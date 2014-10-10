@@ -1,13 +1,13 @@
 //
 //  GrowthKitTests.m
-//  GrowthKitTests
+//  GrowthKitDevApp
 //
-//  Created by dannycosson on 10/10/14.
-//
+//  Created by dannycosson on 10/2/14.
+//  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "GrowthKit.h"
 
 @interface GrowthKitTests : XCTestCase
 
@@ -25,16 +25,25 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+- (void)testSetupAndGetSharedInstance{
+    [GrowthKit setupSharedInstanceWithAppId:@"foo123"];
+    GrowthKit *gk1 = [GrowthKit sharedInstance];
+    GrowthKit *gk2 = [GrowthKit sharedInstance];
+
+    // Test pointer to same object
+    XCTAssertTrue(gk1 == gk2);
+    XCTAssertEqualObjects(gk1.appId, @"foo123");
+    XCTAssertEqualObjects(gk2.appId,@"foo123");
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testSetUserData {
+    [GrowthKit setupSharedInstanceWithAppId:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+    
+    XCTAssertEqualObjects(gk.currentUserId, @"123");
+    XCTAssertEqualObjects(gk.currentUserFirstName, @"Foo");
+    XCTAssertEqualObjects(gk.currentUserLastName, @"Jones");
 }
 
 @end
