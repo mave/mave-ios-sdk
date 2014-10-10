@@ -12,6 +12,7 @@
 		C029279D19E823E2006AEE43 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279C19E823E2006AEE43 /* ViewController.m */; };
 		C02927A219E823E2006AEE43 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C02927A119E823E2006AEE43 /* Images.xcassets */; };
 		C02927C119E825A5006AEE43 /* GrowthKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C02927C019E825A5006AEE43 /* GrowthKitTests.m */; };
+		C02927C619E827F9006AEE43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C02927C519E827F9006AEE43 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		C02927BC19E825A5006AEE43 /* GrowthKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowthKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C02927BF19E825A5006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C02927C019E825A5006AEE43 /* GrowthKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowthKitTests.m; sourceTree = "<group>"; };
+		C02927C519E827F9006AEE43 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 				C029279919E823E2006AEE43 /* AppDelegate.m */,
 				C029279B19E823E2006AEE43 /* ViewController.h */,
 				C029279C19E823E2006AEE43 /* ViewController.m */,
+				C02927C519E827F9006AEE43 /* Main.storyboard */,
 				C02927A119E823E2006AEE43 /* Images.xcassets */,
 				C029279419E823E2006AEE43 /* Supporting Files */,
 			);
@@ -217,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C02927A219E823E2006AEE43 /* Images.xcassets in Resources */,
+				C02927C619E827F9006AEE43 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +458,7 @@
 				C02927B419E823E2006AEE43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C02927C219E825A5006AEE43 /* Build configuration list for PBXNativeTarget "GrowthKitTests" */ = {
 			isa = XCConfigurationList;
@@ -462,6 +467,7 @@
 				C02927C419E825A5006AEE43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
