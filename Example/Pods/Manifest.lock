@@ -1,0 +1,14 @@
+PODS:
+  - GrowthKit (0.1.0)
+
+DEPENDENCIES:
+  - GrowthKit (from `../`)
+
+EXTERNAL SOURCES:
+  GrowthKit:
+    :path: ../
+
+SPEC CHECKSUMS:
+  GrowthKit: e74fbe5c9d1064418b06c16bceb5101091347ac1
+
+COCOAPODS: 0.34.0
