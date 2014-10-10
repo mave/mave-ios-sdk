@@ -55,8 +55,6 @@
 		C029279B19E823E2006AEE43 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		C029279C19E823E2006AEE43 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		C02927A119E823E2006AEE43 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		C02927AF19E823E2006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C02927B019E823E2006AEE43 /* DemoAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoAppTests.m; sourceTree = "<group>"; };
 		C02927BC19E825A5006AEE43 /* GrowthKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowthKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C02927BF19E825A5006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C02927C519E827F9006AEE43 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -128,7 +126,6 @@
 				C029278919E8224C006AEE43 /* GrowthKit */,
 				C02927BD19E825A5006AEE43 /* GrowthKitTests */,
 				C029279319E823E2006AEE43 /* DemoApp */,
-				C02927AD19E823E2006AEE43 /* DemoAppTests */,
 				C029279219E823E2006AEE43 /* Products */,
 				E2762D1EA784A69CA60162F1 /* Pods */,
 				BAF2AC82D5D9713890E196C6 /* Frameworks */,
@@ -176,23 +173,6 @@
 			children = (
 				C029279519E823E2006AEE43 /* Info.plist */,
 				C029279619E823E2006AEE43 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		C02927AD19E823E2006AEE43 /* DemoAppTests */ = {
-			isa = PBXGroup;
-			children = (
-				C02927B019E823E2006AEE43 /* DemoAppTests.m */,
-				C02927AE19E823E2006AEE43 /* Supporting Files */,
-			);
-			path = DemoAppTests;
-			sourceTree = "<group>";
-		};
-		C02927AE19E823E2006AEE43 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				C02927AF19E823E2006AEE43 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
