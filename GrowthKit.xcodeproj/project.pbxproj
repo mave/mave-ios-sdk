@@ -38,6 +38,13 @@
 			remoteGlobalIDString = C029279019E823E2006AEE43;
 			remoteInfo = DemoApp;
 		};
+		C029285619E83A56006AEE43 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C029277919E8217E006AEE43 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C029279019E823E2006AEE43;
+			remoteInfo = DemoApp;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -288,6 +295,7 @@
 			);
 			dependencies = (
 				C029282219E82FC4006AEE43 /* PBXTargetDependency */,
+				C029285719E83A56006AEE43 /* PBXTargetDependency */,
 			);
 			name = GrowthKitTests;
 			productName = GrowthKitTests;
@@ -449,6 +457,11 @@
 			target = C029279019E823E2006AEE43 /* DemoApp */;
 			targetProxy = C029282119E82FC4006AEE43 /* PBXContainerItemProxy */;
 		};
+		C029285719E83A56006AEE43 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C029279019E823E2006AEE43 /* DemoApp */;
+			targetProxy = C029285619E83A56006AEE43 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -555,6 +568,7 @@
 			baseConfigurationReference = 8FF2F891BB968F1E433C7489 /* Pods-GrowthKitTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -604,6 +618,7 @@
 			baseConfigurationReference = 67DE4B21E0255868A78BD50B /* Pods-GrowthKitTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
