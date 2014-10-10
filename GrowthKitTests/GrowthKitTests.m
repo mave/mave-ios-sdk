@@ -1,9 +1,9 @@
 //
 //  GrowthKitTests.m
-//  GrowthKitDevApp
+//  GrowthKit
 //
-//  Created by dannycosson on 10/2/14.
-//  Copyright (c) 2014 Growthkit Inc. All rights reserved.
+//  Created by dannycosson on 10/10/14.
+//
 //
 
 #import <XCTest/XCTest.h>
@@ -29,21 +29,11 @@
     [GrowthKit setupSharedInstanceWithAppId:@"foo123"];
     GrowthKit *gk1 = [GrowthKit sharedInstance];
     GrowthKit *gk2 = [GrowthKit sharedInstance];
-
+    
     // Test pointer to same object
     XCTAssertTrue(gk1 == gk2);
     XCTAssertEqualObjects(gk1.appId, @"foo123");
     XCTAssertEqualObjects(gk2.appId,@"foo123");
-}
-
-- (void)testSetUserData {
-    [GrowthKit setupSharedInstanceWithAppId:@"foo123"];
-    GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
-    
-    XCTAssertEqualObjects(gk.currentUserId, @"123");
-    XCTAssertEqualObjects(gk.currentUserFirstName, @"Foo");
-    XCTAssertEqualObjects(gk.currentUserLastName, @"Jones");
 }
 
 @end
