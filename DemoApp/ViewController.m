@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "GrowthKit.h"
 
 @interface ViewController ()
 
@@ -22,6 +23,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)openInvitePage:(id)sender {
+    [[GrowthKit sharedInstance] presentInvitePage:self];
 }
 
 @end

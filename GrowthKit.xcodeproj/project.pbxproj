@@ -34,6 +34,16 @@
 		DF8350DD60E6B488DFCC33B1 /* libPods-GrowthKitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D1D110D19FDCF9921E21868 /* libPods-GrowthKitTests.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		C029282119E82FC4006AEE43 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C029277919E8217E006AEE43 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C029279019E823E2006AEE43;
+			remoteInfo = DemoApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		2110DFB92C7B0700F5577B76 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5D1D110D19FDCF9921E21868 /* libPods-GrowthKitTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GrowthKitTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -311,6 +321,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C029282219E82FC4006AEE43 /* PBXTargetDependency */,
 			);
 			name = GrowthKitTests;
 			productName = GrowthKitTests;
@@ -330,6 +341,7 @@
 					};
 					C02927BB19E825A5006AEE43 = {
 						CreatedOnToolsVersion = 6.0.1;
+						TestTargetID = C029279019E823E2006AEE43;
 					};
 				};
 			};
@@ -468,6 +480,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C029282219E82FC4006AEE43 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C029279019E823E2006AEE43 /* DemoApp */;
+			targetProxy = C029282119E82FC4006AEE43 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C029277D19E8217E006AEE43 /* Debug */ = {
@@ -613,6 +633,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DemoApp.app/DemoApp";
 			};
 			name = Debug;
 		};
@@ -654,6 +675,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DemoApp.app/DemoApp";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

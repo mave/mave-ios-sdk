@@ -10,6 +10,7 @@
 
 @interface ViewController : UIViewController
 
+- (IBAction)openInvitePage:(id)sender;
 
 @end
 

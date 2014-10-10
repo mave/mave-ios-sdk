@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "GrowthKit.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [GrowthKit setupSharedInstanceWithAppId:@"dca34a7202a2a8372c884b7d468d8345"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk setUserData:@"1" firstName:@"Danny" lastName:@"Cosson"];
+    gk.displayOptions.bottomViewBackgroundColor = [UIColor colorWithRed:0.11 green:0.36 blue:0.62 alpha:1.0];
+
     return YES;
 }
 
