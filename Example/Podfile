@@ -1,0 +1,11 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'GrowthKit', :exclusive => true do
+  pod "GrowthKit", :path => "../"
+end
+
+target 'Tests', :exclusive => true do
+  pod "GrowthKit", :path => "../"
+
+  
+end
