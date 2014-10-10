@@ -10,7 +10,31 @@
 		C029277819E8217E006AEE43 = {
 			isa = PBXGroup;
 			children = (
+				C029278919E8224C006AEE43 /* GrowthKit */,
+				C029278A19E82252006AEE43 /* GrowthKitTests */,
+				C029278C19E82299006AEE43 /* DemoApp */,
 			);
+			sourceTree = "<group>";
+		};
+		C029278919E8224C006AEE43 /* GrowthKit */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = GrowthKit;
+			sourceTree = "<group>";
+		};
+		C029278A19E82252006AEE43 /* GrowthKitTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = GrowthKitTests;
+			sourceTree = "<group>";
+		};
+		C029278C19E82299006AEE43 /* DemoApp */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = DemoApp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
