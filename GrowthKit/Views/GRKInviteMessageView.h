@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GRKInviteMessageView : UIView
+@interface GRKInviteMessageView : UIView <UITextViewDelegate>
 
 @property UIButton *sendButton;
 @property UITextView *textField;

@@ -32,6 +32,10 @@
                           name:UIKeyboardWillShowNotification
                         object:nil];
     [defaultCenter addObserver:self
+                      selector:@selector(keyboardWillHide:)
+                          name:UIKeyboardWillHideNotification
+                        object:nil];
+    [defaultCenter addObserver:self
                       selector:@selector(deviceWillRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
@@ -54,6 +58,13 @@
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [self setContainerAndChildFramesWithKeyboardSize:kbSize];
 }
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize zeroSize = CGSizeMake(kbSize.width, 0);
+    [self setContainerAndChildFramesWithKeyboardSize:zeroSize];
+}
+
 
 - (void)deviceWillRotate:(NSNotification *)notification {
     [self setContainerAndChildFramesWithKeyboardSize:CGSizeMake(0, 0)];

@@ -38,12 +38,14 @@
     self.sendButton = [[UIButton alloc] init];
     self.textField = [[UITextView alloc] init];
     
+    self.textField.delegate = self;
     self.textField.layer.backgroundColor=[tfBgColor CGColor];
     self.textField.layer.borderColor=[tfBorderColor CGColor];
     self.textField.layer.cornerRadius=8.0f;
     self.textField.layer.masksToBounds=YES;
     self.textField.layer.borderWidth= 0.5f;
-    [self.textField setText:@"I invest with Betterment and thought you would like it. Use my invite link to sign up"];
+    [self.textField setText:@"Use my invite link to sign up!"];
+    [self.textField setReturnKeyType:UIReturnKeyDone];
     
     self.sendButton.titleLabel.textColor = buttonTitleTextColor;
     self.sendButton.titleLabel.font = buttonFont;
@@ -94,12 +96,12 @@
     *sendButtonFrame = CGRectMake(buttonOffsetX, buttonOffsetY, buttonSize.width, buttonSize.height);
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    return YES;
 }
-*/
 
 @end
