@@ -12,6 +12,8 @@
 		C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* GRKABCollectionTests.m */; };
 		C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641319EC41010087FF37 /* GRKABTestDataFactory.m */; };
 		C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641519EC41010087FF37 /* GRKABTestDataTests.m */; };
+		C022641E19EC4FAC0087FF37 /* GRKNetworkManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */; };
+		C022642019EC790F0087FF37 /* GRKHTTPManager_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = C022641F19EC790F0087FF37 /* GRKHTTPManager_Internal.h */; };
 		C029279719E823E2006AEE43 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279619E823E2006AEE43 /* main.m */; };
 		C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279919E823E2006AEE43 /* AppDelegate.m */; };
 		C029279D19E823E2006AEE43 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279C19E823E2006AEE43 /* ViewController.m */; };
@@ -26,7 +28,7 @@
 		C029280619E82D0F006AEE43 /* GRKDisplayOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = C029280319E82D0F006AEE43 /* GRKDisplayOptions.m */; };
 		C029280B19E82D18006AEE43 /* GRKABPersonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C029280819E82D18006AEE43 /* GRKABPersonCell.m */; };
 		C029280C19E82D18006AEE43 /* GRKInviteMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C029280A19E82D18006AEE43 /* GRKInviteMessageView.m */; };
-		C029280F19E82D21006AEE43 /* GRKNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C029280E19E82D21006AEE43 /* GRKNetworkManager.m */; };
+		C029280F19E82D21006AEE43 /* GRKHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C029280E19E82D21006AEE43 /* GRKHTTPManager.m */; };
 		C029281E19E82E14006AEE43 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C029281B19E82E14006AEE43 /* AddressBook.framework */; };
 		C029281F19E82E14006AEE43 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C029281C19E82E14006AEE43 /* Foundation.framework */; };
 		C029282019E82E14006AEE43 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C029281D19E82E14006AEE43 /* UIKit.framework */; };
@@ -63,6 +65,8 @@
 		C022641319EC41010087FF37 /* GRKABTestDataFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataFactory.m; sourceTree = "<group>"; };
 		C022641419EC41010087FF37 /* GRKABTestDataFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKABTestDataFactory.h; sourceTree = "<group>"; };
 		C022641519EC41010087FF37 /* GRKABTestDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataTests.m; sourceTree = "<group>"; };
+		C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKNetworkManagerTests.m; sourceTree = "<group>"; };
+		C022641F19EC790F0087FF37 /* GRKHTTPManager_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKHTTPManager_Internal.h; sourceTree = "<group>"; };
 		C029279119E823E2006AEE43 /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C029279519E823E2006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C029279619E823E2006AEE43 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -93,8 +97,8 @@
 		C029280819E82D18006AEE43 /* GRKABPersonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABPersonCell.m; sourceTree = "<group>"; };
 		C029280919E82D18006AEE43 /* GRKInviteMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKInviteMessageView.h; sourceTree = "<group>"; };
 		C029280A19E82D18006AEE43 /* GRKInviteMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKInviteMessageView.m; sourceTree = "<group>"; };
-		C029280D19E82D21006AEE43 /* GRKNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKNetworkManager.h; sourceTree = "<group>"; };
-		C029280E19E82D21006AEE43 /* GRKNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKNetworkManager.m; sourceTree = "<group>"; };
+		C029280D19E82D21006AEE43 /* GRKHTTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKHTTPManager.h; sourceTree = "<group>"; };
+		C029280E19E82D21006AEE43 /* GRKHTTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKHTTPManager.m; sourceTree = "<group>"; };
 		C029281B19E82E14006AEE43 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/AddressBook.framework; sourceTree = DEVELOPER_DIR; };
 		C029281C19E82E14006AEE43 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		C029281D19E82E14006AEE43 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -136,13 +140,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C022640F19EC40600087FF37 /* Networking */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Networking;
-			sourceTree = "<group>";
-		};
 		C022641019EC40B40087FF37 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +150,14 @@
 				C022641519EC41010087FF37 /* GRKABTestDataTests.m */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		C022641C19EC4F940087FF37 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 		C029277819E8217E006AEE43 = {
@@ -215,8 +220,8 @@
 		C02927BD19E825A5006AEE43 /* GrowthKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				C022641C19EC4F940087FF37 /* Networking */,
 				C022641019EC40B40087FF37 /* Models */,
-				C022640F19EC40600087FF37 /* Networking */,
 				C029282319E83189006AEE43 /* GrowthKitTests.m */,
 				C02927BE19E825A5006AEE43 /* Supporting Files */,
 			);
@@ -247,8 +252,9 @@
 		C02927EB19E82C3F006AEE43 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				C029280D19E82D21006AEE43 /* GRKNetworkManager.h */,
-				C029280E19E82D21006AEE43 /* GRKNetworkManager.m */,
+				C029280D19E82D21006AEE43 /* GRKHTTPManager.h */,
+				C022641F19EC790F0087FF37 /* GRKHTTPManager_Internal.h */,
+				C029280E19E82D21006AEE43 /* GRKHTTPManager.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -463,7 +469,7 @@
 				C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */,
 				C02927FA19E82D03006AEE43 /* GRKInvitePageViewController.m in Sources */,
 				C029280619E82D0F006AEE43 /* GRKDisplayOptions.m in Sources */,
-				C029280F19E82D21006AEE43 /* GRKNetworkManager.m in Sources */,
+				C029280F19E82D21006AEE43 /* GRKHTTPManager.m in Sources */,
 				C029280C19E82D18006AEE43 /* GRKInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* GRKABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
@@ -480,6 +486,8 @@
 				C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */,
 				C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */,
 				C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */,
+				C022642019EC790F0087FF37 /* GRKHTTPManager_Internal.h in Sources */,
+				C022641E19EC4FAC0087FF37 /* GRKNetworkManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,12 +510,14 @@
 		C029277D19E8217E006AEE43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Debug;
 		};
 		C029277E19E8217E006AEE43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
 		};

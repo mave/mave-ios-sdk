@@ -94,6 +94,8 @@
     return numOnly;
 }
 
+// For now, phone is required so this will always return exactly one phone
+// number that we should send the invite to
 - (NSString *)bestPhone {
     NSString *val = nil;
     unsigned long numPhones = [self.phoneNumbers count];
