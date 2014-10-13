@@ -1,5 +1,5 @@
 //
-//  GRKNetworkController.h
+//  GRKNetworkManager.h
 //  GrowthKitDevApp
 //
 //  Created by dannycosson on 10/8/14.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GRKNetworkController : NSObject
+@interface GRKNetworkManager : NSObject
 
 - (void)sendInvitesWithSuccessCallback:(void(^)(NSUInteger *))successBlock failureCallback:(void(^)(NSError *))errorBlock;
 

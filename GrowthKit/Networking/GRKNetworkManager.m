@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
-#import "GRKNetworkController.h"
+#import "GRKNetworkManager.h"
 
-@implementation GRKNetworkController
+@implementation GRKNetworkManager
 
 @end
