@@ -10,6 +10,8 @@
 #import <XCTest/XCTest.h>
 #import "GRKHTTPManager.h"
 
+#import <OCMockito/OCMockito.h>
+
 @interface GRKNetworkManagerTests : XCTestCase
 
 @end
