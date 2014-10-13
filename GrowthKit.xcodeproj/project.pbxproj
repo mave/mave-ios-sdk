@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
-		C022640A19EC3FF30087FF37 /* GRKABCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022640419EC3FF30087FF37 /* GRKABCollectionTests.m */; };
-		C022640B19EC3FF30087FF37 /* GRKABTestDataFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C022640619EC3FF30087FF37 /* GRKABTestDataFactory.m */; };
-		C022640C19EC3FF30087FF37 /* GRKABTestDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022640719EC3FF30087FF37 /* GRKABTestDataTests.m */; };
-		C022640D19EC3FF30087FF37 /* GRKABPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022640819EC3FF30087FF37 /* GRKABPersonTests.m */; };
+		C022641619EC41010087FF37 /* GRKABPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641119EC41010087FF37 /* GRKABPersonTests.m */; };
+		C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* GRKABCollectionTests.m */; };
+		C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641319EC41010087FF37 /* GRKABTestDataFactory.m */; };
+		C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641519EC41010087FF37 /* GRKABTestDataTests.m */; };
 		C029279719E823E2006AEE43 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279619E823E2006AEE43 /* main.m */; };
 		C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279919E823E2006AEE43 /* AppDelegate.m */; };
 		C029279D19E823E2006AEE43 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279C19E823E2006AEE43 /* ViewController.m */; };
@@ -58,11 +58,11 @@
 		8ACB3F29796B0AB7B74C3393 /* Pods-DemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.release.xcconfig"; sourceTree = "<group>"; };
 		8FF2F891BB968F1E433C7489 /* Pods-GrowthKitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowthKitTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GrowthKitTests/Pods-GrowthKitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		95BA8557394AD1E344016951 /* libPods-DemoApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DemoApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C022640419EC3FF30087FF37 /* GRKABCollectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABCollectionTests.m; sourceTree = "<group>"; };
-		C022640519EC3FF30087FF37 /* GRKABTestDataFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKABTestDataFactory.h; sourceTree = "<group>"; };
-		C022640619EC3FF30087FF37 /* GRKABTestDataFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataFactory.m; sourceTree = "<group>"; };
-		C022640719EC3FF30087FF37 /* GRKABTestDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataTests.m; sourceTree = "<group>"; };
-		C022640819EC3FF30087FF37 /* GRKABPersonTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABPersonTests.m; sourceTree = "<group>"; };
+		C022641119EC41010087FF37 /* GRKABPersonTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABPersonTests.m; sourceTree = "<group>"; };
+		C022641219EC41010087FF37 /* GRKABCollectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABCollectionTests.m; sourceTree = "<group>"; };
+		C022641319EC41010087FF37 /* GRKABTestDataFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataFactory.m; sourceTree = "<group>"; };
+		C022641419EC41010087FF37 /* GRKABTestDataFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKABTestDataFactory.h; sourceTree = "<group>"; };
+		C022641519EC41010087FF37 /* GRKABTestDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataTests.m; sourceTree = "<group>"; };
 		C029279119E823E2006AEE43 /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C029279519E823E2006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C029279619E823E2006AEE43 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -136,6 +136,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C022640F19EC40600087FF37 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		C022641019EC40B40087FF37 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C022641119EC41010087FF37 /* GRKABPersonTests.m */,
+				C022641219EC41010087FF37 /* GRKABCollectionTests.m */,
+				C022641319EC41010087FF37 /* GRKABTestDataFactory.m */,
+				C022641419EC41010087FF37 /* GRKABTestDataFactory.h */,
+				C022641519EC41010087FF37 /* GRKABTestDataTests.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		C029277819E8217E006AEE43 = {
 			isa = PBXGroup;
 			children = (
@@ -196,12 +215,9 @@
 		C02927BD19E825A5006AEE43 /* GrowthKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				C022641019EC40B40087FF37 /* Models */,
+				C022640F19EC40600087FF37 /* Networking */,
 				C029282319E83189006AEE43 /* GrowthKitTests.m */,
-				C022640419EC3FF30087FF37 /* GRKABCollectionTests.m */,
-				C022640519EC3FF30087FF37 /* GRKABTestDataFactory.h */,
-				C022640619EC3FF30087FF37 /* GRKABTestDataFactory.m */,
-				C022640719EC3FF30087FF37 /* GRKABTestDataTests.m */,
-				C022640819EC3FF30087FF37 /* GRKABPersonTests.m */,
 				C02927BE19E825A5006AEE43 /* Supporting Files */,
 			);
 			path = GrowthKitTests;
@@ -459,11 +475,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C022641619EC41010087FF37 /* GRKABPersonTests.m in Sources */,
 				C029282419E83189006AEE43 /* GrowthKitTests.m in Sources */,
-				C022640D19EC3FF30087FF37 /* GRKABPersonTests.m in Sources */,
-				C022640B19EC3FF30087FF37 /* GRKABTestDataFactory.m in Sources */,
-				C022640A19EC3FF30087FF37 /* GRKABCollectionTests.m in Sources */,
-				C022640C19EC3FF30087FF37 /* GRKABTestDataTests.m in Sources */,
+				C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */,
+				C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */,
+				C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
