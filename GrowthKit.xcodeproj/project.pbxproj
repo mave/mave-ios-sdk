@@ -13,7 +13,6 @@
 		C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641319EC41010087FF37 /* GRKABTestDataFactory.m */; };
 		C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641519EC41010087FF37 /* GRKABTestDataTests.m */; };
 		C022641E19EC4FAC0087FF37 /* GRKNetworkManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */; };
-		C022642019EC790F0087FF37 /* GRKHTTPManager_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = C022641F19EC790F0087FF37 /* GRKHTTPManager_Internal.h */; };
 		C029279719E823E2006AEE43 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279619E823E2006AEE43 /* main.m */; };
 		C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279919E823E2006AEE43 /* AppDelegate.m */; };
 		C029279D19E823E2006AEE43 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279C19E823E2006AEE43 /* ViewController.m */; };
@@ -66,7 +65,6 @@
 		C022641419EC41010087FF37 /* GRKABTestDataFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKABTestDataFactory.h; sourceTree = "<group>"; };
 		C022641519EC41010087FF37 /* GRKABTestDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataTests.m; sourceTree = "<group>"; };
 		C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKNetworkManagerTests.m; sourceTree = "<group>"; };
-		C022641F19EC790F0087FF37 /* GRKHTTPManager_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKHTTPManager_Internal.h; sourceTree = "<group>"; };
 		C029279119E823E2006AEE43 /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C029279519E823E2006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C029279619E823E2006AEE43 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -103,6 +101,7 @@
 		C029281C19E82E14006AEE43 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		C029281D19E82E14006AEE43 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		C029282319E83189006AEE43 /* GrowthKitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowthKitTests.m; sourceTree = "<group>"; };
+		C0425B8919ED6F69006641AB /* GRKHTTPManager_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRKHTTPManager_Internal.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,7 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				C029280D19E82D21006AEE43 /* GRKHTTPManager.h */,
-				C022641F19EC790F0087FF37 /* GRKHTTPManager_Internal.h */,
+				C0425B8919ED6F69006641AB /* GRKHTTPManager_Internal.h */,
 				C029280E19E82D21006AEE43 /* GRKHTTPManager.m */,
 			);
 			path = Networking;
@@ -486,7 +485,6 @@
 				C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */,
 				C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */,
 				C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */,
-				C022642019EC790F0087FF37 /* GRKHTTPManager_Internal.h in Sources */,
 				C022641E19EC4FAC0087FF37 /* GRKNetworkManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

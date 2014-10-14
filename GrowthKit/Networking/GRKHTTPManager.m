@@ -48,14 +48,18 @@
     [request setHTTPMethod:methodType];
     [request setHTTPBody:jsonData];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:self.applicationId forKey:@"X-GrowthKit-Application-ID"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    // [request setValue:self.applicationId forKey:@"X-GrowthKit-Application-ID"];
     
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
             ^(NSData *data, NSURLResponse *response, NSError *error) {
-        [[self class] handleJSONResponseWithData:data
-                                        response:response
-                                           error:error
-                                 completionBlock:completionBlock];
+        NSLog(@"Headers sent: %@", request.allHTTPHeaderFields);
+        
+        completionBlock(200, @{@"fake_response": @YES});
+//        [[self class] handleJSONResponseWithData:data
+//                                        response:response
+//                                           error:error
+//                                 completionBlock:completionBlock];
     }];
     [task resume];
 }

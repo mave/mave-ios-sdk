@@ -12,15 +12,15 @@ typedef void (^GRKHTTPCompletionBlock)(NSInteger statusCode, NSDictionary *respo
 
 @interface GRKHTTPManager : NSObject <NSURLSessionDelegate>
 
-@property (nonatomic, readonly) NSString *baseURL;
-@property (nonatomic, readonly) NSURLSession *session;
 @property (nonatomic, readonly) NSString *applicationId;
+@property (nonatomic, readonly) NSString *baseURL;
+@property (nonatomic) NSURLSession *session;
 
 - (GRKHTTPManager *)initWithApplicationId:(NSString *)applicationId;
 
 //- (void)sendInvitesWithSuccessCallback:(void(^)(NSUInteger *))successBlock failureCallback:(void(^)(NSError *))errorBlock;
 
 // Specific Requests the app will make
-- (void)sendInvitesToPersons:(NSArray *)persons withMessage:(NSString *)messageText;
+//- (void)sendInvitesToPersons:(NSArray *)persons withMessage:(NSString *)messageText;
 
 @end
