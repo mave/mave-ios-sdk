@@ -55,11 +55,10 @@
             ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"Headers sent: %@", request.allHTTPHeaderFields);
         
-        completionBlock(200, @{@"fake_response": @YES});
-//        [[self class] handleJSONResponseWithData:data
-//                                        response:response
-//                                           error:error
-//                                 completionBlock:completionBlock];
+        [[self class] handleJSONResponseWithData:data
+                                        response:response
+                                           error:error
+                                 completionBlock:completionBlock];
     }];
     [task resume];
 }
@@ -68,7 +67,13 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
-    NSLog(@"Data was: %@", data);
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    NSInteger statusCode = [httpResponse statusCode];
+
+    NSError *serializationError = nil;
+    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
+
+    completionBlock(statusCode, dataDict);
 }
 
 

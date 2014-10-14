@@ -84,12 +84,28 @@
         completionBlockRan = YES;
     }];
     
-    NSLog(@"unexpected requests: %@", [UMKMockURLProtocol unexpectedRequests]);
-    
     UMKAssertTrueBeforeTimeout(0.1,
                                [[UMKMockURLProtocol servicedRequests] count] == 1,
                                @"request didn't match stub");
     UMKAssertTrueBeforeTimeout(0.1, completionBlockRan, @"block ran");
 }
+
+- (void)testHandleSuccessJSONResponseWithData {
+    NSDictionary *dataDict = @{@"foo": @2, @"bar": @"yes", @"baz": @YES};
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dataDict options:kNilOptions error:nil];
+
+    NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"1.1" headerFields:@{}];
+
+    __block NSInteger returnedStatusCode;
+    __block NSDictionary *returnedData;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSInteger statusCode, NSDictionary *responseData) {
+        returnedStatusCode = statusCode;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, dataDict);
+    XCTAssertEqual(returnedStatusCode, 200);
+}
+
 
 @end
