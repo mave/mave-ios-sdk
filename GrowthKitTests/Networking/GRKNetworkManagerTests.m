@@ -10,9 +10,17 @@
 #import <XCTest/XCTest.h>
 #import "GRKHTTPManager.h"
 
+#define HC_SHORTHAND
+#import <OCHamcrest/OCHamcrest.h>
+
+#define MOCKITO_SHORTHAND
 #import <OCMockito/OCMockito.h>
 
+#import <URLMock/URLMock.h>
+
 @interface GRKNetworkManagerTests : XCTestCase
+
+@property (nonatomic, strong) GRKHTTPManager *networkManager;
 
 @end
 
@@ -21,6 +29,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    self.networkManager = [[GRKHTTPManager alloc] initWithApplicationId:@"foo123"];
+    NSURLSessionConfiguration *config = self.networkManager.session.configuration;
 }
 
 - (void)tearDown {
@@ -29,16 +39,23 @@
 }
 
 - (void)testInitSetsCorrectVaues {
-    GRKHTTPManager *nm = [[GRKHTTPManager alloc] initWithApplicationId:@"foo123"];
-    XCTAssertEqualObjects(nm.applicationId, @"foo123");
-    XCTAssertEqualObjects(nm.baseURL, @"http://devaccounts.growthkit.io/v1.0");
-    XCTAssertNotNil(nm.session);
+    XCTAssertEqualObjects(self.networkManager.applicationId, @"foo123");
+    XCTAssertEqualObjects(self.networkManager
+                          .baseURL, @"http://devaccounts.growthkit.io/v1.0");
+    XCTAssertNotNil(self.networkManager
+                    .session);
     NSDictionary *expectedAdditionalHeaders = @{@"Accept": @"application/json"};
-    XCTAssertEqualObjects(nm.session.configuration.HTTPAdditionalHeaders,
+    XCTAssertEqualObjects(self.networkManager
+                          .session.configuration.HTTPAdditionalHeaders,
                           expectedAdditionalHeaders);
 }
 
 - (void)testSendIdentifiedJSONRequest {
+    self.networkManager
+    
+//    NSMutableArray *mockArray = mock([NSMutableArray class]);
+//    NSURLSessionTask *mockSessionTask = mock([NSURLSessionTask class]);
+//    [given([mockSessionTask resume]) willReturn@"foo"];
     
 }
 

@@ -64,6 +64,7 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
+    NSLog(@"Data was: %@", data);
 }
 
 
