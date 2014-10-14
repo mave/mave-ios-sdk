@@ -56,6 +56,7 @@
                           expectedAdditionalHeaders);
 }
 
+// TODO - DC: needs to capture the headers as well
 - (void)testSendIdentifiedJSONRequest {
     // Build Request
     NSString *requestPath = @"/foo";

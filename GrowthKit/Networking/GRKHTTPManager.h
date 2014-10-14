@@ -18,9 +18,9 @@ typedef void (^GRKHTTPCompletionBlock)(NSInteger statusCode, NSDictionary *respo
 
 - (GRKHTTPManager *)initWithApplicationId:(NSString *)applicationId;
 
-//- (void)sendInvitesWithSuccessCallback:(void(^)(NSUInteger *))successBlock failureCallback:(void(^)(NSError *))errorBlock;
-
 // Specific Requests the app will make
-//- (void)sendInvitesToPersons:(NSArray *)persons withMessage:(NSString *)messageText;
+- (void)sendInvitesWithPersons:(NSArray *)persons
+                       message:(NSString *)messageText
+                  successBlock:(GRKHTTPCompletionBlock)successBlock;
 
 @end

@@ -11,14 +11,9 @@
 
 @interface GRKInviteMessageViewController : NSObject
 
-@property (weak, nonatomic) GRKInvitePageViewController *delegate;
-@property (weak, nonatomic) NSSet *selectedPhones;
-@property UITextView *messageTextField;
 @property GRKInviteMessageView *view;
 
-- (GRKInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame
-                                              delegate:(GRKInvitePageViewController *)delegate
-                                        selectedPhones:(NSMutableSet *)selectedPhones;
+- (GRKInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame;
 - (void)sendInvites:(id)sender;
 
 @end

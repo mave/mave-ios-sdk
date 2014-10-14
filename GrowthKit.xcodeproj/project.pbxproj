@@ -32,6 +32,8 @@
 		C029281F19E82E14006AEE43 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C029281C19E82E14006AEE43 /* Foundation.framework */; };
 		C029282019E82E14006AEE43 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C029281D19E82E14006AEE43 /* UIKit.framework */; };
 		C029282419E83189006AEE43 /* GrowthKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C029282319E83189006AEE43 /* GrowthKitTests.m */; };
+		C0425B8C19EDB955006641AB /* GRKInviteMessageViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B8B19EDB955006641AB /* GRKInviteMessageViewControllerTests.m */; };
+		C0425B8E19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */; };
 		DF8350DD60E6B488DFCC33B1 /* libPods-GrowthKitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D1D110D19FDCF9921E21868 /* libPods-GrowthKitTests.a */; };
 /* End PBXBuildFile section */
 
@@ -102,6 +104,8 @@
 		C029281D19E82E14006AEE43 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		C029282319E83189006AEE43 /* GrowthKitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowthKitTests.m; sourceTree = "<group>"; };
 		C0425B8919ED6F69006641AB /* GRKHTTPManager_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRKHTTPManager_Internal.h; sourceTree = "<group>"; };
+		C0425B8B19EDB955006641AB /* GRKInviteMessageViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKInviteMessageViewControllerTests.m; sourceTree = "<group>"; };
+		C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKInvitePageViewControllerTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +223,7 @@
 		C02927BD19E825A5006AEE43 /* GrowthKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				C0425B8A19EDB93A006641AB /* Controllers */,
 				C022641C19EC4F940087FF37 /* Networking */,
 				C022641019EC40B40087FF37 /* Models */,
 				C029282319E83189006AEE43 /* GrowthKitTests.m */,
@@ -281,6 +286,15 @@
 				C029280319E82D0F006AEE43 /* GRKDisplayOptions.m */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		C0425B8A19EDB93A006641AB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C0425B8B19EDB955006641AB /* GRKInviteMessageViewControllerTests.m */,
+				C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		E2762D1EA784A69CA60162F1 /* Pods */ = {
@@ -483,8 +497,10 @@
 				C022641619EC41010087FF37 /* GRKABPersonTests.m in Sources */,
 				C029282419E83189006AEE43 /* GrowthKitTests.m in Sources */,
 				C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */,
+				C0425B8E19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m in Sources */,
 				C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */,
 				C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */,
+				C0425B8C19EDB955006641AB /* GRKInviteMessageViewControllerTests.m in Sources */,
 				C022641E19EC4FAC0087FF37 /* GRKNetworkManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

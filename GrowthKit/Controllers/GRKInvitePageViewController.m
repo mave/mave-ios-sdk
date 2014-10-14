@@ -16,10 +16,7 @@
 
 @end
 
-@implementation GRKInvitePageViewController {
-    GRKABTableViewController *abTableViewDelegate;
-    GRKInviteMessageViewController *inviteMessageViewDelegate;
-}
+@implementation GRKInvitePageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -77,6 +74,9 @@
                              name:UIKeyboardWillShowNotification
                            object:nil];
     [defaultCenter removeObserver:self
+                             name:UIKeyboardWillHideNotification
+                           object:nil];
+    [defaultCenter removeObserver:self
                              name:UIDeviceOrientationDidChangeNotification
                            object:nil];
 }
@@ -110,11 +110,15 @@
                              inviteMessageViewFrame:&imvf];
     UIView *containerView = [[UIView alloc] initWithFrame:cvf];
 
-    abTableViewDelegate = [[GRKABTableViewController alloc] initAndCreateTableViewWithFrame:tvf];
-    inviteMessageViewDelegate = [[GRKInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf
-            delegate:self selectedPhones:abTableViewDelegate.selectedPhoneNumbers];
-    [containerView addSubview:abTableViewDelegate.tableView];
-    [containerView addSubview:inviteMessageViewDelegate.view];
+    self.ABTableViewController = [[GRKABTableViewController alloc] initAndCreateTableViewWithFrame:tvf];
+    self.inviteMessageViewController = [[GRKInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
+    
+    [self.inviteMessageViewController.view.sendButton addTarget:self
+                                                  action:@selector(sendInvites:)
+                                        forControlEvents:UIControlEventTouchUpInside];
+     
+    [containerView addSubview:self.ABTableViewController.tableView];
+    [containerView addSubview:self.inviteMessageViewController.view];
     
     return containerView;
 }
@@ -126,8 +130,8 @@
                                      tableViewFrame:&tvf
                              inviteMessageViewFrame:&imvf];
     [self.view setFrame:cvf];
-    [abTableViewDelegate.tableView setFrame:tvf];
-    [inviteMessageViewDelegate.view setFrame:imvf];
+    [self.ABTableViewController.tableView setFrame:tvf];
+    [self.inviteMessageViewController.view setFrame:imvf];
 }
 
 - (void)setupNavgationBar {
@@ -143,6 +147,15 @@
 - (void)dismissAfterCancel:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
     [self cleanupForDismiss];
+}
+
+- (void)sendInvites:(id)sender {
+    NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
+    NSString *message = self.inviteMessageViewController.view.textField.text;
+    [[GrowthKit sharedInstance].HTTPManager sendInvitesWithPersons:phones message:message successBlock:^(NSInteger statusCode, NSDictionary *responseData) {
+        NSLog(@"Sent invites, response code: %li response: %@", (long)statusCode, responseData);
+    }];
+    
 }
 
 @end

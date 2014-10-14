@@ -9,11 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
+#import "GRKHTTPManager.h"
 
 @interface GrowthKit : NSObject
 
 @property (nonatomic, readonly) GRKInvitePageViewController *viewController;
 @property (nonatomic, readonly) GRKDisplayOptions *displayOptions;
+@property (nonatomic) GRKHTTPManager *HTTPManager;
 
 @property (nonatomic, readonly) NSString *appId;
 @property (nonatomic, readonly) NSString *currentUserId;
