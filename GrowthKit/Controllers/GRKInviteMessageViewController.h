@@ -14,6 +14,5 @@
 @property GRKInviteMessageView *view;
 
 - (GRKInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame;
-- (void)sendInvites:(id)sender;
 
 @end
