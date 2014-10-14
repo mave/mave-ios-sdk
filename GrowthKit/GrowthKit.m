@@ -9,6 +9,7 @@
 #import "GrowthKit.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
+#import "GRKHTTPManager.h"
 
 @implementation GrowthKit {
     // Controller
@@ -20,15 +21,19 @@
 //
 
 - (GrowthKit *)initWithAppId:(NSString *)appId {
-    _appId = appId;
-    _displayOptions = [[GRKDisplayOptions alloc] initWithDefaults];
+    self = [self init];
+    if (self) {
+        _appId = appId;
+        _displayOptions = [[GRKDisplayOptions alloc] initWithDefaults];
+        _HTTPManager = [[GRKHTTPManager alloc] initWithApplicationId:appId];
+    }
     return self;
 }
 
 static GrowthKit *sharedInstance = nil;
 
-+ (void)setupSharedInstanceWithAppId:(NSString *)appId {
-    sharedInstance = [[[self class] alloc] initWithAppId:appId];
++ (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
+    sharedInstance = [[[self class] alloc] initWithAppId:applicationID];
 }
 
 + (GrowthKit *)sharedInstance {

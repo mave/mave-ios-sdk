@@ -78,7 +78,15 @@
 
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
-                  successBlock:(GRKHTTPCompletionBlock)successBlock {
+               completionBlock:(GRKHTTPCompletionBlock)completionBlock {
+    NSString *invitesRoute = @"/invites";
+    NSDictionary *params = @{@"recipients": persons,
+                             @"sms_copy": messageText,
+                           };
+    [self sendIdentifiedJSONRequestWithRoute:invitesRoute
+                       methodType:@"POST"
+                           params:params
+                  completionBlock:completionBlock];
     
 }
 

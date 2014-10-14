@@ -26,7 +26,7 @@
 }
 
 - (void)testSetupAndGetSharedInstance{
-    [GrowthKit setupSharedInstanceWithAppId:@"foo123"];
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk1 = [GrowthKit sharedInstance];
     GrowthKit *gk2 = [GrowthKit sharedInstance];
     
@@ -37,7 +37,7 @@
 }
 
 - (void)testSetUserData {
-    [GrowthKit setupSharedInstanceWithAppId:@"foo123"];
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
     

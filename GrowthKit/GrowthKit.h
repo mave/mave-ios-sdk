@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
-#import "GRKHTTPManager.h"
+
+@class GRKHTTPManager;
 
 @interface GrowthKit : NSObject
 
@@ -22,7 +23,7 @@
 @property (nonatomic, readonly) NSString *currentUserFirstName;
 @property (nonatomic, readonly) NSString *currentUserLastName;
 
-+ (void)setupSharedInstanceWithAppId:(NSString *)appId;
++ (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (GrowthKit *)sharedInstance;
 
 - (void)setUserData:(NSString *)userId firstName:(NSString *)firstName lastName:(NSString *)lastName;

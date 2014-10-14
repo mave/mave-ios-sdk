@@ -52,7 +52,7 @@
     MKTArgumentCaptor *argument = [[MKTArgumentCaptor alloc] init];
     [verify(mockHTTPManager) sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
-                                       successBlock:[argument capture]];
+                                       completionBlock:[argument capture]];
 //    GRKHTTPCompletionBlock completionBlock = [argument value];
 }
 

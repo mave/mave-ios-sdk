@@ -21,6 +21,6 @@ typedef void (^GRKHTTPCompletionBlock)(NSInteger statusCode, NSDictionary *respo
 // Specific Requests the app will make
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
-                  successBlock:(GRKHTTPCompletionBlock)successBlock;
+               completionBlock:(GRKHTTPCompletionBlock)completionBlock;
 
 @end
