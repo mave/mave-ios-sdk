@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <objc/runtime.h>
+#import "GRKConstants.h"
 #import "GRKHTTPManager.h"
 #import "GRKHTTPManager_Internal.h"
 
@@ -18,6 +20,7 @@
 #import <OCMockito/OCMockito.h>
 
 #import <URLMock/URLMock.h>
+
 
 @interface GRKNetworkManagerTests : XCTestCase
 
@@ -80,7 +83,7 @@
     // Run request and capture necessary variables
     __block BOOL completionBlockRan = NO;
 //    __block NSDictionary *returnedDict = nil;
-    [self.httpManager sendIdentifiedJSONRequestWithRoute:requestPath methodType:@"POST" params:requestDict completionBlock:^(NSInteger statusCode, NSDictionary *responseData) {
+    [self.httpManager sendIdentifiedJSONRequestWithRoute:requestPath methodType:@"POST" params:requestDict completionBlock:^(NSError *error, NSDictionary *responseData) {
         NSLog(@"Headers expected: %@", expectedRequestHeaders);
         completionBlockRan = YES;
     }];
@@ -91,21 +94,105 @@
     UMKAssertTrueBeforeTimeout(0.1, completionBlockRan, @"block ran");
 }
 
+- (void)testGetHTTPStatusCodeLevel {
+    NSInteger code = 200;
+    NSInteger codeLevel = code / 100;
+    XCTAssertEqual(codeLevel, 2);
+    code = 201;
+    codeLevel = code / 100;
+    XCTAssertEqual(codeLevel, 2);
+    code = 299;
+    codeLevel = code / 100;
+    XCTAssertEqual(codeLevel, 2);
+}
+
+//
+// Tests for formatting request data & parsing response
+//
 - (void)testHandleSuccessJSONResponseWithData {
     NSDictionary *dataDict = @{@"foo": @2, @"bar": @"yes", @"baz": @YES};
     NSData *data = [NSJSONSerialization dataWithJSONObject:dataDict options:kNilOptions error:nil];
-
+    
     NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
-    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"1.1" headerFields:@{}];
+    NSDictionary *headers = @{@"Content-Type": @"application/json"};
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"1.1" headerFields:headers];
 
-    __block NSInteger returnedStatusCode;
     __block NSDictionary *returnedData;
-    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSInteger statusCode, NSDictionary *responseData) {
-        returnedStatusCode = statusCode;
+    __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
         returnedData = responseData;
     }];
     XCTAssertEqualObjects(returnedData, dataDict);
-    XCTAssertEqual(returnedStatusCode, 200);
+    XCTAssertEqualObjects(returnedError, nil);
+}
+
+- (void)testHandleInvalidJSONResponse {
+    NSData *data = [@"{\"this is not json" dataUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
+    NSDictionary *headers = @{@"Content-Type": @"application/json"};
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"1.1" headerFields:headers];
+
+    __block NSDictionary *returnedData;
+    __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, nil);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorResponseJSONCode);
+}
+
+- (void)testHandleNonJSONResponse {
+    NSData *data = [NSJSONSerialization dataWithJSONObject:@{} options:kNilOptions error:nil];
+    
+    NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
+    NSDictionary *headers = @{@"Content-Type": @"text/html"};
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"1.1" headerFields:headers];
+    
+    __block NSDictionary *returnedData;
+    __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, nil);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorResponseIsNotJSONCode);
+}
+
+- (void)testSendIdentifiedJSONRequestWithBadJSONfails {
+    // Object is invalid for JSON
+    __block NSError *returnedError;
+    __block NSDictionary *returnedDict;
+    [self.httpManager sendIdentifiedJSONRequestWithRoute:@"/foo" methodType:@"POST" params:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedDict = responseData;
+    }];
+    XCTAssertEqual([returnedDict count], 0);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorRequestJSONCode);
+}
+
+- (NSData *)failingDataWithJSONObject:(id)params options:(NSJSONWritingOptions)options error:(NSError **)error {
+    *error = [[NSError alloc] init];
+    return nil;
+}
+
+- (void)testSendIdentifiedJSONRequestWithInternalJSONFailure {
+    // Internal error when encoding JSON
+    // Swizzle the methods to force the rror
+    Method ogMethod = class_getClassMethod([NSJSONSerialization class], @selector(dataWithJSONObject:options:error:));
+    Method mockMethod = class_getInstanceMethod([self class], @selector(failingDataWithJSONObject:options:error:));
+    method_exchangeImplementations(ogMethod, mockMethod);
+    
+    // Make call to run test
+    __block NSError *returnedError = nil;
+    __block NSDictionary *returnedDict = nil;
+    [self.httpManager sendIdentifiedJSONRequestWithRoute:@"/foo" methodType:@"POST" params:@{} completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedDict = responseData;
+    }];
+    XCTAssertEqual([returnedDict count], 0);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorRequestJSONCode);
 }
 
 

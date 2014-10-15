@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
+#import "GRKConstants.h"
 #import "GRKHTTPManager.h"
 #import "GRKHTTPManager_Internal.h"
 
@@ -34,15 +35,30 @@
                                 methodType:(NSString *)methodType
                                     params:(NSDictionary *)params
                            completionBlock:(GRKHTTPCompletionBlock)completionBlock {
-    NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
-    
-    NSError *jsonSerializationError;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:&jsonSerializationError];
-    if (jsonSerializationError != nil) {
-        // TODO setup errors
-        NSLog(@"Oh no error serializing dict to json!");
+    // Parse JSON and handle errors
+    NSData *jsonData;
+    NSError *jsonParseError;
+    if ([NSJSONSerialization isValidJSONObject:params]) {
+        NSError *jsonSerializationError;
+        jsonData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:&jsonSerializationError];
+        if (jsonSerializationError != nil) {
+            NSDictionary *userInfo = @{};
+            jsonParseError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                        code:GRKHTTPErrorRequestJSONCode
+                                                    userInfo:userInfo];
+        }
+    } else {
+        NSDictionary *userInfo = @{};
+        jsonParseError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                    code:GRKHTTPErrorRequestJSONCode
+                                                userInfo:userInfo];
+    }
+    if (jsonParseError != nil) {
+        return completionBlock(jsonParseError, nil);
     }
     
+    // Build request
+    NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:url];
     [request setHTTPMethod:methodType];
@@ -51,6 +67,7 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     // [request setValue:self.applicationId forKey:@"X-GrowthKit-Application-ID"];
     
+    // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
             ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"Headers sent: %@", request.allHTTPHeaderFields);
@@ -67,13 +84,28 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
+    NSError *returnError;
+    NSDictionary *returnDict;
+    
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSInteger statusCode = [httpResponse statusCode];
+    NSString *contentType = [httpResponse.allHeaderFields valueForKey:@"Content-Type"];
 
-    NSError *serializationError = nil;
-    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
+    if ([contentType isEqualToString: @"application/json"]) {
+        NSError *serializationError;
+        returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
+        if (serializationError != nil) {
+            returnError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                     code:GRKHTTPErrorResponseJSONCode
+                                                 userInfo:@{}];
+        }
+    } else {
+        returnError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                 code:GRKHTTPErrorResponseIsNotJSONCode
+                                             userInfo:@{}];
+    }
 
-    completionBlock(statusCode, dataDict);
+    completionBlock(returnError, returnDict);
 }
 
 - (void)sendInvitesWithPersons:(NSArray *)persons

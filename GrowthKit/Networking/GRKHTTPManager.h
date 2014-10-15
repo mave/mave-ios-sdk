@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^GRKHTTPCompletionBlock)(NSInteger statusCode, NSDictionary *responseData);
+typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
+
 
 @interface GRKHTTPManager : NSObject <NSURLSessionDelegate>
 

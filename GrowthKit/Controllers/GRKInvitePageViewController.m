@@ -153,8 +153,8 @@
     NSLog(@"Sending invites");
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     NSString *message = self.inviteMessageViewController.view.textField.text;
-    [[GrowthKit sharedInstance].HTTPManager sendInvitesWithPersons:phones message:message completionBlock:^(NSInteger statusCode, NSDictionary *responseData) {
-        NSLog(@"Sent invites, response code: %li response: %@", (long)statusCode, responseData);
+    [[GrowthKit sharedInstance].HTTPManager sendInvitesWithPersons:phones message:message completionBlock:^(NSError *error, NSDictionary *responseData) {
+        NSLog(@"Sent invites, response code: %@ response: %@", error, responseData);
     }];
     
 }

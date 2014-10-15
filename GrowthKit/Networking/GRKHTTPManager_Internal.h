@@ -17,6 +17,8 @@
 
 @interface GRKHTTPManager ()
 
+@property Class NSJSONSerialization;
+
 + (NSDictionary *)defaultHeaders;
 
 // Send a JSON request to GrowthKit API, identified by the application ID

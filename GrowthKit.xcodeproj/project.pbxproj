@@ -34,6 +34,8 @@
 		C029282419E83189006AEE43 /* GrowthKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C029282319E83189006AEE43 /* GrowthKitTests.m */; };
 		C0425B8C19EDB955006641AB /* GRKInviteMessageViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B8B19EDB955006641AB /* GRKInviteMessageViewControllerTests.m */; };
 		C0425B8E19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */; };
+		C0425B9219EF1765006641AB /* GRKConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B9119EF1765006641AB /* GRKConstants.m */; };
+		C0425B9319EF2E5C006641AB /* GRKConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B9119EF1765006641AB /* GRKConstants.m */; };
 		DF8350DD60E6B488DFCC33B1 /* libPods-GrowthKitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D1D110D19FDCF9921E21868 /* libPods-GrowthKitTests.a */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +108,8 @@
 		C0425B8919ED6F69006641AB /* GRKHTTPManager_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRKHTTPManager_Internal.h; sourceTree = "<group>"; };
 		C0425B8B19EDB955006641AB /* GRKInviteMessageViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKInviteMessageViewControllerTests.m; sourceTree = "<group>"; };
 		C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKInvitePageViewControllerTests.m; sourceTree = "<group>"; };
+		C0425B9019EF1765006641AB /* GRKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKConstants.h; sourceTree = "<group>"; };
+		C0425B9119EF1765006641AB /* GRKConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKConstants.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +184,8 @@
 			children = (
 				C02927EF19E82C8D006AEE43 /* GrowthKit.h */,
 				C02927F019E82C8D006AEE43 /* GrowthKit.m */,
+				C0425B9019EF1765006641AB /* GRKConstants.h */,
+				C0425B9119EF1765006641AB /* GRKConstants.m */,
 				C02927EA19E82C24006AEE43 /* Controllers */,
 				C02927ED19E82C4B006AEE43 /* Models */,
 				C02927EC19E82C45006AEE43 /* Views */,
@@ -474,6 +480,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0425B9319EF2E5C006641AB /* GRKConstants.m in Sources */,
 				C02927FC19E82D03006AEE43 /* GRKInviteMessageViewController.m in Sources */,
 				C029279D19E823E2006AEE43 /* ViewController.m in Sources */,
 				C029280B19E82D18006AEE43 /* GRKABPersonCell.m in Sources */,
@@ -494,6 +501,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0425B9219EF1765006641AB /* GRKConstants.m in Sources */,
 				C022641619EC41010087FF37 /* GRKABPersonTests.m in Sources */,
 				C029282419E83189006AEE43 /* GrowthKitTests.m in Sources */,
 				C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */,
