@@ -160,6 +160,40 @@
     XCTAssertEqual([returnedError code], GRKHTTPErrorResponseIsNotJSONCode);
 }
 
+- (void)testHandle400LevelResponse {
+    // Authentication Errors and the like
+    NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
+    NSDictionary *headers = @{@"Content-Type": @"application/json"};
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:401 HTTPVersion:@"1.1" headerFields:headers];
+    
+    __block NSDictionary *returnedData;
+    __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, nil);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorResponse400LevelCode);
+}
+
+- (void)testHandle500LevelResponse {
+    // Authentication Errors and the like
+    NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
+    NSDictionary *headers = @{@"Content-Type": @"application/json"};
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:504 HTTPVersion:@"1.1" headerFields:headers];
+    
+    __block NSDictionary *returnedData;
+    __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, nil);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorResponse500LevelCode);
+}
+
 - (void)testSendIdentifiedJSONRequestWithBadJSONfails {
     // Object is invalid for JSON
     __block NSError *returnedError;
@@ -179,7 +213,7 @@
 
 - (void)testSendIdentifiedJSONRequestWithInternalJSONFailure {
     // Internal error when encoding JSON
-    // Swizzle the methods to force the rror
+    // Swizzle the methods to force the error
     Method ogMethod = class_getClassMethod([NSJSONSerialization class], @selector(dataWithJSONObject:options:error:));
     Method mockMethod = class_getInstanceMethod([self class], @selector(failingDataWithJSONObject:options:error:));
     method_exchangeImplementations(ogMethod, mockMethod);

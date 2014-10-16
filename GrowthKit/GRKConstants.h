@@ -13,3 +13,5 @@ extern NSString * const GRK_ERROR_DOMAIN;
 extern NSInteger const GRKHTTPErrorRequestJSONCode;
 extern NSInteger const GRKHTTPErrorResponseJSONCode;
 extern NSInteger const GRKHTTPErrorResponseIsNotJSONCode;
+extern NSInteger const GRKHTTPErrorResponse400LevelCode;
+extern NSInteger const GRKHTTPErrorResponse500LevelCode;

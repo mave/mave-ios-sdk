@@ -84,13 +84,27 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
-    NSError *returnError;
-    NSDictionary *returnDict;
+    // Handle failures with network
     
+    // Handle error codes
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSInteger statusCode = [httpResponse statusCode];
+    if (statusCode / 100 == 4) {
+        NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                             code:GRKHTTPErrorResponse400LevelCode userInfo:@{}];
+        return completionBlock(statusCodeError, nil);
+    }
+    if (statusCode / 100 == 5) {
+        NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                             code:GRKHTTPErrorResponse500LevelCode userInfo:@{}];
+        return completionBlock(statusCodeError, nil);
+        
+    }
+    
+    // Handle formatting & displaying response
+    NSError *returnError;
+    NSDictionary *returnDict;
     NSString *contentType = [httpResponse.allHeaderFields valueForKey:@"Content-Type"];
-
     if ([contentType isEqualToString: @"application/json"]) {
         NSError *serializationError;
         returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
@@ -104,8 +118,7 @@
                                                  code:GRKHTTPErrorResponseIsNotJSONCode
                                              userInfo:@{}];
     }
-
-    completionBlock(returnError, returnDict);
+    return completionBlock(returnError, returnDict);
 }
 
 - (void)sendInvitesWithPersons:(NSArray *)persons
