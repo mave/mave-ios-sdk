@@ -19,6 +19,7 @@
 #define MOCKITO_SHORTHAND
 #import <OCMockito/OCMockito.h>
 
+#import <OCMock/OCMock.h>
 #import <URLMock/URLMock.h>
 
 
@@ -63,14 +64,26 @@
 // Individual API Requests
 //
 - (void)testSendAppLaunchNotification {
-    GRKHTTPManager *mockHTTPManager = mock([GRKHTTPManager class]);
-    [mockHTTPManager sendApplicationLaunchNotification];
-    [verify(mockHTTPManager) foo];
+    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/launch"
+                                             methodType:@"POST"
+                                                 params:@{}
+                                        completionBlock:nil];
+    
+    [httpManager sendApplicationLaunchNotification];
+    
+    [mocked verify];
+    
+
+    
+//    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
+//    id mocked = [OCMockObject partialMockForObject:httpManager];
 //    MKTArgumentCaptor *argument = [[MKTArgumentCaptor alloc] init];
 //    [verify(mockHTTPManager) sendIdentifiedJSONRequestWithRoute:@"/launch"
 //                                                     methodType:@"POST"
 //                                                         params:@{}
-//                                                completionBlock:[argument capture]];
+//                                                completionBlock:nil];
 }
 
 

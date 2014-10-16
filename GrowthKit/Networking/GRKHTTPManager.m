@@ -149,18 +149,13 @@
                   completionBlock:completionBlock];
 }
 
-- (void)foo {
-    
-}
-
 - (void)sendApplicationLaunchNotification {
-    [self foo];
-//    NSString *launchRoute = @"/launch";
-//    NSDictionary *params = @{};
-//    [self sendIdentifiedJSONRequestWithRoute:launchRoute
-//                                  methodType:@"POST"
-//                                      params:params
-//                             completionBlock:nil];
+    NSString *launchRoute = @"/launch";
+    NSDictionary *params = @{};
+    [self sendIdentifiedJSONRequestWithRoute:launchRoute
+                                  methodType:@"POST"
+                                      params:params
+                             completionBlock:nil];
 }
 
 @end

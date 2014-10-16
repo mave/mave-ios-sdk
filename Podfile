@@ -7,5 +7,6 @@ end
 target "GrowthKitTests" do
   pod "Gizou"
   pod "OCMockito"
+  pod "OCMock"
   pod "URLMock"
 end

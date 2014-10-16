@@ -25,6 +25,5 @@ typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseDat
                completionBlock:(GRKHTTPCompletionBlock)completionBlock;
 
 - (void)sendApplicationLaunchNotification;
-- (void)foo;
 
 @end
