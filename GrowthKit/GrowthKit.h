@@ -30,6 +30,7 @@
           firstName:(NSString *)firstName
            lastName:(NSString *)lastName;
 
+- (void)registerAppOpen;
 - (void)registerNewUserSignup:(NSString *)userId
                     firstName:(NSString *)firstName
                      lastName:(NSString *)lastName

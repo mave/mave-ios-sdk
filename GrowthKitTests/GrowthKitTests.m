@@ -49,6 +49,14 @@
     XCTAssertEqualObjects(gk.currentUserLastName, @"Jones");
 }
 
+- (void)testReportAppOpen {
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    id httpManagerMock = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];
+    [[httpManagerMock expect] sendApplicationLaunchNotification];
+    [gk registerAppOpen];
+    [httpManagerMock verify];
+}
+
 - (void)testReportNewUserSignup {
     NSString *userId = @"100";
     NSString *firstName = @"Dan"; NSString *lastName = @"Foo";

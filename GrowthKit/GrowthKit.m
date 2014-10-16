@@ -49,6 +49,10 @@ static GrowthKit *sharedInstance = nil;
     _currentUserLastName = lastName;
 }
 
+- (void)registerAppOpen {
+    [self.HTTPManager sendApplicationLaunchNotification];
+}
+
 - (void)registerNewUserSignup:(NSString *)userId
                     firstName:(NSString *)firstName
                      lastName:(NSString *)lastName
