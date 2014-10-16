@@ -13,12 +13,6 @@
 #import "GRKHTTPManager.h"
 #import "GRKHTTPManager_Internal.h"
 
-#define HC_SHORTHAND
-#import <OCHamcrest/OCHamcrest.h>
-
-#define MOCKITO_SHORTHAND
-#import <OCMockito/OCMockito.h>
-
 #import <OCMock/OCMock.h>
 #import <URLMock/URLMock.h>
 

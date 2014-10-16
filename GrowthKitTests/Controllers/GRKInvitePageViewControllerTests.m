@@ -7,15 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "GrowthKit.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKHTTPManager.h"
-
-#define HC_SHORTHAND
-#import <OCHamcrest/OCHamcrest.h>
-
-#define MOCKITO_SHORTHAND
-#import <OCMockito/OCMockito.h>
 
 @interface GRKInvitePageViewControllerTests : XCTestCase
 
@@ -44,16 +39,14 @@
     vc.inviteMessageViewController.view.textField.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
-    GRKHTTPManager *mockHTTPManager = mock([GRKHTTPManager class]);
-    [GrowthKit sharedInstance].HTTPManager = mockHTTPManager;
+    id mockHTTPManager = [OCMockObject partialMockForObject:[GrowthKit sharedInstance].HTTPManager];
 
+    [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
+                                            message:inviteMessage
+                                       completionBlock:[OCMArg any]];
     [vc sendInvites:nil];
 
-    MKTArgumentCaptor *argument = [[MKTArgumentCaptor alloc] init];
-    [verify(mockHTTPManager) sendInvitesWithPersons:invitePhones
-                                            message:inviteMessage
-                                       completionBlock:[argument capture]];
-//    GRKHTTPCompletionBlock completionBlock = [argument value];
+    [mockHTTPManager verify];
 }
 
 
