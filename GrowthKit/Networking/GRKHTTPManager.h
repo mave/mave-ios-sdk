@@ -19,9 +19,12 @@ typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseDat
 
 - (GRKHTTPManager *)initWithApplicationId:(NSString *)applicationId;
 
-// Specific Requests the app will make
+// Specific API Requests the app will make
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
                completionBlock:(GRKHTTPCompletionBlock)completionBlock;
+
+- (void)sendApplicationLaunchNotification;
+- (void)foo;
 
 @end

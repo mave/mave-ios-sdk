@@ -12,7 +12,7 @@
 		C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* GRKABCollectionTests.m */; };
 		C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641319EC41010087FF37 /* GRKABTestDataFactory.m */; };
 		C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641519EC41010087FF37 /* GRKABTestDataTests.m */; };
-		C022641E19EC4FAC0087FF37 /* GRKNetworkManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */; };
+		C022641E19EC4FAC0087FF37 /* GRKHTTPManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641D19EC4FAC0087FF37 /* GRKHTTPManagerTests.m */; };
 		C029279719E823E2006AEE43 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279619E823E2006AEE43 /* main.m */; };
 		C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279919E823E2006AEE43 /* AppDelegate.m */; };
 		C029279D19E823E2006AEE43 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279C19E823E2006AEE43 /* ViewController.m */; };
@@ -68,7 +68,7 @@
 		C022641319EC41010087FF37 /* GRKABTestDataFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataFactory.m; sourceTree = "<group>"; };
 		C022641419EC41010087FF37 /* GRKABTestDataFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKABTestDataFactory.h; sourceTree = "<group>"; };
 		C022641519EC41010087FF37 /* GRKABTestDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTestDataTests.m; sourceTree = "<group>"; };
-		C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKNetworkManagerTests.m; sourceTree = "<group>"; };
+		C022641D19EC4FAC0087FF37 /* GRKHTTPManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKHTTPManagerTests.m; sourceTree = "<group>"; };
 		C029279119E823E2006AEE43 /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C029279519E823E2006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C029279619E823E2006AEE43 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 		C022641C19EC4F940087FF37 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				C022641D19EC4FAC0087FF37 /* GRKNetworkManagerTests.m */,
+				C022641D19EC4FAC0087FF37 /* GRKHTTPManagerTests.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -509,7 +509,7 @@
 				C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */,
 				C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */,
 				C0425B8C19EDB955006641AB /* GRKInviteMessageViewControllerTests.m in Sources */,
-				C022641E19EC4FAC0087FF37 /* GRKNetworkManagerTests.m in Sources */,
+				C022641E19EC4FAC0087FF37 /* GRKHTTPManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

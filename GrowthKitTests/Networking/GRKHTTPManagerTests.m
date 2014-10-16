@@ -22,13 +22,13 @@
 #import <URLMock/URLMock.h>
 
 
-@interface GRKNetworkManagerTests : XCTestCase
+@interface GRKHTTPManagerTests : XCTestCase
 
 @property (nonatomic, strong) GRKHTTPManager *httpManager;
 
 @end
 
-@implementation GRKNetworkManagerTests
+@implementation GRKHTTPManagerTests
 
 - (void)setUp {
     [super setUp];
@@ -59,6 +59,24 @@
                           expectedAdditionalHeaders);
 }
 
+//
+// Individual API Requests
+//
+- (void)testSendAppLaunchNotification {
+    GRKHTTPManager *mockHTTPManager = mock([GRKHTTPManager class]);
+    [mockHTTPManager sendApplicationLaunchNotification];
+    [verify(mockHTTPManager) foo];
+//    MKTArgumentCaptor *argument = [[MKTArgumentCaptor alloc] init];
+//    [verify(mockHTTPManager) sendIdentifiedJSONRequestWithRoute:@"/launch"
+//                                                     methodType:@"POST"
+//                                                         params:@{}
+//                                                completionBlock:[argument capture]];
+}
+
+
+//
+// Underlying request sending infrastructure
+//
 // TODO - DC: needs to capture the headers as well
 - (void)testSendIdentifiedJSONRequest {
     // Build Request
@@ -208,6 +226,20 @@
     XCTAssertEqualObjects(returnedData, nil);
     XCTAssertEqual([returnedError code], GRKHTTPErrorResponseNilCode);
 }
+
+- (void)testHandleResponseWithNilCompletionBlockDoesNothing {
+    NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
+    NSDictionary *headers = @{@"Content-Type": @"application/json"};
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:504 HTTPVersion:@"1.1" headerFields:headers];
+
+    // Shouldn't throw an error
+    [GRKHTTPManager handleJSONResponseWithData:data
+                                      response:response
+                                         error:nil
+                               completionBlock:nil];
+}
+
 
 - (void)testSendIdentifiedJSONRequestWithBadJSONfails {
     // Object is invalid for JSON

@@ -84,6 +84,12 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
+    // If Nil completion block, it was a "fire and forget" type request
+    // so we don't need to handle the response at all
+    if (completionBlock == nil) {
+        return;
+    }
+
     // Handle nil response
     if (response == nil) {
         NSError *nilResponseError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
@@ -129,6 +135,7 @@
     return completionBlock(returnError, returnDict);
 }
 
+// Individual wrappers for API requests
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
                completionBlock:(GRKHTTPCompletionBlock)completionBlock {
@@ -140,7 +147,20 @@
                        methodType:@"POST"
                            params:params
                   completionBlock:completionBlock];
+}
+
+- (void)foo {
     
+}
+
+- (void)sendApplicationLaunchNotification {
+    [self foo];
+//    NSString *launchRoute = @"/launch";
+//    NSDictionary *params = @{};
+//    [self sendIdentifiedJSONRequestWithRoute:launchRoute
+//                                  methodType:@"POST"
+//                                      params:params
+//                             completionBlock:nil];
 }
 
 @end
