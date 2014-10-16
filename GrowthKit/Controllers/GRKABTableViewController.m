@@ -31,7 +31,9 @@
     self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
 
     [GRKABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
          [self updateTableData:indexedData];
+        });
      }];
     return self;
 }
