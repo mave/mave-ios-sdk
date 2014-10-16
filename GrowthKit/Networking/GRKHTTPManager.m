@@ -172,4 +172,13 @@
                              completionBlock:nil];
 }
 
+- (void)sendInvitePageOpen:(NSString *)userID {
+    NSString *launchRoute = @"/invite_page_open";
+    NSDictionary *params = @{@"user_id": userID};
+    [self sendIdentifiedJSONRequestWithRoute:launchRoute
+                                  methodType:@"POST"
+                                      params:params
+                             completionBlock:nil];
+}
+
 @end

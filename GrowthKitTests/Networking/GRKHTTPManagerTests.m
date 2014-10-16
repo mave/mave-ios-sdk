@@ -57,7 +57,7 @@
 //
 // Individual API Requests
 //
-- (void)testSendAppLaunchNotification {
+- (void)testSendAppLaunchEvent {
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/launch"
@@ -68,7 +68,7 @@
     [mocked verify];
 }
 
-- (void)testSendUserSignupNotification {
+- (void)testSendUserSignupEvent {
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
     NSDictionary *expectedParams = @{@"user_id": @"1", @"email": @"foo@bar.com", @"phone": @"18085551234"};
@@ -77,6 +77,18 @@
                                                  params:expectedParams
                                         completionBlock:nil];
     [httpManager sendUserSignupNotificationWithUserID:@"1" email:@"foo@bar.com" phone:@"18085551234"];
+    [mocked verify];
+}
+
+- (void)testSendInvitePageOpenEvent {
+    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    NSDictionary *expectedParams = @{@"user_id": @"2"};
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invite_page_open"
+                                             methodType:@"POST"
+                                                 params:expectedParams
+                                        completionBlock:nil];
+    [httpManager sendInvitePageOpen:@"2"];
     [mocked verify];
 }
 

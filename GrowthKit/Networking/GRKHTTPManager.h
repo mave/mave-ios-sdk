@@ -28,5 +28,6 @@ typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseDat
 - (void)sendUserSignupNotificationWithUserID:(NSString *)userId
                                        email:(NSString *)email
                                        phone:(NSString *)phone;
+- (void)sendInvitePageOpen:(NSString *)userID;
 
 @end

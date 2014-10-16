@@ -49,5 +49,19 @@
     [mockHTTPManager verify];
 }
 
+- (void)testViewDidLoadSendsInvitePageViewedEvent {
+    NSString *userId = @"1239sdf";
+    [GrowthKit setupSharedInstanceWithApplicationID:@"appid1"];
+    [[GrowthKit sharedInstance]setUserData:userId firstName:@"Dan" lastName:@"Foo"];
+    GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
+    
+    id mockHTTPManager = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];
+    [[mockHTTPManager expect] sendInvitePageOpen:userId];
+    
+    [vc viewDidLoad];
+    
+    [mockHTTPManager verify];
+}
+
 
 @end

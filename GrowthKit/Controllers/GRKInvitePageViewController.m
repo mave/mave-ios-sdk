@@ -36,6 +36,10 @@
                       selector:@selector(deviceWillRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
+
+    // Register the viewed invite page event with our API
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk.HTTPManager sendInvitePageOpen:gk.currentUserId];
 }
 
 - (void)loadView {
