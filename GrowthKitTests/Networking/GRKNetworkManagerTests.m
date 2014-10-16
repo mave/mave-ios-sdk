@@ -194,6 +194,21 @@
     XCTAssertEqual([returnedError code], GRKHTTPErrorResponse500LevelCode);
 }
 
+- (void)testHandleNilResponse {
+    // Authentication Errors and the like
+    NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    NSHTTPURLResponse *response = nil;
+    
+    __block NSDictionary *returnedData;
+    __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, nil);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorResponseNilCode);
+}
+
 - (void)testSendIdentifiedJSONRequestWithBadJSONfails {
     // Object is invalid for JSON
     __block NSError *returnedError;

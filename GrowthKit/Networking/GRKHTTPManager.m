@@ -84,19 +84,27 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
-    // Handle failures with network
+    // Handle nil response
+    if (response == nil) {
+        NSError *nilResponseError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                               code:GRKHTTPErrorResponseNilCode
+                                                           userInfo:@{}];
+        return completionBlock(nilResponseError, nil);
+    }
     
     // Handle error codes
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSInteger statusCode = [httpResponse statusCode];
     if (statusCode / 100 == 4) {
         NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
-                                                             code:GRKHTTPErrorResponse400LevelCode userInfo:@{}];
+                                                              code:GRKHTTPErrorResponse400LevelCode
+                                                          userInfo:@{}];
         return completionBlock(statusCodeError, nil);
     }
     if (statusCode / 100 == 5) {
         NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
-                                                             code:GRKHTTPErrorResponse500LevelCode userInfo:@{}];
+                                                              code:GRKHTTPErrorResponse500LevelCode
+                                                          userInfo:@{}];
         return completionBlock(statusCodeError, nil);
         
     }
