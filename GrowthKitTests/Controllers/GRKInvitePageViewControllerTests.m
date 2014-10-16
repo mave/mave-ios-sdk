@@ -42,13 +42,13 @@
     NSArray *invitePhones = @[@"18085551234"];
     vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
     vc.inviteMessageViewController.view.textField.text = inviteMessage;
-    
+
     // Create a mock http manager & stub the singleton object to use it
     GRKHTTPManager *mockHTTPManager = mock([GRKHTTPManager class]);
     [GrowthKit sharedInstance].HTTPManager = mockHTTPManager;
-    
+
     [vc sendInvites:nil];
-    
+
     MKTArgumentCaptor *argument = [[MKTArgumentCaptor alloc] init];
     [verify(mockHTTPManager) sendInvitesWithPersons:invitePhones
                                             message:inviteMessage

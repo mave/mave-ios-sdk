@@ -49,6 +49,19 @@ static GrowthKit *sharedInstance = nil;
     _currentUserLastName = lastName;
 }
 
+- (void)registerNewUserSignup:(NSString *)userId
+                    firstName:(NSString *)firstName
+                     lastName:(NSString *)lastName
+                        email:(NSString *)email
+                        phone:(NSString *)phone {
+    self.currentUserId = userId;
+    self.currentUserFirstName = firstName;
+    self.currentUserLastName = lastName;
+    [self.HTTPManager sendUserSignupNotificationWithUserID:userId
+                                                     email:email
+                                                     phone:phone];
+}
+
 
 - (void)presentInvitePage:(UIViewController *)sourceController {
     GRKInvitePageViewController *ipvc = [[GRKInvitePageViewController alloc] init];

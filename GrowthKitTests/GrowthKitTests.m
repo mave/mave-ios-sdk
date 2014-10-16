@@ -7,7 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "GrowthKit.h"
+#import "GRKHTTPManager.h"
 
 @interface GrowthKitTests : XCTestCase
 
@@ -17,7 +19,8 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    // reset shared instance
+    [GrowthKit setupSharedInstanceWithApplicationID:nil];
 }
 
 - (void)tearDown {
@@ -44,6 +47,27 @@
     XCTAssertEqualObjects(gk.currentUserId, @"123");
     XCTAssertEqualObjects(gk.currentUserFirstName, @"Foo");
     XCTAssertEqualObjects(gk.currentUserLastName, @"Jones");
+}
+
+- (void)testReportNewUserSignup {
+    NSString *userId = @"100";
+    NSString *firstName = @"Dan"; NSString *lastName = @"Foo";
+    NSString *email = @"dan@example.com"; NSString *phone = @"18085551234";
+
+    // Verify the API request is sent
+    id mockManager = [OCMockObject mockForClass:[GRKHTTPManager class]];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    gk.HTTPManager = mockManager;
+    [[mockManager expect] sendUserSignupNotificationWithUserID:userId email:email phone:phone];
+
+    [gk registerNewUserSignup:userId firstName:firstName lastName:lastName email:email phone:phone];
+
+    [mockManager verify];
+
+    // Verify the user data fields are set on the object
+    XCTAssertEqualObjects(gk.currentUserId, userId);
+    XCTAssertEqualObjects(gk.currentUserFirstName, firstName);
+    XCTAssertEqualObjects(gk.currentUserLastName, lastName);
 }
 
 @end
