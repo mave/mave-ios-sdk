@@ -11,7 +11,7 @@
 @implementation GRKABPersonCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     return self;
 }
@@ -20,8 +20,10 @@
     self.textLabel.text = [person fullName];
     if (person.selected) {
         self.accessoryType = UITableViewCellAccessoryCheckmark;
+        self.detailTextLabel.text = [person bestPhone];
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
+        self.detailTextLabel.text = nil;
     }
 }
 
