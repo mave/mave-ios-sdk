@@ -70,20 +70,20 @@
                                              methodType:@"POST"
                                                  params:@{}
                                         completionBlock:nil];
-    
     [httpManager sendApplicationLaunchNotification];
-    
     [mocked verify];
-    
+}
 
-    
-//    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
-//    id mocked = [OCMockObject partialMockForObject:httpManager];
-//    MKTArgumentCaptor *argument = [[MKTArgumentCaptor alloc] init];
-//    [verify(mockHTTPManager) sendIdentifiedJSONRequestWithRoute:@"/launch"
-//                                                     methodType:@"POST"
-//                                                         params:@{}
-//                                                completionBlock:nil];
+- (void)testSendUserSignupNotification {
+    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    NSDictionary *expectedParams = @{@"user_id": @"1", @"email": @"foo@bar.com", @"phone": @"18085551234"};
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
+                                             methodType:@"POST"
+                                                 params:expectedParams
+                                        completionBlock:nil];
+    [httpManager sendUserSignupNotificationWithUserID:@"1" email:@"foo@bar.com" phone:@"18085551234"];
+    [mocked verify];
 }
 
 

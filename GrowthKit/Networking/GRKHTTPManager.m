@@ -158,4 +158,18 @@
                              completionBlock:nil];
 }
 
+- (void)sendUserSignupNotificationWithUserID:(NSString *)userId
+                                       email:(NSString *)email
+                                       phone:(NSString *)phone {
+    NSString *launchRoute = @"/users";
+    NSDictionary *params = @{@"user_id": userId,
+                             @"email": email,
+                             @"phone": phone,
+                           };
+    [self sendIdentifiedJSONRequestWithRoute:launchRoute
+                                  methodType:@"POST"
+                                      params:params
+                             completionBlock:nil];
+}
+
 @end
