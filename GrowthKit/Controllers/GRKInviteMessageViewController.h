@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "GRKInviteMessageView.h"
+#import "GRKInviteSendingInProgressView.h"
 
 @interface GRKInviteMessageViewController : NSObject
 
-@property GRKInviteMessageView *view;
+@property UIView *view;
+@property GRKInviteMessageView *messageView;
+@property GRKInviteSendingInProgressView *sendingInProgressView;
 
 - (GRKInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame;
+-(void)switchToSendingInProgressView:(UIView *)superView;
 
 @end

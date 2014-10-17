@@ -36,6 +36,7 @@
 		C0425B8E19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */; };
 		C0425B9219EF1765006641AB /* GRKConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B9119EF1765006641AB /* GRKConstants.m */; };
 		C0425B9319EF2E5C006641AB /* GRKConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = C0425B9119EF1765006641AB /* GRKConstants.m */; };
+		C0F4C8EE19F162B80003D209 /* GRKInviteSendingInProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0F4C8ED19F162B80003D209 /* GRKInviteSendingInProgressView.m */; };
 		DF8350DD60E6B488DFCC33B1 /* libPods-GrowthKitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D1D110D19FDCF9921E21868 /* libPods-GrowthKitTests.a */; };
 /* End PBXBuildFile section */
 
@@ -110,6 +111,8 @@
 		C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKInvitePageViewControllerTests.m; sourceTree = "<group>"; };
 		C0425B9019EF1765006641AB /* GRKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKConstants.h; sourceTree = "<group>"; };
 		C0425B9119EF1765006641AB /* GRKConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKConstants.m; sourceTree = "<group>"; };
+		C0F4C8EC19F162B80003D209 /* GRKInviteSendingInProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKInviteSendingInProgressView.h; sourceTree = "<group>"; };
+		C0F4C8ED19F162B80003D209 /* GRKInviteSendingInProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKInviteSendingInProgressView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,6 +279,8 @@
 				C029280819E82D18006AEE43 /* GRKABPersonCell.m */,
 				C029280919E82D18006AEE43 /* GRKInviteMessageView.h */,
 				C029280A19E82D18006AEE43 /* GRKInviteMessageView.m */,
+				C0F4C8EC19F162B80003D209 /* GRKInviteSendingInProgressView.h */,
+				C0F4C8ED19F162B80003D209 /* GRKInviteSendingInProgressView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -493,6 +498,7 @@
 				C029280C19E82D18006AEE43 /* GRKInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* GRKABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
+				C0F4C8EE19F162B80003D209 /* GRKInviteSendingInProgressView.m in Sources */,
 				C029280419E82D0F006AEE43 /* GRKABCollection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

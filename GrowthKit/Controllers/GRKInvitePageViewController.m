@@ -117,9 +117,9 @@
     self.ABTableViewController = [[GRKABTableViewController alloc] initAndCreateTableViewWithFrame:tvf];
     self.inviteMessageViewController = [[GRKInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
     
-    [self.inviteMessageViewController.view.sendButton addTarget:self
-                                                  action:@selector(sendInvites:)
-                                        forControlEvents:UIControlEventTouchUpInside];
+    [self.inviteMessageViewController.messageView.sendButton addTarget:self
+                                                           action:@selector(sendInvites:)
+                                                 forControlEvents:UIControlEventTouchUpInside];
      
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageViewController.view];
@@ -156,11 +156,11 @@
 - (void)sendInvites:(id)sender {
     NSLog(@"Sending invites");
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
-    NSString *message = self.inviteMessageViewController.view.textField.text;
+    NSString *message = self.inviteMessageViewController.messageView.textField.text;
     [[GrowthKit sharedInstance].HTTPManager sendInvitesWithPersons:phones message:message completionBlock:^(NSError *error, NSDictionary *responseData) {
         NSLog(@"Sent invites, response code: %@ response: %@", error, responseData);
     }];
-    
+    [self.inviteMessageViewController switchToSendingInProgressView:self.view];
 }
 
 @end
