@@ -30,6 +30,22 @@
     [self.view removeFromSuperview];
     self.view = self.sendingInProgressView;
     [superView addSubview:self.view];
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.05
+                                     target:self
+                                   selector:@selector(updateProgressViewFromTimer:)
+                                   userInfo:@{}
+                                    repeats:YES];
+    
 }
+
+- (void)updateProgressViewFromTimer:(NSTimer *)timer {
+    float newProgress = self.sendingInProgressView.progressView.progress + 0.02;
+    [self.sendingInProgressView.progressView setProgress:newProgress animated:YES];
+    if (newProgress >= 1.0) {
+        [timer invalidate];
+    }
+}
+
 
 @end
