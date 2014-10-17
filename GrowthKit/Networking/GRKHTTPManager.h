@@ -11,7 +11,7 @@
 typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
 
 
-@interface GRKHTTPManager : NSObject <NSURLSessionDelegate>
+@interface GRKHTTPManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate>
 
 @property (nonatomic, readonly) NSString *applicationId;
 @property (nonatomic, readonly) NSString *baseURL;

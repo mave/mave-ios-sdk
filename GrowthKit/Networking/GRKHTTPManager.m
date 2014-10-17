@@ -16,12 +16,14 @@
     if (self = [super init]) {
         _applicationId = applicationId;
         _baseURL = @"http://devaccounts.growthkit.io/v1.0";
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-         configuration.HTTPAdditionalHeaders = [[self class] defaultHeaders];
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        sessionConfig.HTTPAdditionalHeaders = [[self class] defaultHeaders];
+        sessionConfig.timeoutIntervalForRequest = 5.0;
+        sessionConfig.timeoutIntervalForResource = 5.0;
         
         NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
         delegateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-        _session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:delegateQueue];
+        _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
     }
     return self;
 }
@@ -73,14 +75,14 @@
     // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
             ^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSLog(@"Headers sent: %@", request.allHTTPHeaderFields);
-        
+//        NSLog(@"Headers sent: %@", request.allHTTPHeaderFields);
         [[self class] handleJSONResponseWithData:data
                                         response:response
                                            error:error
                                  completionBlock:completionBlock];
     }];
     [task resume];
+    return;
 }
 
 + (void)handleJSONResponseWithData:(NSData *)data
@@ -138,7 +140,20 @@
     return completionBlock(returnError, returnDict);
 }
 
-// Individual wrappers for API requests
+//
+// Delegate methods
+//
+-(void)URLSession:(NSURLSession *)session
+             task:(NSURLSessionTask *)task
+  didSendBodyData:(int64_t)bytesSent
+   totalBytesSent:(int64_t)totalBytesSent
+totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+    NSLog(@"Did send bohhhhhdy data");
+}
+
+//
+// Wrappers for the various API requests
+//
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
                completionBlock:(GRKHTTPCompletionBlock)completionBlock {

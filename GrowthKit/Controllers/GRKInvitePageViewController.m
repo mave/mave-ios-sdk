@@ -157,14 +157,23 @@
     NSLog(@"Sending invites");
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     NSString *message = self.inviteMessageViewController.messageView.textField.text;
+    if ([phones count] == 0) {
+        NSLog(@"Pressed Send but no recipients selected");
+        return;
+    }
+    
     GRKHTTPManager *httpManager = [GrowthKit sharedInstance].HTTPManager;
-
-    [self.inviteMessageViewController switchToSendingInProgressView:self.view];
-    [httpManager sendInvitesWithPersons:phones
-                                message:message
-                        completionBlock:^(NSError *error, NSDictionary *responseData) {
-        NSLog(@"Sent invites, response code: %@ response: %@", error, responseData);
+    [httpManager sendInvitesWithPersons:phones message:message completionBlock:^(NSError *error, NSDictionary *responseData) {
+        if (error != nil) {
+            NSLog(@"Invites failed to send, error: %@, response: %@", error, responseData);
+        } else {
+            NSLog(@"Invites sent! response: %@", responseData);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
+        });
     }];
+    [self.inviteMessageViewController switchToSendingInProgressView:self.view];
 }
 
 @end
