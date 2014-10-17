@@ -20,23 +20,24 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
 - (void)testSendInvites {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"1231234"];
+    [GrowthKit sharedInstance].currentUserId = @"foo";
     GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
-    [vc createContainerAndChildViews];
+    [vc loadView];
+    [vc viewDidLoad];
     
     // Setup content for invites
     NSString *inviteMessage = @"This was the text typed in";
     NSArray *invitePhones = @[@"18085551234"];
     vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
-    vc.inviteMessageViewController.view.textField.text = inviteMessage;
+    vc.inviteMessageViewController.messageView.textField.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
     id mockHTTPManager = [OCMockObject partialMockForObject:[GrowthKit sharedInstance].HTTPManager];
@@ -44,7 +45,7 @@
     [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
                                        completionBlock:[OCMArg any]];
-    [vc sendInvites:nil];
+    [vc sendInvites];
 
     [mockHTTPManager verify];
 }

@@ -18,7 +18,7 @@
 
 - (GRKInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame;
 
-- (void)switchToSendingInProgressView:(UIView *)superView; // updatesFromSession:(NSURLSession *)session;
+- (void)switchToSendingInProgressView:(UIView *)superView;
 - (void)updateProgressViewFromTimer:(NSTimer *)timer;
 
 @end

@@ -20,7 +20,7 @@
 - (void)setContainerAndChildFramesWithKeyboardSize:(CGSize)kbSize;
 
 // Other business logic
-- (void)sendInvites:(id)sender;
+- (void)sendInvites;
 
 // This is called when the view controller is being dismissed, either
 // b/c we're done sending invites or the user hit cancel

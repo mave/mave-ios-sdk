@@ -118,7 +118,7 @@
     self.inviteMessageViewController = [[GRKInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
     
     [self.inviteMessageViewController.messageView.sendButton addTarget:self
-                                                           action:@selector(sendInvites:)
+                                                           action:@selector(sendInvites)
                                                  forControlEvents:UIControlEventTouchUpInside];
      
     [containerView addSubview:self.ABTableViewController.tableView];
@@ -153,12 +153,16 @@
     [self cleanupForDismiss];
 }
 
-- (void)sendInvites:(id)sender {
+- (void)sendInvites {
     NSLog(@"Sending invites");
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     NSString *message = self.inviteMessageViewController.messageView.textField.text;
+    GRKHTTPManager *httpManager = [GrowthKit sharedInstance].HTTPManager;
+
     [self.inviteMessageViewController switchToSendingInProgressView:self.view];
-    [[GrowthKit sharedInstance].HTTPManager sendInvitesWithPersons:phones message:message completionBlock:^(NSError *error, NSDictionary *responseData) {
+    [httpManager sendInvitesWithPersons:phones
+                                message:message
+                        completionBlock:^(NSError *error, NSDictionary *responseData) {
         NSLog(@"Sent invites, response code: %@ response: %@", error, responseData);
     }];
 }

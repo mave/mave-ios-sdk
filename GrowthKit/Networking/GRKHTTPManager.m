@@ -54,7 +54,10 @@
                                                 userInfo:userInfo];
     }
     if (jsonParseError != nil) {
-        return completionBlock(jsonParseError, nil);
+        if (completionBlock != nil) {
+            completionBlock(jsonParseError, nil);
+        }
+        return;
     }
     
     // Build request
