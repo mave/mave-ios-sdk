@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AddressBook/AddressBook.h>
 #import "GrowthKit.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKABTableViewController.h"
+#import "GRKABCollection.h"
 #import "GRKInviteMessageViewController.h"
 
 @interface GRKInvitePageViewController ()
@@ -46,8 +48,37 @@
     [super loadView];
     NSLog(@"Invite Page loadView!");
     [self setupNavgationBar];
-//    self.view = [self createContainerAndChildViews];
-    self.view = [self createEmptyFallbackView];
+    [self determineAndSetViewBasedOnABPermissions];
+}
+
+- (void)determineAndSetViewBasedOnABPermissions {
+    // If address book permission already granted, load contacts view right now
+    ABAuthorizationStatus addrBookStatus = ABAddressBookGetAuthorizationStatus();
+    if (addrBookStatus == kABAuthorizationStatusAuthorized) {
+        self.view = [self createAddressBookInviteViewWithData:nil];
+        [GRKABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.ABTableViewController updateTableData:indexedData];
+            });
+         }];
+
+    // If status not determined, prompt for permission then load data
+    // If permission not granted, leave blank for now
+    } else if (addrBookStatus == kABAuthorizationStatusNotDetermined) {
+        self.view = [self createEmptyFallbackView];
+        [GRKABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
+            if ([indexedData count] > 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                     self.view = [self createAddressBookInviteViewWithData:indexedData];
+                });
+            }
+         }];
+
+    // If status already denied, leave blank page for now
+    } else if (addrBookStatus == kABAuthorizationStatusDenied ||
+               addrBookStatus == kABAuthorizationStatusRestricted) {
+        self.view = [self createEmptyFallbackView];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,18 +89,16 @@
 
 - (void)keyboardWillShow:(NSNotification *)notification {
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    [self setContainerAndChildFramesWithKeyboardSize:kbSize];
+    [self setOwnAndSubviewFramesWithKeyboardSize:kbSize];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGSize zeroSize = CGSizeMake(kbSize.width, 0);
-    [self setContainerAndChildFramesWithKeyboardSize:zeroSize];
+    [self setOwnAndSubviewFramesWithKeyboardSize:CGSizeMake(0, 0)];
 }
 
 
 - (void)deviceWillRotate:(NSNotification *)notification {
-    [self setContainerAndChildFramesWithKeyboardSize:CGSizeMake(0, 0)];
+    [self setOwnAndSubviewFramesWithKeyboardSize:CGSizeMake(0, 0)];
 }
 
 
@@ -101,7 +130,7 @@
 
     float inviteViewHeight = 70;
     float tableViewHeight = appFrameSize.height - inviteViewHeight - kbSize.height + extraVerticalPadding;
-    
+
     // Set pointers to return multi
     *containerFrame = CGRectMake(0, 0, appFrameSize.width, appFrameSize.height);
     *tableViewFrame = CGRectMake(0, 0, appFrameSize.width, tableViewHeight);
@@ -119,7 +148,7 @@
     return view;
 }
 
-- (UIView *)createContainerAndChildViews {
+- (UIView *)createAddressBookInviteViewWithData:(NSDictionary *)indexedAddressBook {
     CGRect cvf, tvf, imvf;
     [[self class]computeChildFramesWithKeyboardSize:CGSizeMake(0, 0)
                                createContainerFrame:&cvf
@@ -127,20 +156,20 @@
                              inviteMessageViewFrame:&imvf];
     UIView *containerView = [[UIView alloc] initWithFrame:cvf];
 
-    self.ABTableViewController = [[GRKABTableViewController alloc] initAndCreateTableViewWithFrame:tvf];
+    self.ABTableViewController = [[GRKABTableViewController alloc] initWithFrame:tvf andData:indexedAddressBook];
     self.inviteMessageViewController = [[GRKInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
-    
+
     [self.inviteMessageViewController.messageView.sendButton addTarget:self
                                                            action:@selector(sendInvites)
                                                  forControlEvents:UIControlEventTouchUpInside];
-     
+
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageViewController.view];
     
     return containerView;
 }
 
-- (void)setContainerAndChildFramesWithKeyboardSize:(CGSize)kbSize {
+- (void)setOwnAndSubviewFramesWithKeyboardSize:(CGSize)kbSize {
     CGRect cvf, tvf, imvf;
     [[self class]computeChildFramesWithKeyboardSize:kbSize
                                createContainerFrame:&cvf

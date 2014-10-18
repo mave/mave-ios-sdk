@@ -13,7 +13,7 @@
 @property UITableView *tableView;
 @property (strong, nonatomic) NSMutableSet *selectedPhoneNumbers;
 
-- (GRKABTableViewController *)initAndCreateTableViewWithFrame:(CGRect)frame;
+- (instancetype)initWithFrame:(CGRect)frame andData:(NSDictionary *)indexedABData;
 
 - (void)updateTableData:(NSDictionary *)data;
 

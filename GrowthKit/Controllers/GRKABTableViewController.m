@@ -20,7 +20,7 @@
     NSArray *tableSections;
 }
 
-- (GRKABTableViewController *)initAndCreateTableViewWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame andData:(NSDictionary *)indexedABData {
     self = [super init];
     self.tableView = [[UITableView alloc] initWithFrame:frame];
     //    invitePageTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -29,12 +29,7 @@
     [self.tableView registerClass:[GRKABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
     
     self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
-
-    [GRKABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-         [self updateTableData:indexedData];
-        });
-     }];
+    [self updateTableData:indexedABData];
     return self;
 }
 

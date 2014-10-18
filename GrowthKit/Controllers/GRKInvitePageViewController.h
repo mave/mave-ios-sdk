@@ -16,10 +16,10 @@
 @property (nonatomic) GRKABTableViewController *ABTableViewController;
 @property (nonatomic) GRKInviteMessageViewController *inviteMessageViewController;
 
-- (UIView *)createContainerAndChildViews;
-- (void)setContainerAndChildFramesWithKeyboardSize:(CGSize)kbSize;
-
+- (UIView *)createAddressBookInviteViewWithData:(NSDictionary *)indexedAddressBook;
 - (UIView *)createEmptyFallbackView;
+- (void)setOwnAndSubviewFramesWithKeyboardSize:(CGSize)kbSize;
+- (void)determineAndSetViewBasedOnABPermissions;
 
 // Other business logic
 - (void)sendInvites;
