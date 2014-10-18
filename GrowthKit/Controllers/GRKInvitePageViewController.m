@@ -46,7 +46,8 @@
     [super loadView];
     NSLog(@"Invite Page loadView!");
     [self setupNavgationBar];
-    self.view = [self createContainerAndChildViews];
+//    self.view = [self createContainerAndChildViews];
+    self.view = [self createEmptyFallbackView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,7 +90,8 @@
                       createContainerFrame:(CGRect *)containerFrame
                             tableViewFrame:(CGRect *)tableViewFrame
                     inviteMessageViewFrame:(CGRect *)inviteMessageViewFrame {
-    CGSize appFrameSize = [[UIScreen mainScreen] applicationFrame].size;
+    *containerFrame = [self fullAppFrame];
+    CGSize appFrameSize = containerFrame->size;
 
     float extraVerticalPadding = 0;
     if (![UIApplication sharedApplication].statusBarHidden) {
@@ -104,6 +106,17 @@
     *containerFrame = CGRectMake(0, 0, appFrameSize.width, appFrameSize.height);
     *tableViewFrame = CGRectMake(0, 0, appFrameSize.width, tableViewHeight);
     *inviteMessageViewFrame = CGRectMake(0, tableViewHeight, appFrameSize.width, inviteViewHeight);
+}
+
++ (CGRect)fullAppFrame {
+    CGSize appFrameSize = [[UIScreen mainScreen] applicationFrame].size;
+    return CGRectMake(0, 0, appFrameSize.width, appFrameSize.height);
+}
+
+- (UIView *)createEmptyFallbackView {
+    UIView *view = [[UIView alloc] initWithFrame:[[self class] fullAppFrame]];
+    [view setBackgroundColor:[UIColor whiteColor]];
+    return view;
 }
 
 - (UIView *)createContainerAndChildViews {

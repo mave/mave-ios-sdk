@@ -19,6 +19,8 @@
 - (UIView *)createContainerAndChildViews;
 - (void)setContainerAndChildFramesWithKeyboardSize:(CGSize)kbSize;
 
+- (UIView *)createEmptyFallbackView;
+
 // Other business logic
 - (void)sendInvites;
 
