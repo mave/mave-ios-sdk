@@ -16,9 +16,13 @@
 @property (nonatomic) GRKABTableViewController *ABTableViewController;
 @property (nonatomic) GRKInviteMessageViewController *inviteMessageViewController;
 
+// Helpers for keeping track of keyboard for frame resizing
+@property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame
+@property (atomic) BOOL isKeyboardVisible;
+
 - (UIView *)createAddressBookInviteViewWithData:(NSDictionary *)indexedAddressBook;
 - (UIView *)createEmptyFallbackView;
-- (void)setOwnAndSubviewFramesWithKeyboardSize:(CGSize)kbSize;
+- (void)setOwnAndSubviewFrames;
 - (void)determineAndSetViewBasedOnABPermissions;
 
 // Other business logic

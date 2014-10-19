@@ -20,22 +20,29 @@
 
 @implementation GRKInvitePageViewController
 
+
+- (void)loadView {
+    [super loadView];
+    NSLog(@"Invite Page loadView!");
+    // On load keyboard is hidden
+    self.isKeyboardVisible = NO;
+    self.keyboardFrame = [self keyboardFrameWhenHidden];
+
+    [self setupNavgationBar];
+    [self determineAndSetViewBasedOnABPermissions];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"Invite Page viewDidLoad");
-    // Do any additional setup after loading the view.
 
+    // Subscribe to events that change frame size
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self
-                      selector:@selector(keyboardWillShow:)
-                          name:UIKeyboardWillShowNotification
+                      selector:@selector(keyboardWillChangeFrame:)
+                          name:UIKeyboardWillChangeFrameNotification
                         object:nil];
     [defaultCenter addObserver:self
-                      selector:@selector(keyboardWillHide:)
-                          name:UIKeyboardWillHideNotification
-                        object:nil];
-    [defaultCenter addObserver:self
-                      selector:@selector(deviceWillRotate:)
+                      selector:@selector(deviceDidRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
 
@@ -44,12 +51,59 @@
     [gk.HTTPManager sendInvitePageOpen:gk.currentUserId];
 }
 
-- (void)loadView {
-    [super loadView];
-    NSLog(@"Invite Page loadView!");
-    [self setupNavgationBar];
-    [self determineAndSetViewBasedOnABPermissions];
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
+
+- (void)dismissAfterCancel:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self cleanupForDismiss];
+}
+
+- (void)cleanupForDismiss {
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter removeObserver:self
+                             name:UIKeyboardWillChangeFrameNotification
+                           object:nil];
+    [defaultCenter removeObserver:self
+                             name:UIDeviceOrientationDidChangeNotification
+                           object:nil];
+}
+
+//
+// Handle frame changing events
+//
+
+// returns what the frame would be for a hidden keyboard (origin below app frame)
+// based on  current application frame
+- (CGRect)keyboardFrameWhenHidden {
+    CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+    return CGRectMake(0, appFrame.origin.y + appFrame.size.height, 0, 0);
+}
+
+- (void)deviceDidRotate:(NSNotification *)notification {
+    // If keyboard is visible during rotate, the keyboard frame change event will
+    // resize our view correctly so no need to do anything here
+    if (!self.isKeyboardVisible) {
+        self.keyboardFrame = [self keyboardFrameWhenHidden];
+        [self setOwnAndSubviewFrames];
+    }
+}
+
+- (void)keyboardWillChangeFrame:(NSNotification *)notification {
+    self.keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    if (self.keyboardFrame.origin.y == [self keyboardFrameWhenHidden].origin.y) {
+        self.isKeyboardVisible = NO;
+    } else {
+        self.isKeyboardVisible = YES;
+    }
+    [self setOwnAndSubviewFrames];
+}
+
+//
+// Load the correct view(s) with data
+//
 
 - (void)determineAndSetViewBasedOnABPermissions {
     // If address book permission already granted, load contacts view right now
@@ -81,76 +135,39 @@
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
++ (void)computeChildFramesWithKeyboardFrame:(CGRect)kbFrame
+                       createContainerFrame:(CGRect *)containerFrame
+                             tableViewFrame:(CGRect *)tableViewFrame
+                     inviteMessageViewFrame:(CGRect *)inviteMessageViewFrame {
+    // Our container frame should go from top of screen (will be overlapped by status bar if it's visible)
+    // to the top of the keyboard, and full width of application frame
+    CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+    *containerFrame = CGRectMake(0,
+                                 0,
+                                 appFrame.origin.x + appFrame.size.width,
+                                 kbFrame.origin.y);
 
-
-- (void)keyboardWillShow:(NSNotification *)notification {
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    [self setOwnAndSubviewFramesWithKeyboardSize:kbSize];
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification {
-    [self setOwnAndSubviewFramesWithKeyboardSize:CGSizeMake(0, 0)];
-}
-
-
-- (void)deviceWillRotate:(NSNotification *)notification {
-    [self setOwnAndSubviewFramesWithKeyboardSize:CGSizeMake(0, 0)];
-}
-
-
-- (void)cleanupForDismiss {
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter removeObserver:self
-                             name:UIKeyboardWillShowNotification
-                           object:nil];
-    [defaultCenter removeObserver:self
-                             name:UIKeyboardWillHideNotification
-                           object:nil];
-    [defaultCenter removeObserver:self
-                             name:UIDeviceOrientationDidChangeNotification
-                           object:nil];
-}
-
-+ (void)computeChildFramesWithKeyboardSize:(CGSize)kbSize
-                      createContainerFrame:(CGRect *)containerFrame
-                            tableViewFrame:(CGRect *)tableViewFrame
-                    inviteMessageViewFrame:(CGRect *)inviteMessageViewFrame {
-    *containerFrame = [self fullAppFrame];
-    CGSize appFrameSize = containerFrame->size;
-
-    float extraVerticalPadding = 0;
-    if (![UIApplication sharedApplication].statusBarHidden) {
-        // 20 is to account for the top menu bar which always overlays your app in ios7+
-        extraVerticalPadding = 20;
-    }
-
-    float inviteViewHeight = 70;
-    float tableViewHeight = appFrameSize.height - inviteViewHeight - kbSize.height + extraVerticalPadding;
-
-    // Set pointers to return multi
-    *containerFrame = CGRectMake(0, 0, appFrameSize.width, appFrameSize.height);
-    *tableViewFrame = CGRectMake(0, 0, appFrameSize.width, tableViewHeight);
-    *inviteMessageViewFrame = CGRectMake(0, tableViewHeight, appFrameSize.width, inviteViewHeight);
-}
-
-+ (CGRect)fullAppFrame {
-    CGSize appFrameSize = [[UIScreen mainScreen] applicationFrame].size;
-    return CGRectMake(0, 0, appFrameSize.width, appFrameSize.height);
+    // Invite and table view fill the container frame vertically
+    float inviteViewHeight = 70; // Temporarily hard-coded
+    *tableViewFrame = CGRectMake(containerFrame->origin.x,
+                                 containerFrame->origin.y,
+                                 containerFrame->size.width,
+                                 containerFrame->size.height - inviteViewHeight);
+    *inviteMessageViewFrame = CGRectMake(containerFrame->origin.x,
+                                         tableViewFrame->origin.y + tableViewFrame->size.height,
+                                         containerFrame->size.width,
+                                         inviteViewHeight);
 }
 
 - (UIView *)createEmptyFallbackView {
-    UIView *view = [[UIView alloc] initWithFrame:[[self class] fullAppFrame]];
+    UIView *view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     [view setBackgroundColor:[UIColor whiteColor]];
     return view;
 }
 
 - (UIView *)createAddressBookInviteViewWithData:(NSDictionary *)indexedAddressBook {
     CGRect cvf, tvf, imvf;
-    [[self class]computeChildFramesWithKeyboardSize:CGSizeMake(0, 0)
+    [[self class]computeChildFramesWithKeyboardFrame:self.keyboardFrame
                                createContainerFrame:&cvf
                                      tableViewFrame:&tvf
                              inviteMessageViewFrame:&imvf];
@@ -169,12 +186,12 @@
     return containerView;
 }
 
-- (void)setOwnAndSubviewFramesWithKeyboardSize:(CGSize)kbSize {
+- (void)setOwnAndSubviewFrames {
     CGRect cvf, tvf, imvf;
-    [[self class]computeChildFramesWithKeyboardSize:kbSize
-                               createContainerFrame:&cvf
-                                     tableViewFrame:&tvf
-                             inviteMessageViewFrame:&imvf];
+    [[self class]computeChildFramesWithKeyboardFrame:self.keyboardFrame
+                                createContainerFrame:&cvf
+                                      tableViewFrame:&tvf
+                              inviteMessageViewFrame:&imvf];
     [self.view setFrame:cvf];
     [self.ABTableViewController.tableView setFrame:tvf];
     [self.inviteMessageViewController.view setFrame:imvf];
@@ -188,11 +205,6 @@
                                      target:self
                                      action:@selector(dismissAfterCancel:)];
     [self.navigationItem setLeftBarButtonItem:cancelButton];
-}
-
-- (void)dismissAfterCancel:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self cleanupForDismiss];
 }
 
 - (void)sendInvites {
