@@ -6,13 +6,25 @@
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
+#import "GrowthKit.h"
 #import "GRKABPersonCell.h"
+#import "GRKDisplayOptions.h"
 
 @implementation GRKABPersonCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
-    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style
+              reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:UITableViewCellStyleSubtitle
+                    reuseIdentifier:reuseIdentifier]) {
+        GRKDisplayOptions *displayOpts = [GrowthKit sharedInstance].displayOptions;
+        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        // Sets color of the default accessory checkmark
+        [self setTintColor:displayOpts.secondaryTextColor];
+
+        [self.textLabel setFont:displayOpts.primaryFont];
+        self.textLabel.textColor = displayOpts.primaryTextColor;
+        self.detailTextLabel.textColor = displayOpts.secondaryTextColor;
+    }
     return self;
 }
 

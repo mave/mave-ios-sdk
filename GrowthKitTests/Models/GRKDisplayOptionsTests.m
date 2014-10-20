@@ -30,10 +30,10 @@
 - (void)testDefaultOptions {
     GRKDisplayOptions *opts = [[GRKDisplayOptions alloc] initWithDefaults];
 
-    UIFont *defaultFont = [UIFont systemFontOfSize:14];
+    UIFont *defaultFont = [UIFont systemFontOfSize:16];
     UIColor *white = [[UIColor alloc] initWithWhite:0 alpha:1];
-    UIColor *almostBlack = [[UIColor alloc] initWithWhite:0.9 alpha:1.0];
-    UIColor *lightGrey = [[UIColor alloc] initWithWhite:0.1 alpha:1.0];
+    UIColor *almostBlack = [[UIColor alloc] initWithWhite:0.15 alpha:1.0];
+    UIColor *lightGrey = [[UIColor alloc] initWithWhite:0.65 alpha:1.0];
     UIColor *blueTint = [[UIColor alloc] initWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     XCTAssertEqualObjects(opts.primaryFont, defaultFont);
     XCTAssertEqualObjects(opts.primaryTextColor, almostBlack);

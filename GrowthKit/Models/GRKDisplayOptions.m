@@ -14,7 +14,7 @@
 
 - (GRKDisplayOptions *)initWithDefaults {
     if (self = [super init]) {
-        self.primaryFont = [UIFont systemFontOfSize:14];
+        self.primaryFont = [UIFont systemFontOfSize:16];
         self.primaryTextColor = [[self class] colorAlmostBlack];
         self.secondaryTextColor = [[self class]colorLightGrey];
         self.tintColor = [[self class] colorBlueTint];
@@ -27,8 +27,8 @@
     return self;
 }
 
-+ (UIColor *)colorAlmostBlack { return [[UIColor alloc] initWithWhite:0.9 alpha:1.0]; }
-+ (UIColor *)colorLightGrey { return [[UIColor alloc] initWithWhite:0.1 alpha:1.0]; }
++ (UIColor *)colorAlmostBlack { return [[UIColor alloc] initWithWhite:0.15 alpha:1.0]; }
++ (UIColor *)colorLightGrey { return [[UIColor alloc] initWithWhite:0.65 alpha:1.0]; }
 + (UIColor *)colorWhite { return [[UIColor alloc] initWithWhite:0.0 alpha:1.0]; }
 + (UIColor *)colorBlueTint {
     return [[UIColor alloc] initWithRed:0.0

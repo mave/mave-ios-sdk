@@ -28,15 +28,20 @@
     [super tearDown];
 }
 
-- (void)testSetupAndGetSharedInstance{
+- (void)testSetupSharedInstance {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk1 = [GrowthKit sharedInstance];
+    XCTAssertEqualObjects(gk1.appId, @"foo123");
+    XCTAssertEqualObjects(gk1.displayOptions.primaryFont, [UIFont systemFontOfSize:16]);
+}
+
+- (void)testSharedInstanceIsShared {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk1 = [GrowthKit sharedInstance];
     GrowthKit *gk2 = [GrowthKit sharedInstance];
     
     // Test pointer to same object
     XCTAssertTrue(gk1 == gk2);
-    XCTAssertEqualObjects(gk1.appId, @"foo123");
-    XCTAssertEqualObjects(gk2.appId,@"foo123");
 }
 
 - (void)testSetUserData {
