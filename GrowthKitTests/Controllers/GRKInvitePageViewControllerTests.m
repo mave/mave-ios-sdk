@@ -11,6 +11,7 @@
 #import "GrowthKit.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKHTTPManager.h"
+#import "GRKDisplayOptionsFactory.h"
 
 @interface GRKInvitePageViewControllerTests : XCTestCase
 
@@ -64,5 +65,21 @@
     [mockHTTPManager verify];
 }
 
+//
+// Test any views that don't have own custom subclass with own tests
+//
+- (void)testNavigationBarSetup {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"appid1"];
+    GRKDisplayOptions *opts = [GRKDisplayOptionsFactory generateDisplayOptions];
+    [GrowthKit sharedInstance].displayOptions = opts;
+
+    GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
+    UINavigationController *sampleNavigationController = [[UINavigationController alloc] initWithRootViewController:vc];
+    XCTAssertNotNil(sampleNavigationController);
+    [vc setupNavigationBar];
+    XCTAssertEqualObjects(vc.navigationItem.title, @"Invite Friends");
+    XCTAssertEqualObjects(vc.navigationController.navigationBar.barTintColor,
+                          opts.navigationBarBackgroundColor);
+}
 
 @end

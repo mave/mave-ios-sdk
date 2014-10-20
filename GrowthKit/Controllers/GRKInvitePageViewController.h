@@ -23,6 +23,7 @@
 - (UIView *)createAddressBookInviteViewWithData:(NSDictionary *)indexedAddressBook;
 - (UIView *)createEmptyFallbackView;
 - (void)setOwnAndSubviewFrames;
+- (void)setupNavigationBar;
 - (void)determineAndSetViewBasedOnABPermissions;
 
 // Other business logic

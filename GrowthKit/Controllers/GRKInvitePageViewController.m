@@ -28,7 +28,7 @@
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
 
-    [self setupNavgationBar];
+    [self setupNavigationBar];
     [self determineAndSetViewBasedOnABPermissions];
 }
 
@@ -197,8 +197,10 @@
     [self.inviteMessageViewController.view setFrame:imvf];
 }
 
-- (void)setupNavgationBar {
+- (void)setupNavigationBar {
     self.navigationItem.title = @"Invite Friends";
+    UIColor *col = [GrowthKit sharedInstance].displayOptions.navigationBarBackgroundColor;
+    self.navigationController.navigationBar.barTintColor = col;
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
                                      initWithTitle:@"Cancel"
                                      style:UIBarButtonItemStylePlain

@@ -21,6 +21,7 @@
     [GrowthKit setupSharedInstanceWithApplicationID:@"dca34a7202a2a8372c884b7d468d8345"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     [gk setUserData:@"1" firstName:@"Danny" lastName:@"Cosson"];
+    gk.displayOptions.navigationBarBackgroundColor = [UIColor redColor];
 
     return YES;
 }
