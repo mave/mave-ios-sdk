@@ -51,7 +51,13 @@
 }
 
 - (void)testSendingProgressViewStyleOnInit {
-    
+    CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
+    GRKInviteSendingProgressView *view = [[GRKInviteSendingProgressView alloc] initWithFrame:fakeFrame];
+    GRKDisplayOptions *opts = [GrowthKit sharedInstance].displayOptions;
+
+    XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
+    XCTAssertEqualObjects(view.progressView.tintColor, opts.tintColor);
+    XCTAssertEqualObjects(view.mainLabel.textColor, opts.tintColor);
 }
     
 @end

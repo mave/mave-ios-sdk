@@ -23,10 +23,12 @@ float const INCREMENT_PROGRESS_BAR_BY = MAX_PROGRESS / (SECS_TO_FILL_PROGRESS_BA
         
         CGRect progressViewFrame = CGRectMake(0, 0, frame.size.width, 10);
         self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        [self.progressView setTintColor:displayOptions.tintColor];
         [self.progressView setFrame:progressViewFrame];
         self.progressView.progress = 0.0;
         
         self.mainLabel = [[UILabel alloc] init];
+        self.mainLabel.textColor = displayOptions.tintColor;
         [self setMainLabelText:@"Sending..."];
         
         [self addSubview:self.progressView];
