@@ -25,7 +25,7 @@
     opts.navigationBarBackgroundColor = [self randomColor];
     opts.bottomViewBackgroundColor  = [self randomColor];
     opts.tableCellBackgroundColor = [self randomColor];
-    opts.tableSectionBackgroundColor = [self randomColor];
+    opts.tableSectionHeaderBackgroundColor = [self randomColor];
 
     return opts;
 }

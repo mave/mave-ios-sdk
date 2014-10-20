@@ -13,6 +13,7 @@
 
 + (UIColor *)colorAlmostBlack;
 + (UIColor *)colorLightGrey;
++ (UIColor *)colorExtraLightGrey;
 + (UIColor *)colorWhite;
 + (UIColor *)colorBlueTint;
 
@@ -24,9 +25,8 @@
 @property (strong, nonatomic) UIColor *navigationBarBackgroundColor;
 @property (strong, nonatomic) UIColor *bottomViewBackgroundColor;
 @property (strong, nonatomic) UIColor *tableCellBackgroundColor;
-@property (strong, nonatomic) UIColor *tableSectionBackgroundColor;
+@property (strong, nonatomic) UIColor *tableSectionHeaderBackgroundColor;
 
 - (GRKDisplayOptions *)initWithDefaults;
-
 
 @end

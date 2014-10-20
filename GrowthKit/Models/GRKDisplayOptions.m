@@ -22,13 +22,14 @@
         self.navigationBarBackgroundColor = [[self class] colorWhite];
         self.bottomViewBackgroundColor = [[self class] colorWhite];
         self.tableCellBackgroundColor = [[self class] colorWhite];
-        self.tableSectionBackgroundColor = [[self class] colorLightGrey];
+        self.tableSectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
     }
     return self;
 }
 
 + (UIColor *)colorAlmostBlack { return [[UIColor alloc] initWithWhite:0.15 alpha:1.0]; }
 + (UIColor *)colorLightGrey { return [[UIColor alloc] initWithWhite:0.65 alpha:1.0]; }
++ (UIColor *)colorExtraLightGrey { return [[UIColor alloc] initWithWhite:0.95 alpha:1.0]; }
 + (UIColor *)colorWhite { return [[UIColor alloc] initWithWhite:1.0 alpha:1.0]; }
 + (UIColor *)colorBlueTint {
     return [[UIColor alloc] initWithRed:0.0

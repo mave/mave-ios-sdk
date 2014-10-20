@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
+#import "GrowthKit.h"
+#import "GRKDisplayOptions.h"
 #import "GRKABTableViewController.h"
 #import "GRKABCollection.h"
 #import "GRKABPersonCell.h"
@@ -44,10 +46,46 @@
 }
 
 //
-// Data Source methods
+// Sections
 //
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [tableSections count];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    float labelMarginY = 0.0;
+    float labelOffsetX = 14.0;
+    GRKDisplayOptions *displayOpts = [GrowthKit sharedInstance].displayOptions;
+    NSString *labelText = [self tableView:tableView
+                  titleForHeaderInSection:section];
+    UIFont *labelFont = displayOpts.primaryFont;
+    CGSize labelSize = [labelText sizeWithAttributes:@{NSFontAttributeName: labelFont}];
+    CGRect labelFrame = CGRectMake(labelOffsetX,
+                                   labelMarginY,
+                                   labelSize.width,
+                                   labelSize.height);
+    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+    label.text = labelText;
+    label.textColor = displayOpts.primaryTextColor;
+    label.font = displayOpts.primaryFont;
+
+    CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
+    // section width gets ignored, always stretches to full width
+    CGFloat sectionWidth = 0.0;
+    CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
+    UIView *view = [[UIView alloc] initWithFrame:viewFrame];
+    view.backgroundColor = displayOpts.tableSectionHeaderBackgroundColor;
+
+    [view addSubview:label];
+
+    return view;
+}
+
+// Since we size the headers dynamically based on height of the text
+// lable, this method needs to get the actual view and check its height
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    UIView *header = [self tableView:tableView viewForHeaderInSection:section];
+    return header.frame.size.height;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -59,6 +97,9 @@
     return [[tableData objectForKey:sectionTitle] count];
 }
 
+//
+// Data Source methods
+//
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     GRKABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"InvitePageABPersonCell" forIndexPath:indexPath];
     [cell setupCellWithPerson: [self personAtIndexPath:indexPath]];

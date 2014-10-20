@@ -34,6 +34,7 @@
     UIColor *white = [[UIColor alloc] initWithWhite:1.0 alpha:1];
     UIColor *almostBlack = [[UIColor alloc] initWithWhite:0.15 alpha:1.0];
     UIColor *lightGrey = [[UIColor alloc] initWithWhite:0.65 alpha:1.0];
+    UIColor *extraLightGrey = [[UIColor alloc] initWithWhite:0.95 alpha:1.0];
     UIColor *blueTint = [[UIColor alloc] initWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     XCTAssertEqualObjects(opts.primaryFont, defaultFont);
     XCTAssertEqualObjects(opts.primaryTextColor, almostBlack);
@@ -43,7 +44,7 @@
     XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
     XCTAssertEqualObjects(opts.tableCellBackgroundColor, white);
-    XCTAssertEqualObjects(opts.tableSectionBackgroundColor, lightGrey);
+    XCTAssertEqualObjects(opts.tableSectionHeaderBackgroundColor, extraLightGrey);
 }
 
 - (void)testFactoryFillsOptions {
@@ -57,7 +58,7 @@
     XCTAssertTrue([opts.navigationBarBackgroundColor isKindOfClass: [UIColor class]]);
     XCTAssertTrue([opts.bottomViewBackgroundColor isKindOfClass: [UIColor class]]);
     XCTAssertTrue([opts.tableCellBackgroundColor isKindOfClass: [UIColor class]]);
-    XCTAssertTrue([opts.tableSectionBackgroundColor isKindOfClass: [UIColor class]]);
+    XCTAssertTrue([opts.tableSectionHeaderBackgroundColor isKindOfClass: [UIColor class]]);
 }
 
 @end
