@@ -14,8 +14,8 @@
 
 @interface GrowthKit : NSObject
 
-@property (nonatomic, readonly) GRKInvitePageViewController *viewController;
-@property (nonatomic, readonly) GRKDisplayOptions *displayOptions;
+@property (nonatomic, strong) GRKInvitePageViewController *viewController;
+@property (nonatomic, strong) GRKDisplayOptions *displayOptions;
 @property (nonatomic, strong) GRKHTTPManager *HTTPManager;
 
 @property (nonatomic, strong) NSString *appId;

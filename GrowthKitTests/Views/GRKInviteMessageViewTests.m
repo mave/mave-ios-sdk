@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "GrowthKit.h"
+#import "GRKDisplayOptions.h"
+#import "GRKDisplayOptionsFactory.h"
+#import "GRKInviteMessageView.h"
+#import "GRKInviteSendingProgressView.h"
 
 @interface GRKInviteMessageViewTests : XCTestCase
 
@@ -17,7 +22,8 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    [GrowthKit sharedInstance].displayOptions = [GRKDisplayOptionsFactory generateDisplayOptions];
 }
 
 - (void)tearDown {
@@ -25,16 +31,27 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+- (void)testMessageViewStyleOnInit {
+    // Setup and get opts to compare it to
+    CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
+    GRKInviteMessageView *view = [[GRKInviteMessageView alloc] initWithFrame:fakeFrame];
+    GRKDisplayOptions *opts = [GrowthKit sharedInstance].displayOptions;
+
+    // Test Message field style
+    XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
+    UIColor *tfbgColor = [[UIColor alloc]
+                          initWithCGColor:view.textField.layer.backgroundColor];
+    XCTAssertEqualObjects(tfbgColor, [GRKDisplayOptions colorWhite]);
+    UIColor *tfBorderColor = [[UIColor alloc]
+                              initWithCGColor:view.textField.layer.borderColor];
+    XCTAssertEqualObjects(tfBorderColor, [GRKDisplayOptions colorAlmostBlack]);
+
+    // Test Button Style
+    XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.tintColor);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testSendingProgressViewStyleOnInit {
+    
 }
-
+    
 @end

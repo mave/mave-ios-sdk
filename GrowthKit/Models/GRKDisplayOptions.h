@@ -11,6 +11,11 @@
 
 @interface GRKDisplayOptions : NSObject
 
++ (UIColor *)colorAlmostBlack;
++ (UIColor *)colorLightGrey;
++ (UIColor *)colorWhite;
++ (UIColor *)colorBlueTint;
+
 @property (strong, nonatomic) UIFont *primaryFont;
 @property (strong, nonatomic) UIColor *primaryTextColor;
 @property (strong, nonatomic) UIColor *secondaryTextColor;

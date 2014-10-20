@@ -7,9 +7,9 @@
 //
 
 #import "GrowthKit.h"
-#import "GRKInviteSendingInProgressView.h"
+#import "GRKInviteSendingProgressView.h"
 
-@implementation GRKInviteSendingInProgressView
+@implementation GRKInviteSendingProgressView
 
 float const MAX_PROGRESS = 0.8;
 float const SECS_TO_FILL_PROGRESS_BAR = 2.0;

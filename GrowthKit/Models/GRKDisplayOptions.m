@@ -29,7 +29,7 @@
 
 + (UIColor *)colorAlmostBlack { return [[UIColor alloc] initWithWhite:0.15 alpha:1.0]; }
 + (UIColor *)colorLightGrey { return [[UIColor alloc] initWithWhite:0.65 alpha:1.0]; }
-+ (UIColor *)colorWhite { return [[UIColor alloc] initWithWhite:0.0 alpha:1.0]; }
++ (UIColor *)colorWhite { return [[UIColor alloc] initWithWhite:1.0 alpha:1.0]; }
 + (UIColor *)colorBlueTint {
     return [[UIColor alloc] initWithRed:0.0
                                   green:122.0/255.0

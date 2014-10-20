@@ -13,6 +13,4 @@
 @property UIButton *sendButton;
 @property UITextView *textField;
 
-- (GRKInviteMessageView *)initCustomWithFrame:(CGRect)frame;
-
 @end

@@ -14,46 +14,42 @@
 
 @implementation GRKInviteMessageView
 
-- (GRKInviteMessageView *)initCustomWithFrame:(CGRect)frame {
+- (GRKInviteMessageView *)initWithFrame:(CGRect)frame {
     // Get global display customization options, any of the values could have been
     // overwritten by the client app
     GRKDisplayOptions *displayOptions = [GrowthKit sharedInstance].displayOptions;
-
-    // TextView Attributes
-    UIColor *tfBgColor = [[UIColor alloc] initWithWhite:0.9 alpha:1.0];
-    UIColor *tfBorderColor = [UIColor blackColor];
     
     // Button attributes
     NSString *buttonTitle = @"Send";
     float buttonTitleFontSize = 12;
-    UIColor *buttonTitleTextColor = [UIColor blackColor];
     UIFont *buttonFont = [UIFont systemFontOfSize:buttonTitleFontSize];
     
     // Create own containing view
-    self = [[GRKInviteMessageView alloc] initWithFrame:frame];
-    [self setBackgroundColor:displayOptions.bottomViewBackgroundColor];
+    if (self = [super initWithFrame:frame]) {
+        [self setBackgroundColor:displayOptions.bottomViewBackgroundColor];
+        
+        // Create child views (button & textView) & set non-layout styling
+        // They will get laid out by layoutSubviews
+        self.sendButton = [[UIButton alloc] init];
+        self.textField = [[UITextView alloc] init];
+        
+        self.textField.delegate = self;
+        self.textField.layer.backgroundColor=[[GRKDisplayOptions colorWhite] CGColor];
+        self.textField.layer.borderColor=[[GRKDisplayOptions colorAlmostBlack] CGColor];
+        self.textField.layer.cornerRadius=8.0f;
+        self.textField.layer.masksToBounds=YES;
+        self.textField.layer.borderWidth= 0.5f;
+        [self.textField setText:@"Use my invite link to sign up!"];
+        [self.textField setReturnKeyType:UIReturnKeyDone];
+        
+        [self.sendButton setTitleColor:displayOptions.tintColor forState:UIControlStateNormal];
+        self.sendButton.titleLabel.font = buttonFont;
+        [self.sendButton setTitle:buttonTitle forState: UIControlStateNormal];
+        
+        [self addSubview:self.textField];
+        [self addSubview:self.sendButton];
     
-    // Create child views (button & textView) & set non-layout styling
-    // They will get laid out by layoutSubviews
-    self.sendButton = [[UIButton alloc] init];
-    self.textField = [[UITextView alloc] init];
-    
-    self.textField.delegate = self;
-    self.textField.layer.backgroundColor=[tfBgColor CGColor];
-    self.textField.layer.borderColor=[tfBorderColor CGColor];
-    self.textField.layer.cornerRadius=8.0f;
-    self.textField.layer.masksToBounds=YES;
-    self.textField.layer.borderWidth= 0.5f;
-    [self.textField setText:@"Use my invite link to sign up!"];
-    [self.textField setReturnKeyType:UIReturnKeyDone];
-    
-    self.sendButton.titleLabel.textColor = buttonTitleTextColor;
-    self.sendButton.titleLabel.font = buttonFont;
-    [self.sendButton setTitle:buttonTitle forState: UIControlStateNormal];
-    
-    [self addSubview:self.textField];
-    [self addSubview:self.sendButton];
-    
+    }
     return self;
 }
 

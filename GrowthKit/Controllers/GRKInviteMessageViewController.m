@@ -12,15 +12,15 @@
 #import <UIKit/UIKit.h>
 #import "GRKInviteMessageViewController.h"
 #import "GRKInviteMessageView.h"
-#import "GRKInviteSendingInProgressView.h"
+#import "GRKInviteSendingProgressView.h"
 
 @implementation GRKInviteMessageViewController
 
 - (GRKInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame {
     self = [self init];
     if (self) {
-        self.messageView = [[GRKInviteMessageView alloc] initCustomWithFrame:frame];
-        self.sendingInProgressView = [[GRKInviteSendingInProgressView alloc] initWithFrame:frame];
+        self.messageView = [[GRKInviteMessageView alloc] initWithFrame:frame];
+        self.sendingInProgressView = [[GRKInviteSendingProgressView alloc] initWithFrame:frame];
         self.view = (UIView *)self.messageView;
     }
     return self;

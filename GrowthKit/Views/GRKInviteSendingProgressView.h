@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GRKInviteSendingInProgressView : UIView
+@interface GRKInviteSendingProgressView : UIView
 
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UILabel *mainLabel;
