@@ -56,10 +56,19 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dismissAfterCancel:(id)sender {
+// TODO: Do Cancel and Success need to be separate methods? Do we need
+// the client app to specify a delegate for them to call to alert the
+// app that we've returned and give info about how many invites were sent, etc?
+- (void)dismissAfterCancel {
     [self dismissViewControllerAnimated:YES completion:nil];
     [self cleanupForDismiss];
 }
+
+- (void)dismissAfterSuccess {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self cleanupForDismiss];
+}
+
 
 - (void)cleanupForDismiss {
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -205,7 +214,7 @@
                                      initWithTitle:@"Cancel"
                                      style:UIBarButtonItemStylePlain
                                      target:self
-                                     action:@selector(dismissAfterCancel:)];
+                                     action:@selector(dismissAfterCancel)];
     [self.navigationItem setLeftBarButtonItem:cancelButton];
 }
 
@@ -220,17 +229,20 @@
     
     GRKHTTPManager *httpManager = [GrowthKit sharedInstance].HTTPManager;
     [httpManager sendInvitesWithPersons:phones message:message completionBlock:^(NSError *error, NSDictionary *responseData) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (error != nil) {
-                NSLog(@"Invites failed to send, error: %@, response: %@",
-                      error, responseData);
+        if (error != nil) {
+            NSLog(@"Invites failed to send, error: %@, response: %@",
+                  error, responseData);
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self.inviteMessageViewController switchToInviteMessageView:self.view];
                 [self showErrorAndResetAfterSendInvitesFailure:error];
-            } else {
-                NSLog(@"Invites sent! response: %@", responseData);
-                    [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
-            }
-        });
+            });
+        } else {
+            NSLog(@"Invites sent! response: %@", responseData);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
+                [self performSelector:@selector(dismissAfterSuccess) withObject:nil afterDelay:1.0];
+            });
+        }
     }];
     [self.inviteMessageViewController switchToSendingInProgressView:self.view];
 }

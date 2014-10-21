@@ -34,7 +34,6 @@
 // b/c we're done sending invites or the user hit cancel
 - (void)cleanupForDismiss;
 
-- (void)dismissAfterCancel:(id)sender;
-
-
+- (void)dismissAfterCancel;
+- (void)dismissAfterSuccess;
 @end
