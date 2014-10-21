@@ -143,7 +143,7 @@
     NSString *invitesRoute = @"/invites/sms";
     NSDictionary *params = @{@"recipients": persons,
                              @"sms_copy": messageText,
-                             @"user_id": userId
+                             @"sender_user_id": userId
                            };
     [self sendIdentifiedJSONRequestWithRoute:invitesRoute
                        methodType:@"POST"

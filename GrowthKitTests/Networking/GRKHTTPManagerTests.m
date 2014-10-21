@@ -87,7 +87,7 @@
     NSString *userId = @"some-user-id";
     NSDictionary *expectedParams = @{@"recipients": recipients,
                                      @"sms_copy": smsCopy,
-                                     @"user_id": userId
+                                     @"sender_user_id": userId
                                    };
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodType:@"POST"
