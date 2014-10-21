@@ -14,8 +14,6 @@
 #import "GRKHTTPManager_Internal.h"
 
 #import <OCMock/OCMock.h>
-#import <URLMock/URLMock.h>
-
 
 @interface GRKHTTPManagerTests : XCTestCase
 
@@ -28,20 +26,11 @@
 - (void)setUp {
     [super setUp];
     
-    // Set up URLMock & tell it to use fake session
-    [UMKMockURLProtocol reset];
-    [UMKMockURLProtocol enable];
-    [UMKMockURLProtocol setVerificationEnabled:YES];
+    // Set up http manager to use
     self.httpManager = [[GRKHTTPManager alloc] initWithApplicationId:@"foo123"];
-    NSURLSessionConfiguration *config = self.httpManager.session.configuration;
-    config.protocolClasses = @[ [UMKMockURLProtocol class] ];
-    self.httpManager.session = [NSURLSession sessionWithConfiguration:config];
-    
 }
 
 - (void)tearDown {
-    [UMKMockURLProtocol setVerificationEnabled:NO];
-    [UMKMockURLProtocol disable];
     [super tearDown];
 }
 
