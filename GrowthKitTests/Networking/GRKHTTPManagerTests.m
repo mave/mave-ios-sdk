@@ -84,14 +84,16 @@
     id mocked = [OCMockObject partialMockForObject:httpManager];
     NSArray *recipients = @[@"18085551234", @"18085555678"];
     NSString *smsCopy = @"This is as test";
+    NSString *userId = @"some-user-id";
     NSDictionary *expectedParams = @{@"recipients": recipients,
-                                     @"sms_copy": smsCopy
+                                     @"sms_copy": smsCopy,
+                                     @"user_id": userId
                                    };
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
-    [httpManager sendInvitesWithPersons:recipients message:smsCopy completionBlock:nil];
+    [httpManager sendInvitesWithPersons:recipients message:smsCopy userId:userId completionBlock:nil];
     [mocked verify];
 }
 

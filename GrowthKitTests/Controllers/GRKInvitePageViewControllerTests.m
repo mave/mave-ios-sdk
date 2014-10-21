@@ -46,6 +46,7 @@
 
     [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
+                                              userId:[GrowthKit sharedInstance].currentUserId
                                        completionBlock:[OCMArg any]];
     [vc sendInvites];
 
