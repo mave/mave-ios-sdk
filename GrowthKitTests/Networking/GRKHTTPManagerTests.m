@@ -79,6 +79,22 @@
     [mocked verify];
 }
 
+- (void)testSendInvitesEvent {
+    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    NSArray *recipients = @[@"18085551234", @"18085555678"];
+    NSString *smsCopy = @"This is as test";
+    NSDictionary *expectedParams = @{@"recipients": recipients,
+                                     @"sms_copy": smsCopy
+                                   };
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
+                                             methodType:@"POST"
+                                                 params:expectedParams
+                                        completionBlock:nil];
+    [httpManager sendInvitesWithPersons:recipients message:smsCopy completionBlock:nil];
+    [mocked verify];
+}
+
 
 //
 // Underlying request sending infrastructure
