@@ -130,9 +130,11 @@
     GRKABPerson *p1 = [GRKABTestDataFactory personWithFirstName:@"Dan" lastName:@"Foo"];
     GRKABPerson *p2 = [GRKABTestDataFactory personWithFirstName:@"Dan" lastName:@"foo"];
     GRKABPerson *p3 = [GRKABTestDataFactory personWithFirstName:@"dan" lastName:nil];
-    XCTAssertEqualObjects([p1 firstLetter], @"F");
-    XCTAssertEqualObjects([p2 firstLetter], @"F");
-    XCTAssertEqualObjects([p3 firstLetter], @"D");    
+    GRKABPerson *p4 = [GRKABTestDataFactory personWithFirstName:nil lastName:@"Foo"];
+    XCTAssertEqualObjects([p1 firstLetter], @"D");
+    XCTAssertEqualObjects([p2 firstLetter], @"D");
+    XCTAssertEqualObjects([p3 firstLetter], @"D");
+    XCTAssertEqualObjects([p4 firstLetter], @"F");
 }
 
 - (void)testFullNameBoth {
@@ -227,17 +229,17 @@
 }
 
 - (void)testComparePersonsLastNamesDiffer {
-    GRKABPerson *p1 = [GRKABTestDataFactory personWithFirstName:@"D" lastName:@"F"];
-    GRKABPerson *p2 = [GRKABTestDataFactory personWithFirstName:@"C" lastName:@"E"];
-    XCTAssertEqual([p1 compareNames:p2], NSOrderedDescending);
-    XCTAssertEqual([p2 compareNames:p1], NSOrderedAscending);
+    GRKABPerson *p1 = [GRKABTestDataFactory personWithFirstName:@"C" lastName:@"F"];
+    GRKABPerson *p2 = [GRKABTestDataFactory personWithFirstName:@"D" lastName:@"E"];
+    XCTAssertEqual([p1 compareNames:p2], NSOrderedAscending);
+    XCTAssertEqual([p2 compareNames:p1], NSOrderedDescending);
 }
 
 - (void)testCompareWhenLastNamesMightBeMissing {
     GRKABPerson *p1 = [GRKABTestDataFactory personWithFirstName:@"D" lastName:@"F"];
     GRKABPerson *p2 = [GRKABTestDataFactory personWithFirstName:@"E" lastName:nil];
-    XCTAssertEqual([p1 compareNames:p2], NSOrderedDescending);
-    XCTAssertEqual([p2 compareNames:p1], NSOrderedAscending);
+    XCTAssertEqual([p1 compareNames:p2], NSOrderedAscending);
+    XCTAssertEqual([p2 compareNames:p1], NSOrderedDescending);
     
     GRKABPerson *p1_2 = [GRKABTestDataFactory personWithFirstName:@"D" lastName:nil];
     XCTAssertEqual([p1_2 compareNames:p2], NSOrderedAscending);
@@ -247,8 +249,8 @@
 - (void)testCompareWhenFirstNamesMightBeMissing {
     GRKABPerson *p1 = [GRKABTestDataFactory personWithFirstName:@"D" lastName:@"F"];
     GRKABPerson *p2 = [GRKABTestDataFactory personWithFirstName:nil lastName:@"E"];
-    XCTAssertEqual([p1 compareNames:p2], NSOrderedDescending);
-    XCTAssertEqual([p2 compareNames:p1], NSOrderedAscending);
+    XCTAssertEqual([p1 compareNames:p2], NSOrderedAscending);
+    XCTAssertEqual([p2 compareNames:p1], NSOrderedDescending);
     
     GRKABPerson *p1_2 = [GRKABTestDataFactory personWithFirstName:nil lastName:@"D"];
     XCTAssertEqual([p1_2 compareNames:p2], NSOrderedAscending);

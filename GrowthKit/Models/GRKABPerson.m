@@ -140,7 +140,7 @@
     if (fn == nil) fn = @"";
     NSString *ln = self.lastName;
     if (ln == nil) ln = @"";
-    return [NSString stringWithFormat:@"%@%@",ln,fn];
+    return [NSString stringWithFormat:@"%@%@",fn,ln];
 }
 
 @end
