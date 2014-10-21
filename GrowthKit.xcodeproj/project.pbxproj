@@ -356,11 +356,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C02927B219E823E2006AEE43 /* Build configuration list for PBXNativeTarget "DemoApp" */;
 			buildPhases = (
-				1ED63065937FA7B76A60FEB7 /* Check Pods Manifest.lock */,
 				C029278D19E823E2006AEE43 /* Sources */,
 				C029278E19E823E2006AEE43 /* Frameworks */,
 				C029278F19E823E2006AEE43 /* Resources */,
-				EBA49C9E2F860CDD81EAE5B6 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -463,21 +461,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		1ED63065937FA7B76A60FEB7 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		925AE1ED72E96F8F8EC069E7 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -491,21 +474,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GrowthKitTests/Pods-GrowthKitTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EBA49C9E2F860CDD81EAE5B6 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -586,7 +554,6 @@
 		};
 		C02927B319E823E2006AEE43 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2110DFB92C7B0700F5577B76 /* Pods-DemoApp.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -632,7 +599,6 @@
 		};
 		C02927B419E823E2006AEE43 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8ACB3F29796B0AB7B74C3393 /* Pods-DemoApp.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
