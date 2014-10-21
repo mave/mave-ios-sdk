@@ -33,4 +33,10 @@
     [self.sendingInProgressView startTimedProgress];
 }
 
+- (void)switchToInviteMessageView:(UIView *)superView {
+    [self.view removeFromSuperview];
+    self.view = self.messageView;
+    [superView addSubview:self.view];
+}
+
 @end

@@ -63,7 +63,8 @@
     }
     
     // Build request
-    NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
+//    NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
+    NSURL *url = [NSURL URLWithString:@"http://requestb.in/17wngjn1"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:url];
     [request setHTTPMethod:methodType];
@@ -138,17 +139,6 @@
                                              userInfo:@{}];
     }
     return completionBlock(returnError, returnDict);
-}
-
-//
-// Delegate methods
-//
--(void)URLSession:(NSURLSession *)session
-             task:(NSURLSessionTask *)task
-  didSendBodyData:(int64_t)bytesSent
-   totalBytesSent:(int64_t)totalBytesSent
-totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
-    NSLog(@"Did send bohhhhhdy data");
 }
 
 //

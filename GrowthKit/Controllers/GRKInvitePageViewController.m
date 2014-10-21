@@ -220,16 +220,35 @@
     
     GRKHTTPManager *httpManager = [GrowthKit sharedInstance].HTTPManager;
     [httpManager sendInvitesWithPersons:phones message:message completionBlock:^(NSError *error, NSDictionary *responseData) {
-        if (error != nil) {
-            NSLog(@"Invites failed to send, error: %@, response: %@", error, responseData);
-        } else {
-            NSLog(@"Invites sent! response: %@", responseData);
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
+            if (error != nil) {
+                NSLog(@"Invites failed to send, error: %@, response: %@",
+                      error, responseData);
+                [self.inviteMessageViewController switchToInviteMessageView:self.view];
+                [self showErrorAndResetAfterSendInvitesFailure:error];
+            } else {
+                NSLog(@"Invites sent! response: %@", responseData);
+                    [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
+            }
         });
     }];
     [self.inviteMessageViewController switchToSendingInProgressView:self.view];
+}
+
+- (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
+                                                    message:@"Server was unavailable or internet connection failed"
+                                                   delegate:nil
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:nil];
+    [alert show];
+    [self performSelector:@selector(dismissSendInvitesFailedAlertView:)
+               withObject:alert
+               afterDelay:3.0];
+}
+
+- (void)dismissSendInvitesFailedAlertView:(UIAlertView *)alertView {
+    [alertView dismissWithClickedButtonIndex:0 animated:YES];
 }
 
 @end

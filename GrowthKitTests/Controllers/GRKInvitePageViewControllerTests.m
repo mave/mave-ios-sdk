@@ -21,6 +21,9 @@
 
 - (void)setUp {
     [super setUp];
+    [GrowthKit resetSharedInstanceForTesting];
+    [GrowthKit setupSharedInstanceWithApplicationID:@"1231234"];
+    [GrowthKit sharedInstance].currentUserId = @"foo";
 }
 
 - (void)tearDown {
@@ -28,8 +31,6 @@
 }
 
 - (void)testSendInvites {
-    [GrowthKit setupSharedInstanceWithApplicationID:@"1231234"];
-    [GrowthKit sharedInstance].currentUserId = @"foo";
     GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
     [vc loadView];
     [vc viewDidLoad];

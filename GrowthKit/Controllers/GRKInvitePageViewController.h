@@ -28,6 +28,7 @@
 
 // Other business logic
 - (void)sendInvites;
+- (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error;
 
 // This is called when the view controller is being dismissed, either
 // b/c we're done sending invites or the user hit cancel

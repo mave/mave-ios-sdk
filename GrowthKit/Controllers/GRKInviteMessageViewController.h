@@ -19,5 +19,6 @@
 - (GRKInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame;
 
 - (void)switchToSendingInProgressView:(UIView *)superView;
+- (void)switchToInviteMessageView:(UIView *)superView;
 
 @end
