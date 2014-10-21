@@ -139,7 +139,7 @@
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
                completionBlock:(GRKHTTPCompletionBlock)completionBlock {
-    NSString *invitesRoute = @"/invites";
+    NSString *invitesRoute = @"/invites/sms";
     NSDictionary *params = @{@"recipients": persons,
                              @"sms_copy": messageText,
                            };
