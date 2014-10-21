@@ -57,11 +57,11 @@
 
 - (void)testIndexedDictionaryOfGRKABPersons {
     GRKABCollection *ab = [[GRKABCollection alloc] init];
-    GRKABPerson *p1 = [GRKABTestDataFactory personWithFirstName:@"Joe" lastName:@"Adams"];
+    GRKABPerson *p1 = [GRKABTestDataFactory personWithFirstName:@"Don" lastName:@"Adams"];
     GRKABPerson *p2 = [GRKABTestDataFactory personWithFirstName:@"Deb" lastName:@"Anderson"];
     GRKABPerson *p3 = [GRKABTestDataFactory personWithFirstName:@"Foo" lastName:@"Bernard"];
     ab.data = @[p1, p2, p3];
-    NSDictionary *expected = @{@"A": @[p1, p2], @"B": @[p3]};
+    NSDictionary *expected = @{@"D": @[p1, p2], @"F": @[p3]};
 
     NSDictionary *indexed = [ab indexedDictionaryOfGRKABPersons];
     XCTAssertEqualObjects(indexed, expected);
