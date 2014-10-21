@@ -17,12 +17,10 @@
 }
 
 //
-// Init and handling shared instance
+// Init and handling shared instance & needed data
 //
-
-- (GrowthKit *)initWithAppId:(NSString *)appId {
-    self = [self init];
-    if (self) {
+- (instancetype)initWithAppId:(NSString *)appId {
+    if (self = [self init]) {
         _appId = appId;
         _displayOptions = [[GRKDisplayOptions alloc] initWithDefaults];
         _HTTPManager = [[GRKHTTPManager alloc] initWithApplicationId:appId];
@@ -31,12 +29,21 @@
 }
 
 static GrowthKit *sharedInstance = nil;
+static dispatch_once_t sharedInstanceonceToken;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
-    sharedInstance = [[[self class] alloc] initWithAppId:applicationID];
+    dispatch_once(&sharedInstanceonceToken, ^{
+        sharedInstance = [[self alloc] initWithAppId:applicationID];
+    });
 }
 
-+ (GrowthKit *)sharedInstance {
+# if DEBUG
++ (void)resetSharedInstanceForTesting {
+    sharedInstanceonceToken = 0;
+}
+#endif
+
++ (instancetype)sharedInstance {
     if (sharedInstance == nil) {
         NSLog(@"Error: didn't setup shared instance with app id");
     }
@@ -49,6 +56,9 @@ static GrowthKit *sharedInstance = nil;
     _currentUserLastName = lastName;
 }
 
+//
+// Funnel events that need to be called explicitly by consumer
+//
 - (void)registerAppOpen {
     [self.HTTPManager sendApplicationLaunchNotification];
 }
@@ -66,7 +76,9 @@ static GrowthKit *sharedInstance = nil;
                                                      phone:phone];
 }
 
-
+//
+// Methods for consumer to present/manage the invite page
+//
 - (void)presentInvitePage:(UIViewController *)sourceController {
     GRKInvitePageViewController *ipvc = [[GRKInvitePageViewController alloc] init];
     invitePageNavController = [[UINavigationController alloc] initWithRootViewController:ipvc];

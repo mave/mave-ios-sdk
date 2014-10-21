@@ -24,7 +24,12 @@
 @property (nonatomic, strong) NSString *currentUserLastName;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
-+ (GrowthKit *)sharedInstance;
++ (instancetype)sharedInstance;
+
+// Ability to reset the object in tests
+# if DEBUG
++ (void)resetSharedInstanceForTesting;
+#endif
 
 - (void)setUserData:(NSString *)userId
           firstName:(NSString *)firstName

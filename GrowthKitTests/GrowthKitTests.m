@@ -19,8 +19,7 @@
 
 - (void)setUp {
     [super setUp];
-    // reset shared instance
-    [GrowthKit setupSharedInstanceWithApplicationID:nil];
+    [GrowthKit resetSharedInstanceForTesting];
 }
 
 - (void)tearDown {
@@ -33,6 +32,11 @@
     GrowthKit *gk1 = [GrowthKit sharedInstance];
     XCTAssertEqualObjects(gk1.appId, @"foo123");
     XCTAssertEqualObjects(gk1.displayOptions.primaryFont, [UIFont systemFontOfSize:16]);
+    #if DEBUG
+    NSLog(@"Foolog");
+    #else
+    NSLog(@"Barlog");
+    #endif
 }
 
 - (void)testSharedInstanceIsShared {
