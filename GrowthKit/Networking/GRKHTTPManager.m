@@ -63,8 +63,7 @@
     }
     
     // Build request
-//    NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
-    NSURL *url = [NSURL URLWithString:@"http://requestb.in/17wngjn1"];
+    NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:url];
     [request setHTTPMethod:methodType];
