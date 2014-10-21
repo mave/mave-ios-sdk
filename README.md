@@ -7,7 +7,9 @@
 
 ## Usage
 
-You can see it in action in the included demo app, open `GrowthKit.xcworkspace` in xcode and build the `DemoApp` Target. 
+You can see it in action in the included demo app. To run it:
+ - `pod install` to pull the required dependencies
+ - then open `GrowthKit.xcworkspace` in xcode and build the `DemoApp` Target.
 
 (If you're not running the api server locally at devaccounts.growthkit.io, all the network requests in the demo app will fail)
 
