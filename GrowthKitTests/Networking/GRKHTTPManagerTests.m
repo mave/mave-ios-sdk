@@ -49,9 +49,7 @@
     XCTAssertEqualObjects(self.httpManager.applicationId, @"foo123");
     XCTAssertEqualObjects(self.httpManager.baseURL, @"http://devaccounts.growthkit.io/v1.0");
     XCTAssertNotNil(self.httpManager.session);
-    NSDictionary *expectedAdditionalHeaders = @{@"Accept": @"application/json"};
-    XCTAssertEqualObjects(self.httpManager.session.configuration.HTTPAdditionalHeaders,
-                          expectedAdditionalHeaders);
+    XCTAssertEqualObjects(self.httpManager.session.configuration.HTTPAdditionalHeaders, nil);
 }
 
 //
@@ -96,39 +94,42 @@
 //
 // Underlying request sending infrastructure
 //
-// TODO - DC: needs to capture the headers as well
-- (void)testSendIdentifiedJSONRequest {
-    // Build Request
+
+- (void)testSendIdentifiedJSONRequestSuccess {
+    // Setup mock and block to get data out of the request
+    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] initWithApplicationId:@"appid12"];
+    id mockSession = [OCMockObject mockForClass:[NSURLSession class]];
+    id mockTask = [OCMockObject mockForClass:[NSURLSessionTask class]];
+    httpManager.session = mockSession;
+    __block NSString *urlString;
+    __block NSString *requestMethod;
+    __block NSString *requestBodyParams;
+    __block NSDictionary *requestHeaders;
     NSString *requestPath = @"/foo";
     NSDictionary *requestDict = @{@"foo": @2, @"bar": @YES};
-    
-    // Build Mock/Stub with expected values
-    NSURL *url = [NSURL URLWithString: [self.httpManager.baseURL stringByAppendingString:requestPath]];
-//    NSDictionary *responseDict = @{@"ok": @"yes"};
-//    NSData *responseJSON = [NSJSONSerialization dataWithJSONObject:responseDict options:kNilOptions error:nil];
-    NSDictionary *expectedRequestHeaders = @{@"Accept": @"application/json",
-                                             @"Content-Type": @"application/json; charset=utf-8",
-                                             };
-    
-    UMKMockHTTPRequest *mockRequest = [[UMKMockHTTPRequest alloc] initWithHTTPMethod:@"POST" URL:url checksHeadersWhenMatching:NO checksBodyWhenMatching:YES];
-    [mockRequest setBodyWithJSONObject:requestDict];
-    [mockRequest setHeaders:expectedRequestHeaders];
-    mockRequest.responder = [UMKMockHTTPResponder mockHTTPResponderWithStatusCode:200];
-//    [UMKMockHTTPResponder mockHTTPResponderWithStatusCode:200 body:responseJSON];
-    [UMKMockURLProtocol expectMockRequest:mockRequest];
-    
-    // Run request and capture necessary variables
-    __block BOOL completionBlockRan = NO;
-//    __block NSDictionary *returnedDict = nil;
-    [self.httpManager sendIdentifiedJSONRequestWithRoute:requestPath methodType:@"POST" params:requestDict completionBlock:^(NSError *error, NSDictionary *responseData) {
-        NSLog(@"Headers expected: %@", expectedRequestHeaders);
-        completionBlockRan = YES;
-    }];
-    
-    UMKAssertTrueBeforeTimeout(0.1,
-                               [[UMKMockURLProtocol servicedRequests] count] == 1,
-                               @"request didn't match stub");
-    UMKAssertTrueBeforeTimeout(0.1, completionBlockRan, @"block ran");
+    OCMStub([mockSession dataTaskWithRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+        NSURLRequest *request = (NSURLRequest *)obj;
+        urlString = [request.URL absoluteString];
+        requestMethod = request.HTTPMethod;
+        requestBodyParams = [NSJSONSerialization JSONObjectWithData:request.HTTPBody options:kNilOptions error:nil];
+        requestHeaders = request.allHTTPHeaderFields;
+        return YES;
+    }] completionHandler:[OCMArg any]]).andReturn(mockTask);
+    OCMExpect([mockTask resume]);
+
+    // Call the send method
+    [httpManager sendIdentifiedJSONRequestWithRoute:requestPath methodType:@"POST" params:requestDict completionBlock:nil];
+
+    // Verify
+    OCMVerify([mockTask resume]);
+    XCTAssertEqualObjects(urlString, @"http://devaccounts.growthkit.io/v1.0/foo");
+    XCTAssertEqualObjects(requestMethod, @"POST");
+    XCTAssertEqualObjects(requestBodyParams, requestDict);
+    NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",
+                                      @"Accept": @"application/json",
+                                      @"X-Application-ID": @"appid12",
+                                      };
+    XCTAssertEqualObjects(requestHeaders, expectedHeaders);
 }
 
 - (void)testGetHTTPStatusCodeLevel {
@@ -144,7 +145,45 @@
 }
 
 //
-// Tests for formatting request data & parsing response
+// Tests for errors in building Request
+//
+- (void)testSendIdentifiedJSONRequestWithBadJSONfails {
+    // Object is invalid for JSON
+    __block NSError *returnedError;
+    __block NSDictionary *returnedDict;
+    [self.httpManager sendIdentifiedJSONRequestWithRoute:@"/foo" methodType:@"POST" params:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedDict = responseData;
+    }];
+    XCTAssertEqual([returnedDict count], 0);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorRequestJSONCode);
+}
+
+- (NSData *)failingDataWithJSONObject:(id)params options:(NSJSONWritingOptions)options error:(NSError **)error {
+    *error = [[NSError alloc] init];
+    return nil;
+}
+
+- (void)testSendIdentifiedJSONRequestWithInternalJSONFailure {
+    // Internal error when encoding JSON
+    // Swizzle the methods to force the error
+    Method ogMethod = class_getClassMethod([NSJSONSerialization class], @selector(dataWithJSONObject:options:error:));
+    Method mockMethod = class_getInstanceMethod([self class], @selector(failingDataWithJSONObject:options:error:));
+    method_exchangeImplementations(ogMethod, mockMethod);
+    
+    // Make call to run test
+    __block NSError *returnedError = nil;
+    __block NSDictionary *returnedDict = nil;
+    [self.httpManager sendIdentifiedJSONRequestWithRoute:@"/foo" methodType:@"POST" params:@{} completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedDict = responseData;
+    }];
+    XCTAssertEqual([returnedDict count], 0);
+    XCTAssertEqual([returnedError code], GRKHTTPErrorRequestJSONCode);
+}
+
+//
+// Tests for response handler
 //
 - (void)testHandleSuccessJSONResponseWithData {
     NSDictionary *dataDict = @{@"foo": @2, @"bar": @"yes", @"baz": @YES};
@@ -257,42 +296,6 @@
                                       response:response
                                          error:nil
                                completionBlock:nil];
-}
-
-
-- (void)testSendIdentifiedJSONRequestWithBadJSONfails {
-    // Object is invalid for JSON
-    __block NSError *returnedError;
-    __block NSDictionary *returnedDict;
-    [self.httpManager sendIdentifiedJSONRequestWithRoute:@"/foo" methodType:@"POST" params:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
-        returnedError = error;
-        returnedDict = responseData;
-    }];
-    XCTAssertEqual([returnedDict count], 0);
-    XCTAssertEqual([returnedError code], GRKHTTPErrorRequestJSONCode);
-}
-
-- (NSData *)failingDataWithJSONObject:(id)params options:(NSJSONWritingOptions)options error:(NSError **)error {
-    *error = [[NSError alloc] init];
-    return nil;
-}
-
-- (void)testSendIdentifiedJSONRequestWithInternalJSONFailure {
-    // Internal error when encoding JSON
-    // Swizzle the methods to force the error
-    Method ogMethod = class_getClassMethod([NSJSONSerialization class], @selector(dataWithJSONObject:options:error:));
-    Method mockMethod = class_getInstanceMethod([self class], @selector(failingDataWithJSONObject:options:error:));
-    method_exchangeImplementations(ogMethod, mockMethod);
-    
-    // Make call to run test
-    __block NSError *returnedError = nil;
-    __block NSDictionary *returnedDict = nil;
-    [self.httpManager sendIdentifiedJSONRequestWithRoute:@"/foo" methodType:@"POST" params:@{} completionBlock:^(NSError *error, NSDictionary *responseData) {
-        returnedError = error;
-        returnedDict = responseData;
-    }];
-    XCTAssertEqual([returnedDict count], 0);
-    XCTAssertEqual([returnedError code], GRKHTTPErrorRequestJSONCode);
 }
 
 

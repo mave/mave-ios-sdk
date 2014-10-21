@@ -18,7 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [GrowthKit setupSharedInstanceWithApplicationID:@"dca34a7202a2a8372c884b7d468d8345"];
+    [GrowthKit setupSharedInstanceWithApplicationID:@"demo-app-application-id"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     [gk setUserData:@"1" firstName:@"Danny" lastName:@"Cosson"];
 

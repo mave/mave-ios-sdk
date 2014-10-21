@@ -17,7 +17,6 @@
         _applicationId = applicationId;
         _baseURL = @"http://devaccounts.growthkit.io/v1.0";
         NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-        sessionConfig.HTTPAdditionalHeaders = [[self class] defaultHeaders];
         sessionConfig.timeoutIntervalForRequest = 5.0;
         sessionConfig.timeoutIntervalForResource = 5.0;
         
@@ -26,11 +25,6 @@
         _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
     }
     return self;
-}
-
-+ (NSDictionary *)defaultHeaders {
-    return @{@"Accept": @"application/json",
-           };
 }
 
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
@@ -70,12 +64,11 @@
     [request setHTTPBody:jsonData];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    // [request setValue:self.applicationId forKey:@"X-GrowthKit-Application-ID"];
+    [request setValue:self.applicationId forHTTPHeaderField:@"X-Application-ID"];
     
     // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
             ^(NSData *data, NSURLResponse *response, NSError *error) {
-//        NSLog(@"Headers sent: %@", request.allHTTPHeaderFields);
         [[self class] handleJSONResponseWithData:data
                                         response:response
                                            error:error

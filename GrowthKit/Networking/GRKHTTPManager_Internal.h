@@ -19,8 +19,6 @@
 
 @property Class NSJSONSerialization;
 
-+ (NSDictionary *)defaultHeaders;
-
 // Send a JSON request to GrowthKit API, identified by the application ID
 // Will serialize & deserialize to/from JSON to pass the data
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
