@@ -22,16 +22,14 @@
     NSArray *tableSections;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame andData:(NSDictionary *)indexedABData {
-    self = [super init];
-    self.tableView = [[UITableView alloc] initWithFrame:frame];
-    //    invitePageTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    [self.tableView registerClass:[GRKABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
-    
-    self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
-    [self updateTableData:indexedABData];
+- (instancetype)initTableViewWithFrame:(CGRect)frame {
+    if(self = [super init]) {
+        self.tableView = [[UITableView alloc] initWithFrame:frame];
+        self.tableView.delegate = self;
+        self.tableView.dataSource = self;
+        [self.tableView registerClass:[GRKABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
+        self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
+    }
     return self;
 }
 

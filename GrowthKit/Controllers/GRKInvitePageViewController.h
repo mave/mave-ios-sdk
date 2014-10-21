@@ -20,7 +20,7 @@
 @property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame
 @property (atomic) BOOL isKeyboardVisible;
 
-- (UIView *)createAddressBookInviteViewWithData:(NSDictionary *)indexedAddressBook;
+- (UIView *)createAddressBookInviteView;
 - (UIView *)createEmptyFallbackView;
 - (void)setOwnAndSubviewFrames;
 - (void)setupNavigationBar;

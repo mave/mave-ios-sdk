@@ -104,12 +104,11 @@
 //
 // Load the correct view(s) with data
 //
-
 - (void)determineAndSetViewBasedOnABPermissions {
     // If address book permission already granted, load contacts view right now
     ABAuthorizationStatus addrBookStatus = ABAddressBookGetAuthorizationStatus();
     if (addrBookStatus == kABAuthorizationStatusAuthorized) {
-        self.view = [self createAddressBookInviteViewWithData:nil];
+        self.view = [self createAddressBookInviteView];
         [GRKABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.ABTableViewController updateTableData:indexedData];
@@ -123,7 +122,8 @@
         [GRKABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
             if ([indexedData count] > 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                     self.view = [self createAddressBookInviteViewWithData:indexedData];
+                    self.view = [self createAddressBookInviteView];
+                    [self.ABTableViewController updateTableData:indexedData];
                 });
             }
          }];
@@ -165,7 +165,7 @@
     return view;
 }
 
-- (UIView *)createAddressBookInviteViewWithData:(NSDictionary *)indexedAddressBook {
+- (UIView *)createAddressBookInviteView {
     CGRect cvf, tvf, imvf;
     [[self class]computeChildFramesWithKeyboardFrame:self.keyboardFrame
                                createContainerFrame:&cvf
@@ -173,7 +173,7 @@
                              inviteMessageViewFrame:&imvf];
     UIView *containerView = [[UIView alloc] initWithFrame:cvf];
 
-    self.ABTableViewController = [[GRKABTableViewController alloc] initWithFrame:tvf andData:indexedAddressBook];
+    self.ABTableViewController = [[GRKABTableViewController alloc] initTableViewWithFrame:tvf];
     self.inviteMessageViewController = [[GRKInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
 
     [self.inviteMessageViewController.messageView.sendButton addTarget:self

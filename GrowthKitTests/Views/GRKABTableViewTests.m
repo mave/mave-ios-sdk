@@ -49,7 +49,8 @@
 - (void)testTableSectionStyle {
     CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
     NSDictionary *data = @{@"D": @[@"Danny"]};
-    GRKABTableViewController *vc = [[GRKABTableViewController alloc] initWithFrame:fakeFrame andData:data];
+    GRKABTableViewController *vc = [[GRKABTableViewController alloc] initTableViewWithFrame:fakeFrame];
+    [vc updateTableData:data];
     GRKDisplayOptions *opts = [GrowthKit sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
