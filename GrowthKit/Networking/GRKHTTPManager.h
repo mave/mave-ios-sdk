@@ -22,6 +22,7 @@ typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseDat
 // Specific API Requests the app will make
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
+                        userId:(NSString *)userId
                completionBlock:(GRKHTTPCompletionBlock)completionBlock;
 
 - (void)sendApplicationLaunchNotification;
