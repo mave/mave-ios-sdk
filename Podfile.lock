@@ -1,13 +1,27 @@
 PODS:
   - Gizou (0.1.3)
+  - MMDrawerController (0.5.7):
+    - MMDrawerController/Core
+    - MMDrawerController/MMDrawerBarButtonItem
+    - MMDrawerController/MMDrawerVisualStates
+    - MMDrawerController/Subclass
+  - MMDrawerController/Core (0.5.7)
+  - MMDrawerController/MMDrawerBarButtonItem (0.5.7):
+    - MMDrawerController/Core
+  - MMDrawerController/MMDrawerVisualStates (0.5.7):
+    - MMDrawerController/Core
+  - MMDrawerController/Subclass (0.5.7):
+    - MMDrawerController/Core
   - OCMock (3.1.1)
 
 DEPENDENCIES:
   - Gizou
+  - MMDrawerController (~> 0.5.7)
   - OCMock
 
 SPEC CHECKSUMS:
   Gizou: f0025df05b51197ab8979c728a1cd525b7d6911f
+  MMDrawerController: c3ab7a318ddc7e2bcd133139c3161af08c6e1197
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
 
 COCOAPODS: 0.34.4
