@@ -49,7 +49,6 @@
                                               userId:[GrowthKit sharedInstance].currentUserId
                                        completionBlock:[OCMArg any]];
     [vc sendInvites];
-
     [mockHTTPManager verify];
 }
 
