@@ -22,7 +22,7 @@
             </objects>
             <point key="canvasLocation" x="697" y="1111"/>
         </scene>
-        <!--GrowthKitDevApp-->
+        <!--GrowthKitDemoApp-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="HomeViewController" sceneMemberID="viewController">
@@ -34,28 +34,60 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9I1-zF-I2e">
-                                <rect key="frame" x="277" y="130" width="48" height="30"/>
-                                <state key="normal" title="Click It">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="It doesn't do anything!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Lt-Yv-O8l">
-                                <rect key="frame" x="214" y="168" width="172" height="28"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Try out options for the invite page" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ITQ-Tn-ZRc">
+                                <rect key="frame" x="135" y="72" width="257" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="iPj-IB-hbb"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ZrD-QY-Cy5">
+                                <rect key="frame" x="135" y="153" width="115" height="29"/>
+                                <segments>
+                                    <segment title="Default"/>
+                                    <segment title="Blue"/>
+                                </segments>
+                                <color key="tintColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Color Scheme" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iKM-RG-F6u">
+                                <rect key="frame" x="135" y="132" width="110" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Message Copy" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mwF-dn-v4r">
+                                <rect key="frame" x="135" y="196" width="116" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" text="This is a test invite - check out the Mave Invite SDK DemoApp" translatesAutoresizingMaskIntoConstraints="NO" id="OEe-sn-Sbn">
+                                <rect key="frame" x="135" y="220" width="228" height="52"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="219" id="byG-mG-TIx"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                            </textView>
                         </subviews>
-                        <color key="backgroundColor" red="0.51086680203918355" green="1" blue="0.44778580236221466" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.43643558011959871" green="0.7570665109211715" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="9I1-zF-I2e" secondAttribute="centerY" constant="155" id="1Va-hG-fVO"/>
-                            <constraint firstAttribute="centerX" secondItem="7Lt-Yv-O8l" secondAttribute="centerX" id="eS3-m3-oWW"/>
-                            <constraint firstAttribute="centerX" secondItem="9I1-zF-I2e" secondAttribute="centerX" constant="-1" id="lvV-aC-7Ga"/>
-                            <constraint firstAttribute="centerY" secondItem="7Lt-Yv-O8l" secondAttribute="centerY" constant="118" id="yGA-Dq-6t1"/>
+                            <constraint firstItem="ITQ-Tn-ZRc" firstAttribute="leading" secondItem="mwF-dn-v4r" secondAttribute="leading" id="F2A-ER-8qI"/>
+                            <constraint firstItem="ZrD-QY-Cy5" firstAttribute="top" secondItem="iKM-RG-F6u" secondAttribute="bottom" constant="8" id="L6d-DH-b54"/>
+                            <constraint firstItem="ITQ-Tn-ZRc" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="8" id="L6m-GB-veT"/>
+                            <constraint firstItem="ITQ-Tn-ZRc" firstAttribute="leading" secondItem="OEe-sn-Sbn" secondAttribute="leading" id="QC1-Cl-rcc"/>
+                            <constraint firstItem="ITQ-Tn-ZRc" firstAttribute="leading" secondItem="iKM-RG-F6u" secondAttribute="leading" id="SAs-gG-tGl"/>
+                            <constraint firstItem="ZrD-QY-Cy5" firstAttribute="leading" secondItem="ITQ-Tn-ZRc" secondAttribute="leading" id="SCW-M9-Ffz"/>
+                            <constraint firstItem="OEe-sn-Sbn" firstAttribute="top" secondItem="mwF-dn-v4r" secondAttribute="bottom" constant="3" id="XZz-LH-A7W"/>
+                            <constraint firstAttribute="centerX" secondItem="ITQ-Tn-ZRc" secondAttribute="centerX" constant="-1.5" id="ZrK-dS-kyn"/>
+                            <constraint firstItem="mwF-dn-v4r" firstAttribute="top" secondItem="ZrD-QY-Cy5" secondAttribute="bottom" constant="36" id="b80-Qh-A09"/>
+                            <constraint firstItem="iKM-RG-F6u" firstAttribute="top" secondItem="ITQ-Tn-ZRc" secondAttribute="bottom" constant="39" id="k9p-fD-9IY"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="GrowthKitDevApp" id="6ZE-1W-sak">
+                    <navigationItem key="navigationItem" title="GrowthKitDemoApp" id="6ZE-1W-sak">
                         <barButtonItem key="rightBarButtonItem" title="Invite" id="grM-f3-TYS">
                             <connections>
                                 <action selector="presentInvitePageAsModal:" destination="vXZ-lx-hvc" id="etC-Qx-Ni6"/>
