@@ -268,7 +268,7 @@
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
                                                     message:@"Server was unavailable or internet connection failed"
                                                    delegate:nil
-                                          cancelButtonTitle:nil
+                                          cancelButtonTitle:@"Ok"
                                           otherButtonTitles:nil];
     [alert show];
     [self performSelector:@selector(dismissSendInvitesFailedAlertView:)
