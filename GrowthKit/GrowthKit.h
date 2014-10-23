@@ -42,16 +42,7 @@
                         email:(NSString *)email
                         phone:(NSString *)phone;
 
-- (void)presentInvitePage:(UIViewController *)sourceController;
-
-@end
-
-
-@protocol GRKInvitePageDelegate <NSObject>
-
-@optional
-- (void)invitesFailedToSend:(NSError *)error;
-- (void)invitesSent:(NSUInteger *)number;
-- (void)invitesNotSent;
+- (void)presentInvitePage:(UIViewController *)sourceController animated:(BOOL)animated;
+- (UIViewController *)invitePageViewControllerWithDelegate:(id <GRKInvitePageDelegate>) delegate;
 
 @end

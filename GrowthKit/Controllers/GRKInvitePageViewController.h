@@ -11,8 +11,16 @@
 #import "GRKInviteMessageViewController.h"
 #import "GRKHTTPManager.h"
 
+@protocol GRKInvitePageDelegate <NSObject>
+@required
+- (void)userDidCancel;
+- (void)userDidSendInvites;
+- (UIBarButtonItem *)cancelBarButtonItem;
+@end
+
 @interface GRKInvitePageViewController : UIViewController
 
+@property (nonatomic) id <GRKInvitePageDelegate> delegate;
 @property (nonatomic) GRKABTableViewController *ABTableViewController;
 @property (nonatomic) GRKInviteMessageViewController *inviteMessageViewController;
 
@@ -20,6 +28,7 @@
 @property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame
 @property (atomic) BOOL isKeyboardVisible;
 
+- (instancetype)initWithDelegate:(id <GRKInvitePageDelegate>)delegate;
 - (UIView *)createAddressBookInviteView;
 - (UIView *)createEmptyFallbackView;
 - (void)setOwnAndSubviewFrames;
@@ -37,3 +46,4 @@
 - (void)dismissAfterCancel;
 - (void)dismissAfterSuccess;
 @end
+

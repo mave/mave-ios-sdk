@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0CC6463119F9401C0006A1D0 /* InvitePageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463019F9401C0006A1D0 /* InvitePageDelegate.m */; };
+		0CC6463419F962CF0006A1D0 /* ModalInvitePageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463319F962CF0006A1D0 /* ModalInvitePageDelegate.m */; };
+		0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73E819F858A4009C6385 /* RootDrawerController.m */; };
+		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
 		C022641619EC41010087FF37 /* GRKABPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641119EC41010087FF37 /* GRKABPersonTests.m */; };
 		C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* GRKABCollectionTests.m */; };
@@ -15,7 +19,7 @@
 		C022641E19EC4FAC0087FF37 /* GRKHTTPManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641D19EC4FAC0087FF37 /* GRKHTTPManagerTests.m */; };
 		C029279719E823E2006AEE43 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279619E823E2006AEE43 /* main.m */; };
 		C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279919E823E2006AEE43 /* AppDelegate.m */; };
-		C029279D19E823E2006AEE43 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279C19E823E2006AEE43 /* ViewController.m */; };
+		C029279D19E823E2006AEE43 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C029279C19E823E2006AEE43 /* HomeViewController.m */; };
 		C02927A219E823E2006AEE43 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C02927A119E823E2006AEE43 /* Images.xcassets */; };
 		C02927C619E827F9006AEE43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C02927C519E827F9006AEE43 /* Main.storyboard */; };
 		C02927F319E82CF8006AEE43 /* GrowthKit.m in Sources */ = {isa = PBXBuildFile; fileRef = C02927F019E82C8D006AEE43 /* GrowthKit.m */; };
@@ -62,6 +66,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0CC6462F19F9401C0006A1D0 /* InvitePageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitePageDelegate.h; sourceTree = "<group>"; };
+		0CC6463019F9401C0006A1D0 /* InvitePageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvitePageDelegate.m; sourceTree = "<group>"; };
+		0CC6463219F962CF0006A1D0 /* ModalInvitePageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalInvitePageDelegate.h; sourceTree = "<group>"; };
+		0CC6463319F962CF0006A1D0 /* ModalInvitePageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalInvitePageDelegate.m; sourceTree = "<group>"; };
+		0CCC73E719F858A4009C6385 /* RootDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootDrawerController.h; sourceTree = "<group>"; };
+		0CCC73E819F858A4009C6385 /* RootDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootDrawerController.m; sourceTree = "<group>"; };
+		0CCC73ED19F8708E009C6385 /* SideDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerController.h; sourceTree = "<group>"; };
+		0CCC73EE19F8708E009C6385 /* SideDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideDrawerController.m; sourceTree = "<group>"; };
 		2110DFB92C7B0700F5577B76 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5D1D110D19FDCF9921E21868 /* libPods-GrowthKitTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GrowthKitTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67DE4B21E0255868A78BD50B /* Pods-GrowthKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowthKitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GrowthKitTests/Pods-GrowthKitTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -79,8 +91,8 @@
 		C029279619E823E2006AEE43 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C029279819E823E2006AEE43 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C029279919E823E2006AEE43 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C029279B19E823E2006AEE43 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		C029279C19E823E2006AEE43 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		C029279B19E823E2006AEE43 /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
+		C029279C19E823E2006AEE43 /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		C02927A119E823E2006AEE43 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C02927BC19E825A5006AEE43 /* GrowthKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowthKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C02927BF19E825A5006AEE43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -218,11 +230,19 @@
 			children = (
 				C029279819E823E2006AEE43 /* AppDelegate.h */,
 				C029279919E823E2006AEE43 /* AppDelegate.m */,
-				C029279B19E823E2006AEE43 /* ViewController.h */,
-				C029279C19E823E2006AEE43 /* ViewController.m */,
+				0CCC73E719F858A4009C6385 /* RootDrawerController.h */,
+				0CCC73E819F858A4009C6385 /* RootDrawerController.m */,
+				0CCC73ED19F8708E009C6385 /* SideDrawerController.h */,
+				0CCC73EE19F8708E009C6385 /* SideDrawerController.m */,
+				C029279B19E823E2006AEE43 /* HomeViewController.h */,
+				C029279C19E823E2006AEE43 /* HomeViewController.m */,
+				0CC6462F19F9401C0006A1D0 /* InvitePageDelegate.h */,
+				0CC6463019F9401C0006A1D0 /* InvitePageDelegate.m */,
 				C02927C519E827F9006AEE43 /* Main.storyboard */,
 				C02927A119E823E2006AEE43 /* Images.xcassets */,
 				C029279419E823E2006AEE43 /* Supporting Files */,
+				0CC6463219F962CF0006A1D0 /* ModalInvitePageDelegate.h */,
+				0CC6463319F962CF0006A1D0 /* ModalInvitePageDelegate.m */,
 			);
 			path = DemoApp;
 			sourceTree = "<group>";
@@ -517,17 +537,21 @@
 			files = (
 				C0425B9319EF2E5C006641AB /* GRKConstants.m in Sources */,
 				C02927FC19E82D03006AEE43 /* GRKInviteMessageViewController.m in Sources */,
-				C029279D19E823E2006AEE43 /* ViewController.m in Sources */,
+				0CC6463419F962CF0006A1D0 /* ModalInvitePageDelegate.m in Sources */,
+				0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */,
+				C029279D19E823E2006AEE43 /* HomeViewController.m in Sources */,
 				C029280B19E82D18006AEE43 /* GRKABPersonCell.m in Sources */,
 				C02927FB19E82D03006AEE43 /* GRKABTableViewController.m in Sources */,
 				C02927F319E82CF8006AEE43 /* GrowthKit.m in Sources */,
 				C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */,
 				C02927FA19E82D03006AEE43 /* GRKInvitePageViewController.m in Sources */,
 				C029280619E82D0F006AEE43 /* GRKDisplayOptions.m in Sources */,
+				0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */,
 				C029280F19E82D21006AEE43 /* GRKHTTPManager.m in Sources */,
 				C029280C19E82D18006AEE43 /* GRKInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* GRKABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
+				0CC6463119F9401C0006A1D0 /* InvitePageDelegate.m in Sources */,
 				C0F4C8EE19F162B80003D209 /* GRKInviteSendingProgressView.m in Sources */,
 				C029280419E82D0F006AEE43 /* GRKABCollection.m in Sources */,
 			);
@@ -572,7 +596,7 @@
 		C029277D19E8217E006AEE43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
@@ -580,7 +604,7 @@
 		C029277E19E8217E006AEE43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 			};
 			name = Release;
 		};

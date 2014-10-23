@@ -20,6 +20,12 @@
 
 @implementation GRKInvitePageViewController
 
+- (instancetype)initWithDelegate:(id <GRKInvitePageDelegate>)delegate {
+    if (self = [super init]) {
+        self.delegate = delegate;
+    }
+    return self;
+}
 
 - (void)loadView {
     [super loadView];
@@ -208,16 +214,32 @@
 
 - (void)setupNavigationBar {
     self.navigationItem.title = @"Invite Friends";
-    UIColor *col = [GrowthKit sharedInstance].displayOptions.navigationBarBackgroundColor;
-    self.navigationController.navigationBar.barTintColor = col;
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
-                                     initWithTitle:@"Cancel"
-                                     style:UIBarButtonItemStylePlain
-                                     target:self
-                                     action:@selector(dismissAfterCancel)];
-    [self.navigationItem setLeftBarButtonItem:cancelButton];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    self.navigationController.navigationBar.barTintColor = gk.displayOptions.navigationBarBackgroundColor;
+    UIBarButtonItem * cancelBarButtonItem;
+    NSLog(@"delegate is %@", self.delegate);
+    if ([self.delegate respondsToSelector:@selector(cancelBarButtonItem)]) {
+        cancelBarButtonItem = [self.delegate cancelBarButtonItem];
+        NSLog(@"responds");
+    } else {
+        NSLog(@"not resp");
+        cancelBarButtonItem = [self fallbackCancelBarButtonItemWithDelegate:self.delegate];
+    }
+    [self.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
 }
 
+- (UIBarButtonItem *)fallbackCancelBarButtonItemWithDelegate:(id <GRKInvitePageDelegate>) delegate {
+    
+    return [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                            style:UIBarButtonItemStylePlain
+                                           target:delegate
+                                           action:@selector(userDidCancel)];
+}
+
+
+//
+// Send invites and update UI when done
+//
 - (void)sendInvites {
     NSLog(@"Sending invites");
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];

@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface HomeViewController : UIViewController
 
-- (IBAction)openInvitePage:(id)sender;
+- (IBAction)presentInvitePageAsModal:(id)sender;
 
 @end
 

@@ -79,10 +79,15 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Methods for consumer to present/manage the invite page
 //
-- (void)presentInvitePage:(UIViewController *)sourceController {
+- (void)presentInvitePage:(UIViewController *)sourceController animated:(BOOL)animated {
     GRKInvitePageViewController *ipvc = [[GRKInvitePageViewController alloc] init];
     invitePageNavController = [[UINavigationController alloc] initWithRootViewController:ipvc];
-    [sourceController presentViewController:invitePageNavController animated:YES completion:nil];
+    [sourceController presentViewController:invitePageNavController animated:animated completion:nil];
+}
+
+- (UIViewController *)invitePageViewControllerWithDelegate:(id<GRKInvitePageDelegate>)delegate {
+    GRKInvitePageViewController *inviteController = [[GRKInvitePageViewController alloc] initWithDelegate:delegate];
+    return [[UINavigationController alloc] initWithRootViewController:inviteController];
 }
 
 @end
