@@ -37,9 +37,6 @@
     tableData = data;
     tableSections = [[tableData allKeys]
                        sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    if (tableData == nil) {
-        NSLog(@"It was nil!");
-    }
     [self.tableView reloadData];
 }
 

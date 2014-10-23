@@ -21,6 +21,7 @@
     [GrowthKit setupSharedInstanceWithApplicationID:@"12345"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     [gk setUserData:@"1" firstName:@"Danny" lastName:@"Cosson"];
+    [gk registerAppOpen];
 
     return YES;
 }

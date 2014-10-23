@@ -29,7 +29,6 @@
 
 - (void)loadView {
     [super loadView];
-    NSLog(@"Invite Page loadView!");
     // On load keyboard is hidden
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
@@ -210,15 +209,12 @@
 
 - (void)setupNavigationBar {
     self.navigationItem.title = @"Invite Friends";
-    GrowthKit *gk = [GrowthKit sharedInstance];
-    self.navigationController.navigationBar.barTintColor = gk.displayOptions.navigationBarBackgroundColor;
+    self.navigationController.navigationBar.barTintColor = [GrowthKit sharedInstance].displayOptions.navigationBarBackgroundColor;
+
     UIBarButtonItem * cancelBarButtonItem;
-    NSLog(@"delegate is %@", self.delegate);
     if ([self.delegate respondsToSelector:@selector(cancelBarButtonItem)]) {
         cancelBarButtonItem = [self.delegate cancelBarButtonItem];
-        NSLog(@"responds");
     } else {
-        NSLog(@"not resp");
         cancelBarButtonItem = [[UIBarButtonItem alloc] init];
         cancelBarButtonItem.title = @"Cancel";
     }

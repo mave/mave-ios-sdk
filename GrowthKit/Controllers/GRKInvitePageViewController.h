@@ -11,13 +11,31 @@
 #import "GRKInviteMessageViewController.h"
 #import "GRKHTTPManager.h"
 
+// This protocol must be implemented to dismiss the invite page view controller and return
+//   the user to your application.
+// You can also run custom code based on whether or not the user sent any invites.
 @protocol GRKInvitePageDelegate <NSObject>
+
 @required
-- (void)userDidCancel;
+// Indicates that invites were sent successfully
 - (void)userDidSendInvites;
+
+// Indicates that the user hit cancel without sending any invites.
+- (void)userDidCancel;
+
 @optional
+// Return a custom button to use for the top left of the invite page navigation bar.
+// Useful to set a custom icon, at a minimum you'd want a different icon for
+//   presenting the invite page as a modal vs pushing onto a navigation stack vs using
+//   a custom drawer controller or something.
+//
+// Any target & action set on the bar button item will be ignored, instead this library
+// will call its own cleanup methods and then call your `userDidCancel` method.
 - (UIBarButtonItem *)cancelBarButtonItem;
+
 @end
+
+
 
 @interface GRKInvitePageViewController : UIViewController
 

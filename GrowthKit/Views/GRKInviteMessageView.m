@@ -55,7 +55,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    NSLog(@"Layout subviews@");
+
     CGRect textFrame, buttonFrame;
     [self computeFrameSizesWithContainingFrame:self.frame
                                     ButtonFont:self.sendButton.titleLabel.font
