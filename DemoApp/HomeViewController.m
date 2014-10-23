@@ -8,6 +8,8 @@
 
 #import "HomeViewController.h"
 
+#import <UIKit/UIKit.h>
+
 #import "GrowthKit.h"
 #import "ModalInvitePageDelegate.h"
 #import "UIViewController+MMDrawerController.h"
@@ -19,6 +21,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupLeftMenuButton];
+    UILabel *label;
+//    self.view.backgroundColor = [UIColor greenColor];
+//    for (int i = 0; i < [self.view.subviews count]; i++) {
+//        if ([self.view.subviews[i] class] == [UILabel class]) {
+//            label = self.view.subviews[i];
+//            label.textColor = [UIColor redColor];
+//        }
+//    }
 }
 
 - (IBAction)presentInvitePageAsModal:(id)sender {

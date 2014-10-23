@@ -94,6 +94,10 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="colorSchemes" destination="ZrD-QY-Cy5" id="B3P-17-4Yd"/>
+                        <outlet property="defaultMessageCopy" destination="OEe-sn-Sbn" id="S5B-wB-paN"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

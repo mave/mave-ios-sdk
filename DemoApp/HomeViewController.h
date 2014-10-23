@@ -10,6 +10,9 @@
 
 @interface HomeViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UITextView *defaultMessageCopy;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *colorSchemes;
+
 - (IBAction)presentInvitePageAsModal:(id)sender;
 
 @end
