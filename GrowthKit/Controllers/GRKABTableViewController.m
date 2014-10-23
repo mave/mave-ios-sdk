@@ -8,6 +8,7 @@
 
 #import "GrowthKit.h"
 #import "GRKDisplayOptions.h"
+#import "GRKInvitePageViewController.h"
 #import "GRKABTableViewController.h"
 #import "GRKABCollection.h"
 #import "GRKABPersonCell.h"
@@ -22,8 +23,9 @@
     NSArray *tableSections;
 }
 
-- (instancetype)initTableViewWithFrame:(CGRect)frame {
+- (instancetype)initTableViewWithFrame:(CGRect)frame parent:(GRKInvitePageViewController *)parent {
     if(self = [super init]) {
+        self.parentViewController = parent;
         self.tableView = [[UITableView alloc] initWithFrame:frame];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
@@ -103,7 +105,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // TODO: make more robust (if phone number is none)
     GRKABPerson *person = [self personAtIndexPath:indexPath];
     person.selected = !person.selected;
     if (person.selected) {
@@ -111,6 +112,7 @@
     } else {
         [self.selectedPhoneNumbers removeObject:person.phoneNumbers[0]];
     }
+    [self.parentViewController ABTableViewControllerUpdatedNumberSelected:[self.selectedPhoneNumbers count]];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 

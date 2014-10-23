@@ -47,14 +47,18 @@
 @property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame
 @property (atomic) BOOL isKeyboardVisible;
 
+// Setup self and children
 - (instancetype)initWithDelegate:(id <GRKInvitePageDelegate>)delegate;
 - (UIView *)createAddressBookInviteView;
 - (UIView *)createEmptyFallbackView;
-- (void)setOwnAndSubviewFrames;
 - (void)setupNavigationBar;
+- (void)setOwnAndSubviewFrames;
 - (void)determineAndSetViewBasedOnABPermissions;
 
-// Other business logic
+// React to children actions
+- (void)ABTableViewControllerUpdatedNumberSelected:(unsigned long)num;
+
+// Invite Sending
 - (void)sendInvites;
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error;
 

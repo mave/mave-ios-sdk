@@ -10,7 +10,11 @@
 
 @interface GRKInviteMessageView : UIView <UITextViewDelegate>
 
+@property UIView *fakeTopBorder;  // view to make a border on just one side
 @property UIButton *sendButton;
 @property UITextView *textField;
+@property UILabel *sendMediumIndicator;  // e.g. "4 Individual SMS"
+
+- (void)updateNumberPeopleSelected:(unsigned long)numberSelected;
 
 @end

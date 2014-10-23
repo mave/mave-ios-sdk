@@ -37,17 +37,28 @@
     GRKInviteMessageView *view = [[GRKInviteMessageView alloc] initWithFrame:fakeFrame];
     GRKDisplayOptions *opts = [GrowthKit sharedInstance].displayOptions;
 
-    // Test Message field style
+    // Test view box style
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
+    XCTAssertEqualObjects(view.fakeTopBorder.backgroundColor, opts.borderColor);
+    XCTAssertEqual(view.fakeTopBorder.frame.size.height, 0.5f);
+    XCTAssertEqual(view.fakeTopBorder.frame.origin.x, 0);
+    XCTAssertEqual(view.fakeTopBorder.frame.origin.y, 0);
+    
+    // Test Message field style
     UIColor *tfbgColor = [[UIColor alloc]
                           initWithCGColor:view.textField.layer.backgroundColor];
     XCTAssertEqualObjects(tfbgColor, [GRKDisplayOptions colorWhite]);
     UIColor *tfBorderColor = [[UIColor alloc]
                               initWithCGColor:view.textField.layer.borderColor];
-    XCTAssertEqualObjects(tfBorderColor, [GRKDisplayOptions colorAlmostBlack]);
+    XCTAssertEqualObjects(tfBorderColor, opts.borderColor);
 
     // Test Button Style
     XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.tintColor);
+    
+    // Send Medium Indicator Style
+    XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
+    XCTAssertEqualObjects(view.sendMediumIndicator.textColor, opts.secondaryTextColor);
+    XCTAssertEqualObjects(view.sendMediumIndicator.font, opts.primaryFont);
 }
 
 - (void)testSendingProgressViewStyleOnInit {

@@ -114,6 +114,22 @@
 //
 // Load the correct view(s) with data
 //
+- (void)setupNavigationBar {
+    self.navigationItem.title = @"Invite Friends";
+    self.navigationController.navigationBar.barTintColor = [GrowthKit sharedInstance].displayOptions.navigationBarBackgroundColor;
+    
+    UIBarButtonItem * cancelBarButtonItem;
+    if ([self.delegate respondsToSelector:@selector(cancelBarButtonItem)]) {
+        cancelBarButtonItem = [self.delegate cancelBarButtonItem];
+    } else {
+        cancelBarButtonItem = [[UIBarButtonItem alloc] init];
+        cancelBarButtonItem.title = @"Cancel";
+    }
+    cancelBarButtonItem.target = self;
+    cancelBarButtonItem.action = @selector(dismissAfterSuccess);
+    [self.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
+}
+
 - (void)determineAndSetViewBasedOnABPermissions {
     // If address book permission already granted, load contacts view right now
     ABAuthorizationStatus addrBookStatus = ABAddressBookGetAuthorizationStatus();
@@ -183,7 +199,8 @@
                              inviteMessageViewFrame:&imvf];
     UIView *containerView = [[UIView alloc] initWithFrame:cvf];
 
-    self.ABTableViewController = [[GRKABTableViewController alloc] initTableViewWithFrame:tvf];
+    self.ABTableViewController = [[GRKABTableViewController alloc] initTableViewWithFrame:tvf
+                                                                                   parent:self];
     self.inviteMessageViewController = [[GRKInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
 
     [self.inviteMessageViewController.messageView.sendButton addTarget:self
@@ -206,21 +223,17 @@
     [self.ABTableViewController.tableView setFrame:tvf];
     [self.inviteMessageViewController.view setFrame:imvf];
 }
+//
+// Respond to children's Events
+//
 
-- (void)setupNavigationBar {
-    self.navigationItem.title = @"Invite Friends";
-    self.navigationController.navigationBar.barTintColor = [GrowthKit sharedInstance].displayOptions.navigationBarBackgroundColor;
-
-    UIBarButtonItem * cancelBarButtonItem;
-    if ([self.delegate respondsToSelector:@selector(cancelBarButtonItem)]) {
-        cancelBarButtonItem = [self.delegate cancelBarButtonItem];
-    } else {
-        cancelBarButtonItem = [[UIBarButtonItem alloc] init];
-        cancelBarButtonItem.title = @"Cancel";
-    }
-    cancelBarButtonItem.target = self;
-    cancelBarButtonItem.action = @selector(dismissAfterSuccess);
-    [self.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
+- (void)ABTableViewControllerUpdatedNumberSelected:(unsigned long)num {
+    // If called from the table view's "did select row at index path" method we'll already be
+    // in the main thread anyway, but dispatch it asynchronously just in case we ever call
+    // from somewhere else.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.inviteMessageViewController.messageView updateNumberPeopleSelected:num];
+    });
 }
 
 
