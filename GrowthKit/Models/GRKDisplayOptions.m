@@ -16,8 +16,9 @@
     if (self = [super init]) {
         self.primaryFont = [UIFont systemFontOfSize:16];
         self.primaryTextColor = [[self class] colorAlmostBlack];
-        self.secondaryTextColor = [[self class]colorLightGrey];
+        self.secondaryTextColor = [[self class]colorMediumGrey];
         self.tintColor = [[self class] colorBlueTint];
+        self.borderColor = [[self class] colorLightGrey];
 
         self.navigationBarBackgroundColor = [[self class] colorWhite];
         self.bottomViewBackgroundColor = [[self class] colorWhite];
@@ -28,7 +29,8 @@
 }
 
 + (UIColor *)colorAlmostBlack { return [[UIColor alloc] initWithWhite:0.15 alpha:1.0]; }
-+ (UIColor *)colorLightGrey { return [[UIColor alloc] initWithWhite:0.65 alpha:1.0]; }
++ (UIColor *)colorMediumGrey { return [[UIColor alloc] initWithWhite:0.65 alpha:1.0]; }
++ (UIColor *)colorLightGrey { return [[UIColor alloc] initWithWhite:0.70 alpha:1.0]; }
 + (UIColor *)colorExtraLightGrey { return [[UIColor alloc] initWithWhite:0.95 alpha:1.0]; }
 + (UIColor *)colorWhite { return [[UIColor alloc] initWithWhite:1.0 alpha:1.0]; }
 + (UIColor *)colorBlueTint {

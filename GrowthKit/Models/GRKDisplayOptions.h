@@ -21,6 +21,7 @@
 @property (strong, nonatomic) UIColor *primaryTextColor;
 @property (strong, nonatomic) UIColor *secondaryTextColor;
 @property (strong, nonatomic) UIColor *tintColor;
+@property (strong, nonatomic) UIColor *borderColor;
 
 @property (strong, nonatomic) UIColor *navigationBarBackgroundColor;
 @property (strong, nonatomic) UIColor *bottomViewBackgroundColor;

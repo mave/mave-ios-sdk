@@ -26,7 +26,11 @@
     
     // Create own containing view
     if (self = [super initWithFrame:frame]) {
-        [self setBackgroundColor:displayOptions.bottomViewBackgroundColor];
+        self.backgroundColor = displayOptions.bottomViewBackgroundColor;
+
+        // Use a view to simulate a border that's on just the top
+        UIView *fakeTopBorder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 0.5f)];
+        fakeTopBorder.backgroundColor = displayOptions.borderColor;
         
         // Create child views (button & textView) & set non-layout styling
         // They will get laid out by layoutSubviews
@@ -35,7 +39,7 @@
         
         self.textField.delegate = self;
         self.textField.layer.backgroundColor=[[GRKDisplayOptions colorWhite] CGColor];
-        self.textField.layer.borderColor=[[GRKDisplayOptions colorAlmostBlack] CGColor];
+        self.textField.layer.borderColor=[displayOptions.borderColor CGColor];
         self.textField.layer.cornerRadius=8.0f;
         self.textField.layer.masksToBounds=YES;
         self.textField.layer.borderWidth= 0.5f;
@@ -46,6 +50,7 @@
         self.sendButton.titleLabel.font = buttonFont;
         [self.sendButton setTitle:buttonTitle forState: UIControlStateNormal];
         
+        [self addSubview:fakeTopBorder];
         [self addSubview:self.textField];
         [self addSubview:self.sendButton];
     
