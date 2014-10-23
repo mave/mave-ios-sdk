@@ -227,7 +227,7 @@
 // Respond to children's Events
 //
 
-- (void)ABTableViewControllerUpdatedNumberSelected:(unsigned long)num {
+- (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num {
     // If called from the table view's "did select row at index path" method we'll already be
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
     // from somewhere else.

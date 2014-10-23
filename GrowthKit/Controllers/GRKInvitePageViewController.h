@@ -37,7 +37,7 @@
 
 
 
-@interface GRKInvitePageViewController : UIViewController
+@interface GRKInvitePageViewController : UIViewController <GRKABTableViewAdditionalDelegate>
 
 @property (nonatomic) id <GRKInvitePageDelegate> delegate;
 @property (nonatomic) GRKABTableViewController *ABTableViewController;
@@ -54,9 +54,6 @@
 - (void)setupNavigationBar;
 - (void)setOwnAndSubviewFrames;
 - (void)determineAndSetViewBasedOnABPermissions;
-
-// React to children actions
-- (void)ABTableViewControllerUpdatedNumberSelected:(unsigned long)num;
 
 // Invite Sending
 - (void)sendInvites;

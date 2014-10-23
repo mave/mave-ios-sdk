@@ -8,7 +8,6 @@
 
 #import "GrowthKit.h"
 #import "GRKDisplayOptions.h"
-#import "GRKInvitePageViewController.h"
 #import "GRKABTableViewController.h"
 #import "GRKABCollection.h"
 #import "GRKABPersonCell.h"
@@ -23,7 +22,7 @@
     NSArray *tableSections;
 }
 
-- (instancetype)initTableViewWithFrame:(CGRect)frame parent:(GRKInvitePageViewController *)parent {
+- (instancetype)initTableViewWithFrame:(CGRect)frame parent:(id<GRKABTableViewAdditionalDelegate>)parent {
     if(self = [super init]) {
         self.parentViewController = parent;
         self.tableView = [[UITableView alloc] initWithFrame:frame];
@@ -112,7 +111,7 @@
     } else {
         [self.selectedPhoneNumbers removeObject:person.phoneNumbers[0]];
     }
-    [self.parentViewController ABTableViewControllerUpdatedNumberSelected:[self.selectedPhoneNumbers count]];
+    [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 

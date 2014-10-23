@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0CC6463119F9401C0006A1D0 /* SideDrawerInvitePageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463019F9401C0006A1D0 /* SideDrawerInvitePageDelegate.m */; };
 		0CC6463419F962CF0006A1D0 /* ModalInvitePageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463319F962CF0006A1D0 /* ModalInvitePageDelegate.m */; };
+		0CC6463619F9C6190006A1D0 /* GRKABTableViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463519F9C6190006A1D0 /* GRKABTableViewControllerTests.m */; };
 		0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73E819F858A4009C6385 /* RootDrawerController.m */; };
 		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
@@ -70,6 +71,7 @@
 		0CC6463019F9401C0006A1D0 /* SideDrawerInvitePageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideDrawerInvitePageDelegate.m; sourceTree = "<group>"; };
 		0CC6463219F962CF0006A1D0 /* ModalInvitePageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalInvitePageDelegate.h; sourceTree = "<group>"; };
 		0CC6463319F962CF0006A1D0 /* ModalInvitePageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalInvitePageDelegate.m; sourceTree = "<group>"; };
+		0CC6463519F9C6190006A1D0 /* GRKABTableViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKABTableViewControllerTests.m; sourceTree = "<group>"; };
 		0CCC73E719F858A4009C6385 /* RootDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootDrawerController.h; sourceTree = "<group>"; };
 		0CCC73E819F858A4009C6385 /* RootDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootDrawerController.m; sourceTree = "<group>"; };
 		0CCC73ED19F8708E009C6385 /* SideDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerController.h; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 			children = (
 				C0425B8B19EDB955006641AB /* GRKInviteMessageViewControllerTests.m */,
 				C0425B8D19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m */,
+				0CC6463519F9C6190006A1D0 /* GRKABTableViewControllerTests.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				C0834F3219F44D7500E52CA1 /* GRKInviteMessageViewTests.m in Sources */,
 				C0425B8E19EDBFC8006641AB /* GRKInvitePageViewControllerTests.m in Sources */,
 				C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */,
+				0CC6463619F9C6190006A1D0 /* GRKABTableViewControllerTests.m in Sources */,
 				C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */,
 				C0425B8C19EDB955006641AB /* GRKInviteMessageViewControllerTests.m in Sources */,
 				C022641E19EC4FAC0087FF37 /* GRKHTTPManagerTests.m in Sources */,
