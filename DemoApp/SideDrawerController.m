@@ -10,7 +10,7 @@
 
 #import "GrowthKit.h"
 #import "RootDrawerController.h"
-#import "InvitePageDelegate.h"
+#import "SideDrawerInvitePageDelegate.h"
 #import "MMDrawerBarButtonItem.h"
 #import "UIViewController+MMDrawerController.h"
 
@@ -43,8 +43,7 @@
     NSString *controllerIdentifier = self.sideDrawerMenuItemIdentifiers[indexPath.row];
     UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
-        InvitePageDelegate *invitePageDelegate = [[InvitePageDelegate alloc] init];
-        invitePageDelegate.mm_drawerController = self.mm_drawerController;
+        SideDrawerInvitePageDelegate *invitePageDelegate = [[SideDrawerInvitePageDelegate alloc] initWithDrawerController:self.mm_drawerController];
         centerViewController = [[GrowthKit sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate];
     } else {
         centerViewController = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];

@@ -42,7 +42,6 @@
                         email:(NSString *)email
                         phone:(NSString *)phone;
 
-- (void)presentInvitePage:(UIViewController *)sourceController animated:(BOOL)animated;
 - (UIViewController *)invitePageViewControllerWithDelegate:(id <GRKInvitePageDelegate>) delegate;
 
 @end

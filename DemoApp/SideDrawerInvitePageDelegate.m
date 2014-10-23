@@ -6,10 +6,17 @@
 //
 //
 
-#import "InvitePageDelegate.h"
+#import "SideDrawerInvitePageDelegate.h"
 #import "MMDrawerBarButtonItem.h"
 
-@implementation InvitePageDelegate
+@implementation SideDrawerInvitePageDelegate
+
+- (instancetype)initWithDrawerController:(MMDrawerController *)drawerController {
+    if (self = [super init]) {
+        self.mm_drawerController = drawerController;
+    }
+    return self;
+}
 
 - (void)userDidCancel {
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
@@ -20,7 +27,7 @@
 }
 
 - (UIBarButtonItem *)cancelBarButtonItem {
-    return [[MMDrawerBarButtonItem alloc] initWithTarget:self action:@selector(userDidCancel)];
+    return [[MMDrawerBarButtonItem alloc] initWithTarget:nil action:nil];
 }
 
 @end

@@ -15,6 +15,7 @@
 @required
 - (void)userDidCancel;
 - (void)userDidSendInvites;
+@optional
 - (UIBarButtonItem *)cancelBarButtonItem;
 @end
 
@@ -39,11 +40,8 @@
 - (void)sendInvites;
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error;
 
-// This is called when the view controller is being dismissed, either
-// b/c we're done sending invites or the user hit cancel
+// This is called when the view controller is being dismissed.
+// Called just before the delegate method for cancel or did send.
 - (void)cleanupForDismiss;
-
-- (void)dismissAfterCancel;
-- (void)dismissAfterSuccess;
 @end
 

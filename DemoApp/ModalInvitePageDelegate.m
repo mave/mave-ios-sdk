@@ -11,11 +11,10 @@
 @implementation ModalInvitePageDelegate
 
 - (void)userDidSendInvites {
-    
+    [self.viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)userDidCancel {
-    NSLog(@"called my modal delegate");
     [self.viewController dismissViewControllerAnimated:YES completion:nil];
 }
 

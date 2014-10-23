@@ -10,8 +10,10 @@
 #import "GrowthKit.h"
 #import "MMDrawerController.h"
 
-@interface InvitePageDelegate : NSObject <GRKInvitePageDelegate>
+@interface SideDrawerInvitePageDelegate : NSObject <GRKInvitePageDelegate>
 
 @property (nonatomic, weak) MMDrawerController *mm_drawerController;
+
+- (instancetype)initWithDrawerController:(MMDrawerController *)drawerController;
 
 @end

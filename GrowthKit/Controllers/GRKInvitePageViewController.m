@@ -62,19 +62,15 @@
     // Dispose of any resources that can be recreated.
 }
 
-// TODO: Do Cancel and Success need to be separate methods? Do we need
-// the client app to specify a delegate for them to call to alert the
-// app that we've returned and give info about how many invites were sent, etc?
-- (void)dismissAfterCancel {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self cleanupForDismiss];
-}
-
+// Wrap the delegate cancel & success to make sure we cleanup first
 - (void)dismissAfterSuccess {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self cleanupForDismiss];
+    [self.delegate userDidSendInvites];
 }
 
+- (void)dismissAfterCancel {
+    [self cleanupForDismiss];
+    [self.delegate userDidCancel];
+}
 
 - (void)cleanupForDismiss {
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -223,17 +219,12 @@
         NSLog(@"responds");
     } else {
         NSLog(@"not resp");
-        cancelBarButtonItem = [self fallbackCancelBarButtonItemWithDelegate:self.delegate];
+        cancelBarButtonItem = [[UIBarButtonItem alloc] init];
+        cancelBarButtonItem.title = @"Cancel";
     }
+    cancelBarButtonItem.target = self;
+    cancelBarButtonItem.action = @selector(dismissAfterSuccess);
     [self.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
-}
-
-- (UIBarButtonItem *)fallbackCancelBarButtonItemWithDelegate:(id <GRKInvitePageDelegate>) delegate {
-    
-    return [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                            style:UIBarButtonItemStylePlain
-                                           target:delegate
-                                           action:@selector(userDidCancel)];
 }
 
 
@@ -263,7 +254,10 @@
             NSLog(@"Invites sent! response: %@", responseData);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
-                [self performSelector:@selector(dismissAfterSuccess) withObject:nil afterDelay:1.0];
+            });
+            dispatch_after(1.0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self cleanupForDismiss];
+                [self.delegate userDidSendInvites];
             });
         }
     }];
