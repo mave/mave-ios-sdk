@@ -32,7 +32,7 @@
     self.textLabel.text = [person fullName];
     if (person.selected) {
         self.accessoryType = UITableViewCellAccessoryCheckmark;
-        self.detailTextLabel.text = [person bestPhone];
+        self.detailTextLabel.text = [[person class] displayPhoneNumber:[person bestPhone]];
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
         self.detailTextLabel.text = nil;
