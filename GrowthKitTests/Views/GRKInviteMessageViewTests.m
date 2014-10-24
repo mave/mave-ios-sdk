@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "GrowthKit.h"
 #import "GRKDisplayOptions.h"
 #import "GRKDisplayOptionsFactory.h"
@@ -70,5 +71,20 @@
     XCTAssertEqualObjects(view.progressView.tintColor, opts.tintColor);
     XCTAssertEqualObjects(view.mainLabel.textColor, opts.tintColor);
 }
+
+- (void)testUpdateNumberPeopleSelected {
+    GRKInviteMessageView *view = [[GRKInviteMessageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    id partialMock = [OCMockObject partialMockForObject:view];
+    [[partialMock expect] setNeedsLayout];
     
+    [view updateNumberPeopleSelected:3];
+    
+    XCTAssertEqualObjects(view.sendMediumIndicator.text, @"3 Individual SMS");
+    [partialMock verify];
+    
+    // Now try 0 people
+    [view updateNumberPeopleSelected:0];
+    XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
+}
+
 @end

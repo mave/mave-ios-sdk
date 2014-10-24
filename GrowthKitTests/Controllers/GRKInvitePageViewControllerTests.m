@@ -12,6 +12,7 @@
 #import "GRKInvitePageViewController.h"
 #import "GRKHTTPManager.h"
 #import "GRKDisplayOptionsFactory.h"
+#import "GRKInviteMessageView.h"
 
 @interface GRKInvitePageViewControllerTests : XCTestCase
 
@@ -30,6 +31,19 @@
     [super tearDown];
 }
 
+//
+- (void)testRespondAsAdditionalTableViewDelegate {
+    id mock = [OCMockObject mockForClass:[GRKInviteMessageView class]];
+    GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
+    vc.inviteMessageViewController.messageView = mock;
+    OCMExpect([mock updateNumberPeopleSelected:2]);
+    [vc ABTableViewControllerNumberSelectedChanged:2];
+    OCMVerify(mock);
+}
+
+//
+// Sending requests
+//
 - (void)testSendInvites {
     GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
     [vc loadView];
