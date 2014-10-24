@@ -12,6 +12,7 @@
 @interface GRKDisplayOptions : NSObject
 
 + (UIColor *)colorAlmostBlack;
++ (UIColor *)colorMediumGrey;
 + (UIColor *)colorLightGrey;
 + (UIColor *)colorExtraLightGrey;
 + (UIColor *)colorWhite;

@@ -54,7 +54,12 @@
     XCTAssertEqualObjects(tfBorderColor, opts.borderColor);
 
     // Test Button Style
+    XCTAssertFalse(view.sendButton.enabled);
+    XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateNormal], @"Send");
     XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.tintColor);
+    XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateDisabled], @"Send");
+    XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateDisabled],
+                          [GRKDisplayOptions colorMediumGrey]);
     
     // Send Medium Indicator Style
     XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
@@ -72,7 +77,7 @@
     XCTAssertEqualObjects(view.mainLabel.textColor, opts.tintColor);
 }
 
-- (void)testUpdateNumberPeopleSelected {
+- (void)testUpdateNumberPeopleSelectedNonZero {
     GRKInviteMessageView *view = [[GRKInviteMessageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     id partialMock = [OCMockObject partialMockForObject:view];
     [[partialMock expect] setNeedsLayout];
@@ -80,11 +85,16 @@
     [view updateNumberPeopleSelected:3];
     
     XCTAssertEqualObjects(view.sendMediumIndicator.text, @"3 Individual SMS");
+    XCTAssertTrue(view.sendButton.enabled);
     [partialMock verify];
-    
-    // Now try 0 people
+}
+
+- (void)testUpdateNumberPeopleSelectedZero {
+    GRKInviteMessageView *view = [[GRKInviteMessageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+
     [view updateNumberPeopleSelected:0];
     XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
+    XCTAssertFalse(view.sendButton.enabled);
 }
 
 @end

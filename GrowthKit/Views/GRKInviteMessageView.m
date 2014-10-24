@@ -48,8 +48,12 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         
         self.sendButton = [[UIButton alloc] init];
         [self.sendButton setTitleColor:displayOptions.tintColor forState:UIControlStateNormal];
+        [self.sendButton setTitleColor:[GRKDisplayOptions colorMediumGrey] forState:UIControlStateDisabled];
         self.sendButton.titleLabel.font = buttonFont;
         [self.sendButton setTitle:buttonTitle forState: UIControlStateNormal];
+        [self.sendButton setTitle:buttonTitle forState:UIControlStateDisabled];
+        self.sendButton.enabled = NO;
+        
         
         self.sendMediumIndicator = [[UILabel alloc] init];
         self.sendMediumIndicator.font = displayOptions.primaryFont;
@@ -65,12 +69,14 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
 }
 
 - (void)updateNumberPeopleSelected:(unsigned long)numberSelected {
-    NSString *copy = @"";
+    NSString *copy = @""; BOOL buttonEnabled = NO;
     if (numberSelected > 0) {
         copy = [NSString stringWithFormat:@"%lu ", numberSelected];
+        buttonEnabled = YES;
     }
     copy = [copy stringByAppendingString:SEND_MEDIUM_INDICATOR];
     self.sendMediumIndicator.text = copy;
+    self.sendButton.enabled = buttonEnabled;
     [self setNeedsLayout];
 }
 
