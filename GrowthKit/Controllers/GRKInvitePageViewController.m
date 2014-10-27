@@ -63,6 +63,7 @@
 
 // Wrap the delegate cancel & success to make sure we cleanup first
 - (void)dismissAfterSuccess {
+    [self cleanupForDismiss];
     [self.delegate userDidSendInvites];
 }
 
@@ -126,7 +127,7 @@
         cancelBarButtonItem.title = @"Cancel";
     }
     cancelBarButtonItem.target = self;
-    cancelBarButtonItem.action = @selector(dismissAfterSuccess);
+    cancelBarButtonItem.action = @selector(dismissAfterCancel);
     [self.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
 }
 
@@ -264,9 +265,8 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
             });
-            dispatch_after(1.0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [self cleanupForDismiss];
-                [self.delegate userDidSendInvites];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self dismissAfterSuccess];
             });
         }
     }];
