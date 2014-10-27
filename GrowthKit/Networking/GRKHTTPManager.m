@@ -83,6 +83,7 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
+    NSLog(@"return handler blah");
     // If Nil completion block, it was a fire and forget type request
     // so we don't need to handle the response at all
     if (completionBlock == nil) {
@@ -119,7 +120,13 @@
     NSDictionary *returnDict;
     NSString *contentType = [httpResponse.allHeaderFields valueForKey:@"Content-Type"];
     if ([contentType isEqualToString: @"application/json"]) {
-        if (data.length == 0) {
+
+        // JSON empty data might be a string literal ""
+        NSString *dataAsString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"data as string: [%@]", dataAsString);
+        if (data ==nil ||
+            data.length == 0 ||
+            [dataAsString isEqualToString:@"\"\"\n"]) {
             returnError = nil;
             returnDict = @{};
         } else {

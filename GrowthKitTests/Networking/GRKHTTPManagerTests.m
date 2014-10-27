@@ -210,7 +210,8 @@
     XCTAssertEqualObjects(returnedError, nil);
 }
 
-- (void) testHandleEmptyResponseBody {
+- (void) testHandleEmptyStringResponseBody {
+    // Empty string
     NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
     NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
     NSDictionary *headers = @{@"Content-Type": @"application/json"};
@@ -218,6 +219,24 @@
 
     __block NSDictionary *returnedData;
     __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, @{});
+    XCTAssertEqualObjects(returnedError, nil);
+    
+    // Literal double quotes in string
+    data = [@"\"\"\n" dataUsingEncoding:NSUTF8StringEncoding];
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, @{});
+    XCTAssertEqualObjects(returnedError, nil);
+
+    // data nil
+    data = nil;
     [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
         returnedError = error;
         returnedData = responseData;
