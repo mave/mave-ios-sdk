@@ -177,7 +177,7 @@
     Method ogMethod = class_getClassMethod([NSJSONSerialization class], @selector(dataWithJSONObject:options:error:));
     Method mockMethod = class_getInstanceMethod([self class], @selector(failingDataWithJSONObject:options:error:));
     method_exchangeImplementations(ogMethod, mockMethod);
-    
+
     // Make call to run test
     __block NSError *returnedError = nil;
     __block NSDictionary *returnedDict = nil;
@@ -207,6 +207,22 @@
         returnedData = responseData;
     }];
     XCTAssertEqualObjects(returnedData, dataDict);
+    XCTAssertEqualObjects(returnedError, nil);
+}
+
+- (void) testHandleEmptyResponseBody {
+    NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    NSURL *url = [NSURL URLWithString:@"http://example.com/foo"];
+    NSDictionary *headers = @{@"Content-Type": @"application/json"};
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"1.1" headerFields:headers];
+
+    __block NSDictionary *returnedData;
+    __block NSError *returnedError;
+    [GRKHTTPManager handleJSONResponseWithData:data response:response error:nil completionBlock:^(NSError *error, NSDictionary *responseData) {
+        returnedError = error;
+        returnedData = responseData;
+    }];
+    XCTAssertEqualObjects(returnedData, @{});
     XCTAssertEqualObjects(returnedError, nil);
 }
 

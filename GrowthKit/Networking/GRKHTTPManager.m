@@ -119,12 +119,17 @@
     NSDictionary *returnDict;
     NSString *contentType = [httpResponse.allHeaderFields valueForKey:@"Content-Type"];
     if ([contentType isEqualToString: @"application/json"]) {
-        NSError *serializationError;
-        returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
-        if (serializationError != nil) {
-            returnError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
-                                                     code:GRKHTTPErrorResponseJSONCode
-                                                 userInfo:@{}];
+        if (data.length == 0) {
+            returnError = nil;
+            returnDict = @{};
+        } else {
+            NSError *serializationError;
+            returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
+            if (serializationError != nil) {
+                returnError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                                                         code:GRKHTTPErrorResponseJSONCode
+                                                     userInfo:@{}];
+            }
         }
     } else {
         returnError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
