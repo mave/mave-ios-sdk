@@ -40,7 +40,7 @@
 
     // Test view box style
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
-    XCTAssertEqualObjects(view.fakeTopBorder.backgroundColor, opts.borderColor);
+    XCTAssertEqualObjects(view.fakeTopBorder.backgroundColor, opts.bottomViewBorderColor);
     XCTAssertEqual(view.fakeTopBorder.frame.size.height, 0.5f);
     XCTAssertEqual(view.fakeTopBorder.frame.origin.x, 0);
     XCTAssertEqual(view.fakeTopBorder.frame.origin.y, 0);
@@ -51,20 +51,20 @@
     XCTAssertEqualObjects(tfbgColor, [GRKDisplayOptions colorWhite]);
     UIColor *tfBorderColor = [[UIColor alloc]
                               initWithCGColor:view.textField.layer.borderColor];
-    XCTAssertEqualObjects(tfBorderColor, opts.borderColor);
+    XCTAssertEqualObjects(tfBorderColor, opts.bottomViewBorderColor);
 
     // Test Button Style
     XCTAssertFalse(view.sendButton.enabled);
     XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateNormal], @"Send");
-    XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.tintColor);
+    XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.sendButtonColor);
     XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateDisabled], @"Send");
     XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateDisabled],
                           [GRKDisplayOptions colorMediumGrey]);
     
     // Send Medium Indicator Style
     XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
-    XCTAssertEqualObjects(view.sendMediumIndicator.textColor, opts.secondaryTextColor);
-    XCTAssertEqualObjects(view.sendMediumIndicator.font, opts.primaryFont);
+    XCTAssertEqualObjects(view.sendMediumIndicator.textColor, opts.sendButtonColor);
+    XCTAssertEqualObjects(view.sendMediumIndicator.font, opts.sendButtonFont);
 }
 
 - (void)testSendingProgressViewStyleOnInit {
@@ -73,8 +73,8 @@
     GRKDisplayOptions *opts = [GrowthKit sharedInstance].displayOptions;
 
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
-    XCTAssertEqualObjects(view.progressView.tintColor, opts.tintColor);
-    XCTAssertEqualObjects(view.mainLabel.textColor, opts.tintColor);
+    XCTAssertEqualObjects(view.progressView.tintColor, opts.sendButtonColor);
+    XCTAssertEqualObjects(view.mainLabel.textColor, opts.sendButtonColor);
 }
 
 - (void)testUpdateNumberPeopleSelectedNonZero {

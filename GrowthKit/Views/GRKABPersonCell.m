@@ -19,11 +19,12 @@
         GRKDisplayOptions *displayOpts = [GrowthKit sharedInstance].displayOptions;
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         // Sets color of the default accessory checkmark
-        [self setTintColor:displayOpts.secondaryTextColor];
+        [self setTintColor:displayOpts.checkmarkColor];
 
-        [self.textLabel setFont:displayOpts.primaryFont];
-        self.textLabel.textColor = displayOpts.primaryTextColor;
-        self.detailTextLabel.textColor = displayOpts.secondaryTextColor;
+        self.textLabel.font = displayOpts.personNameFont;
+        self.textLabel.textColor = [GRKDisplayOptions colorAlmostBlack];
+        self.detailTextLabel.font = displayOpts.personContactInfoFont;
+        self.detailTextLabel.textColor = [GRKDisplayOptions colorMediumGrey];
     }
     return self;
 }

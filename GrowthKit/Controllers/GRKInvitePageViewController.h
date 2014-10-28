@@ -23,16 +23,6 @@
 // Indicates that the user hit cancel without sending any invites.
 - (void)userDidCancel;
 
-@optional
-// Return a custom button to use for the top left of the invite page navigation bar.
-// Useful to set a custom icon, at a minimum you'd want a different icon for
-//   presenting the invite page as a modal vs pushing onto a navigation stack vs using
-//   a custom drawer controller or something.
-//
-// Any target & action set on the bar button item will be ignored, instead this library
-// will call its own cleanup methods and then call your `userDidCancel` method.
-- (UIBarButtonItem *)cancelBarButtonItem;
-
 @end
 
 

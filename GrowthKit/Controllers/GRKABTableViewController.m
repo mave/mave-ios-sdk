@@ -28,7 +28,7 @@
         self.tableView = [[UITableView alloc] initWithFrame:frame];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
-        self.tableView.separatorColor = [GrowthKit sharedInstance].displayOptions.borderColor;
+        self.tableView.separatorColor = [GRKDisplayOptions colorExtraLightGrey];
         [self.tableView registerClass:[GRKABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }
@@ -55,7 +55,7 @@
     GRKDisplayOptions *displayOpts = [GrowthKit sharedInstance].displayOptions;
     NSString *labelText = [self tableView:tableView
                   titleForHeaderInSection:section];
-    UIFont *labelFont = displayOpts.primaryFont;
+    UIFont *labelFont = displayOpts.sectionHeaderFont;
     CGSize labelSize = [labelText sizeWithAttributes:@{NSFontAttributeName: labelFont}];
     CGRect labelFrame = CGRectMake(labelOffsetX,
                                    labelMarginY,
@@ -63,15 +63,15 @@
                                    labelSize.height);
     UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
     label.text = labelText;
-    label.textColor = displayOpts.primaryTextColor;
-    label.font = displayOpts.primaryFont;
+    label.textColor = [GRKDisplayOptions colorAlmostBlack];
+    label.font = labelFont;
 
     CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
     // section width gets ignored, always stretches to full width
     CGFloat sectionWidth = 0.0;
     CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
     UIView *view = [[UIView alloc] initWithFrame:viewFrame];
-    view.backgroundColor = displayOpts.tableSectionHeaderBackgroundColor;
+    view.backgroundColor = [GRKDisplayOptions colorLightGrey];
 
     [view addSubview:label];
 

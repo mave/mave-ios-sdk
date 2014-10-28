@@ -40,10 +40,11 @@
     GRKDisplayOptions *displayOpts = [GrowthKit sharedInstance].displayOptions;
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
-    XCTAssertEqualObjects(cell.textLabel.font, displayOpts.primaryFont);
-    XCTAssertEqualObjects(cell.textLabel.textColor, displayOpts.primaryTextColor);
-    XCTAssertEqualObjects(cell.detailTextLabel.textColor, displayOpts.secondaryTextColor);
-    XCTAssertEqualObjects(cell.tintColor, displayOpts.secondaryTextColor);
+    XCTAssertEqualObjects(cell.textLabel.font, displayOpts.personNameFont);
+    XCTAssertEqualObjects(cell.textLabel.textColor, [GRKDisplayOptions colorAlmostBlack]);
+    XCTAssertEqualObjects(cell.detailTextLabel.font, displayOpts.personContactInfoFont);
+    XCTAssertEqualObjects(cell.detailTextLabel.textColor, [GRKDisplayOptions colorMediumGrey]);
+    XCTAssertEqualObjects(cell.tintColor, displayOpts.checkmarkColor);
 }
 
 - (void)testTableSectionStyle {
@@ -54,11 +55,11 @@
     GRKDisplayOptions *opts = [GrowthKit sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
-    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, opts.tableSectionHeaderBackgroundColor);
+    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, [GRKDisplayOptions colorLightGrey]);
     UILabel *headerLabel = (UILabel *)sectionHeaderView.subviews[0];
     XCTAssertEqualObjects(headerLabel.text, @"D");
-    XCTAssertEqualObjects(headerLabel.textColor, opts.primaryTextColor);
-    XCTAssertEqualObjects(headerLabel.font, opts.primaryFont);
+    XCTAssertEqualObjects(headerLabel.textColor, [GRKDisplayOptions colorAlmostBlack]);
+    XCTAssertEqualObjects(headerLabel.font, opts.sectionHeaderFont);
 }
 
 @end

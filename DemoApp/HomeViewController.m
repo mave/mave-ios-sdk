@@ -21,7 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupLeftMenuButton];
-    UILabel *label;
+//    UILabel *label;
 //    self.view.backgroundColor = [UIColor greenColor];
 //    for (int i = 0; i < [self.view.subviews count]; i++) {
 //        if ([self.view.subviews[i] class] == [UILabel class]) {

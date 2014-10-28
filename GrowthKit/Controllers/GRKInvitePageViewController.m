@@ -116,16 +116,11 @@
 // Load the correct view(s) with data
 //
 - (void)setupNavigationBar {
+    GRKDisplayOptions *displayOptions = [GrowthKit sharedInstance].displayOptions;
     self.navigationItem.title = @"Invite Friends";
-    self.navigationController.navigationBar.barTintColor = [GrowthKit sharedInstance].displayOptions.navigationBarBackgroundColor;
+    self.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
     
-    UIBarButtonItem * cancelBarButtonItem;
-    if ([self.delegate respondsToSelector:@selector(cancelBarButtonItem)]) {
-        cancelBarButtonItem = [self.delegate cancelBarButtonItem];
-    } else {
-        cancelBarButtonItem = [[UIBarButtonItem alloc] init];
-        cancelBarButtonItem.title = @"Cancel";
-    }
+    UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;
     cancelBarButtonItem.target = self;
     cancelBarButtonItem.action = @selector(dismissAfterCancel);
     [self.navigationItem setLeftBarButtonItem:cancelBarButtonItem];

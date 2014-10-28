@@ -14,16 +14,25 @@
 
 - (GRKDisplayOptions *)initWithDefaults {
     if (self = [super init]) {
-        self.primaryFont = [UIFont systemFontOfSize:16];
-        self.primaryTextColor = [[self class] colorAlmostBlack];
-        self.secondaryTextColor = [[self class]colorMediumGrey];
-        self.tintColor = [[self class] colorBlueTint];
-        self.borderColor = [[self class] colorLightGrey];
-
+        // Header options
         self.navigationBarBackgroundColor = [[self class] colorWhite];
+        self.navigationBarTitleColor = [[self class] colorAlmostBlack];
+        self.navigationBarTitleFont = [UIFont systemFontOfSize:14];
+        self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
+        self.navigationBarCancelButton.title = @"Cancel";
+
+        // "Friends to invite" table options
+        self.personNameFont = [UIFont systemFontOfSize:14];
+        self.personContactInfoFont = [UIFont systemFontOfSize:10];
+        self.sectionHeaderFont = [UIFont systemFontOfSize:10];
+        self.tableIndexListColor = [[self class] colorMediumGrey];
+        self.checkmarkColor = [[self class] colorBlueTint];
+        
+        // Message and Send section options
         self.bottomViewBackgroundColor = [[self class] colorWhite];
-        self.tableCellBackgroundColor = [[self class] colorWhite];
-        self.tableSectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
+        self.bottomViewBorderColor = [[self class] colorMediumGrey];
+        self.sendButtonFont = [UIFont systemFontOfSize:14];
+        self.sendButtonColor = [[self class] colorBlueTint];
     }
     return self;
 }

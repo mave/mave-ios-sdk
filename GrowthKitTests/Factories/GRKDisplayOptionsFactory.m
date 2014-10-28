@@ -17,16 +17,22 @@
 + (GRKDisplayOptions *)generateDisplayOptions {
     GRKDisplayOptions *opts = [[GRKDisplayOptions alloc] init];
 
-    opts.primaryFont = [self randomFont];
-    opts.primaryTextColor = [self randomColor];
-    opts.secondaryTextColor = [self randomColor];
-    opts.tintColor = [self randomColor];
-
     opts.navigationBarBackgroundColor = [self randomColor];
-    opts.bottomViewBackgroundColor  = [self randomColor];
-    opts.tableCellBackgroundColor = [self randomColor];
-    opts.tableSectionHeaderBackgroundColor = [self randomColor];
+    opts.navigationBarTitleColor = [self randomColor];
+    opts.navigationBarTitleFont = [self randomFont];
+    opts.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
+    opts.navigationBarCancelButton.title = @"Cancel";
 
+    opts.personNameFont = [self randomFont];
+    opts.personContactInfoFont = [self randomFont];
+    opts.sectionHeaderFont = [self randomFont];
+    opts.tableIndexListColor = [self randomColor];
+    opts.checkmarkColor = [self randomColor];
+    
+    opts.bottomViewBackgroundColor = [self randomColor];
+    opts.bottomViewBorderColor = [self randomColor];
+    opts.sendButtonFont = [self randomFont];
+    opts.sendButtonColor = [self randomColor];
     return opts;
 }
 

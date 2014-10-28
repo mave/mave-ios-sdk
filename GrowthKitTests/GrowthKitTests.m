@@ -31,7 +31,7 @@
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk1 = [GrowthKit sharedInstance];
     XCTAssertEqualObjects(gk1.appId, @"foo123");
-    XCTAssertEqualObjects(gk1.displayOptions.primaryFont, [UIFont systemFontOfSize:16]);
+    XCTAssertNotNil(gk1.displayOptions);
     #if DEBUG
     NSLog(@"Foolog");
     #else

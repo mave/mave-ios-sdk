@@ -23,23 +23,21 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
     
     // Button attributes
     NSString *buttonTitle = @"Send";
-    float buttonTitleFontSize = 12;
-    UIFont *buttonFont = [UIFont systemFontOfSize:buttonTitleFontSize];
-    
+
     // Create own containing view
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = displayOptions.bottomViewBackgroundColor;
 
         // Use a view to simulate a border that's on just the top
         self.fakeTopBorder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 0.5f)];
-        self.fakeTopBorder.backgroundColor = displayOptions.borderColor;
+        self.fakeTopBorder.backgroundColor = displayOptions.bottomViewBorderColor;
         
         // Create child views (button & textView) & set non-layout styling
         // They will get laid out by layoutSubviews
         self.textField = [[UITextView alloc] init];
         self.textField.delegate = self;
         self.textField.layer.backgroundColor=[[GRKDisplayOptions colorWhite] CGColor];
-        self.textField.layer.borderColor=[displayOptions.borderColor CGColor];
+        self.textField.layer.borderColor=[displayOptions.bottomViewBorderColor CGColor];
         self.textField.layer.cornerRadius=8.0f;
         self.textField.layer.masksToBounds=YES;
         self.textField.layer.borderWidth= 0.5f;
@@ -47,17 +45,17 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         [self.textField setReturnKeyType:UIReturnKeyDone];
         
         self.sendButton = [[UIButton alloc] init];
-        [self.sendButton setTitleColor:displayOptions.tintColor forState:UIControlStateNormal];
+        [self.sendButton setTitleColor:displayOptions.sendButtonColor forState:UIControlStateNormal];
         [self.sendButton setTitleColor:[GRKDisplayOptions colorMediumGrey] forState:UIControlStateDisabled];
-        self.sendButton.titleLabel.font = buttonFont;
+        self.sendButton.titleLabel.font = displayOptions.sendButtonFont;
         [self.sendButton setTitle:buttonTitle forState: UIControlStateNormal];
         [self.sendButton setTitle:buttonTitle forState:UIControlStateDisabled];
         self.sendButton.enabled = NO;
         
         
         self.sendMediumIndicator = [[UILabel alloc] init];
-        self.sendMediumIndicator.font = displayOptions.primaryFont;
-        self.sendMediumIndicator.textColor = displayOptions.secondaryTextColor;
+        self.sendMediumIndicator.font = displayOptions.sendButtonFont;
+        self.sendMediumIndicator.textColor = displayOptions.sendButtonColor;
         self.sendMediumIndicator.text = SEND_MEDIUM_INDICATOR;
         
         [self addSubview:self.fakeTopBorder];
