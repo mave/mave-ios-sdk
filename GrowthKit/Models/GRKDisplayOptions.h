@@ -32,7 +32,7 @@
 @property (strong, nonatomic) UIFont *personNameFont;
 @property (strong, nonatomic) UIFont *personContactInfoFont;
 @property (strong, nonatomic) UIFont *sectionHeaderFont;
-@property (strong, nonatomic) UIColor *tableIndexListColor;
+@property (strong, nonatomic) UIColor *sectionIndexColor;
 @property (strong, nonatomic) UIColor *checkmarkColor;
 
 // Message and Send section options

@@ -29,6 +29,7 @@
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorColor = [GRKDisplayOptions colorExtraLightGrey];
+        self.tableView.sectionIndexColor = [GrowthKit sharedInstance].displayOptions.sectionIndexColor;
         [self.tableView registerClass:[GRKABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }

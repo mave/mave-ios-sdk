@@ -36,7 +36,7 @@
     UIColor *white = [[UIColor alloc] initWithWhite:1.0 alpha:1];
     UIColor *almostBlack = [[UIColor alloc] initWithWhite:0.15 alpha:1.0];
     UIColor *mediumGrey = [[UIColor alloc] initWithWhite:0.65 alpha:1.0];
-    UIColor *lightGrey = [[UIColor alloc] initWithWhite:0.65 alpha:1.0];
+    UIColor *lightGrey = [[UIColor alloc] initWithWhite:0.70 alpha:1.0];
     UIColor *extraLightGrey = [[UIColor alloc] initWithWhite:0.95 alpha:1.0];
     UIColor *blueTint = [[UIColor alloc] initWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
 
@@ -50,7 +50,7 @@
     XCTAssertEqualObjects(opts.personNameFont, defaultFont);
     XCTAssertEqualObjects(opts.personContactInfoFont, smallerFont);
     XCTAssertEqualObjects(opts.sectionHeaderFont, smallerBoldFont);
-    XCTAssertEqualObjects(opts.tableIndexListColor, mediumGrey);
+    XCTAssertEqualObjects(opts.sectionIndexColor, lightGrey);
     XCTAssertEqualObjects(opts.checkmarkColor, blueTint);
     
     // Message and Send section options
@@ -73,7 +73,7 @@
     XCTAssertTrue([opts.personNameFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.personContactInfoFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.sectionHeaderFont isKindOfClass:[UIFont class]]);
-    XCTAssertTrue([opts.tableIndexListColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.sectionIndexColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.checkmarkColor isKindOfClass:[UIColor class]]);
     
     // Message and Send section options

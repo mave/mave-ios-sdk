@@ -26,7 +26,7 @@
     opts.personNameFont = [self randomFont];
     opts.personContactInfoFont = [self randomFont];
     opts.sectionHeaderFont = [self randomFont];
-    opts.tableIndexListColor = [self randomColor];
+    opts.sectionIndexColor = [self randomColor];
     opts.checkmarkColor = [self randomColor];
     
     opts.bottomViewBackgroundColor = [self randomColor];

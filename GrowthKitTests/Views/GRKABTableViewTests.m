@@ -32,6 +32,14 @@
     [super tearDown];
 }
 
+- (void)testTableStyle {
+    CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
+    NSDictionary *data = @{@"D": @[@"Danny"]};
+    GRKABTableViewController *vc = [[GRKABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
+    [vc updateTableData:data];
+    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, [GrowthKit sharedInstance].displayOptions.sectionIndexColor);
+}
+
 - (void)testPersonCellStyleOnInit {
     // This is the init method called by the table view's dequeue method
     GRKABPersonCell *cell = [[GRKABPersonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Foo"];

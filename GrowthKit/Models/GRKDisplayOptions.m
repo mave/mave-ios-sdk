@@ -25,7 +25,7 @@
         self.personNameFont = [UIFont systemFontOfSize:14];
         self.personContactInfoFont = [UIFont systemFontOfSize:12];
         self.sectionHeaderFont = [UIFont boldSystemFontOfSize:12];
-        self.tableIndexListColor = [[self class] colorMediumGrey];
+        self.sectionIndexColor = [[self class] colorLightGrey];
         self.checkmarkColor = [[self class] colorBlueTint];
         
         // Message and Send section options
