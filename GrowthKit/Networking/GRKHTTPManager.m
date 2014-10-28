@@ -83,7 +83,6 @@
                           response:(NSURLResponse *)response
                              error:(NSError *)error
                    completionBlock:(GRKHTTPCompletionBlock)completionBlock {
-    NSLog(@"return handler blah");
     // If Nil completion block, it was a fire and forget type request
     // so we don't need to handle the response at all
     if (completionBlock == nil) {
