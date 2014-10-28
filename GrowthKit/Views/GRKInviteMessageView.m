@@ -54,8 +54,8 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         
         
         self.sendMediumIndicator = [[UILabel alloc] init];
-        self.sendMediumIndicator.font = displayOptions.sendButtonFont;
-        self.sendMediumIndicator.textColor = displayOptions.sendButtonColor;
+        self.sendMediumIndicator.font = displayOptions.personContactInfoFont;
+        self.sendMediumIndicator.textColor = [GRKDisplayOptions colorMediumGrey];
         self.sendMediumIndicator.text = SEND_MEDIUM_INDICATOR;
         
         [self addSubview:self.fakeTopBorder];

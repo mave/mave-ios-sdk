@@ -23,8 +23,8 @@
 
         // "Friends to invite" table options
         self.personNameFont = [UIFont systemFontOfSize:14];
-        self.personContactInfoFont = [UIFont systemFontOfSize:10];
-        self.sectionHeaderFont = [UIFont systemFontOfSize:10];
+        self.personContactInfoFont = [UIFont systemFontOfSize:12];
+        self.sectionHeaderFont = [UIFont boldSystemFontOfSize:12];
         self.tableIndexListColor = [[self class] colorMediumGrey];
         self.checkmarkColor = [[self class] colorBlueTint];
         

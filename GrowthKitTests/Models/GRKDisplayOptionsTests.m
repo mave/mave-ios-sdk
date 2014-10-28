@@ -31,7 +31,8 @@
     GRKDisplayOptions *opts = [[GRKDisplayOptions alloc] initWithDefaults];
 
     UIFont *defaultFont = [UIFont systemFontOfSize:14];
-    UIFont *smallerFont = [UIFont systemFontOfSize:10];
+    UIFont *smallerFont = [UIFont systemFontOfSize:12];
+    UIFont *smallerBoldFont = [UIFont boldSystemFontOfSize:12];
     UIColor *white = [[UIColor alloc] initWithWhite:1.0 alpha:1];
     UIColor *almostBlack = [[UIColor alloc] initWithWhite:0.15 alpha:1.0];
     UIColor *mediumGrey = [[UIColor alloc] initWithWhite:0.65 alpha:1.0];
@@ -48,7 +49,7 @@
     // "Friends to invite" table options
     XCTAssertEqualObjects(opts.personNameFont, defaultFont);
     XCTAssertEqualObjects(opts.personContactInfoFont, smallerFont);
-    XCTAssertEqualObjects(opts.sectionHeaderFont, smallerFont);
+    XCTAssertEqualObjects(opts.sectionHeaderFont, smallerBoldFont);
     XCTAssertEqualObjects(opts.tableIndexListColor, mediumGrey);
     XCTAssertEqualObjects(opts.checkmarkColor, blueTint);
     

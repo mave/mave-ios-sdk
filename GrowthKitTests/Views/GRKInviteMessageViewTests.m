@@ -63,8 +63,8 @@
     
     // Send Medium Indicator Style
     XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
-    XCTAssertEqualObjects(view.sendMediumIndicator.textColor, opts.sendButtonColor);
-    XCTAssertEqualObjects(view.sendMediumIndicator.font, opts.sendButtonFont);
+    XCTAssertEqualObjects(view.sendMediumIndicator.textColor, [GRKDisplayOptions colorMediumGrey]);
+    XCTAssertEqualObjects(view.sendMediumIndicator.font, opts.personContactInfoFont);
 }
 
 - (void)testSendingProgressViewStyleOnInit {
