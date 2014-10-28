@@ -55,7 +55,7 @@
     GRKDisplayOptions *opts = [GrowthKit sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
-    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, [GRKDisplayOptions colorLightGrey]);
+    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, [GRKDisplayOptions colorExtraLightGrey]);
     UILabel *headerLabel = (UILabel *)sectionHeaderView.subviews[0];
     XCTAssertEqualObjects(headerLabel.text, @"D");
     XCTAssertEqualObjects(headerLabel.textColor, [GRKDisplayOptions colorAlmostBlack]);

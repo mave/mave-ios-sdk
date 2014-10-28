@@ -71,7 +71,7 @@
     CGFloat sectionWidth = 0.0;
     CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
     UIView *view = [[UIView alloc] initWithFrame:viewFrame];
-    view.backgroundColor = [GRKDisplayOptions colorLightGrey];
+    view.backgroundColor = [GRKDisplayOptions colorExtraLightGrey];
 
     [view addSubview:label];
 
