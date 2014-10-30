@@ -117,7 +117,12 @@
 //
 - (void)setupNavigationBar {
     GRKDisplayOptions *displayOptions = [GrowthKit sharedInstance].displayOptions;
+    
     self.navigationItem.title = @"Invite Friends";
+    self.navigationController.navigationBar.titleTextAttributes = @{
+            NSForegroundColorAttributeName: displayOptions.navigationBarTitleColor,
+            NSFontAttributeName: displayOptions.navigationBarTitleFont,
+    };
     self.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
     
     UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;

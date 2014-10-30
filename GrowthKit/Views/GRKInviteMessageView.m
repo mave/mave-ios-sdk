@@ -98,8 +98,8 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
 - (void)computeFrameSizesWithContainingFrame:(CGRect)containingFrame
                                   ButtonFont:(UIFont *)buttonFont
                                  buttonTitle:(NSString *)buttonTitle
-                     sendMediumIndicatorFont:sendMediumIndicatorFont
-                    sendMediumIndicatorTitle:sendMediumIndicatorTitle
+                     sendMediumIndicatorFont:(UIFont *)sendMediumIndicatorFont
+                    sendMediumIndicatorTitle:(NSString *)sendMediumIndicatorTitle
                          createTextViewFrame:(CGRect *)textViewFrame
                              sendButtonFrame:(CGRect *)sendButtonFrame
                     sendMediumIndicatorFrame:(CGRect *)sendMediumIndicatorFrame {
