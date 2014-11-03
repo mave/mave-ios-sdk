@@ -35,6 +35,10 @@
           firstName:(NSString *)firstName
            lastName:(NSString *)lastName;
 
+// This function checks that required fields for the GrowthKit invite page to work
+// correctly aren't nil. Gets called when initializing the invite page.
+- (NSError *)validateSetup;
+
 - (void)registerAppOpen;
 - (void)registerNewUserSignup:(NSString *)userId
                     firstName:(NSString *)firstName
@@ -42,6 +46,7 @@
                         email:(NSString *)email
                         phone:(NSString *)phone;
 
-- (UIViewController *)invitePageViewControllerWithDelegate:(id <GRKInvitePageDelegate>) delegate;
+- (UIViewController *)invitePageViewControllerWithDelegate:(id <GRKInvitePageDelegate>) delegate
+                                           validationError:(NSError **)error;
 
 @end

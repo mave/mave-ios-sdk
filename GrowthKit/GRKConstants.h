@@ -15,7 +15,7 @@
 #define DebugLog( s, ... )
 #endif
 
-extern NSString * const GRK_ERROR_DOMAIN;
+extern NSString * const GRK_HTTP_ERROR_DOMAIN;
 
 extern NSInteger const GRKHTTPErrorRequestJSONCode;
 extern NSInteger const GRKHTTPErrorResponseIsNotJSONCode;
@@ -23,3 +23,7 @@ extern NSInteger const GRKHTTPErrorResponseJSONCode;
 extern NSInteger const GRKHTTPErrorResponseNilCode;
 extern NSInteger const GRKHTTPErrorResponse400LevelCode;
 extern NSInteger const GRKHTTPErrorResponse500LevelCode;
+
+extern NSString * const GRK_VALIDATION_ERROR_DOMAIN;
+extern NSInteger const GRKValidationErrorApplicationIDNotSetCode;
+extern NSInteger const GRKValidationErrorUserIDNotSetCode;

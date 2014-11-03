@@ -7,6 +7,7 @@
 //
 
 #import "GrowthKit.h"
+#import "GRKConstants.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
 #import "GRKHTTPManager.h"
@@ -56,6 +57,23 @@ static dispatch_once_t sharedInstanceonceToken;
     _currentUserLastName = lastName;
 }
 
+- (NSError *)validateSetup {
+    NSError *err = nil;
+    if (self.appId == nil) {
+        err = [[NSError alloc] initWithDomain:GRK_VALIDATION_ERROR_DOMAIN
+                                         code:GRKValidationErrorApplicationIDNotSetCode
+                                     userInfo:@{}];
+        DebugLog(@"Error with GrowthKit shared instance setup - Application ID not set");
+    }
+    if (self.currentUserId == nil) {
+        DebugLog(@"Error with GrowthKit shared instance setup - UserID not set");
+        err = [[NSError alloc] initWithDomain:GRK_VALIDATION_ERROR_DOMAIN
+                                         code:GRKValidationErrorUserIDNotSetCode
+                                     userInfo:@{}];
+    }
+    return err;
+}
+
 //
 // Funnel events that need to be called explicitly by consumer
 //
@@ -79,9 +97,15 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Methods for consumer to present/manage the invite page
 //
-- (UIViewController *)invitePageViewControllerWithDelegate:(id<GRKInvitePageDelegate>)delegate {
-    GRKInvitePageViewController *inviteController = [[GRKInvitePageViewController alloc] initWithDelegate:delegate];
-    return [[UINavigationController alloc] initWithRootViewController:inviteController];
+- (UIViewController *)invitePageViewControllerWithDelegate:(id<GRKInvitePageDelegate>)delegate
+                                           validationError:(NSError **)error{
+    UIViewController *returnVC = nil;
+    *error = [self validateSetup];
+    if (!*error) {
+        GRKInvitePageViewController *inviteController = [[GRKInvitePageViewController alloc] initWithDelegate:delegate];
+        returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
+    }
+    return returnVC;
 }
 
 @end

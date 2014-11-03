@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "GrowthKit.h"
+#import "GRKConstants.h"
 #import "GRKHTTPManager.h"
 
 @interface GrowthKitTests : XCTestCase
@@ -56,6 +57,59 @@
     XCTAssertEqualObjects(gk.currentUserId, @"123");
     XCTAssertEqualObjects(gk.currentUserFirstName, @"Foo");
     XCTAssertEqualObjects(gk.currentUserLastName, @"Jones");
+}
+
+- (void)testIsSetupOkFailsWithNoApplicationID {
+    [GrowthKit setupSharedInstanceWithApplicationID:nil];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+    NSError *err = [gk validateSetup];
+    XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqual(err.code, GRKValidationErrorApplicationIDNotSetCode);
+}
+
+- (void)testIsSetupOkFailsWithNoUserID {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk setUserData:nil firstName:@"Foo" lastName:@"Jones"];
+    NSError *err = [gk validateSetup];
+    XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqual(err.code, GRKValidationErrorUserIDNotSetCode);
+}
+
+- (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk setUserData:@"1" firstName:nil lastName:nil];
+    NSError *err = [gk validateSetup];
+    XCTAssertNil(err);
+}
+
+- (void)testInvitePageViewControllerNoErrorIfUserDataSet {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+
+    NSError *error;
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
+                                                    validationError:&error];
+    XCTAssertNotNil(vc);
+    XCTAssertNil(error);
+}
+
+- (void)testInvitePageViewControllerErrorIfValidationError {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    // user ID is nil
+    [gk setUserData:nil firstName:@"Foo" lastName:@"Jones"];
+
+    NSError *error;
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
+                                                    validationError:&error];
+    XCTAssertNil(vc);
+    XCTAssertNotNil(error);
+    XCTAssertEqualObjects(error.domain, GRK_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqual(error.code, GRKValidationErrorUserIDNotSetCode);
 }
 
 - (void)testReportAppOpen {

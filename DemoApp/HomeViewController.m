@@ -33,8 +33,12 @@
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
     ModalInvitePageDelegate *delegate = [[ModalInvitePageDelegate alloc] init];
-    delegate.viewController = [[GrowthKit sharedInstance] invitePageViewControllerWithDelegate:delegate];
-    [self presentViewController:delegate.viewController animated:YES completion:nil];
+    NSError *initError;
+    delegate.viewController = [[GrowthKit sharedInstance] invitePageViewControllerWithDelegate:delegate
+                                                                               validationError:&initError];
+    if (!initError) {
+        [self presentViewController:delegate.viewController animated:YES completion:nil];
+    }
 }
 
 // Methods to present this home view in the drawer

@@ -44,7 +44,12 @@
     UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
         SideDrawerInvitePageDelegate *invitePageDelegate = [[SideDrawerInvitePageDelegate alloc] initWithDrawerController:self.mm_drawerController];
-        centerViewController = [[GrowthKit sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate];
+        NSError *err;
+        centerViewController = [[GrowthKit sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate
+                                                                                validationError:&err];
+        if (err) { // Invite view not initialized properly, just leave drawer open
+            return;
+        }
     } else {
         centerViewController = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];
     }

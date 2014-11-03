@@ -39,13 +39,13 @@
         jsonData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:&jsonSerializationError];
         if (jsonSerializationError != nil) {
             NSDictionary *userInfo = @{};
-            jsonParseError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+            jsonParseError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                         code:GRKHTTPErrorRequestJSONCode
                                                     userInfo:userInfo];
         }
     } else {
         NSDictionary *userInfo = @{};
-        jsonParseError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+        jsonParseError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                     code:GRKHTTPErrorRequestJSONCode
                                                 userInfo:userInfo];
     }
@@ -91,7 +91,7 @@
 
     // Handle nil response
     if (response == nil) {
-        NSError *nilResponseError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+        NSError *nilResponseError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                                code:GRKHTTPErrorResponseNilCode
                                                            userInfo:@{}];
         return completionBlock(nilResponseError, nil);
@@ -101,13 +101,13 @@
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSInteger statusCode = [httpResponse statusCode];
     if (statusCode / 100 == 4) {
-        NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+        NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                               code:GRKHTTPErrorResponse400LevelCode
                                                           userInfo:@{}];
         return completionBlock(statusCodeError, nil);
     }
     if (statusCode / 100 == 5) {
-        NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+        NSError *statusCodeError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                               code:GRKHTTPErrorResponse500LevelCode
                                                           userInfo:@{}];
         return completionBlock(statusCodeError, nil);
@@ -132,13 +132,13 @@
             NSError *serializationError;
             returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
             if (serializationError != nil) {
-                returnError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+                returnError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                          code:GRKHTTPErrorResponseJSONCode
                                                      userInfo:@{}];
             }
         }
     } else {
-        returnError = [[NSError alloc] initWithDomain:GRK_ERROR_DOMAIN
+        returnError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                  code:GRKHTTPErrorResponseIsNotJSONCode
                                              userInfo:@{}];
     }
