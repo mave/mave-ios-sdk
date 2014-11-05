@@ -8,6 +8,14 @@
 
 #import "GRKConstants.h"
 
+
+#ifdef USE_DEV_API
+    NSString * const GRKAPIBaseURL = @"http://devapi.mave.io/";
+#else
+    NSString * const GRKAPIBaseURL = @"http://api.mave.io/";
+#endif
+NSString * const GRKAPIVersion = @"v1.0";
+
 NSString * const GRK_HTTP_ERROR_DOMAIN = @"com.growthkit.http.error";
 NSInteger const GRKHTTPErrorRequestJSONCode = 1000;
 NSInteger const GRKHTTPErrorResponseIsNotJSONCode = 1010;

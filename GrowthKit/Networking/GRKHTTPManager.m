@@ -15,7 +15,7 @@
 - (instancetype)initWithApplicationId:(NSString *)applicationId {
     if (self = [super init]) {
         _applicationId = applicationId;
-        _baseURL = @"http://devaccounts.growthkit.io/v1.0";
+        _baseURL = [GRKAPIBaseURL stringByAppendingString:GRKAPIVersion];
         NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         sessionConfig.timeoutIntervalForRequest = 5.0;
         sessionConfig.timeoutIntervalForResource = 5.0;
@@ -23,6 +23,8 @@
         NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
         delegateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
         _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
+
+        DebugLog(@"Initialized GRKHTTPManager on domain %@", GRKAPIBaseURL);
     }
     return self;
 }
@@ -132,6 +134,7 @@
             NSError *serializationError;
             returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
             if (serializationError != nil) {
+                DebugLog(@"Bad JSON error: %@", data);
                 returnError = [[NSError alloc] initWithDomain:GRK_HTTP_ERROR_DOMAIN
                                                          code:GRKHTTPErrorResponseJSONCode
                                                      userInfo:@{}];

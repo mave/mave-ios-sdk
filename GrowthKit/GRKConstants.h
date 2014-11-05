@@ -15,6 +15,9 @@
 #define DebugLog( s, ... )
 #endif
 
+extern NSString * const GRKAPIBaseURL;
+extern NSString * const GRKAPIVersion;
+
 extern NSString * const GRK_HTTP_ERROR_DOMAIN;
 
 extern NSInteger const GRKHTTPErrorRequestJSONCode;
