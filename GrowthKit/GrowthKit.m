@@ -90,6 +90,8 @@ static dispatch_once_t sharedInstanceonceToken;
     self.currentUserFirstName = firstName;
     self.currentUserLastName = lastName;
     [self.HTTPManager sendUserSignupNotificationWithUserID:userId
+                                                 firstName:firstName
+                                                  lastName:lastName
                                                      email:email
                                                      phone:phone];
 }

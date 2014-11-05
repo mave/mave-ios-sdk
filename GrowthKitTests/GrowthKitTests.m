@@ -129,7 +129,7 @@
     id mockManager = [OCMockObject mockForClass:[GRKHTTPManager class]];
     GrowthKit *gk = [GrowthKit sharedInstance];
     gk.HTTPManager = mockManager;
-    [[mockManager expect] sendUserSignupNotificationWithUserID:userId email:email phone:phone];
+    [[mockManager expect] sendUserSignupNotificationWithUserID:userId firstName:firstName lastName:lastName  email:email phone:phone];
 
     [gk registerNewUserSignup:userId firstName:firstName lastName:lastName email:email phone:phone];
 

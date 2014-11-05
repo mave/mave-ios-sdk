@@ -176,13 +176,25 @@
 }
 
 - (void)sendUserSignupNotificationWithUserID:(NSString *)userId
+                                   firstName:(NSString *)firstName
+                                    lastName:(NSString *)lastName
                                        email:(NSString *)email
                                        phone:(NSString *)phone {
     NSString *launchRoute = @"/users";
-    NSDictionary *params = @{@"user_id": userId,
-                             @"email": email,
-                             @"phone": phone,
-                           };
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:userId forKey:@"user_id"];
+    if (firstName) {
+        [params setObject:firstName forKey:@"first_name"];
+    }
+    if (lastName) {
+        [params setObject:lastName forKey:@"last_name"];
+    }
+    if (email) {
+        [params setObject:email forKey:@"email"];
+    }
+    if (phone) {
+        [params setObject:phone forKey:@"phone"];
+    }
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodType:@"POST"
                                       params:params

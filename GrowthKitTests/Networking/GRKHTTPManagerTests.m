@@ -36,7 +36,7 @@
 
 - (void)testInitSetsCorrectVaues {
     XCTAssertEqualObjects(self.httpManager.applicationId, @"foo123");
-    XCTAssertEqualObjects(self.httpManager.baseURL, @"http://devaccounts.growthkit.io/v1.0");
+    XCTAssertEqualObjects(self.httpManager.baseURL, @"http://devapi.mave.io/v1.0");
     XCTAssertNotNil(self.httpManager.session);
     XCTAssertEqualObjects(self.httpManager.session.configuration.HTTPAdditionalHeaders, nil);
 }
@@ -58,12 +58,28 @@
 - (void)testSendUserSignupEvent {
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
-    NSDictionary *expectedParams = @{@"user_id": @"1", @"email": @"foo@bar.com", @"phone": @"18085551234"};
+    NSDictionary *expectedParams = @{@"user_id": @"1",
+                                     @"first_name": @"Dan",
+                                     @"last_name": @"Foo",
+                                     @"email": @"foo@bar.com",
+                                     @"phone": @"18085551234"};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
-    [httpManager sendUserSignupNotificationWithUserID:@"1" email:@"foo@bar.com" phone:@"18085551234"];
+    [httpManager sendUserSignupNotificationWithUserID:@"1" firstName:@"Dan" lastName:@"Foo" email:@"foo@bar.com" phone:@"18085551234"];
+    [mocked verify];
+}
+
+- (void)testSendUserSignupEventWithNilEmailAndPhone {
+    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    NSDictionary *expectedParams = @{@"user_id": @"1"};
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
+                                             methodType:@"POST"
+                                                 params:expectedParams
+                                        completionBlock:nil];
+    [httpManager sendUserSignupNotificationWithUserID:@"1" firstName:nil lastName:nil email:nil phone:nil];
     [mocked verify];
 }
 
@@ -129,7 +145,7 @@
 
     // Verify
     OCMVerify([mockTask resume]);
-    XCTAssertEqualObjects(urlString, @"http://devaccounts.growthkit.io/v1.0/foo");
+    XCTAssertEqualObjects(urlString, @"http://devapi.mave.io/v1.0/foo");
     XCTAssertEqualObjects(requestMethod, @"POST");
     XCTAssertEqualObjects(requestBodyParams, requestDict);
     NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",

@@ -27,6 +27,8 @@ typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseDat
 
 - (void)sendApplicationLaunchNotification;
 - (void)sendUserSignupNotificationWithUserID:(NSString *)userId
+                                   firstName:(NSString *)firstName
+                                    lastName:(NSString *)lastName
                                        email:(NSString *)email
                                        phone:(NSString *)phone;
 - (void)sendInvitePageOpen:(NSString *)userID;
