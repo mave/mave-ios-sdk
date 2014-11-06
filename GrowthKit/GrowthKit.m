@@ -7,6 +7,7 @@
 //
 
 #import "GrowthKit.h"
+#import "GrowthKit_Internal.h"
 #import "GRKConstants.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
@@ -37,6 +38,7 @@ static dispatch_once_t sharedInstanceonceToken;
     dispatch_once(&sharedInstanceonceToken, ^{
         NSLog(@"actually setup shared instance");
         sharedInstance = [[self alloc] initWithAppId:applicationID];
+        [sharedInstance trackAppOpen];
     });
 }
 
@@ -80,8 +82,13 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Funnel events that need to be called explicitly by consumer
 //
-- (void)registerAppOpen {
+- (void)trackAppOpen {
     [self.HTTPManager sendApplicationLaunchNotification];
+}
+
+- (void)identifyUser:(GRKUserData *)userData {
+    self.userData = userData;
+    [self.HTTPManager identifyUserRequest:userData];
 }
 
 - (void)registerNewUserSignup:(NSString *)userId

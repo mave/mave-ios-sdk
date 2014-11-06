@@ -203,6 +203,7 @@
     }];
     XCTAssertEqual([returnedDict count], 0);
     XCTAssertEqual([returnedError code], GRKHTTPErrorRequestJSONCode);
+    method_exchangeImplementations(mockMethod, ogMethod);
 }
 
 //

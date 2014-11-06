@@ -175,6 +175,14 @@
                              completionBlock:nil];
 }
 
+- (void)trackSignupRequest:(GRKUserData *)userData {
+    
+}
+
+- (void)identifyUserRequest:(GRKUserData *)userData {
+    
+}
+
 - (void)sendUserSignupNotificationWithUserID:(NSString *)userId
                                    firstName:(NSString *)firstName
                                     lastName:(NSString *)lastName

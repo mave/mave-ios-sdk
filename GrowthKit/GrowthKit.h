@@ -20,6 +20,7 @@
 @property (nonatomic, strong) GRKHTTPManager *HTTPManager;
 
 @property (nonatomic, strong) NSString *appId;
+@property (strong, nonatomic) GRKUserData *userData;
 @property (nonatomic, strong) NSString *currentUserId;
 @property (nonatomic, strong) NSString *currentUserFirstName;
 @property (nonatomic, strong) NSString *currentUserLastName;
@@ -40,7 +41,6 @@
 // correctly aren't nil. Gets called when initializing the invite page.
 - (NSError *)validateSetup;
 
-- (void)trackAppOpen;
 - (void)identifyUser:(GRKUserData *)userData;
 - (void)trackSignup;
 

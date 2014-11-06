@@ -8,7 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import <objc/runtime.h>
 #import "GrowthKit.h"
+#import "GrowthKit_Internal.h"
+#import "GRKUserData.h"
 #import "GRKConstants.h"
 #import "GRKHTTPManager.h"
 
@@ -16,7 +19,9 @@
 
 @end
 
-@implementation GrowthKitTests
+@implementation GrowthKitTests {
+    BOOL _fakeAppLaunchWasTriggered;
+}
 
 - (void)setUp {
     [super setUp];
@@ -40,13 +45,48 @@
     #endif
 }
 
+
 - (void)testSharedInstanceIsShared {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk1 = [GrowthKit sharedInstance];
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk2 = [GrowthKit sharedInstance];
     
     // Test pointer to same object
     XCTAssertTrue(gk1 == gk2);
+}
+
+- (void)testSetupSharedInstanceTriggersAppOpenEvent {
+    // Swizzle methods to check that calling our setup shared instance method also triggers
+    // a track app launch event
+    Method ogMethod = class_getInstanceMethod([GRKHTTPManager class], @selector(sendApplicationLaunchNotification));
+    Method mockMethod = class_getInstanceMethod([self class], @selector(fakeSendApplicationLaunchNotification));
+    method_exchangeImplementations(ogMethod, mockMethod);
+    
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertEqual(_didCallFakeSendApplicationLaunchNotification, YES);
+    
+    method_exchangeImplementations(mockMethod, ogMethod);
+
+}
+
+static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
+- (void)fakeSendApplicationLaunchNotification {
+    _didCallFakeSendApplicationLaunchNotification = YES;
+}
+
+- (void)testIdentifyUser {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GRKUserData *userData = [[GRKUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
+    id mockManager = [OCMockObject mockForClass:[GRKHTTPManager class]];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    gk.HTTPManager = mockManager;
+    [[mockManager expect] identifyUserRequest:userData];
+
+    [gk identifyUser:userData];
+
+    [mockManager verify];
+    XCTAssertEqualObjects(gk.userData, userData);
 }
 
 - (void)testSetUserData {
@@ -121,7 +161,8 @@
     XCTAssertEqual(error.code, GRKValidationErrorUserIDNotSetCode);
 }
 
-- (void)testReportAppOpen {
+- (void)testTrackAppOpen {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     id httpManagerMock = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];
     [[httpManagerMock expect] sendApplicationLaunchNotification];
@@ -129,25 +170,15 @@
     [httpManagerMock verify];
 }
 
-- (void)testReportNewUserSignup {
-    NSString *userId = @"100";
-    NSString *firstName = @"Dan"; NSString *lastName = @"Foo";
-    NSString *email = @"dan@example.com"; NSString *phone = @"18085551234";
-
+- (void)testTrackSignup {
+    GRKUserData *userData = [[GRKUserData alloc] init];
     // Verify the API request is sent
     id mockManager = [OCMockObject mockForClass:[GRKHTTPManager class]];
     GrowthKit *gk = [GrowthKit sharedInstance];
     gk.HTTPManager = mockManager;
-    [[mockManager expect] sendUserSignupNotificationWithUserID:userId firstName:firstName lastName:lastName  email:email phone:phone];
-
-    //[gk registerNewUserSignup:userId firstName:firstName lastName:lastName email:email phone:phone];
+    [[mockManager expect] trackSignupRequest:userData];
 
     [mockManager verify];
-
-    // Verify the user data fields are set on the object
-    XCTAssertEqualObjects(gk.currentUserId, userId);
-    XCTAssertEqualObjects(gk.currentUserFirstName, firstName);
-    XCTAssertEqualObjects(gk.currentUserLastName, lastName);
 }
 
 @end
