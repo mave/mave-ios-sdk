@@ -44,54 +44,73 @@
 //
 // Individual API Requests
 //
-- (void)testSendAppLaunchEvent {
+- (void)testTrackAppOpenRequest {
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/launch"
                                              methodType:@"POST"
                                                  params:@{}
                                         completionBlock:nil];
-    [httpManager sendApplicationLaunchNotification];
+    [httpManager trackAppOpenRequest];
     [mocked verify];
 }
 
-- (void)testSendUserSignupEvent {
+- (void)testIdentifyUserRequest {
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
-    NSDictionary *expectedParams = @{@"user_id": @"1",
-                                     @"first_name": @"Dan",
-                                     @"last_name": @"Foo",
-                                     @"email": @"foo@bar.com",
-                                     @"phone": @"18085551234"};
+    GRKUserData *userData = [[GRKUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo" email:@"foo@bar.com" phone:@"18085551234"];
+    NSDictionary *expectedParams = @{@"user_id": userData.userID,
+                                     @"first_name": userData.firstName,
+                                     @"last_name": userData.lastName,
+                                     @"email": userData.email,
+                                     @"phone": userData.phone};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
-    [httpManager sendUserSignupNotificationWithUserID:@"1" firstName:@"Dan" lastName:@"Foo" email:@"foo@bar.com" phone:@"18085551234"];
+    [httpManager identifyUserRequest:userData];
     [mocked verify];
 }
 
-- (void)testSendUserSignupEventWithNilEmailAndPhone {
+- (void)testIdentifyUserRequestWithMinimalParams {
+    // user id is the only property of the user data required to be non-nil to make the identify user request
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
-    NSDictionary *expectedParams = @{@"user_id": @"1"};
+    GRKUserData *userData = [[GRKUserData alloc] init];
+    userData.userID = @"1";
+    NSDictionary *expectedParams = @{@"user_id": userData.userID};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
-    [httpManager sendUserSignupNotificationWithUserID:@"1" firstName:nil lastName:nil email:nil phone:nil];
+    [httpManager identifyUserRequest:userData];
+    [mocked verify];
+}
+
+- (void)testTrackSignupRequest {
+    GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    GRKUserData *userData = [[GRKUserData alloc] initWithUserID:@"1" firstName:nil lastName:nil email:nil phone:nil];
+    NSDictionary *expectedParams = @{@"user_id": userData.userID};
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
+                                             methodType:@"POST"
+                                                 params:expectedParams
+                                        completionBlock:nil];
+    [httpManager trackSignupRequest:userData];
     [mocked verify];
 }
 
 - (void)testSendInvitePageOpenEvent {
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
+    GRKUserData *userData = [[GRKUserData alloc] init];
+    userData.userID = @"1"; userData.firstName = @"Dan";
     NSDictionary *expectedParams = @{@"user_id": @"2"};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invite_page_open"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
-    [httpManager sendInvitePageOpen:@"2"];
+    [httpManager trackInvitePageOpenRequest:userData];
     [mocked verify];
 }
 
