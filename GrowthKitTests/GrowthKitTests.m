@@ -8,7 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import <objc/runtime.h>
 #import "GrowthKit.h"
+#import "GrowthKit_Internal.h"
+#import "GRKUserData.h"
 #import "GRKConstants.h"
 #import "GRKHTTPManager.h"
 
@@ -16,7 +19,9 @@
 
 @end
 
-@implementation GrowthKitTests
+@implementation GrowthKitTests {
+    BOOL _fakeAppLaunchWasTriggered;
+}
 
 - (void)setUp {
     [super setUp];
@@ -33,45 +38,74 @@
     GrowthKit *gk1 = [GrowthKit sharedInstance];
     XCTAssertEqualObjects(gk1.appId, @"foo123");
     XCTAssertNotNil(gk1.displayOptions);
-    #if DEBUG
-    NSLog(@"Foolog");
-    #else
-    NSLog(@"Barlog");
-    #endif
 }
+
 
 - (void)testSharedInstanceIsShared {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk1 = [GrowthKit sharedInstance];
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk2 = [GrowthKit sharedInstance];
     
     // Test pointer to same object
     XCTAssertTrue(gk1 == gk2);
 }
 
-- (void)testSetUserData {
-    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
-    GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+- (void)testSetupSharedInstanceTriggersAppOpenEvent {
+    // Swizzle methods to check that calling our setup shared instance method also triggers
+    // a track app launch event
+    Method ogMethod = class_getInstanceMethod([GRKHTTPManager class], @selector(trackAppOpenRequest));
+    Method mockMethod = class_getInstanceMethod([self class], @selector(fakeTrackAppOpenRequest));
+    method_exchangeImplementations(ogMethod, mockMethod);
     
-    XCTAssertEqualObjects(gk.currentUserId, @"123");
-    XCTAssertEqualObjects(gk.currentUserFirstName, @"Foo");
-    XCTAssertEqualObjects(gk.currentUserLastName, @"Jones");
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertEqual(_didCallFakeTrackAppOpenRequest, YES);
+    
+    method_exchangeImplementations(mockMethod, ogMethod);
+
+}
+
+static BOOL _didCallFakeTrackAppOpenRequest = NO;
+- (void)fakeTrackAppOpenRequest {
+    _didCallFakeTrackAppOpenRequest = YES;
+}
+
+- (void)testIdentifyUser {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GRKUserData *userData = [[GRKUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
+    id mockManager = [OCMockObject mockForClass:[GRKHTTPManager class]];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    gk.HTTPManager = mockManager;
+    [[mockManager expect] identifyUserRequest:userData];
+
+    [gk identifyUser:userData];
+
+    [mockManager verify];
+    XCTAssertEqualObjects(gk.userData, userData);
 }
 
 - (void)testIsSetupOkFailsWithNoApplicationID {
     [GrowthKit setupSharedInstanceWithApplicationID:nil];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+    [gk identifyUser:[[GRKUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, GRKValidationErrorApplicationIDNotSetCode);
 }
 
+- (void)testIsSetupOkFailsWithNilUserData {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk identifyUser:nil];
+    NSError *err = [gk validateSetup];
+    XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqual(err.code, GRKValidationErrorUserIDNotSetCode);
+}
+
 - (void)testIsSetupOkFailsWithNoUserID {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:nil firstName:@"Foo" lastName:@"Jones"];
+    [gk identifyUser:[[GRKUserData alloc] initWithUserID:nil firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, GRKValidationErrorUserIDNotSetCode);
@@ -80,7 +114,7 @@
 - (void)testIsSetupOkFailsWithNoFirstName {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"2" firstName:nil lastName:@"Jones"];
+    [gk identifyUser:[[GRKUserData alloc] initWithUserID:@"100" firstName:nil lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, GRKValidationErrorUserNameNotSetCode);
@@ -89,7 +123,7 @@
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"1" firstName:@"Dan" lastName:nil];
+        [gk identifyUser:[[GRKUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:nil email:nil phone:nil]];
     NSError *err = [gk validateSetup];
     XCTAssertNil(err);
 }
@@ -97,11 +131,12 @@
 - (void)testInvitePageViewControllerNoErrorIfUserDataSet {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+    gk.userData = [[GRKUserData alloc] init];
+    gk.userData.userID = @"123";
+    gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
-                                                    validationError:&error];
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil error:&error];
     XCTAssertNotNil(vc);
     XCTAssertNil(error);
 }
@@ -109,45 +144,39 @@
 - (void)testInvitePageViewControllerErrorIfValidationError {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
+    gk.userData = [[GRKUserData alloc] init];
     // user ID is nil
-    [gk setUserData:nil firstName:@"Foo" lastName:@"Jones"];
+    gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
-                                                    validationError:&error];
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil error:&error];
     XCTAssertNil(vc);
     XCTAssertNotNil(error);
     XCTAssertEqualObjects(error.domain, GRK_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(error.code, GRKValidationErrorUserIDNotSetCode);
 }
 
-- (void)testReportAppOpen {
+- (void)testTrackAppOpen {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     id httpManagerMock = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];
-    [[httpManagerMock expect] sendApplicationLaunchNotification];
-    [gk registerAppOpen];
+    [[httpManagerMock expect] trackAppOpenRequest];
+    [gk trackAppOpen];
     [httpManagerMock verify];
 }
 
-- (void)testReportNewUserSignup {
-    NSString *userId = @"100";
-    NSString *firstName = @"Dan"; NSString *lastName = @"Foo";
-    NSString *email = @"dan@example.com"; NSString *phone = @"18085551234";
-
+- (void)testTrackSignup {
+    GRKUserData *userData = [[GRKUserData alloc] init];
     // Verify the API request is sent
     id mockManager = [OCMockObject mockForClass:[GRKHTTPManager class]];
     GrowthKit *gk = [GrowthKit sharedInstance];
     gk.HTTPManager = mockManager;
-    [[mockManager expect] sendUserSignupNotificationWithUserID:userId firstName:firstName lastName:lastName  email:email phone:phone];
-
-    [gk registerNewUserSignup:userId firstName:firstName lastName:lastName email:email phone:phone];
+    gk.userData = userData;
+    [[mockManager expect] trackSignupRequest:userData];
+    
+    [gk trackSignup];
 
     [mockManager verify];
-
-    // Verify the user data fields are set on the object
-    XCTAssertEqualObjects(gk.currentUserId, userId);
-    XCTAssertEqualObjects(gk.currentUserFirstName, firstName);
-    XCTAssertEqualObjects(gk.currentUserLastName, lastName);
 }
 
 @end

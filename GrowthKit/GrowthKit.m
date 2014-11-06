@@ -7,6 +7,7 @@
 //
 
 #import "GrowthKit.h"
+#import "GrowthKit_Internal.h"
 #import "GRKConstants.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
@@ -33,8 +34,11 @@ static GrowthKit *sharedInstance = nil;
 static dispatch_once_t sharedInstanceonceToken;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
+    NSLog(@"setup shared instance");
     dispatch_once(&sharedInstanceonceToken, ^{
+        NSLog(@"actually setup shared instance");
         sharedInstance = [[self alloc] initWithAppId:applicationID];
+        [sharedInstance trackAppOpen];
     });
 }
 
@@ -51,21 +55,15 @@ static dispatch_once_t sharedInstanceonceToken;
     return sharedInstance;
 }
 
-- (void)setUserData:(NSString *)userId firstName:(NSString *)firstName lastName:(NSString *)lastName {
-    _currentUserId = userId;
-    _currentUserFirstName = firstName;
-    _currentUserLastName = lastName;
-}
-
 - (NSError *)validateSetup {
     NSInteger errCode = 0;
     if (self.appId == nil) {
         DebugLog(@"Error with GrowthKit shared instance setup - Application ID not set");
         errCode = GRKValidationErrorApplicationIDNotSetCode;
-    } else if (self.currentUserId == nil) {
+    } else if (self.userData.userID == nil) {
         DebugLog(@"Error with GrowthKit shared instance setup - UserID not set");
         errCode = GRKValidationErrorUserIDNotSetCode;
-    } else if (self.currentUserFirstName == nil) {
+    } else if (self.userData.firstName == nil) {
         DebugLog(@"Error with GrowthKit shared instance setup - user firstName not set");
         errCode = GRKValidationErrorUserNameNotSetCode;
     } else {
@@ -78,30 +76,24 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Funnel events that need to be called explicitly by consumer
 //
-- (void)registerAppOpen {
-    [self.HTTPManager sendApplicationLaunchNotification];
+- (void)trackAppOpen {
+    [self.HTTPManager trackAppOpenRequest];
 }
 
-- (void)registerNewUserSignup:(NSString *)userId
-                    firstName:(NSString *)firstName
-                     lastName:(NSString *)lastName
-                        email:(NSString *)email
-                        phone:(NSString *)phone {
-    self.currentUserId = userId;
-    self.currentUserFirstName = firstName;
-    self.currentUserLastName = lastName;
-    [self.HTTPManager sendUserSignupNotificationWithUserID:userId
-                                                 firstName:firstName
-                                                  lastName:lastName
-                                                     email:email
-                                                     phone:phone];
+- (void)identifyUser:(GRKUserData *)userData {
+    self.userData = userData;
+    [self.HTTPManager identifyUserRequest:userData];
+}
+
+- (void)trackSignup {
+    [self.HTTPManager trackSignupRequest:self.userData];
 }
 
 //
 // Methods for consumer to present/manage the invite page
 //
 - (UIViewController *)invitePageViewControllerWithDelegate:(id<GRKInvitePageDelegate>)delegate
-                                           validationError:(NSError **)error{
+                                                     error:(NSError **)error{
     UIViewController *returnVC = nil;
     *error = [self validateSetup];
     if (!*error) {

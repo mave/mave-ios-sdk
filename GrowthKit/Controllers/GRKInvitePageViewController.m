@@ -53,7 +53,7 @@
 
     // Register the viewed invite page event with our API
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk.HTTPManager sendInvitePageOpen:gk.currentUserId];
+    [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -252,7 +252,7 @@
     
     GrowthKit *gk = [GrowthKit sharedInstance];
     GRKHTTPManager *httpManager = gk.HTTPManager;
-    [httpManager sendInvitesWithPersons:phones message:message userId:gk.currentUserId completionBlock:^(NSError *error, NSDictionary *responseData) {
+    [httpManager sendInvitesWithPersons:phones message:message userId:gk.userData.userID completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
             NSLog(@"Invites failed to send, error: %@, response: %@",
                   error, responseData);

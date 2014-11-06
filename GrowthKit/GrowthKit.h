@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
+#import "GRKUserData.h"
 
 @class GRKHTTPManager;
 
@@ -19,9 +20,7 @@
 @property (nonatomic, strong) GRKHTTPManager *HTTPManager;
 
 @property (nonatomic, strong) NSString *appId;
-@property (nonatomic, strong) NSString *currentUserId;
-@property (nonatomic, strong) NSString *currentUserFirstName;
-@property (nonatomic, strong) NSString *currentUserLastName;
+@property (strong, nonatomic) GRKUserData *userData;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
@@ -31,22 +30,10 @@
 + (void)resetSharedInstanceForTesting;
 #endif
 
-- (void)setUserData:(NSString *)userId
-          firstName:(NSString *)firstName
-           lastName:(NSString *)lastName;
-
-// This function checks that required fields for the GrowthKit invite page to work
-// correctly aren't nil. Gets called when initializing the invite page.
-- (NSError *)validateSetup;
-
-- (void)registerAppOpen;
-- (void)registerNewUserSignup:(NSString *)userId
-                    firstName:(NSString *)firstName
-                     lastName:(NSString *)lastName
-                        email:(NSString *)email
-                        phone:(NSString *)phone;
+- (void)identifyUser:(GRKUserData *)userData;
+- (void)trackSignup;
 
 - (UIViewController *)invitePageViewControllerWithDelegate:(id <GRKInvitePageDelegate>) delegate
-                                           validationError:(NSError **)error;
+                                                     error:(NSError **)error;
 
 @end

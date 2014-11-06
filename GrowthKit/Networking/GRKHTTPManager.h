@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GRKUserData.h"
 
 typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
 
@@ -25,12 +26,9 @@ typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseDat
                         userId:(NSString *)userId
                completionBlock:(GRKHTTPCompletionBlock)completionBlock;
 
-- (void)sendApplicationLaunchNotification;
-- (void)sendUserSignupNotificationWithUserID:(NSString *)userId
-                                   firstName:(NSString *)firstName
-                                    lastName:(NSString *)lastName
-                                       email:(NSString *)email
-                                       phone:(NSString *)phone;
-- (void)sendInvitePageOpen:(NSString *)userID;
+- (void)trackAppOpenRequest;
+- (void)identifyUserRequest:(GRKUserData *)userData;
+- (void)trackSignupRequest:(GRKUserData *)userData;
+- (void)trackInvitePageOpenRequest:(GRKUserData *)userData;
 
 @end

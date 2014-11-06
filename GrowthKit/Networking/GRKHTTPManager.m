@@ -166,7 +166,7 @@
                   completionBlock:completionBlock];
 }
 
-- (void)sendApplicationLaunchNotification {
+- (void)trackAppOpenRequest {
     NSString *launchRoute = @"/launch";
     NSDictionary *params = @{};
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
@@ -175,39 +175,31 @@
                              completionBlock:nil];
 }
 
-- (void)sendUserSignupNotificationWithUserID:(NSString *)userId
-                                   firstName:(NSString *)firstName
-                                    lastName:(NSString *)lastName
-                                       email:(NSString *)email
-                                       phone:(NSString *)phone {
+- (void)trackSignupRequest:(GRKUserData *)userData {
+    NSString *signupRoute = @"/users/signup";
+    NSDictionary *params = [userData toDictionaryIDOnly];
+    [self sendIdentifiedJSONRequestWithRoute:signupRoute
+                                  methodType:@"POST"
+                                      params:params
+                             completionBlock:nil];
+    
+}
+
+- (void)identifyUserRequest:(GRKUserData *)userData {
     NSString *launchRoute = @"/users";
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [params setObject:userId forKey:@"user_id"];
-    if (firstName) {
-        [params setObject:firstName forKey:@"first_name"];
-    }
-    if (lastName) {
-        [params setObject:lastName forKey:@"last_name"];
-    }
-    if (email) {
-        [params setObject:email forKey:@"email"];
-    }
-    if (phone) {
-        [params setObject:phone forKey:@"phone"];
-    }
+    NSDictionary *params = [userData toDictionary];
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
-                                  methodType:@"POST"
+                                  methodType:@"PUT"
                                       params:params
                              completionBlock:nil];
 }
 
-- (void)sendInvitePageOpen:(NSString *)userID {
+-(void)trackInvitePageOpenRequest:(GRKUserData *)userData {
     NSString *launchRoute = @"/invite_page_open";
-    NSDictionary *params = @{@"user_id": userID};
+    NSDictionary *params = [userData toDictionaryIDOnly];
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodType:@"POST"
                                       params:params
                              completionBlock:nil];
 }
-
 @end
