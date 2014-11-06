@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 #import "GrowthKit.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 @interface AppDelegate ()
 
@@ -17,7 +19,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    [Fabric with:@[CrashlyticsKit]];
+    
     [GrowthKit setupSharedInstanceWithApplicationID:@"12345"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     [gk setUserData:@"1" firstName:@"Danny" lastName:@"Cosson"];

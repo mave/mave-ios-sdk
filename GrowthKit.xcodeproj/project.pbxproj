@@ -14,6 +14,8 @@
 		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
 		0CF6541F1A02D5E3008992F0 /* GRKNavigationBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF6541E1A02D5E3008992F0 /* GRKNavigationBarTests.m */; };
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
+		4DC4D75F1A0BD9C600437F18 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC4D75D1A0BD9C600437F18 /* Crashlytics.framework */; };
+		4DC4D7601A0BD9C700437F18 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC4D75E1A0BD9C600437F18 /* Fabric.framework */; };
 		C022641619EC41010087FF37 /* GRKABPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641119EC41010087FF37 /* GRKABPersonTests.m */; };
 		C022641719EC41010087FF37 /* GRKABCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* GRKABCollectionTests.m */; };
 		C022641819EC41010087FF37 /* GRKABTestDataFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641319EC41010087FF37 /* GRKABTestDataFactory.m */; };
@@ -79,6 +81,8 @@
 		0CCC73EE19F8708E009C6385 /* SideDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideDrawerController.m; sourceTree = "<group>"; };
 		0CF6541E1A02D5E3008992F0 /* GRKNavigationBarTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKNavigationBarTests.m; sourceTree = "<group>"; };
 		2110DFB92C7B0700F5577B76 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
+		4DC4D75D1A0BD9C600437F18 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		4DC4D75E1A0BD9C600437F18 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		5D1D110D19FDCF9921E21868 /* libPods-GrowthKitTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GrowthKitTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67DE4B21E0255868A78BD50B /* Pods-GrowthKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowthKitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GrowthKitTests/Pods-GrowthKitTests.release.xcconfig"; sourceTree = "<group>"; };
 		8ACB3F29796B0AB7B74C3393 /* Pods-DemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -147,8 +151,10 @@
 			files = (
 				C029281E19E82E14006AEE43 /* AddressBook.framework in Frameworks */,
 				C029281F19E82E14006AEE43 /* Foundation.framework in Frameworks */,
+				4DC4D7601A0BD9C700437F18 /* Fabric.framework in Frameworks */,
 				C029282019E82E14006AEE43 /* UIKit.framework in Frameworks */,
 				2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */,
+				4DC4D75F1A0BD9C600437F18 /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +172,8 @@
 		BAF2AC82D5D9713890E196C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4DC4D75D1A0BD9C600437F18 /* Crashlytics.framework */,
+				4DC4D75E1A0BD9C600437F18 /* Fabric.framework */,
 				C029281B19E82E14006AEE43 /* AddressBook.framework */,
 				C029281C19E82E14006AEE43 /* Foundation.framework */,
 				C029281D19E82E14006AEE43 /* UIKit.framework */,
@@ -387,6 +395,7 @@
 				C029278E19E823E2006AEE43 /* Frameworks */,
 				C029278F19E823E2006AEE43 /* Resources */,
 				EBA49C9E2F860CDD81EAE5B6 /* Copy Pods Resources */,
+				4DC4D75C1A0BD98800437F18 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -503,6 +512,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		4DC4D75C1A0BD98800437F18 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 4c9755dfd6f7311abb1dfbd78623795815c0c1b6 408a45072ded0863eede61b59a6b0ddb658232f0c15849ffec82d674794ff4c1";
 		};
 		925AE1ED72E96F8F8EC069E7 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -639,6 +661,11 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/astaub/code/mave/mave-ios-app",
+					"$(PROJECT_DIR)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -686,6 +713,11 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/astaub/code/mave/mave-ios-app",
+					"$(PROJECT_DIR)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
