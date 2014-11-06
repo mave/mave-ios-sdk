@@ -77,6 +77,15 @@
     XCTAssertEqual(err.code, GRKValidationErrorUserIDNotSetCode);
 }
 
+- (void)testIsSetupOkFailsWithNoFirstName {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk setUserData:@"2" firstName:nil lastName:@"Jones"];
+    NSError *err = [gk validateSetup];
+    XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqual(err.code, GRKValidationErrorUserNameNotSetCode);
+}
+
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];

@@ -28,3 +28,4 @@ NSInteger const GRKHTTPErrorResponse500LevelCode = 500;
 NSString * const GRK_VALIDATION_ERROR_DOMAIN = @"com.growthkit.validation.error";
 NSInteger const GRKValidationErrorApplicationIDNotSetCode = 100;
 NSInteger const GRKValidationErrorUserIDNotSetCode = 101;
+NSInteger const GRKValidationErrorUserNameNotSetCode = 102;

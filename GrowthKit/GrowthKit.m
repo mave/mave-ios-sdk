@@ -58,20 +58,21 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 - (NSError *)validateSetup {
-    NSError *err = nil;
+    NSInteger errCode = 0;
     if (self.appId == nil) {
-        err = [[NSError alloc] initWithDomain:GRK_VALIDATION_ERROR_DOMAIN
-                                         code:GRKValidationErrorApplicationIDNotSetCode
-                                     userInfo:@{}];
         DebugLog(@"Error with GrowthKit shared instance setup - Application ID not set");
-    }
-    if (self.currentUserId == nil) {
+        errCode = GRKValidationErrorApplicationIDNotSetCode;
+    } else if (self.currentUserId == nil) {
         DebugLog(@"Error with GrowthKit shared instance setup - UserID not set");
-        err = [[NSError alloc] initWithDomain:GRK_VALIDATION_ERROR_DOMAIN
-                                         code:GRKValidationErrorUserIDNotSetCode
-                                     userInfo:@{}];
+        errCode = GRKValidationErrorUserIDNotSetCode;
+    } else if (self.currentUserFirstName == nil) {
+        DebugLog(@"Error with GrowthKit shared instance setup - user firstName not set");
+        errCode = GRKValidationErrorUserNameNotSetCode;
+    } else {
+        return nil;
     }
-    return err;
+
+    return [[NSError alloc] initWithDomain:GRK_VALIDATION_ERROR_DOMAIN code:errCode userInfo:@{}];
 }
 
 //

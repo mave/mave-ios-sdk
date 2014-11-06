@@ -30,3 +30,4 @@ extern NSInteger const GRKHTTPErrorResponse500LevelCode;
 extern NSString * const GRK_VALIDATION_ERROR_DOMAIN;
 extern NSInteger const GRKValidationErrorApplicationIDNotSetCode;
 extern NSInteger const GRKValidationErrorUserIDNotSetCode;
+extern NSInteger const GRKValidationErrorUserNameNotSetCode;
