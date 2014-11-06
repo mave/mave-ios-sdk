@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C141D301A0BC1A80036202A /* GRKUserData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C141D2F1A0BC1A80036202A /* GRKUserData.m */; };
+		0C141D321A0BCFB50036202A /* GRKUserDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C141D311A0BCFB50036202A /* GRKUserDataTests.m */; };
 		0CC6463119F9401C0006A1D0 /* SideDrawerInvitePageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463019F9401C0006A1D0 /* SideDrawerInvitePageDelegate.m */; };
 		0CC6463419F962CF0006A1D0 /* ModalInvitePageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463319F962CF0006A1D0 /* ModalInvitePageDelegate.m */; };
 		0CC6463619F9C6190006A1D0 /* GRKABTableViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463519F9C6190006A1D0 /* GRKABTableViewControllerTests.m */; };
@@ -68,6 +70,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C141D2E1A0BC1A80036202A /* GRKUserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRKUserData.h; sourceTree = "<group>"; };
+		0C141D2F1A0BC1A80036202A /* GRKUserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKUserData.m; sourceTree = "<group>"; };
+		0C141D311A0BCFB50036202A /* GRKUserDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRKUserDataTests.m; sourceTree = "<group>"; };
 		0CC6462F19F9401C0006A1D0 /* SideDrawerInvitePageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerInvitePageDelegate.h; sourceTree = "<group>"; };
 		0CC6463019F9401C0006A1D0 /* SideDrawerInvitePageDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideDrawerInvitePageDelegate.m; sourceTree = "<group>"; };
 		0CC6463219F962CF0006A1D0 /* ModalInvitePageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalInvitePageDelegate.h; sourceTree = "<group>"; };
@@ -181,6 +186,7 @@
 				C022641119EC41010087FF37 /* GRKABPersonTests.m */,
 				C022641219EC41010087FF37 /* GRKABCollectionTests.m */,
 				C022641519EC41010087FF37 /* GRKABTestDataTests.m */,
+				0C141D311A0BCFB50036202A /* GRKUserDataTests.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -328,6 +334,8 @@
 				C02927FF19E82D0F006AEE43 /* GRKABCollection.m */,
 				C029280019E82D0F006AEE43 /* GRKABPerson.h */,
 				C029280119E82D0F006AEE43 /* GRKABPerson.m */,
+				0C141D2E1A0BC1A80036202A /* GRKUserData.h */,
+				0C141D2F1A0BC1A80036202A /* GRKUserData.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -558,6 +566,7 @@
 				C029280519E82D0F006AEE43 /* GRKABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
 				0CC6463119F9401C0006A1D0 /* SideDrawerInvitePageDelegate.m in Sources */,
+				0C141D301A0BC1A80036202A /* GRKUserData.m in Sources */,
 				C0F4C8EE19F162B80003D209 /* GRKInviteSendingProgressView.m in Sources */,
 				C029280419E82D0F006AEE43 /* GRKABCollection.m in Sources */,
 			);
@@ -580,6 +589,7 @@
 				C022641919EC41010087FF37 /* GRKABTestDataTests.m in Sources */,
 				C0425B8C19EDB955006641AB /* GRKInviteMessageViewControllerTests.m in Sources */,
 				C022641E19EC4FAC0087FF37 /* GRKHTTPManagerTests.m in Sources */,
+				0C141D321A0BCFB50036202A /* GRKUserDataTests.m in Sources */,
 				0CF6541F1A02D5E3008992F0 /* GRKNavigationBarTests.m in Sources */,
 				C0834F3A19F57F0000E52CA1 /* GRKABTableViewTests.m in Sources */,
 			);

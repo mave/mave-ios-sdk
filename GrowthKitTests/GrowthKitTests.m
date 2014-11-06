@@ -125,7 +125,7 @@
     GrowthKit *gk = [GrowthKit sharedInstance];
     id httpManagerMock = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];
     [[httpManagerMock expect] sendApplicationLaunchNotification];
-    [gk registerAppOpen];
+    [gk trackAppOpen];
     [httpManagerMock verify];
 }
 
@@ -140,7 +140,7 @@
     gk.HTTPManager = mockManager;
     [[mockManager expect] sendUserSignupNotificationWithUserID:userId firstName:firstName lastName:lastName  email:email phone:phone];
 
-    [gk registerNewUserSignup:userId firstName:firstName lastName:lastName email:email phone:phone];
+    //[gk registerNewUserSignup:userId firstName:firstName lastName:lastName email:email phone:phone];
 
     [mockManager verify];
 

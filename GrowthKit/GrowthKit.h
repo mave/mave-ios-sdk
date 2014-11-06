@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GRKInvitePageViewController.h"
 #import "GRKDisplayOptions.h"
+#import "GRKUserData.h"
 
 @class GRKHTTPManager;
 
@@ -39,12 +40,9 @@
 // correctly aren't nil. Gets called when initializing the invite page.
 - (NSError *)validateSetup;
 
-- (void)registerAppOpen;
-- (void)registerNewUserSignup:(NSString *)userId
-                    firstName:(NSString *)firstName
-                     lastName:(NSString *)lastName
-                        email:(NSString *)email
-                        phone:(NSString *)phone;
+- (void)trackAppOpen;
+- (void)identifyUser:(GRKUserData *)userData;
+- (void)trackSignup;
 
 - (UIViewController *)invitePageViewControllerWithDelegate:(id <GRKInvitePageDelegate>) delegate
                                            validationError:(NSError **)error;

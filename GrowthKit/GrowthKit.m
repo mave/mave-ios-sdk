@@ -33,7 +33,9 @@ static GrowthKit *sharedInstance = nil;
 static dispatch_once_t sharedInstanceonceToken;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
+    NSLog(@"setup shared instance");
     dispatch_once(&sharedInstanceonceToken, ^{
+        NSLog(@"actually setup shared instance");
         sharedInstance = [[self alloc] initWithAppId:applicationID];
     });
 }
