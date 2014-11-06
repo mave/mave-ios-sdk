@@ -17,4 +17,9 @@
 
 - (void)trackAppOpen;
 
+// This function checks that required fields for the GrowthKit invite page to work
+// correctly aren't nil. If it fails we return nil for the invite page view controller.
+- (NSError *)validateSetup;
+
+
 @end

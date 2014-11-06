@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "GrowthKit.h"
+#import "GRKUserData.h"
 #import "GRKInvitePageViewController.h"
 #import "GRKHTTPManager.h"
 #import "GRKDisplayOptionsFactory.h"
@@ -24,7 +25,8 @@
     [super setUp];
     [GrowthKit resetSharedInstanceForTesting];
     [GrowthKit setupSharedInstanceWithApplicationID:@"1231234"];
-    [GrowthKit sharedInstance].currentUserId = @"foo";
+    [GrowthKit sharedInstance].userData = [[GRKUserData alloc] init];
+    [GrowthKit sharedInstance].userData.userID = @"foo";
 }
 
 - (void)tearDown {
@@ -60,7 +62,7 @@
 
     [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
-                                              userId:[GrowthKit sharedInstance].currentUserId
+                                              userId:[GrowthKit sharedInstance].userData.userID
                                        completionBlock:[OCMArg any]];
     [vc sendInvites];
     [mockHTTPManager verify];
@@ -69,7 +71,7 @@
 - (void)testViewDidLoadSendsInvitePageViewedEvent {
     NSString *userId = @"1239sdf";
     [GrowthKit setupSharedInstanceWithApplicationID:@"appid1"];
-    [[GrowthKit sharedInstance]setUserData:userId firstName:@"Dan" lastName:@"Foo"];
+    GRKUserData *userData = [[GRKUserData alloc] initWithUserID:userId firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
     
     id mockHTTPManager = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];

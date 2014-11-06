@@ -21,9 +21,6 @@
 
 @property (nonatomic, strong) NSString *appId;
 @property (strong, nonatomic) GRKUserData *userData;
-@property (nonatomic, strong) NSString *currentUserId;
-@property (nonatomic, strong) NSString *currentUserFirstName;
-@property (nonatomic, strong) NSString *currentUserLastName;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
@@ -32,14 +29,6 @@
 # if DEBUG
 + (void)resetSharedInstanceForTesting;
 #endif
-
-- (void)setUserData:(NSString *)userId
-          firstName:(NSString *)firstName
-           lastName:(NSString *)lastName;
-
-// This function checks that required fields for the GrowthKit invite page to work
-// correctly aren't nil. Gets called when initializing the invite page.
-- (NSError *)validateSetup;
 
 - (void)identifyUser:(GRKUserData *)userData;
 - (void)trackSignup;

@@ -20,8 +20,6 @@
     // Override point for customization after application launch.
     [GrowthKit setupSharedInstanceWithApplicationID:@"12345"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"1" firstName:@"Danny" lastName:@"Cosson"];
-
     return YES;
 }
 

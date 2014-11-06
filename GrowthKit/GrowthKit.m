@@ -55,21 +55,15 @@ static dispatch_once_t sharedInstanceonceToken;
     return sharedInstance;
 }
 
-- (void)setUserData:(NSString *)userId firstName:(NSString *)firstName lastName:(NSString *)lastName {
-    _currentUserId = userId;
-    _currentUserFirstName = firstName;
-    _currentUserLastName = lastName;
-}
-
 - (NSError *)validateSetup {
     NSInteger errCode = 0;
     if (self.appId == nil) {
         DebugLog(@"Error with GrowthKit shared instance setup - Application ID not set");
         errCode = GRKValidationErrorApplicationIDNotSetCode;
-    } else if (self.currentUserId == nil) {
+    } else if (self.userData.userID == nil) {
         DebugLog(@"Error with GrowthKit shared instance setup - UserID not set");
         errCode = GRKValidationErrorUserIDNotSetCode;
-    } else if (self.currentUserFirstName == nil) {
+    } else if (self.userData.firstName == nil) {
         DebugLog(@"Error with GrowthKit shared instance setup - user firstName not set");
         errCode = GRKValidationErrorUserNameNotSetCode;
     } else {
@@ -100,9 +94,9 @@ static dispatch_once_t sharedInstanceonceToken;
                      lastName:(NSString *)lastName
                         email:(NSString *)email
                         phone:(NSString *)phone {
-    self.currentUserId = userId;
-    self.currentUserFirstName = firstName;
-    self.currentUserLastName = lastName;
+//    self.currentUserId = userId;
+//    self.currentUserFirstName = firstName;
+//    self.currentUserLastName = lastName;
     [self.HTTPManager sendUserSignupNotificationWithUserID:userId
                                                  firstName:firstName
                                                   lastName:lastName

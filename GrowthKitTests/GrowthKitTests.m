@@ -89,29 +89,28 @@ static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
     XCTAssertEqualObjects(gk.userData, userData);
 }
 
-- (void)testSetUserData {
-    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
-    GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
-    
-    XCTAssertEqualObjects(gk.currentUserId, @"123");
-    XCTAssertEqualObjects(gk.currentUserFirstName, @"Foo");
-    XCTAssertEqualObjects(gk.currentUserLastName, @"Jones");
-}
-
 - (void)testIsSetupOkFailsWithNoApplicationID {
     [GrowthKit setupSharedInstanceWithApplicationID:nil];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+    [gk identifyUser:[[GRKUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, GRKValidationErrorApplicationIDNotSetCode);
 }
 
+- (void)testIsSetupOkFailsWithNilUserData {
+    [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
+    GrowthKit *gk = [GrowthKit sharedInstance];
+    [gk identifyUser:nil];
+    NSError *err = [gk validateSetup];
+    XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqual(err.code, GRKValidationErrorUserIDNotSetCode);
+}
+
 - (void)testIsSetupOkFailsWithNoUserID {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:nil firstName:@"Foo" lastName:@"Jones"];
+    [gk identifyUser:[[GRKUserData alloc] initWithUserID:nil firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, GRKValidationErrorUserIDNotSetCode);
@@ -120,7 +119,7 @@ static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
 - (void)testIsSetupOkFailsWithNoFirstName {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"2" firstName:nil lastName:@"Jones"];
+    [gk identifyUser:[[GRKUserData alloc] initWithUserID:@"100" firstName:nil lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, GRK_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, GRKValidationErrorUserNameNotSetCode);
@@ -129,7 +128,7 @@ static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"1" firstName:@"Dan" lastName:nil];
+        [gk identifyUser:[[GRKUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:nil email:nil phone:nil]];
     NSError *err = [gk validateSetup];
     XCTAssertNil(err);
 }
@@ -137,7 +136,9 @@ static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
 - (void)testInvitePageViewControllerNoErrorIfUserDataSet {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"123" firstName:@"Foo" lastName:@"Jones"];
+    gk.userData = [[GRKUserData alloc] init];
+    gk.userData.userID = @"123";
+    gk.userData.firstName = @"Dan";
 
     NSError *error;
     UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
@@ -149,8 +150,9 @@ static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
 - (void)testInvitePageViewControllerErrorIfValidationError {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
+    gk.userData = [[GRKUserData alloc] init];
     // user ID is nil
-    [gk setUserData:nil firstName:@"Foo" lastName:@"Jones"];
+    gk.userData.firstName = @"Dan";
 
     NSError *error;
     UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil

@@ -32,8 +32,10 @@ typedef void (^GRKHTTPCompletionBlock)(NSError *error, NSDictionary *responseDat
                                     lastName:(NSString *)lastName
                                        email:(NSString *)email
                                        phone:(NSString *)phone;
+- (void)sendInvitePageOpen:(NSString *)userID;
+
 - (void)identifyUserRequest:(GRKUserData *)userData;
 - (void)trackSignupRequest:(GRKUserData *)userData;
-- (void)sendInvitePageOpen:(NSString *)userID;
+- (void)trackInvitePageOpenRequest:(GRKUserData *)userData;
 
 @end
