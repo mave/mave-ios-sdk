@@ -89,7 +89,7 @@
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
-    [gk setUserData:@"1" firstName:nil lastName:nil];
+    [gk setUserData:@"1" firstName:@"Dan" lastName:nil];
     NSError *err = [gk validateSetup];
     XCTAssertNil(err);
 }
