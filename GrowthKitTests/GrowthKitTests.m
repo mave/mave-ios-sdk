@@ -38,11 +38,6 @@
     GrowthKit *gk1 = [GrowthKit sharedInstance];
     XCTAssertEqualObjects(gk1.appId, @"foo123");
     XCTAssertNotNil(gk1.displayOptions);
-    #if DEBUG
-    NSLog(@"Foolog");
-    #else
-    NSLog(@"Barlog");
-    #endif
 }
 
 
