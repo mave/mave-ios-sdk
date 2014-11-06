@@ -176,7 +176,10 @@ static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
     id mockManager = [OCMockObject mockForClass:[GRKHTTPManager class]];
     GrowthKit *gk = [GrowthKit sharedInstance];
     gk.HTTPManager = mockManager;
+    gk.userData = userData;
     [[mockManager expect] trackSignupRequest:userData];
+    
+    [gk trackSignup];
 
     [mockManager verify];
 }

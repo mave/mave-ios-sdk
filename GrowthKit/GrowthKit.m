@@ -91,6 +91,10 @@ static dispatch_once_t sharedInstanceonceToken;
     [self.HTTPManager identifyUserRequest:userData];
 }
 
+- (void)trackSignup {
+    [self.HTTPManager trackSignupRequest:self.userData];
+}
+
 - (void)registerNewUserSignup:(NSString *)userId
                     firstName:(NSString *)firstName
                      lastName:(NSString *)lastName
