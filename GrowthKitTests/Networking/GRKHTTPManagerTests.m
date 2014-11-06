@@ -65,7 +65,7 @@
                                      @"email": userData.email,
                                      @"phone": userData.phone};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
-                                             methodType:@"POST"
+                                             methodType:@"PUT"
                                                  params:expectedParams
                                         completionBlock:nil];
     [httpManager identifyUserRequest:userData];
@@ -77,10 +77,10 @@
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
     GRKUserData *userData = [[GRKUserData alloc] init];
-    userData.userID = @"1";
-    NSDictionary *expectedParams = @{@"user_id": userData.userID};
+    // user id is missing so request will fail but it will still get attempted
+    NSDictionary *expectedParams = @{};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
-                                             methodType:@"POST"
+                                             methodType:@"PUT"
                                                  params:expectedParams
                                         completionBlock:nil];
     [httpManager identifyUserRequest:userData];
@@ -90,9 +90,9 @@
 - (void)testTrackSignupRequest {
     GRKHTTPManager *httpManager = [[GRKHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
-    GRKUserData *userData = [[GRKUserData alloc] initWithUserID:@"1" firstName:nil lastName:nil email:nil phone:nil];
+    GRKUserData *userData = [[GRKUserData alloc] initWithUserID:@"1" firstName:@"Blah" lastName:nil email:nil phone:nil];
     NSDictionary *expectedParams = @{@"user_id": userData.userID};
-    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users/signup"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
@@ -105,7 +105,7 @@
     id mocked = [OCMockObject partialMockForObject:httpManager];
     GRKUserData *userData = [[GRKUserData alloc] init];
     userData.userID = @"1"; userData.firstName = @"Dan";
-    NSDictionary *expectedParams = @{@"user_id": @"2"};
+    NSDictionary *expectedParams = @{@"user_id": userData.userID};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invite_page_open"
                                              methodType:@"POST"
                                                  params:expectedParams

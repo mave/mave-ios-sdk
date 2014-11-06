@@ -72,10 +72,10 @@
     NSString *userId = @"1239sdf";
     [GrowthKit setupSharedInstanceWithApplicationID:@"appid1"];
     GRKUserData *userData = [[GRKUserData alloc] initWithUserID:userId firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
+    [GrowthKit sharedInstance].userData = userData;
     GRKInvitePageViewController *vc = [[GRKInvitePageViewController alloc] init];
-    
     id mockHTTPManager = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];
-    [[mockHTTPManager expect] sendInvitePageOpen:userId];
+    [[mockHTTPManager expect] trackInvitePageOpenRequest:userData];
     
     [vc viewDidLoad];
     

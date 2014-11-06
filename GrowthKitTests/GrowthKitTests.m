@@ -59,20 +59,20 @@
 - (void)testSetupSharedInstanceTriggersAppOpenEvent {
     // Swizzle methods to check that calling our setup shared instance method also triggers
     // a track app launch event
-    Method ogMethod = class_getInstanceMethod([GRKHTTPManager class], @selector(sendApplicationLaunchNotification));
-    Method mockMethod = class_getInstanceMethod([self class], @selector(fakeSendApplicationLaunchNotification));
+    Method ogMethod = class_getInstanceMethod([GRKHTTPManager class], @selector(trackAppOpenRequest));
+    Method mockMethod = class_getInstanceMethod([self class], @selector(fakeTrackAppOpenRequest));
     method_exchangeImplementations(ogMethod, mockMethod);
     
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
-    XCTAssertEqual(_didCallFakeSendApplicationLaunchNotification, YES);
+    XCTAssertEqual(_didCallFakeTrackAppOpenRequest, YES);
     
     method_exchangeImplementations(mockMethod, ogMethod);
 
 }
 
-static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
-- (void)fakeSendApplicationLaunchNotification {
-    _didCallFakeSendApplicationLaunchNotification = YES;
+static BOOL _didCallFakeTrackAppOpenRequest = NO;
+- (void)fakeTrackAppOpenRequest {
+    _didCallFakeTrackAppOpenRequest = YES;
 }
 
 - (void)testIdentifyUser {
@@ -167,7 +167,7 @@ static BOOL _didCallFakeSendApplicationLaunchNotification = NO;
     [GrowthKit setupSharedInstanceWithApplicationID:@"foo123"];
     GrowthKit *gk = [GrowthKit sharedInstance];
     id httpManagerMock = [OCMockObject partialMockForObject: [GrowthKit sharedInstance].HTTPManager];
-    [[httpManagerMock expect] sendApplicationLaunchNotification];
+    [[httpManagerMock expect] trackAppOpenRequest];
     [gk trackAppOpen];
     [httpManagerMock verify];
 }

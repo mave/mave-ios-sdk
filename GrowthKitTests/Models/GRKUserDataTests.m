@@ -33,7 +33,28 @@
     XCTAssertEqualObjects(ud.lastName, @"la");
     XCTAssertEqualObjects(ud.email, @"em");
     XCTAssertEqualObjects(ud.phone, @"ph");
+}
 
+- (void)testToDictionaryAllNils {
+    GRKUserData *ud = [[GRKUserData alloc] init];
+    NSDictionary *dict = [ud toDictionary];
+    XCTAssertEqualObjects(dict, @{});
+}
+
+- (void)testToDictionaryNoNils {
+    GRKUserData *ud = [[GRKUserData alloc] initWithUserID:@"id1" firstName:@"fi" lastName:@"la" email:@"em" phone:@"ph"];
+    NSDictionary *expected = @{@"user_id": @"id1",
+                               @"first_name": @"fi",
+                               @"last_name": @"la",
+                               @"email": @"em",
+                               @"phone": @"ph"};
+    XCTAssertEqualObjects([ud toDictionary], expected);
+}
+
+- (void)testToDictionaryIDOnly {
+    GRKUserData *ud = [[GRKUserData alloc] initWithUserID:@"id5" firstName:@"fi" lastName:@"la" email:@"em" phone:@"ph"];
+    NSDictionary *expected = @{@"user_id": @"id5"};
+    XCTAssertEqualObjects([ud toDictionaryIDOnly], expected);
 }
 
 @end

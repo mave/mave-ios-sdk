@@ -22,4 +22,9 @@
                          email:(NSString *)email
                          phone:(NSString *)phone;
 
+// Convert to a dictionary, e.g. to be serialized as JSON for an API request
+- (NSDictionary *)toDictionary;
+// Serializes only the userID field to a dictionary
+- (NSDictionary *)toDictionaryIDOnly;
+
 @end

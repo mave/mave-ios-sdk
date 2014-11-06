@@ -77,7 +77,7 @@ static dispatch_once_t sharedInstanceonceToken;
 // Funnel events that need to be called explicitly by consumer
 //
 - (void)trackAppOpen {
-    [self.HTTPManager sendApplicationLaunchNotification];
+    [self.HTTPManager trackAppOpenRequest];
 }
 
 - (void)identifyUser:(GRKUserData *)userData {
@@ -87,21 +87,6 @@ static dispatch_once_t sharedInstanceonceToken;
 
 - (void)trackSignup {
     [self.HTTPManager trackSignupRequest:self.userData];
-}
-
-- (void)registerNewUserSignup:(NSString *)userId
-                    firstName:(NSString *)firstName
-                     lastName:(NSString *)lastName
-                        email:(NSString *)email
-                        phone:(NSString *)phone {
-//    self.currentUserId = userId;
-//    self.currentUserFirstName = firstName;
-//    self.currentUserLastName = lastName;
-    [self.HTTPManager sendUserSignupNotificationWithUserID:userId
-                                                 firstName:firstName
-                                                  lastName:lastName
-                                                     email:email
-                                                     phone:phone];
 }
 
 //

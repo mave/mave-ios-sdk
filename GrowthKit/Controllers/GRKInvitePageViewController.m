@@ -53,7 +53,7 @@
 
     // Register the viewed invite page event with our API
     GrowthKit *gk = [GrowthKit sharedInstance];
-    //[gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
+    [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
 }
 
 - (void)didReceiveMemoryWarning {
