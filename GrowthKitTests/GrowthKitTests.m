@@ -141,8 +141,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
-                                                    validationError:&error];
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil error:&error];
     XCTAssertNotNil(vc);
     XCTAssertNil(error);
 }
@@ -155,8 +154,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
-                                                    validationError:&error];
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil error:&error];
     XCTAssertNil(vc);
     XCTAssertNotNil(error);
     XCTAssertEqualObjects(error.domain, GRK_VALIDATION_ERROR_DOMAIN);

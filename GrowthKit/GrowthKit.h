@@ -34,6 +34,6 @@
 - (void)trackSignup;
 
 - (UIViewController *)invitePageViewControllerWithDelegate:(id <GRKInvitePageDelegate>) delegate
-                                           validationError:(NSError **)error;
+                                                     error:(NSError **)error;
 
 @end

@@ -93,7 +93,7 @@ static dispatch_once_t sharedInstanceonceToken;
 // Methods for consumer to present/manage the invite page
 //
 - (UIViewController *)invitePageViewControllerWithDelegate:(id<GRKInvitePageDelegate>)delegate
-                                           validationError:(NSError **)error{
+                                                     error:(NSError **)error{
     UIViewController *returnVC = nil;
     *error = [self validateSetup];
     if (!*error) {
