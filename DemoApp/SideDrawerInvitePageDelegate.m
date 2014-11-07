@@ -26,8 +26,4 @@
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
 }
 
-- (UIBarButtonItem *)cancelBarButtonItem {
-    return [[MMDrawerBarButtonItem alloc] initWithTarget:nil action:nil];
-}
-
 @end

@@ -29,9 +29,9 @@
 
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
 
-@property (nonatomic) id <MAVEInvitePageDelegate> delegate;
-@property (nonatomic) MAVEABTableViewController *ABTableViewController;
-@property (nonatomic) MAVEInviteMessageViewController *inviteMessageViewController;
+@property (strong, nonatomic) id <MAVEInvitePageDelegate> delegate;
+@property (strong, nonatomic) MAVEABTableViewController *ABTableViewController;
+@property (strong, nonatomic) MAVEInviteMessageViewController *inviteMessageViewController;
 
 // Helpers for keeping track of keyboard for frame resizing
 @property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame

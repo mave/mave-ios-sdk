@@ -11,6 +11,8 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
+#define MAVEDemoApplicationID @"12345"
+
 @interface AppDelegate ()
 
 @end
@@ -21,8 +23,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     //[Fabric with:@[CrashlyticsKit]];
     
-    [Mave setupSharedInstanceWithApplicationID:@"12345"];
-    Mave *gk = [Mave sharedInstance];
+    [Mave setupSharedInstanceWithApplicationID:MAVEDemoApplicationID];
+    MAVEUserData *maveUserData = [[MAVEUserData alloc] initWithUserID:@"1"
+                                                            firstName:@"Example"lastName:@"Person"
+                                                                email:@"foo@example.com"
+                                                                phone:@"18085551234"];
+    [[Mave sharedInstance] identifyUser:maveUserData];
     return YES;
 }
 

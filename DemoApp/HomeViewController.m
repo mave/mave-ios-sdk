@@ -11,7 +11,6 @@
 #import <UIKit/UIKit.h>
 
 #import "Mave.h"
-#import "ModalInvitePageDelegate.h"
 #import "UIViewController+MMDrawerController.h"
 #import "MMDrawerBarButtonItem.h"
 
@@ -32,11 +31,10 @@
 }
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
-    ModalInvitePageDelegate *delegate = [[ModalInvitePageDelegate alloc] init];
     NSError *initError;
-    delegate.viewController = [[Mave sharedInstance] invitePageViewControllerWithDelegate:delegate error:&initError];
+    self.invitePageViewController = [[Mave sharedInstance] invitePageViewControllerWithDelegate:self error:&initError];
     if (!initError) {
-        [self presentViewController:delegate.viewController animated:YES completion:nil];
+        [self presentViewController:self.invitePageViewController animated:YES completion:nil];
     }
 }
 
@@ -46,8 +44,19 @@
     [self.navigationItem setLeftBarButtonItem:leftDrawerButton];
 }
 
+
 - (void)leftDrawerButtonPress:(id)leftDrawerButtonPress {
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
 }
+
+#pragma mark - Mave invite page delegate methods
+- (void)userDidSendInvites {
+    [self.invitePageViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)userDidCancel {
+    [self.invitePageViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 @end

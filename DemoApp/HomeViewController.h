@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Mave.h"
 
-@interface HomeViewController : UIViewController
+@interface HomeViewController : UIViewController <MAVEInvitePageDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextView *defaultMessageCopy;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *colorSchemes;
+
+@property (weak, nonatomic) UIViewController *invitePageViewController;
 
 - (IBAction)presentInvitePageAsModal:(id)sender;
 
