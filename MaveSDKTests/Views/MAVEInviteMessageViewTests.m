@@ -35,6 +35,7 @@
 - (void)testMessageViewStyleOnInit {
     // Setup and get opts to compare it to
     CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
+    [MaveSDK sharedInstance].defaultSMSMessageText = @"tmp message";
     MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] initWithFrame:fakeFrame];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
@@ -45,13 +46,14 @@
     XCTAssertEqual(view.fakeTopBorder.frame.origin.x, 0);
     XCTAssertEqual(view.fakeTopBorder.frame.origin.y, 0);
     
-    // Test Message field style
+    // Test Message field style & content
     UIColor *tfbgColor = [[UIColor alloc]
                           initWithCGColor:view.textField.layer.backgroundColor];
     XCTAssertEqualObjects(tfbgColor, [MAVEDisplayOptions colorWhite]);
     UIColor *tfBorderColor = [[UIColor alloc]
                               initWithCGColor:view.textField.layer.borderColor];
     XCTAssertEqualObjects(tfBorderColor, opts.bottomViewBorderColor);
+    XCTAssertEqualObjects(view.textField.text, @"tmp message");
 
     // Test Button Style
     XCTAssertFalse(view.sendButton.enabled);

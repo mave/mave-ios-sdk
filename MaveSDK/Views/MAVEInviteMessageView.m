@@ -41,8 +41,8 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         self.textField.layer.cornerRadius=8.0f;
         self.textField.layer.masksToBounds=YES;
         self.textField.layer.borderWidth= 0.5f;
-        [self.textField setText:@"Use my invite link to sign up!"];
-        [self.textField setReturnKeyType:UIReturnKeyDone];
+        self.textField.text = [MaveSDK sharedInstance].defaultSMSMessageText;
+        self.textField.returnKeyType = UIReturnKeyDone;
         
         self.sendButton = [[UIButton alloc] init];
         [self.sendButton setTitleColor:displayOptions.sendButtonColor forState:UIControlStateNormal];
