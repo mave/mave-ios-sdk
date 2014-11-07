@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) MAVEInvitePageViewController *viewController;
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
+@property (nonatomic, strong) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEHTTPManager *HTTPManager;
 
 @property (nonatomic, strong) NSString *appId;
@@ -34,6 +35,7 @@
 - (void)trackSignup;
 
 - (UIViewController *)invitePageViewControllerWithDelegate:(id <MAVEInvitePageDelegate>) delegate
+                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
                                                      error:(NSError **)error;
 
 @end

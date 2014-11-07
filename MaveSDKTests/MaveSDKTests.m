@@ -38,6 +38,7 @@
     MaveSDK *gk1 = [MaveSDK sharedInstance];
     XCTAssertEqualObjects(gk1.appId, @"foo123");
     XCTAssertNotNil(gk1.displayOptions);
+    XCTAssertNil(gk1.defaultSMSMessageText);
 }
 
 
@@ -151,9 +152,12 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil error:&error];
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
+                                              defaultSMSMessageText:@"tmp"
+                                                              error:&error];
     XCTAssertNotNil(vc);
     XCTAssertNil(error);
+    XCTAssertEqualObjects(gk.defaultSMSMessageText, @"tmp");
 }
 
 - (void)testInvitePageViewControllerErrorIfValidationError {
@@ -164,9 +168,12 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil error:&error];
+    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
+                                              defaultSMSMessageText:@"tmp"
+                                                              error:&error];
     XCTAssertNil(vc);
     XCTAssertNotNil(error);
+    XCTAssertEqualObjects(gk.defaultSMSMessageText, nil);
     XCTAssertEqualObjects(error.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(error.code, MAVEValidationErrorUserIDNotSetCode);
 }

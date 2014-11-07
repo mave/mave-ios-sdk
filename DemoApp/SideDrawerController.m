@@ -45,7 +45,9 @@
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
         SideDrawerInvitePageDelegate *invitePageDelegate = [[SideDrawerInvitePageDelegate alloc] initWithDrawerController:self.mm_drawerController];
         NSError *err;
-        centerViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate error:&err];
+        centerViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate
+                                                                        defaultSMSMessageText:@"Join me on Mave!"
+                                                                                        error:&err];
         if (err) { // Invite view not initialized properly, just leave drawer open
             return;
         }

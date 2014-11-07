@@ -96,10 +96,12 @@ static dispatch_once_t sharedInstanceonceToken;
 // Methods for consumer to present/manage the invite page
 //
 - (UIViewController *)invitePageViewControllerWithDelegate:(id<MAVEInvitePageDelegate>)delegate
-                                                     error:(NSError **)error{
+                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
+                                                     error:(NSError **)error {
     UIViewController *returnVC = nil;
     *error = [self validateSetup];
     if (!*error) {
+        self.defaultSMSMessageText = defaultSMSMessageText;
         MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] initWithDelegate:delegate];
         returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
     }
