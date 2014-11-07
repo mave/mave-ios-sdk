@@ -45,8 +45,7 @@
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
         SideDrawerInvitePageDelegate *invitePageDelegate = [[SideDrawerInvitePageDelegate alloc] initWithDrawerController:self.mm_drawerController];
         NSError *err;
-        centerViewController = [[Mave sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate
-                                                                                validationError:&err];
+        centerViewController = [[Mave sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate error:&err];
         if (err) { // Invite view not initialized properly, just leave drawer open
             return;
         }

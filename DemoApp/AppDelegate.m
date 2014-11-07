@@ -19,7 +19,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [Fabric with:@[CrashlyticsKit]];
+    //[Fabric with:@[CrashlyticsKit]];
     
     [Mave setupSharedInstanceWithApplicationID:@"12345"];
     Mave *gk = [Mave sharedInstance];
