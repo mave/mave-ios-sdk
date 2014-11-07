@@ -82,7 +82,10 @@ static dispatch_once_t sharedInstanceonceToken;
 
 - (void)identifyUser:(MAVEUserData *)userData {
     self.userData = userData;
-    [self.HTTPManager identifyUserRequest:userData];
+    NSError *validationError = [self validateSetup];
+    if (validationError == nil) {
+        [self.HTTPManager identifyUserRequest:userData];
+    }
 }
 
 - (void)trackSignup {

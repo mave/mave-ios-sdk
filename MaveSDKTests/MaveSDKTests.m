@@ -84,6 +84,21 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     XCTAssertEqualObjects(gk.userData, userData);
 }
 
+- (void)testIdentifyUserInvalidDoesntMakeNetworkRequest {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVEUserData *userData = [[MAVEUserData alloc] init];
+    userData.userID = @"1";  // no first name
+    id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
+    MaveSDK *gk = [MaveSDK sharedInstance];
+    gk.HTTPManager = mockManager;
+    [[mockManager reject] identifyUserRequest:userData];
+    
+    [gk identifyUser:userData];
+    
+    [mockManager verify];
+    XCTAssertEqualObjects(gk.userData, userData);
+}
+
 - (void)testIsSetupOkFailsWithNoApplicationID {
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
     MaveSDK *gk = [MaveSDK sharedInstance];
