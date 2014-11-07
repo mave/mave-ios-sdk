@@ -75,6 +75,19 @@
     XCTAssertEqualObjects(p.phoneNumberLabels[1], @"_$!<Main>!$_");
 }
 
+- (void)testPhoneNumbersFromABRecordRefNoLabel {
+    ABRecordRef rec = ABPersonCreate();
+    ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
+    ABMultiValueAddValueAndLabel(pnmv, @"808.555.1234", nil, NULL);
+    ABRecordSetValue(rec, kABPersonPhoneProperty, pnmv, nil);
+    MAVEABPerson *p = [[MAVEABPerson alloc] init];
+    [p setPhoneNumbersFromABRecordRef:rec];
+    XCTAssertEqual([p.phoneNumbers count], 1);
+    XCTAssertEqual([p.phoneNumberLabels count], 1);
+    XCTAssertEqualObjects(p.phoneNumbers[0], @"18085551234");
+    XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<OtherFAX>!$_");
+}
+
 - (void)testPhoneNumbersFromABRecordRefWhenNone {
     ABRecordRef rec = ABPersonCreate();
     MAVEABPerson *p = [[MAVEABPerson alloc] init];

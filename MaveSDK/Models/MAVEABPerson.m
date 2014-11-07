@@ -31,14 +31,17 @@
     NSMutableArray *phoneNumberLabels = [[NSMutableArray alloc] initWithCapacity:numPhones];
     
     NSString *pn;
+    NSString *label;
     for (NSUInteger i=0; i < numPhones; i++) {
         pn = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneMultiValue, i);
         pn = [[self class] normalizePhoneNumber:pn];
         if (pn != nil) {
             [phoneNumbers insertObject:pn atIndex: i];
-            [phoneNumberLabels
-             insertObject:(__bridge_transfer NSString *)ABMultiValueCopyLabelAtIndex(phoneMultiValue, i)
-             atIndex:i];
+            label = (__bridge_transfer NSString *) ABMultiValueCopyLabelAtIndex(phoneMultiValue, i);
+            if (label == nil) {
+                label = (__bridge_transfer NSString *) kABPersonPhoneOtherFAXLabel;
+            }
+            [phoneNumberLabels insertObject: label atIndex:i];
         }
     }
     if (phoneMultiValue != NULL) CFRelease(phoneMultiValue);
