@@ -71,7 +71,7 @@
     // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
             ^(NSData *data, NSURLResponse *response, NSError *error) {
-        DebugLog(@"HTTP Request: \"%lu\" %@ %@", ((NSHTTPURLResponse *)response).statusCode, methodType, relativeURL);
+        DebugLog(@"HTTP Request: \"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, methodType, relativeURL);
         [[self class] handleJSONResponseWithData:data
                                         response:response
                                            error:error
