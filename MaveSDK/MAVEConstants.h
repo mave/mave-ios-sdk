@@ -1,6 +1,6 @@
 //
 //  MAVEConstants.h
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/15/14.
 //

@@ -1,6 +1,6 @@
 //
 //  SideDrawerController.m
-//  Mave
+//  MaveSDK
 //
 //  Created by Danny Cosson on 10/22/14.
 //
@@ -8,7 +8,7 @@
 
 #import "SideDrawerController.h"
 
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "RootDrawerController.h"
 #import "SideDrawerInvitePageDelegate.h"
 #import "MMDrawerBarButtonItem.h"
@@ -45,7 +45,7 @@
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
         SideDrawerInvitePageDelegate *invitePageDelegate = [[SideDrawerInvitePageDelegate alloc] initWithDrawerController:self.mm_drawerController];
         NSError *err;
-        centerViewController = [[Mave sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate error:&err];
+        centerViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate error:&err];
         if (err) { // Invite view not initialized properly, just leave drawer open
             return;
         }

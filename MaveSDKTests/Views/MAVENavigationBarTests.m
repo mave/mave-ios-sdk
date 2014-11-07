@@ -1,6 +1,6 @@
 //
 //  MAVENavigationBarTests.m
-//  Mave
+//  MaveSDK
 //
 //  Created by Danny Cosson on 10/30/14.
 //
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptionsFactory.h"
 
@@ -29,9 +29,9 @@
 }
 
 - (void)testNavBarSetup {
-    [Mave setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
     MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
-    [Mave sharedInstance].displayOptions = opts;
+    [MaveSDK sharedInstance].displayOptions = opts;
     
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     UINavigationController *sampleNavigationController = [[UINavigationController alloc] initWithRootViewController:vc];

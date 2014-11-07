@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "UIViewController+MMDrawerController.h"
 #import "MMDrawerBarButtonItem.h"
 
@@ -32,7 +32,7 @@
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
     NSError *initError;
-    self.invitePageViewController = [[Mave sharedInstance] invitePageViewControllerWithDelegate:self error:&initError];
+    self.invitePageViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:self error:&initError];
     if (!initError) {
         [self presentViewController:self.invitePageViewController animated:YES completion:nil];
     }
@@ -49,7 +49,7 @@
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
 }
 
-#pragma mark - Mave invite page delegate methods
+#pragma mark - MaveSDK invite page delegate methods
 - (void)userDidSendInvites {
     [self.invitePageViewController dismissViewControllerAnimated:YES completion:nil];
 }

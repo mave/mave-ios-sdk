@@ -1,6 +1,6 @@
 //
 //  MAVEHTTPManagerTests.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/13/14.
 //

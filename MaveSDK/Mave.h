@@ -1,6 +1,6 @@
 //
 //  InvitePage.h
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
@@ -13,7 +13,7 @@
 
 @class MAVEHTTPManager;
 
-@interface Mave : NSObject
+@interface MaveSDK : NSObject
 
 @property (nonatomic, strong) MAVEInvitePageViewController *viewController;
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;

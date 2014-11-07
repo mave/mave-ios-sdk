@@ -1,12 +1,12 @@
 //
 //  MAVEInviteMessageSendingView.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/17/14.
 //
 //
 
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEInviteSendingProgressView.h"
 
 @implementation MAVEInviteSendingProgressView
@@ -18,7 +18,7 @@ float const INCREMENT_PROGRESS_BAR_BY = MAX_PROGRESS / (SECS_TO_FILL_PROGRESS_BA
 
 -(instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        MAVEDisplayOptions *displayOptions = [Mave sharedInstance].displayOptions;
+        MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         [self setBackgroundColor:displayOptions.bottomViewBackgroundColor];
         
         CGRect progressViewFrame = CGRectMake(0, 0, frame.size.width, 10);

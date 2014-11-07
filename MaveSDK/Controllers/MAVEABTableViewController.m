@@ -1,12 +1,12 @@
 //
 //  MAVEABTableViewController.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABCollection.h"
@@ -29,7 +29,7 @@
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorColor = [MAVEDisplayOptions colorExtraLightGrey];
-        self.tableView.sectionIndexColor = [Mave sharedInstance].displayOptions.sectionIndexColor;
+        self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.sectionIndexColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }
@@ -53,7 +53,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     float labelMarginY = 0.0;
     float labelOffsetX = 14.0;
-    MAVEDisplayOptions *displayOpts = [Mave sharedInstance].displayOptions;
+    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
     NSString *labelText = [self tableView:tableView
                   titleForHeaderInSection:section];
     UIFont *labelFont = displayOpts.sectionHeaderFont;

@@ -1,6 +1,6 @@
 //
 //  MAVEInviteMessageViewTests.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/19/14.
 //
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEDisplayOptionsFactory.h"
 #import "MAVEInviteMessageView.h"
@@ -23,8 +23,8 @@
 
 - (void)setUp {
     [super setUp];
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    [Mave sharedInstance].displayOptions = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK sharedInstance].displayOptions = [MAVEDisplayOptionsFactory generateDisplayOptions];
 }
 
 - (void)tearDown {
@@ -36,7 +36,7 @@
     // Setup and get opts to compare it to
     CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
     MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] initWithFrame:fakeFrame];
-    MAVEDisplayOptions *opts = [Mave sharedInstance].displayOptions;
+    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
     // Test view box style
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
@@ -70,7 +70,7 @@
 - (void)testSendingProgressViewStyleOnInit {
     CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
     MAVEInviteSendingProgressView *view = [[MAVEInviteSendingProgressView alloc] initWithFrame:fakeFrame];
-    MAVEDisplayOptions *opts = [Mave sharedInstance].displayOptions;
+    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
     XCTAssertEqualObjects(view.progressView.tintColor, opts.sendButtonColor);

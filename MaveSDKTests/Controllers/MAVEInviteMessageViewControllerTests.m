@@ -1,6 +1,6 @@
 //
 //  MAVEInviteMessageViewControllerTests.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/14/14.
 //

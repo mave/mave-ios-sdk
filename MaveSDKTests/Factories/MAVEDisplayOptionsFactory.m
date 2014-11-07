@@ -1,6 +1,6 @@
 //
 //  MAVEDisplayOptionsFactory.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/19/14.
 //

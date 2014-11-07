@@ -1,6 +1,6 @@
 //
 //  MAVEInvitePageViewControllerTests.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/14/14.
 //
@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEUserData.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEHTTPManager.h"
@@ -23,10 +23,10 @@
 
 - (void)setUp {
     [super setUp];
-    [Mave resetSharedInstanceForTesting];
-    [Mave setupSharedInstanceWithApplicationID:@"1231234"];
-    [Mave sharedInstance].userData = [[MAVEUserData alloc] init];
-    [Mave sharedInstance].userData.userID = @"foo";
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"1231234"];
+    [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
+    [MaveSDK sharedInstance].userData.userID = @"foo";
 }
 
 - (void)tearDown {
@@ -58,11 +58,11 @@
     vc.inviteMessageViewController.messageView.textField.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
-    id mockHTTPManager = [OCMockObject partialMockForObject:[Mave sharedInstance].HTTPManager];
+    id mockHTTPManager = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].HTTPManager];
 
     [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
-                                              userId:[Mave sharedInstance].userData.userID
+                                              userId:[MaveSDK sharedInstance].userData.userID
                                        completionBlock:[OCMArg any]];
     [vc sendInvites];
     [mockHTTPManager verify];
@@ -70,11 +70,11 @@
 
 - (void)testViewDidLoadSendsInvitePageViewedEvent {
     NSString *userId = @"1239sdf";
-    [Mave setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:userId firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
-    [Mave sharedInstance].userData = userData;
+    [MaveSDK sharedInstance].userData = userData;
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    id mockHTTPManager = [OCMockObject partialMockForObject: [Mave sharedInstance].HTTPManager];
+    id mockHTTPManager = [OCMockObject partialMockForObject: [MaveSDK sharedInstance].HTTPManager];
     [[mockHTTPManager expect] trackInvitePageOpenRequest:userData];
     
     [vc viewDidLoad];

@@ -1,6 +1,6 @@
 //
 //  MAVEDisplayOptionsTests.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/20/14.
 //

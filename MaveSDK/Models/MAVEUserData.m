@@ -1,6 +1,6 @@
 //
 //  MAVEUserData.m
-//  Mave
+//  MaveSDK
 //
 //  Created by Danny Cosson on 11/6/14.
 //

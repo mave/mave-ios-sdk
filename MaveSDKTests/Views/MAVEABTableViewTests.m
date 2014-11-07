@@ -1,6 +1,6 @@
 //
 //  MAVEABPersonCellTests.m
-//  Mave
+//  MaveSDK
 //
 //  Created by dannycosson on 10/20/14.
 //
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEDisplayOptionsFactory.h"
 #import "MAVEABTableViewController.h"
@@ -23,8 +23,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    [Mave sharedInstance].displayOptions = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK sharedInstance].displayOptions = [MAVEDisplayOptionsFactory generateDisplayOptions];
 }
 
 - (void)tearDown {
@@ -37,7 +37,7 @@
     NSDictionary *data = @{@"D": @[@"Danny"]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
     [vc updateTableData:data];
-    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, [Mave sharedInstance].displayOptions.sectionIndexColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, [MaveSDK sharedInstance].displayOptions.sectionIndexColor);
 }
 
 - (void)testPersonCellStyleOnInit {
@@ -45,7 +45,7 @@
     MAVEABPersonCell *cell = [[MAVEABPersonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Foo"];
     XCTAssertNotNil(cell);
 
-    MAVEDisplayOptions *displayOpts = [Mave sharedInstance].displayOptions;
+    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
     XCTAssertEqualObjects(cell.textLabel.font, displayOpts.personNameFont);
@@ -60,7 +60,7 @@
     NSDictionary *data = @{@"D": @[@"Danny"]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
     [vc updateTableData:data];
-    MAVEDisplayOptions *opts = [Mave sharedInstance].displayOptions;
+    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
     XCTAssertEqualObjects(sectionHeaderView.backgroundColor, [MAVEDisplayOptions colorExtraLightGrey]);

@@ -1,23 +1,23 @@
 //
-//  Mave_Internal.h
-//  Mave
+//  MaveSDK_Internal.h
+//  MaveSDK
 //
 //  Created by Danny Cosson on 11/6/14.
 //
 //
 
-#ifndef Mave_Mave_Internal_h
-#define Mave_Mave_Internal_h
+#ifndef MaveSDK_MaveSDK_Internal_h
+#define MaveSDK_MaveSDK_Internal_h
 
 #endif
 
-#import "Mave.h"
+#import "MaveSDK.h"
 
-@interface Mave (Internal)
+@interface MaveSDK (Internal)
 
 - (void)trackAppOpen;
 
-// This function checks that required fields for the Mave invite page to work
+// This function checks that required fields for the MaveSDK invite page to work
 // correctly aren't nil. If it fails we return nil for the invite page view controller.
 - (NSError *)validateSetup;
 

@@ -1,13 +1,13 @@
 //
 //  InvitePageDelegate.h
-//  Mave
+//  MaveSDK
 //
 //  Created by Danny Cosson on 10/23/14.
 //
 //
 
 #import <Foundation/Foundation.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MMDrawerController.h"
 
 @interface SideDrawerInvitePageDelegate : NSObject <MAVEInvitePageDelegate>

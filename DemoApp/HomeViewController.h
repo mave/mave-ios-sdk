@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 
 @interface HomeViewController : UIViewController <MAVEInvitePageDelegate>
 

@@ -1,6 +1,6 @@
 //
 //  InvitePage.h
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
@@ -10,7 +10,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptions.h"
 
-@interface Mave : NSObject
+@interface MaveSDK : NSObject
 
 @property (nonatomic, readonly) MAVEInvitePageViewController *viewController;
 @property (nonatomic, readonly) MAVEDisplayOptions *displayOptions;
@@ -21,7 +21,7 @@
 @property (nonatomic, readonly) NSString *currentUserLastName;
 
 + (void)setupSharedInstanceWithAppId:(NSString *)appId;
-+ (Mave *)sharedInstance;
++ (MaveSDK *)sharedInstance;
 
 - (void)setUserData:(NSString *)userId firstName:(NSString *)firstName lastName:(NSString *)lastName;
 

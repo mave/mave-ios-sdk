@@ -1,19 +1,19 @@
 //
 //  InvitePage.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
-#import "Mave.h"
-#import "Mave_Internal.h"
+#import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 #import "MAVEConstants.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEHTTPManager.h"
 
-@implementation Mave {
+@implementation MaveSDK {
     // Controller
     UINavigationController *invitePageNavController;
 }
@@ -30,7 +30,7 @@
     return self;
 }
 
-static Mave *sharedInstance = nil;
+static MaveSDK *sharedInstance = nil;
 static dispatch_once_t sharedInstanceonceToken;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
@@ -58,13 +58,13 @@ static dispatch_once_t sharedInstanceonceToken;
 - (NSError *)validateSetup {
     NSInteger errCode = 0;
     if (self.appId == nil) {
-        DebugLog(@"Error with Mave shared instance setup - Application ID not set");
+        DebugLog(@"Error with MaveSDK shared instance setup - Application ID not set");
         errCode = MAVEValidationErrorApplicationIDNotSetCode;
     } else if (self.userData.userID == nil) {
-        DebugLog(@"Error with Mave shared instance setup - UserID not set");
+        DebugLog(@"Error with MaveSDK shared instance setup - UserID not set");
         errCode = MAVEValidationErrorUserIDNotSetCode;
     } else if (self.userData.firstName == nil) {
-        DebugLog(@"Error with Mave shared instance setup - user firstName not set");
+        DebugLog(@"Error with MaveSDK shared instance setup - user firstName not set");
         errCode = MAVEValidationErrorUserNameNotSetCode;
     } else {
         return nil;

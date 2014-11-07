@@ -1,6 +1,6 @@
 //
 //  InvitePageViewController.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 10/1/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AddressBook/AddressBook.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABCollection.h"
@@ -52,7 +52,7 @@
                         object:nil];
 
     // Register the viewed invite page event with our API
-    Mave *gk = [Mave sharedInstance];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
 }
 
@@ -116,7 +116,7 @@
 // Load the correct view(s) with data
 //
 - (void)setupNavigationBar {
-    MAVEDisplayOptions *displayOptions = [Mave sharedInstance].displayOptions;
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
     
     self.navigationItem.title = @"Invite Friends";
     self.navigationController.navigationBar.titleTextAttributes = @{
@@ -250,7 +250,7 @@
         return;
     }
     
-    Mave *gk = [Mave sharedInstance];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     MAVEHTTPManager *httpManager = gk.HTTPManager;
     [httpManager sendInvitesWithPersons:phones message:message userId:gk.userData.userID completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {

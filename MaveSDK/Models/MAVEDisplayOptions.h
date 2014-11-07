@@ -1,6 +1,6 @@
 //
 //  MAVEDisplayOptions.h
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 10/9/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.

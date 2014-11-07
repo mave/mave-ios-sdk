@@ -1,6 +1,6 @@
 //
-//  MaveTests.m
-//  MaveDevApp
+//  MaveSDKTests.m
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 10/2/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
@@ -9,23 +9,23 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <objc/runtime.h>
-#import "Mave.h"
-#import "Mave_Internal.h"
+#import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
 #import "MAVEHTTPManager.h"
 
-@interface MaveTests : XCTestCase
+@interface MaveSDKTests : XCTestCase
 
 @end
 
-@implementation MaveTests {
+@implementation MaveSDKTests {
     BOOL _fakeAppLaunchWasTriggered;
 }
 
 - (void)setUp {
     [super setUp];
-    [Mave resetSharedInstanceForTesting];
+    [MaveSDK resetSharedInstanceForTesting];
 }
 
 - (void)tearDown {
@@ -34,18 +34,18 @@
 }
 
 - (void)testSetupSharedInstance {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk1 = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk1 = [MaveSDK sharedInstance];
     XCTAssertEqualObjects(gk1.appId, @"foo123");
     XCTAssertNotNil(gk1.displayOptions);
 }
 
 
 - (void)testSharedInstanceIsShared {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk1 = [Mave sharedInstance];
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk2 = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk1 = [MaveSDK sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk2 = [MaveSDK sharedInstance];
     
     // Test pointer to same object
     XCTAssertTrue(gk1 == gk2);
@@ -58,7 +58,7 @@
     Method mockMethod = class_getInstanceMethod([self class], @selector(fakeTrackAppOpenRequest));
     method_exchangeImplementations(ogMethod, mockMethod);
     
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     XCTAssertEqual(_didCallFakeTrackAppOpenRequest, YES);
     
     method_exchangeImplementations(mockMethod, ogMethod);
@@ -71,10 +71,10 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testIdentifyUser {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
-    Mave *gk = [Mave sharedInstance];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     gk.HTTPManager = mockManager;
     [[mockManager expect] identifyUserRequest:userData];
 
@@ -85,8 +85,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testIsSetupOkFailsWithNoApplicationID {
-    [Mave setupSharedInstanceWithApplicationID:nil];
-    Mave *gk = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:nil];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
@@ -94,8 +94,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testIsSetupOkFailsWithNilUserData {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:nil];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
@@ -103,8 +103,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testIsSetupOkFailsWithNoUserID {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:nil firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
@@ -112,8 +112,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testIsSetupOkFailsWithNoFirstName {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:nil lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
@@ -121,16 +121,16 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
         [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:nil email:nil phone:nil]];
     NSError *err = [gk validateSetup];
     XCTAssertNil(err);
 }
 
 - (void)testInvitePageViewControllerNoErrorIfUserDataSet {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     gk.userData = [[MAVEUserData alloc] init];
     gk.userData.userID = @"123";
     gk.userData.firstName = @"Dan";
@@ -142,8 +142,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testInvitePageViewControllerErrorIfValidationError {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk = [Mave sharedInstance];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     gk.userData = [[MAVEUserData alloc] init];
     // user ID is nil
     gk.userData.firstName = @"Dan";
@@ -157,9 +157,9 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 }
 
 - (void)testTrackAppOpen {
-    [Mave setupSharedInstanceWithApplicationID:@"foo123"];
-    Mave *gk = [Mave sharedInstance];
-    id httpManagerMock = [OCMockObject partialMockForObject: [Mave sharedInstance].HTTPManager];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
+    id httpManagerMock = [OCMockObject partialMockForObject: [MaveSDK sharedInstance].HTTPManager];
     [[httpManagerMock expect] trackAppOpenRequest];
     [gk trackAppOpen];
     [httpManagerMock verify];
@@ -169,7 +169,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     // Verify the API request is sent
     id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
-    Mave *gk = [Mave sharedInstance];
+    MaveSDK *gk = [MaveSDK sharedInstance];
     gk.HTTPManager = mockManager;
     gk.userData = userData;
     [[mockManager expect] trackSignupRequest:userData];

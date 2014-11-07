@@ -1,13 +1,13 @@
 //
 //  MAVEInviteMessageViewController.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 10/2/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
 
-#import "Mave.h"
+#import "MaveSDK.h"
 #import <UIKit/UIKit.h>
 #import "MAVEInviteMessageViewController.h"
 #import "MAVEInviteMessageView.h"

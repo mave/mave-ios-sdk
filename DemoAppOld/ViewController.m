@@ -1,13 +1,13 @@
 //
 //  ViewController.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
 #import "ViewController.h"
-#import "Mave.h"
+#import "MaveSDK.h"
 
 @interface ViewController ()
 
@@ -26,7 +26,7 @@
 }
 
 - (IBAction)openInvitePage:(id)sender {
-    [[Mave sharedInstance] presentInvitePage:self];
+    [[MaveSDK sharedInstance] presentInvitePage:self];
 }
 
 @end

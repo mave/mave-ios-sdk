@@ -1,12 +1,12 @@
 //
 //  InvitePageABPersonCell.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEABPersonCell.h"
 #import "MAVEDisplayOptions.h"
 
@@ -16,7 +16,7 @@
               reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:UITableViewCellStyleSubtitle
                     reuseIdentifier:reuseIdentifier]) {
-        MAVEDisplayOptions *displayOpts = [Mave sharedInstance].displayOptions;
+        MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         // Sets color of the default accessory checkmark
         [self setTintColor:displayOpts.checkmarkColor];

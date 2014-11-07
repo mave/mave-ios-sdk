@@ -1,16 +1,16 @@
 //
 //  InvitePage.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptions.h"
 
-@implementation Mave {
+@implementation MaveSDK {
     // Controller
     UINavigationController *invitePageNavController;
 }
@@ -19,19 +19,19 @@
 // Init and handling shared instance
 //
 
-- (Mave *)initWithAppId:(NSString *)appId {
+- (MaveSDK *)initWithAppId:(NSString *)appId {
     _appId = appId;
     _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
     return self;
 }
 
-static Mave *sharedInstance = nil;
+static MaveSDK *sharedInstance = nil;
 
 + (void)setupSharedInstanceWithAppId:(NSString *)appId {
     sharedInstance = [[[self class] alloc] initWithAppId:appId];
 }
 
-+ (Mave *)sharedInstance {
++ (MaveSDK *)sharedInstance {
     if (sharedInstance == nil) {
         NSLog(@"Error: didn't setup shared instance with app id");
     }
