@@ -4,7 +4,7 @@ target "DemoApp" do
   pod 'MMDrawerController', '~> 0.5.7'
 end
 
-target "GrowthKitTests" do
+target "MaveTests" do
   pod "Gizou"
   pod "OCMock"
 end

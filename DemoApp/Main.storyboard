@@ -22,7 +22,7 @@
             </objects>
             <point key="canvasLocation" x="697" y="1111"/>
         </scene>
-        <!--GrowthKitDemoApp-->
+        <!--MaveDemoApp-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="HomeViewController" sceneMemberID="viewController">
@@ -87,7 +87,7 @@
                             <constraint firstItem="iKM-RG-F6u" firstAttribute="top" secondItem="ITQ-Tn-ZRc" secondAttribute="bottom" constant="39" id="k9p-fD-9IY"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="GrowthKitDemoApp" id="6ZE-1W-sak">
+                    <navigationItem key="navigationItem" title="MaveDemoApp" id="6ZE-1W-sak">
                         <barButtonItem key="rightBarButtonItem" title="Invite" id="grM-f3-TYS">
                             <connections>
                                 <action selector="presentInvitePageAsModal:" destination="vXZ-lx-hvc" id="etC-Qx-Ni6"/>

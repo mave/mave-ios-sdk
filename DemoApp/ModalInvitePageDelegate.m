@@ -1,6 +1,6 @@
 //
 //  ModalInvitePageDelegate.m
-//  GrowthKit
+//  Mave
 //
 //  Created by Danny Cosson on 10/23/14.
 //
