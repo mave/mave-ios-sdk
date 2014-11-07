@@ -33,7 +33,7 @@
 - (IBAction)presentInvitePageAsModal:(id)sender {
     NSError *initError;
     self.invitePageViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:self
-                                                                             defaultSMSMessageText:@"Join me on Mave!"
+                                                                             defaultSMSMessageText:@"Join me on Mave-SDK DemoApp!"
                                                                                              error:&initError];
     if (!initError) {
         [self presentViewController:self.invitePageViewController animated:YES completion:nil];
