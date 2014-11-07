@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "GrowthKit.h"
+#import "Mave.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
@@ -21,8 +21,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [Fabric with:@[CrashlyticsKit]];
     
-    [GrowthKit setupSharedInstanceWithApplicationID:@"12345"];
-    GrowthKit *gk = [GrowthKit sharedInstance];
+    [Mave setupSharedInstanceWithApplicationID:@"12345"];
+    Mave *gk = [Mave sharedInstance];
     return YES;
 }
 

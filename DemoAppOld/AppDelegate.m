@@ -1,13 +1,13 @@
 //
 //  AppDelegate.m
-//  GrowthKitDevApp
+//  MaveDevApp
 //
 //  Created by dannycosson on 9/25/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
 #import "AppDelegate.h"
-#import "GrowthKit.h"
+#import "Mave.h"
 
 @interface AppDelegate ()
 
@@ -18,8 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [GrowthKit setupSharedInstanceWithAppId:@"dca34a7202a2a8372c884b7d468d8345"];
-    GrowthKit *gk = [GrowthKit sharedInstance];
+    [Mave setupSharedInstanceWithAppId:@"dca34a7202a2a8372c884b7d468d8345"];
+    Mave *gk = [Mave sharedInstance];
     [gk setUserData:@"1" firstName:@"Danny" lastName:@"Cosson"];
     gk.displayOptions.bottomViewBackgroundColor = [UIColor colorWithRed:0.11 green:0.36 blue:0.62 alpha:1.0];
 

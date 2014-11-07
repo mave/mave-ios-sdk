@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GrowthKit.h"
+#import "Mave.h"
 #import "ModalInvitePageDelegate.h"
 #import "UIViewController+MMDrawerController.h"
 #import "MMDrawerBarButtonItem.h"
@@ -34,7 +34,7 @@
 - (IBAction)presentInvitePageAsModal:(id)sender {
     ModalInvitePageDelegate *delegate = [[ModalInvitePageDelegate alloc] init];
     NSError *initError;
-    delegate.viewController = [[GrowthKit sharedInstance] invitePageViewControllerWithDelegate:delegate error:&initError];
+    delegate.viewController = [[Mave sharedInstance] invitePageViewControllerWithDelegate:delegate error:&initError];
     if (!initError) {
         [self presentViewController:delegate.viewController animated:YES completion:nil];
     }

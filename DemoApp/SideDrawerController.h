@@ -1,6 +1,6 @@
 //
 //  SideDrawerController.h
-//  GrowthKit
+//  Mave
 //
 //  Created by Danny Cosson on 10/22/14.
 //
