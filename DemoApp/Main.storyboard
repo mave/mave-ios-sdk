@@ -22,7 +22,7 @@
             </objects>
             <point key="canvasLocation" x="697" y="1111"/>
         </scene>
-        <!--MaveDemoApp-->
+        <!--MaveSDKDemoApp-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="HomeViewController" sceneMemberID="viewController">
@@ -63,7 +63,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" text="This is a test invite - check out the Mave Invite SDK DemoApp" translatesAutoresizingMaskIntoConstraints="NO" id="OEe-sn-Sbn">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" text="This is a test invite - check out the MaveSDK Invite SDK DemoApp" translatesAutoresizingMaskIntoConstraints="NO" id="OEe-sn-Sbn">
                                 <rect key="frame" x="135" y="220" width="228" height="52"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -87,7 +87,7 @@
                             <constraint firstItem="iKM-RG-F6u" firstAttribute="top" secondItem="ITQ-Tn-ZRc" secondAttribute="bottom" constant="39" id="k9p-fD-9IY"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="MaveDemoApp" id="6ZE-1W-sak">
+                    <navigationItem key="navigationItem" title="MaveSDKDemoApp" id="6ZE-1W-sak">
                         <barButtonItem key="rightBarButtonItem" title="Invite" id="grM-f3-TYS">
                             <connections>
                                 <action selector="presentInvitePageAsModal:" destination="vXZ-lx-hvc" id="etC-Qx-Ni6"/>

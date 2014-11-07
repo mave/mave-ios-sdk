@@ -1,6 +1,6 @@
 //
 //  InvitePageWrapperForDrawer.m
-//  Mave
+//  MaveSDK
 //
 //  Created by Danny Cosson on 10/23/14.
 //

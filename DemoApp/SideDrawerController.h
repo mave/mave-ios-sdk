@@ -1,6 +1,6 @@
 //
 //  SideDrawerController.h
-//  Mave
+//  MaveSDK
 //
 //  Created by Danny Cosson on 10/22/14.
 //

@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
-        <!--MaveDevApp-->
+        <!--MaveSDKDevApp-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
@@ -37,7 +37,7 @@
                             <constraint firstAttribute="centerY" secondItem="7Lt-Yv-O8l" secondAttribute="centerY" constant="118" id="yGA-Dq-6t1"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="MaveDevApp" id="6ZE-1W-sak">
+                    <navigationItem key="navigationItem" title="MaveSDKDevApp" id="6ZE-1W-sak">
                         <barButtonItem key="rightBarButtonItem" title="Invite" id="grM-f3-TYS">
                             <connections>
                                 <action selector="openInvitePage:" destination="vXZ-lx-hvc" id="hFK-E5-LHh"/>

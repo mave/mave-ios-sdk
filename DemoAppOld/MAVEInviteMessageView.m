@@ -1,13 +1,13 @@
 //
 //  MAVEInviteMessageView.m
-//  MaveDevApp
+//  MaveSDKDevApp
 //
 //  Created by dannycosson on 10/2/14.
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "Mave.h"
+#import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEInviteMessageView.h"
 #import "MAVEDisplayOptions.h"
@@ -17,7 +17,7 @@
 - (MAVEInviteMessageView *)initCustomWithFrame:(CGRect)frame {
     // Get global display customization options, any of the values could have been
     // overwritten by the client app
-    MAVEDisplayOptions *displayOptions = [Mave sharedInstance].displayOptions;
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
 
     // TextView Attributes
     UIColor *tfBgColor = [[UIColor alloc] initWithWhite:0.9 alpha:1.0];
