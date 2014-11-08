@@ -30,18 +30,19 @@
     NSMutableArray *phoneNumbers = [[NSMutableArray alloc] initWithCapacity:numPhones];
     NSMutableArray *phoneNumberLabels = [[NSMutableArray alloc] initWithCapacity:numPhones];
     
-    NSString *pn;
-    NSString *label;
-    for (NSUInteger i=0; i < numPhones; i++) {
-        pn = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneMultiValue, i);
+    NSString *pn; NSString *label;
+    NSInteger insertIndex = 0;
+    for (NSUInteger readIndex=0; readIndex < numPhones; readIndex++) {
+        pn = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneMultiValue, readIndex);
         pn = [[self class] normalizePhoneNumber:pn];
         if (pn != nil) {
-            [phoneNumbers insertObject:pn atIndex: i];
-            label = (__bridge_transfer NSString *) ABMultiValueCopyLabelAtIndex(phoneMultiValue, i);
+            [phoneNumbers insertObject:pn atIndex: insertIndex];
+            label = (__bridge_transfer NSString *) ABMultiValueCopyLabelAtIndex(phoneMultiValue, readIndex);
             if (label == nil) {
                 label = (__bridge_transfer NSString *) kABPersonPhoneOtherFAXLabel;
             }
-            [phoneNumberLabels insertObject: label atIndex:i];
+            [phoneNumberLabels insertObject: label atIndex:insertIndex];
+            insertIndex += 1;
         }
     }
     if (phoneMultiValue != NULL) CFRelease(phoneMultiValue);
