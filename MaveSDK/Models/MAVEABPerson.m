@@ -11,16 +11,23 @@
 @implementation MAVEABPerson
 
 - (id)initFromABRecordRef:(ABRecordRef)record {
-    self.firstName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonFirstNameProperty);
-    self.lastName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonLastNameProperty);
-    if (self.firstName == nil && self.lastName ==nil) {
-        return nil;
+    if (self = [self init]) {
+        @try {
+            self.firstName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonFirstNameProperty);
+            self.lastName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonLastNameProperty);
+            if (self.firstName == nil && self.lastName ==nil) {
+                return nil;
+            }
+            [self setPhoneNumbersFromABRecordRef:record];
+            if ([self.phoneNumbers count] == 0) {
+                return nil;
+            }
+            self.emailAddresses = [[self class] emailAddressesFromABRecordRef:record];
+        }
+        @catch (NSException *exception) {
+            self = nil;
+        }
     }
-    [self setPhoneNumbersFromABRecordRef:record];
-    if ([self.phoneNumbers count] == 0) {
-        return nil;
-    }
-    self.emailAddresses = [[self class] emailAddressesFromABRecordRef:record];
     return self;
 }
 
