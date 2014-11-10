@@ -57,19 +57,7 @@
 // Cleanup to dismiss, then call the block method, passing back the
 // number of invites sent to the containing app
 - (void)dismissSelf:(unsigned int)numberOfInvitesSent {
-    [self cleanupForDismiss];
-    InvitePageDismissalBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
-    if (dismissalBlock) dismissalBlock(self, numberOfInvitesSent);
-}
-- (void)dismissAfterSuccess {
-    [self cleanupForDismiss];
-}
-
-- (void)dismissAfterCancel {
-    [self cleanupForDismiss];
-}
-
-- (void)cleanupForDismiss {
+    // Cleanup for dismiss
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
                              name:UIKeyboardWillChangeFrameNotification
@@ -77,6 +65,13 @@
     [defaultCenter removeObserver:self
                              name:UIDeviceOrientationDidChangeNotification
                            object:nil];
+    // Call dismissal block
+    InvitePageDismissalBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
+    dismissalBlock(self, numberOfInvitesSent);
+}
+
+- (void)dismissAfterCancel {
+    [self dismissSelf:0];
 }
 
 //
@@ -263,7 +258,7 @@
                 [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
             });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self dismissAfterSuccess];
+                [self dismissSelf:(unsigned int)[phones count]];
             });
         }
     }];

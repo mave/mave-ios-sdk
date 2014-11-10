@@ -42,14 +42,20 @@
     NSString *controllerIdentifier = self.sideDrawerMenuItemIdentifiers[indexPath.row];
     UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
-        
-        
-//        [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft
-//                                          animated:YES
-//                                        completion:nil];
-        
-        
-        
+        NSError *setupError;
+        NSString *defaultMessage = @"Join me on DEMO APP!";
+        centerViewController = [[MaveSDK sharedInstance]
+            invitePageWithDefaultMessage:defaultMessage
+                              setupError:&setupError
+                          dismissalBlock:^(UIViewController *viewController,
+                                           unsigned int numberOfInvitesSent) {
+                              NSLog(@"in dismissal block");
+                              [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
+        }];
+        if (setupError) {
+            [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
+            return;
+        }
     } else {
         centerViewController = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];
     }

@@ -34,7 +34,7 @@ typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, unsig
 - (void)sendInvites;
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error;
 
-// Methods to dismiss self after user done sending invites
+// Methods to dismiss self after user done sending invites or user hit cancel
 - (void)dismissSelf:(unsigned int)numberOfInvitesSent;
-- (void)cleanupForDismiss;
+- (void)dismissAfterCancel;
 @end

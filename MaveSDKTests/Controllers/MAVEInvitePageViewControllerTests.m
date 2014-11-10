@@ -43,7 +43,7 @@
     OCMVerify(mock);
 }
 
-- (void)testDismissalBlockCalled {
+- (void)testDismissalBlockCalledOnDismissSelf {
     __block unsigned int numSent = 0;
     [MaveSDK sharedInstance].invitePageDismissalBlock =
         ^void(UIViewController *viewController,
@@ -54,6 +54,22 @@
     XCTAssertEqual(numSent, 0);
     [vc dismissSelf:3];
     XCTAssertEqual(numSent, 3);
+}
+
+- (void)testDismissAfterCancelCallsDismissSelf {
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    [vc loadView];
+    [vc viewDidLoad];
+
+    // Check that the cancel button is setup correctly
+    UINavigationController *navVC = (UINavigationController *)vc;
+    XCTAssertEqual(navVC.navigationItem.leftBarButtonItem.target, navVC);
+    XCTAssertEqual(navVC.navigationItem.leftBarButtonItem.action, @selector(dismissAfterCancel));
+
+    id mockVC = [OCMockObject partialMockForObject:vc];
+    [[mockVC expect] dismissSelf:0];
+    [vc dismissAfterCancel];
+    [mockVC verify];
 }
 
 //
@@ -76,7 +92,7 @@
     [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
                                               userId:[MaveSDK sharedInstance].userData.userID
-                                       completionBlock:[OCMArg any]];
+                                     completionBlock:[OCMArg any]];
     [vc sendInvites];
     [mockHTTPManager verify];
 }
