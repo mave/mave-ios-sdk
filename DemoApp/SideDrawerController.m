@@ -10,7 +10,6 @@
 
 #import "MaveSDK.h"
 #import "RootDrawerController.h"
-#import "SideDrawerInvitePageDelegate.h"
 #import "MMDrawerBarButtonItem.h"
 #import "UIViewController+MMDrawerController.h"
 
@@ -43,19 +42,14 @@
     NSString *controllerIdentifier = self.sideDrawerMenuItemIdentifiers[indexPath.row];
     UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
-        NSString *defaultMessage = @"Join me on MaveSDK Demo App!";
-        NSError *setupError;
-        centerViewController = [[MaveSDK sharedInstance]
-            invitePageWithDefaultMessage:defaultMessage
-                              setupError:&setupError
-                         completionBlock:^(UIViewController *viewController,
-                                           unsigned int numberOfInvitesSent) {
-                             [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft
-                                                               animated:YES
-                                                             completion:nil];
-                          }];
         
-
+        
+//        [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft
+//                                          animated:YES
+//                                        completion:nil];
+        
+        
+        
     } else {
         centerViewController = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];
     }

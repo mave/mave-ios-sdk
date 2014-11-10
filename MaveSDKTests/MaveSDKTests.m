@@ -178,7 +178,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     UIViewController *vc =
         [gk invitePageWithDefaultMessage:@"tmp"
                               setupError:&error
-                         completionBlock:^(UIViewController *viewController,
+                          dismissalBlock:^(UIViewController *viewController,
                                            unsigned int numberOfInvitesSent) {
                              blockCalled = YES;
     }];
@@ -201,7 +201,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     UIViewController *vc =
         [gk invitePageWithDefaultMessage:@"tmp"
                               setupError:&error
-                         completionBlock:^(UIViewController *viewController,
+                          dismissalBlock:^(UIViewController *viewController,
                                            unsigned int numberOfInvitesSent) {
     }];
     XCTAssertNil(vc);

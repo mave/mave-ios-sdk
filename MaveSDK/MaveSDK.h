@@ -37,5 +37,5 @@
 
 - (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
                                         setupError:(NSError *__autoreleasing *)setupError
-                                   completionBlock:(InvitePageDismissalBlock)dismissalBlock;
+                                    dismissalBlock:(InvitePageDismissalBlock)dismissalBlock;
 @end

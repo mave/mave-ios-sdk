@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MaveSDK.h"
 
 @interface HomeViewController : UIViewController
 
