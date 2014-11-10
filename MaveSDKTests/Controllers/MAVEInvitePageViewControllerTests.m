@@ -43,6 +43,19 @@
     OCMVerify(mock);
 }
 
+- (void)testDismissalBlockCalled {
+    __block unsigned int numSent = 0;
+    [MaveSDK sharedInstance].invitePageDismissalBlock =
+        ^void(UIViewController *viewController,
+              unsigned int numberOfInvitesSent) {
+        numSent = numberOfInvitesSent;
+    };
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    XCTAssertEqual(numSent, 0);
+    [vc dismissSelf:3];
+    XCTAssertEqual(numSent, 3);
+}
+
 //
 // Sending requests
 //
@@ -67,6 +80,8 @@
     [vc sendInvites];
     [mockHTTPManager verify];
 }
+
+
 
 - (void)testViewDidLoadSendsInvitePageViewedEvent {
     NSString *userId = @"1239sdf";

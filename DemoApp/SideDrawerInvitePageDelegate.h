@@ -10,7 +10,7 @@
 #import "MaveSDK.h"
 #import "MMDrawerController.h"
 
-@interface SideDrawerInvitePageDelegate : NSObject <MAVEInvitePageDelegate>
+@interface SideDrawerInvitePageDelegate : NSObject
 
 @property (nonatomic, weak) MMDrawerController *mm_drawerController;
 

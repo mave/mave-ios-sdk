@@ -20,13 +20,6 @@
 
 @implementation MAVEInvitePageViewController
 
-- (instancetype)initWithDelegate:(id <MAVEInvitePageDelegate>)delegate {
-    if (self = [super init]) {
-        self.delegate = delegate;
-    }
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
     // On load keyboard is hidden
@@ -61,15 +54,19 @@
     // Dispose of any resources that can be recreated.
 }
 
-// Wrap the delegate cancel & success to make sure we cleanup first
+// Cleanup to dismiss, then call the block method, passing back the
+// number of invites sent to the containing app
+- (void)dismissSelf:(unsigned int)numberOfInvitesSent {
+    [self cleanupForDismiss];
+    InvitePageDismissalBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
+    if (dismissalBlock) dismissalBlock(self, numberOfInvitesSent);
+}
 - (void)dismissAfterSuccess {
     [self cleanupForDismiss];
-    [self.delegate userDidSendInvites];
 }
 
 - (void)dismissAfterCancel {
     [self cleanupForDismiss];
-    [self.delegate userDidCancel];
 }
 
 - (void)cleanupForDismiss {

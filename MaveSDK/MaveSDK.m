@@ -8,8 +8,8 @@
 
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
-#import "MAVEConstants.h"
 #import "MAVEInvitePageViewController.h"
+#import "MAVEConstants.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEHTTPManager.h"
 
@@ -95,17 +95,32 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Methods for consumer to present/manage the invite page
 //
-- (UIViewController *)invitePageViewControllerWithDelegate:(id<MAVEInvitePageDelegate>)delegate
-                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
-                                                     error:(NSError **)error {
-    UIViewController *returnVC = nil;
-    *error = [self validateSetup];
-    if (!*error) {
-        self.defaultSMSMessageText = defaultSMSMessageText;
-        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] initWithDelegate:delegate];
-        returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
+- (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
+                                        setupError:(NSError *__autoreleasing *)setupError
+                                   completionBlock:(InvitePageDismissalBlock) dismissalBlock {
+    self.invitePageDismissalBlock = dismissalBlock;
+    UIViewController *returnViewController = nil;
+    *setupError = [self validateSetup];
+    if (!*setupError) {
+        self.defaultSMSMessageText = defaultMessageText;
+        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] init];
+        returnViewController =
+            [[UINavigationController alloc] initWithRootViewController:inviteController];
     }
-    return returnVC;
+    return returnViewController;
 }
+
+//- (UIViewController *)invitePageViewControllerWithDelegate:(id<MAVEInvitePageDelegate>)delegate
+//                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
+//                                                     error:(NSError **)error {
+//    UIViewController *returnVC = nil;
+//    *error = [self validateSetup];
+//    if (!*error) {
+//        self.defaultSMSMessageText = defaultSMSMessageText;
+//        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] initWithDelegate:delegate];
+//        returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
+//    }
+//    return returnVC;
+//}
 
 @end

@@ -152,12 +152,20 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
-                                              defaultSMSMessageText:@"tmp"
-                                                              error:&error];
+    __block BOOL blockCalled = NO;
+    UIViewController *vc =
+        [gk invitePageWithDefaultMessage:@"tmp"
+                              setupError:&error
+                         completionBlock:^(UIViewController *viewController,
+                                           unsigned int numberOfInvitesSent) {
+                             blockCalled = YES;
+    }];
     XCTAssertNotNil(vc);
     XCTAssertNil(error);
     XCTAssertEqualObjects(gk.defaultSMSMessageText, @"tmp");
+    // Assert dismissal block set
+    gk.invitePageDismissalBlock(vc, 10);
+    XCTAssertTrue(blockCalled);
 }
 
 - (void)testInvitePageViewControllerErrorIfValidationError {
@@ -168,9 +176,12 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     gk.userData.firstName = @"Dan";
 
     NSError *error;
-    UIViewController *vc = [gk invitePageViewControllerWithDelegate:nil
-                                              defaultSMSMessageText:@"tmp"
-                                                              error:&error];
+    UIViewController *vc =
+        [gk invitePageWithDefaultMessage:@"tmp"
+                              setupError:&error
+                         completionBlock:^(UIViewController *viewController,
+                                           unsigned int numberOfInvitesSent) {
+    }];
     XCTAssertNil(vc);
     XCTAssertNotNil(error);
     XCTAssertEqualObjects(gk.defaultSMSMessageText, nil);

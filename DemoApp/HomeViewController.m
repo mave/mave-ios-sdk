@@ -31,13 +31,6 @@
 }
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
-    NSError *initError;
-    self.invitePageViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:self
-                                                                             defaultSMSMessageText:@"Join me on Mave-SDK DemoApp!"
-                                                                                             error:&initError];
-    if (!initError) {
-        [self presentViewController:self.invitePageViewController animated:YES completion:nil];
-    }
 }
 
 // Methods to present this home view in the drawer
@@ -49,15 +42,6 @@
 
 - (void)leftDrawerButtonPress:(id)leftDrawerButtonPress {
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
-}
-
-#pragma mark - MaveSDK invite page delegate methods
-- (void)userDidSendInvites {
-    [self.invitePageViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)userDidCancel {
-    [self.invitePageViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 

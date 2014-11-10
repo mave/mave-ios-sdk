@@ -43,14 +43,19 @@
     NSString *controllerIdentifier = self.sideDrawerMenuItemIdentifiers[indexPath.row];
     UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
-        SideDrawerInvitePageDelegate *invitePageDelegate = [[SideDrawerInvitePageDelegate alloc] initWithDrawerController:self.mm_drawerController];
-        NSError *err;
-        centerViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate
-                                                                        defaultSMSMessageText:@"Join me on Mave-SDK DemoApp!"
-                                                                                        error:&err];
-        if (err) { // Invite view not initialized properly, just leave drawer open
-            return;
-        }
+        NSString *defaultMessage = @"Join me on MaveSDK Demo App!";
+        NSError *setupError;
+        centerViewController = [[MaveSDK sharedInstance]
+            invitePageWithDefaultMessage:defaultMessage
+                              setupError:&setupError
+                         completionBlock:^(UIViewController *viewController,
+                                           unsigned int numberOfInvitesSent) {
+                             [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft
+                                                               animated:YES
+                                                             completion:nil];
+                          }];
+        
+
     } else {
         centerViewController = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];
     }
