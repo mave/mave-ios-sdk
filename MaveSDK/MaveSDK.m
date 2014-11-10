@@ -56,6 +56,8 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 - (NSError *)validateSetup {
+    NSLog(@"ipdb: %@", self.invitePageDismissalBlock);
+
     NSInteger errCode = 0;
     if (self.appId == nil) {
         DebugLog(@"Error with MaveSDK shared instance setup - Application ID not set");
@@ -66,6 +68,9 @@ static dispatch_once_t sharedInstanceonceToken;
     } else if (self.userData.firstName == nil) {
         DebugLog(@"Error with MaveSDK shared instance setup - user firstName not set");
         errCode = MAVEValidationErrorUserNameNotSetCode;
+    } else if (self.invitePageDismissalBlock == nil) {
+        DebugLog(@"Error with MaveSDK shared instance setup - invite page dismissalBlock is nil");
+        errCode = MAVEValidationErrorDismissalBlockNotSetCode;
     } else {
         return nil;
     }

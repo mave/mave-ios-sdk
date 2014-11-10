@@ -29,3 +29,4 @@ NSString * const MAVE_VALIDATION_ERROR_DOMAIN = @"com.growthkit.validation.error
 NSInteger const MAVEValidationErrorApplicationIDNotSetCode = 100;
 NSInteger const MAVEValidationErrorUserIDNotSetCode = 101;
 NSInteger const MAVEValidationErrorUserNameNotSetCode = 102;
+NSInteger const MAVEValidationErrorDismissalBlockNotSetCode = 120;

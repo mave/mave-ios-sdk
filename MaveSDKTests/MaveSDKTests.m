@@ -74,8 +74,10 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 - (void)testIdentifyUser {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
-    id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
     MaveSDK *gk = [MaveSDK sharedInstance];
+    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+                                        unsigned int numInvitesSent) {};
+    id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
     gk.HTTPManager = mockManager;
     [[mockManager expect] identifyUserRequest:userData];
 
@@ -104,6 +106,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
+    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+                                        unsigned int numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorApplicationIDNotSetCode);
@@ -112,6 +116,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 - (void)testIsSetupOkFailsWithNilUserData {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
+    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+                                        unsigned int numInvitesSent) {};
     [gk identifyUser:nil];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
@@ -122,6 +128,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:nil firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
+    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+                                        unsigned int numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserIDNotSetCode);
@@ -131,15 +139,29 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:nil lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
+    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+                                        unsigned int numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserNameNotSetCode);
+}
+
+- (void)testIsSetupOkFailsWithNoDismissalBlock {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *gk = [MaveSDK sharedInstance];
+    [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
+    // never set dismissal block so it's nil
+    NSError *err = [gk validateSetup];
+    XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqual(err.code, MAVEValidationErrorDismissalBlockNotSetCode);
 }
 
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
         [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:nil email:nil phone:nil]];
+    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+                                        unsigned int numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertNil(err);
 }
