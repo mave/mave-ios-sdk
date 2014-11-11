@@ -7,13 +7,12 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <objc/runtime.h>
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
 #import "MAVEABTestDataFactory.h"
 
-@interface MAVEABPersonTests : XCTestCase {
-    ABRecordRef exampleRecordRef;
-}
+@interface MAVEABPersonTests : XCTestCase
 
 @end
 
@@ -21,18 +20,6 @@
 
 - (void)setUp {
     [super setUp];
-    ABRecordRef p = ABPersonCreate();
-    ABRecordSetValue(p, kABPersonFirstNameProperty, @"John" , nil);
-    ABRecordSetValue(p, kABPersonLastNameProperty, @"Smith" , nil);
-    
-    ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
-    ABMultiValueAddValueAndLabel(pnmv, @"808.555.1234", kABPersonPhoneMobileLabel, NULL);
-    ABRecordSetValue(p, kABPersonPhoneProperty, pnmv, nil);
-    
-    ABMutableMultiValueRef emv = ABMultiValueCreateMutable(kABPersonEmailProperty);
-    ABMultiValueAddValueAndLabel(emv, @"jsmith@example.com", kABOtherLabel, NULL);
-    ABRecordSetValue(p, kABPersonEmailProperty, emv, nil);
-    exampleRecordRef = p;
 }
 
 - (void)tearDown {
@@ -44,7 +31,21 @@
 // Initializing the MAVEABPerson object
 //
 - (void)testInitPersonFromABRecordRef {
-    MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:exampleRecordRef];
+    // Set up ABRecordRefManually
+    ABRecordRef pref = ABPersonCreate();
+    ABRecordSetValue(pref, kABPersonFirstNameProperty, @"John" , nil);
+    ABRecordSetValue(pref, kABPersonLastNameProperty, @"Smith" , nil);
+
+    ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
+    ABMultiValueAddValueAndLabel(pnmv, @"808.555.1234", kABPersonPhoneMobileLabel, NULL);
+    ABRecordSetValue(pref, kABPersonPhoneProperty, pnmv, nil);
+
+    ABMutableMultiValueRef emv = ABMultiValueCreateMutable(kABPersonEmailProperty);
+    ABMultiValueAddValueAndLabel(emv, @"jsmith@example.com", kABOtherLabel, NULL);
+    ABRecordSetValue(pref, kABPersonEmailProperty, emv, nil);
+
+    // Load as MAVEABPerson record and test
+    MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:pref];
     XCTAssertEqualObjects(p.firstName, @"John");
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
@@ -64,7 +65,7 @@
     ABMultiValueAddValueAndLabel(pnmv, @"808.555.1234", kABPersonPhoneMobileLabel, NULL);
     ABMultiValueAddValueAndLabel(pnmv, @"(808) 555- 5678", kABPersonPhoneMainLabel, NULL);
     ABRecordSetValue(rec, kABPersonPhoneProperty, pnmv, nil);
-    
+
     MAVEABPerson *p = [[MAVEABPerson alloc] init];
     [p setPhoneNumbersFromABRecordRef:rec];
     XCTAssertEqual([p.phoneNumbers count], 2);
@@ -73,6 +74,24 @@
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<Mobile>!$_");
     XCTAssertEqualObjects(p.phoneNumbers[1], @"18085555678");
     XCTAssertEqualObjects(p.phoneNumberLabels[1], @"_$!<Main>!$_");
+}
+
+- (void)fakeCrashySetPhoneFromABRecordRef:(id)record {
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:nil forKey:@"any key"];
+}
+
+- (void)testPhoneNumbersFromABRecordRefWhenTheUnexpectedHappens {
+    // Swizzle the set phone numbers for the record method
+    Method ogMethod = class_getInstanceMethod([MAVEABPerson class], @selector(setPhoneNumbersFromABRecordRef:));
+    Method mockMethod = class_getInstanceMethod([self class], @selector(fakeCrashySetPhoneFromABRecordRef:));
+    method_exchangeImplementations(ogMethod, mockMethod);
+
+    ABRecordRef rec = [MAVEABTestDataFactory generateABRecordRef];
+    MAVEABPerson *person = [[MAVEABPerson alloc] initFromABRecordRef:rec];
+    // It will have crashed, check that we caught exception and just returned nil instead
+    XCTAssertEqualObjects(person, nil);
+    method_exchangeImplementations(mockMethod, ogMethod);
 }
 
 - (void)testPhoneNumbersFromABRecordRefNilLabel {
