@@ -13,6 +13,7 @@
 #import "MAVEABTableViewController.h"
 #import "MAVEABCollection.h"
 #import "MAVEInviteMessageViewController.h"
+#import "MAVENoAddressBookPermissionView.h"
 
 @interface MAVEInvitePageViewController ()
 
@@ -135,7 +136,7 @@
          }];
 
     // If status not determined, prompt for permission then load data
-    // If permission not granted, leave blank for now
+    // If permission not granted, swap empty for for permission denied view
     } else if (addrBookStatus == kABAuthorizationStatusNotDetermined) {
         self.view = [self createEmptyFallbackView];
         [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
@@ -144,6 +145,10 @@
                     self.view = [self createAddressBookInviteView];
                     [self.ABTableViewController updateTableData:indexedData];
                 });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.view = [[MAVENoAddressBookPermissionView alloc] init];
+                });
             }
          }];
 
@@ -151,6 +156,9 @@
     } else if (addrBookStatus == kABAuthorizationStatusDenied ||
                addrBookStatus == kABAuthorizationStatusRestricted) {
         self.view = [self createEmptyFallbackView];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.view = [[MAVENoAddressBookPermissionView alloc] init];
+        });
     }
 }
 
