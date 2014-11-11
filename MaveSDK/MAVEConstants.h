@@ -29,6 +29,7 @@ extern NSInteger const MAVEHTTPErrorResponse500LevelCode;
 
 extern NSString * const MAVE_VALIDATION_ERROR_DOMAIN;
 extern NSInteger const MAVEValidationErrorApplicationIDNotSetCode;
+extern NSInteger const MAVEValidationErrorUserIdentifyNeverCalledCode;
 extern NSInteger const MAVEValidationErrorUserIDNotSetCode;
 extern NSInteger const MAVEValidationErrorUserNameNotSetCode;
 extern NSInteger const MAVEValidationErrorDismissalBlockNotSetCode;

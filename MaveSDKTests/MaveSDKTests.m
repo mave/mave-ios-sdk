@@ -121,7 +121,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     [gk identifyUser:nil];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, MAVEValidationErrorUserIDNotSetCode);
+    XCTAssertEqual(err.code, MAVEValidationErrorUserIdentifyNeverCalledCode);
 }
 
 - (void)testIsSetupOkFailsWithNoUserID {

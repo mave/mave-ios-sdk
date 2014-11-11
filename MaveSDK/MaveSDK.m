@@ -34,9 +34,7 @@ static MaveSDK *sharedInstance = nil;
 static dispatch_once_t sharedInstanceonceToken;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
-    NSLog(@"setup shared instance");
     dispatch_once(&sharedInstanceonceToken, ^{
-        NSLog(@"actually setup shared instance");
         sharedInstance = [[self alloc] initWithAppId:applicationID];
         [sharedInstance trackAppOpen];
     });
@@ -56,12 +54,13 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 - (NSError *)validateSetup {
-    NSLog(@"ipdb: %@", self.invitePageDismissalBlock);
-
     NSInteger errCode = 0;
     if (self.appId == nil) {
         DebugLog(@"Error with MaveSDK shared instance setup - Application ID not set");
         errCode = MAVEValidationErrorApplicationIDNotSetCode;
+    } else if (self.userData == nil) {
+        DebugLog(@"Error with MaveSDK shared instance setup - identifyUser not called");
+        errCode = MAVEValidationErrorUserIdentifyNeverCalledCode;
     } else if (self.userData.userID == nil) {
         DebugLog(@"Error with MaveSDK shared instance setup - UserID not set");
         errCode = MAVEValidationErrorUserIDNotSetCode;
