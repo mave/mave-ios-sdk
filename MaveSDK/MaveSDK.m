@@ -55,26 +55,29 @@ static dispatch_once_t sharedInstanceonceToken;
 
 - (NSError *)validateSetup {
     NSInteger errCode = 0;
+    NSString *humanError = @"";
     if (self.appId == nil) {
-        DebugLog(@"Error with MaveSDK shared instance setup - Application ID not set");
+        humanError = @"applicationID is nil";
         errCode = MAVEValidationErrorApplicationIDNotSetCode;
     } else if (self.userData == nil) {
-        DebugLog(@"Error with MaveSDK shared instance setup - identifyUser not called");
+        humanError = @"identifyUser never called";
         errCode = MAVEValidationErrorUserIdentifyNeverCalledCode;
     } else if (self.userData.userID == nil) {
-        DebugLog(@"Error with MaveSDK shared instance setup - UserID not set");
+        humanError = @"userID set to nil";
         errCode = MAVEValidationErrorUserIDNotSetCode;
     } else if (self.userData.firstName == nil) {
-        DebugLog(@"Error with MaveSDK shared instance setup - user firstName not set");
+        humanError = @"user firstName set to nil";
         errCode = MAVEValidationErrorUserNameNotSetCode;
     } else if (self.invitePageDismissalBlock == nil) {
-        DebugLog(@"Error with MaveSDK shared instance setup - invite page dismissalBlock is nil");
+        humanError = @"invite page dismissalBlock was nil";
         errCode = MAVEValidationErrorDismissalBlockNotSetCode;
     } else {
         return nil;
     }
-
-    return [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN code:errCode userInfo:@{}];
+    DebugLog(@"Error with MaveSDK sharedInstance setup - %@", humanError);
+    return [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN
+                                      code:errCode
+                                  userInfo:@{@"message": humanError}];
 }
 
 //

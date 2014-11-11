@@ -111,6 +111,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorApplicationIDNotSetCode);
+    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"applicationID is nil");
 }
 
 - (void)testIsSetupOkFailsWithNilUserData {
@@ -122,6 +123,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserIdentifyNeverCalledCode);
+    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"identifyUser never called");
+
 }
 
 - (void)testIsSetupOkFailsWithNoUserID {
@@ -133,6 +136,8 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserIDNotSetCode);
+    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"userID set to nil");
+
 }
 
 - (void)testIsSetupOkFailsWithNoFirstName {
@@ -144,6 +149,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserNameNotSetCode);
+    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"user firstName set to nil");
 }
 
 - (void)testIsSetupOkFailsWithNoDismissalBlock {
@@ -154,6 +160,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorDismissalBlockNotSetCode);
+    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"invite page dismissalBlock was nil");
 }
 
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
