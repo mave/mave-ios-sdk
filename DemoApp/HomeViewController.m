@@ -31,6 +31,26 @@
 }
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
+    // Reset bar button item back to normal "Cancel"
+    UIBarButtonItem *bbi =
+        [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                         style:UIBarButtonItemStylePlain
+                                        target:nil
+                                        action:nil];
+    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
+
+    NSError *setupError;
+    NSString *defaultMessage = @"Join me on DEMO APP!";
+    UIViewController *inviteController = [[MaveSDK sharedInstance]
+        invitePageWithDefaultMessage:defaultMessage
+                          setupError:&setupError
+                      dismissalBlock:^(UIViewController *viewController,
+                                       unsigned int numberOfInvitesSent) {
+                          [viewController dismissViewControllerAnimated:YES completion:nil];
+    }];
+    if (!setupError) {
+        [self presentViewController:inviteController animated:YES completion:nil];
+    }
 }
 
 // Methods to present this home view in the drawer

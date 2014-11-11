@@ -42,6 +42,10 @@
     NSString *controllerIdentifier = self.sideDrawerMenuItemIdentifiers[indexPath.row];
     UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
+        // Style the bar button for drawer controller use
+        MMDrawerBarButtonItem *bbi = [[MMDrawerBarButtonItem alloc] initWithTarget:nil action:nil];
+        [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
+
         NSError *setupError;
         NSString *defaultMessage = @"Join me on DEMO APP!";
         centerViewController = [[MaveSDK sharedInstance]
