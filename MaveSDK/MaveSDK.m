@@ -53,7 +53,7 @@ static dispatch_once_t sharedInstanceonceToken;
     return sharedInstance;
 }
 
-- (NSError *)validateSetup {
+- (NSError *)validateUserSetup {
     NSInteger errCode = 0;
     NSString *humanError = @"";
     if (self.appId == nil) {
@@ -68,7 +68,25 @@ static dispatch_once_t sharedInstanceonceToken;
     } else if (self.userData.firstName == nil) {
         humanError = @"user firstName set to nil";
         errCode = MAVEValidationErrorUserNameNotSetCode;
-    } else if (self.invitePageDismissalBlock == nil) {
+    } else {
+        return nil;
+    }
+    DebugLog(@"Error with MaveSDK sharedInstance user info setup - %@", humanError);
+    return [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN
+                                      code:errCode
+                                  userInfo:@{@"message": humanError}];
+}
+
+- (NSError *)validateSetup {
+    NSError *error = [self validateUserSetup];
+    if (error) {
+        return error;
+    }
+
+    // Validate non user info fields
+    NSInteger errCode = 0;
+    NSString *humanError = @"";
+    if (self.invitePageDismissalBlock == nil) {
         humanError = @"invite page dismissalBlock was nil";
         errCode = MAVEValidationErrorDismissalBlockNotSetCode;
     } else {
@@ -89,7 +107,7 @@ static dispatch_once_t sharedInstanceonceToken;
 
 - (void)identifyUser:(MAVEUserData *)userData {
     self.userData = userData;
-    NSError *validationError = [self validateSetup];
+    NSError *validationError = [self validateUserSetup];
     if (validationError == nil) {
         [self.HTTPManager identifyUserRequest:userData];
     }

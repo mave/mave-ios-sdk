@@ -20,6 +20,8 @@
 // This function checks that required fields for the MaveSDK invite page to work
 // correctly aren't nil. If it fails we return nil for the invite page view controller.
 - (NSError *)validateSetup;
+// Validate just the user info related required setup fields
+- (NSError *)validateUserSetup;
 
 
 @end
