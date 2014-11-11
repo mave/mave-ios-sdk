@@ -21,22 +21,21 @@
         
         // starting in iOS 8 we can link directly to current app settings page
         // This if statemenct checks if our constant is available
-        //if (&UIApplicationOpenSettingsURLString != NULL) {
-        if (NO) {
-            self.detailButton = [[UIButton alloc] init];
-            self.detailButton.titleLabel.text = @"Tap to go to Settings to enable";
-            [self.detailButton addTarget:self
-                                  action:@selector(openCurrentAppInSettings)
-                        forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:self.detailButton];
-        } else {
+//        if (&UIApplicationOpenSettingsURLString != NULL) {
+//            self.detailButton = [[UIButton alloc] init];
+//            self.detailButton.titleLabel.text = @"Tap to go to Settings to enable";
+//            [self.detailButton addTarget:self
+//                                  action:@selector(openCurrentAppInSettings)
+//                        forControlEvents:UIControlEventTouchUpInside];
+//            [self addSubview:self.detailButton];
+//        } else {
             self.detailLabel = [[UILabel alloc] init];
             self.detailLabel.text = @"Settings -> Privacy Settings -> Contacts\nto enable";
             self.detailLabel.numberOfLines = 0;
             self.detailLabel.font = [UIFont systemFontOfSize:13];
             self.detailLabel.textAlignment = NSTextAlignmentCenter;
             [self addSubview:self.detailLabel];
-        }
+//        }
     }
     return self;
 }
