@@ -8,8 +8,8 @@
 
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
-#import "MAVEConstants.h"
 #import "MAVEInvitePageViewController.h"
+#import "MAVEConstants.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEHTTPManager.h"
 
@@ -56,6 +56,8 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 - (NSError *)validateSetup {
+    NSLog(@"ipdb: %@", self.invitePageDismissalBlock);
+
     NSInteger errCode = 0;
     if (self.appId == nil) {
         DebugLog(@"Error with MaveSDK shared instance setup - Application ID not set");
@@ -66,6 +68,9 @@ static dispatch_once_t sharedInstanceonceToken;
     } else if (self.userData.firstName == nil) {
         DebugLog(@"Error with MaveSDK shared instance setup - user firstName not set");
         errCode = MAVEValidationErrorUserNameNotSetCode;
+    } else if (self.invitePageDismissalBlock == nil) {
+        DebugLog(@"Error with MaveSDK shared instance setup - invite page dismissalBlock is nil");
+        errCode = MAVEValidationErrorDismissalBlockNotSetCode;
     } else {
         return nil;
     }
@@ -95,17 +100,32 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Methods for consumer to present/manage the invite page
 //
-- (UIViewController *)invitePageViewControllerWithDelegate:(id<MAVEInvitePageDelegate>)delegate
-                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
-                                                     error:(NSError **)error {
-    UIViewController *returnVC = nil;
-    *error = [self validateSetup];
-    if (!*error) {
-        self.defaultSMSMessageText = defaultSMSMessageText;
-        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] initWithDelegate:delegate];
-        returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
+- (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
+                                        setupError:(NSError *__autoreleasing *)setupError
+                                    dismissalBlock:(InvitePageDismissalBlock) dismissalBlock {
+    self.invitePageDismissalBlock = dismissalBlock;
+    UIViewController *returnViewController = nil;
+    *setupError = [self validateSetup];
+    if (!*setupError) {
+        self.defaultSMSMessageText = defaultMessageText;
+        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] init];
+        returnViewController =
+            [[UINavigationController alloc] initWithRootViewController:inviteController];
     }
-    return returnVC;
+    return returnViewController;
 }
+
+//- (UIViewController *)invitePageViewControllerWithDelegate:(id<MAVEInvitePageDelegate>)delegate
+//                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
+//                                                     error:(NSError **)error {
+//    UIViewController *returnVC = nil;
+//    *error = [self validateSetup];
+//    if (!*error) {
+//        self.defaultSMSMessageText = defaultSMSMessageText;
+//        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] initWithDelegate:delegate];
+//        returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
+//    }
+//    return returnVC;
+//}
 
 @end

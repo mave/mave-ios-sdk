@@ -31,12 +31,25 @@
 }
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
-    NSError *initError;
-    self.invitePageViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:self
-                                                                             defaultSMSMessageText:@"Join me on Mave-SDK DemoApp!"
-                                                                                             error:&initError];
-    if (!initError) {
-        [self presentViewController:self.invitePageViewController animated:YES completion:nil];
+    // Reset bar button item back to normal "Cancel"
+    UIBarButtonItem *bbi =
+        [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                         style:UIBarButtonItemStylePlain
+                                        target:nil
+                                        action:nil];
+    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
+
+    NSError *setupError;
+    NSString *defaultMessage = @"Join me on DEMO APP!";
+    UIViewController *inviteController = [[MaveSDK sharedInstance]
+        invitePageWithDefaultMessage:defaultMessage
+                          setupError:&setupError
+                      dismissalBlock:^(UIViewController *viewController,
+                                       unsigned int numberOfInvitesSent) {
+                          [viewController dismissViewControllerAnimated:YES completion:nil];
+    }];
+    if (!setupError) {
+        [self presentViewController:inviteController animated:YES completion:nil];
     }
 }
 
@@ -49,15 +62,6 @@
 
 - (void)leftDrawerButtonPress:(id)leftDrawerButtonPress {
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
-}
-
-#pragma mark - MaveSDK invite page delegate methods
-- (void)userDidSendInvites {
-    [self.invitePageViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)userDidCancel {
-    [self.invitePageViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 

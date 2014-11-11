@@ -24,11 +24,12 @@
     //[Fabric with:@[CrashlyticsKit]];
     
     [MaveSDK setupSharedInstanceWithApplicationID:MAVEDemoApplicationID];
-    MAVEUserData *maveUserData = [[MAVEUserData alloc] initWithUserID:@"1"
-                                                            firstName:@"Example"lastName:@"Person"
-                                                                email:@"foo@example.com"
-                                                                phone:@"18085551234"];
-    [[MaveSDK sharedInstance] identifyUser:maveUserData];
+    MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"1"
+                                                        firstName:@"Example"
+                                                         lastName:@"Person"
+                                                            email:@"foo@ex.com"
+                                                            phone:@"18085551234"];
+    [[MaveSDK sharedInstance] identifyUser:userData];
     return YES;
 }
 

@@ -31,3 +31,4 @@ extern NSString * const MAVE_VALIDATION_ERROR_DOMAIN;
 extern NSInteger const MAVEValidationErrorApplicationIDNotSetCode;
 extern NSInteger const MAVEValidationErrorUserIDNotSetCode;
 extern NSInteger const MAVEValidationErrorUserNameNotSetCode;
+extern NSInteger const MAVEValidationErrorDismissalBlockNotSetCode;

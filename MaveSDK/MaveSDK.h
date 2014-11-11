@@ -22,6 +22,7 @@
 
 @property (nonatomic, strong) NSString *appId;
 @property (strong, nonatomic) MAVEUserData *userData;
+@property (nonatomic, copy) InvitePageDismissalBlock invitePageDismissalBlock;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
@@ -34,8 +35,7 @@
 - (void)identifyUser:(MAVEUserData *)userData;
 - (void)trackSignup;
 
-- (UIViewController *)invitePageViewControllerWithDelegate:(id <MAVEInvitePageDelegate>) delegate
-                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
-                                                     error:(NSError **)error;
-
+- (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
+                                        setupError:(NSError *__autoreleasing *)setupError
+                                    dismissalBlock:(InvitePageDismissalBlock)dismissalBlock;
 @end

@@ -11,25 +11,11 @@
 #import "MAVEInviteMessageViewController.h"
 #import "MAVEHTTPManager.h"
 
-// This protocol must be implemented to dismiss the invite page view controller and return
-//   the user to your application.
-// You can also run custom code based on whether or not the user sent any invites.
-@protocol MAVEInvitePageDelegate <NSObject>
-
-@required
-// Indicates that invites were sent successfully
-- (void)userDidSendInvites;
-
-// Indicates that the user hit cancel without sending any invites.
-- (void)userDidCancel;
-
-@end
-
+typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, unsigned int numberOfInvitesSent);
 
 
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
 
-@property (strong, nonatomic) id <MAVEInvitePageDelegate> delegate;
 @property (strong, nonatomic) MAVEABTableViewController *ABTableViewController;
 @property (strong, nonatomic) MAVEInviteMessageViewController *inviteMessageViewController;
 
@@ -38,7 +24,6 @@
 @property (atomic) BOOL isKeyboardVisible;
 
 // Setup self and children
-- (instancetype)initWithDelegate:(id <MAVEInvitePageDelegate>)delegate;
 - (UIView *)createAddressBookInviteView;
 - (UIView *)createEmptyFallbackView;
 - (void)setupNavigationBar;
@@ -49,8 +34,7 @@
 - (void)sendInvites;
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error;
 
-// This is called when the view controller is being dismissed.
-// Called just before the delegate method for cancel or did send.
-- (void)cleanupForDismiss;
+// Methods to dismiss self after user done sending invites or user hit cancel
+- (void)dismissSelf:(unsigned int)numberOfInvitesSent;
+- (void)dismissAfterCancel;
 @end
-

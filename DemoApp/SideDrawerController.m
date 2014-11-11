@@ -10,7 +10,6 @@
 
 #import "MaveSDK.h"
 #import "RootDrawerController.h"
-#import "SideDrawerInvitePageDelegate.h"
 #import "MMDrawerBarButtonItem.h"
 #import "UIViewController+MMDrawerController.h"
 
@@ -43,12 +42,22 @@
     NSString *controllerIdentifier = self.sideDrawerMenuItemIdentifiers[indexPath.row];
     UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
-        SideDrawerInvitePageDelegate *invitePageDelegate = [[SideDrawerInvitePageDelegate alloc] initWithDrawerController:self.mm_drawerController];
-        NSError *err;
-        centerViewController = [[MaveSDK sharedInstance] invitePageViewControllerWithDelegate:invitePageDelegate
-                                                                        defaultSMSMessageText:@"Join me on Mave-SDK DemoApp!"
-                                                                                        error:&err];
-        if (err) { // Invite view not initialized properly, just leave drawer open
+        // Style the bar button for drawer controller use
+        MMDrawerBarButtonItem *bbi = [[MMDrawerBarButtonItem alloc] initWithTarget:nil action:nil];
+        [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
+
+        NSError *setupError;
+        NSString *defaultMessage = @"Join me on DEMO APP!";
+        centerViewController = [[MaveSDK sharedInstance]
+            invitePageWithDefaultMessage:defaultMessage
+                              setupError:&setupError
+                          dismissalBlock:^(UIViewController *viewController,
+                                           unsigned int numberOfInvitesSent) {
+                              NSLog(@"in dismissal block");
+                              [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
+        }];
+        if (setupError) {
+            [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
             return;
         }
     } else {
