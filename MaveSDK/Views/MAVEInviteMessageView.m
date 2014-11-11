@@ -42,6 +42,7 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         self.textField.layer.masksToBounds=YES;
         self.textField.layer.borderWidth= 0.5f;
         self.textField.text = [MaveSDK sharedInstance].defaultSMSMessageText;
+        self.textField.font = [UIFont systemFontOfSize:16.0];
         self.textField.returnKeyType = UIReturnKeyDone;
         
         self.sendButton = [[UIButton alloc] init];

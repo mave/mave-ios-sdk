@@ -54,6 +54,7 @@
                               initWithCGColor:view.textField.layer.borderColor];
     XCTAssertEqualObjects(tfBorderColor, opts.bottomViewBorderColor);
     XCTAssertEqualObjects(view.textField.text, @"tmp message");
+    XCTAssertEqual(view.textField.font.pointSize, 16);
 
     // Test Button Style
     XCTAssertFalse(view.sendButton.enabled);

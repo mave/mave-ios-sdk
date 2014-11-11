@@ -30,9 +30,10 @@
 - (void)testDefaultOptions {
     MAVEDisplayOptions *opts = [[MAVEDisplayOptions alloc] initWithDefaults];
 
-    UIFont *defaultFont = [UIFont systemFontOfSize:14];
-    UIFont *smallerFont = [UIFont systemFontOfSize:12];
-    UIFont *smallerBoldFont = [UIFont boldSystemFontOfSize:12];
+    UIFont *defaultFont = [UIFont systemFontOfSize:16];
+    UIFont *sendButtonFont = [UIFont systemFontOfSize:18];
+    UIFont *smallerFont = [UIFont systemFontOfSize:14];
+    UIFont *smallerBoldFont = [UIFont boldSystemFontOfSize:14];
     UIColor *white = [[UIColor alloc] initWithWhite:1.0 alpha:1];
     UIColor *almostBlack = [[UIColor alloc] initWithWhite:0.15 alpha:1.0];
     UIColor *mediumGrey = [[UIColor alloc] initWithWhite:0.65 alpha:1.0];
@@ -56,7 +57,7 @@
     // Message and Send section options
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
     XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
-    XCTAssertEqualObjects(opts.sendButtonFont, defaultFont);
+    XCTAssertEqualObjects(opts.sendButtonFont, sendButtonFont);
     XCTAssertEqualObjects(opts.sendButtonColor, blueTint);
 }
 

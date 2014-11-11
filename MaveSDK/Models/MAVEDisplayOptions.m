@@ -17,21 +17,21 @@
         // Header options
         self.navigationBarBackgroundColor = [[self class] colorWhite];
         self.navigationBarTitleColor = [[self class] colorAlmostBlack];
-        self.navigationBarTitleFont = [UIFont systemFontOfSize:14];
+        self.navigationBarTitleFont = [UIFont systemFontOfSize:16];
         self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
         self.navigationBarCancelButton.title = @"Cancel";
 
         // "Friends to invite" table options
-        self.personNameFont = [UIFont systemFontOfSize:14];
-        self.personContactInfoFont = [UIFont systemFontOfSize:12];
-        self.sectionHeaderFont = [UIFont boldSystemFontOfSize:12];
+        self.personNameFont = [UIFont systemFontOfSize:16];
+        self.personContactInfoFont = [UIFont systemFontOfSize:14];
+        self.sectionHeaderFont = [UIFont boldSystemFontOfSize:14];
         self.sectionIndexColor = [[self class] colorLightGrey];
         self.checkmarkColor = [[self class] colorBlueTint];
         
         // Message and Send section options
         self.bottomViewBackgroundColor = [[self class] colorWhite];
         self.bottomViewBorderColor = [[self class] colorMediumGrey];
-        self.sendButtonFont = [UIFont systemFontOfSize:14];
+        self.sendButtonFont = [UIFont systemFontOfSize:18];
         self.sendButtonColor = [[self class] colorBlueTint];
     }
     return self;
