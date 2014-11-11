@@ -12,10 +12,17 @@
 
 @implementation MAVEHTTPManager
 
-- (instancetype)initWithApplicationId:(NSString *)applicationId {
+- (instancetype)init {
     if (self = [super init]) {
+        // Set hard-coded constants
+        self.baseURL = [MAVEAPIBaseURL stringByAppendingString:MAVEAPIVersion];
+    }
+    return self;
+}
+
+- (instancetype)initWithApplicationId:(NSString *)applicationId {
+    if (self = [self init]) {
         _applicationId = applicationId;
-        _baseURL = [MAVEAPIBaseURL stringByAppendingString:MAVEAPIVersion];
         NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         sessionConfig.timeoutIntervalForRequest = 5.0;
         sessionConfig.timeoutIntervalForResource = 5.0;
@@ -25,6 +32,7 @@
         _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
 
         DebugLog(@"Initialized MAVEHTTPManager on domain %@", MAVEAPIBaseURL);
+
     }
     return self;
 }
@@ -67,7 +75,13 @@
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:self.applicationId forHTTPHeaderField:@"X-Application-ID"];
-    
+    NSString *userAgent =
+        [[self class] userAgentWithUIDevice:[UIDevice currentDevice]];
+    NSString *screenSize =
+        [[self class] formattedScreenSize:[UIScreen mainScreen].bounds.size];
+    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    [request setValue: screenSize forHTTPHeaderField:@"X-Device-Screen-Dimensions"];
+
     // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
             ^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -202,4 +216,25 @@
                                       params:params
                              completionBlock:nil];
 }
+
+// Utils
++ (NSString *)formattedScreenSize:(CGSize)size {
+    long w = (long)round(size.width);
+    long h = (long)round(size.height);
+    if (w > h) {
+        long tmp = w;
+        w = h;
+        h = tmp;
+    }
+    return [NSString stringWithFormat:@"%ldx%ld", w, h];
+}
+
++ (NSString *)userAgentWithUIDevice:(UIDevice *)device {
+    NSString *iosVersionStr =
+        [device.systemVersion stringByReplacingOccurrencesOfString:@"."
+                                                        withString:@"_"];
+    return [NSString stringWithFormat:@"(iPhone; CPU iPhone OS %@ like Mac OS X)",
+            iosVersionStr];
+}
+
 @end

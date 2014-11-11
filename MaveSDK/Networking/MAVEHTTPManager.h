@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "MAVEUserData.h"
 
 typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
@@ -14,9 +15,13 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 
 @interface MAVEHTTPManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate>
 
-@property (nonatomic, readonly) NSString *applicationId;
-@property (nonatomic, readonly) NSString *baseURL;
-@property (nonatomic) NSURLSession *session;
+@property (strong, nonatomic) NSString *applicationId;
+@property (strong, nonatomic) NSString *baseURL;
+@property (strong, nonatomic) NSURLSession *session;
+
+// UserAgent & screenSize are for fingerprinting
++ (NSString *)userAgentWithUIDevice:(UIDevice *)device;
++ (NSString *)formattedScreenSize:(CGSize)size;
 
 - (MAVEHTTPManager *)initWithApplicationId:(NSString *)applicationId;
 

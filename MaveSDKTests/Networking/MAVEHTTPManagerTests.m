@@ -41,6 +41,27 @@
     XCTAssertEqualObjects(self.httpManager.session.configuration.HTTPAdditionalHeaders, nil);
 }
 
+- (void)testUserAgent {
+    NSString *expectedUA =  @"(iPhone; CPU iPhone OS 8_1 like Mac OS X)";
+    NSString *ua = [MAVEHTTPManager userAgentWithUIDevice:[UIDevice currentDevice]];
+    XCTAssertEqualObjects(ua, expectedUA);
+
+}
+
+- (void)testFormattedScreenSize {
+    // Should convert the screen size to a string of the format "AxB" that does
+    // not differ if we are in landscape mode
+    NSString *s1 = [MAVEHTTPManager formattedScreenSize:CGSizeMake(10, 20)];
+    NSString *s2 = [MAVEHTTPManager formattedScreenSize:CGSizeMake(10, 10)];
+    NSString *s3 = [MAVEHTTPManager formattedScreenSize:CGSizeMake(20, 10)];
+    // No need for decimal screen sizes
+    NSString *s4 = [MAVEHTTPManager formattedScreenSize:CGSizeMake(10.5001, 10.4999)];
+    XCTAssertEqualObjects(s1, @"10x20");
+    XCTAssertEqualObjects(s2, @"10x10");
+    XCTAssertEqualObjects(s3, @"10x20");
+    XCTAssertEqualObjects(s4, @"10x11");
+}
+
 //
 // Individual API Requests
 //
@@ -167,9 +188,15 @@
     XCTAssertEqualObjects(urlString, @"http://devapi.mave.io/v1.0/foo");
     XCTAssertEqualObjects(requestMethod, @"POST");
     XCTAssertEqualObjects(requestBodyParams, requestDict);
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+    NSString *expectedDimensions = [NSString stringWithFormat:@"%ldx%ld",
+                                    (long)screenSize.width, (long)screenSize.height];
+    NSString *expectedUserAgent = [MAVEHTTPManager userAgentWithUIDevice:[UIDevice currentDevice]];
     NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",
                                       @"Accept": @"application/json",
                                       @"X-Application-ID": @"appid12",
+                                      @"User-Agent": expectedUserAgent,
+                                      @"X-Device-Screen-Dimensions": expectedDimensions,
                                       };
     XCTAssertEqualObjects(requestHeaders, expectedHeaders);
 }
