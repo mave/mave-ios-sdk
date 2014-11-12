@@ -31,7 +31,7 @@
         self.personCellBackgroundColor = [[self class] colorWhite];
 
         self.sectionHeaderColor = [[self class] colorAlmostBlack];
-        self.sectionHeaderBackgroundColor = [[self class] colorLightGrey];
+        self.sectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
         self.sectionIndexColor = [[self class] colorLightGrey];
         self.checkmarkColor = [[self class] colorBlueTint];
         

@@ -175,7 +175,7 @@
                                  kbFrame.origin.y);
 
     // Invite and table view fill the container frame vertically
-    float inviteViewHeight = 70; // Temporarily hard-coded
+    float inviteViewHeight = 90; // Temporarily hard-coded
     *tableViewFrame = CGRectMake(containerFrame->origin.x,
                                  containerFrame->origin.y,
                                  containerFrame->size.width,
