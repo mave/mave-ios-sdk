@@ -42,15 +42,22 @@
     UIColor *blueTint = [[UIColor alloc] initWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
 
     // Header options
-    XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
-    XCTAssertEqualObjects(opts.navigationBarTitleColor, almostBlack);
+    XCTAssertEqualObjects(opts.navigationBarTitleCopy, @"Invite Friends");
     XCTAssertEqualObjects(opts.navigationBarTitleFont, defaultFont);
+    XCTAssertEqualObjects(opts.navigationBarTitleColor, almostBlack);
+    XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
 
     // "Friends to invite" table options
     XCTAssertEqualObjects(opts.personNameFont, defaultFont);
+    XCTAssertEqualObjects(opts.personNameColor, almostBlack);
     XCTAssertEqualObjects(opts.personContactInfoFont, smallerFont);
+    XCTAssertEqualObjects(opts.personContactInfoColor, mediumGrey);
+    XCTAssertEqualObjects(opts.personCellBackgroundColor, white);
+
     XCTAssertEqualObjects(opts.sectionHeaderFont, smallerBoldFont);
+    XCTAssertEqualObjects(opts.sectionHeaderColor, almostBlack);
+    XCTAssertEqualObjects(opts.sectionHeaderBackgroundColor, lightGrey);
     XCTAssertEqualObjects(opts.sectionIndexColor, lightGrey);
     XCTAssertEqualObjects(opts.checkmarkColor, blueTint);
     

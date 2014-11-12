@@ -15,16 +15,23 @@
 - (MAVEDisplayOptions *)initWithDefaults {
     if (self = [super init]) {
         // Header options
-        self.navigationBarBackgroundColor = [[self class] colorWhite];
-        self.navigationBarTitleColor = [[self class] colorAlmostBlack];
+        self.navigationBarTitleCopy = @"Invite Friends";
         self.navigationBarTitleFont = [UIFont systemFontOfSize:16];
+        self.navigationBarTitleColor = [[self class] colorAlmostBlack];
+        self.navigationBarBackgroundColor = [[self class] colorWhite];
         self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
         self.navigationBarCancelButton.title = @"Cancel";
 
         // "Friends to invite" table options
         self.personNameFont = [UIFont systemFontOfSize:16];
+        self.personNameColor = [[self class] colorAlmostBlack];
         self.personContactInfoFont = [UIFont systemFontOfSize:14];
+        self.personContactInfoColor = [[self class] colorMediumGrey];
         self.sectionHeaderFont = [UIFont boldSystemFontOfSize:14];
+        self.personCellBackgroundColor = [[self class] colorWhite];
+
+        self.sectionHeaderColor = [[self class] colorAlmostBlack];
+        self.sectionHeaderBackgroundColor = [[self class] colorLightGrey];
         self.sectionIndexColor = [[self class] colorLightGrey];
         self.checkmarkColor = [[self class] colorBlueTint];
         

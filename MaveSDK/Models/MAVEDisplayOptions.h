@@ -20,18 +20,26 @@
 
 // Invite friends page options:
 // Header options
-@property (strong, nonatomic) UIColor *navigationBarBackgroundColor;
+@property (strong, nonatomic) NSString *navigationBarTitleCopy;
 @property (strong, nonatomic) UIFont *navigationBarTitleFont;
 @property (strong, nonatomic) UIColor *navigationBarTitleColor;
+@property (strong, nonatomic) UIColor *navigationBarBackgroundColor;
 // Note: any target & action set on the navigation bar cancel button item will
 // be ignored, on cancel we run our own teardown code and then call your
-// delegate's `userDidCancel` method
+// dismissalBlock
 @property (strong, nonatomic) UIBarButtonItem *navigationBarCancelButton;
 
 // "Friends to invite" table options
 @property (strong, nonatomic) UIFont *personNameFont;
+@property (strong, nonatomic) UIColor *personNameColor;
 @property (strong, nonatomic) UIFont *personContactInfoFont;
+@property (strong, nonatomic) UIColor *personContactInfoColor;
+@property (strong, nonatomic) UIColor *personCellBackgroundColor;
+
 @property (strong, nonatomic) UIFont *sectionHeaderFont;
+@property (strong, nonatomic) UIColor *sectionHeaderColor;
+@property (strong, nonatomic) UIColor *sectionHeaderBackgroundColor;
+
 @property (strong, nonatomic) UIColor *sectionIndexColor;
 @property (strong, nonatomic) UIColor *checkmarkColor;
 
