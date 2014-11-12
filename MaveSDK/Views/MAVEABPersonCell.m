@@ -21,10 +21,11 @@
         // Sets color of the default accessory checkmark
         [self setTintColor:displayOpts.checkmarkColor];
 
+        self.backgroundColor = displayOpts.personCellBackgroundColor;
         self.textLabel.font = displayOpts.personNameFont;
-        self.textLabel.textColor = [MAVEDisplayOptions colorAlmostBlack];
+        self.textLabel.textColor = displayOpts.personNameColor;
         self.detailTextLabel.font = displayOpts.personContactInfoFont;
-        self.detailTextLabel.textColor = [MAVEDisplayOptions colorMediumGrey];
+        self.detailTextLabel.textColor = displayOpts.personContactInfoColor;
     }
     return self;
 }

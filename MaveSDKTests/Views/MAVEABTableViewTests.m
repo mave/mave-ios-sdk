@@ -49,9 +49,10 @@
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
     XCTAssertEqualObjects(cell.textLabel.font, displayOpts.personNameFont);
-    XCTAssertEqualObjects(cell.textLabel.textColor, [MAVEDisplayOptions colorAlmostBlack]);
+    XCTAssertEqualObjects(cell.textLabel.textColor, displayOpts.personNameColor);
     XCTAssertEqualObjects(cell.detailTextLabel.font, displayOpts.personContactInfoFont);
-    XCTAssertEqualObjects(cell.detailTextLabel.textColor, [MAVEDisplayOptions colorMediumGrey]);
+    XCTAssertEqualObjects(cell.detailTextLabel.textColor, displayOpts.personContactInfoColor);
+    XCTAssertEqualObjects(cell.backgroundColor, displayOpts.personCellBackgroundColor);
     XCTAssertEqualObjects(cell.tintColor, displayOpts.checkmarkColor);
 }
 
@@ -60,14 +61,14 @@
     NSDictionary *data = @{@"D": @[@"Danny"]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
     [vc updateTableData:data];
-    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
+    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
-    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, [MAVEDisplayOptions colorExtraLightGrey]);
+    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, displayOpts.sectionHeaderBackgroundColor);
     UILabel *headerLabel = (UILabel *)sectionHeaderView.subviews[0];
     XCTAssertEqualObjects(headerLabel.text, @"D");
-    XCTAssertEqualObjects(headerLabel.textColor, [MAVEDisplayOptions colorAlmostBlack]);
-    XCTAssertEqualObjects(headerLabel.font, opts.sectionHeaderFont);
+    XCTAssertEqualObjects(headerLabel.textColor, displayOpts.sectionHeaderColor);
+    XCTAssertEqualObjects(headerLabel.font, displayOpts.sectionHeaderFont);
 }
 
 @end

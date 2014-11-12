@@ -64,7 +64,7 @@
                                    labelSize.height);
     UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
     label.text = labelText;
-    label.textColor = [MAVEDisplayOptions colorAlmostBlack];
+    label.textColor = displayOpts.sectionHeaderColor;
     label.font = labelFont;
 
     CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
@@ -72,7 +72,7 @@
     CGFloat sectionWidth = 0.0;
     CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
     UIView *view = [[UIView alloc] initWithFrame:viewFrame];
-    view.backgroundColor = [MAVEDisplayOptions colorExtraLightGrey];
+    view.backgroundColor = displayOpts.sectionHeaderBackgroundColor;
 
     [view addSubview:label];
 

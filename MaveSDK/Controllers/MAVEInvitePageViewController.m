@@ -111,7 +111,7 @@
 - (void)setupNavigationBar {
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
     
-    self.navigationItem.title = @"Invite Friends";
+    self.navigationItem.title = displayOptions.navigationBarTitleCopy;
     self.navigationController.navigationBar.titleTextAttributes = @{
             NSForegroundColorAttributeName: displayOptions.navigationBarTitleColor,
             NSFontAttributeName: displayOptions.navigationBarTitleFont,

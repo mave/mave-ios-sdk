@@ -30,19 +30,19 @@
 
 - (void)testNavBarSetup {
     [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
-    MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
-    [MaveSDK sharedInstance].displayOptions = opts;
+    MAVEDisplayOptions *displayOpts = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].displayOptions = displayOpts;
     
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     UINavigationController *sampleNavigationController = [[UINavigationController alloc] initWithRootViewController:vc];
     XCTAssertNotNil(sampleNavigationController);
     [vc setupNavigationBar];
-    XCTAssertEqualObjects(vc.navigationItem.title, @"Invite Friends");
+    XCTAssertEqualObjects(vc.navigationItem.title, displayOpts.navigationBarTitleCopy);
     XCTAssertEqualObjects(vc.navigationController.navigationBar.barTintColor,
-                          opts.navigationBarBackgroundColor);
+                          displayOpts.navigationBarBackgroundColor);
     NSDictionary *expectedTitleTextAttrs = @{
-        NSForegroundColorAttributeName: opts.navigationBarTitleColor,
-        NSFontAttributeName: opts.navigationBarTitleFont,
+        NSForegroundColorAttributeName: displayOpts.navigationBarTitleColor,
+        NSFontAttributeName: displayOpts.navigationBarTitleFont,
         };
     XCTAssertEqualObjects(vc.navigationController.navigationBar.titleTextAttributes, expectedTitleTextAttrs);
 }

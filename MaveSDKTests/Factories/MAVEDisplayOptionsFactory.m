@@ -17,15 +17,22 @@
 + (MAVEDisplayOptions *)generateDisplayOptions {
     MAVEDisplayOptions *opts = [[MAVEDisplayOptions alloc] init];
 
-    opts.navigationBarBackgroundColor = [self randomColor];
-    opts.navigationBarTitleColor = [self randomColor];
+    opts.navigationBarTitleCopy = @"Blah Copy";
     opts.navigationBarTitleFont = [self randomFont];
+    opts.navigationBarTitleColor = [self randomColor];
+    opts.navigationBarBackgroundColor = [self randomColor];
     opts.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
     opts.navigationBarCancelButton.title = @"Cancel";
 
     opts.personNameFont = [self randomFont];
+    opts.personNameColor = [self randomColor];
     opts.personContactInfoFont = [self randomFont];
+    opts.personContactInfoColor = [self randomColor];
+    opts.personCellBackgroundColor = [self randomColor];
+
     opts.sectionHeaderFont = [self randomFont];
+    opts.sectionHeaderColor = [self randomColor];
+    opts.sectionHeaderBackgroundColor = [self randomColor];
     opts.sectionIndexColor = [self randomColor];
     opts.checkmarkColor = [self randomColor];
     
