@@ -31,8 +31,7 @@
         delegateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
         _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
 
-        DebugLog(@"Initialized MAVEHTTPManager on domain %@", MAVEAPIBaseURL);
-
+        DebugLog(@"Initialized MAVEHTTPManager on domain %@ with applicationID %@", MAVEAPIBaseURL, _applicationId);
     }
     return self;
 }
