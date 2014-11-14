@@ -44,13 +44,13 @@
     
     // Test Message field style & content
     UIColor *tfbgColor = [[UIColor alloc]
-                          initWithCGColor:view.textField.layer.backgroundColor];
+                          initWithCGColor:view.textView.layer.backgroundColor];
     XCTAssertEqualObjects(tfbgColor, [MAVEDisplayOptions colorWhite]);
     UIColor *tfBorderColor = [[UIColor alloc]
-                              initWithCGColor:view.textField.layer.borderColor];
+                              initWithCGColor:view.textView.layer.borderColor];
     XCTAssertEqualObjects(tfBorderColor, opts.bottomViewBorderColor);
-    XCTAssertEqualObjects(view.textField.text, @"tmp message");
-    XCTAssertEqual(view.textField.font.pointSize, 16);
+    XCTAssertEqualObjects(view.textView.text, @"tmp message");
+    XCTAssertEqual(view.textView.font.pointSize, 16);
 
     // Test Button Style
     XCTAssertFalse(view.sendButton.enabled);

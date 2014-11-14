@@ -237,7 +237,7 @@
 - (void)sendInvites {
     NSLog(@"Sending invites");
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
-    NSString *message = self.inviteMessageViewController.messageView.textField.text;
+    NSString *message = self.inviteMessageViewController.messageView.textView.text;
     if ([phones count] == 0) {
         NSLog(@"Pressed Send but no recipients selected");
         return;

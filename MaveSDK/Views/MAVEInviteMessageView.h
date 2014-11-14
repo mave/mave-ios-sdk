@@ -10,11 +10,12 @@
 
 @interface MAVEInviteMessageView : UIView <UITextViewDelegate>
 
-@property UIView *fakeTopBorder;  // view to make a border on just one side
+@property UIView *fakeTopBorder;  // view to make a border on just top side
 @property UIButton *sendButton;
-@property UITextView *textField;
+@property UITextView *textView;
 @property UILabel *sendMediumIndicator;  // e.g. "4 Individual SMS"
 
+- (float)computeOwnHeight;
 - (void)updateNumberPeopleSelected:(unsigned long)numberSelected;
 
 @end

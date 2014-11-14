@@ -34,16 +34,16 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         
         // Create child views (button & textView) & set non-layout styling
         // They will get laid out by layoutSubviews
-        self.textField = [[UITextView alloc] init];
-        self.textField.delegate = self;
-        self.textField.layer.backgroundColor=[[MAVEDisplayOptions colorWhite] CGColor];
-        self.textField.layer.borderColor=[displayOptions.bottomViewBorderColor CGColor];
-        self.textField.layer.cornerRadius=8.0f;
-        self.textField.layer.masksToBounds=YES;
-        self.textField.layer.borderWidth= 0.5f;
-        self.textField.text = [MaveSDK sharedInstance].defaultSMSMessageText;
-        self.textField.font = [UIFont systemFontOfSize:16.0];
-        self.textField.returnKeyType = UIReturnKeyDone;
+        self.textView = [[UITextView alloc] init];
+        self.textView.delegate = self;
+        self.textView.layer.backgroundColor=[[MAVEDisplayOptions colorWhite] CGColor];
+        self.textView.layer.borderColor=[displayOptions.bottomViewBorderColor CGColor];
+        self.textView.layer.cornerRadius=8.0f;
+        self.textView.layer.masksToBounds=YES;
+        self.textView.layer.borderWidth= 0.5f;
+        self.textView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
+        self.textView.font = [UIFont systemFontOfSize:16.0];
+        self.textView.returnKeyType = UIReturnKeyDone;
         
         self.sendButton = [[UIButton alloc] init];
         [self.sendButton setTitleColor:displayOptions.sendButtonTextColor forState:UIControlStateNormal];
@@ -60,7 +60,7 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         self.sendMediumIndicator.text = SEND_MEDIUM_INDICATOR;
         
         [self addSubview:self.fakeTopBorder];
-        [self addSubview:self.textField];
+        [self addSubview:self.textView];
         [self addSubview:self.sendButton];
         [self addSubview:self.sendMediumIndicator];
     }
@@ -92,7 +92,7 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
                                sendButtonFrame:&buttonFrame
                       sendMediumIndicatorFrame:&sendMediumIndicatorFrame];
     self.fakeTopBorder.frame = CGRectMake(0, 0, self.frame.size.width, 0.5f);
-    self.textField.frame = textFrame;
+    self.textView.frame = textFrame;
     self.sendButton.frame = buttonFrame;
     self.sendMediumIndicator.frame = sendMediumIndicatorFrame;
 }
@@ -135,6 +135,10 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
     *textViewFrame = CGRectMake(tfOuterPaddingWidth, tfOuterPaddingHeight, tfWidth, tfHeight);
     *sendButtonFrame = CGRectMake(buttonOffsetX, buttonOffsetY, buttonSize.width, buttonSize.height);
     *sendMediumIndicatorFrame = CGRectMake(smiOffsetX, smiOffsetY, smiSize.width, smiSize.height);
+}
+
+- (float)computeOwnHeight {
+    
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
