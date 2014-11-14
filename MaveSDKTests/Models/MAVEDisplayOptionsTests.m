@@ -49,12 +49,12 @@
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
 
     // "Friends to invite" table options
-    XCTAssertEqualObjects(opts.personNameFont, defaultFont);
-    XCTAssertEqualObjects(opts.personNameColor, almostBlack);
-    XCTAssertEqualObjects(opts.personContactInfoFont, smallerFont);
-    XCTAssertEqualObjects(opts.personContactInfoColor, mediumGrey);
-    XCTAssertEqualObjects(opts.personCellBackgroundColor, white);
-    XCTAssertEqualObjects(opts.checkmarkColor, blueTint);
+    XCTAssertEqualObjects(opts.contactNameFont, defaultFont);
+    XCTAssertEqualObjects(opts.contactNameTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.contactDetailsFont, smallerFont);
+    XCTAssertEqualObjects(opts.contactDetailsTextColor, mediumGrey);
+    XCTAssertEqualObjects(opts.contactCellBackgroundColor, white);
+    XCTAssertEqualObjects(opts.contactCheckmarkColor, blueTint);
 
     XCTAssertEqualObjects(opts.sectionHeaderFont, smallerBoldFont);
     XCTAssertEqualObjects(opts.sectionHeaderColor, almostBlack);
@@ -79,11 +79,11 @@
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
     
     // "Friends to invite" table options
-    XCTAssertTrue([opts.personNameFont isKindOfClass:[UIFont class]]);
-    XCTAssertTrue([opts.personContactInfoFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.contactNameFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.contactDetailsFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.sectionHeaderFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.sectionIndexColor isKindOfClass:[UIColor class]]);
-    XCTAssertTrue([opts.checkmarkColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.contactCheckmarkColor isKindOfClass:[UIColor class]]);
     
     // Message and Send section options
     XCTAssertTrue([opts.bottomViewBackgroundColor isKindOfClass:[UIColor class]]);

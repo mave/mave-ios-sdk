@@ -67,7 +67,7 @@
     // Send Medium Indicator Style
     XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
     XCTAssertEqualObjects(view.sendMediumIndicator.textColor, [MAVEDisplayOptions colorMediumGrey]);
-    XCTAssertEqualObjects(view.sendMediumIndicator.font, opts.personContactInfoFont);
+    XCTAssertEqualObjects(view.sendMediumIndicator.font, opts.contactDetailsFont);
 }
 
 - (void)testSendingProgressViewStyleOnInit {

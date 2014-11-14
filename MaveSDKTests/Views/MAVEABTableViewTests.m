@@ -50,12 +50,12 @@
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
-    XCTAssertEqualObjects(cell.textLabel.font, displayOpts.personNameFont);
-    XCTAssertEqualObjects(cell.textLabel.textColor, displayOpts.personNameColor);
-    XCTAssertEqualObjects(cell.detailTextLabel.font, displayOpts.personContactInfoFont);
-    XCTAssertEqualObjects(cell.detailTextLabel.textColor, displayOpts.personContactInfoColor);
-    XCTAssertEqualObjects(cell.backgroundColor, displayOpts.personCellBackgroundColor);
-    XCTAssertEqualObjects(cell.tintColor, displayOpts.checkmarkColor);
+    XCTAssertEqualObjects(cell.textLabel.font, displayOpts.contactNameFont);
+    XCTAssertEqualObjects(cell.textLabel.textColor, displayOpts.contactNameTextColor);
+    XCTAssertEqualObjects(cell.detailTextLabel.font, displayOpts.contactDetailsFont);
+    XCTAssertEqualObjects(cell.detailTextLabel.textColor, displayOpts.contactDetailsTextColor);
+    XCTAssertEqualObjects(cell.backgroundColor, displayOpts.contactCellBackgroundColor);
+    XCTAssertEqualObjects(cell.tintColor, displayOpts.contactCheckmarkColor);
 }
 
 - (void)testTableSectionStyle {

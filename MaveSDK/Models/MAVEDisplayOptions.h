@@ -30,12 +30,12 @@
 @property (strong, nonatomic) UIBarButtonItem *navigationBarCancelButton;
 
 // "Friends to invite" table options
-@property (strong, nonatomic) UIFont *personNameFont;
-@property (strong, nonatomic) UIColor *personNameColor;
-@property (strong, nonatomic) UIFont *personContactInfoFont;
-@property (strong, nonatomic) UIColor *personContactInfoColor;
-@property (strong, nonatomic) UIColor *personCellBackgroundColor;
-@property (strong, nonatomic) UIColor *checkmarkColor;
+@property (strong, nonatomic) UIFont *contactNameFont;
+@property (strong, nonatomic) UIColor *contactNameTextColor;
+@property (strong, nonatomic) UIFont *contactDetailsFont;
+@property (strong, nonatomic) UIColor *contactDetailsTextColor;
+@property (strong, nonatomic) UIColor *contactCellBackgroundColor;
+@property (strong, nonatomic) UIColor *contactCheckmarkColor;
 
 
 @property (strong, nonatomic) UIFont *sectionHeaderFont;

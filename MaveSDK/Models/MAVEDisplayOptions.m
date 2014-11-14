@@ -23,12 +23,12 @@
         self.navigationBarCancelButton.title = @"Cancel";
 
         // "Friends to invite" table options
-        self.personNameFont = [UIFont systemFontOfSize:16];
-        self.personNameColor = [[self class] colorAlmostBlack];
-        self.personContactInfoFont = [UIFont systemFontOfSize:14];
-        self.personContactInfoColor = [[self class] colorMediumGrey];
-        self.personCellBackgroundColor = [[self class] colorWhite];
-        self.checkmarkColor = [[self class] colorBlueTint];
+        self.contactNameFont = [UIFont systemFontOfSize:16];
+        self.contactNameTextColor = [[self class] colorAlmostBlack];
+        self.contactDetailsFont = [UIFont systemFontOfSize:14];
+        self.contactDetailsTextColor = [[self class] colorMediumGrey];
+        self.contactCellBackgroundColor = [[self class] colorWhite];
+        self.contactCheckmarkColor = [[self class] colorBlueTint];
 
         self.sectionHeaderFont = [UIFont boldSystemFontOfSize:14];
         self.sectionHeaderColor = [[self class] colorAlmostBlack];
