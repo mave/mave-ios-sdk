@@ -38,8 +38,8 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
     [vc updateTableData:data];
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
-    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.sectionIndexColor);
-    XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor, displayOptions.sectionIndexBackgroundColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.contactSectionIndexColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor, displayOptions.contactSectionIndexBackgroundColor);
 }
 
 - (void)testPersonCellStyleOnInit {
@@ -50,12 +50,12 @@
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
-    XCTAssertEqualObjects(cell.textLabel.font, displayOpts.personNameFont);
-    XCTAssertEqualObjects(cell.textLabel.textColor, displayOpts.personNameColor);
-    XCTAssertEqualObjects(cell.detailTextLabel.font, displayOpts.personContactInfoFont);
-    XCTAssertEqualObjects(cell.detailTextLabel.textColor, displayOpts.personContactInfoColor);
-    XCTAssertEqualObjects(cell.backgroundColor, displayOpts.personCellBackgroundColor);
-    XCTAssertEqualObjects(cell.tintColor, displayOpts.checkmarkColor);
+    XCTAssertEqualObjects(cell.textLabel.font, displayOpts.contactNameFont);
+    XCTAssertEqualObjects(cell.textLabel.textColor, displayOpts.contactNameTextColor);
+    XCTAssertEqualObjects(cell.detailTextLabel.font, displayOpts.contactDetailsFont);
+    XCTAssertEqualObjects(cell.detailTextLabel.textColor, displayOpts.contactDetailsTextColor);
+    XCTAssertEqualObjects(cell.backgroundColor, displayOpts.contactCellBackgroundColor);
+    XCTAssertEqualObjects(cell.tintColor, displayOpts.contactCheckmarkColor);
 }
 
 - (void)testTableSectionStyle {
@@ -66,11 +66,11 @@
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
-    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, displayOpts.sectionHeaderBackgroundColor);
+    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, displayOpts.contactSectionHeaderBackgroundColor);
     UILabel *headerLabel = (UILabel *)sectionHeaderView.subviews[0];
     XCTAssertEqualObjects(headerLabel.text, @"D");
-    XCTAssertEqualObjects(headerLabel.textColor, displayOpts.sectionHeaderColor);
-    XCTAssertEqualObjects(headerLabel.font, displayOpts.sectionHeaderFont);
+    XCTAssertEqualObjects(headerLabel.textColor, displayOpts.contactSectionHeaderTextColor);
+    XCTAssertEqualObjects(headerLabel.font, displayOpts.contactSectionHeaderFont);
 }
 
 @end

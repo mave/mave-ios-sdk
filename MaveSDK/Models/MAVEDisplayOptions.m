@@ -17,30 +17,30 @@
         // Header options
         self.navigationBarTitleCopy = @"Invite Friends";
         self.navigationBarTitleFont = [UIFont systemFontOfSize:16];
-        self.navigationBarTitleColor = [[self class] colorAlmostBlack];
+        self.navigationBarTitleTextColor = [[self class] colorAlmostBlack];
         self.navigationBarBackgroundColor = [[self class] colorWhite];
         self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
         self.navigationBarCancelButton.title = @"Cancel";
 
         // "Friends to invite" table options
-        self.personNameFont = [UIFont systemFontOfSize:16];
-        self.personNameColor = [[self class] colorAlmostBlack];
-        self.personContactInfoFont = [UIFont systemFontOfSize:14];
-        self.personContactInfoColor = [[self class] colorMediumGrey];
-        self.personCellBackgroundColor = [[self class] colorWhite];
-        self.checkmarkColor = [[self class] colorBlueTint];
+        self.contactNameFont = [UIFont systemFontOfSize:16];
+        self.contactNameTextColor = [[self class] colorAlmostBlack];
+        self.contactDetailsFont = [UIFont systemFontOfSize:14];
+        self.contactDetailsTextColor = [[self class] colorMediumGrey];
+        self.contactCellBackgroundColor = [[self class] colorWhite];
+        self.contactCheckmarkColor = [[self class] colorBlueTint];
 
-        self.sectionHeaderFont = [UIFont boldSystemFontOfSize:14];
-        self.sectionHeaderColor = [[self class] colorAlmostBlack];
-        self.sectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
-        self.sectionIndexColor = [[self class] colorLightGrey];
-        self.sectionIndexBackgroundColor = [[self class] colorWhite];
+        self.contactSectionHeaderFont = [UIFont boldSystemFontOfSize:14];
+        self.contactSectionHeaderTextColor = [[self class] colorAlmostBlack];
+        self.contactSectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
+        self.contactSectionIndexColor = [[self class] colorLightGrey];
+        self.contactSectionIndexBackgroundColor = [[self class] colorWhite];
 
         // Message and Send section options
-        self.bottomViewBackgroundColor = [[self class] colorWhite];
         self.bottomViewBorderColor = [[self class] colorMediumGrey];
+        self.bottomViewBackgroundColor = [[self class] colorWhite];
         self.sendButtonFont = [UIFont systemFontOfSize:18];
-        self.sendButtonColor = [[self class] colorBlueTint];
+        self.sendButtonTextColor = [[self class] colorBlueTint];
     }
     return self;
 }

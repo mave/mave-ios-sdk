@@ -41,7 +41,7 @@
     XCTAssertEqualObjects(vc.navigationController.navigationBar.barTintColor,
                           displayOpts.navigationBarBackgroundColor);
     NSDictionary *expectedTitleTextAttrs = @{
-        NSForegroundColorAttributeName: displayOpts.navigationBarTitleColor,
+        NSForegroundColorAttributeName: displayOpts.navigationBarTitleTextColor,
         NSFontAttributeName: displayOpts.navigationBarTitleFont,
         };
     XCTAssertEqualObjects(vc.navigationController.navigationBar.titleTextAttributes, expectedTitleTextAttrs);

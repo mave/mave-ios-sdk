@@ -19,13 +19,13 @@
         MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         // Sets color of the default accessory checkmark
-        [self setTintColor:displayOpts.checkmarkColor];
+        [self setTintColor:displayOpts.contactCheckmarkColor];
 
-        self.backgroundColor = displayOpts.personCellBackgroundColor;
-        self.textLabel.font = displayOpts.personNameFont;
-        self.textLabel.textColor = displayOpts.personNameColor;
-        self.detailTextLabel.font = displayOpts.personContactInfoFont;
-        self.detailTextLabel.textColor = displayOpts.personContactInfoColor;
+        self.backgroundColor = displayOpts.contactCellBackgroundColor;
+        self.textLabel.font = displayOpts.contactNameFont;
+        self.textLabel.textColor = displayOpts.contactNameTextColor;
+        self.detailTextLabel.font = displayOpts.contactDetailsFont;
+        self.detailTextLabel.textColor = displayOpts.contactDetailsTextColor;
     }
     return self;
 }

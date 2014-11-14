@@ -44,29 +44,29 @@
     // Header options
     XCTAssertEqualObjects(opts.navigationBarTitleCopy, @"Invite Friends");
     XCTAssertEqualObjects(opts.navigationBarTitleFont, defaultFont);
-    XCTAssertEqualObjects(opts.navigationBarTitleColor, almostBlack);
+    XCTAssertEqualObjects(opts.navigationBarTitleTextColor, almostBlack);
     XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
 
     // "Friends to invite" table options
-    XCTAssertEqualObjects(opts.personNameFont, defaultFont);
-    XCTAssertEqualObjects(opts.personNameColor, almostBlack);
-    XCTAssertEqualObjects(opts.personContactInfoFont, smallerFont);
-    XCTAssertEqualObjects(opts.personContactInfoColor, mediumGrey);
-    XCTAssertEqualObjects(opts.personCellBackgroundColor, white);
-    XCTAssertEqualObjects(opts.checkmarkColor, blueTint);
+    XCTAssertEqualObjects(opts.contactNameFont, defaultFont);
+    XCTAssertEqualObjects(opts.contactNameTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.contactDetailsFont, smallerFont);
+    XCTAssertEqualObjects(opts.contactDetailsTextColor, mediumGrey);
+    XCTAssertEqualObjects(opts.contactCellBackgroundColor, white);
+    XCTAssertEqualObjects(opts.contactCheckmarkColor, blueTint);
 
-    XCTAssertEqualObjects(opts.sectionHeaderFont, smallerBoldFont);
-    XCTAssertEqualObjects(opts.sectionHeaderColor, almostBlack);
-    XCTAssertEqualObjects(opts.sectionHeaderBackgroundColor, extraLightGrey);
-    XCTAssertEqualObjects(opts.sectionIndexColor, lightGrey);
-    XCTAssertEqualObjects(opts.sectionIndexBackgroundColor, white);
+    XCTAssertEqualObjects(opts.contactSectionHeaderFont, smallerBoldFont);
+    XCTAssertEqualObjects(opts.contactSectionHeaderTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.contactSectionHeaderBackgroundColor, extraLightGrey);
+    XCTAssertEqualObjects(opts.contactSectionIndexColor, lightGrey);
+    XCTAssertEqualObjects(opts.contactSectionIndexBackgroundColor, white);
     
     // Message and Send section options
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
     XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
     XCTAssertEqualObjects(opts.sendButtonFont, sendButtonFont);
-    XCTAssertEqualObjects(opts.sendButtonColor, blueTint);
+    XCTAssertEqualObjects(opts.sendButtonTextColor, blueTint);
 }
 
 - (void)testFactoryFillsOptions {
@@ -74,22 +74,22 @@
 
     // Header options
     XCTAssertTrue([opts.navigationBarBackgroundColor isKindOfClass:[UIColor class]]);
-    XCTAssertTrue([opts.navigationBarTitleColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.navigationBarTitleTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.navigationBarTitleFont isKindOfClass:[UIFont class]]);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
     
     // "Friends to invite" table options
-    XCTAssertTrue([opts.personNameFont isKindOfClass:[UIFont class]]);
-    XCTAssertTrue([opts.personContactInfoFont isKindOfClass:[UIFont class]]);
-    XCTAssertTrue([opts.sectionHeaderFont isKindOfClass:[UIFont class]]);
-    XCTAssertTrue([opts.sectionIndexColor isKindOfClass:[UIColor class]]);
-    XCTAssertTrue([opts.checkmarkColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.contactNameFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.contactDetailsFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.contactSectionHeaderFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.contactSectionIndexColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.contactCheckmarkColor isKindOfClass:[UIColor class]]);
     
     // Message and Send section options
     XCTAssertTrue([opts.bottomViewBackgroundColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.bottomViewBorderColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.sendButtonFont isKindOfClass:[UIFont class]]);
-    XCTAssertTrue([opts.sendButtonColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.sendButtonTextColor isKindOfClass:[UIColor class]]);
 }
 
 @end

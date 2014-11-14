@@ -19,28 +19,28 @@
 
     opts.navigationBarTitleCopy = @"Blah Copy";
     opts.navigationBarTitleFont = [self randomFont];
-    opts.navigationBarTitleColor = [self randomColor];
+    opts.navigationBarTitleTextColor = [self randomColor];
     opts.navigationBarBackgroundColor = [self randomColor];
     opts.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
     opts.navigationBarCancelButton.title = @"Cancel";
 
-    opts.personNameFont = [self randomFont];
-    opts.personNameColor = [self randomColor];
-    opts.personContactInfoFont = [self randomFont];
-    opts.personContactInfoColor = [self randomColor];
-    opts.personCellBackgroundColor = [self randomColor];
-    opts.checkmarkColor = [self randomColor];
+    opts.contactNameFont = [self randomFont];
+    opts.contactNameTextColor = [self randomColor];
+    opts.contactDetailsFont = [self randomFont];
+    opts.contactDetailsTextColor = [self randomColor];
+    opts.contactCellBackgroundColor = [self randomColor];
+    opts.contactCheckmarkColor = [self randomColor];
 
-    opts.sectionHeaderFont = [self randomFont];
-    opts.sectionHeaderColor = [self randomColor];
-    opts.sectionHeaderBackgroundColor = [self randomColor];
-    opts.sectionIndexColor = [self randomColor];
-    opts.sectionIndexBackgroundColor = [self randomColor];
+    opts.contactSectionHeaderFont = [self randomFont];
+    opts.contactSectionHeaderTextColor = [self randomColor];
+    opts.contactSectionHeaderBackgroundColor = [self randomColor];
+    opts.contactSectionIndexColor = [self randomColor];
+    opts.contactSectionIndexBackgroundColor = [self randomColor];
     
     opts.bottomViewBackgroundColor = [self randomColor];
     opts.bottomViewBorderColor = [self randomColor];
     opts.sendButtonFont = [self randomFont];
-    opts.sendButtonColor = [self randomColor];
+    opts.sendButtonTextColor = [self randomColor];
     return opts;
 }
 
