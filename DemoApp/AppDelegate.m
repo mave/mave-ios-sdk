@@ -46,10 +46,9 @@
     backButton.title = @"Back";
     backButton.tintColor = white;
 
-
-    // Setup the MaveSDK
+    // Customize the Mave invite page
     MaveSDK *mave = [MaveSDK sharedInstance];
-    
+
     // Navigation bar options
     mave.displayOptions.navigationBarTitleCopy = @"Invite friends";
     mave.displayOptions.navigationBarTitleFont = font1Bold;
