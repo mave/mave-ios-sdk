@@ -91,7 +91,7 @@
     // resize our view correctly so no need to do anything here
     if (!self.isKeyboardVisible) {
         self.keyboardFrame = [self keyboardFrameWhenHidden];
-        [self setOwnAndSubviewFrames];
+        [self layoutInvitePageViewAndSubviews];
     }
 }
 
@@ -102,7 +102,7 @@
     } else {
         self.isKeyboardVisible = YES;
     }
-    [self setOwnAndSubviewFrames];
+    [self layoutInvitePageViewAndSubviews];
 }
 
 //
@@ -129,6 +129,7 @@
     ABAuthorizationStatus addrBookStatus = ABAddressBookGetAuthorizationStatus();
     if (addrBookStatus == kABAuthorizationStatusAuthorized) {
         self.view = [self createAddressBookInviteView];
+        [self layoutInvitePageViewAndSubviews];
         [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.ABTableViewController updateTableData:indexedData];
@@ -143,6 +144,7 @@
             if ([indexedData count] > 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.view = [self createAddressBookInviteView];
+                    [self layoutInvitePageViewAndSubviews];
                     [self.ABTableViewController updateTableData:indexedData];
                 });
             } else {
@@ -193,30 +195,19 @@
 }
 
 - (UIView *)createAddressBookInviteView {
-    CGRect cvf, tvf, imvf;
-    [[self class]computeChildFramesWithKeyboardFrame:self.keyboardFrame
-                               createContainerFrame:&cvf
-                                     tableViewFrame:&tvf
-                             inviteMessageViewFrame:&imvf];
-    UIView *containerView = [[UIView alloc] initWithFrame:cvf];
-
+    // Instantiate the view controllers for child vies
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.ABTableViewController.tableView.frame = tvf;
-
     self.inviteMessageViewController = [[MAVEInviteMessageViewController alloc] initAndCreateView];
-    self.inviteMessageViewController.view.frame = imvf;
-
     [self.inviteMessageViewController.messageView.sendButton addTarget:self
-                                                           action:@selector(sendInvites)
-                                                 forControlEvents:UIControlEventTouchUpInside];
-
+                                                                action:@selector(sendInvites)
+                                                      forControlEvents:UIControlEventTouchUpInside];
+    UIView *containerView = [[UIView alloc] init];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageViewController.view];
-    
     return containerView;
 }
 
-- (void)setOwnAndSubviewFrames {
+- (void)layoutInvitePageViewAndSubviews {
     CGRect cvf, tvf, imvf;
     [[self class]computeChildFramesWithKeyboardFrame:self.keyboardFrame
                                 createContainerFrame:&cvf
