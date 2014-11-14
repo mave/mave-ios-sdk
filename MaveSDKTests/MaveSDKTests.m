@@ -123,7 +123,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserIdentifyNeverCalledCode);
-    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"identifyUser never called");
+    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"identifyUser not called");
 
 }
 

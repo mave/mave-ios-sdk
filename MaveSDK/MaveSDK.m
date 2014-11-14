@@ -60,7 +60,7 @@ static dispatch_once_t sharedInstanceonceToken;
         humanError = @"applicationID is nil";
         errCode = MAVEValidationErrorApplicationIDNotSetCode;
     } else if (self.userData == nil) {
-        humanError = @"identifyUser never called";
+        humanError = @"identifyUser not called";
         errCode = MAVEValidationErrorUserIdentifyNeverCalledCode;
     } else if (self.userData.userID == nil) {
         humanError = @"userID set to nil";

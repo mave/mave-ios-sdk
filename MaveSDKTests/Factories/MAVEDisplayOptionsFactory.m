@@ -29,12 +29,13 @@
     opts.personContactInfoFont = [self randomFont];
     opts.personContactInfoColor = [self randomColor];
     opts.personCellBackgroundColor = [self randomColor];
+    opts.checkmarkColor = [self randomColor];
 
     opts.sectionHeaderFont = [self randomFont];
     opts.sectionHeaderColor = [self randomColor];
     opts.sectionHeaderBackgroundColor = [self randomColor];
     opts.sectionIndexColor = [self randomColor];
-    opts.checkmarkColor = [self randomColor];
+    opts.sectionIndexBackgroundColor = [self randomColor];
     
     opts.bottomViewBackgroundColor = [self randomColor];
     opts.bottomViewBorderColor = [self randomColor];

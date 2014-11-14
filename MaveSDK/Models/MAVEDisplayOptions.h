@@ -35,13 +35,14 @@
 @property (strong, nonatomic) UIFont *personContactInfoFont;
 @property (strong, nonatomic) UIColor *personContactInfoColor;
 @property (strong, nonatomic) UIColor *personCellBackgroundColor;
+@property (strong, nonatomic) UIColor *checkmarkColor;
+
 
 @property (strong, nonatomic) UIFont *sectionHeaderFont;
 @property (strong, nonatomic) UIColor *sectionHeaderColor;
 @property (strong, nonatomic) UIColor *sectionHeaderBackgroundColor;
-
 @property (strong, nonatomic) UIColor *sectionIndexColor;
-@property (strong, nonatomic) UIColor *checkmarkColor;
+@property (strong, nonatomic) UIColor *sectionIndexBackgroundColor;
 
 // Message and Send section options
 @property (strong, nonatomic) UIColor *bottomViewBackgroundColor;

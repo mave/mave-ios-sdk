@@ -27,14 +27,15 @@
         self.personNameColor = [[self class] colorAlmostBlack];
         self.personContactInfoFont = [UIFont systemFontOfSize:14];
         self.personContactInfoColor = [[self class] colorMediumGrey];
-        self.sectionHeaderFont = [UIFont boldSystemFontOfSize:14];
         self.personCellBackgroundColor = [[self class] colorWhite];
+        self.checkmarkColor = [[self class] colorBlueTint];
 
+        self.sectionHeaderFont = [UIFont boldSystemFontOfSize:14];
         self.sectionHeaderColor = [[self class] colorAlmostBlack];
         self.sectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
         self.sectionIndexColor = [[self class] colorLightGrey];
-        self.checkmarkColor = [[self class] colorBlueTint];
-        
+        self.sectionIndexBackgroundColor = [[self class] colorWhite];
+
         // Message and Send section options
         self.bottomViewBackgroundColor = [[self class] colorWhite];
         self.bottomViewBorderColor = [[self class] colorMediumGrey];

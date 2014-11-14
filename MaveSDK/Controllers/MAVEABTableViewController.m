@@ -24,12 +24,14 @@
 
 - (instancetype)initTableViewWithFrame:(CGRect)frame parent:(id<MAVEABTableViewAdditionalDelegate>)parent {
     if(self = [super init]) {
+        MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
         self.tableView = [[UITableView alloc] initWithFrame:frame];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorColor = [MAVEDisplayOptions colorExtraLightGrey];
-        self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.sectionIndexColor;
+        self.tableView.sectionIndexColor = displayOptions.sectionIndexColor;
+        self.tableView.sectionIndexBackgroundColor = displayOptions.sectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }

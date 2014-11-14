@@ -37,7 +37,9 @@
     NSDictionary *data = @{@"D": @[@"Danny"]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
     [vc updateTableData:data];
-    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, [MaveSDK sharedInstance].displayOptions.sectionIndexColor);
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
+    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.sectionIndexColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor, displayOptions.sectionIndexBackgroundColor);
 }
 
 - (void)testPersonCellStyleOnInit {

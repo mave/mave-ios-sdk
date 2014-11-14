@@ -54,12 +54,13 @@
     XCTAssertEqualObjects(opts.personContactInfoFont, smallerFont);
     XCTAssertEqualObjects(opts.personContactInfoColor, mediumGrey);
     XCTAssertEqualObjects(opts.personCellBackgroundColor, white);
+    XCTAssertEqualObjects(opts.checkmarkColor, blueTint);
 
     XCTAssertEqualObjects(opts.sectionHeaderFont, smallerBoldFont);
     XCTAssertEqualObjects(opts.sectionHeaderColor, almostBlack);
     XCTAssertEqualObjects(opts.sectionHeaderBackgroundColor, extraLightGrey);
     XCTAssertEqualObjects(opts.sectionIndexColor, lightGrey);
-    XCTAssertEqualObjects(opts.checkmarkColor, blueTint);
+    XCTAssertEqualObjects(opts.sectionIndexBackgroundColor, white);
     
     // Message and Send section options
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
