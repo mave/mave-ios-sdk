@@ -19,7 +19,7 @@
 
     opts.navigationBarTitleCopy = @"Blah Copy";
     opts.navigationBarTitleFont = [self randomFont];
-    opts.navigationBarTitleColor = [self randomColor];
+    opts.navigationBarTitleTextColor = [self randomColor];
     opts.navigationBarBackgroundColor = [self randomColor];
     opts.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
     opts.navigationBarCancelButton.title = @"Cancel";

@@ -44,7 +44,7 @@
     // Header options
     XCTAssertEqualObjects(opts.navigationBarTitleCopy, @"Invite Friends");
     XCTAssertEqualObjects(opts.navigationBarTitleFont, defaultFont);
-    XCTAssertEqualObjects(opts.navigationBarTitleColor, almostBlack);
+    XCTAssertEqualObjects(opts.navigationBarTitleTextColor, almostBlack);
     XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
 
@@ -74,7 +74,7 @@
 
     // Header options
     XCTAssertTrue([opts.navigationBarBackgroundColor isKindOfClass:[UIColor class]]);
-    XCTAssertTrue([opts.navigationBarTitleColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.navigationBarTitleTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.navigationBarTitleFont isKindOfClass:[UIFont class]]);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
     

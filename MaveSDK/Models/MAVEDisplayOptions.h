@@ -22,7 +22,7 @@
 // Header options
 @property (strong, nonatomic) NSString *navigationBarTitleCopy;
 @property (strong, nonatomic) UIFont *navigationBarTitleFont;
-@property (strong, nonatomic) UIColor *navigationBarTitleColor;
+@property (strong, nonatomic) UIColor *navigationBarTitleTextColor;
 @property (strong, nonatomic) UIColor *navigationBarBackgroundColor;
 // Note: any target & action set on the navigation bar cancel button item will
 // be ignored, on cancel we run our own teardown code and then call your

@@ -113,7 +113,7 @@
     
     self.navigationItem.title = displayOptions.navigationBarTitleCopy;
     self.navigationController.navigationBar.titleTextAttributes = @{
-            NSForegroundColorAttributeName: displayOptions.navigationBarTitleColor,
+            NSForegroundColorAttributeName: displayOptions.navigationBarTitleTextColor,
             NSFontAttributeName: displayOptions.navigationBarTitleFont,
     };
     self.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
