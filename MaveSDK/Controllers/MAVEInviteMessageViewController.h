@@ -16,7 +16,7 @@
 @property MAVEInviteMessageView *messageView;
 @property MAVEInviteSendingProgressView *sendingInProgressView;
 
-- (MAVEInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame;
+- (instancetype)initAndCreateView;
 
 - (void)switchToSendingInProgressView:(UIView *)superView;
 - (void)switchToInviteMessageView:(UIView *)superView;

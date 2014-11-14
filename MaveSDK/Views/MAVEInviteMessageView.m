@@ -16,7 +16,7 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
 
 @implementation MAVEInviteMessageView
 
-- (MAVEInviteMessageView *)initWithFrame:(CGRect)frame {
+- (MAVEInviteMessageView *)init {
     // Get global display customization options, any of the values could have been
     // overwritten by the client app
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
@@ -25,11 +25,11 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
     NSString *buttonTitle = @"Send";
 
     // Create own containing view
-    if (self = [super initWithFrame:frame]) {
+    if (self = [super init]) {
         self.backgroundColor = displayOptions.bottomViewBackgroundColor;
 
         // Use a view to simulate a border that's on just the top
-        self.fakeTopBorder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 0.5f)];
+        self.fakeTopBorder = [[UIView alloc] init];
         self.fakeTopBorder.backgroundColor = displayOptions.bottomViewBorderColor;
         
         // Create child views (button & textView) & set non-layout styling
@@ -91,9 +91,10 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
                            createTextViewFrame:&textFrame
                                sendButtonFrame:&buttonFrame
                       sendMediumIndicatorFrame:&sendMediumIndicatorFrame];
-    [self.textField setFrame:textFrame];
-    [self.sendButton setFrame:buttonFrame];
-    [self.sendMediumIndicator setFrame:sendMediumIndicatorFrame];
+    self.fakeTopBorder.frame = CGRectMake(0, 0, self.frame.size.width, 0.5f);
+    self.textField.frame = textFrame;
+    self.sendButton.frame = buttonFrame;
+    self.sendMediumIndicator.frame = sendMediumIndicatorFrame;
 }
 
 - (void)computeFrameSizesWithContainingFrame:(CGRect)containingFrame

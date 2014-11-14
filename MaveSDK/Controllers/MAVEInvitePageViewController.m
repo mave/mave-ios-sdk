@@ -203,7 +203,8 @@
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
     self.ABTableViewController.tableView.frame = tvf;
 
-    self.inviteMessageViewController = [[MAVEInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
+    self.inviteMessageViewController = [[MAVEInviteMessageViewController alloc] initAndCreateView];
+    self.inviteMessageViewController.view.frame = imvf;
 
     [self.inviteMessageViewController.messageView.sendButton addTarget:self
                                                            action:@selector(sendInvites)

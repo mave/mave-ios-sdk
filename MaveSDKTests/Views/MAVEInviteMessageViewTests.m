@@ -34,17 +34,13 @@
 
 - (void)testMessageViewStyleOnInit {
     // Setup and get opts to compare it to
-    CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
     [MaveSDK sharedInstance].defaultSMSMessageText = @"tmp message";
-    MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] initWithFrame:fakeFrame];
+    MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] init];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
     // Test view box style
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
     XCTAssertEqualObjects(view.fakeTopBorder.backgroundColor, opts.bottomViewBorderColor);
-    XCTAssertEqual(view.fakeTopBorder.frame.size.height, 0.5f);
-    XCTAssertEqual(view.fakeTopBorder.frame.origin.x, 0);
-    XCTAssertEqual(view.fakeTopBorder.frame.origin.y, 0);
     
     // Test Message field style & content
     UIColor *tfbgColor = [[UIColor alloc]
@@ -81,7 +77,7 @@
 }
 
 - (void)testUpdateNumberPeopleSelectedNonZero {
-    MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] init];
     id partialMock = [OCMockObject partialMockForObject:view];
     [[partialMock expect] setNeedsLayout];
     
@@ -93,7 +89,7 @@
 }
 
 - (void)testUpdateNumberPeopleSelectedZero {
-    MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] init];
 
     [view updateNumberPeopleSelected:0];
     XCTAssertEqualObjects(view.sendMediumIndicator.text, @"Individual SMS");
