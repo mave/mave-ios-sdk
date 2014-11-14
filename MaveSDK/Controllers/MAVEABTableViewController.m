@@ -22,11 +22,11 @@
     NSArray *tableSections;
 }
 
-- (instancetype)initTableViewWithFrame:(CGRect)frame parent:(id<MAVEABTableViewAdditionalDelegate>)parent {
+- (instancetype)initTableViewWithParent:(id<MAVEABTableViewAdditionalDelegate>)parent {
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
-        self.tableView = [[UITableView alloc] initWithFrame:frame];
+        self.tableView = [[UITableView alloc] init];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorColor = [MAVEDisplayOptions colorExtraLightGrey];

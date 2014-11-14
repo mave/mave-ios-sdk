@@ -200,8 +200,9 @@
                              inviteMessageViewFrame:&imvf];
     UIView *containerView = [[UIView alloc] initWithFrame:cvf];
 
-    self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithFrame:tvf
-                                                                                   parent:self];
+    self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
+    self.ABTableViewController.tableView.frame = tvf;
+
     self.inviteMessageViewController = [[MAVEInviteMessageViewController alloc] initAndCreateViewWithFrame:imvf];
 
     [self.inviteMessageViewController.messageView.sendButton addTarget:self

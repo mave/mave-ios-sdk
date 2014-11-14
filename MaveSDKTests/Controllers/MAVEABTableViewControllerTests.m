@@ -36,8 +36,7 @@
     // Set up data
     id mockedIPVC = [OCMockObject mockForClass:[MAVEInvitePageViewController class]];
     id mockedTableView = [OCMockObject mockForClass:[UITableView class]];
-    CGRect noFrame = CGRectMake(0, 0, 0, 0);
-    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:noFrame parent:mockedIPVC];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:mockedIPVC];
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.firstName = @"Abbie"; p1.lastName = @"Foo";
     p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;

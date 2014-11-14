@@ -20,8 +20,8 @@
 @property UITableView *tableView;
 @property (strong, nonatomic) NSMutableSet *selectedPhoneNumbers;
 
-- (instancetype)initTableViewWithFrame:(CGRect)frame
-                                parent:(id<MAVEABTableViewAdditionalDelegate>)parent;
+- (instancetype)initTableViewWithParent:(id<MAVEABTableViewAdditionalDelegate>)parent;
+
 - (void)updateTableData:(NSDictionary *)data;
 
 @end
