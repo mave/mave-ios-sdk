@@ -30,8 +30,8 @@
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorColor = [MAVEDisplayOptions colorExtraLightGrey];
-        self.tableView.sectionIndexColor = displayOptions.sectionIndexColor;
-        self.tableView.sectionIndexBackgroundColor = displayOptions.sectionIndexBackgroundColor;
+        self.tableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
+        self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }
@@ -58,7 +58,7 @@
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
     NSString *labelText = [self tableView:tableView
                   titleForHeaderInSection:section];
-    UIFont *labelFont = displayOpts.sectionHeaderFont;
+    UIFont *labelFont = displayOpts.contactSectionHeaderFont;
     CGSize labelSize = [labelText sizeWithAttributes:@{NSFontAttributeName: labelFont}];
     CGRect labelFrame = CGRectMake(labelOffsetX,
                                    labelMarginY,
@@ -66,7 +66,7 @@
                                    labelSize.height);
     UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
     label.text = labelText;
-    label.textColor = displayOpts.sectionHeaderColor;
+    label.textColor = displayOpts.contactSectionHeaderTextColor;
     label.font = labelFont;
 
     CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
@@ -74,7 +74,7 @@
     CGFloat sectionWidth = 0.0;
     CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
     UIView *view = [[UIView alloc] initWithFrame:viewFrame];
-    view.backgroundColor = displayOpts.sectionHeaderBackgroundColor;
+    view.backgroundColor = displayOpts.contactSectionHeaderBackgroundColor;
 
     [view addSubview:label];
 

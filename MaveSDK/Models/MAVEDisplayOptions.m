@@ -30,17 +30,17 @@
         self.contactCellBackgroundColor = [[self class] colorWhite];
         self.contactCheckmarkColor = [[self class] colorBlueTint];
 
-        self.sectionHeaderFont = [UIFont boldSystemFontOfSize:14];
-        self.sectionHeaderColor = [[self class] colorAlmostBlack];
-        self.sectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
-        self.sectionIndexColor = [[self class] colorLightGrey];
-        self.sectionIndexBackgroundColor = [[self class] colorWhite];
+        self.contactSectionHeaderFont = [UIFont boldSystemFontOfSize:14];
+        self.contactSectionHeaderTextColor = [[self class] colorAlmostBlack];
+        self.contactSectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
+        self.contactSectionIndexColor = [[self class] colorLightGrey];
+        self.contactSectionIndexBackgroundColor = [[self class] colorWhite];
 
         // Message and Send section options
-        self.bottomViewBackgroundColor = [[self class] colorWhite];
         self.bottomViewBorderColor = [[self class] colorMediumGrey];
+        self.bottomViewBackgroundColor = [[self class] colorWhite];
         self.sendButtonFont = [UIFont systemFontOfSize:18];
-        self.sendButtonColor = [[self class] colorBlueTint];
+        self.sendButtonTextColor = [[self class] colorBlueTint];
     }
     return self;
 }

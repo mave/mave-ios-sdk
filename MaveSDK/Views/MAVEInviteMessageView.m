@@ -46,7 +46,7 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         self.textField.returnKeyType = UIReturnKeyDone;
         
         self.sendButton = [[UIButton alloc] init];
-        [self.sendButton setTitleColor:displayOptions.sendButtonColor forState:UIControlStateNormal];
+        [self.sendButton setTitleColor:displayOptions.sendButtonTextColor forState:UIControlStateNormal];
         [self.sendButton setTitleColor:[MAVEDisplayOptions colorMediumGrey] forState:UIControlStateDisabled];
         self.sendButton.titleLabel.font = displayOptions.sendButtonFont;
         [self.sendButton setTitle:buttonTitle forState: UIControlStateNormal];

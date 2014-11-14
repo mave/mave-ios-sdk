@@ -38,17 +38,17 @@
 @property (strong, nonatomic) UIColor *contactCheckmarkColor;
 
 
-@property (strong, nonatomic) UIFont *sectionHeaderFont;
-@property (strong, nonatomic) UIColor *sectionHeaderColor;
-@property (strong, nonatomic) UIColor *sectionHeaderBackgroundColor;
-@property (strong, nonatomic) UIColor *sectionIndexColor;
-@property (strong, nonatomic) UIColor *sectionIndexBackgroundColor;
+@property (strong, nonatomic) UIFont *contactSectionHeaderFont;
+@property (strong, nonatomic) UIColor *contactSectionHeaderTextColor;
+@property (strong, nonatomic) UIColor *contactSectionHeaderBackgroundColor;
+@property (strong, nonatomic) UIColor *contactSectionIndexColor;
+@property (strong, nonatomic) UIColor *contactSectionIndexBackgroundColor;
 
 // Message and Send section options
 @property (strong, nonatomic) UIColor *bottomViewBackgroundColor;
 @property (strong, nonatomic) UIColor *bottomViewBorderColor;
 @property (strong, nonatomic) UIFont *sendButtonFont;
-@property (strong, nonatomic) UIColor *sendButtonColor;
+@property (strong, nonatomic) UIColor *sendButtonTextColor;
 
 - (MAVEDisplayOptions *)initWithDefaults;
 

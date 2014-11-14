@@ -59,7 +59,7 @@
     // Test Button Style
     XCTAssertFalse(view.sendButton.enabled);
     XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateNormal], @"Send");
-    XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.sendButtonColor);
+    XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.sendButtonTextColor);
     XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateDisabled], @"Send");
     XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateDisabled],
                           [MAVEDisplayOptions colorMediumGrey]);
@@ -76,8 +76,8 @@
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
-    XCTAssertEqualObjects(view.progressView.tintColor, opts.sendButtonColor);
-    XCTAssertEqualObjects(view.mainLabel.textColor, opts.sendButtonColor);
+    XCTAssertEqualObjects(view.progressView.tintColor, opts.sendButtonTextColor);
+    XCTAssertEqualObjects(view.mainLabel.textColor, opts.sendButtonTextColor);
 }
 
 - (void)testUpdateNumberPeopleSelectedNonZero {

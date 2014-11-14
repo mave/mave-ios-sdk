@@ -38,8 +38,8 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
     [vc updateTableData:data];
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
-    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.sectionIndexColor);
-    XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor, displayOptions.sectionIndexBackgroundColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.contactSectionIndexColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor, displayOptions.contactSectionIndexBackgroundColor);
 }
 
 - (void)testPersonCellStyleOnInit {
@@ -66,11 +66,11 @@
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
-    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, displayOpts.sectionHeaderBackgroundColor);
+    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, displayOpts.contactSectionHeaderBackgroundColor);
     UILabel *headerLabel = (UILabel *)sectionHeaderView.subviews[0];
     XCTAssertEqualObjects(headerLabel.text, @"D");
-    XCTAssertEqualObjects(headerLabel.textColor, displayOpts.sectionHeaderColor);
-    XCTAssertEqualObjects(headerLabel.font, displayOpts.sectionHeaderFont);
+    XCTAssertEqualObjects(headerLabel.textColor, displayOpts.contactSectionHeaderTextColor);
+    XCTAssertEqualObjects(headerLabel.font, displayOpts.contactSectionHeaderFont);
 }
 
 @end

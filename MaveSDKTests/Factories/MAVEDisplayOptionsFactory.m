@@ -31,16 +31,16 @@
     opts.contactCellBackgroundColor = [self randomColor];
     opts.contactCheckmarkColor = [self randomColor];
 
-    opts.sectionHeaderFont = [self randomFont];
-    opts.sectionHeaderColor = [self randomColor];
-    opts.sectionHeaderBackgroundColor = [self randomColor];
-    opts.sectionIndexColor = [self randomColor];
-    opts.sectionIndexBackgroundColor = [self randomColor];
+    opts.contactSectionHeaderFont = [self randomFont];
+    opts.contactSectionHeaderTextColor = [self randomColor];
+    opts.contactSectionHeaderBackgroundColor = [self randomColor];
+    opts.contactSectionIndexColor = [self randomColor];
+    opts.contactSectionIndexBackgroundColor = [self randomColor];
     
     opts.bottomViewBackgroundColor = [self randomColor];
     opts.bottomViewBorderColor = [self randomColor];
     opts.sendButtonFont = [self randomFont];
-    opts.sendButtonColor = [self randomColor];
+    opts.sendButtonTextColor = [self randomColor];
     return opts;
 }
 
