@@ -154,6 +154,14 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
         [textView resignFirstResponder];
         return NO;
     }
+    NSString *newText = [textView.text substringToIndex:range.location];
+    newText = [newText stringByAppendingString:text];
+    newText = [newText stringByAppendingString:[textView.text substringFromIndex:range.location + range.length]];
+
+    // Limit so that Name + message + link isn't over 160
+    if ([newText length] >= 110) {
+        return NO;
+    }
     return YES;
 }
 

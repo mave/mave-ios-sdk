@@ -175,11 +175,6 @@
     self.inviteMessageViewController.messageView.textViewContentChangingBlock = ^void() {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf layoutInvitePageViewAndSubviews];
-            UIEdgeInsets ci = weakSelf.inviteMessageViewController.messageView.textView.contentInset;
-            CGPoint co = weakSelf.inviteMessageViewController.messageView.textView.contentOffset;
-            NSLog(@"content inset %f %f %f %f", ci.top, ci.right, ci.bottom, ci.left);
-            NSLog(@"content offset %f %f", co.x, co.y);
-
         });
     };
     
