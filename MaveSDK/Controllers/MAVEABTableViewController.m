@@ -29,7 +29,7 @@
         self.tableView = [[UITableView alloc] init];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
-        self.tableView.separatorColor = [MAVEDisplayOptions colorExtraLightGrey];
+        self.tableView.separatorColor = displayOptions.contactSeparatorColor;
         self.tableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
         self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];

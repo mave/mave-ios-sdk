@@ -53,6 +53,7 @@
     XCTAssertEqualObjects(opts.contactNameTextColor, almostBlack);
     XCTAssertEqualObjects(opts.contactDetailsFont, smallerFont);
     XCTAssertEqualObjects(opts.contactDetailsTextColor, mediumGrey);
+    XCTAssertEqualObjects(opts.contactSeparatorColor, extraLightGrey);
     XCTAssertEqualObjects(opts.contactCellBackgroundColor, white);
     XCTAssertEqualObjects(opts.contactCheckmarkColor, blueTint);
 

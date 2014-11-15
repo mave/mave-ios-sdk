@@ -27,6 +27,7 @@
         self.contactNameTextColor = [[self class] colorAlmostBlack];
         self.contactDetailsFont = [UIFont systemFontOfSize:14];
         self.contactDetailsTextColor = [[self class] colorMediumGrey];
+        self.contactSeparatorColor = [[self class] colorExtraLightGrey];
         self.contactCellBackgroundColor = [[self class] colorWhite];
         self.contactCheckmarkColor = [[self class] colorBlueTint];
 

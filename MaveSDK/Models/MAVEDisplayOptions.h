@@ -34,9 +34,9 @@
 @property (strong, nonatomic) UIColor *contactNameTextColor;
 @property (strong, nonatomic) UIFont *contactDetailsFont;
 @property (strong, nonatomic) UIColor *contactDetailsTextColor;
+@property (strong, nonatomic) UIColor *contactSeparatorColor;
 @property (strong, nonatomic) UIColor *contactCellBackgroundColor;
 @property (strong, nonatomic) UIColor *contactCheckmarkColor;
-
 
 @property (strong, nonatomic) UIFont *contactSectionHeaderFont;
 @property (strong, nonatomic) UIColor *contactSectionHeaderTextColor;

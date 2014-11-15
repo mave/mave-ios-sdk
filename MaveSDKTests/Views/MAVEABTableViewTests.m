@@ -39,6 +39,7 @@
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
     XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.contactSectionIndexColor);
     XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor, displayOptions.contactSectionIndexBackgroundColor);
+    XCTAssertEqualObjects(vc.tableView.separatorColor, displayOptions.contactSeparatorColor);
 }
 
 - (void)testPersonCellStyleOnInit {

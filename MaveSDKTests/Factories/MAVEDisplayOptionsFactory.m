@@ -28,6 +28,7 @@
     opts.contactNameTextColor = [self randomColor];
     opts.contactDetailsFont = [self randomFont];
     opts.contactDetailsTextColor = [self randomColor];
+    opts.contactSeparatorColor = [self randomColor];
     opts.contactCellBackgroundColor = [self randomColor];
     opts.contactCheckmarkColor = [self randomColor];
 
