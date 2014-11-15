@@ -15,17 +15,19 @@
 
 @implementation MAVEInviteMessageViewController
 
-- (MAVEInviteMessageViewController *)initAndCreateViewWithFrame:(CGRect)frame {
+- (instancetype)initAndCreateView {
     self = [self init];
     if (self) {
-        self.messageView = [[MAVEInviteMessageView alloc] initWithFrame:frame];
-        self.sendingInProgressView = [[MAVEInviteSendingProgressView alloc] initWithFrame:frame];
+        self.messageView = [[MAVEInviteMessageView alloc] init];
         self.view = (UIView *)self.messageView;
     }
     return self;
 }
 
 - (void)switchToSendingInProgressView:(UIView *)superView {
+    if (!self.sendingInProgressView) {
+        self.sendingInProgressView = [[MAVEInviteSendingProgressView alloc] initWithFrame:self.view.frame];
+    }
     [self.view removeFromSuperview];
     self.view = self.sendingInProgressView;
     [superView addSubview:self.view];

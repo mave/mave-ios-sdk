@@ -27,7 +27,7 @@ typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, unsig
 - (UIView *)createAddressBookInviteView;
 - (UIView *)createEmptyFallbackView;
 - (void)setupNavigationBar;
-- (void)setOwnAndSubviewFrames;
+- (void)layoutInvitePageViewAndSubviews;
 - (void)determineAndSetViewBasedOnABPermissions;
 
 // Invite Sending

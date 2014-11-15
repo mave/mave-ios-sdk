@@ -33,9 +33,8 @@
 }
 
 - (void)testTableStyle {
-    CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
     NSDictionary *data = @{@"D": @[@"Danny"]};
-    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:nil];
     [vc updateTableData:data];
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
     XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.contactSectionIndexColor);
@@ -59,9 +58,8 @@
 }
 
 - (void)testTableSectionStyle {
-    CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
     NSDictionary *data = @{@"D": @[@"Danny"]};
-    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithFrame:fakeFrame parent:nil];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:nil];
     [vc updateTableData:data];
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 

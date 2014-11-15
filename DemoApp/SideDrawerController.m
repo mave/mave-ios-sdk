@@ -47,7 +47,7 @@
         [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
 
         NSError *setupError;
-        NSString *defaultMessage = @"Join me on DEMO APP!";
+        NSString *defaultMessage = @"Join me on DEMO APP! it's a fun way to do some things blah blah blah ok cool that's nice. Also invite codes.";
         centerViewController = [[MaveSDK sharedInstance]
             invitePageWithDefaultMessage:defaultMessage
                               setupError:&setupError

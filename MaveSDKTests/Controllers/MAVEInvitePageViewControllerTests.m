@@ -84,7 +84,7 @@
     NSString *inviteMessage = @"This was the text typed in";
     NSArray *invitePhones = @[@"18085551234"];
     vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
-    vc.inviteMessageViewController.messageView.textField.text = inviteMessage;
+    vc.inviteMessageViewController.messageView.textView.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
     id mockHTTPManager = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].HTTPManager];
