@@ -29,6 +29,7 @@
         self.tableView = [[UITableView alloc] init];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
+        self.tableView.backgroundColor = displayOptions.contactCellBackgroundColor;
         self.tableView.separatorColor = displayOptions.contactSeparatorColor;
         self.tableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
         self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
