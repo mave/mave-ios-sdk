@@ -13,7 +13,7 @@
 #import "MAVEDisplayOptions.h"
 
 NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
-NSInteger const MESSAGE_VIEW_NUM_ROWS_MAX = 4;
+NSInteger const MESSAGE_VIEW_NUM_ROWS_MAX = 6;
 
 // Constant layout values
 CGFloat const textViewOuterPaddingWidth = 10;
@@ -51,6 +51,7 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
         self.textView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
         self.textView.font = [UIFont systemFontOfSize:16.0];
         self.textView.returnKeyType = UIReturnKeyDone;
+        self.textView.scrollEnabled = NO;
                 
         self.sendButton = [[UIButton alloc] init];
         [self.sendButton setTitleColor:displayOptions.sendButtonTextColor forState:UIControlStateNormal];
@@ -96,6 +97,7 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
         sendMediumIndicatorFrame:&sendMediumIndicatorFrame];
     self.fakeTopBorder.frame = CGRectMake(0, 0, self.frame.size.width, 0.5f);
     self.textView.frame = textFrame;
+
     self.sendButton.frame = buttonFrame;
     self.sendMediumIndicator.frame = sendMediumIndicatorFrame;
 }
@@ -108,13 +110,16 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
 }
 
 - (CGSize)textViewSizeWithContainerWidth:(CGFloat)containerWidth {
-    CGFloat TEXT_VIEW_MAX_HEIGHT = self.textView.font.lineHeight * MESSAGE_VIEW_NUM_ROWS_MAX;
     float tfWidth = containerWidth - 2*textViewOuterPaddingWidth - textViewButtonSpacingWidth - [self sendButtonSize].width;
-    CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, TEXT_VIEW_MAX_HEIGHT)].height;
-    if (tfHeight > TEXT_VIEW_MAX_HEIGHT) {
-        tfHeight = TEXT_VIEW_MAX_HEIGHT;
+    CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, [self textViewMaxHeight])].height;
+    if (tfHeight > [self textViewMaxHeight]) {
+        tfHeight = [self textViewMaxHeight];
     }
     return CGSizeMake(tfWidth, tfHeight);
+}
+
+- (CGFloat)textViewMaxHeight {
+    return self.textView.font.lineHeight * MESSAGE_VIEW_NUM_ROWS_MAX;
 }
 
 - (CGSize)sendMediumIndicatorSize {
