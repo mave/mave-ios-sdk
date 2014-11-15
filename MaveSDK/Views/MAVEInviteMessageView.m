@@ -13,7 +13,6 @@
 #import "MAVEDisplayOptions.h"
 
 NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
-NSInteger const MESSAGE_VIEW_NUM_ROWS_MAX = 6;
 
 // Constant layout values
 CGFloat const textViewOuterPaddingWidth = 10;
@@ -111,15 +110,8 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
 
 - (CGSize)textViewSizeWithContainerWidth:(CGFloat)containerWidth {
     float tfWidth = containerWidth - 2*textViewOuterPaddingWidth - textViewButtonSpacingWidth - [self sendButtonSize].width;
-    CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, [self textViewMaxHeight])].height;
-    if (tfHeight > [self textViewMaxHeight]) {
-        tfHeight = [self textViewMaxHeight];
-    }
+    CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, 2000)].height;
     return CGSizeMake(tfWidth, tfHeight);
-}
-
-- (CGFloat)textViewMaxHeight {
-    return self.textView.font.lineHeight * MESSAGE_VIEW_NUM_ROWS_MAX;
 }
 
 - (CGSize)sendMediumIndicatorSize {
