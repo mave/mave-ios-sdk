@@ -13,6 +13,13 @@
 #import "MAVEDisplayOptions.h"
 
 NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
+NSInteger const MESSAGE_VIEW_NUM_ROWS_MAX = 4;
+
+// Constant layout values
+CGFloat const textViewOuterPaddingWidth = 10;
+CGFloat const textViewOuterPaddingHeight = 10;
+CGFloat const textViewButtonSpacingWidth = 10;
+CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
 
 @implementation MAVEInviteMessageView
 
@@ -44,7 +51,7 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         self.textView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
         self.textView.font = [UIFont systemFontOfSize:16.0];
         self.textView.returnKeyType = UIReturnKeyDone;
-        
+                
         self.sendButton = [[UIButton alloc] init];
         [self.sendButton setTitleColor:displayOptions.sendButtonTextColor forState:UIControlStateNormal];
         [self.sendButton setTitleColor:[MAVEDisplayOptions colorMediumGrey] forState:UIControlStateDisabled];
@@ -83,62 +90,66 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
     [super layoutSubviews];
 
     CGRect textFrame, buttonFrame, sendMediumIndicatorFrame;
-    [self computeFrameSizesWithContainingFrame:self.frame
-                                    ButtonFont:self.sendButton.titleLabel.font
-                                   buttonTitle:self.sendButton.titleLabel.text
-                       sendMediumIndicatorFont:self.sendMediumIndicator.font
-                      sendMediumIndicatorTitle:self.sendMediumIndicator.text
-                           createTextViewFrame:&textFrame
-                               sendButtonFrame:&buttonFrame
-                      sendMediumIndicatorFrame:&sendMediumIndicatorFrame];
+    [self computeSubviewFramesIn:self.frame.size
+                   textViewFrame:&textFrame
+                 sendButtonFrame:&buttonFrame
+        sendMediumIndicatorFrame:&sendMediumIndicatorFrame];
     self.fakeTopBorder.frame = CGRectMake(0, 0, self.frame.size.width, 0.5f);
     self.textView.frame = textFrame;
     self.sendButton.frame = buttonFrame;
     self.sendMediumIndicator.frame = sendMediumIndicatorFrame;
 }
 
-- (void)computeFrameSizesWithContainingFrame:(CGRect)containingFrame
-                                  ButtonFont:(UIFont *)buttonFont
-                                 buttonTitle:(NSString *)buttonTitle
-                     sendMediumIndicatorFont:(UIFont *)sendMediumIndicatorFont
-                    sendMediumIndicatorTitle:(NSString *)sendMediumIndicatorTitle
-                         createTextViewFrame:(CGRect *)textViewFrame
-                             sendButtonFrame:(CGRect *)sendButtonFrame
-                    sendMediumIndicatorFrame:(CGRect *)sendMediumIndicatorFrame {
-    // TextView
-    float tfOuterPaddingWidth = 10;
-    float tfOuterPaddingHeight = 10;
-    float tfSmiSpacingHeight = 5;
-    float tfFieldButtonSpacingWidth = tfOuterPaddingWidth;
-
-    // Button
-    CGSize buttonSize = [buttonTitle sizeWithAttributes:@{NSFontAttributeName: buttonFont}];
-    buttonSize.width = ceilf(buttonSize.width);
-    buttonSize.height = ceilf(buttonSize.height);
-    float buttonOffsetX = containingFrame.size.width - tfOuterPaddingWidth - buttonSize.width;
-    float buttonOffsetY = (containingFrame.size.height - buttonSize.height) / 2;
-    
-    // Send medium indicator
-    CGSize smiSize = [sendMediumIndicatorTitle sizeWithAttributes:@{NSFontAttributeName: sendMediumIndicatorFont}];
-    smiSize.width = ceilf(smiSize.width);
-    smiSize.height = ceilf(smiSize.height);
-
-    // TextField derived attributes
-    float tfWidth = containingFrame.size.width - 2*tfOuterPaddingWidth - tfFieldButtonSpacingWidth - buttonSize.width;
-    float tfHeight = containingFrame.size.height - tfOuterPaddingHeight - 2*tfSmiSpacingHeight - smiSize.height;
-    
-    // Send medium indicator derived attributes
-    float smiOffsetX = (containingFrame.size.width - smiSize.width) / 2;
-    float smiOffsetY = tfOuterPaddingHeight + tfHeight + tfSmiSpacingHeight;
-
-    // Set pointers to return multiple values
-    *textViewFrame = CGRectMake(tfOuterPaddingWidth, tfOuterPaddingHeight, tfWidth, tfHeight);
-    *sendButtonFrame = CGRectMake(buttonOffsetX, buttonOffsetY, buttonSize.width, buttonSize.height);
-    *sendMediumIndicatorFrame = CGRectMake(smiOffsetX, smiOffsetY, smiSize.width, smiSize.height);
+// Helper functions for computing sizes
+- (CGFloat)computeHeightWithWidth:(CGFloat)width {
+    CGSize textViewSize = [self textViewSizeWithContainerWidth:width];
+    return textViewSize.height + [self sendMediumIndicatorSize].height +
+        textViewOuterPaddingHeight + 2*textViewSendMediumIndicatorSpacingHeight;
 }
 
-- (float)computeOwnHeight {
-    
+- (CGSize)textViewSizeWithContainerWidth:(CGFloat)containerWidth {
+    CGFloat TEXT_VIEW_MAX_HEIGHT = self.textView.font.lineHeight * MESSAGE_VIEW_NUM_ROWS_MAX;
+    float tfWidth = containerWidth - 2*textViewOuterPaddingWidth - textViewButtonSpacingWidth - [self sendButtonSize].width;
+    CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, TEXT_VIEW_MAX_HEIGHT)].height;
+    if (tfHeight > TEXT_VIEW_MAX_HEIGHT) {
+        tfHeight = TEXT_VIEW_MAX_HEIGHT;
+    }
+    return CGSizeMake(tfWidth, tfHeight);
+}
+
+- (CGSize)sendMediumIndicatorSize {
+    return [self.sendMediumIndicator.text
+            sizeWithAttributes:@{NSFontAttributeName: self.sendMediumIndicator.font}];
+}
+
+- (CGSize)sendButtonSize {
+    return [self.sendButton.titleLabel.text
+            sizeWithAttributes:@{NSFontAttributeName: self.sendButton.titleLabel.font}];
+}
+
+- (void)computeSubviewFramesIn:(CGSize)containerSize
+                 textViewFrame:(CGRect *)textViewFrame
+               sendButtonFrame:(CGRect *)sendButtonFrame
+      sendMediumIndicatorFrame:(CGRect *)sendMediumIndicatorFrame {
+    // Sizes based on fonts
+    CGSize smiSize = [self sendMediumIndicatorSize];
+    CGSize buttonSize = [self sendButtonSize];
+
+    // Text View (dynamically sized based on default message text)
+    CGSize textViewSize = [self textViewSizeWithContainerWidth:containerSize.width];
+
+    // Button
+    float buttonOffsetX = containerSize.width - textViewOuterPaddingWidth - buttonSize.width;
+    float buttonOffsetY = (containerSize.height - buttonSize.height) / 2;
+
+    // Send medium indicator derived attributes
+    float smiOffsetX = (containerSize.width - smiSize.width) / 2;
+    float smiOffsetY = textViewOuterPaddingHeight + textViewSize.height + textViewSendMediumIndicatorSpacingHeight;
+
+    // Set pointers to return multiple values
+    *textViewFrame = CGRectMake(textViewOuterPaddingWidth, textViewOuterPaddingHeight, textViewSize.width, textViewSize.height);
+    *sendButtonFrame = CGRectMake(buttonOffsetX, buttonOffsetY, buttonSize.width, buttonSize.height);
+    *sendMediumIndicatorFrame = CGRectMake(smiOffsetX, smiOffsetY, smiSize.width, smiSize.height);
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -147,6 +158,12 @@ NSString * const SEND_MEDIUM_INDICATOR = @"Individual SMS";
         return NO;
     }
     return YES;
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    if (self.textViewContentChangingBlock) {
+        self.textViewContentChangingBlock();
+    }
 }
 
 @end

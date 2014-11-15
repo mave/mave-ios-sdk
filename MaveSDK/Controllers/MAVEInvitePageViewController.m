@@ -164,36 +164,6 @@
     }
 }
 
-+ (void)computeChildFramesWithKeyboardFrame:(CGRect)kbFrame
-                       createContainerFrame:(CGRect *)containerFrame
-                             tableViewFrame:(CGRect *)tableViewFrame
-                     inviteMessageViewFrame:(CGRect *)inviteMessageViewFrame {
-    // Our container frame should go from top of screen (will be overlapped by status bar if it's visible)
-    // to the top of the keyboard, and full width of application frame
-    CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-    *containerFrame = CGRectMake(0,
-                                 0,
-                                 appFrame.origin.x + appFrame.size.width,
-                                 kbFrame.origin.y);
-
-    // Invite and table view fill the container frame vertically
-    float inviteViewHeight = 90; // Temporarily hard-coded
-    *tableViewFrame = CGRectMake(containerFrame->origin.x,
-                                 containerFrame->origin.y,
-                                 containerFrame->size.width,
-                                 containerFrame->size.height - inviteViewHeight);
-    *inviteMessageViewFrame = CGRectMake(containerFrame->origin.x,
-                                         tableViewFrame->origin.y + tableViewFrame->size.height,
-                                         containerFrame->size.width,
-                                         inviteViewHeight);
-}
-
-- (UIView *)createEmptyFallbackView {
-    UIView *view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    [view setBackgroundColor:[UIColor whiteColor]];
-    return view;
-}
-
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child vies
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
@@ -201,21 +171,47 @@
     [self.inviteMessageViewController.messageView.sendButton addTarget:self
                                                                 action:@selector(sendInvites)
                                                       forControlEvents:UIControlEventTouchUpInside];
-    UIView *containerView = [[UIView alloc] init];
+    __weak typeof(self) weakSelf = self;
+    self.inviteMessageViewController.messageView.textViewContentChangingBlock = ^void() {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf layoutInvitePageViewAndSubviews];
+        });
+    };
+    
+    CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+    CGRect containerFrame = CGRectMake(0,
+                                       0,
+                                       appFrame.origin.x + appFrame.size.width,
+                                       self.keyboardFrame.origin.y);
+    
+    UIView *containerView = [[UIView alloc] initWithFrame:containerFrame];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageViewController.view];
     return containerView;
 }
 
 - (void)layoutInvitePageViewAndSubviews {
-    CGRect cvf, tvf, imvf;
-    [[self class]computeChildFramesWithKeyboardFrame:self.keyboardFrame
-                                createContainerFrame:&cvf
-                                      tableViewFrame:&tvf
-                              inviteMessageViewFrame:&imvf];
-    [self.view setFrame:cvf];
-    [self.ABTableViewController.tableView setFrame:tvf];
-    [self.inviteMessageViewController.view setFrame:imvf];
+    CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+    CGRect containerFrame = CGRectMake(0,
+                                       0,
+                                       appFrame.origin.x + appFrame.size.width,
+                                       self.keyboardFrame.origin.y);
+
+    CGFloat inviteViewHeight = [self.inviteMessageViewController.messageView
+                                computeHeightWithWidth:containerFrame.size.width];
+
+    CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
+                                       containerFrame.origin.y,
+                                       containerFrame.size.width,
+                                       containerFrame.size.height - inviteViewHeight);
+
+    CGRect inviteMessageViewFrame = CGRectMake(containerFrame.origin.x,
+                                               tableViewFrame.origin.y + tableViewFrame.size.height,
+                                               containerFrame.size.width,
+                                               inviteViewHeight);
+    self.view.frame = containerFrame;
+    self.ABTableViewController.tableView.frame = tableViewFrame;
+    self.inviteMessageViewController.view.frame = inviteMessageViewFrame;
 }
 //
 // Respond to children's Events

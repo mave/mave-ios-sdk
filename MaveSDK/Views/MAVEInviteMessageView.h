@@ -15,7 +15,9 @@
 @property UITextView *textView;
 @property UILabel *sendMediumIndicator;  // e.g. "4 Individual SMS"
 
-- (float)computeOwnHeight;
+@property (nonatomic, copy) void (^textViewContentChangingBlock)();
+
+- (CGFloat)computeHeightWithWidth:(CGFloat)width;
 - (void)updateNumberPeopleSelected:(unsigned long)numberSelected;
 
 @end
