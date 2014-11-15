@@ -38,10 +38,13 @@
         self.contactSectionIndexBackgroundColor = [[self class] colorWhite];
 
         // Message and Send section options
-        self.bottomViewBorderColor = [[self class] colorMediumGrey];
-        self.bottomViewBackgroundColor = [[self class] colorWhite];
+        self.messageFieldFont = [UIFont systemFontOfSize:16];
+        self.messageFieldTextColor = [[self class] colorAlmostBlack];
+        self.messageFieldBackgroundColor = [[self class] colorWhite];
         self.sendButtonFont = [UIFont systemFontOfSize:18];
         self.sendButtonTextColor = [[self class] colorBlueTint];
+        self.bottomViewBorderColor = [[self class] colorMediumGrey];
+        self.bottomViewBackgroundColor = [[self class] colorWhite];
     }
     return self;
 }

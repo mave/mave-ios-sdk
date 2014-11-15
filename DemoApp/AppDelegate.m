@@ -76,10 +76,11 @@
     mave.displayOptions.contactSectionIndexBackgroundColor = white;
 
     // Message and Send section options
-    mave.displayOptions.bottomViewBorderColor = gray;
-    mave.displayOptions.bottomViewBackgroundColor = lightGray;
+
     mave.displayOptions.sendButtonFont = font1Bold;
     mave.displayOptions.sendButtonTextColor = green;
+    mave.displayOptions.bottomViewBorderColor = gray;
+    mave.displayOptions.bottomViewBackgroundColor = lightGray;
 
     return YES;
 }

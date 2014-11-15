@@ -37,11 +37,14 @@
     opts.contactSectionHeaderBackgroundColor = [self randomColor];
     opts.contactSectionIndexColor = [self randomColor];
     opts.contactSectionIndexBackgroundColor = [self randomColor];
-    
-    opts.bottomViewBackgroundColor = [self randomColor];
-    opts.bottomViewBorderColor = [self randomColor];
+
+    opts.messageFieldFont = [self randomFont];
+    opts.messageFieldTextColor = [self randomColor];
+    opts.messageFieldBackgroundColor = [self randomColor];
     opts.sendButtonFont = [self randomFont];
     opts.sendButtonTextColor = [self randomColor];
+    opts.bottomViewBackgroundColor = [self randomColor];
+    opts.bottomViewBorderColor = [self randomColor];
     return opts;
 }
 

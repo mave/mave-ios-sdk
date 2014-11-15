@@ -64,10 +64,13 @@
     XCTAssertEqualObjects(opts.contactSectionIndexBackgroundColor, white);
     
     // Message and Send section options
-    XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
-    XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
+    XCTAssertEqualObjects(opts.messageFieldFont, defaultFont);
+    XCTAssertEqualObjects(opts.messageFieldTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.messageFieldBackgroundColor, white);
     XCTAssertEqualObjects(opts.sendButtonFont, sendButtonFont);
     XCTAssertEqualObjects(opts.sendButtonTextColor, blueTint);
+    XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
+    XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
 }
 
 - (void)testFactoryFillsOptions {

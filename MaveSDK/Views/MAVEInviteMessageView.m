@@ -42,13 +42,14 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
         // They will get laid out by layoutSubviews
         self.textView = [[UITextView alloc] init];
         self.textView.delegate = self;
-        self.textView.layer.backgroundColor=[[MAVEDisplayOptions colorWhite] CGColor];
         self.textView.layer.borderColor=[displayOptions.bottomViewBorderColor CGColor];
         self.textView.layer.cornerRadius=8.0f;
         self.textView.layer.masksToBounds=YES;
         self.textView.layer.borderWidth= 0.5f;
         self.textView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
-        self.textView.font = [UIFont systemFontOfSize:16.0];
+        self.textView.font = displayOptions.messageFieldFont;
+        self.textView.textColor = displayOptions.messageFieldTextColor;
+        self.textView.backgroundColor = displayOptions.messageFieldBackgroundColor;
         self.textView.returnKeyType = UIReturnKeyDone;
         self.textView.scrollEnabled = NO;
                 

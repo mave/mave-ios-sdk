@@ -30,25 +30,28 @@
 @property (strong, nonatomic) UIBarButtonItem *navigationBarCancelButton;
 
 // "Friends to invite" table options
-@property (strong, nonatomic) UIFont *contactNameFont;
+@property (strong, nonatomic) UIFont  *contactNameFont;
 @property (strong, nonatomic) UIColor *contactNameTextColor;
-@property (strong, nonatomic) UIFont *contactDetailsFont;
+@property (strong, nonatomic) UIFont  *contactDetailsFont;
 @property (strong, nonatomic) UIColor *contactDetailsTextColor;
 @property (strong, nonatomic) UIColor *contactSeparatorColor;
 @property (strong, nonatomic) UIColor *contactCellBackgroundColor;
 @property (strong, nonatomic) UIColor *contactCheckmarkColor;
 
-@property (strong, nonatomic) UIFont *contactSectionHeaderFont;
+@property (strong, nonatomic) UIFont  *contactSectionHeaderFont;
 @property (strong, nonatomic) UIColor *contactSectionHeaderTextColor;
 @property (strong, nonatomic) UIColor *contactSectionHeaderBackgroundColor;
 @property (strong, nonatomic) UIColor *contactSectionIndexColor;
 @property (strong, nonatomic) UIColor *contactSectionIndexBackgroundColor;
 
 // Message and Send section options
+@property (strong, nonatomic) UIFont  *messageFieldFont;
+@property (strong, nonatomic) UIColor *messageFieldTextColor;
+@property (strong, nonatomic) UIColor *messageFieldBackgroundColor;
+@property (strong, nonatomic) UIFont  *sendButtonFont;
+@property (strong, nonatomic) UIColor *sendButtonTextColor;
 @property (strong, nonatomic) UIColor *bottomViewBackgroundColor;
 @property (strong, nonatomic) UIColor *bottomViewBorderColor;
-@property (strong, nonatomic) UIFont *sendButtonFont;
-@property (strong, nonatomic) UIColor *sendButtonTextColor;
 
 - (MAVEDisplayOptions *)initWithDefaults;
 
