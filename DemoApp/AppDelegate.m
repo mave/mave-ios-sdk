@@ -64,6 +64,7 @@
     mave.displayOptions.contactNameTextColor = black;
     mave.displayOptions.contactDetailsFont = font1Smaller;
     mave.displayOptions.contactDetailsTextColor = gray;
+    mave.displayOptions.contactSeparatorColor = lightGray;
     mave.displayOptions.contactCellBackgroundColor = white;
     mave.displayOptions.contactCheckmarkColor = green;
 
