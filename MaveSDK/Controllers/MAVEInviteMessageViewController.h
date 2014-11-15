@@ -21,6 +21,4 @@
 - (void)switchToSendingInProgressView:(UIView *)superView;
 - (void)switchToInviteMessageView:(UIView *)superView;
 
-- (void)messageTextViewChanged;
-
 @end

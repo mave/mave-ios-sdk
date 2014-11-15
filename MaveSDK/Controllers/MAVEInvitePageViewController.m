@@ -164,6 +164,12 @@
     }
 }
 
+- (UIView *)createEmptyFallbackView {
+    UIView *view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+    [view setBackgroundColor:[UIColor whiteColor]];
+    return view;
+}
+
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child vies
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
