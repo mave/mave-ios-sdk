@@ -76,12 +76,13 @@
     mave.displayOptions.contactSectionIndexBackgroundColor = white;
 
     // Message and Send section options
-
+    mave.displayOptions.messageFieldFont = [UIFont systemFontOfSize:16];
+    mave.displayOptions.messageFieldTextColor = black;
+    mave.displayOptions.messageFieldBackgroundColor = white;
     mave.displayOptions.sendButtonFont = font1Bold;
     mave.displayOptions.sendButtonTextColor = green;
     mave.displayOptions.bottomViewBorderColor = gray;
     mave.displayOptions.bottomViewBackgroundColor = lightGray;
-
     return YES;
 }
 
