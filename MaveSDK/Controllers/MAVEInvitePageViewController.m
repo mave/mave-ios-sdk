@@ -59,6 +59,7 @@
 // number of invites sent to the containing app
 - (void)dismissSelf:(unsigned int)numberOfInvitesSent {
     // Cleanup for dismiss
+    [self.inviteMessageContainerView.inviteMessageView.textView endEditing:YES];
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
                              name:UIKeyboardWillChangeFrameNotification
@@ -233,7 +234,6 @@
 //
 - (void)sendInvites {
     DebugLog(@"Sending invites");
-    [self.inviteMessageContainerView.inviteMessageView.textView endEditing:YES];
     NSString *message = self.inviteMessageContainerView.inviteMessageView.textView.text;
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     if ([phones count] == 0) {
