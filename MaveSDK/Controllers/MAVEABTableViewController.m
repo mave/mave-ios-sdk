@@ -111,9 +111,9 @@
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
     person.selected = !person.selected;
     if (person.selected) {
-        [self.selectedPhoneNumbers addObject:person.phoneNumbers[0]];
+        [self.selectedPhoneNumbers addObject:person.bestPhone];
     } else {
-        [self.selectedPhoneNumbers removeObject:person.phoneNumbers[0]];
+        [self.selectedPhoneNumbers removeObject:person.bestPhone];
     }
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
