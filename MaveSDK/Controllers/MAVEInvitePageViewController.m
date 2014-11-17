@@ -196,8 +196,6 @@
                                        0,
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
-    NSLog(@"Window frame: %@", NSStringFromCGRect(self.view.window.frame));
-    NSLog(@"App frame: %@", NSStringFromCGRect(appFrame));
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
@@ -205,7 +203,7 @@
     CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
                                        containerFrame.origin.y,
                                        containerFrame.size.width,
-                                       containerFrame.size.height - inviteViewHeight - self.navigationController.navigationBar.frame.size.height - 30);
+                                       containerFrame.size.height - inviteViewHeight);
 
     CGRect inviteMessageViewFrame = CGRectMake(containerFrame.origin.x,
                                                tableViewFrame.origin.y + tableViewFrame.size.height,
