@@ -12,8 +12,8 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABCollection.h"
-#import "MAVEInviteMessageViewController.h"
 #import "MAVENoAddressBookPermissionView.h"
+#import "MAVEConstants.h"
 
 @interface MAVEInvitePageViewController ()
 
@@ -171,14 +171,14 @@
 }
 
 - (UIView *)createAddressBookInviteView {
-    // Instantiate the view controllers for child vies
+    // Instantiate the view controllers for child views
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.inviteMessageViewController = [[MAVEInviteMessageViewController alloc] initAndCreateView];
-    [self.inviteMessageViewController.messageView.sendButton addTarget:self
-                                                                action:@selector(sendInvites)
-                                                      forControlEvents:UIControlEventTouchUpInside];
+    self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
+    [self.inviteMessageContainerView.inviteMessageView.sendButton
+        addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
+
     __weak typeof(self) weakSelf = self;
-    self.inviteMessageViewController.messageView.textViewContentChangingBlock = ^void() {
+    self.inviteMessageContainerView.inviteMessageView.textViewContentChangingBlock = ^void() {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf layoutInvitePageViewAndSubviews];
         });
@@ -192,7 +192,7 @@
     
     UIView *containerView = [[UIView alloc] initWithFrame:containerFrame];
     [containerView addSubview:self.ABTableViewController.tableView];
-    [containerView addSubview:self.inviteMessageViewController.view];
+    [containerView addSubview:self.inviteMessageContainerView];
     return containerView;
 }
 
@@ -203,7 +203,7 @@
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
-    CGFloat inviteViewHeight = [self.inviteMessageViewController.messageView
+    CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
 
     CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
@@ -217,7 +217,8 @@
                                                inviteViewHeight);
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
-    self.inviteMessageViewController.view.frame = inviteMessageViewFrame;
+    NSLog(@"updating invite message view controller frame");
+    self.inviteMessageContainerView.frame = inviteMessageViewFrame;
 }
 //
 // Respond to children's Events
@@ -228,7 +229,7 @@
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
     // from somewhere else.
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.inviteMessageViewController.messageView updateNumberPeopleSelected:num];
+        [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:num];
     });
 }
 
@@ -237,9 +238,10 @@
 // Send invites and update UI when done
 //
 - (void)sendInvites {
-    NSLog(@"Sending invites");
+    DebugLog(@"Sending invites");
+    [self.inviteMessageContainerView.inviteMessageView.textView endEditing:YES];
+    NSString *message = self.inviteMessageContainerView.inviteMessageView.textView.text;
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
-    NSString *message = self.inviteMessageViewController.messageView.textView.text;
     if ([phones count] == 0) {
         NSLog(@"Pressed Send but no recipients selected");
         return;
@@ -249,26 +251,26 @@
     MAVEHTTPManager *httpManager = gk.HTTPManager;
     [httpManager sendInvitesWithPersons:phones message:message userId:gk.userData.userID completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
-            NSLog(@"Invites failed to send, error: %@, response: %@",
+            DebugLog(@"Invites failed to send, error: %@, response: %@",
                   error, responseData);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.inviteMessageViewController switchToInviteMessageView:self.view];
                 [self showErrorAndResetAfterSendInvitesFailure:error];
             });
         } else {
-            NSLog(@"Invites sent! response: %@", responseData);
+            DebugLog(@"Invites sent! response: %@", responseData);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.inviteMessageViewController.sendingInProgressView completeSendingProgress];
+                [self.inviteMessageContainerView.sendingInProgressView completeSendingProgress];
             });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self dismissSelf:(unsigned int)[phones count]];
             });
         }
     }];
-    [self.inviteMessageViewController switchToSendingInProgressView:self.view];
+    [self.inviteMessageContainerView makeSendingInProgressViewActive];
 }
 
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error {
+    [self.inviteMessageContainerView makeInviteMessageViewActive];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
                                                     message:@"Server was unavailable or internet connection failed"
                                                    delegate:nil

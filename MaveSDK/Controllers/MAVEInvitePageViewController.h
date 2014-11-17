@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVEABTableViewController.h"
-#import "MAVEInviteMessageViewController.h"
+#import "MAVEInviteMessageContainerView.h"
 #import "MAVEHTTPManager.h"
 
 typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, unsigned int numberOfInvitesSent);
@@ -17,7 +17,7 @@ typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, unsig
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
 
 @property (strong, nonatomic) MAVEABTableViewController *ABTableViewController;
-@property (strong, nonatomic) MAVEInviteMessageViewController *inviteMessageViewController;
+@property (strong, nonatomic) MAVEInviteMessageContainerView *inviteMessageContainerView;
 
 // Helpers for keeping track of keyboard for frame resizing
 @property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame

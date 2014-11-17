@@ -66,8 +66,7 @@
 }
 
 - (void)testSendingProgressViewStyleOnInit {
-    CGRect fakeFrame = CGRectMake(0, 0, 0, 0);
-    MAVEInviteSendingProgressView *view = [[MAVEInviteSendingProgressView alloc] initWithFrame:fakeFrame];
+    MAVEInviteSendingProgressView *view = [[MAVEInviteSendingProgressView alloc] init];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
     XCTAssertEqualObjects(view.backgroundColor, opts.bottomViewBackgroundColor);
