@@ -184,13 +184,7 @@
         });
     };
     
-    CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-    CGRect containerFrame = CGRectMake(0,
-                                       0,
-                                       appFrame.origin.x + appFrame.size.width,
-                                       self.keyboardFrame.origin.y);
-    
-    UIView *containerView = [[UIView alloc] initWithFrame:containerFrame];
+    UIView *containerView = [[UIView alloc] init];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageContainerView];
     return containerView;
