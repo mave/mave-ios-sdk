@@ -207,7 +207,7 @@
                              completionBlock:nil];
 }
 
--(void)trackInvitePageOpenRequest:(MAVEUserData *)userData {
+- (void)trackInvitePageOpenRequest:(MAVEUserData *)userData {
     NSString *launchRoute = @"/invite_page_open";
     NSDictionary *params = [userData toDictionaryIDOnly];
     [self sendIdentifiedJSONRequestWithRoute:launchRoute

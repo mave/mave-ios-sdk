@@ -37,7 +37,7 @@
                                              blue:125.0/255 alpha:1.0];
     UIColor *white = [[UIColor alloc] initWithWhite:1.0 alpha:1.0];
     UIColor *black = [[UIColor alloc] initWithWhite:0.15 alpha: 1.0];
-    UIColor *gray = [[UIColor alloc] initWithWhite:0.65 alpha: 1.0];
+    UIColor *gray = [[UIColor alloc] initWithWhite:0.50 alpha: 1.0];
     UIColor *lightGray = [[UIColor alloc] initWithWhite:0.96 alpha: 1.0];
     UIFont *font1 = [UIFont fontWithName:@"AppleSDGothicNeo-Light" size:17];
     UIFont *font1Bold = [UIFont fontWithName:@"AppleSDGothicNeo-SemiBold" size:17];
