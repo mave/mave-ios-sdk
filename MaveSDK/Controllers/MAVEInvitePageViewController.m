@@ -10,6 +10,7 @@
 #import <AddressBook/AddressBook.h>
 #import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
+#import "MAVEInviteCopyView.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABCollection.h"
 #import "MAVENoAddressBookPermissionView.h"
@@ -174,9 +175,11 @@
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
+    self.ABTableViewController.tableView.tableHeaderView = [[MAVEInviteCopyView alloc] init];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
+    
 
     __weak typeof(self) weakSelf = self;
     self.inviteMessageContainerView.inviteMessageView.textViewContentChangingBlock = ^void() {
@@ -200,6 +203,9 @@
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
+    
+    CGFloat tableHeaderViewHeight = 40;
+//    CGFloat tableHeaderViewHeight = [self.ABTableViewController.tableView.tableHead
 
     CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
                                        containerFrame.origin.y,
@@ -212,7 +218,10 @@
                                                inviteViewHeight);
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
-    NSLog(@"updating invite message view controller frame");
+    self.ABTableViewController.tableView.tableHeaderView.frame = CGRectMake(0, 0, appFrame.size.width, tableHeaderViewHeight);
+    // For some reason you need to re-assign any time the frame of the tableHeaderView changes,
+    // otherwise the rest of the table isn't shifted down to make room for the tableHeaderView
+    self.ABTableViewController.tableView.tableHeaderView = self.ABTableViewController.tableView.tableHeaderView;
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
 }
 //

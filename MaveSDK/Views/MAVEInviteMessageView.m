@@ -111,7 +111,7 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
 
 - (CGSize)textViewSizeWithContainerWidth:(CGFloat)containerWidth {
     float tfWidth = containerWidth - 2*textViewOuterPaddingWidth - textViewButtonSpacingWidth - [self sendButtonSize].width;
-    CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, 2000)].height;
+    CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, FLT_MAX)].height;
     return CGSizeMake(tfWidth, tfHeight);
 }
 

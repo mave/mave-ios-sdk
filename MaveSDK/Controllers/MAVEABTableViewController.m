@@ -9,6 +9,7 @@
 #import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEABTableViewController.h"
+#import "MAVEInviteCopyView.h"
 #import "MAVEABCollection.h"
 #import "MAVEABPersonCell.h"
 #import "MAVEABPerson.h"
@@ -35,6 +36,8 @@
         self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
+        
+        // self.tableView.tableHeaderView = [[MAVEInviteCopyView alloc] init];
     }
     return self;
 }

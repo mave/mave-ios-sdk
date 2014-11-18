@@ -43,7 +43,7 @@
     OCMVerify(mock);
 }
 
-- (void)testDismissalBlockCalledOnDismissSelf {
+- (void)testAppropriateTeardownOnDismissSelf {
     __block unsigned int numSent = 0;
     [MaveSDK sharedInstance].invitePageDismissalBlock =
         ^void(UIViewController *viewController,
@@ -51,9 +51,16 @@
         numSent = numberOfInvitesSent;
     };
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    XCTAssertEqual(numSent, 0);
+    [vc loadView]; [vc viewDidLoad];
+    id textViewMock = [OCMockObject mockForClass:[UITextView class]];
+    vc.inviteMessageContainerView.inviteMessageView.textView = textViewMock;
+
+    [[textViewMock expect] endEditing:YES];
+
     [vc dismissSelf:3];
+
     XCTAssertEqual(numSent, 3);
+    [textViewMock verify];
 }
 
 - (void)testDismissAfterCancelCallsDismissSelf {
