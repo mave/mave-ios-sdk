@@ -51,6 +51,16 @@
     [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
 }
 
+- (void)dealloc {
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter removeObserver:self
+                             name:UIKeyboardWillChangeFrameNotification
+                           object:nil];
+    [defaultCenter removeObserver:self
+                             name:UIDeviceOrientationDidChangeNotification
+                           object:nil];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -60,14 +70,8 @@
 // number of invites sent to the containing app
 - (void)dismissSelf:(unsigned int)numberOfInvitesSent {
     // Cleanup for dismiss
-    [self.inviteMessageContainerView.inviteMessageView.textView endEditing:YES];
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter removeObserver:self
-                             name:UIKeyboardWillChangeFrameNotification
-                           object:nil];
-    [defaultCenter removeObserver:self
-                             name:UIDeviceOrientationDidChangeNotification
-                           object:nil];
+    [self.view endEditing:YES];
+
     // Call dismissal block
     InvitePageDismissalBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
     dismissalBlock(self, numberOfInvitesSent);

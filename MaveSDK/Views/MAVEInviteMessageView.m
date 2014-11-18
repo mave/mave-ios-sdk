@@ -152,7 +152,7 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([text isEqualToString:@"\n"]) {
-        [textView resignFirstResponder];
+        [textView endEditing:YES];
         return NO;
     }
     NSString *newText = [textView.text substringToIndex:range.location];
