@@ -52,15 +52,13 @@
     };
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     [vc loadView]; [vc viewDidLoad];
-    id textViewMock = [OCMockObject mockForClass:[UITextView class]];
-    vc.inviteMessageContainerView.inviteMessageView.textView = textViewMock;
-
-    [[textViewMock expect] endEditing:YES];
+    id vcViewMock = [OCMockObject partialMockForObject:vc.view];
+    [[vcViewMock expect] endEditing:YES];
 
     [vc dismissSelf:3];
 
     XCTAssertEqual(numSent, 3);
-    [textViewMock verify];
+    [vcViewMock verify];
 }
 
 - (void)testDismissAfterCancelCallsDismissSelf {
