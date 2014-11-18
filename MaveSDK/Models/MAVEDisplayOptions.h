@@ -29,6 +29,11 @@
 // dismissalBlock
 @property (strong, nonatomic) UIBarButtonItem *navigationBarCancelButton;
 
+// Explanation of how the referral program works section
+@property (strong, nonatomic) UIFont  *userExplanationFont;
+@property (strong, nonatomic) UIColor *userExplanationTextColor;
+@property (strong, nonatomic) UIColor *userExplanationCellBackgroundColor;
+
 // "Friends to invite" table options
 @property (strong, nonatomic) UIFont  *contactNameFont;
 @property (strong, nonatomic) UIColor *contactNameTextColor;
