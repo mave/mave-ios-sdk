@@ -17,5 +17,6 @@
 
 - (void)setupInit;
 - (CGFloat)computeHeightWithWidth:(CGFloat)width;
+- (CGSize)messageCopyLabelSizeWithWidth:(CGFloat)width;
 
 @end

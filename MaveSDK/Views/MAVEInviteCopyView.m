@@ -8,8 +8,8 @@
 
 #import "MAVEInviteCopyView.h"
 
-const CGFloat LABEL_MARGIN_X = 10;
-const CGFloat LABEL_MARGIN_Y = 10;
+const CGFloat LABEL_MARGIN_X = 15;
+const CGFloat LABEL_MARGIN_Y = 12;
 
 @implementation MAVEInviteCopyView
 
@@ -36,10 +36,8 @@ const CGFloat LABEL_MARGIN_Y = 10;
 
 // Dynamic layout
 - (void)layoutSubviews {
-    NSLog(@"in layout subvies");
-    CGFloat messageCopyXMargin = 20;
-    CGFloat messageCopyWidth = self.frame.size.width - 2*messageCopyXMargin;
-    self.messageCopy.frame = CGRectMake(messageCopyXMargin, 0, messageCopyWidth, 50);
+    CGSize labelSize = [self messageCopyLabelSizeWithWidth:self.frame.size.width];
+    self.messageCopy.frame = CGRectMake(LABEL_MARGIN_X, LABEL_MARGIN_Y, labelSize.width, labelSize.height);
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {
