@@ -49,11 +49,11 @@
         [UIFont systemFontOfSize:14];
     CGFloat viewWidth = 200;
     // Expected taken by running once with our default values
-    CGFloat expectedViewHeight = 74.5;
+    CGFloat expectedViewHeight = 90.5;
     MAVEInviteExplanationView *copyView = [[MAVEInviteExplanationView alloc] init];
     CGSize labelSize = [copyView messageCopyLabelSizeWithWidth:viewWidth];
-    XCTAssertEqual(labelSize.width, viewWidth - 2*15);
-    XCTAssertEqual(labelSize.height, expectedViewHeight - 2*12);
+    XCTAssertEqual(labelSize.width, viewWidth - 2*20);
+    XCTAssertEqual(labelSize.height, expectedViewHeight - 2*20);
     
     XCTAssertEqual([copyView computeHeightWithWidth:viewWidth], expectedViewHeight);
 }
