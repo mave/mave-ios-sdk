@@ -148,7 +148,7 @@
     CGFloat shiftedOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top;
 
     // TODO: use a container view so this is 0
-    CGFloat DEFAULT_INNER_EXPLANATION_OFFSET = 12;
+    CGFloat DEFAULT_INNER_EXPLANATION_OFFSET = 20;
     if (self.tableView.tableHeaderView && shiftedOffsetY < 0) {
         MAVEInviteExplanationView *explanationView =
             (MAVEInviteExplanationView *)self.tableView.tableHeaderView;
