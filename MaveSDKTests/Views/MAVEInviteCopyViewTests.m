@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "MaveSDK.h"
 #import "MAVEInviteCopyView.h"
 
 @interface MAVEInviteCopyViewTests : XCTestCase
@@ -27,13 +28,13 @@
 }
 
 - (void)testInit {
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
     MAVEInviteCopyView *copyView = [[MAVEInviteCopyView alloc] init];
     XCTAssertNotNil(copyView);
     XCTAssertNotNil(copyView.messageCopy);
-    XCTAssertEqualObjects(copyView.backgroundColor, [UIColor whiteColor]);
-    //XCTAssertEqualObjects(copyView.messageCopy.font, <#expression2, ...#>)
-    //XCTAssertEqualObjects(copyView.messageCopy.textColor, <#expression2, ...#>)
-    //XCTAssertEqualObjects(copyView.messageCopy.text, <#expression2, ...#>)
+    XCTAssertEqualObjects(copyView.backgroundColor, displayOptions.userExplanationCellBackgroundColor);
+    XCTAssertEqualObjects(copyView.messageCopy.font, displayOptions.userExplanationFont);
+    XCTAssertEqualObjects(copyView.messageCopy.textColor, displayOptions.userExplanationTextColor);
     XCTAssertEqual(copyView.messageCopy.textAlignment, NSTextAlignmentCenter);
     XCTAssertEqual(copyView.messageCopy.lineBreakMode, NSLineBreakByWordWrapping);
     XCTAssertEqual([copyView.subviews count], 1);
@@ -41,6 +42,8 @@
 
 - (void)testLayoutComputeHeight {
     // Set some default values
+    [MaveSDK sharedInstance].displayOptions.userExplanationFont =
+        [UIFont systemFontOfSize:14];
     CGFloat viewWidth = 200;
     // Expected taken by running once with our default values
     CGFloat expectedViewHeight = 74.5;

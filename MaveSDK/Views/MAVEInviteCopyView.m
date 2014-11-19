@@ -7,6 +7,7 @@
 //
 
 #import "MAVEInviteCopyView.h"
+#import "MaveSDK.h"
 
 const CGFloat LABEL_MARGIN_X = 15;
 const CGFloat LABEL_MARGIN_Y = 12;
@@ -21,11 +22,13 @@ const CGFloat LABEL_MARGIN_Y = 12;
 }
 
 - (void)setupInit {
-    self.backgroundColor = [UIColor whiteColor];
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
+
+    self.backgroundColor = displayOptions.userExplanationCellBackgroundColor;
 
     self.messageCopy = [[UILabel alloc] init];
-    self.messageCopy.font = [UIFont systemFontOfSize:14];
-    self.messageCopy.textColor = [UIColor blackColor];
+    self.messageCopy.font = displayOptions.userExplanationFont;
+    self.messageCopy.textColor = displayOptions.userExplanationTextColor;
     self.messageCopy.text = @"Get $20 for each friend you invite, this is some longer text blah";
     self.messageCopy.textAlignment = NSTextAlignmentCenter;
     self.messageCopy.lineBreakMode = NSLineBreakByWordWrapping;

@@ -24,6 +24,9 @@
     opts.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
     opts.navigationBarCancelButton.title = @"Cancel";
 
+    opts.userExplanationFont = [self randomFont];
+    opts.userExplanationTextColor = [self randomColor];
+    opts.userExplanationCellBackgroundColor = [self randomColor];
     opts.contactNameFont = [self randomFont];
     opts.contactNameTextColor = [self randomColor];
     opts.contactDetailsFont = [self randomFont];
