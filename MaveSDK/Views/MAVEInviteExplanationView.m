@@ -9,8 +9,8 @@
 #import "MAVEInviteExplanationView.h"
 #import "MaveSDK.h"
 
-const CGFloat LABEL_MARGIN_X = 15;
-const CGFloat LABEL_MARGIN_Y = 12;
+const CGFloat LABEL_MARGIN_X = 20;
+const CGFloat LABEL_MARGIN_Y = 20;
 
 @implementation MAVEInviteExplanationView
 
