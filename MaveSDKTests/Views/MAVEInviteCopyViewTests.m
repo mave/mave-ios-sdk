@@ -33,6 +33,7 @@
     XCTAssertNotNil(copyView);
     XCTAssertNotNil(copyView.messageCopy);
     XCTAssertEqualObjects(copyView.backgroundColor, displayOptions.userExplanationCellBackgroundColor);
+    XCTAssertEqualObjects(copyView.messageCopy.text, displayOptions.userExplanationCopy);
     XCTAssertEqualObjects(copyView.messageCopy.font, displayOptions.userExplanationFont);
     XCTAssertEqualObjects(copyView.messageCopy.textColor, displayOptions.userExplanationTextColor);
     XCTAssertEqual(copyView.messageCopy.textAlignment, NSTextAlignmentCenter);
