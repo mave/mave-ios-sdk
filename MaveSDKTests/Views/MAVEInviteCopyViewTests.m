@@ -43,6 +43,8 @@
 
 - (void)testLayoutComputeHeight {
     // Set some default values
+    [MaveSDK sharedInstance].displayOptions.userExplanationCopy =
+        @"Get $20 for each friend you invite, this is some longer text blah";
     [MaveSDK sharedInstance].displayOptions.userExplanationFont =
         [UIFont systemFontOfSize:14];
     CGFloat viewWidth = 200;

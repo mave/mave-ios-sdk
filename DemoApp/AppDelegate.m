@@ -58,6 +58,9 @@
     // that the action and target will be ignored since we call the
     // dismissalBlock you passed us instead
     mave.displayOptions.navigationBarCancelButton = backButton;
+    
+    // User explanation copy
+    mave.displayOptions.userExplanationCopy = @"Get $20 for each friend you invite, this is some longer text blah";
 
     // Contacts table options
     mave.displayOptions.contactNameFont = font1;
@@ -73,7 +76,7 @@
     mave.displayOptions.contactSectionHeaderTextColor = black;
     mave.displayOptions.contactSectionHeaderBackgroundColor = lightGray;
     mave.displayOptions.contactSectionIndexColor = green;
-    mave.displayOptions.contactSectionIndexBackgroundColor = white;
+    mave.displayOptions.contactSectionIndexBackgroundColor = [UIColor colorWithWhite:1 alpha:0];
 
     // Message and Send section options
     mave.displayOptions.messageFieldFont = [UIFont systemFontOfSize:16];
