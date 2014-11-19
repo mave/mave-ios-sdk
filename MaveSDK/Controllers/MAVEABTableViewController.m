@@ -146,14 +146,15 @@
     //
     // shift coordinates of content offsetY so scrolled to top is offset 0
     CGFloat shiftedOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top;
-    CGFloat offsetDiff = shiftedOffsetY - self.lastScrolledShiftedOffsetY;
-    self.lastScrolledShiftedOffsetY = shiftedOffsetY;
 
+    // TODO: use a container view so this is 0
+    CGFloat DEFAULT_INNER_EXPLANATION_OFFSET = 12;
     if (self.tableView.tableHeaderView && shiftedOffsetY < 0) {
         MAVEInviteExplanationView *explanationView =
             (MAVEInviteExplanationView *)self.tableView.tableHeaderView;
         CGRect explanationTextFrame = explanationView.messageCopy.frame;
-        explanationTextFrame.origin.y += offsetDiff / 2;
+        explanationTextFrame.origin.y =
+            roundf(DEFAULT_INNER_EXPLANATION_OFFSET + (shiftedOffsetY / 2));
         explanationView.messageCopy.frame = explanationTextFrame;
     }
 

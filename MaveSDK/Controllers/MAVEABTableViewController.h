@@ -20,7 +20,6 @@
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *aboveTableContentView;
 @property (strong, nonatomic) NSMutableSet *selectedPhoneNumbers;
-@property (nonatomic) CGFloat lastScrolledShiftedOffsetY;
 
 - (instancetype)initTableViewWithParent:(id<MAVEABTableViewAdditionalDelegate>)parent;
 
