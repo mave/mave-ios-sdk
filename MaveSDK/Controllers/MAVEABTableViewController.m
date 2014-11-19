@@ -27,14 +27,20 @@
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
+
         self.tableView = [[UITableView alloc] init];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.backgroundColor = displayOptions.contactCellBackgroundColor;
         self.tableView.separatorColor = displayOptions.contactSeparatorColor;
         self.tableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
-        self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
+        self.tableView.sectionIndexBackgroundColor =
+            displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
+
+        self.aboveTableContentView = [[UIView alloc] init];
+        self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
+
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }
     return self;

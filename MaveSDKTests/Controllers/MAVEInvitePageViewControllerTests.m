@@ -50,6 +50,17 @@
     XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, expectedHeight);
     XCTAssertEqualObjects(ipvc.ABTableViewController.tableView.tableHeaderView,
                           ipvc.inviteExplanationView);
+
+    // Top "bounce region" should look like it connects to the header and be at the top
+    // of the table view tall as the whole screen
+    XCTAssertEqualObjects(ipvc.ABTableViewController.aboveTableContentView.backgroundColor,
+                          ipvc.inviteExplanationView.backgroundColor);
+    XCTAssertEqualObjects(ipvc.ABTableViewController.aboveTableContentView.superview,
+                          ipvc.ABTableViewController.tableView);
+    CGFloat fullAppHeight = ipvc.view.frame.size.height;
+    CGRect expectedAboveViewFrame = CGRectMake(0, 0 - fullAppHeight, expectedWidth, fullAppHeight);
+    CGRect aboveViewFrame = ipvc.ABTableViewController.aboveTableContentView.frame;
+    XCTAssertTrue(CGRectEqualToRect(aboveViewFrame, expectedAboveViewFrame));
 }
 
 - (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {

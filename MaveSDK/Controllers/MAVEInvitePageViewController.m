@@ -193,6 +193,7 @@
     };
     
     UIView *containerView = [[UIView alloc] init];
+    [self.ABTableViewController.tableView addSubview:self.ABTableViewController.aboveTableContentView];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageContainerView];
     return containerView;
@@ -235,6 +236,13 @@
         // table header view needs to be re-assigned when frame changes or the rest
         // of the table doesn't get offset and the header overlaps it
         self.ABTableViewController.tableView.tableHeaderView = self.inviteExplanationView;
+        // Put empty above table view above the content in the table view with same
+        // color as the header cell so it looks like it's part of the header cell
+        self.ABTableViewController.aboveTableContentView.frame =
+            CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
+                       containerFrame.size.width, containerFrame.size.height);
+        self.ABTableViewController.aboveTableContentView.backgroundColor =
+            self.inviteExplanationView.backgroundColor;
     }
 }
 //
