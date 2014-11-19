@@ -10,6 +10,7 @@
 #import <AddressBook/AddressBook.h>
 #import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
+#import "MAVEInviteExplanationView.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABCollection.h"
 #import "MAVENoAddressBookPermissionView.h"
@@ -178,9 +179,11 @@
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
+    self.inviteExplanationView = [[MAVEInviteExplanationView alloc] init];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
+    
 
     __weak typeof(self) weakSelf = self;
     self.inviteMessageContainerView.inviteMessageView.textViewContentChangingBlock = ^void() {
@@ -189,13 +192,7 @@
         });
     };
     
-    CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-    CGRect containerFrame = CGRectMake(0,
-                                       0,
-                                       appFrame.origin.x + appFrame.size.width,
-                                       self.keyboardFrame.origin.y);
-    
-    UIView *containerView = [[UIView alloc] initWithFrame:containerFrame];
+    UIView *containerView = [[UIView alloc] init];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageContainerView];
     return containerView;
@@ -220,10 +217,25 @@
                                                tableViewFrame.origin.y + tableViewFrame.size.height,
                                                containerFrame.size.width,
                                                inviteViewHeight);
+
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
-    NSLog(@"updating invite message view controller frame");
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
+    
+    //
+    // Add in the explanation view if text has been set
+    //
+    if ([self.inviteExplanationView.messageCopy.text length] > 0) {
+        CGFloat inviteExplanationViewHeight = [self.inviteExplanationView
+                                               computeHeightWithWidth:containerFrame.size.width];
+        CGRect inviteExplanationViewFrame = CGRectMake(0, 0, containerFrame.size.width,
+                                                       inviteExplanationViewHeight);
+        self.inviteExplanationView.frame = inviteExplanationViewFrame;
+
+        // table header view needs to be re-assigned when frame changes or the rest
+        // of the table doesn't get offset and the header overlaps it
+        self.ABTableViewController.tableView.tableHeaderView = self.inviteExplanationView;
+    }
 }
 //
 // Respond to children's Events

@@ -21,6 +21,12 @@
         self.navigationBarBackgroundColor = [[self class] colorWhite];
         self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
         self.navigationBarCancelButton.title = @"Cancel";
+        
+        // Explanation of how the referral program works section
+        self.inviteExplanationCopy = nil;
+        self.inviteExplanationFont = [UIFont systemFontOfSize:14];
+        self.inviteExplanationTextColor = [[self class] colorAlmostBlack];
+        self.inviteExplanationCellBackgroundColor = [[self class] colorExtraLightGrey];
 
         // "Friends to invite" table options
         self.contactNameFont = [UIFont systemFontOfSize:16];

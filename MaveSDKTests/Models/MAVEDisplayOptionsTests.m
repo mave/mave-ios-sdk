@@ -47,6 +47,12 @@
     XCTAssertEqualObjects(opts.navigationBarTitleTextColor, almostBlack);
     XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
+    
+    // Explanation of how the referral program works section
+    XCTAssertEqualObjects(opts.inviteExplanationCopy, nil);
+    XCTAssertEqualObjects(opts.inviteExplanationFont, smallerFont);
+    XCTAssertEqualObjects(opts.inviteExplanationTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.inviteExplanationCellBackgroundColor, extraLightGrey);
 
     // "Friends to invite" table options
     XCTAssertEqualObjects(opts.contactNameFont, defaultFont);

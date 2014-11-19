@@ -16,6 +16,10 @@
 		0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73E819F858A4009C6385 /* RootDrawerController.m */; };
 		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
 		0CF6541F1A02D5E3008992F0 /* MAVENavigationBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF6541E1A02D5E3008992F0 /* MAVENavigationBarTests.m */; };
+		0CFDBE261A1A827C00DD2AAF /* MAVEReferralData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */; };
+		0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */; };
+		0CFDBE2B1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */; };
+		0CFDBE711A1CE1BC00DD2AAF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CFDBE701A1CE1BC00DD2AAF /* Default-568h@2x.png */; };
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
 		C022641619EC41010087FF37 /* MAVEABPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641119EC41010087FF37 /* MAVEABPersonTests.m */; };
 		C022641719EC41010087FF37 /* MAVEABCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* MAVEABCollectionTests.m */; };
@@ -84,6 +88,12 @@
 		0CCC73ED19F8708E009C6385 /* SideDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerController.h; sourceTree = "<group>"; };
 		0CCC73EE19F8708E009C6385 /* SideDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideDrawerController.m; sourceTree = "<group>"; };
 		0CF6541E1A02D5E3008992F0 /* MAVENavigationBarTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVENavigationBarTests.m; sourceTree = "<group>"; };
+		0CFDBE241A1A827C00DD2AAF /* MAVEReferralData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEReferralData.h; sourceTree = "<group>"; };
+		0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEReferralData.m; sourceTree = "<group>"; };
+		0CFDBE271A1B875100DD2AAF /* MAVEInviteExplanationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteExplanationView.h; sourceTree = "<group>"; };
+		0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteExplanationView.m; sourceTree = "<group>"; };
+		0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteExplanationViewTests.m; sourceTree = "<group>"; };
+		0CFDBE701A1CE1BC00DD2AAF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2110DFB92C7B0700F5577B76 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5D1D110D19FDCF9921E21868 /* libPods-MaveSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MaveSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67DE4B21E0255868A78BD50B /* Pods-MaveSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MaveSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MaveSDKTests/Pods-MaveSDKTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -247,6 +257,7 @@
 				C029279B19E823E2006AEE43 /* HomeViewController.h */,
 				C029279C19E823E2006AEE43 /* HomeViewController.m */,
 				C02927A119E823E2006AEE43 /* Images.xcassets */,
+				0CFDBE701A1CE1BC00DD2AAF /* Default-568h@2x.png */,
 				C029279419E823E2006AEE43 /* Supporting Files */,
 			);
 			path = DemoApp;
@@ -309,6 +320,8 @@
 			children = (
 				C029280219E82D0F006AEE43 /* MAVEDisplayOptions.h */,
 				C029280319E82D0F006AEE43 /* MAVEDisplayOptions.m */,
+				0CFDBE271A1B875100DD2AAF /* MAVEInviteExplanationView.h */,
+				0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */,
 				C029280719E82D18006AEE43 /* MAVEABPersonCell.h */,
 				C029280819E82D18006AEE43 /* MAVEABPersonCell.m */,
 				0C7200701A19414D00E12B91 /* MAVEInviteMessageContainerView.h */,
@@ -333,6 +346,8 @@
 				C029280119E82D0F006AEE43 /* MAVEABPerson.m */,
 				0C141D2E1A0BC1A80036202A /* MAVEUserData.h */,
 				0C141D2F1A0BC1A80036202A /* MAVEUserData.m */,
+				0CFDBE241A1A827C00DD2AAF /* MAVEReferralData.h */,
+				0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -350,6 +365,7 @@
 			isa = PBXGroup;
 			children = (
 				C0834F3719F54A9500E52CA1 /* MAVEDisplayOptionsTests.m */,
+				0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */,
 				C0834F3919F57F0000E52CA1 /* MAVEABTableViewTests.m */,
 				C0834F3119F44D7500E52CA1 /* MAVEInviteMessageViewTests.m */,
 				0CF6541E1A02D5E3008992F0 /* MAVENavigationBarTests.m */,
@@ -466,6 +482,7 @@
 			files = (
 				C02927A219E823E2006AEE43 /* Images.xcassets in Resources */,
 				C02927C619E827F9006AEE43 /* Main.storyboard in Resources */,
+				0CFDBE711A1CE1BC00DD2AAF /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +570,7 @@
 				C02927FB19E82D03006AEE43 /* MAVEABTableViewController.m in Sources */,
 				C02927F319E82CF8006AEE43 /* MaveSDK.m in Sources */,
 				C029279A19E823E2006AEE43 /* AppDelegate.m in Sources */,
+				0CFDBE261A1A827C00DD2AAF /* MAVEReferralData.m in Sources */,
 				C02927FA19E82D03006AEE43 /* MAVEInvitePageViewController.m in Sources */,
 				C029280619E82D0F006AEE43 /* MAVEDisplayOptions.m in Sources */,
 				0C1134D11A12C42200631797 /* MAVENoAddressBookPermissionView.m in Sources */,
@@ -562,6 +580,7 @@
 				C029280519E82D0F006AEE43 /* MAVEABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
 				0C7200721A19414D00E12B91 /* MAVEInviteMessageContainerView.m in Sources */,
+				0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */,
 				0C141D301A0BC1A80036202A /* MAVEUserData.m in Sources */,
 				C0F4C8EE19F162B80003D209 /* MAVEInviteSendingProgressView.m in Sources */,
 				C029280419E82D0F006AEE43 /* MAVEABCollection.m in Sources */,
@@ -574,6 +593,7 @@
 			files = (
 				C0834F3819F54A9500E52CA1 /* MAVEDisplayOptionsTests.m in Sources */,
 				C0425B9219EF1765006641AB /* MAVEConstants.m in Sources */,
+				0CFDBE2B1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m in Sources */,
 				C022641619EC41010087FF37 /* MAVEABPersonTests.m in Sources */,
 				C029282419E83189006AEE43 /* MaveSDKTests.m in Sources */,
 				C022641819EC41010087FF37 /* MAVEABTestDataFactory.m in Sources */,
@@ -664,12 +684,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = DemoApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -708,11 +729,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = DemoApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

@@ -27,10 +27,41 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"1231234"];
     [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
     [MaveSDK sharedInstance].userData.userID = @"foo";
+    [MaveSDK sharedInstance].displayOptions =
+        [MAVEDisplayOptionsFactory generateDisplayOptions];
 }
 
 - (void)tearDown {
     [super tearDown];
+}
+
+
+- (void)testDoLayoutInviteExplanationBoxIfCopyNotNil {
+    MAVEInvitePageViewController *ipvc =
+        [[MAVEInvitePageViewController alloc] init];
+    [ipvc loadView]; [ipvc viewDidLoad];
+
+    CGFloat expectedWidth = ipvc.view.frame.size.width;
+    CGFloat expectedHeight = [ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth];
+    XCTAssertGreaterThan(expectedWidth, 0);
+    XCTAssertGreaterThan(expectedHeight, 0);
+
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, expectedWidth);
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, expectedHeight);
+    XCTAssertEqualObjects(ipvc.ABTableViewController.tableView.tableHeaderView,
+                          ipvc.inviteExplanationView);
+}
+
+- (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {
+    [MaveSDK sharedInstance].displayOptions.inviteExplanationCopy = nil;
+
+    MAVEInvitePageViewController *ipvc =
+    [[MAVEInvitePageViewController alloc] init];
+    [ipvc loadView]; [ipvc viewDidLoad];
+    
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, 0);
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, 0);
+    XCTAssertNil(ipvc.ABTableViewController.tableView.tableHeaderView);
 }
 
 //
@@ -43,7 +74,7 @@
     OCMVerify(mock);
 }
 
-- (void)testDismissalBlockCalledOnDismissSelf {
+- (void)testAppropriateTeardownOnDismissSelf {
     __block unsigned int numSent = 0;
     [MaveSDK sharedInstance].invitePageDismissalBlock =
         ^void(UIViewController *viewController,
@@ -51,9 +82,14 @@
         numSent = numberOfInvitesSent;
     };
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    XCTAssertEqual(numSent, 0);
+    [vc loadView]; [vc viewDidLoad];
+    id vcViewMock = [OCMockObject partialMockForObject:vc.view];
+    [[vcViewMock expect] endEditing:YES];
+
     [vc dismissSelf:3];
+
     XCTAssertEqual(numSent, 3);
+    [vcViewMock verify];
 }
 
 - (void)testDismissAfterCancelCallsDismissSelf {
