@@ -207,9 +207,6 @@
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
-    
-    CGFloat tableHeaderViewHeight = [self.inviteCopyView
-                                     computeHeightWithWidth:containerFrame.size.width];
 
     CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
                                        containerFrame.origin.y,
@@ -220,13 +217,25 @@
                                                tableViewFrame.origin.y + tableViewFrame.size.height,
                                                containerFrame.size.width,
                                                inviteViewHeight);
+
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
-    self.inviteCopyView.frame = CGRectMake(0, 0, appFrame.size.width, tableHeaderViewHeight);
-    // For some reason this needs to be re-assigned when layout changes, otherwise
-    // the rest of the table isn't shifted down to make room for the tableHeaderView
-    self.ABTableViewController.tableView.tableHeaderView = self.inviteCopyView;
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
+    
+    //
+    // Add in the explanation view if text has been set
+    //
+    if ([MaveSDK sharedInstance].displayOptions.userExplanationTextColor) {
+        CGFloat inviteExplanationViewHeight = [self.inviteCopyView
+                                               computeHeightWithWidth:containerFrame.size.width];
+        CGRect inviteExplanationViewFrame = CGRectMake(0, 0, containerFrame.size.width,
+                                                       inviteExplanationViewHeight);
+        self.inviteCopyView.frame = inviteExplanationViewFrame;
+
+        // table header view needs to be re-assigned when frame changes or the rest
+        // of the table doesn't get offset and the header overlaps it
+        self.ABTableViewController.tableView.tableHeaderView = self.inviteCopyView;
+    }
 }
 //
 // Respond to children's Events

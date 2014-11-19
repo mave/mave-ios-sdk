@@ -49,6 +49,7 @@
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
     
     // Explanation of how the referral program works section
+    XCTAssertEqualObjects(opts.userExplanationCopy, nil);
     XCTAssertEqualObjects(opts.userExplanationFont, smallerFont);
     XCTAssertEqualObjects(opts.userExplanationTextColor, almostBlack);
     XCTAssertEqualObjects(opts.userExplanationCellBackgroundColor, extraLightGrey);

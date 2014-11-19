@@ -21,18 +21,19 @@
 // Invite friends page options:
 // Header options
 @property (strong, nonatomic) NSString *navigationBarTitleCopy;
-@property (strong, nonatomic) UIFont *navigationBarTitleFont;
-@property (strong, nonatomic) UIColor *navigationBarTitleTextColor;
-@property (strong, nonatomic) UIColor *navigationBarBackgroundColor;
+@property (strong, nonatomic) UIFont   *navigationBarTitleFont;
+@property (strong, nonatomic) UIColor  *navigationBarTitleTextColor;
+@property (strong, nonatomic) UIColor  *navigationBarBackgroundColor;
 // Note: any target & action set on the navigation bar cancel button item will
 // be ignored, on cancel we run our own teardown code and then call your
 // dismissalBlock
 @property (strong, nonatomic) UIBarButtonItem *navigationBarCancelButton;
 
 // Explanation of how the referral program works section
-@property (strong, nonatomic) UIFont  *userExplanationFont;
-@property (strong, nonatomic) UIColor *userExplanationTextColor;
-@property (strong, nonatomic) UIColor *userExplanationCellBackgroundColor;
+@property (strong, nonatomic) NSString *userExplanationCopy;
+@property (strong, nonatomic) UIFont   *userExplanationFont;
+@property (strong, nonatomic) UIColor  *userExplanationTextColor;
+@property (strong, nonatomic) UIColor  *userExplanationCellBackgroundColor;
 
 // "Friends to invite" table options
 @property (strong, nonatomic) UIFont  *contactNameFont;

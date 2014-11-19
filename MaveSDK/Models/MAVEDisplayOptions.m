@@ -23,6 +23,7 @@
         self.navigationBarCancelButton.title = @"Cancel";
         
         // Explanation of how the referral program works section
+        self.userExplanationCopy = nil;
         self.userExplanationFont = [UIFont systemFontOfSize:14];
         self.userExplanationTextColor = [[self class] colorAlmostBlack];
         self.userExplanationCellBackgroundColor = [[self class] colorExtraLightGrey];
