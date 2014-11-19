@@ -19,6 +19,7 @@
 @property (nonatomic, weak) id <MAVEABTableViewAdditionalDelegate> parentViewController;
 @property UITableView *tableView;
 @property (strong, nonatomic) NSMutableSet *selectedPhoneNumbers;
+@property (nonatomic) CGFloat lastScrolledShiftedOffsetY;
 
 - (instancetype)initTableViewWithParent:(id<MAVEABTableViewAdditionalDelegate>)parent;
 

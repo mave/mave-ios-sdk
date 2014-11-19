@@ -36,8 +36,6 @@
         self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
-        
-        // self.tableView.tableHeaderView = [[MAVEInviteCopyView alloc] init];
     }
     return self;
 }
@@ -128,6 +126,31 @@
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
     return index;
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    NSLog(@"did scroll to top");
+}
+
+// Scroll delegate methods
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //
+    // If scrolling past top, reposition content within the explanation frame to stay
+    //     vertically centered to make it look like the table header view is expanding
+    //
+    // shift coordinates of content offsetY so scrolled to top is offset 0
+    CGFloat shiftedOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top;
+    CGFloat offsetDiff = shiftedOffsetY - self.lastScrolledShiftedOffsetY;
+    self.lastScrolledShiftedOffsetY = shiftedOffsetY;
+
+    if (self.tableView.tableHeaderView && shiftedOffsetY < 0) {
+        MAVEInviteExplanationView *explanationView =
+            (MAVEInviteExplanationView *)self.tableView.tableHeaderView;
+        CGRect explanationTextFrame = explanationView.messageCopy.frame;
+        explanationTextFrame.origin.y += offsetDiff / 2;
+        explanationView.messageCopy.frame = explanationTextFrame;
+    }
+
 }
 
 // Helpers
