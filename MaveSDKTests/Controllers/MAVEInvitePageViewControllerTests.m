@@ -27,10 +27,41 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"1231234"];
     [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
     [MaveSDK sharedInstance].userData.userID = @"foo";
+    [MaveSDK sharedInstance].displayOptions =
+        [MAVEDisplayOptionsFactory generateDisplayOptions];
 }
 
 - (void)tearDown {
     [super tearDown];
+}
+
+
+- (void)testDoLayoutInviteExplanationBoxIfCopyNotNil {
+    MAVEInvitePageViewController *ipvc =
+        [[MAVEInvitePageViewController alloc] init];
+    [ipvc loadView]; [ipvc viewDidLoad];
+
+    CGFloat expectedWidth = ipvc.view.frame.size.width;
+    CGFloat expectedHeight = [ipvc.inviteCopyView computeHeightWithWidth:expectedWidth];
+    XCTAssertGreaterThan(expectedWidth, 0);
+    XCTAssertGreaterThan(expectedHeight, 0);
+
+    XCTAssertEqual(ipvc.inviteCopyView.frame.size.width, expectedWidth);
+    XCTAssertEqual(ipvc.inviteCopyView.frame.size.height, expectedHeight);
+    XCTAssertEqualObjects(ipvc.ABTableViewController.tableView.tableHeaderView,
+                          ipvc.inviteCopyView);
+}
+
+- (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {
+    [MaveSDK sharedInstance].displayOptions.userExplanationCopy = nil;
+
+    MAVEInvitePageViewController *ipvc =
+    [[MAVEInvitePageViewController alloc] init];
+    [ipvc loadView]; [ipvc viewDidLoad];
+    
+    XCTAssertEqual(ipvc.inviteCopyView.frame.size.width, 0);
+    XCTAssertEqual(ipvc.inviteCopyView.frame.size.height, 0);
+    XCTAssertNil(ipvc.ABTableViewController.tableView.tableHeaderView);
 }
 
 //

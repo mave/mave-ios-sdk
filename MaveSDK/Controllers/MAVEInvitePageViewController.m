@@ -225,7 +225,7 @@
     //
     // Add in the explanation view if text has been set
     //
-    if ([MaveSDK sharedInstance].displayOptions.userExplanationTextColor) {
+    if ([self.inviteCopyView.messageCopy.text length] > 0) {
         CGFloat inviteExplanationViewHeight = [self.inviteCopyView
                                                computeHeightWithWidth:containerFrame.size.width];
         CGRect inviteExplanationViewFrame = CGRectMake(0, 0, containerFrame.size.width,
