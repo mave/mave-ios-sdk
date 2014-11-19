@@ -36,8 +36,12 @@
     NSDictionary *data = @{@"D": @[@"Danny"]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:nil];
     [vc updateTableData:data];
+    XCTAssertNotNil(vc.tableView);
+    XCTAssertNotNil(vc.aboveTableContentView);
+    
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
     XCTAssertEqualObjects(vc.tableView.backgroundColor, displayOptions.contactCellBackgroundColor);
+    XCTAssertEqualObjects(vc.aboveTableContentView.backgroundColor, displayOptions.contactCellBackgroundColor);
     XCTAssertEqualObjects(vc.tableView.sectionIndexColor, displayOptions.contactSectionIndexColor);
     XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor, displayOptions.contactSectionIndexBackgroundColor);
     XCTAssertEqualObjects(vc.tableView.separatorColor, displayOptions.contactSeparatorColor);

@@ -13,6 +13,7 @@
 
 @interface MAVEInviteExplanationView : UIView
 
+
 @property (strong, nonatomic) UILabel *messageCopy;
 
 - (void)setupInit;

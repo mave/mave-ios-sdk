@@ -27,17 +27,21 @@
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
+
         self.tableView = [[UITableView alloc] init];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.backgroundColor = displayOptions.contactCellBackgroundColor;
         self.tableView.separatorColor = displayOptions.contactSeparatorColor;
         self.tableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
-        self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
+        self.tableView.sectionIndexBackgroundColor =
+            displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
+
+        self.aboveTableContentView = [[UIView alloc] init];
+        self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
+
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
-        
-        // self.tableView.tableHeaderView = [[MAVEInviteCopyView alloc] init];
     }
     return self;
 }
@@ -128,6 +132,32 @@
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
     return index;
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    NSLog(@"did scroll to top");
+}
+
+// Scroll delegate methods
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //
+    // If scrolling past top, reposition content within the explanation frame to stay
+    //     vertically centered to make it look like the table header view is expanding
+    //
+    // shift coordinates of content offsetY so scrolled to top is offset 0
+    CGFloat shiftedOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top;
+
+    // TODO: use a container view so this is 0
+    CGFloat DEFAULT_INNER_EXPLANATION_OFFSET = 12;
+    if (self.tableView.tableHeaderView && shiftedOffsetY < 0) {
+        MAVEInviteExplanationView *explanationView =
+            (MAVEInviteExplanationView *)self.tableView.tableHeaderView;
+        CGRect explanationTextFrame = explanationView.messageCopy.frame;
+        explanationTextFrame.origin.y =
+            roundf(DEFAULT_INNER_EXPLANATION_OFFSET + (shiftedOffsetY / 2));
+        explanationView.messageCopy.frame = explanationTextFrame;
+    }
+
 }
 
 // Helpers

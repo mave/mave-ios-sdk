@@ -61,6 +61,7 @@
     
     // User explanation copy
     mave.displayOptions.inviteExplanationCopy = @"Get $20 for each friend you invite, this is some longer text blah";
+    mave.displayOptions.inviteExplanationCellBackgroundColor = lightGray;
 
     // Contacts table options
     mave.displayOptions.contactNameFont = font1;
