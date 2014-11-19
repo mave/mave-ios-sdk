@@ -30,10 +30,10 @@
 @property (strong, nonatomic) UIBarButtonItem *navigationBarCancelButton;
 
 // Explanation of how the referral program works section
-@property (strong, nonatomic) NSString *userExplanationCopy;
-@property (strong, nonatomic) UIFont   *userExplanationFont;
-@property (strong, nonatomic) UIColor  *userExplanationTextColor;
-@property (strong, nonatomic) UIColor  *userExplanationCellBackgroundColor;
+@property (strong, nonatomic) NSString *inviteExplanationCopy;
+@property (strong, nonatomic) UIFont   *inviteExplanationFont;
+@property (strong, nonatomic) UIColor  *inviteExplanationTextColor;
+@property (strong, nonatomic) UIColor  *inviteExplanationCellBackgroundColor;
 
 // "Friends to invite" table options
 @property (strong, nonatomic) UIFont  *contactNameFont;

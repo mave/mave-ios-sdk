@@ -10,7 +10,7 @@
 #import <AddressBook/AddressBook.h>
 #import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
-#import "MAVEInviteCopyView.h"
+#import "MAVEInviteExplanationView.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABCollection.h"
 #import "MAVENoAddressBookPermissionView.h"
@@ -179,7 +179,7 @@
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.inviteCopyView = [[MAVEInviteCopyView alloc] init];
+    self.inviteExplanationView = [[MAVEInviteExplanationView alloc] init];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
@@ -225,16 +225,16 @@
     //
     // Add in the explanation view if text has been set
     //
-    if ([self.inviteCopyView.messageCopy.text length] > 0) {
-        CGFloat inviteExplanationViewHeight = [self.inviteCopyView
+    if ([self.inviteExplanationView.messageCopy.text length] > 0) {
+        CGFloat inviteExplanationViewHeight = [self.inviteExplanationView
                                                computeHeightWithWidth:containerFrame.size.width];
         CGRect inviteExplanationViewFrame = CGRectMake(0, 0, containerFrame.size.width,
                                                        inviteExplanationViewHeight);
-        self.inviteCopyView.frame = inviteExplanationViewFrame;
+        self.inviteExplanationView.frame = inviteExplanationViewFrame;
 
         // table header view needs to be re-assigned when frame changes or the rest
         // of the table doesn't get offset and the header overlaps it
-        self.ABTableViewController.tableView.tableHeaderView = self.inviteCopyView;
+        self.ABTableViewController.tableView.tableHeaderView = self.inviteExplanationView;
     }
 }
 //

@@ -60,7 +60,7 @@
     mave.displayOptions.navigationBarCancelButton = backButton;
     
     // User explanation copy
-    mave.displayOptions.userExplanationCopy = @"Get $20 for each friend you invite, this is some longer text blah";
+    mave.displayOptions.inviteExplanationCopy = @"Get $20 for each friend you invite, this is some longer text blah";
 
     // Contacts table options
     mave.displayOptions.contactNameFont = font1;

@@ -42,25 +42,25 @@
     [ipvc loadView]; [ipvc viewDidLoad];
 
     CGFloat expectedWidth = ipvc.view.frame.size.width;
-    CGFloat expectedHeight = [ipvc.inviteCopyView computeHeightWithWidth:expectedWidth];
+    CGFloat expectedHeight = [ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth];
     XCTAssertGreaterThan(expectedWidth, 0);
     XCTAssertGreaterThan(expectedHeight, 0);
 
-    XCTAssertEqual(ipvc.inviteCopyView.frame.size.width, expectedWidth);
-    XCTAssertEqual(ipvc.inviteCopyView.frame.size.height, expectedHeight);
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, expectedWidth);
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, expectedHeight);
     XCTAssertEqualObjects(ipvc.ABTableViewController.tableView.tableHeaderView,
-                          ipvc.inviteCopyView);
+                          ipvc.inviteExplanationView);
 }
 
 - (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {
-    [MaveSDK sharedInstance].displayOptions.userExplanationCopy = nil;
+    [MaveSDK sharedInstance].displayOptions.inviteExplanationCopy = nil;
 
     MAVEInvitePageViewController *ipvc =
     [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
     
-    XCTAssertEqual(ipvc.inviteCopyView.frame.size.width, 0);
-    XCTAssertEqual(ipvc.inviteCopyView.frame.size.height, 0);
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, 0);
+    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, 0);
     XCTAssertNil(ipvc.ABTableViewController.tableView.tableHeaderView);
 }
 

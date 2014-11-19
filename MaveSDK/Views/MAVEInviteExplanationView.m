@@ -6,13 +6,13 @@
 //
 //
 
-#import "MAVEInviteCopyView.h"
+#import "MAVEInviteExplanationView.h"
 #import "MaveSDK.h"
 
 const CGFloat LABEL_MARGIN_X = 15;
 const CGFloat LABEL_MARGIN_Y = 12;
 
-@implementation MAVEInviteCopyView
+@implementation MAVEInviteExplanationView
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -24,12 +24,12 @@ const CGFloat LABEL_MARGIN_Y = 12;
 - (void)setupInit {
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
 
-    self.backgroundColor = displayOptions.userExplanationCellBackgroundColor;
+    self.backgroundColor = displayOptions.inviteExplanationCellBackgroundColor;
 
     self.messageCopy = [[UILabel alloc] init];
-    self.messageCopy.font = displayOptions.userExplanationFont;
-    self.messageCopy.textColor = displayOptions.userExplanationTextColor;
-    self.messageCopy.text = displayOptions.userExplanationCopy;
+    self.messageCopy.font = displayOptions.inviteExplanationFont;
+    self.messageCopy.textColor = displayOptions.inviteExplanationTextColor;
+    self.messageCopy.text = displayOptions.inviteExplanationCopy;
     self.messageCopy.textAlignment = NSTextAlignmentCenter;
     self.messageCopy.lineBreakMode = NSLineBreakByWordWrapping;
     self.messageCopy.numberOfLines = 0;

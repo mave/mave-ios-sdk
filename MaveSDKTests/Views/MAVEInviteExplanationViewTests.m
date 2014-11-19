@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "MaveSDK.h"
-#import "MAVEInviteCopyView.h"
+#import "MAVEInviteExplanationView.h"
 
-@interface MAVEInviteCopyViewTests : XCTestCase
+@interface MAVEInviteExplanationViewTests : XCTestCase
 
 @end
 
-@implementation MAVEInviteCopyViewTests
+@implementation MAVEInviteExplanationViewTests
 
 - (void)setUp {
     [super setUp];
@@ -29,13 +29,13 @@
 
 - (void)testInit {
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
-    MAVEInviteCopyView *copyView = [[MAVEInviteCopyView alloc] init];
+    MAVEInviteExplanationView *copyView = [[MAVEInviteExplanationView alloc] init];
     XCTAssertNotNil(copyView);
     XCTAssertNotNil(copyView.messageCopy);
-    XCTAssertEqualObjects(copyView.backgroundColor, displayOptions.userExplanationCellBackgroundColor);
-    XCTAssertEqualObjects(copyView.messageCopy.text, displayOptions.userExplanationCopy);
-    XCTAssertEqualObjects(copyView.messageCopy.font, displayOptions.userExplanationFont);
-    XCTAssertEqualObjects(copyView.messageCopy.textColor, displayOptions.userExplanationTextColor);
+    XCTAssertEqualObjects(copyView.backgroundColor, displayOptions.inviteExplanationCellBackgroundColor);
+    XCTAssertEqualObjects(copyView.messageCopy.text, displayOptions.inviteExplanationCopy);
+    XCTAssertEqualObjects(copyView.messageCopy.font, displayOptions.inviteExplanationFont);
+    XCTAssertEqualObjects(copyView.messageCopy.textColor, displayOptions.inviteExplanationTextColor);
     XCTAssertEqual(copyView.messageCopy.textAlignment, NSTextAlignmentCenter);
     XCTAssertEqual(copyView.messageCopy.lineBreakMode, NSLineBreakByWordWrapping);
     XCTAssertEqual([copyView.subviews count], 1);
@@ -43,14 +43,14 @@
 
 - (void)testLayoutComputeHeight {
     // Set some default values
-    [MaveSDK sharedInstance].displayOptions.userExplanationCopy =
+    [MaveSDK sharedInstance].displayOptions.inviteExplanationCopy =
         @"Get $20 for each friend you invite, this is some longer text blah";
-    [MaveSDK sharedInstance].displayOptions.userExplanationFont =
+    [MaveSDK sharedInstance].displayOptions.inviteExplanationFont =
         [UIFont systemFontOfSize:14];
     CGFloat viewWidth = 200;
     // Expected taken by running once with our default values
     CGFloat expectedViewHeight = 74.5;
-    MAVEInviteCopyView *copyView = [[MAVEInviteCopyView alloc] init];
+    MAVEInviteExplanationView *copyView = [[MAVEInviteExplanationView alloc] init];
     CGSize labelSize = [copyView messageCopyLabelSizeWithWidth:viewWidth];
     XCTAssertEqual(labelSize.width, viewWidth - 2*15);
     XCTAssertEqual(labelSize.height, expectedViewHeight - 2*12);

@@ -11,7 +11,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MAVEInviteCopyView : UIView
+@interface MAVEInviteExplanationView : UIView
 
 @property (strong, nonatomic) UILabel *messageCopy;
 
