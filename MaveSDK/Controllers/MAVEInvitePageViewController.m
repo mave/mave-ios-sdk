@@ -271,9 +271,13 @@
         return;
     }
     
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    MAVEHTTPManager *httpManager = gk.HTTPManager;
-    [httpManager sendInvitesWithPersons:phones message:message userId:gk.userData.userID completionBlock:^(NSError *error, NSDictionary *responseData) {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    MAVEHTTPManager *httpManager = mave.HTTPManager;
+    [httpManager sendInvitesWithPersons:phones
+                                message:message
+                                 userId:mave.userData.userID
+               inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                        completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
             DebugLog(@"Invites failed to send, error: %@, response: %@",
                   error, responseData);

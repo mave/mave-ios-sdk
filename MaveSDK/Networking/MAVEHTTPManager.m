@@ -187,12 +187,18 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
                         userId:(NSString *)userId
+      inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSString *invitesRoute = @"/invites/sms";
-    NSDictionary *params = @{@"recipients": persons,
-                             @"sms_copy": messageText,
-                             @"sender_user_id": userId
-                           };
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:persons forKey:@"recipients"];
+    [params setObject:messageText forKey:@"sms_copy"];
+    [params setObject:userId forKey:@"sender_user_id"];
+    if ([inviteLinkDestinationURL length] > 0) {
+        [params setObject:inviteLinkDestinationURL forKey:@"link_destination"];
+    }
+    // optional args
+
     [self sendIdentifiedJSONRequestWithRoute:invitesRoute
                        methodType:@"POST"
                            params:params

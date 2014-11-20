@@ -16,6 +16,11 @@
 @property (strong, nonatomic) NSString *email;
 @property (strong, nonatomic) NSString *phone;
 
+// Essentially a referral code for web & mobile web signup flows,
+// if this (optional) URL is set invite links sent by this user
+// redirect here instead of app store or a non-attributed signup page
+@property (strong, nonatomic) NSString *inviteLinkDestinationURL;
+
 - (instancetype)initWithUserID:(NSString *)userID
                      firstName:(NSString *)firstName
                       lastName:(NSString *)lastName

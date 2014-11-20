@@ -29,6 +29,7 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 - (void)sendInvitesWithPersons:(NSArray *)persons
                        message:(NSString *)messageText
                         userId:(NSString *)userId
+      inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 - (void)trackAppOpenRequest;

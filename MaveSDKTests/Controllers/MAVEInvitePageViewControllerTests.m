@@ -123,6 +123,8 @@
 // Sending requests
 //
 - (void)testSendInvites {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.userData.inviteLinkDestinationURL = @"http://example.com/foo?code=blah";
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     [vc loadView];
     [vc viewDidLoad];
@@ -138,7 +140,8 @@
 
     [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
-                                              userId:[MaveSDK sharedInstance].userData.userID
+                                              userId:mave.userData.userID
+                            inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
                                      completionBlock:[OCMArg any]];
     [vc sendInvites];
     [mockHTTPManager verify];
