@@ -36,26 +36,6 @@
     return self;
 }
 
-- (void)URLSession:(NSURLSession *)session
-              task:(NSURLSessionTask *)task
-willPerformHTTPRedirection:(NSHTTPURLResponse *)response
-        newRequest:(NSURLRequest *)request
- completionHandler:(void (^)(NSURLRequest *))completionHandler {
-    // Always redirect with the same method, body, headers as original request
-    //
-    // NB: Default behavior in all HTTP clients including this one is
-    // for same method to be used unless it's POST in which case it gets
-    // changed to GET, and for request body to be dropped
-    NSMutableURLRequest *newRequest =
-        [[NSMutableURLRequest alloc] initWithURL:request.URL
-                                     cachePolicy:request.cachePolicy
-                                 timeoutInterval:request.timeoutInterval];
-    newRequest.HTTPMethod = task.originalRequest.HTTPMethod;
-    newRequest.HTTPBody = task.originalRequest.HTTPBody;
-    newRequest.allHTTPHeaderFields = task.originalRequest.allHTTPHeaderFields;
-    completionHandler(newRequest);
-}
-
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodType:(NSString *)methodType
                                     params:(NSDictionary *)params
@@ -178,6 +158,27 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
                                              userInfo:@{}];
     }
     return completionBlock(returnError, returnDict);
+}
+
+// Redirects
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+        newRequest:(NSURLRequest *)request
+ completionHandler:(void (^)(NSURLRequest *))completionHandler {
+    // Always redirect with the same method, body, headers as original request
+    //
+    // NB: Default behavior in all HTTP clients including this one is
+    // for same method to be used unless it's POST in which case it gets
+    // changed to GET, and for request body to be dropped
+    NSMutableURLRequest *newRequest =
+    [[NSMutableURLRequest alloc] initWithURL:request.URL
+                                 cachePolicy:request.cachePolicy
+                             timeoutInterval:task.originalRequest.timeoutInterval];
+    newRequest.HTTPMethod = task.originalRequest.HTTPMethod;
+    newRequest.HTTPBody = task.originalRequest.HTTPBody;
+    newRequest.allHTTPHeaderFields = task.originalRequest.allHTTPHeaderFields;
+    completionHandler(newRequest);
 }
 
 //
