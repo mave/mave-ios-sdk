@@ -181,15 +181,33 @@
     NSArray *recipients = @[@"18085551234", @"18085555678"];
     NSString *smsCopy = @"This is as test";
     NSString *userId = @"some-user-id";
+    NSString *linkDestination = @"http://example.com/foo?code=hello";
     NSDictionary *expectedParams = @{@"recipients": recipients,
                                      @"sms_copy": smsCopy,
-                                     @"sender_user_id": userId
+                                     @"sender_user_id": userId,
+                                     @"link_destination": linkDestination,
                                    };
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
-    [httpManager sendInvitesWithPersons:recipients message:smsCopy userId:userId completionBlock:nil];
+    [httpManager sendInvitesWithPersons:recipients message:smsCopy userId:userId inviteLinkDestinationURL:linkDestination completionBlock:nil];
+    [mocked verify];
+}
+
+- (void)testSendEventsLinkDestinationOmittedIfEmpty {
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    NSString *linkDestination = nil;
+    NSDictionary *expectedParams = @{@"recipients": @[],
+                                     @"sms_copy": @"",
+                                     @"sender_user_id": @"",
+                                     };
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
+                                             methodType:@"POST"
+                                                 params:expectedParams
+                                        completionBlock:nil];
+    [httpManager sendInvitesWithPersons:@[] message:@"" userId:@"" inviteLinkDestinationURL:linkDestination completionBlock:nil];
     [mocked verify];
 }
 
