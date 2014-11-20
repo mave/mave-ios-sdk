@@ -31,7 +31,7 @@
 - (void)makeSendingInProgressViewActive {
     self.inviteMessageView.hidden = YES;
     self.sendingInProgressView.hidden = NO;
-//    [self.sendingInProgressView startTimedProgress];
+    [self.sendingInProgressView startTimedProgress];
 }
 
 - (void)layoutSubviews {

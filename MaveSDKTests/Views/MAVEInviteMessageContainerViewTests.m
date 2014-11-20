@@ -31,16 +31,18 @@
     MAVEInviteMessageContainerView *view = [[MAVEInviteMessageContainerView alloc] init];
     XCTAssertNotNil(view.inviteMessageView);
     XCTAssertNotNil(view.sendingInProgressView);
-
-    id sendingInProgressViewMock = [OCMockObject partialMockForObject:view.sendingInProgressView];
     XCTAssertFalse(view.inviteMessageView.hidden);
     XCTAssertTrue(view.sendingInProgressView.hidden);
-    [sendingInProgressViewMock verify];
 }
 
 - (void)testSwitchToSendingInProgressView {
     MAVEInviteMessageContainerView *view = [[MAVEInviteMessageContainerView alloc] init];
+    id sendingInProgressViewMock = [OCMockObject partialMockForObject:view.sendingInProgressView];
+    [[sendingInProgressViewMock expect] startTimedProgress];
+
     [view makeSendingInProgressViewActive];
+
+    [sendingInProgressViewMock verify];
     XCTAssertTrue(view.inviteMessageView.hidden);
     XCTAssertFalse(view.sendingInProgressView.hidden);
 }
