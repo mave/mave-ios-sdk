@@ -36,6 +36,26 @@
     return self;
 }
 
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+        newRequest:(NSURLRequest *)request
+ completionHandler:(void (^)(NSURLRequest *))completionHandler {
+    // Always redirect with the same method, body, headers as original request
+    //
+    // NB: Default behavior in all HTTP clients including this one is
+    // for same method to be used unless it's POST in which case it gets
+    // changed to GET, and for request body to be dropped
+    NSMutableURLRequest *newRequest =
+        [[NSMutableURLRequest alloc] initWithURL:request.URL
+                                     cachePolicy:request.cachePolicy
+                                 timeoutInterval:request.timeoutInterval];
+    newRequest.HTTPMethod = task.originalRequest.HTTPMethod;
+    newRequest.HTTPBody = task.originalRequest.HTTPBody;
+    newRequest.allHTTPHeaderFields = task.originalRequest.allHTTPHeaderFields;
+    completionHandler(newRequest);
+}
+
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodType:(NSString *)methodType
                                     params:(NSDictionary *)params
@@ -137,7 +157,6 @@
 
         // JSON empty data might be a string literal ""
         NSString *dataAsString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"data as string: [%@]", dataAsString);
         if (data ==nil ||
             data.length == 0 ||
             [dataAsString isEqualToString:@"\"\"\n"]) {

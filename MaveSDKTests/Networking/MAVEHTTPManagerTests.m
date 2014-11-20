@@ -15,6 +15,11 @@
 
 #import <OCMock/OCMock.h>
 
+// alter some built-in objects to make readonly properties assignable
+@interface NSURLSessionTask (MutableSessionTask)
+@property (strong, nonatomic, readwrite) NSURLRequest *originalRequest;
+@end
+
 @interface MAVEHTTPManagerTests : XCTestCase
 
 @property (nonatomic, strong) MAVEHTTPManager *httpManager;
@@ -64,6 +69,37 @@
     XCTAssertEqualObjects(s2, @"10x10");
     XCTAssertEqualObjects(s3, @"10x20");
     XCTAssertEqualObjects(s4, @"10x11");
+}
+
+- (void)testRedirects {
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
+
+    NSMutableURLRequest *originalRequest = [[NSMutableURLRequest alloc] init];
+    originalRequest.URL = [NSURL URLWithString:@"http://example.com/foo"];
+    originalRequest.HTTPMethod = @"POST";
+    originalRequest.HTTPBody = [@"hello" dataUsingEncoding:NSUTF8StringEncoding];
+    [originalRequest setValue:@"foobar" forHTTPHeaderField:@"X-Danny-Foo"];
+
+    // This is a new request with basically what the default behavior for redirects would be
+    NSMutableURLRequest *newRequest = [[NSMutableURLRequest alloc] init];
+    newRequest.URL = [NSURL URLWithString:@"https://example.com/foo"];
+    newRequest.HTTPMethod = @"GET";
+    newRequest.HTTPBody = nil;
+    [originalRequest setValue:@"foobar" forHTTPHeaderField:@"X-Danny-Foo"];
+
+    NSURLSessionTask *task = [[NSURLSessionTask alloc] init];
+    task.originalRequest = originalRequest;
+
+    [httpManager URLSession:nil
+                       task:task
+ willPerformHTTPRedirection:nil
+                 newRequest:newRequest
+          completionHandler:^(NSURLRequest * request) {
+              XCTAssertEqualObjects(request.URL, newRequest.URL);
+              XCTAssertEqualObjects(request.HTTPMethod, originalRequest.HTTPMethod);
+              XCTAssertEqualObjects(request.HTTPBody, originalRequest.HTTPBody);
+              XCTAssertEqualObjects(request.allHTTPHeaderFields, originalRequest.allHTTPHeaderFields);
+          }];
 }
 
 //
