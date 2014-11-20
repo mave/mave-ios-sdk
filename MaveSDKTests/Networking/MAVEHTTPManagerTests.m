@@ -42,7 +42,11 @@
 }
 
 - (void)testUserAgent {
-    NSString *expectedUA =  @"(iPhone; CPU iPhone OS 8_1 like Mac OS X)";
+    NSString *iosVersionStr = [[UIDevice currentDevice].systemVersion
+        stringByReplacingOccurrencesOfString:@"." withString:@"_"];
+    NSString *expectedUA = [NSString stringWithFormat:
+                            @"(iPhone; CPU iPhone OS %@ like Mac OS X)",
+                            iosVersionStr];
     NSString *ua = [MAVEHTTPManager userAgentWithUIDevice:[UIDevice currentDevice]];
     XCTAssertEqualObjects(ua, expectedUA);
 

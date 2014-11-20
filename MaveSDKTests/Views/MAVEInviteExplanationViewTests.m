@@ -52,10 +52,11 @@
     CGFloat expectedViewHeight = 90.5;
     MAVEInviteExplanationView *copyView = [[MAVEInviteExplanationView alloc] init];
     CGSize labelSize = [copyView messageCopyLabelSizeWithWidth:viewWidth];
-    XCTAssertEqual(labelSize.width, viewWidth - 2*20);
-    XCTAssertEqual(labelSize.height, expectedViewHeight - 2*20);
+
+    XCTAssertEqualWithAccuracy(labelSize.width, viewWidth - 2*20, 1);
+    XCTAssertEqualWithAccuracy(labelSize.height, expectedViewHeight - 2*20, 1);
     
-    XCTAssertEqual([copyView computeHeightWithWidth:viewWidth], expectedViewHeight);
+    XCTAssertEqualWithAccuracy([copyView computeHeightWithWidth:viewWidth], expectedViewHeight, 1);
 }
 
 @end

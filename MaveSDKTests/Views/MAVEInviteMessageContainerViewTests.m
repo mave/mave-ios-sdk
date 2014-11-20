@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 #import "MAVEInviteMessageContainerView.h"
 
@@ -30,8 +31,11 @@
     MAVEInviteMessageContainerView *view = [[MAVEInviteMessageContainerView alloc] init];
     XCTAssertNotNil(view.inviteMessageView);
     XCTAssertNotNil(view.sendingInProgressView);
+
+    id sendingInProgressViewMock = [OCMockObject partialMockForObject:view.sendingInProgressView];
     XCTAssertFalse(view.inviteMessageView.hidden);
     XCTAssertTrue(view.sendingInProgressView.hidden);
+    [sendingInProgressViewMock verify];
 }
 
 - (void)testSwitchToSendingInProgressView {

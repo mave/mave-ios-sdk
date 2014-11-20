@@ -78,7 +78,7 @@ float const INCREMENT_PROGRESS_BAR_BY = MAX_PROGRESS / (SECS_TO_FILL_PROGRESS_BA
 - (void)updateProgressViewFromTimer:(NSTimer *)timer {
     float currentProgress = self.progressView.progress;
     if (currentProgress >= MAX_PROGRESS) {
-        if (timer.valid) {
+        if ([timer isValid]) {  // timer.valid is iOS8 only
             [timer invalidate];
         }
         return;
