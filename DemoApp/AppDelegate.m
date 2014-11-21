@@ -59,7 +59,7 @@
     // that the action and target will be ignored since we call the
     // dismissalBlock you passed us instead
     mave.displayOptions.navigationBarCancelButton = backButton;
-    
+
     // Invite explanation options
     mave.displayOptions.inviteExplanationCopy =
         @"Invite friends to DemoApp!\nGet $20 for each person that signs up.";
