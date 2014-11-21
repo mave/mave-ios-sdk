@@ -42,6 +42,7 @@
     UIFont *font1 = [UIFont fontWithName:@"AppleSDGothicNeo-Light" size:17];
     UIFont *font1Bold = [UIFont fontWithName:@"AppleSDGothicNeo-SemiBold" size:17];
     UIFont *font1Smaller = [UIFont fontWithName:@"AppleSDGothicNeo-Thin" size:14];
+    UIFont *font1SmallerBold = [UIFont fontWithName:@"AppleSDGothicNeo-SemiBold" size:14];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] init];
     backButton.title = @"Back";
     backButton.tintColor = white;
@@ -52,16 +53,19 @@
     // Navigation bar options
     mave.displayOptions.navigationBarTitleCopy = @"Invite friends";
     mave.displayOptions.navigationBarTitleFont = font1Bold;
-    mave.displayOptions.navigationBarTitleTextColor = white;
-    mave.displayOptions.navigationBarBackgroundColor = green;
+    mave.displayOptions.navigationBarTitleTextColor = black;
+    mave.displayOptions.navigationBarBackgroundColor = lightGray;
     // the cancel button can be any custom UIBarButtonItem, but note
     // that the action and target will be ignored since we call the
     // dismissalBlock you passed us instead
     mave.displayOptions.navigationBarCancelButton = backButton;
     
-    // User explanation copy
-    mave.displayOptions.inviteExplanationCopy = @"Get $20 for each friend you invite, this is some longer text blah";
-    mave.displayOptions.inviteExplanationCellBackgroundColor = lightGray;
+    // Invite explanation options
+    mave.displayOptions.inviteExplanationCopy =
+        @"Invite friends to DemoApp!\nGet $20 for each person that signs up.";
+    mave.displayOptions.inviteExplanationFont = font1SmallerBold;
+    mave.displayOptions.inviteExplanationTextColor = white;
+    mave.displayOptions.inviteExplanationCellBackgroundColor = green;
 
     // Contacts table options
     mave.displayOptions.contactNameFont = font1;
@@ -76,7 +80,7 @@
     mave.displayOptions.contactSectionHeaderFont = font1Smaller;
     mave.displayOptions.contactSectionHeaderTextColor = black;
     mave.displayOptions.contactSectionHeaderBackgroundColor = lightGray;
-    mave.displayOptions.contactSectionIndexColor = green;
+    mave.displayOptions.contactSectionIndexColor = black;
     mave.displayOptions.contactSectionIndexBackgroundColor = [UIColor colorWithWhite:1 alpha:0];
 
     // Message and Send section options

@@ -124,7 +124,7 @@
 //
 - (void)testSendInvites {
     MaveSDK *mave = [MaveSDK sharedInstance];
-    mave.userData.inviteLinkDestinationURL = @"http://example.com/foo?code=blah";
+    mave.userData.inviteLinkDestinationURL = @"http://example.com/foo?referralCode=blah";
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     [vc loadView];
     [vc viewDidLoad];
@@ -146,7 +146,6 @@
     [vc sendInvites];
     [mockHTTPManager verify];
 }
-
 
 
 - (void)testViewDidLoadSendsInvitePageViewedEvent {
