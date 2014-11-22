@@ -184,7 +184,6 @@
     [self.inviteMessageContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
     
-
     __weak typeof(self) weakSelf = self;
     self.inviteMessageContainerView.inviteMessageView.textViewContentChangingBlock = ^void() {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -227,22 +226,27 @@
     // Add in the explanation view if text has been set
     //
     if ([self.inviteExplanationView.messageCopy.text length] > 0) {
-        CGFloat inviteExplanationViewHeight = [self.inviteExplanationView
-                                               computeHeightWithWidth:containerFrame.size.width];
+        CGRect prevInviteExplanationViewFrame = self.inviteExplanationView.frame;
+        // use ceil so rounding errors won't cause tiny gap below the table header view
+        CGFloat inviteExplanationViewHeight = ceil([self.inviteExplanationView
+                                                    computeHeightWithWidth:containerFrame.size.width]);
         CGRect inviteExplanationViewFrame = CGRectMake(0, 0, containerFrame.size.width,
-                                                       inviteExplanationViewHeight);
-        self.inviteExplanationView.frame = inviteExplanationViewFrame;
+                                                       ceil(inviteExplanationViewHeight));
 
         // table header view needs to be re-assigned when frame changes or the rest
         // of the table doesn't get offset and the header overlaps it
-        self.ABTableViewController.tableView.tableHeaderView = self.inviteExplanationView;
-        // Put empty above table view above the content in the table view with same
-        // color as the header cell so it looks like it's part of the header cell
-        self.ABTableViewController.aboveTableContentView.frame =
-            CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
-                       containerFrame.size.width, containerFrame.size.height);
-        self.ABTableViewController.aboveTableContentView.backgroundColor =
-            self.inviteExplanationView.backgroundColor;
+        if (!CGRectEqualToRect(inviteExplanationViewFrame, prevInviteExplanationViewFrame)) {
+            NSLog(@"invite frame is: %@", NSStringFromCGRect(inviteExplanationViewFrame));
+            self.inviteExplanationView.frame = inviteExplanationViewFrame;
+            self.ABTableViewController.tableView.tableHeaderView = self.inviteExplanationView;
+            // Put empty view above the content in the table view with same color
+            // as the header cell so it looks like it's part of the header cell
+            self.ABTableViewController.aboveTableContentView.frame =
+                CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
+                           containerFrame.size.width, containerFrame.size.height);
+            self.ABTableViewController.aboveTableContentView.backgroundColor =
+                self.inviteExplanationView.backgroundColor;
+        }
     }
 }
 //
