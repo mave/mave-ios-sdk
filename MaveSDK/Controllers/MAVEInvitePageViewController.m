@@ -231,9 +231,6 @@
     CGFloat inviteViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
     if ([self shouldDisplayInviteMessageView]) {
         inviteViewOffsetY -= inviteViewHeight;
-        self.inviteMessageContainerView.hidden = NO;
-    } else {
-        self.inviteMessageContainerView.hidden = YES;
     }
 
     CGRect inviteMessageViewFrame = CGRectMake(0,
