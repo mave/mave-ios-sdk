@@ -111,6 +111,14 @@
     [self layoutInvitePageViewAndSubviews];
 }
 
+- (BOOL)shouldDisplayInviteMessageView {
+    if ([self.ABTableViewController.selectedPhoneNumbers count] == 0) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 //
 // Load the correct view(s) with data
 //
@@ -205,22 +213,34 @@
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
-    CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
-                                computeHeightWithWidth:containerFrame.size.width];
+    CGFloat inviteViewHeight;
+    if (self.shouldDisplayInviteMessageView) {
+        inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
+                            computeHeightWithWidth:containerFrame.size.width];
+
+    } else {
+        inviteViewHeight = 0;
+    }
+    self.inviteMessageContainerView.hidden = !self.shouldDisplayInviteMessageView;
 
     CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
                                        containerFrame.origin.y,
                                        containerFrame.size.width,
-                                       containerFrame.size.height - inviteViewHeight);
+                                       containerFrame.size.height);
 
     CGRect inviteMessageViewFrame = CGRectMake(containerFrame.origin.x,
-                                               tableViewFrame.origin.y + tableViewFrame.size.height,
+                                               tableViewFrame.origin.y + containerFrame.size.height - inviteViewHeight,
                                                containerFrame.size.width,
                                                inviteViewHeight);
 
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
+
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
+    
+    if (!self.shouldDisplayInviteMessageView ) {
+        self.inviteMessageContainerView.hidden = YES;
+    }
     
     //
     // Add in the explanation view if text has been set
@@ -258,6 +278,7 @@
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
     // from somewhere else.
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self layoutInvitePageViewAndSubviews];
         [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:num];
     });
 }
