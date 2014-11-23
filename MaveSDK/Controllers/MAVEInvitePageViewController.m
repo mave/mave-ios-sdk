@@ -213,34 +213,37 @@
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
-    CGFloat inviteViewHeight;
-    if (self.shouldDisplayInviteMessageView) {
-        inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
-                            computeHeightWithWidth:containerFrame.size.width];
-
-    } else {
-        inviteViewHeight = 0;
-    }
-    self.inviteMessageContainerView.hidden = !self.shouldDisplayInviteMessageView;
-
     CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
                                        containerFrame.origin.y,
                                        containerFrame.size.width,
                                        containerFrame.size.height);
 
-    CGRect inviteMessageViewFrame = CGRectMake(containerFrame.origin.x,
-                                               tableViewFrame.origin.y + containerFrame.size.height - inviteViewHeight,
+    CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
+                            computeHeightWithWidth:containerFrame.size.width];
+
+    // Extend bottom of table view content so invite message view doesn't overlap it
+    UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
+    abTableViewInsets.bottom = inviteViewHeight;
+    self.ABTableViewController.tableView.contentInset = abTableViewInsets;
+
+    // Put the invite message view off bottom of screen unless we should display it,
+    // then it goes at the very bottom
+    CGFloat inviteViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
+    if ([self shouldDisplayInviteMessageView]) {
+        inviteViewOffsetY -= inviteViewHeight;
+        self.inviteMessageContainerView.hidden = NO;
+    } else {
+        self.inviteMessageContainerView.hidden = YES;
+    }
+
+    CGRect inviteMessageViewFrame = CGRectMake(0,
+                                               inviteViewOffsetY,
                                                containerFrame.size.width,
                                                inviteViewHeight);
 
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
-
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
-    
-    if (!self.shouldDisplayInviteMessageView ) {
-        self.inviteMessageContainerView.hidden = YES;
-    }
     
     //
     // Add in the explanation view if text has been set
@@ -278,7 +281,9 @@
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
     // from somewhere else.
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self layoutInvitePageViewAndSubviews];
+        [UIView animateWithDuration:0.25 animations:^{
+            [self layoutInvitePageViewAndSubviews];
+        }];
         [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:num];
     });
 }
