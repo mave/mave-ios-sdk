@@ -74,7 +74,7 @@
     [request setHTTPBody:jsonData];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:self.applicationID forHTTPHeaderField:@"X-Application-ID"];
+    [request setValue:self.applicationID forHTTPHeaderField:@"X-Application-Id"];
     NSString *userAgent =
         [[self class] userAgentWithUIDevice:[UIDevice currentDevice]];
     NSString *screenSize =

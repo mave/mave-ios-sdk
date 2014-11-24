@@ -254,7 +254,7 @@
     NSString *expectedUserAgent = [MAVEHTTPManager userAgentWithUIDevice:[UIDevice currentDevice]];
     NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",
                                       @"Accept": @"application/json",
-                                      @"X-Application-ID": @"appid12",
+                                      @"X-Application-Id": @"appid12",
                                       @"X-App-Device-Id": @"appdeviceid12",
                                       @"User-Agent": expectedUserAgent,
                                       @"X-Device-Screen-Dimensions": expectedDimensions,
