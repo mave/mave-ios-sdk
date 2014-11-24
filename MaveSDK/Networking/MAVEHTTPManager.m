@@ -24,6 +24,7 @@
                   applicationDeviceID:(NSString *)applicationDeviceID {
     if (self = [self init]) {
         self.applicationID = applicationID;
+        self.applicationDeviceID = applicationDeviceID;
         NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         sessionConfig.timeoutIntervalForRequest = 5.0;
         sessionConfig.timeoutIntervalForResource = 5.0;
@@ -75,6 +76,7 @@
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:self.applicationID forHTTPHeaderField:@"X-Application-Id"];
+    [request setValue:self.applicationDeviceID forHTTPHeaderField:@"X-App-Device-Id"];
     NSString *userAgent =
         [[self class] userAgentWithUIDevice:[UIDevice currentDevice]];
     NSString *screenSize =
