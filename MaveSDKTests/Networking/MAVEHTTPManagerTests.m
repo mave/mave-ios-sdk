@@ -32,7 +32,8 @@
     [super setUp];
     
     // Set up http manager to use
-    self.httpManager = [[MAVEHTTPManager alloc] initWithApplicationId:@"foo123"];
+    self.httpManager = [[MAVEHTTPManager alloc] initWithApplicationID:@"foo123"
+                                                  applicationDeviceID:@"foo"];
 }
 
 - (void)tearDown {
@@ -40,7 +41,7 @@
 }
 
 - (void)testInitSetsCorrectVaues {
-    XCTAssertEqualObjects(self.httpManager.applicationId, @"foo123");
+    XCTAssertEqualObjects(self.httpManager.applicationID, @"foo123");
     XCTAssertEqualObjects(self.httpManager.baseURL, @"http://devapi.mave.io/v1.0");
     XCTAssertNotNil(self.httpManager.session);
     XCTAssertEqualObjects(self.httpManager.session.configuration.HTTPAdditionalHeaders, nil);
@@ -218,7 +219,8 @@
 
 - (void)testSendIdentifiedJSONRequestSuccess {
     // Setup mock and block to get data out of the request
-    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] initWithApplicationId:@"appid12"];
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] initWithApplicationID:@"appid12"
+                                                              applicationDeviceID:@"appdeviceid12"];
     id mockSession = [OCMockObject mockForClass:[NSURLSession class]];
     id mockTask = [OCMockObject mockForClass:[NSURLSessionTask class]];
     httpManager.session = mockSession;
@@ -252,7 +254,8 @@
     NSString *expectedUserAgent = [MAVEHTTPManager userAgentWithUIDevice:[UIDevice currentDevice]];
     NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",
                                       @"Accept": @"application/json",
-                                      @"X-Application-ID": @"appid12",
+                                      @"X-Application-Id": @"appid12",
+                                      @"X-App-Device-Id": @"appdeviceid12",
                                       @"User-Agent": expectedUserAgent,
                                       @"X-Device-Screen-Dimensions": expectedDimensions,
                                       };

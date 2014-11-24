@@ -15,7 +15,8 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 
 @interface MAVEHTTPManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate>
 
-@property (strong, nonatomic) NSString *applicationId;
+@property (strong, nonatomic) NSString *applicationID;
+@property (strong, nonatomic) NSString *applicationDeviceID;
 @property (strong, nonatomic) NSString *baseURL;
 @property (strong, nonatomic) NSURLSession *session;
 
@@ -23,7 +24,8 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 + (NSString *)userAgentWithUIDevice:(UIDevice *)device;
 + (NSString *)formattedScreenSize:(CGSize)size;
 
-- (MAVEHTTPManager *)initWithApplicationId:(NSString *)applicationId;
+- (MAVEHTTPManager *)initWithApplicationID:(NSString *)applicationID
+                       applicationDeviceID:(NSString *)applicationDeviceID;
 
 // Specific API Requests the app will make
 - (void)sendInvitesWithPersons:(NSArray *)persons

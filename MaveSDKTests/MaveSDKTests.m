@@ -39,6 +39,7 @@
     XCTAssertEqualObjects(gk1.appId, @"foo123");
     XCTAssertNotNil(gk1.displayOptions);
     XCTAssertNil(gk1.defaultSMSMessageText);
+    XCTAssertNotNil(gk1.appDeviceID);
 }
 
 
@@ -50,6 +51,18 @@
     
     // Test pointer to same object
     XCTAssertTrue(gk1 == gk2);
+}
+
+- (void)testResetSharedInstanceResetsUserDataButNotAppDeviceID {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    NSString *appDeviceID1 = [MaveSDK sharedInstance].appDeviceID;
+    [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
+    [MaveSDK sharedInstance].userData.userID = @"blah";
+
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertNil([MaveSDK sharedInstance].userData.userID);
+    XCTAssertEqualObjects(appDeviceID1, [MaveSDK sharedInstance].appDeviceID);
 }
 
 - (void)testSetupSharedInstanceTriggersAppOpenEvent {

@@ -21,6 +21,7 @@
 @property (nonatomic, strong) MAVEHTTPManager *HTTPManager;
 
 @property (nonatomic, strong) NSString *appId;
+@property (nonatomic, strong) NSString *appDeviceID;
 @property (strong, nonatomic) MAVEUserData *userData;
 @property (nonatomic, copy) InvitePageDismissalBlock invitePageDismissalBlock;
 

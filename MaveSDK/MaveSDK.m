@@ -10,6 +10,7 @@
 #import "MaveSDK_Internal.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEConstants.h"
+#import "MAVEIDUtils.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEHTTPManager.h"
 
@@ -24,8 +25,10 @@
 - (instancetype)initWithAppId:(NSString *)appId {
     if (self = [self init]) {
         _appId = appId;
+        _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
-        _HTTPManager = [[MAVEHTTPManager alloc] initWithApplicationId:appId];
+        _HTTPManager = [[MAVEHTTPManager alloc] initWithApplicationID:self.appId
+                                                  applicationDeviceID:self.appDeviceID];
     }
     return self;
 }
