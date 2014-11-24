@@ -39,6 +39,8 @@
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
         self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 
+        // default above table content view matches table, it will get overridden to
+        // match the above table header view if we add one
         self.aboveTableContentView = [[UIView alloc] init];
         self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
 
