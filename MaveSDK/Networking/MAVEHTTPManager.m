@@ -20,9 +20,10 @@
     return self;
 }
 
-- (instancetype)initWithApplicationId:(NSString *)applicationId {
+- (instancetype)initWithApplicationID:(NSString *)applicationID
+                  applicationDeviceID:(NSString *)applicationDeviceID {
     if (self = [self init]) {
-        _applicationId = applicationId;
+        self.applicationID = applicationID;
         NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         sessionConfig.timeoutIntervalForRequest = 5.0;
         sessionConfig.timeoutIntervalForResource = 5.0;
@@ -31,7 +32,7 @@
         delegateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
         _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
 
-        DebugLog(@"Initialized MAVEHTTPManager on domain %@ with applicationID %@", MAVEAPIBaseURL, _applicationId);
+        DebugLog(@"Initialized MAVEHTTPManager on domain %@ with applicationID %@", MAVEAPIBaseURL, self.applicationID);
     }
     return self;
 }
@@ -73,7 +74,7 @@
     [request setHTTPBody:jsonData];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:self.applicationId forHTTPHeaderField:@"X-Application-ID"];
+    [request setValue:self.applicationID forHTTPHeaderField:@"X-Application-ID"];
     NSString *userAgent =
         [[self class] userAgentWithUIDevice:[UIDevice currentDevice]];
     NSString *screenSize =

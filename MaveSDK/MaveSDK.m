@@ -27,7 +27,8 @@
         _appId = appId;
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
-        _HTTPManager = [[MAVEHTTPManager alloc] initWithApplicationId:appId];
+        _HTTPManager = [[MAVEHTTPManager alloc] initWithApplicationID:self.appId
+                                                  applicationDeviceID:self.appDeviceID];
     }
     return self;
 }
