@@ -42,11 +42,7 @@
 
 // Generate uuid1 with timestamp. This is normally MAC address + timestamp, since
 // this is an apple provided library presumably it can't use the real MAC address
-// in which case it will fall back to 10 random bytes and
-//
-// This uses the local timezone, perhaps we should modify the code here
-// http://www.opensource.apple.com/source/xnu/xnu-792.13.8/libkern/uuid/uuid.c
-// to write a version that uses UTC
+// in which case it will fall back to 6 random bytes instead
 + (NSString *)generateUUIDVersion1String {
     uuid_t uuidBytes;
     uuid_generate_time((unsigned char*)uuidBytes);
