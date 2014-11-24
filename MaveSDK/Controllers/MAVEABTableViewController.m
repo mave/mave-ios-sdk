@@ -37,6 +37,7 @@
         self.tableView.sectionIndexBackgroundColor =
             displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
+        self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 
         self.aboveTableContentView = [[UIView alloc] init];
         self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
