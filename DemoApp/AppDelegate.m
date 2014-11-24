@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "MaveSDK.h"
+#import "MAVEIDUtils.h"
 
 #define MAVEDemoApplicationID @"12345"
 
@@ -27,6 +28,7 @@
                                                             email:@"foo@ex.com"
                                                             phone:@"18085551234"];
     [[MaveSDK sharedInstance] identifyUser:userData];
+
 
     ///
     /// Display customizations

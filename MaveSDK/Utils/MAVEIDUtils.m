@@ -9,6 +9,7 @@
 
 #import "MAVEIDUtils.h"
 #import "MAVEConstants.h"
+#import <uuid/uuid.h>
 
 #define MAVEUserDefaultsKeyAppDeviceID @"MAVEUserDefaultsKeyAppDeviceID"
 
@@ -36,10 +37,29 @@
 }
 
 + (NSString *)generateAppDeviceIDUUIDString {
-    CFUUIDRef theUUID = CFUUIDCreate(NULL);
-    NSString *stringUUID = (__bridge NSString *) CFUUIDCreateString(NULL, theUUID);
-    if (theUUID != NULL) CFRelease(theUUID);
-    return stringUUID;
+    return [self generateUUIDVersion1String];
 }
+
+// Generate uuid1 with timestamp. This is normally MAC address + timestamp, since
+// this is an apple provided library presumably it can't use the real MAC address
+// in which case it will fall back to 10 random bytes and
+//
+// This uses the local timezone, perhaps we should modify the code here
+// http://www.opensource.apple.com/source/xnu/xnu-792.13.8/libkern/uuid/uuid.c
+// to write a version that uses UTC
++ (NSString *)generateUUIDVersion1String {
+    uuid_t uuidBytes;
+    uuid_generate_time((unsigned char*)uuidBytes);
+    NSUUID *uuid = [[NSUUID alloc] initWithUUIDBytes:uuidBytes];
+    return uuid.UUIDString;
+}
+
+// All random bytes, uuid4
++ (NSString *)generateUUIDVersion4String {
+    return [NSUUID UUID].UUIDString;
+}
+
+
+
 
 @end
