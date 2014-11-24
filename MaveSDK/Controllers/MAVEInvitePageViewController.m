@@ -111,6 +111,14 @@
     [self layoutInvitePageViewAndSubviews];
 }
 
+- (BOOL)shouldDisplayInviteMessageView {
+    if ([self.ABTableViewController.selectedPhoneNumbers count] == 0) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 //
 // Load the correct view(s) with data
 //
@@ -205,21 +213,36 @@
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
-    CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
-                                computeHeightWithWidth:containerFrame.size.width];
-
     CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
                                        containerFrame.origin.y,
                                        containerFrame.size.width,
-                                       containerFrame.size.height - inviteViewHeight);
+                                       containerFrame.size.height);
 
-    CGRect inviteMessageViewFrame = CGRectMake(containerFrame.origin.x,
-                                               tableViewFrame.origin.y + tableViewFrame.size.height,
+    CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
+                            computeHeightWithWidth:containerFrame.size.width];
+
+    // Extend bottom of table view content so invite message view doesn't overlap it
+    UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
+    abTableViewInsets.bottom = inviteViewHeight;
+    self.ABTableViewController.tableView.contentInset = abTableViewInsets;
+
+    // Put the invite message view off bottom of screen unless we should display it,
+    // then it goes at the very bottom
+    CGFloat inviteViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
+    if ([self shouldDisplayInviteMessageView]) {
+        inviteViewOffsetY -= inviteViewHeight;
+    }
+
+    CGRect inviteMessageViewFrame = CGRectMake(0,
+                                               inviteViewOffsetY,
                                                containerFrame.size.width,
                                                inviteViewHeight);
 
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
+    self.ABTableViewController.aboveTableContentView.frame =
+        CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
+               containerFrame.size.width, containerFrame.size.height);
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
     
     //
@@ -236,14 +259,9 @@
         // table header view needs to be re-assigned when frame changes or the rest
         // of the table doesn't get offset and the header overlaps it
         if (!CGRectEqualToRect(inviteExplanationViewFrame, prevInviteExplanationViewFrame)) {
-            NSLog(@"invite frame is: %@", NSStringFromCGRect(inviteExplanationViewFrame));
             self.inviteExplanationView.frame = inviteExplanationViewFrame;
             self.ABTableViewController.tableView.tableHeaderView = self.inviteExplanationView;
-            // Put empty view above the content in the table view with same color
-            // as the header cell so it looks like it's part of the header cell
-            self.ABTableViewController.aboveTableContentView.frame =
-                CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
-                           containerFrame.size.width, containerFrame.size.height);
+            // match above table color to explanation view color so it looks like one view
             self.ABTableViewController.aboveTableContentView.backgroundColor =
                 self.inviteExplanationView.backgroundColor;
         }
@@ -258,6 +276,9 @@
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
     // from somewhere else.
     dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.25 animations:^{
+            [self layoutInvitePageViewAndSubviews];
+        }];
         [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:num];
     });
 }
