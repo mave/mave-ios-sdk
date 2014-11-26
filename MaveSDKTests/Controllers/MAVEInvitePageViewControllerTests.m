@@ -56,6 +56,7 @@
 
     [ipvc viewDidAppear:NO];
     [mock verify];
+    [mock stopMocking];
 }
 
 - (void)testUseAddressBookBasedInviteViewIfCanTryAddressBookInvites {
@@ -73,6 +74,7 @@
     [ipvc viewDidAppear:NO];
 
     [mock verify];
+    [mock stopMocking];
 }
 
 
@@ -82,7 +84,7 @@
     [ipvc loadView]; [ipvc viewDidLoad];
 
     CGFloat expectedWidth = ipvc.view.frame.size.width;
-    CGFloat expectedHeight = [ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth];
+    CGFloat expectedHeight = round([ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth]);
     XCTAssertGreaterThan(expectedWidth, 0);
     XCTAssertGreaterThan(expectedHeight, 0);
 
