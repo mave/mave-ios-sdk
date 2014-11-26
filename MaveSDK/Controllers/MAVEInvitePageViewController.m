@@ -62,6 +62,7 @@
 }
 
 - (void)dealloc {
+    NSLog(@"called dealloc");
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
                              name:UIKeyboardWillChangeFrameNotification
@@ -373,11 +374,11 @@
                                             initWithActivityItems:activityItems
                                             applicationActivities:nil];
     activityVC.excludedActivityTypes = @[UIActivityTypeAddToReadingList];
-    [self presentViewController:activityVC animated:YES completion:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self dismissSelf:1];
-        });
-    }];
+    activityVC.completionHandler = ^void (NSString *activityType, BOOL completed) {
+        unsigned int numberShares = completed ? 1 : 0;
+        [self dismissSelf:numberShares];
+    };
+    [self presentViewController:activityVC animated:YES completion:nil];
 }
 
 @end
