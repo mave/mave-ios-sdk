@@ -29,7 +29,11 @@
     self.keyboardFrame = [self keyboardFrameWhenHidden];
 
     [self setupNavigationBar];
-    [self determineAndSetViewBasedOnABPermissions];
+    if ([self canTryAddressBookInvites]) {
+        [self determineAndSetViewBasedOnABPermissions];
+    } else {
+        self.view = [self createEmptyFallbackView];
+    }
 }
 
 - (void)viewDidLoad {
@@ -49,6 +53,12 @@
     // Register the viewed invite page event with our API
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    if (![self canTryAddressBookInvites]) {
+        [self presentShareSheet];
+    }
 }
 
 - (void)dealloc {
@@ -117,6 +127,16 @@
     } else {
         return YES;
     }
+}
+
+- (BOOL)canTryAddressBookInvites {
+    // Right now, we'll only try our address book flow for US devices until we can
+    // thoroughly test different countries
+    NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    if ([countryCode isEqualToString:MAVECountryCodeUnitedStates]) {
+        return YES;
+    }
+    return NO;
 }
 
 //
@@ -337,6 +357,27 @@
 
 - (void)dismissSendInvitesFailedAlertView:(UIAlertView *)alertView {
     [alertView dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+// Do Share sheet invites instead
+- (void)presentShareSheet {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    NSMutableArray *activityItems = [[NSMutableArray alloc] init];
+    [activityItems addObject:mave.defaultSMSMessageText];
+    if ([mave.appId isEqualToString:MAVEPartnerApplicationIDSwig] ||
+        [mave.appId isEqualToString:MAVEPartnerApplicationIDSwigEleviter]) {
+        [activityItems addObject:[NSURL URLWithString:MAVEInviteURLSwig]];
+    }
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]
+                                            initWithActivityItems:activityItems
+                                            applicationActivities:nil];
+    activityVC.excludedActivityTypes = @[UIActivityTypeAddToReadingList];
+    [self presentViewController:activityVC animated:YES completion:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self dismissSelf:1];
+        });
+    }];
 }
 
 @end

@@ -30,6 +30,8 @@ typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, unsig
 - (UIView *)createEmptyFallbackView;
 - (void)setupNavigationBar;
 - (BOOL)shouldDisplayInviteMessageView;
+- (BOOL)canTryAddressBookInvites;
+- (void)presentShareSheet;
 - (void)layoutInvitePageViewAndSubviews;
 - (void)determineAndSetViewBasedOnABPermissions;
 

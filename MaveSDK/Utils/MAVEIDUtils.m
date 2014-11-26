@@ -51,9 +51,9 @@
 }
 
 // All random bytes, uuid4
-+ (NSString *)generateUUIDVersion4String {
-    return [NSUUID UUID].UUIDString;
-}
+//+ (NSString *)generateUUIDVersion4String {
+//    return [NSUUID UUID].UUIDString;
+//}
 
 
 

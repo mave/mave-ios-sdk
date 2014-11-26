@@ -43,11 +43,11 @@
 - (void)openCurrentAppInSettings {
     // Works in iOS8 only, lower platforms shouldn't even call this method
     // but check again for the string just to be safe and not crash in iOS7
-    if (&UIApplicationOpenSettingsURLString == NULL) {
-        return;
-    }
-    [[UIApplication sharedApplication]
-        openURL: [NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+//    if (&UIApplicationOpenSettingsURLString == NULL) {
+//        return;
+//    }
+//    [[UIApplication sharedApplication]
+//        openURL: [NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 }
 
 - (void)layoutSubviews {

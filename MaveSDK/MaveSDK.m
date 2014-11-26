@@ -126,7 +126,7 @@ static dispatch_once_t sharedInstanceonceToken;
 - (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
                                         setupError:(NSError *__autoreleasing *)setupError
                                     dismissalBlock:(InvitePageDismissalBlock) dismissalBlock {
-    self.invitePageDismissalBlock = dismissalBlock;
+    self.invitePageDismissalBlock = dismissalBlock;    
     UIViewController *returnViewController = nil;
     *setupError = [self validateSetup];
     if (!*setupError) {
