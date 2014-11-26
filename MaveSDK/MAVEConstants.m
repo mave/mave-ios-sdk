@@ -24,10 +24,22 @@ NSInteger const MAVEHTTPErrorResponseNilCode = 1012;
 NSInteger const MAVEHTTPErrorResponse400LevelCode = 400;
 NSInteger const MAVEHTTPErrorResponse500LevelCode = 500;
 
-
 NSString * const MAVE_VALIDATION_ERROR_DOMAIN = @"com.mave.validation.error";
 NSInteger const MAVEValidationErrorApplicationIDNotSetCode = 100;
 NSInteger const MAVEValidationErrorUserIdentifyNeverCalledCode = 110;
 NSInteger const MAVEValidationErrorUserIDNotSetCode = 111;
 NSInteger const MAVEValidationErrorUserNameNotSetCode = 112;
 NSInteger const MAVEValidationErrorDismissalBlockNotSetCode = 120;
+
+///
+/// Application IDs to hard-code features for specific early beta partners
+///
+NSString *const MAVEPartnerApplicationIDSwig = @"549627813558889";
+NSString *const MAVEPartnerApplicationIDSwigEleviter = @"571085046001449";
+NSString *const MAVEInviteURLSwig = @"http://appjoin.us/MTYz";
+            
+///
+/// Country Codes
+///
+NSString *const MAVECountryCodeUnitedStates = @"US";
+NSString *const MAVECountryCodeRussia = @"RU";

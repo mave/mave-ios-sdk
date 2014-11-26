@@ -33,3 +33,16 @@ extern NSInteger const MAVEValidationErrorUserIdentifyNeverCalledCode;
 extern NSInteger const MAVEValidationErrorUserIDNotSetCode;
 extern NSInteger const MAVEValidationErrorUserNameNotSetCode;
 extern NSInteger const MAVEValidationErrorDismissalBlockNotSetCode;
+
+///
+/// Application IDs to hard-code features for specific early beta partners
+///
+extern NSString * const MAVEPartnerApplicationIDSwig;
+extern NSString * const MAVEPartnerApplicationIDSwigEleviter;
+extern NSString * const MAVEInviteURLSwig;
+
+///
+/// Country Codes
+///
+extern NSString *const MAVECountryCodeUnitedStates;
+extern NSString *const MAVECountryCodeRussia;

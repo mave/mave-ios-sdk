@@ -29,7 +29,6 @@
                                                             phone:@"18085551234"];
     [[MaveSDK sharedInstance] identifyUser:userData];
 
-
     ///
     /// Display customizations
     ///

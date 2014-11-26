@@ -35,6 +35,48 @@
     [super tearDown];
 }
 
+- (void)testCanTryAddressBookInvites {
+    // on the simulator it's always US so this should always be true
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    XCTAssertTrue([ipvc canTryAddressBookInvites]);
+}
+
+- (void)testUseShareSheetIfCannotTryAddressBookInvites {
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    id mock = [OCMockObject partialMockForObject:ipvc];
+    [[[mock stub] andReturnValue:@NO] canTryAddressBookInvites];
+
+    // don't determine views by permissions, just use empty fallback
+    [[mock reject] determineAndSetViewBasedOnABPermissions];
+    [[mock expect] createEmptyFallbackView];
+
+    [ipvc loadView];
+
+    [[mock expect] presentShareSheet];
+
+    [ipvc viewDidAppear:NO];
+    [mock verify];
+    [mock stopMocking];
+}
+
+- (void)testUseAddressBookBasedInviteViewIfCanTryAddressBookInvites {
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    id mock = [OCMockObject partialMockForObject:ipvc];
+    [[[mock stub] andReturnValue:@YES] canTryAddressBookInvites];
+
+    // don't determine views by permissions, just use empty fallback
+    [[mock expect] determineAndSetViewBasedOnABPermissions];
+
+    [ipvc loadView];
+
+    [[mock reject] presentShareSheet];
+
+    [ipvc viewDidAppear:NO];
+
+    [mock verify];
+    [mock stopMocking];
+}
+
 
 - (void)testDoLayoutInviteExplanationBoxIfCopyNotNil {
     MAVEInvitePageViewController *ipvc =
@@ -42,7 +84,7 @@
     [ipvc loadView]; [ipvc viewDidLoad];
 
     CGFloat expectedWidth = ipvc.view.frame.size.width;
-    CGFloat expectedHeight = [ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth];
+    CGFloat expectedHeight = round([ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth]);
     XCTAssertGreaterThan(expectedWidth, 0);
     XCTAssertGreaterThan(expectedHeight, 0);
 
