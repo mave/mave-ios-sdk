@@ -27,6 +27,7 @@
     // On load keyboard is hidden
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
+    self.isFirstDisplay = YES;
 
     [self setupNavigationBar];
     if ([self canTryAddressBookInvites]) {
@@ -49,16 +50,22 @@
                       selector:@selector(deviceDidRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
-
+    
     // Register the viewed invite page event with our API
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
+    
+    // Now it's no longer the first display
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    if (![self canTryAddressBookInvites]) {
+    // If first time we're displaying this view, pop-up the share sheet
+    // automatically if we can't try address book invites
+    if (![self canTryAddressBookInvites] && self.isFirstDisplay) {
         [self presentShareSheet];
     }
+    // Now it's no longer the first time displaying this page
+    self.isFirstDisplay = NO;
 }
 
 - (void)dealloc {
@@ -362,6 +369,7 @@
 
 // Do Share sheet invites instead
 - (void)presentShareSheet {
+    NSLog(@"called present");
     MaveSDK *mave = [MaveSDK sharedInstance];
     NSMutableArray *activityItems = [[NSMutableArray alloc] init];
     [activityItems addObject:mave.defaultSMSMessageText];

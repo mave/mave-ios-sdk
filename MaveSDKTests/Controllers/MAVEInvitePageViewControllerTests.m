@@ -57,6 +57,9 @@
     [ipvc viewDidAppear:NO];
     [mock verify];
     [mock stopMocking];
+    
+    // Now it's no longer the first display
+    XCTAssertFalse(ipvc.isFirstDisplay);
 }
 
 - (void)testUseAddressBookBasedInviteViewIfCanTryAddressBookInvites {
