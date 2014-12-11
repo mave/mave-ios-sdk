@@ -11,8 +11,6 @@
 #import "MAVEDisplayOptions.h"
 #import "MAVEUserData.h"
 
-typedef void (^referringUserBlock)(MAVEUserData *userData);
-
 @class MAVEHTTPManager;
 
 @interface MaveSDK : NSObject

@@ -42,29 +42,36 @@
                                 methodType:(NSString *)methodType
                                     params:(NSDictionary *)params
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
-    // Parse JSON and handle errors
-    NSData *jsonData;
-    NSError *jsonParseError;
-    if ([NSJSONSerialization isValidJSONObject:params]) {
-        NSError *jsonSerializationError;
-        jsonData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:&jsonSerializationError];
-        if (jsonSerializationError != nil) {
+    NSData *bodyData;
+    // For GET request, turn params into querystring params
+    if ([methodType isEqualToString:@"GET"]) {
+        relativeURL = [relativeURL stringByAppendingString:
+                       [[self class] dictToURLQueryStringFragment:params]];
+        bodyData = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    } else {
+        // Parse JSON for body and handle errors
+        NSError *jsonParseError;
+        if ([NSJSONSerialization isValidJSONObject:params]) {
+            NSError *jsonSerializationError;
+            bodyData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:&jsonSerializationError];
+            if (jsonSerializationError != nil) {
+                NSDictionary *userInfo = @{};
+                jsonParseError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
+                                                            code:MAVEHTTPErrorRequestJSONCode
+                                                        userInfo:userInfo];
+            }
+        } else {
             NSDictionary *userInfo = @{};
             jsonParseError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
                                                         code:MAVEHTTPErrorRequestJSONCode
                                                     userInfo:userInfo];
         }
-    } else {
-        NSDictionary *userInfo = @{};
-        jsonParseError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
-                                                    code:MAVEHTTPErrorRequestJSONCode
-                                                userInfo:userInfo];
-    }
-    if (jsonParseError != nil) {
-        if (completionBlock != nil) {
-            completionBlock(jsonParseError, nil);
+        if (jsonParseError != nil) {
+            if (completionBlock != nil) {
+                completionBlock(jsonParseError, nil);
+            }
+            return;
         }
-        return;
     }
     
     // Build request
@@ -72,7 +79,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:url];
     [request setHTTPMethod:methodType];
-    [request setHTTPBody:jsonData];
+    [request setHTTPBody:bodyData];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:self.applicationID forHTTPHeaderField:@"X-Application-Id"];
@@ -245,6 +252,16 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
                              completionBlock:nil];
 }
 
+- (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock {
+    NSString *launchRoute = @"/referring_user";
+
+    [self sendIdentifiedJSONRequestWithRoute:launchRoute
+                                  methodType:@"GET"
+                                      params:nil
+                             completionBlock:nil];
+}
+
+
 // Utils
 + (NSString *)formattedScreenSize:(CGSize)size {
     long w = (long)round(size.width);
@@ -263,6 +280,26 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
                                                         withString:@"_"];
     return [NSString stringWithFormat:@"(iPhone; CPU iPhone OS %@ like Mac OS X)",
             iosVersionStr];
+}
+
++ (NSString *)dictToURLQueryStringFragment:(NSDictionary *)dict {
+    if ([dict count] == 0) {
+        return @"";
+    }
+    NSArray *sortedKeys = [[dict allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableArray *fragments = [[NSMutableArray alloc] init];
+    NSString *key, *val;
+    for (key in sortedKeys) {
+        val = [dict objectForKey:key];
+        if (val == (id)[NSNull null]) {  // NSNull and all false-ey things
+            val = @"";
+        }
+        // convert non-strings to strings
+        val = [NSString stringWithFormat:@"%@", val];
+        val = [val stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+        [fragments addObject:[NSString stringWithFormat:@"%@=%@", key, val]];
+    }
+    return [@"?" stringByAppendingString:[fragments componentsJoinedByString:@"&"]];
 }
 
 @end

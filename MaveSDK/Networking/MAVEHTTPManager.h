@@ -38,5 +38,6 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 - (void)identifyUserRequest:(MAVEUserData *)userData;
 - (void)trackSignupRequest:(MAVEUserData *)userData;
 - (void)trackInvitePageOpenRequest:(MAVEUserData *)userData;
+- (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
 
 @end

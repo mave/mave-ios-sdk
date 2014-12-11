@@ -31,5 +31,6 @@
                              error:(NSError *)error
                    completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
++ (NSString *)dictToURLQueryStringFragment:(NSDictionary *)dict;
 
 @end
