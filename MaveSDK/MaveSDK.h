@@ -11,17 +11,19 @@
 #import "MAVEDisplayOptions.h"
 #import "MAVEUserData.h"
 
+typedef void (^referringUserBlock)(MAVEUserData *userData);
+
 @class MAVEHTTPManager;
 
 @interface MaveSDK : NSObject
 
 @property (nonatomic, strong) MAVEInvitePageViewController *viewController;
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
-@property (nonatomic, strong) NSString *defaultSMSMessageText;
+@property (nonatomic, copy) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEHTTPManager *HTTPManager;
 
-@property (nonatomic, strong) NSString *appId;
-@property (nonatomic, strong) NSString *appDeviceID;
+@property (nonatomic, copy) NSString *appId;
+@property (nonatomic, copy) NSString *appDeviceID;
 @property (strong, nonatomic) MAVEUserData *userData;
 @property (nonatomic, copy) InvitePageDismissalBlock invitePageDismissalBlock;
 
