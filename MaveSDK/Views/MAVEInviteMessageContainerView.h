@@ -12,8 +12,8 @@
 
 @interface MAVEInviteMessageContainerView : UIView
 
-@property (strong, nonatomic) MAVEInviteMessageView *inviteMessageView;
-@property (strong, nonatomic) MAVEInviteSendingProgressView *sendingInProgressView;
+@property (nonatomic, strong) MAVEInviteMessageView *inviteMessageView;
+@property (nonatomic, strong) MAVEInviteSendingProgressView *sendingInProgressView;
 
 - (void)makeInviteMessageViewActive;
 - (void)makeSendingInProgressViewActive;

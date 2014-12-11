@@ -10,8 +10,8 @@
 
 @interface MAVENoAddressBookPermissionView : UIView
 
-@property (strong, nonatomic) UILabel *titleLabel;
-@property (strong, nonatomic) UILabel *detailLabel;
-@property (strong, nonatomic) UIButton *detailButton;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *detailLabel;
+@property (nonatomic, strong) UIButton *detailButton;
 
 @end
