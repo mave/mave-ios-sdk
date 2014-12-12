@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
+#import "MAVEConstants.h"
 #import "MAVEABCollection.h"
 #import "MAVEABCollection_Internal.h"
 #import <AddressBook/AddressBook.h>
@@ -29,7 +30,7 @@
         NSError *abAccessError = (__bridge_transfer NSError *)abAccessErrorCF;
         if (!([abAccessError.domain isEqualToString:@"ABAddressBookErrorDomain"]
                && abAccessError.code == 1)) {
-            NSLog(@"Unknown Error getting address book!");
+            DebugLog(@"Unknown Error getting address book");
         }
         self.completionBlock(nil);
     }
@@ -39,7 +40,7 @@
             NSArray *addressBookNS = CFBridgingRelease(ABAddressBookCopyArrayOfAllPeople(addressBook));
             self.data = [[self class] copyEntireAddressBookToMAVEABPersonArray:addressBookNS];
         } else {
-            NSLog(@"Not granted permission!");
+            DebugLog(@"User denied address book permission!");
         }
         if (addressBook != NULL) CFRelease(addressBook);
         self.completionBlock([self indexedDictionaryOfMAVEABPersons]);

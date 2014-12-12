@@ -53,7 +53,6 @@
                               setupError:&setupError
                           dismissalBlock:^(UIViewController *viewController,
                                            NSUInteger numberOfInvitesSent) {
-                              NSLog(@"in dismissal block");
                               [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
         }];
         if (setupError) {

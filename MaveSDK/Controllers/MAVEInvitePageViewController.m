@@ -69,7 +69,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"called dealloc");
+    DebugLog(@"dealloc MAVEInvitePageViewController");
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
                              name:UIKeyboardWillChangeFrameNotification
@@ -320,7 +320,7 @@
     NSString *message = self.inviteMessageContainerView.inviteMessageView.textView.text;
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     if ([phones count] == 0) {
-        NSLog(@"Pressed Send but no recipients selected");
+        DebugLog(@"Pressed Send but no recipients selected");
         return;
     }
     
@@ -369,7 +369,6 @@
 
 // Do Share sheet invites instead
 - (void)presentShareSheet {
-    NSLog(@"called present");
     MaveSDK *mave = [MaveSDK sharedInstance];
     NSMutableArray *activityItems = [[NSMutableArray alloc] init];
     [activityItems addObject:mave.defaultSMSMessageText];

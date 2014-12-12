@@ -137,10 +137,6 @@
     return index;
 }
 
-- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
-    NSLog(@"did scroll to top");
-}
-
 // Scroll delegate methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     //

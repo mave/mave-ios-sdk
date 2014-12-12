@@ -51,7 +51,7 @@ static dispatch_once_t sharedInstanceonceToken;
 
 + (instancetype)sharedInstance {
     if (sharedInstance == nil) {
-        NSLog(@"Error: didn't setup shared instance with app id");
+        DebugLog(@"Error: didn't setup shared instance with app id");
     }
     return sharedInstance;
 }
