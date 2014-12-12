@@ -72,4 +72,22 @@
     XCTAssertEqualObjects([ud toDictionaryIDOnly], expected);
 }
 
+- (void)testFullName {
+    MAVEUserData *ud = [[MAVEUserData alloc] init];
+    ud.firstName = @"Foo";
+    ud.lastName = @"Bar";
+    XCTAssertEqualObjects(ud.fullName, @"Foo Bar");
+}
+
+- (void)testFullNameWhenEmpty {
+    MAVEUserData *ud = [[MAVEUserData alloc] init];
+    XCTAssertEqualObjects(ud.fullName, nil);
+}
+
+- (void)testFullNameWhenFirstNameOnly {
+    MAVEUserData *ud = [[MAVEUserData alloc] init];
+    ud.firstName = @"Foo";
+    XCTAssertEqualObjects(ud.fullName, @"Foo");
+}
+
 @end

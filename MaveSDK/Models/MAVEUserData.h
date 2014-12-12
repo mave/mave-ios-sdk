@@ -35,4 +35,7 @@
 // Serializes only the userID field to a dictionary
 - (NSDictionary *)toDictionaryIDOnly;
 
+// Convenience Methods
+- (NSString *)fullName;
+
 @end

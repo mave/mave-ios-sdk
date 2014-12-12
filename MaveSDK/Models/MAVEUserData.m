@@ -59,4 +59,12 @@
     return (NSDictionary *)output;
 }
 
+- (NSString *)fullName {
+    NSString *output = self.firstName;
+    if (self.lastName) {
+        output = [NSString stringWithFormat:@"%@ %@", output, self.lastName];
+    }
+    return output;
+}
+
 @end
