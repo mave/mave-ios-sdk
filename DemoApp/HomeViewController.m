@@ -45,7 +45,7 @@
         invitePageWithDefaultMessage:defaultMessage
                           setupError:&setupError
                       dismissalBlock:^(UIViewController *viewController,
-                                       unsigned int numberOfInvitesSent) {
+                                       NSUInteger numberOfInvitesSent) {
                           [viewController dismissViewControllerAnimated:YES completion:nil];
     }];
     if (!setupError) {

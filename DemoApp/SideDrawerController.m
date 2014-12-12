@@ -52,7 +52,7 @@
             invitePageWithDefaultMessage:defaultMessage
                               setupError:&setupError
                           dismissalBlock:^(UIViewController *viewController,
-                                           unsigned int numberOfInvitesSent) {
+                                           NSUInteger numberOfInvitesSent) {
                               NSLog(@"in dismissal block");
                               [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
         }];

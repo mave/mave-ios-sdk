@@ -103,7 +103,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     MaveSDK *gk = [MaveSDK sharedInstance];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        unsigned int numInvitesSent) {};
+                                        NSUInteger numInvitesSent) {};
     id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
     gk.HTTPManager = mockManager;
     [[mockManager expect] identifyUserRequest:userData];
@@ -134,7 +134,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        unsigned int numInvitesSent) {};
+                                        NSUInteger numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorApplicationIDNotSetCode);
@@ -145,7 +145,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        unsigned int numInvitesSent) {};
+                                        NSUInteger numInvitesSent) {};
     [gk identifyUser:nil];
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
@@ -159,7 +159,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:nil firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        unsigned int numInvitesSent) {};
+                                        NSUInteger numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserIDNotSetCode);
@@ -172,7 +172,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     MaveSDK *gk = [MaveSDK sharedInstance];
     [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:nil lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        unsigned int numInvitesSent) {};
+                                        NSUInteger numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(err.code, MAVEValidationErrorUserNameNotSetCode);
@@ -195,7 +195,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     MaveSDK *gk = [MaveSDK sharedInstance];
         [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:nil email:nil phone:nil]];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        unsigned int numInvitesSent) {};
+                                        NSUInteger numInvitesSent) {};
     NSError *err = [gk validateSetup];
     XCTAssertNil(err);
 }
@@ -213,7 +213,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
         [gk invitePageWithDefaultMessage:@"tmp"
                               setupError:&error
                           dismissalBlock:^(UIViewController *viewController,
-                                           unsigned int numberOfInvitesSent) {
+                                           NSUInteger numberOfInvitesSent) {
                              blockCalled = YES;
     }];
     XCTAssertNotNil(vc);
@@ -236,7 +236,7 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
         [gk invitePageWithDefaultMessage:@"tmp"
                               setupError:&error
                           dismissalBlock:^(UIViewController *viewController,
-                                           unsigned int numberOfInvitesSent) {
+                                           NSUInteger numberOfInvitesSent) {
     }];
     XCTAssertNil(vc);
     XCTAssertNotNil(error);
