@@ -35,6 +35,21 @@
     XCTAssertEqualObjects(ud.phone, @"ph");
 }
 
+- (void)testInitWithDictionary {
+    MAVEUserData *ud = [[MAVEUserData alloc] initWithDictionary:@{
+            @"user_id": @"id1",
+            @"first_name": @"fi",
+            @"last_name": @"la",
+            @"email": @"em",
+            @"phone": @"ph",
+    }];
+    XCTAssertEqualObjects(ud.userID, @"id1");
+    XCTAssertEqualObjects(ud.firstName, @"fi");
+    XCTAssertEqualObjects(ud.lastName, @"la");
+    XCTAssertEqualObjects(ud.email, @"em");
+    XCTAssertEqualObjects(ud.phone, @"ph");
+}
+
 - (void)testToDictionaryAllNils {
     MAVEUserData *ud = [[MAVEUserData alloc] init];
     NSDictionary *dict = [ud toDictionary];

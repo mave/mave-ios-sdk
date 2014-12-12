@@ -258,7 +258,15 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodType:@"GET"
                                       params:nil
-                             completionBlock:nil];
+                             completionBlock:^(NSError *error, NSDictionary *responseData) {
+        MAVEUserData *userData;
+         if (error || [responseData count] == 0) {
+             userData = nil;
+         } else {
+             userData = [[MAVEUserData alloc] initWithDictionary:responseData];
+         }
+         referringUserBlock(userData);
+    }];
 }
 
 

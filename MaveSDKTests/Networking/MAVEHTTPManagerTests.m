@@ -196,6 +196,56 @@
     [mocked verify];
 }
 
+
+- (void)testGetReferringUser {
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/referring_user"
+                                             methodType:@"GET"
+                                                 params:nil
+                                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        // GAAHHH this is crazy. This block is to check the block argument that the method
+        // under test, getReferringUser:, passes to the sendIdentifiedRequest method.
+        //
+        // To do that we call that block argument with some fake data and then later we'll
+        // verify that the userData object ultimately gets filled in correctly.
+        // But, we also have to cast the block argument before calling it.
+        NSDictionary *fakeResponseData = @{
+            @"user_id": @"1", @"first_name": @"dan"};
+        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
+        return YES;
+    }]];
+    __block MAVEUserData *userData;
+    [httpManager getReferringUser:^(MAVEUserData *_userData) {
+        userData = _userData;
+    }];
+    [mocked verify];
+    XCTAssertEqualObjects(userData.userID, @"1");
+    XCTAssertEqualObjects(userData.firstName, @"dan");
+}
+
+- (void)testGetReferringUserNull {
+    // Same as above test, but this time the data returned from the server is nil
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/referring_user"
+                                             methodType:@"GET"
+                                                 params:nil
+                                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        NSDictionary *fakeResponseData = nil;
+        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
+        return YES;
+    }]];
+    __block MAVEUserData *userData;
+    [httpManager getReferringUser:^(MAVEUserData *_userData) {
+        userData = _userData;
+    }];
+    [mocked verify];
+    
+    XCTAssertNil(userData);
+}
+
+
 - (void)testSendEventsLinkDestinationOmittedIfEmpty {
     MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];

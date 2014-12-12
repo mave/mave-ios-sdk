@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MAVEUserData : NSObject
 
 @property (nonatomic, copy) NSString *userID;
@@ -26,6 +27,8 @@
                       lastName:(NSString *)lastName
                          email:(NSString *)email
                          phone:(NSString *)phone;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
 
 // Convert to a dictionary, e.g. to be serialized as JSON for an API request
 - (NSDictionary *)toDictionary;
