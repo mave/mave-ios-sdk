@@ -8,11 +8,12 @@
 
 #import "MAVEUserData.h"
 
-#define UserDataKeyUserID @"user_id"
-#define UserDataKeyFirstName @"first_name"
-#define UserDataKeyLastName @"last_name"
-#define UserDataKeyEmail @"email"
-#define UserDataKeyPhone @"phone"
+#define MAVEUserDataKeyUserID @"user_id"
+#define MAVEUserDataKeyUserID @"user_id"
+#define MAVEUserDataKeyFirstName @"first_name"
+#define MAVEUserDataKeyLastName @"last_name"
+#define MAVEUserDataKeyEmail @"email"
+#define MAVEUserDataKeyPhone @"phone"
 
 @implementation MAVEUserData
 
@@ -31,20 +32,39 @@
     return self;
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
+    if (self = [self init]) {
+        self.userID = [dict objectForKey:MAVEUserDataKeyUserID];
+        self.firstName = [dict objectForKey:MAVEUserDataKeyFirstName];
+        self.lastName = [dict objectForKey:MAVEUserDataKeyLastName];
+        self.email = [dict objectForKey:MAVEUserDataKeyEmail];
+        self.phone = [dict objectForKey:MAVEUserDataKeyPhone];
+    }
+    return self;
+}
+
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
-    if (self.userID) [output setObject:self.userID forKey:UserDataKeyUserID];
-    if (self.firstName) [output setObject:self.firstName forKey:UserDataKeyFirstName];
-    if (self.lastName) [output setObject:self.lastName forKey:UserDataKeyLastName];
-    if (self.email) [output setObject:self.email forKey:UserDataKeyEmail];
-    if (self.phone) [output setObject:self.phone forKey:UserDataKeyPhone];
+    if (self.userID) [output setObject:self.userID forKey:MAVEUserDataKeyUserID];
+    if (self.firstName) [output setObject:self.firstName forKey:MAVEUserDataKeyFirstName];
+    if (self.lastName) [output setObject:self.lastName forKey:MAVEUserDataKeyLastName];
+    if (self.email) [output setObject:self.email forKey:MAVEUserDataKeyEmail];
+    if (self.phone) [output setObject:self.phone forKey:MAVEUserDataKeyPhone];
     return (NSDictionary *)output;
 }
 
 - (NSDictionary *)toDictionaryIDOnly {
     NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
-    if (self.userID) [output setObject:self.userID forKey:UserDataKeyUserID];
+    if (self.userID) [output setObject:self.userID forKey:MAVEUserDataKeyUserID];
     return (NSDictionary *)output;
+}
+
+- (NSString *)fullName {
+    NSString *output = self.firstName;
+    if (self.lastName) {
+        output = [NSString stringWithFormat:@"%@ %@", output, self.lastName];
+    }
+    return output;
 }
 
 @end

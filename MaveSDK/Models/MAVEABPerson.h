@@ -14,11 +14,11 @@
 // A Person object that is much simpler than an ABRecordRef - has just the fields we care about
 // and is an NSObject with helper methods to access fields we want.
 
-@property NSString *firstName;
-@property NSString *lastName;
-@property NSArray *phoneNumbers;   // Array of NSStrings
-@property NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
-@property NSArray *emailAddresses; // Array of NSStrings
+@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong) NSString *lastName;
+@property (nonatomic, strong) NSArray *phoneNumbers;   // Array of NSStrings
+@property (nonatomic, strong) NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
+@property (nonatomic, strong) NSArray *emailAddresses; // Array of NSStrings
 
 @property BOOL selected;
 

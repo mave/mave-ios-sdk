@@ -69,7 +69,6 @@
                                             detailLabelSize.height);
     }
     if (self.detailButton) {
-        NSLog(@"setting button frame");
         self.detailButton.frame = CGRectMake(100, 100, 200, 200);
     }
 }

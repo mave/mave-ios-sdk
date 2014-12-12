@@ -16,10 +16,10 @@
 
 @interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) id <MAVEABTableViewAdditionalDelegate> parentViewController;
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) UIView *aboveTableContentView;
-@property (strong, nonatomic) NSMutableSet *selectedPhoneNumbers;
+@property (nonatomic, weak) id <MAVEABTableViewAdditionalDelegate> parentViewController;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *aboveTableContentView;
+@property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
 
 - (instancetype)initTableViewWithParent:(id<MAVEABTableViewAdditionalDelegate>)parent;
 

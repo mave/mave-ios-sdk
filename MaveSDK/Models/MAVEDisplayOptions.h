@@ -20,44 +20,44 @@
 
 // Invite friends page options:
 // Header options
-@property (strong, nonatomic) NSString *navigationBarTitleCopy;
-@property (strong, nonatomic) UIFont   *navigationBarTitleFont;
-@property (strong, nonatomic) UIColor  *navigationBarTitleTextColor;
-@property (strong, nonatomic) UIColor  *navigationBarBackgroundColor;
+@property (nonatomic, copy) NSString *navigationBarTitleCopy;
+@property (nonatomic, strong) UIFont   *navigationBarTitleFont;
+@property (nonatomic, strong) UIColor  *navigationBarTitleTextColor;
+@property (nonatomic, strong) UIColor  *navigationBarBackgroundColor;
 // Note: any target & action set on the navigation bar cancel button item will
 // be ignored, on cancel we run our own teardown code and then call your
 // dismissalBlock
-@property (strong, nonatomic) UIBarButtonItem *navigationBarCancelButton;
+@property (nonatomic, strong) UIBarButtonItem *navigationBarCancelButton;
 
 // Explanation of how the referral program works section
-@property (strong, nonatomic) NSString *inviteExplanationCopy;
-@property (strong, nonatomic) UIFont   *inviteExplanationFont;
-@property (strong, nonatomic) UIColor  *inviteExplanationTextColor;
-@property (strong, nonatomic) UIColor  *inviteExplanationCellBackgroundColor;
+@property (nonatomic, copy) NSString *inviteExplanationCopy;
+@property (nonatomic, strong) UIFont   *inviteExplanationFont;
+@property (nonatomic, strong) UIColor  *inviteExplanationTextColor;
+@property (nonatomic, strong) UIColor  *inviteExplanationCellBackgroundColor;
 
 // "Friends to invite" table options
-@property (strong, nonatomic) UIFont  *contactNameFont;
-@property (strong, nonatomic) UIColor *contactNameTextColor;
-@property (strong, nonatomic) UIFont  *contactDetailsFont;
-@property (strong, nonatomic) UIColor *contactDetailsTextColor;
-@property (strong, nonatomic) UIColor *contactSeparatorColor;
-@property (strong, nonatomic) UIColor *contactCellBackgroundColor;
-@property (strong, nonatomic) UIColor *contactCheckmarkColor;
+@property (nonatomic, strong) UIFont  *contactNameFont;
+@property (nonatomic, strong) UIColor *contactNameTextColor;
+@property (nonatomic, strong) UIFont  *contactDetailsFont;
+@property (nonatomic, strong) UIColor *contactDetailsTextColor;
+@property (nonatomic, strong) UIColor *contactSeparatorColor;
+@property (nonatomic, strong) UIColor *contactCellBackgroundColor;
+@property (nonatomic, strong) UIColor *contactCheckmarkColor;
 
-@property (strong, nonatomic) UIFont  *contactSectionHeaderFont;
-@property (strong, nonatomic) UIColor *contactSectionHeaderTextColor;
-@property (strong, nonatomic) UIColor *contactSectionHeaderBackgroundColor;
-@property (strong, nonatomic) UIColor *contactSectionIndexColor;
-@property (strong, nonatomic) UIColor *contactSectionIndexBackgroundColor;
+@property (nonatomic, strong) UIFont  *contactSectionHeaderFont;
+@property (nonatomic, strong) UIColor *contactSectionHeaderTextColor;
+@property (nonatomic, strong) UIColor *contactSectionHeaderBackgroundColor;
+@property (nonatomic, strong) UIColor *contactSectionIndexColor;
+@property (nonatomic, strong) UIColor *contactSectionIndexBackgroundColor;
 
 // Message and Send section options
-@property (strong, nonatomic) UIFont  *messageFieldFont;
-@property (strong, nonatomic) UIColor *messageFieldTextColor;
-@property (strong, nonatomic) UIColor *messageFieldBackgroundColor;
-@property (strong, nonatomic) UIFont  *sendButtonFont;
-@property (strong, nonatomic) UIColor *sendButtonTextColor;
-@property (strong, nonatomic) UIColor *bottomViewBackgroundColor;
-@property (strong, nonatomic) UIColor *bottomViewBorderColor;
+@property (nonatomic, strong) UIFont  *messageFieldFont;
+@property (nonatomic, strong) UIColor *messageFieldTextColor;
+@property (nonatomic, strong) UIColor *messageFieldBackgroundColor;
+@property (nonatomic, strong) UIFont  *sendButtonFont;
+@property (nonatomic, strong) UIColor *sendButtonTextColor;
+@property (nonatomic, strong) UIColor *bottomViewBackgroundColor;
+@property (nonatomic, strong) UIColor *bottomViewBorderColor;
 
 - (MAVEDisplayOptions *)initWithDefaults;
 

@@ -196,6 +196,56 @@
     [mocked verify];
 }
 
+
+- (void)testGetReferringUser {
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/referring_user"
+                                             methodType:@"GET"
+                                                 params:nil
+                                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        // GAAHHH this is crazy. This block is to check the block argument that the method
+        // under test, getReferringUser:, passes to the sendIdentifiedRequest method.
+        //
+        // To do that we call that block argument with some fake data and then later we'll
+        // verify that the userData object ultimately gets filled in correctly.
+        // But, we also have to cast the block argument before calling it.
+        NSDictionary *fakeResponseData = @{
+            @"user_id": @"1", @"first_name": @"dan"};
+        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
+        return YES;
+    }]];
+    __block MAVEUserData *userData;
+    [httpManager getReferringUser:^(MAVEUserData *_userData) {
+        userData = _userData;
+    }];
+    [mocked verify];
+    XCTAssertEqualObjects(userData.userID, @"1");
+    XCTAssertEqualObjects(userData.firstName, @"dan");
+}
+
+- (void)testGetReferringUserNull {
+    // Same as above test, but this time the data returned from the server is nil
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/referring_user"
+                                             methodType:@"GET"
+                                                 params:nil
+                                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        NSDictionary *fakeResponseData = nil;
+        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
+        return YES;
+    }]];
+    __block MAVEUserData *userData;
+    [httpManager getReferringUser:^(MAVEUserData *_userData) {
+        userData = _userData;
+    }];
+    [mocked verify];
+    
+    XCTAssertNil(userData);
+}
+
+
 - (void)testSendEventsLinkDestinationOmittedIfEmpty {
     MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
@@ -217,7 +267,7 @@
 // Underlying request sending infrastructure
 //
 
-- (void)testSendIdentifiedJSONRequestSuccess {
+- (void)testSendIdentifiedJSONRequestWithBodySuccess {
     // Setup mock and block to get data out of the request
     MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] initWithApplicationID:@"appid12"
                                                               applicationDeviceID:@"appdeviceid12"];
@@ -262,6 +312,41 @@
     XCTAssertEqualObjects(requestHeaders, expectedHeaders);
 }
 
+// Get request has no body so params dict should be converted to querystring params
+- (void)testSendIdentifiedGETRequest {
+    // Setup mock and block to get data out of the request
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] initWithApplicationID:@"appid12"
+                                                              applicationDeviceID:@"appdeviceid12"];
+    id mockSession = [OCMockObject mockForClass:[NSURLSession class]];
+    id mockTask = [OCMockObject mockForClass:[NSURLSessionTask class]];
+    httpManager.session = mockSession;
+    __block NSString *urlString;
+    __block NSString *requestMethod;
+    __block NSString *requestBody;
+    __block NSDictionary *requestHeaders;
+    NSString *requestPath = @"/foo";
+    NSDictionary *requestDict = @{@"foo": @"escaped ?-", @"bar": @YES};
+    OCMStub([mockSession dataTaskWithRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+        NSURLRequest *request = (NSURLRequest *)obj;
+        urlString = [request.URL absoluteString];
+        requestMethod = request.HTTPMethod;
+        requestBody = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+        requestHeaders = request.allHTTPHeaderFields;
+        return YES;
+    }] completionHandler:[OCMArg any]]).andReturn(mockTask);
+    OCMExpect([mockTask resume]);
+    
+    // Call the send method
+    [httpManager sendIdentifiedJSONRequestWithRoute:requestPath methodType:@"GET" params:requestDict completionBlock:nil];
+    
+    //Verify
+    OCMVerify([mockTask resume]);
+    XCTAssertEqualObjects(urlString, @"http://devapi.mave.io/v1.0/foo?bar=1&foo=escaped%20%3F-");
+    XCTAssertEqualObjects(requestMethod, @"GET");
+    XCTAssertEqualObjects(requestBody, @"");
+}
+
+// Utils
 - (void)testGetHTTPStatusCodeLevel {
     NSInteger code = 200;
     NSInteger codeLevel = code / 100;
@@ -273,6 +358,25 @@
     codeLevel = code / 100;
     XCTAssertEqual(codeLevel, 2);
 }
+
+- (void)testDictToURLParams {
+    NSString *qs = [MAVEHTTPManager dictToURLQueryStringFragment:@{
+        @"b": @NO,
+        @"a": @YES,
+        @"c": @"simplestring",
+        @"d": @"escaped ?-",
+        @"e": @2,
+        @"f": @"2",
+        @"g": [NSNull null]}];
+    NSString *expected = @"?a=1&b=0&c=simplestring&d=escaped%20%3F-&e=2&f=2&g=";
+    XCTAssertEqualObjects(qs, expected);
+}
+
+- (void)testEmptyDictToURLGivesEmptyString {
+    XCTAssertEqualObjects([MAVEHTTPManager dictToURLQueryStringFragment:nil], @"");
+    XCTAssertEqualObjects([MAVEHTTPManager dictToURLQueryStringFragment:@{}], @"");
+}
+
 
 //
 // Tests for errors in building Request

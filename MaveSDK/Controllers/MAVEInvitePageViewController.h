@@ -12,7 +12,7 @@
 #import "MAVEInviteMessageContainerView.h"
 #import "MAVEHTTPManager.h"
 
-typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, unsigned int numberOfInvitesSent);
+typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, NSUInteger numberOfInvitesSent);
 
 
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>

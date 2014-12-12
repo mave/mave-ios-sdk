@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MAVEUserData : NSObject
 
-@property (strong, nonatomic) NSString *userID;
-@property (strong, nonatomic) NSString *firstName;
-@property (strong, nonatomic) NSString *lastName;
-@property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *phone;
+@property (nonatomic, copy) NSString *userID;
+@property (nonatomic, copy) NSString *firstName;
+@property (nonatomic, copy) NSString *lastName;
+@property (nonatomic, copy) NSString *email;
+@property (nonatomic, copy) NSString *phone;
 
 // Essentially a referral code for web & mobile web signup flows,
 // if this (optional) URL is set invite links sent by this user
@@ -27,9 +28,14 @@
                          email:(NSString *)email
                          phone:(NSString *)phone;
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
+
 // Convert to a dictionary, e.g. to be serialized as JSON for an API request
 - (NSDictionary *)toDictionary;
 // Serializes only the userID field to a dictionary
 - (NSDictionary *)toDictionaryIDOnly;
+
+// Convenience Methods
+- (NSString *)fullName;
 
 @end

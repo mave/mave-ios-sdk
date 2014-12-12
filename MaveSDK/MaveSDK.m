@@ -51,7 +51,7 @@ static dispatch_once_t sharedInstanceonceToken;
 
 + (instancetype)sharedInstance {
     if (sharedInstance == nil) {
-        NSLog(@"Error: didn't setup shared instance with app id");
+        DebugLog(@"Error: didn't setup shared instance with app id");
     }
     return sharedInstance;
 }
@@ -99,6 +99,13 @@ static dispatch_once_t sharedInstanceonceToken;
     return [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN
                                       code:errCode
                                   userInfo:@{@"message": humanError}];
+}
+
+//
+// Methods for consumer get get data from our sdk
+//
+- (void)getReferringUser:(void (^)(MAVEUserData *))referringUserHandler {
+    [self.HTTPManager getReferringUser:referringUserHandler];
 }
 
 //

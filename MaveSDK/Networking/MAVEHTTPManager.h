@@ -15,10 +15,10 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 
 @interface MAVEHTTPManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate>
 
-@property (strong, nonatomic) NSString *applicationID;
-@property (strong, nonatomic) NSString *applicationDeviceID;
-@property (strong, nonatomic) NSString *baseURL;
-@property (strong, nonatomic) NSURLSession *session;
+@property (nonatomic, copy) NSString *applicationID;
+@property (nonatomic, copy) NSString *applicationDeviceID;
+@property (nonatomic, copy) NSString *baseURL;
+@property (nonatomic, strong) NSURLSession *session;
 
 // UserAgent & screenSize are for fingerprinting
 + (NSString *)userAgentWithUIDevice:(UIDevice *)device;
@@ -38,5 +38,6 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 - (void)identifyUserRequest:(MAVEUserData *)userData;
 - (void)trackSignupRequest:(MAVEUserData *)userData;
 - (void)trackInvitePageOpenRequest:(MAVEUserData *)userData;
+- (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
 
 @end
