@@ -33,6 +33,7 @@
 + (void)resetSharedInstanceForTesting;
 #endif
 
+- (void)getReferringUser:(void(^)(MAVEUserData * userData))referringUserHandler;
 - (void)identifyUser:(MAVEUserData *)userData;
 - (void)trackSignup;
 

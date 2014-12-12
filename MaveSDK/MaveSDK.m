@@ -102,6 +102,13 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 //
+// Methods for consumer get get data from our sdk
+//
+- (void)getReferringUser:(void (^)(MAVEUserData *))referringUserHandler {
+    [self.HTTPManager getReferringUser:referringUserHandler];
+}
+
+//
 // Funnel events that need to be called explicitly by consumer
 //
 - (void)trackAppOpen {
