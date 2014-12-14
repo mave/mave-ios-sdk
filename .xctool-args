@@ -2,5 +2,6 @@
   "-workspace", "MaveSDK.xcworkspace",
   "-scheme", "DemoApp",
   "-configuration", "Debug",
-  "-sdk", "iphonesimulator"
+  "-sdk", "iphonesimulator",
+  "-destination", "platform=iOS Simulator,OS=latest,name=iPhone 6"
 ]
