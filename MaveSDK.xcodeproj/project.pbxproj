@@ -128,11 +128,11 @@
 		C02927F519E82D03006AEE43 /* MAVEInvitePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInvitePageViewController.m; sourceTree = "<group>"; };
 		C02927F619E82D03006AEE43 /* MAVEABTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABTableViewController.h; sourceTree = "<group>"; };
 		C02927F719E82D03006AEE43 /* MAVEABTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABTableViewController.m; sourceTree = "<group>"; };
-		C02927FD19E82D0F006AEE43 /* MAVEABCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABCollection.h; sourceTree = "<group>"; };
-		C02927FE19E82D0F006AEE43 /* MAVEABCollection_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABCollection_Internal.h; sourceTree = "<group>"; };
-		C02927FF19E82D0F006AEE43 /* MAVEABCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABCollection.m; sourceTree = "<group>"; };
-		C029280019E82D0F006AEE43 /* MAVEABPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPerson.h; sourceTree = "<group>"; };
-		C029280119E82D0F006AEE43 /* MAVEABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPerson.m; sourceTree = "<group>"; };
+		C02927FD19E82D0F006AEE43 /* MAVEABCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MAVEABCollection.h; path = ../MAVEABCollection.h; sourceTree = "<group>"; };
+		C02927FE19E82D0F006AEE43 /* MAVEABCollection_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MAVEABCollection_Internal.h; path = ../MAVEABCollection_Internal.h; sourceTree = "<group>"; };
+		C02927FF19E82D0F006AEE43 /* MAVEABCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MAVEABCollection.m; path = ../MAVEABCollection.m; sourceTree = "<group>"; };
+		C029280019E82D0F006AEE43 /* MAVEABPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MAVEABPerson.h; path = ../MAVEABPerson.h; sourceTree = "<group>"; };
+		C029280119E82D0F006AEE43 /* MAVEABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MAVEABPerson.m; path = ../MAVEABPerson.m; sourceTree = "<group>"; };
 		C029280219E82D0F006AEE43 /* MAVEDisplayOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MAVEDisplayOptions.h; path = ../Models/MAVEDisplayOptions.h; sourceTree = "<group>"; };
 		C029280319E82D0F006AEE43 /* MAVEDisplayOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MAVEDisplayOptions.m; path = ../Models/MAVEDisplayOptions.m; sourceTree = "<group>"; };
 		C029280719E82D18006AEE43 /* MAVEABPersonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPersonCell.h; sourceTree = "<group>"; };
@@ -181,6 +181,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C1F19E81A3E226F00B2D482 /* AddressBook */ = {
+			isa = PBXGroup;
+			children = (
+				C02927FD19E82D0F006AEE43 /* MAVEABCollection.h */,
+				C02927FE19E82D0F006AEE43 /* MAVEABCollection_Internal.h */,
+				C02927FF19E82D0F006AEE43 /* MAVEABCollection.m */,
+				C029280019E82D0F006AEE43 /* MAVEABPerson.h */,
+				C029280119E82D0F006AEE43 /* MAVEABPerson.m */,
+			);
+			name = AddressBook;
+			path = MerkleTree;
+			sourceTree = "<group>";
+		};
 		0C2D73151A1FCB480059CA54 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -363,11 +376,7 @@
 		C02927ED19E82C4B006AEE43 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C02927FD19E82D0F006AEE43 /* MAVEABCollection.h */,
-				C02927FE19E82D0F006AEE43 /* MAVEABCollection_Internal.h */,
-				C02927FF19E82D0F006AEE43 /* MAVEABCollection.m */,
-				C029280019E82D0F006AEE43 /* MAVEABPerson.h */,
-				C029280119E82D0F006AEE43 /* MAVEABPerson.m */,
+				0C1F19E81A3E226F00B2D482 /* AddressBook */,
 				0C141D2E1A0BC1A80036202A /* MAVEUserData.h */,
 				0C141D2F1A0BC1A80036202A /* MAVEUserData.m */,
 				0CFDBE241A1A827C00DD2AAF /* MAVEReferralData.h */,
