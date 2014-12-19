@@ -9,6 +9,7 @@
 #import "MAVEConstants.h"
 #import "MAVEHTTPManager.h"
 #import "MAVEHTTPManager_Internal.h"
+#import "MAVEPreFetchedHTTPRequest.h"
 
 @implementation MAVEHTTPManager
 
@@ -102,6 +103,25 @@
     }];
     [task resume];
     return;
+}
+
+- (MAVEPreFetchedHTTPRequest *)preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
+                                                           methodType:(NSString *)methodType
+                                                               params:(NSDictionary *)params
+                                                          defaultData:(NSDictionary *)defaultData {
+    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
+    [self sendIdentifiedJSONRequestWithRoute:relativeURL
+                                  methodType:methodType params:params
+                             completionBlock:^(NSError *error, NSDictionary *responseData) {
+                                 if (error) {
+                                     [req doNotSetResponseData];
+                                 } else if ([responseData count] == 0) {
+                                     [req doNotSetResponseData];
+                                 } else {
+                                     [req setResponseData:responseData];
+                                 }
+                             }];
+    return req;
 }
 
 + (void)handleJSONResponseWithData:(NSData *)data
@@ -252,6 +272,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
                              completionBlock:nil];
 }
 
+//
+// GET Requests
+// We generally want to pre-fetch them so that when we actually want to access
+// the data it's already here and there's no latency.
+//
 - (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock {
     NSString *launchRoute = @"/referring_user";
 
