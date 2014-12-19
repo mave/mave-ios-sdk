@@ -14,6 +14,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MAVEHTTPManager.h"
+#import "MAVEPreFetchedHTTPRequest.h"
 
 @interface MAVEHTTPManager ()
 
@@ -25,6 +26,13 @@
                                 methodType:(NSString *)methodType
                                     params:(NSDictionary *)params
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+
+// Wrapper for pre-fetching JSON requests
+- (MAVEPreFetchedHTTPRequest *)
+    preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
+                                methodType:(NSString *)methodType
+                                    params:(NSDictionary *)params
+                               defaultData:(NSDictionary *)defaultResponse;
 
 + (void)handleJSONResponseWithData:(NSData *)data
                           response:(NSURLResponse *)response

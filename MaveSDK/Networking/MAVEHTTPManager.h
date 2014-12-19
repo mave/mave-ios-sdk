@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "MAVEUserData.h"
+#import "MAVEPreFetchedHTTPRequest.h"
 
 typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
 
@@ -39,5 +40,6 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 - (void)trackSignupRequest:(MAVEUserData *)userData;
 - (void)trackInvitePageOpenRequest:(MAVEUserData *)userData;
 - (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
+- (MAVEPreFetchedHTTPRequest *)preFetchRemoteConfiguration:(NSDictionary *)defaultData;
 
 @end

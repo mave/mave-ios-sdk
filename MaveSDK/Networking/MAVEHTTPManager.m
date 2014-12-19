@@ -294,6 +294,14 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     }];
 }
 
+- (MAVEPreFetchedHTTPRequest *)preFetchRemoteConfiguration:(NSDictionary *)defaultData {
+    NSString *route = @"/remote_configuration/ios";
+    return [self preFetchIdentifiedJSONRequestWithRoute:route
+                                      methodType:@"GET"
+                                          params:nil
+                                     defaultData:defaultData];
+}
+
 
 // Utils
 + (NSString *)formattedScreenSize:(CGSize)size {

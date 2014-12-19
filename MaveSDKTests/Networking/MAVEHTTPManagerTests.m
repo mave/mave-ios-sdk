@@ -12,6 +12,7 @@
 #import "MAVEConstants.h"
 #import "MAVEHTTPManager.h"
 #import "MAVEHTTPManager_Internal.h"
+#import "MAVEPreFetchedHTTPRequest.h"
 
 #import <OCMock/OCMock.h>
 
@@ -243,6 +244,18 @@
     [mocked verify];
     
     XCTAssertNil(userData);
+}
+
+- (void)testPreFetchRemoteConfiguration {
+    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
+    NSDictionary *defaultResponse = @{@"foo": @1};
+    id mocked = [OCMockObject partialMockForObject:httpManager];
+    [[mocked expect] preFetchIdentifiedJSONRequestWithRoute:@"/remote_configuration/ios"
+                                                 methodType:@"GET"
+                                                     params:nil
+                                                defaultData:defaultResponse];
+    [httpManager preFetchRemoteConfiguration:defaultResponse];
+    [mocked verify];
 }
 
 
