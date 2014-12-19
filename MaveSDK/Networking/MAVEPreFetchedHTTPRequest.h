@@ -13,8 +13,8 @@
 
 @interface MAVEPreFetchedHTTPRequest : NSObject
 
-@property (atomic) BOOL requestComplete;
 @property dispatch_semaphore_t gcd_semaphore;
+@property (nonatomic, strong) NSDictionary *defaultData;
 @property (nonatomic, strong) NSDictionary *responseData;
 
 - (instancetype)initWithDefaultData:(NSDictionary *)defaultResponseData;

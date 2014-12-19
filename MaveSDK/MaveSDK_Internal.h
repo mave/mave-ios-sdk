@@ -12,8 +12,11 @@
 #endif
 
 #import "MaveSDK.h"
+#import "MAVEPreFetchedHTTPRequest.h"
 
 @interface MaveSDK (Internal)
+
+@property (nonatomic, strong) MAVEPreFetchedHTTPRequest *preFetchedRemoteConfigurationRequest;
 
 - (instancetype)initWithAppId:(NSString *)appId;
 

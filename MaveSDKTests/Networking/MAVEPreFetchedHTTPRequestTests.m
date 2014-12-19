@@ -29,6 +29,7 @@
 - (void)testInitWithDefaultData {
     NSDictionary *defaultData = @{@"foo": @"bar"};
     MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
+    XCTAssertEqualObjects(req.defaultData, defaultData);
     XCTAssertEqualObjects(req.responseData, defaultData);
     XCTAssertNotNil(req.gcd_semaphore);
 }
@@ -40,6 +41,8 @@
     req.responseData = newData;
     XCTAssertNotEqualObjects(req.responseData, defaultData);
     XCTAssertEqualObjects(req.responseData, newData);
+    // default data is unchanged
+    XCTAssertEqualObjects(req.defaultData, defaultData);
 }
 
 // ResponseData being nil is fine, and different than "doNotSet" it
@@ -49,6 +52,7 @@
     MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
     req.responseData = newData;
     XCTAssertNil(req.responseData);
+    XCTAssertEqualObjects(req.defaultData, defaultData);
 }
 
 - (void)testDoNotSetDataDoesNotOverrideDefault {

@@ -13,6 +13,7 @@
 #import "MAVEIDUtils.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEHTTPManager.h"
+#import "MAVERemoteConfiguration.h"
 
 @implementation MaveSDK {
     // Controller
@@ -29,6 +30,8 @@
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
         _HTTPManager = [[MAVEHTTPManager alloc] initWithApplicationID:self.appId
                                                   applicationDeviceID:self.appDeviceID];
+        self.preFetchedRemoteConfigurationRequest =
+            [_HTTPManager preFetchRemoteConfiguration:[MAVERemoteConfiguration defaultJSONData]];
     }
     return self;
 }
@@ -102,10 +105,23 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 //
-// Methods for consumer get get data from our sdk
+// Methods to get data from our sdk
 //
 - (void)getReferringUser:(void (^)(MAVEUserData *))referringUserHandler {
     [self.HTTPManager getReferringUser:referringUserHandler];
+}
+
+- (void)getRemoteConfiguration:(void (^)(MAVERemoteConfiguration *))block {
+    [self.preFetchedRemoteConfigurationRequest readDataWithTimeout:5 completionBlock:^(NSDictionary *responseData) {
+        // initialize with response data. If it fails it's likely because data from server was malformatted,
+        // so fall back to default json
+        MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithJSON:responseData];
+        if (!remoteConfig) {
+            remoteConfig = [[MAVERemoteConfiguration alloc]
+                            initWithJSON:self.preFetchedRemoteConfigurationRequest.defaultData];
+        }
+        block(remoteConfig);
+    }];
 }
 
 //

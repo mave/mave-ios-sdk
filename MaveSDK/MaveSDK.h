@@ -10,6 +10,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEUserData.h"
+#import "MAVERemoteConfiguration.h"
 
 @class MAVEHTTPManager;
 

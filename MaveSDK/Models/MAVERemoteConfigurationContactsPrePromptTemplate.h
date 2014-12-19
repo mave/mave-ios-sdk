@@ -1,0 +1,19 @@
+//
+//  MAVERemoteConfigurationContactsPrePromptTemplate.h
+//  MaveSDK
+//
+//  Created by Danny Cosson on 12/18/14.
+//
+//
+
+#import <Foundation/Foundation.h>
+
+@interface MAVERemoteConfigurationContactsPrePromptTemplate : NSObject
+
+@property (nonatomic, strong) NSString *remoteConfigID;
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *message;
+@property (nonatomic, strong) NSString *cancelButtonCopy;
+@property (nonatomic, strong) NSString *acceptButtonCopy;
+
+@end
