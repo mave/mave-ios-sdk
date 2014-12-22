@@ -9,6 +9,7 @@
 #import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEABTableViewController.h"
+#import "MAVEABTableViewController.h"
 #import "MAVEInviteTableHeaderView.h"
 #import "MAVEInviteExplanationView.h"
 #import "MAVEABUtils.h"
@@ -45,6 +46,9 @@
         self.aboveTableContentView = [[UIView alloc] init];
         self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
         [self.tableView addSubview:self.aboveTableContentView];
+
+        // Set up the header view
+        self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] init];
 
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }
@@ -154,11 +158,34 @@
     [headerView resizeWithShiftedOffsetY:shiftedOffsetY];
 }
 
-// Helpers
+#pragma mark - Helpers
+
 - (MAVEABPerson *)personAtIndexPath:(NSIndexPath *)indexPath {
     // TODO unit test
     NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
     return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
+}
+
+#pragma mark - Layout
+
+- (void)layoutHeaderViewForWidth:(CGFloat)width {
+    CGRect prevInviteTableHeaderViewFrame = self.inviteTableHeaderView.frame;
+    // use ceil so rounding errors won't cause tiny gap below the table header view
+    CGFloat inviteTableHeaderViewHeight = ceil([self.inviteTableHeaderView
+                                                computeHeightWithWidth:width]);
+    CGRect inviteExplanationViewFrame = CGRectMake(0, 0, width, inviteTableHeaderViewHeight);
+
+    // table header view needs to be re-assigned when frame changes or the rest
+    // of the table doesn't get offset and the header overlaps it
+    if (!CGRectEqualToRect(inviteExplanationViewFrame, prevInviteTableHeaderViewFrame)) {
+        self.inviteTableHeaderView.frame = inviteExplanationViewFrame;
+        self.tableView.tableHeaderView = self.inviteTableHeaderView;
+
+        // match above table color to explanation view color so it looks like one view
+        if (self.inviteTableHeaderView.showsExplanation) {
+            self.aboveTableContentView.backgroundColor = self.inviteTableHeaderView.backgroundColor;
+        }
+    }
 }
 
 @end

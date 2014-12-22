@@ -22,7 +22,6 @@ extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
 
 @property (strong, nonatomic) MAVEABTableViewController *ABTableViewController;
-@property (strong, nonatomic) MAVEInviteTableHeaderView *inviteTableHeaderView;
 @property (strong, nonatomic) MAVEInviteMessageContainerView *inviteMessageContainerView;
 
 // Helpers for keeping track of keyboard for frame resizing

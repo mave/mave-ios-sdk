@@ -10,8 +10,6 @@
 #import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 
-#define MAVE_DEFAULT_SEARCH_BAR_HEIGHT 44
-
 @implementation MAVEInviteTableHeaderView
 
 - (instancetype)init {

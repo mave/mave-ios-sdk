@@ -212,7 +212,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] init];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
@@ -265,29 +264,9 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
                containerFrame.size.width, containerFrame.size.height);
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
-    
-    //
-    // Add in the explanation view if text has been set
-    //
-    CGRect prevInviteTableHeaderViewFrame = self.inviteTableHeaderView.frame;
-    // use ceil so rounding errors won't cause tiny gap below the table header view
-    CGFloat inviteTableHeaderViewHeight = ceil([self.inviteTableHeaderView
-                                                computeHeightWithWidth:containerFrame.size.width]);
-    CGRect inviteExplanationViewFrame = CGRectMake(0, 0, containerFrame.size.width,
-                                                   inviteTableHeaderViewHeight);
 
-    // table header view needs to be re-assigned when frame changes or the rest
-    // of the table doesn't get offset and the header overlaps it
-    if (!CGRectEqualToRect(inviteExplanationViewFrame, prevInviteTableHeaderViewFrame)) {
-        self.inviteTableHeaderView.frame = inviteExplanationViewFrame;
-        self.ABTableViewController.tableView.tableHeaderView = self.inviteTableHeaderView;
-
-        // match above table color to explanation view color so it looks like one view
-        if (self.inviteTableHeaderView.showsExplanation) {
-            self.ABTableViewController.aboveTableContentView.backgroundColor =
-            self.inviteTableHeaderView.backgroundColor;
-        }
-    }
+    // Resize the header based on width
+    [self.ABTableViewController layoutHeaderViewForWidth:containerFrame.size.width];
 }
 //
 // Respond to children's Events

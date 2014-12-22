@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "MAVEInviteExplanationView.h"
 
+#define MAVE_DEFAULT_SEARCH_BAR_HEIGHT 44
+
 @interface MAVEInviteTableHeaderView : UIView
 
 @property (readonly, assign) BOOL showsExplanation;
