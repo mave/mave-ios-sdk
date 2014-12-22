@@ -239,10 +239,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
-    CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
-                                       containerFrame.origin.y,
-                                       containerFrame.size.width,
-                                       containerFrame.size.height);
+    CGRect tableViewFrame = containerFrame;
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                             computeHeightWithWidth:containerFrame.size.width];
