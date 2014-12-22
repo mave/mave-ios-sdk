@@ -9,6 +9,7 @@
 #import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEABTableViewController.h"
+#import "MAVEInviteTableHeaderView.h"
 #import "MAVEInviteExplanationView.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPersonCell.h"
@@ -43,6 +44,7 @@
         // match the above table header view if we add one
         self.aboveTableContentView = [[UIView alloc] init];
         self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
+        [self.tableView addSubview:self.aboveTableContentView];
 
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
     }
@@ -142,23 +144,14 @@
 // Scroll delegate methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     //
-    // If scrolling past top, reposition content within the explanation frame to stay
-    //     vertically centered to make it look like the table header view is expanding
+    // If scrolling past top, reposition content within the table header view to stay
+    //     vertically centered to make it look like the header view is expanding
     //
     // shift coordinates of content offsetY so scrolled to top is offset 0
     CGFloat shiftedOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top;
 
-    // TODO: use a container view so this is 0
-    CGFloat DEFAULT_INNER_EXPLANATION_OFFSET = 20;
-    if (self.tableView.tableHeaderView && shiftedOffsetY < 0) {
-        MAVEInviteExplanationView *explanationView =
-            (MAVEInviteExplanationView *)self.tableView.tableHeaderView;
-        CGRect explanationTextFrame = explanationView.messageCopy.frame;
-        explanationTextFrame.origin.y =
-            roundf(DEFAULT_INNER_EXPLANATION_OFFSET + (shiftedOffsetY / 2));
-        explanationView.messageCopy.frame = explanationTextFrame;
-    }
-
+    MAVEInviteTableHeaderView *headerView = (MAVEInviteTableHeaderView *)self.tableView.tableHeaderView;
+    [headerView resizeWithShiftedOffsetY:shiftedOffsetY];
 }
 
 // Helpers

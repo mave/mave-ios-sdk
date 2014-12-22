@@ -16,6 +16,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptionsFactory.h"
 #import "MAVEInviteMessageView.h"
+#import "MAVEInviteTableHeaderView.h"
 
 @interface MAVEInvitePageViewControllerTests : XCTestCase
 
@@ -111,19 +112,19 @@
     [ipvc loadView]; [ipvc viewDidLoad];
 
     CGFloat expectedWidth = ipvc.view.frame.size.width;
-    CGFloat expectedHeight = round([ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth]);
+    CGFloat expectedHeight = round([ipvc.inviteTableHeaderView computeHeightWithWidth:expectedWidth]);
     XCTAssertGreaterThan(expectedWidth, 0);
     XCTAssertGreaterThan(expectedHeight, 0);
 
-    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, expectedWidth);
-    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, expectedHeight);
+    XCTAssertEqual(ipvc.inviteTableHeaderView.frame.size.width, expectedWidth);
+    XCTAssertEqual(ipvc.inviteTableHeaderView.frame.size.height, expectedHeight);
     XCTAssertEqualObjects(ipvc.ABTableViewController.tableView.tableHeaderView,
-                          ipvc.inviteExplanationView);
+                          ipvc.inviteTableHeaderView);
 
     // Top "bounce region" should look like it connects to the header and be at the top
     // of the table view tall as the whole screen
     XCTAssertEqualObjects(ipvc.ABTableViewController.aboveTableContentView.backgroundColor,
-                          ipvc.inviteExplanationView.backgroundColor);
+                          ipvc.inviteTableHeaderView.inviteExplanationView.backgroundColor);
     XCTAssertEqualObjects(ipvc.ABTableViewController.aboveTableContentView.superview,
                           ipvc.ABTableViewController.tableView);
     CGFloat fullAppHeight = ipvc.view.frame.size.height;
@@ -133,14 +134,16 @@
 }
 
 - (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {
+    UISearchBar *searchBar = [[UISearchBar alloc] init];
+
     [MaveSDK sharedInstance].displayOptions.inviteExplanationCopy = nil;
 
     MAVEInvitePageViewController *ipvc =
     [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
     
-    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, 0);
-    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, 0);
+    XCTAssertEqual(ipvc.inviteTableHeaderView.frame.size.width, searchBar.frame.size.width);
+    XCTAssertEqual(ipvc.inviteTableHeaderView.frame.size.height, searchBar.frame.size.height);
     XCTAssertNil(ipvc.ABTableViewController.tableView.tableHeaderView);
 }
 
