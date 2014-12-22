@@ -36,7 +36,7 @@
         self.tableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
         self.tableView.sectionIndexBackgroundColor =
             displayOptions.contactSectionIndexBackgroundColor;
-        [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:@"InvitePageABPersonCell"];
+        [self.tableView registerClass:[MAVEABPersonCell class] forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
         self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 
         // default above table content view matches table, it will get overridden to
@@ -112,7 +112,9 @@
 // Data Source methods
 //
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MAVEABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"InvitePageABPersonCell" forIndexPath:indexPath];
+    static NSString *cellIdentifier = MAVEInvitePageABPersonCellID;
+    MAVEABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
+                                                             forIndexPath:indexPath];
     [cell setupCellWithPerson: [self personAtIndexPath:indexPath]];
     return cell;
 }
