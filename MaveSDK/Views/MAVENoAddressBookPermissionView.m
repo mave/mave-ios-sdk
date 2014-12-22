@@ -54,15 +54,15 @@
     // Layout Title label
     CGSize titleLabelSize = [self.titleLabel.text
         sizeWithAttributes:@{NSFontAttributeName: self.titleLabel.font}];
-    float titleLabelX = (self.frame.size.width - titleLabelSize.width) / 2;
-    float titleLabelY = 120;
+    CGFloat titleLabelX = (self.frame.size.width - titleLabelSize.width) / 2;
+    CGFloat titleLabelY = 120;
     self.titleLabel.frame = CGRectMake(titleLabelX, titleLabelY, titleLabelSize.width, titleLabelSize.height);
     
     if (self.detailLabel) {
         CGSize detailLabelSize = [self.detailLabel.text
             sizeWithAttributes:@{NSFontAttributeName: self.detailLabel.font}];
-        float detailLabelX = (self.frame.size.width - detailLabelSize.width) / 2;
-        float detailLabelY = self.titleLabel.frame.origin.y + self.titleLabel.frame.size.height + 10;
+        CGFloat detailLabelX = (self.frame.size.width - detailLabelSize.width) / 2;
+        CGFloat detailLabelY = self.titleLabel.frame.origin.y + self.titleLabel.frame.size.height + 10;
         self.detailLabel.frame = CGRectMake(detailLabelX,
                                             detailLabelY,
                                             detailLabelSize.width,

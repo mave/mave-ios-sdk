@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UILabel *mainLabel;
-@property (nonatomic) float progressBarIncrementBy;
+@property (nonatomic) CGFloat progressBarIncrementBy;
 
 - (void)startTimedProgress;
 - (void)updateProgressViewFromTimer:(NSTimer *)timer;

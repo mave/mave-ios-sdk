@@ -64,8 +64,8 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    float labelMarginY = 0.0;
-    float labelOffsetX = 14.0;
+    CGFloat labelMarginY = 0.0;
+    CGFloat labelOffsetX = 14.0;
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
     NSString *labelText = [self tableView:tableView
                   titleForHeaderInSection:section];
