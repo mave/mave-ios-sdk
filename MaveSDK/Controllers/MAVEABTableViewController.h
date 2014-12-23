@@ -15,15 +15,17 @@
 - (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num;
 @end
 
-@interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource>
+@interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate>
 
-@property (nonatomic, weak) id <MAVEABTableViewAdditionalDelegate> parentViewController;
+@property (nonatomic, weak) UIViewController<MAVEABTableViewAdditionalDelegate> *parentViewController;
 @property (nonatomic, strong) MAVEInviteTableHeaderView *inviteTableHeaderView;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIView *aboveTableContentView;
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
 
-- (instancetype)initTableViewWithParent:(id<MAVEABTableViewAdditionalDelegate>)parent;
+@property (nonatomic, strong) NSArray *allPersons; // for search
+
+- (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
 
 - (void)updateTableData:(NSDictionary *)data;
 

@@ -15,14 +15,12 @@
 - (instancetype)init {
     if (self = [super init]) {
         [self setupInit];
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
     return self;
 }
 
 - (void)setupInit {
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
-
 
     _showsExplanation = displayOptions.inviteExplanationCopy.length > 0;
     if (self.showsExplanation) {
@@ -31,10 +29,12 @@
         self.backgroundColor = displayOptions.inviteExplanationCellBackgroundColor;
     }
 
-    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0,
-                                                                   self.frame.size.width,
-                                                                   MAVE_DEFAULT_SEARCH_BAR_HEIGHT)];
-    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.searchBar = [[UISearchBar alloc] initWithFrame:
+                      CGRectMake(0,
+                                 self.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT,
+                                 self.frame.size.width,
+                                 MAVE_DEFAULT_SEARCH_BAR_HEIGHT)];
+    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:self.searchBar];
 }
 
@@ -51,12 +51,16 @@
                                                          inviteExplanationViewHeight);
         self.inviteExplanationView.frame = newInviteExplanationViewRect;
     }
+}
 
-    // Reposition the search bar below the invite explanation
+- (void)repositionSearchBar {
+    [self bringSubviewToFront:self.searchBar];
     CGRect searchBarFrame = self.searchBar.frame;
-    searchBarFrame.origin.y = self.inviteExplanationView.frame.size.height;
-    searchBarFrame.size.width = frame.size.width;
-    self.searchBar.frame = searchBarFrame;
+    searchBarFrame.size.height = MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
+    searchBarFrame.origin.y = self.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
+    [UIView animateWithDuration:.2 animations:^{
+        self.searchBar.frame = searchBarFrame;
+    }];
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {

@@ -18,6 +18,7 @@
 @property (nonatomic, strong) MAVEInviteExplanationView *inviteExplanationView;
 @property (nonatomic, strong) UISearchBar *searchBar;
 
+- (void)repositionSearchBar;
 - (CGFloat)computeHeightWithWidth:(CGFloat)width;
 - (void)resizeWithShiftedOffsetY:(CGFloat)shiftedOffsetY;
 
