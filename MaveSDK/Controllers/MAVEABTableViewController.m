@@ -19,6 +19,7 @@
 @interface MAVEABTableViewController ()
 
 @property (nonatomic, assign) BOOL isSearching;
+@property (nonatomic, strong) UISearchBar *otherSearchBar;
 @property (nonatomic, strong) UISearchDisplayController *searchDisplayController;
 
 @end
@@ -49,24 +50,43 @@
                forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
         self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 
-        // default above table content view matches table, it will get overridden to
-        // match the above table header view if we add one
-        self.aboveTableContentView = [[UIView alloc] init];
-        self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
-        [self.tableView addSubview:self.aboveTableContentView];
-
-        // Set up the header view
-        self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] init];
-        self.inviteTableHeaderView.searchBar.delegate = self;
-        self.tableView.tableHeaderView = self.inviteTableHeaderView;
-        self.searchDisplayController = [[UISearchDisplayController alloc]
-                                        initWithSearchBar:self.inviteTableHeaderView.searchBar
-                                        contentsController:parent];
-        self.searchDisplayController.delegate = self;
-        self.searchDisplayController.searchResultsDataSource = self;
-//        self.searchDisplayController.searchResultsDelegate = self;
+        [self setupTableHeader];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)setupTableHeader {
+    // default above table content view matches table, it will get overridden to
+    // match the above table header view if we add one
+    self.aboveTableContentView = [[UIView alloc] init];
+    self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
+    [self.tableView addSubview:self.aboveTableContentView];
+
+    // Set up the header view
+    self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] init];
+    self.inviteTableHeaderView.searchBar.delegate = self;
+    self.inviteTableHeaderView.searchBar.hidden = NO;
+    self.tableView.tableHeaderView = self.inviteTableHeaderView;
+    self.inviteTableHeaderView.searchBar.placeholder = @"SEARCH BAR";
+
+    self.otherSearchBar = [[UISearchBar alloc] init];
+    self.otherSearchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.otherSearchBar.delegate = self;
+    CGRect otherSearchBarFrame = self.otherSearchBar.frame;
+    otherSearchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
+    otherSearchBarFrame.origin = CGPointMake(0, 0); //self.tableView.frame.origin.y - MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
+    self.otherSearchBar.frame = otherSearchBarFrame;
+    self.otherSearchBar.hidden = YES;
+    self.otherSearchBar.placeholder = @"OTHER SEARCH BAR";
+
+    [self.tableView addSubview:self.otherSearchBar];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
+                                                 name:@"UIKeyboardWillShowNotification" object:nil];
 }
 
 - (void)updateTableData:(NSDictionary *)data {
@@ -189,15 +209,33 @@
 
 // Scroll delegate methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //
-    // If scrolling past top, reposition content within the table header view to stay
-    //     vertically centered to make it look like the header view is expanding
-    //
-    // shift coordinates of content offsetY so scrolled to top is offset 0
-    CGFloat shiftedOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top;
+    CGFloat offsetY = self.tableView.contentOffset.y;
 
-//    MAVEInviteTableHeaderView *headerView = (MAVEInviteTableHeaderView *)self.tableView.tableHeaderView;
-//    [headerView resizeWithShiftedOffsetY:shiftedOffsetY];
+    // Scrolled above search bar
+    if (offsetY < 10) {
+        self.inviteTableHeaderView.searchBar.hidden = NO;
+        self.otherSearchBar.hidden = YES;
+
+        UIEdgeInsets contentInset = self.tableView.contentInset;
+        contentInset.top = 64;
+        self.tableView.contentInset = contentInset;
+    }
+    else {
+        // Hide the inviteTableHeaderView's search bar
+        self.inviteTableHeaderView.searchBar.hidden = YES;
+        self.otherSearchBar.hidden = NO;
+        [self.tableView bringSubviewToFront:self.otherSearchBar];
+
+        // Offset the otherSearchBar while scrolling below the headerView
+        CGRect newFrame = self.otherSearchBar.frame;
+        newFrame.origin.y = offsetY + 64;
+        self.otherSearchBar.frame = newFrame;
+
+        // Set the tableView's edgeInsets so it's below the other search bar
+        UIEdgeInsets contentInset = self.tableView.contentInset;
+        contentInset.top = MAVE_DEFAULT_SEARCH_BAR_HEIGHT + 64;
+        self.tableView.contentInset = contentInset;
+    }
 }
 
 #pragma mark - Helpers
@@ -262,49 +300,28 @@
     }
 }
 
-#pragma mark - SearchDisplayControllerDelegate
+#pragma mark - UISearchBarDelegate
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     NSLog(@"searchBar textDidChange: %@", searchText);
+
     [self searchContacts:searchText];
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    self.inviteTableHeaderView.inviteExplanationView.hidden = YES;
-    self.aboveTableContentView.hidden = YES;
-    [self.tableView layoutSubviews];
+    if (searchBar == self.inviteTableHeaderView.searchBar) {
+        self.otherSearchBar.hidden = NO;
+        self.inviteTableHeaderView.searchBar.hidden = YES;
+        [self performSelector:@selector(beginSearchBarEditing) withObject:nil afterDelay:0.0];
+        return NO;
+    }
 
     return YES;
 }
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    NSLog(@"searchDisplayController shouldReloadTableForSearchString");
-    return YES;
-}
-
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-    self.inviteTableHeaderView.inviteExplanationView.hidden = YES;
-    self.aboveTableContentView.hidden = YES;
-}
-
-- (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller {
-    self.searchDisplayController.searchResultsTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    self.searchDisplayController.searchResultsTableView.delegate = self;
-    self.searchDisplayController.searchResultsTableView.dataSource = self;
-    [self.searchDisplayController.searchResultsTableView registerClass:[MAVEABPersonCell class]
-                                                forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
-    self.isSearching = YES;
-}
-
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
-    self.inviteTableHeaderView.inviteExplanationView.hidden = NO;
-    self.aboveTableContentView.hidden = NO;
-}
-
-- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
-    self.isSearching = NO;
-    self.tableView.tableHeaderView = self.inviteTableHeaderView;
-    [self.inviteTableHeaderView repositionSearchBar];
+- (void)beginSearchBarEditing {
+    [self.tableView setContentOffset:CGPointMake(0, 10) animated:YES];
+    [self.otherSearchBar becomeFirstResponder];
 }
 
 @end
