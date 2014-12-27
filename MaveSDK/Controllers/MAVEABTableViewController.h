@@ -23,7 +23,10 @@
 @property (nonatomic, strong) UIView *aboveTableContentView;
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
 
-@property (nonatomic, strong) NSArray *allPersons; // for search
+// For searching
+@property (nonatomic, strong) NSArray *allPersons;
+@property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, assign) BOOL isSearching;
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
 

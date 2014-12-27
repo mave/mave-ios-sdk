@@ -159,4 +159,24 @@
     XCTAssertEqual([expectedAllPersons count], [[vc allPersons] count]);
 }
 
+- (void)testSearchingFlags {
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+
+    [vc searchBarShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
+    XCTAssertFalse(vc.searchBar.hidden);
+    XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
+    XCTAssertTrue(vc.isSearching);
+//    XCTAssertTrue(vc.searchBar.isFirstResponder); // firstResponder chain doesn't complete during tests
+    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
+
+    [vc searchBarTextDidEndEditing:vc.searchBar];
+    XCTAssertFalse(vc.searchBar.hidden);
+    XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
+    XCTAssertFalse(vc.isSearching);
+    XCTAssertFalse(vc.searchBar.isFirstResponder);
+    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
+}
+
 @end

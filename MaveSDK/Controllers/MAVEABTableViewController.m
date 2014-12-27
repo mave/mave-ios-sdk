@@ -18,9 +18,8 @@
 
 @interface MAVEABTableViewController ()
 
-@property (nonatomic, assign) BOOL isSearching;
-@property (nonatomic, strong) UISearchBar *otherSearchBar;
-@property (nonatomic, strong) UISearchDisplayController *searchDisplayController;
+
+@property (nonatomic, strong) UITableView *searchTableView;
 
 @end
 
@@ -69,22 +68,37 @@
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
     self.inviteTableHeaderView.searchBar.placeholder = @"SEARCH BAR";
 
-    self.otherSearchBar = [[UISearchBar alloc] init];
-    self.otherSearchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.otherSearchBar.delegate = self;
-    CGRect otherSearchBarFrame = self.otherSearchBar.frame;
-    otherSearchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
-    otherSearchBarFrame.origin = CGPointMake(0, 0); //self.tableView.frame.origin.y - MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
-    self.otherSearchBar.frame = otherSearchBarFrame;
-    self.otherSearchBar.hidden = YES;
-    self.otherSearchBar.placeholder = @"OTHER SEARCH BAR";
+    self.searchBar = [[UISearchBar alloc] init];
+    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.searchBar.delegate = self;
+    CGRect searchBarFrame = self.searchBar.frame;
+    searchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
+    searchBarFrame.origin = CGPointMake(0, 0); //self.tableView.frame.origin.y - MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
+    self.searchBar.frame = searchBarFrame;
+    self.searchBar.hidden = YES;
+    self.searchBar.placeholder = @"OTHER SEARCH BAR";
 
-    [self.tableView addSubview:self.otherSearchBar];
+    [self.tableView addSubview:self.searchBar];
 
     // Set the tableView's edgeInsets so it's below the search bar
     UIEdgeInsets contentInset = self.tableView.contentInset;
     contentInset.top = MAVE_DEFAULT_SEARCH_BAR_HEIGHT + 64;
     self.tableView.contentInset = contentInset;
+}
+
+- (void)setupSearchTableView {
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
+
+    self.searchTableView = [[UITableView alloc] init];
+    self.searchTableView.delegate = self;
+    self.searchTableView.dataSource = self;
+    self.searchTableView.backgroundColor = [UIColor colorWithWhite:.5 alpha:.5]; //displayOptions.contactCellBackgroundColor;
+    self.searchTableView.separatorColor = displayOptions.contactSeparatorColor;
+    self.searchTableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
+    self.searchTableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
+    [self.tableView registerClass:[MAVEABPersonCell class]
+           forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
+
 }
 
 - (void)updateTableData:(NSDictionary *)data {
@@ -95,7 +109,7 @@
 
     if (self.isSearching) {
         [self searchContacts:self.inviteTableHeaderView.searchBar.text];
-        [self.searchDisplayController.searchResultsTableView reloadData];
+        [self.searchTableView reloadData];
     }
 }
 
@@ -190,7 +204,7 @@
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (tableView == self.searchTableView) {
         // if a row was selected in the searchTableView, then reload the main tableView so the same
         // row appears tapped as well
         [self.tableView reloadData];
@@ -212,7 +226,7 @@
     // Scrolled above search bar
     if (offsetY < 10) {
         self.inviteTableHeaderView.searchBar.hidden = NO;
-        self.otherSearchBar.hidden = YES;
+        self.searchBar.hidden = YES;
 
         UIEdgeInsets contentInset = self.tableView.contentInset;
         contentInset.top = 64;
@@ -221,13 +235,13 @@
     else {
         // Hide the inviteTableHeaderView's search bar
         self.inviteTableHeaderView.searchBar.hidden = YES;
-        self.otherSearchBar.hidden = NO;
-        [self.tableView bringSubviewToFront:self.otherSearchBar];
+        self.searchBar.hidden = NO;
+        [self.tableView bringSubviewToFront:self.searchBar];
 
-        // Offset the otherSearchBar while scrolling below the headerView
-        CGRect newFrame = self.otherSearchBar.frame;
+        // Offset the searchBar while scrolling below the headerView
+        CGRect newFrame = self.searchBar.frame;
         newFrame.origin.y = offsetY + 64;
-        self.otherSearchBar.frame = newFrame;
+        self.searchBar.frame = newFrame;
     }
 }
 
@@ -235,7 +249,7 @@
 
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
     // TODO unit test
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (tableView == self.searchTableView) {
         return [searchedTableData objectAtIndex:indexPath.row];
     } else {
         NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
@@ -265,7 +279,7 @@
     }
 }
 
-#pragma mark - Searching
+#pragma mark - Search Results
 
 - (NSArray *)allPersons {
     if (_allPersons) {
@@ -293,22 +307,21 @@
     }
 }
 
-#pragma mark - UISearchBarDelegate
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    NSLog(@"searchBar textDidChange: %@", searchText);
-    [self searchContacts:searchText];
-}
+#pragma mark - Search TableView management
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     if (searchBar == self.inviteTableHeaderView.searchBar) {
         self.inviteTableHeaderView.searchBar.hidden = YES;
-        self.otherSearchBar.hidden = NO;
-        [self performSelector:@selector(beginSearchBarEditing) withObject:nil afterDelay:0.0];
+        self.searchBar.hidden = NO;
+        [self beginSearchBarEditing];
         return NO;
     }
 
     return YES;
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    self.isSearching = NO;
 }
 
 - (void)beginSearchBarEditing {
@@ -317,7 +330,13 @@
         [self.tableView setContentOffset:CGPointMake(0, 10) animated:YES];
     }
 
-    [self.otherSearchBar becomeFirstResponder];
+    self.isSearching = YES;
+    [self.searchBar becomeFirstResponder];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    NSLog(@"searchBar textDidChange: %@", searchText);
+    [self searchContacts:searchText];
 }
 
 @end
