@@ -55,10 +55,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)setupTableHeader {
     // default above table content view matches table, it will get overridden to
     // match the above table header view if we add one
@@ -85,8 +81,10 @@
 
     [self.tableView addSubview:self.otherSearchBar];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
-                                                 name:@"UIKeyboardWillShowNotification" object:nil];
+    // Set the tableView's edgeInsets so it's below the search bar
+    UIEdgeInsets contentInset = self.tableView.contentInset;
+    contentInset.top = MAVE_DEFAULT_SEARCH_BAR_HEIGHT + 64;
+    self.tableView.contentInset = contentInset;
 }
 
 - (void)updateTableData:(NSDictionary *)data {
@@ -230,11 +228,6 @@
         CGRect newFrame = self.otherSearchBar.frame;
         newFrame.origin.y = offsetY + 64;
         self.otherSearchBar.frame = newFrame;
-
-        // Set the tableView's edgeInsets so it's below the other search bar
-        UIEdgeInsets contentInset = self.tableView.contentInset;
-        contentInset.top = MAVE_DEFAULT_SEARCH_BAR_HEIGHT + 64;
-        self.tableView.contentInset = contentInset;
     }
 }
 
@@ -304,14 +297,13 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     NSLog(@"searchBar textDidChange: %@", searchText);
-
     [self searchContacts:searchText];
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     if (searchBar == self.inviteTableHeaderView.searchBar) {
-        self.otherSearchBar.hidden = NO;
         self.inviteTableHeaderView.searchBar.hidden = YES;
+        self.otherSearchBar.hidden = NO;
         [self performSelector:@selector(beginSearchBarEditing) withObject:nil afterDelay:0.0];
         return NO;
     }
@@ -320,7 +312,11 @@
 }
 
 - (void)beginSearchBarEditing {
-    [self.tableView setContentOffset:CGPointMake(0, 10) animated:YES];
+    CGFloat offsetY = self.tableView.contentOffset.y;
+    if (offsetY < 10) {
+        [self.tableView setContentOffset:CGPointMake(0, 10) animated:YES];
+    }
+
     [self.otherSearchBar becomeFirstResponder];
 }
 
