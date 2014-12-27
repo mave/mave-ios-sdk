@@ -16,8 +16,10 @@
 #import "MAVEABPersonCell.h"
 #import "MAVEABPerson.h"
 
-@interface MAVEABTableViewController ()
+#define MAVE_AB_TABLE_VC_OFFSET_THRESHOLD 10
+#define MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT 64
 
+@interface MAVEABTableViewController ()
 
 @property (nonatomic, strong) UITableView *searchTableView;
 
@@ -82,7 +84,7 @@
 
     // Set the tableView's edgeInsets so it's below the search bar
     UIEdgeInsets contentInset = self.tableView.contentInset;
-    contentInset.top = MAVE_DEFAULT_SEARCH_BAR_HEIGHT + 64;
+    contentInset.top = MAVE_DEFAULT_SEARCH_BAR_HEIGHT + MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT;
     self.tableView.contentInset = contentInset;
 }
 
@@ -224,12 +226,12 @@
     CGFloat offsetY = self.tableView.contentOffset.y;
 
     // Scrolled above search bar
-    if (offsetY < 10) {
+    if (offsetY < MAVE_AB_TABLE_VC_OFFSET_THRESHOLD) {
         self.inviteTableHeaderView.searchBar.hidden = NO;
         self.searchBar.hidden = YES;
 
         UIEdgeInsets contentInset = self.tableView.contentInset;
-        contentInset.top = 64;
+        contentInset.top = MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT;
         self.tableView.contentInset = contentInset;
     }
     else {
@@ -240,7 +242,7 @@
 
         // Offset the searchBar while scrolling below the headerView
         CGRect newFrame = self.searchBar.frame;
-        newFrame.origin.y = offsetY + 64;
+        newFrame.origin.y = offsetY + MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT;
         self.searchBar.frame = newFrame;
     }
 }
@@ -326,8 +328,9 @@
 
 - (void)beginSearchBarEditing {
     CGFloat offsetY = self.tableView.contentOffset.y;
-    if (offsetY < 10) {
-        [self.tableView setContentOffset:CGPointMake(0, 10) animated:YES];
+    if (offsetY < MAVE_AB_TABLE_VC_OFFSET_THRESHOLD) {
+        [self.tableView setContentOffset:CGPointMake(0, MAVE_AB_TABLE_VC_OFFSET_THRESHOLD)
+                                animated:YES];
     }
 
     self.isSearching = YES;
