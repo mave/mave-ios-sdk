@@ -7,21 +7,29 @@
 //
 
 #import "MAVERemoteConfiguration.h"
+#import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 #import "MAVEHTTPManager.h"
+
+const NSString *MAVERemoteConfigKeyEnableContactsPrePrompt = @"enable_contacts_pre_prompt";
+const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"contacts_pre_prompt_template";
 
 @implementation MAVERemoteConfiguration
 
-- (instancetype)initWithJSON:(NSDictionary *)responseData {
+- (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [self init]) {
-        
+        self.enableContactsPrePrompt = [data objectForKey:MAVERemoteConfigKeyEnableContactsPrePrompt];
+        self.contactsPrePromptTemplate = [[MAVERemoteConfigurationContactsPrePromptTemplate alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplate]];
     }
     return self;
 }
 
 // JSON-formatted data to initiate the remote configuration in its default state
 + (NSDictionary *)defaultJSONData {
-    NSDictionary *defaults = [[NSDictionary alloc] init];
-    return defaults;
+    return @{
+        MAVERemoteConfigKeyEnableContactsPrePrompt: @YES,
+        MAVERemoteConfigKeyContactsPrePromptTemplate:
+            [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData],
+    };
 }
 
 @end

@@ -13,15 +13,15 @@
 
 #import <Foundation/Foundation.h>
 #import "MAVEHTTPManager.h"
-#import "MAVEPreFetchedHTTPRequest.h"
+#import "MAVEPendingResponseObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
-@interface MAVERemoteConfiguration : NSObject
 
-@property (nonatomic) BOOL enableContactsPrePrompt;
+@interface MAVERemoteConfiguration : NSObject<MAVEDictionaryInitializable>
+
+@property (nonatomic) NSNumber *enableContactsPrePrompt;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePromptTemplate *contactsPrePromptTemplate;
 
-- (instancetype)initWithJSON:(NSDictionary *)responseData;
 + (NSDictionary *)defaultJSONData;
 
 @end

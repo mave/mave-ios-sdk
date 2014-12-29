@@ -20,6 +20,7 @@
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
 @property (nonatomic, copy) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEHTTPManager *HTTPManager;
+@property (nonatomic, strong) MAVEPendingResponseObjectBuilder *remoteConfigurationBuilder;
 
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;

@@ -7,13 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MAVEPendingResponseObjectBuilder.h"
 
-@interface MAVERemoteConfigurationContactsPrePromptTemplate : NSObject
+@interface MAVERemoteConfigurationContactsPrePromptTemplate : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic, strong) NSString *remoteConfigID;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *message;
 @property (nonatomic, strong) NSString *cancelButtonCopy;
 @property (nonatomic, strong) NSString *acceptButtonCopy;
+
++ (NSDictionary *)defaultJSONData;
 
 @end
