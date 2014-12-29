@@ -16,12 +16,12 @@
 #import "MAVEABPersonCell.h"
 #import "MAVEABPerson.h"
 
-#define MAVE_AB_TABLE_VC_OFFSET_THRESHOLD 10
-#define MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT 64
+#define MAVE_AB_TABLE_VC_SEARCH_BAR_OFFSET_Y self.tableView.tableHeaderView.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT
 
 @interface MAVEABTableViewController ()
 
 @property (nonatomic, strong) UITableView *searchTableView;
+@property (nonatomic, strong) UIButton *searchBackgroundButton;
 
 @end
 
@@ -36,6 +36,8 @@
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
+//        self.parentViewController.automaticallyAdjustsScrollViewInsets = NO;
+//        self.parentViewController.edgesForExtendedLayout = UIRectEdgeNone;
 
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
 
@@ -81,11 +83,6 @@
     self.searchBar.placeholder = @"OTHER SEARCH BAR";
 
     [self.tableView addSubview:self.searchBar];
-
-    // Set the tableView's edgeInsets so it's below the search bar
-    UIEdgeInsets contentInset = self.tableView.contentInset;
-    contentInset.top = MAVE_DEFAULT_SEARCH_BAR_HEIGHT + MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT;
-    self.tableView.contentInset = contentInset;
 }
 
 - (void)setupSearchTableView {
@@ -226,13 +223,13 @@
     CGFloat offsetY = self.tableView.contentOffset.y;
 
     // Scrolled above search bar
-    if (offsetY < MAVE_AB_TABLE_VC_OFFSET_THRESHOLD) {
+    if (offsetY < MAVE_AB_TABLE_VC_SEARCH_BAR_OFFSET_Y) {
         self.inviteTableHeaderView.searchBar.hidden = NO;
         self.searchBar.hidden = YES;
 
-        UIEdgeInsets contentInset = self.tableView.contentInset;
-        contentInset.top = MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT;
-        self.tableView.contentInset = contentInset;
+//        UIEdgeInsets contentInset = self.tableView.contentInset;
+//        contentInset.top = 0;
+//        self.tableView.contentInset = contentInset;
     }
     else {
         // Hide the inviteTableHeaderView's search bar
@@ -242,8 +239,12 @@
 
         // Offset the searchBar while scrolling below the headerView
         CGRect newFrame = self.searchBar.frame;
-        newFrame.origin.y = offsetY + MAVE_AB_TABLE_VC_TABLE_VIEW_HEIGHT;
+        newFrame.origin.y = offsetY;
         self.searchBar.frame = newFrame;
+
+//        UIEdgeInsets contentInset = self.tableView.contentInset;
+//        contentInset.top = 44;
+//        self.tableView.contentInset = contentInset;
     }
 }
 
@@ -311,6 +312,20 @@
 
 #pragma mark - Search TableView management
 
+- (UIView *)searchBackgroundButton {
+    if (!_searchBackgroundButton) {
+        _searchBackgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _searchBackgroundButton.frame = self.tableView.frame;
+        _searchBackgroundButton.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        _searchBackgroundButton.autoresizingMask = (UIViewAutoresizingFlexibleHeight |
+                                                    UIViewAutoresizingFlexibleWidth);
+        [_searchBackgroundButton addTarget:self.searchBar action:@selector(resignFirstResponder)
+                          forControlEvents:UIControlEventTouchUpInside];
+    }
+
+    return _searchBackgroundButton;
+}
+
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     if (searchBar == self.inviteTableHeaderView.searchBar) {
         self.inviteTableHeaderView.searchBar.hidden = YES;
@@ -319,22 +334,37 @@
         return NO;
     }
 
+    [self addsearchBackgroundButton];
     return YES;
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    self.isSearching = NO;
 }
 
 - (void)beginSearchBarEditing {
     CGFloat offsetY = self.tableView.contentOffset.y;
-    if (offsetY < MAVE_AB_TABLE_VC_OFFSET_THRESHOLD) {
-        [self.tableView setContentOffset:CGPointMake(0, MAVE_AB_TABLE_VC_OFFSET_THRESHOLD)
+    CGFloat searchBarOffset = MAVE_AB_TABLE_VC_SEARCH_BAR_OFFSET_Y;
+
+    if (offsetY < searchBarOffset) {
+        [self.tableView setContentOffset:CGPointMake(0, searchBarOffset)
                                 animated:YES];
     }
 
     self.isSearching = YES;
     [self.searchBar becomeFirstResponder];
+}
+
+- (void)addsearchBackgroundButton {
+    CGRect searchBackgroundButtonFrame = self.searchBackgroundButton.frame;
+    searchBackgroundButtonFrame.origin.y = self.tableView.frame.origin.y;
+    self.searchBackgroundButton.frame = searchBackgroundButtonFrame;
+    [self.tableView addSubview:self.searchBackgroundButton];
+
+    self.tableView.scrollEnabled = NO;
+    [self.tableView bringSubviewToFront:self.searchBar];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    self.isSearching = NO;
+    self.tableView.scrollEnabled = YES;
+    [self.searchBackgroundButton removeFromSuperview];
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {

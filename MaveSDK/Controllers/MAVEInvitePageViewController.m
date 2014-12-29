@@ -230,16 +230,21 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 }
 
 - (void)layoutInvitePageViewAndSubviews {
+    self.automaticallyAdjustsScrollViewInsets = YES;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+
+//    CGRect screenFrame = [[UIScreen mainScreen] bounds];
     CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+
     CGRect containerFrame = CGRectMake(0,
                                        0,
                                        appFrame.origin.x + appFrame.size.width,
-                                       self.keyboardFrame.origin.y);
+                                       appFrame.origin.y + appFrame.size.height);
 
     CGRect tableViewFrame = containerFrame;
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
-                            computeHeightWithWidth:containerFrame.size.width];
+                                computeHeightWithWidth:containerFrame.size.width];
 
     // Extend bottom of table view content so invite message view doesn't overlap it
     UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
@@ -261,8 +266,10 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
     self.ABTableViewController.aboveTableContentView.frame =
-        CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
-               containerFrame.size.width, containerFrame.size.height);
+        CGRectMake(0,
+                   tableViewFrame.origin.y - containerFrame.size.height,
+                   containerFrame.size.width,
+                   containerFrame.size.height);
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
 
     // Resize the header based on width
