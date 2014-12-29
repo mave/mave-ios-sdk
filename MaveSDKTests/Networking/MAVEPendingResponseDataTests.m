@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "MAVEPreFetchedHTTPRequest.h"
+#import "MAVEPendingResponseData.h"
 
-@interface MAVEPreFetchedHTTPRequestTests : XCTestCase
+@interface MAVEPendingResponseDataTests : XCTestCase
 
 @end
 
-@implementation MAVEPreFetchedHTTPRequestTests
+@implementation MAVEPendingResponseDataTests
 
 - (void)setUp {
     [super setUp];
@@ -28,49 +28,55 @@
 
 - (void)testInitWithDefaultData {
     NSDictionary *defaultData = @{@"foo": @"bar"};
-    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
-    XCTAssertEqualObjects(req.defaultData, defaultData);
-    XCTAssertEqualObjects(req.responseData, defaultData);
-    XCTAssertNotNil(req.gcd_semaphore);
+    MAVEPendingResponseData *data =
+        [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData];
+    XCTAssertEqualObjects(data.defaultData, defaultData);
+    XCTAssertEqualObjects(data.responseData, defaultData);
+    XCTAssertNotNil(data.gcd_semaphore);
 }
 
 - (void)testSetDataOverwritesDefault {
     NSDictionary *defaultData = @{@"foo": @"bar"};
     NSDictionary *newData = @{@"foo": @"baz"};
-    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
-    req.responseData = newData;
-    XCTAssertNotEqualObjects(req.responseData, defaultData);
-    XCTAssertEqualObjects(req.responseData, newData);
+    MAVEPendingResponseData *data =
+        [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData];
+    data.responseData = newData;
+    XCTAssertNotEqualObjects(data.responseData, defaultData);
+    XCTAssertEqualObjects(data.responseData, newData);
     // default data is unchanged
-    XCTAssertEqualObjects(req.defaultData, defaultData);
+    XCTAssertEqualObjects(data.defaultData, defaultData);
 }
 
 // ResponseData being nil is fine, and different than "doNotSet" it
 - (void)testSetDataCanOverwriteWithNil {
     NSDictionary *defaultData = @{@"foo": @"bar"};
     NSDictionary *newData = nil;
-    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
-    req.responseData = newData;
-    XCTAssertNil(req.responseData);
-    XCTAssertEqualObjects(req.defaultData, defaultData);
+    MAVEPendingResponseData *data =
+        [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData];
+    data.responseData = newData;
+    XCTAssertNil(data.responseData);
+    XCTAssertEqualObjects(data.defaultData, defaultData);
 }
 
 - (void)testDoNotSetDataDoesNotOverrideDefault {
     NSDictionary *defaultData = @{@"foo": @"bar"};
-    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
-    [req doNotSetResponseData];
-    XCTAssertEqualObjects(req.responseData, defaultData);
+    MAVEPendingResponseData *data =
+        [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData];
+    [data doNotSetResponseData];
+    XCTAssertEqualObjects(data.responseData, defaultData);
 }
 
 // If we read data successfully, we have data and semaphore gets re-signalled
 - (void)testReadDataSuccess {
     NSDictionary *defaultData = @{@"foo": @0};
     NSDictionary *newData = @{@"foo": @1};
-    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
+    MAVEPendingResponseData *req =
+        [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData];
     req.responseData = newData;
 
-    [req readDataWithTimeout:0 completionBlock:^(NSDictionary *responseData) {
+    [req readDataWithTimeout:0 completionBlock:^(NSDictionary *responseData, NSDictionary *defaultData) {
         XCTAssertEqualObjects(responseData, newData);
+        XCTAssertEqualObjects(defaultData, defaultData);
     }];
     // since semaphore was re-signalled, we can get it now with no wait
     XCTAssertEqual(dispatch_semaphore_wait(req.gcd_semaphore, 0), 0);
@@ -78,11 +84,13 @@
 
 // If read-data timeout, the semaphore does not get re-signalled
 - (void)testReadDataTimeout {
-    NSDictionary *defaultData = @{@"foo": @0};
-    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
+    NSDictionary *defaultData1 = @{@"foo": @0};
+    MAVEPendingResponseData *req =
+        [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData1];
     
-    [req readDataWithTimeout:0 completionBlock:^(NSDictionary *responseData) {
+    [req readDataWithTimeout:0 completionBlock:^(NSDictionary *responseData, NSDictionary *defaultData) {
         XCTAssertEqualObjects(responseData, defaultData);
+        XCTAssertEqualObjects(defaultData, defaultData1);
     }];
     // since semaphore was not re-signalled, it still blocks
     XCTAssertNotEqual(dispatch_semaphore_wait(req.gcd_semaphore, 0), 0);

@@ -12,7 +12,7 @@
 #import "MAVEConstants.h"
 #import "MAVEHTTPManager.h"
 #import "MAVEHTTPManager_Internal.h"
-#import "MAVEPreFetchedHTTPRequest.h"
+#import "MAVEPendingResponseData.h"
 
 #import <OCMock/OCMock.h>
 

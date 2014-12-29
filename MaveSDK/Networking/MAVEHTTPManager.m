@@ -9,7 +9,7 @@
 #import "MAVEConstants.h"
 #import "MAVEHTTPManager.h"
 #import "MAVEHTTPManager_Internal.h"
-#import "MAVEPreFetchedHTTPRequest.h"
+#import "MAVEPendingResponseData.h"
 
 @implementation MAVEHTTPManager
 
@@ -105,11 +105,12 @@
     return;
 }
 
-- (MAVEPreFetchedHTTPRequest *)preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
+- (MAVEPendingResponseData *)preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                                            methodType:(NSString *)methodType
                                                                params:(NSDictionary *)params
                                                           defaultData:(NSDictionary *)defaultData {
-    MAVEPreFetchedHTTPRequest *req = [[MAVEPreFetchedHTTPRequest alloc] initWithDefaultData:defaultData];
+    MAVEPendingResponseData *req =
+        [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData];
     [self sendIdentifiedJSONRequestWithRoute:relativeURL
                                   methodType:methodType params:params
                              completionBlock:^(NSError *error, NSDictionary *responseData) {
@@ -294,7 +295,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     }];
 }
 
-- (MAVEPreFetchedHTTPRequest *)preFetchRemoteConfiguration:(NSDictionary *)defaultData {
+- (MAVEPendingResponseData *)preFetchRemoteConfiguration:(NSDictionary *)defaultData {
     NSString *route = @"/remote_configuration/ios";
     return [self preFetchIdentifiedJSONRequestWithRoute:route
                                       methodType:@"GET"
