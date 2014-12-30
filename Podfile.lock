@@ -17,7 +17,7 @@ PODS:
 DEPENDENCIES:
   - Gizou
   - MMDrawerController (~> 0.5.7)
-  - OCMock
+  - OCMock (~> 3.1.1)
 
 SPEC CHECKSUMS:
   Gizou: f0025df05b51197ab8979c728a1cd525b7d6911f
