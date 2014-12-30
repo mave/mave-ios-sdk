@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <objc/runtime.h>
 #import "MAVEConstants.h"
+#import "MAVEClientPropertyUtils.h"
 #import "MAVEHTTPManager.h"
 #import "MAVEHTTPManager_Internal.h"
 #import "MAVEPendingResponseData.h"
@@ -315,12 +316,14 @@
     NSString *expectedDimensions = [NSString stringWithFormat:@"%ldx%ld",
                                     (long)screenSize.width, (long)screenSize.height];
     NSString *expectedUserAgent = [MAVEHTTPManager userAgentWithUIDevice:[UIDevice currentDevice]];
+    NSString *expectedClientProperties = [MAVEClientPropertyUtils encodedAutomaticClientProperties];
     NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",
                                       @"Accept": @"application/json",
                                       @"X-Application-Id": @"appid12",
                                       @"X-App-Device-Id": @"appdeviceid12",
                                       @"User-Agent": expectedUserAgent,
                                       @"X-Device-Screen-Dimensions": expectedDimensions,
+                                      @"X-Client-Properties": expectedClientProperties,
                                       };
     XCTAssertEqualObjects(requestHeaders, expectedHeaders);
 }

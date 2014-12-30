@@ -7,6 +7,7 @@
 //
 
 #import "MAVEConstants.h"
+#import "MAVEClientPropertyUtils.h"
 #import "MAVEHTTPManager.h"
 #import "MAVEHTTPManager_Internal.h"
 #import "MAVEPendingResponseData.h"
@@ -89,8 +90,11 @@
         [[self class] userAgentWithUIDevice:[UIDevice currentDevice]];
     NSString *screenSize =
         [[self class] formattedScreenSize:[UIScreen mainScreen].bounds.size];
+    NSString *clientProperties =
+        [MAVEClientPropertyUtils encodedAutomaticClientProperties];
     [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
-    [request setValue: screenSize forHTTPHeaderField:@"X-Device-Screen-Dimensions"];
+    [request setValue:screenSize forHTTPHeaderField:@"X-Device-Screen-Dimensions"];
+    [request setValue:clientProperties forHTTPHeaderField:@"X-Client-Properties"];
 
     // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
