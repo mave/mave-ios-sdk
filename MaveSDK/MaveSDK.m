@@ -151,17 +151,4 @@ static dispatch_once_t sharedInstanceonceToken;
     return returnViewController;
 }
 
-//- (UIViewController *)invitePageViewControllerWithDelegate:(id<MAVEInvitePageDelegate>)delegate
-//                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
-//                                                     error:(NSError **)error {
-//    UIViewController *returnVC = nil;
-//    *error = [self validateSetup];
-//    if (!*error) {
-//        self.defaultSMSMessageText = defaultSMSMessageText;
-//        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] initWithDelegate:delegate];
-//        returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
-//    }
-//    return returnVC;
-//}
-
 @end

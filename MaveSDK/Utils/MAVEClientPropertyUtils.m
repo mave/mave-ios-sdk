@@ -69,19 +69,21 @@
 }
 
 + (NSString *)encodedAutomaticClientProperties {
-    NSDictionary *properties = @{
-        @"app_device_id": [self appDeviceID],
-        @"app_release": [self appRelease],
-        @"app_version": [self appVersion],
-        @"carrier": [self carrier],
-        @"country": [self countryCode],
-        @"language": [self language],
-        @"mave_version": MAVEAPIVersion,
-        @"manufacturer": [self manufacturer],
-        @"model": [self model],
-        @"os": [self os],
-        @"osVersion": [self osVersion],
-    };
+    // use setValue:forKey: which will  omit setting the object in the
+    // dictionary if nil, just in case a nil value sneaks in somehow
+    NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+    [properties setValue:[self appDeviceID] forKey: @"app_device_id"];
+    [properties setValue:[self appRelease] forKey: @"app_release"];
+    [properties setValue:[self appVersion] forKey: @"app_version"];
+    [properties setValue:[self carrier] forKey: @"carrier"];
+    [properties setValue:[self countryCode] forKey: @"country"];
+    [properties setValue:[self language] forKey: @"language"];
+    [properties setValue:MAVEAPIVersion forKey: @"mave_version"];
+    [properties setValue:[self manufacturer] forKey: @"manufacturer"];
+    [properties setValue:[self model] forKey: @"model"];
+    [properties setValue:[self os] forKey: @"os"];
+    [properties setValue:[self osVersion] forKey: @"osVersion"];
+
     return [self base64EncodeDictionary:properties];
 }
 
