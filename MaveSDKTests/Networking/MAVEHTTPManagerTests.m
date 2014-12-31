@@ -164,14 +164,15 @@
     [mocked verify];
 }
 
-- (void)testSendInvitePageOpenEvent {
+- (void)testTrackInvitePageOpenRequest {
     MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
     id mocked = [OCMockObject partialMockForObject:httpManager];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     userData.userID = @"1"; userData.firstName = @"Dan";
     NSString *invitePageType = @"aiwekdk";
     NSDictionary *expectedParams = @{@"user_id": userData.userID,
-                                     @"invite_page_type": invitePageType};
+                                     @"invite_page_type": invitePageType,
+                                     @"contacts_permission_status": @"allowed"};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invite_page_open"
                                              methodType:@"POST"
                                                  params:expectedParams

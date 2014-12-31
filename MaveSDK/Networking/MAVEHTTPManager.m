@@ -7,6 +7,7 @@
 //
 
 #import "MAVEConstants.h"
+#import "MAVEABCollection.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVEHTTPManager.h"
 #import "MAVEHTTPManager_Internal.h"
@@ -274,6 +275,8 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     NSMutableDictionary *params =
         (NSMutableDictionary *)[userData toDictionaryIDOnly];
     [params setObject:invitePageType forKey:@"invite_page_type"];
+    [params setObject:[MAVEABCollection addressBookPermissionStatus]
+               forKey:@"contacts_permission_status"];
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodType:@"POST"
                                       params:params
