@@ -193,16 +193,17 @@
 }
 
 
-- (void)testViewDidLoadSendsInvitePageViewedEvent {
+- (void)testLoadViewSendsInvitePageViewedEvent {
     NSString *userId = @"1239sdf";
     [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:userId firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     [MaveSDK sharedInstance].userData = userData;
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     id mockHTTPManager = [OCMockObject partialMockForObject: [MaveSDK sharedInstance].HTTPManager];
-    [[mockHTTPManager expect] trackInvitePageOpenRequest:userData];
+    [[mockHTTPManager expect] trackInvitePageOpenRequest:userData
+                                                pageType:MAVEInvitePageTypeContactList];
     
-    [vc viewDidLoad];
+    [vc loadView];
     
     [mockHTTPManager verify];
 }

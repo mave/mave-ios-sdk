@@ -14,6 +14,11 @@
 
 typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, NSUInteger numberOfInvitesSent);
 
+extern NSString * const MAVEInvitePageTypeContactList;
+extern NSString * const MAVEInvitePageTypeNoneNeedContactsPermission;
+extern NSString * const MAVEInvitePageTypeCustomShare;
+extern NSString * const MAVEInvitePageTypeNativeShareSheet;
+
 
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
 

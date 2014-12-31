@@ -12,8 +12,23 @@
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
 
+NSString * const MAVEABPermissionStatusAllowed = @"allowed";
+NSString * const MAVEABPermissionStatusDenied = @"denied";
+NSString * const MAVEABPermisssionStatusUnprompted = @"unprompted";
+
 
 @implementation MAVEABCollection
+
++ (NSString *)addressBookPermissionStatus {
+    ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
+    if (status == kABAuthorizationStatusAuthorized) {
+        return MAVEABPermissionStatusAllowed;
+    } else if (status == kABAuthorizationStatusNotDetermined) {
+        return MAVEABPermisssionStatusUnprompted;
+    } else {  // there are two underlying statuses here
+        return MAVEABPermissionStatusDenied;
+    }
+}
 
 + (id)createAndLoadAddressBookWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
     // TODO test with mocking out the load method

@@ -268,14 +268,18 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
                              completionBlock:nil];
 }
 
-- (void)trackInvitePageOpenRequest:(MAVEUserData *)userData {
+- (void)trackInvitePageOpenRequest:(MAVEUserData *)userData
+                          pageType:(NSString *)invitePageType {
     NSString *launchRoute = @"/invite_page_open";
-    NSDictionary *params = [userData toDictionaryIDOnly];
+    NSMutableDictionary *params =
+        (NSMutableDictionary *)[userData toDictionaryIDOnly];
+    [params setObject:invitePageType forKey:@"invite_page_type"];
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodType:@"POST"
                                       params:params
                              completionBlock:nil];
 }
+
 
 //
 // GET Requests

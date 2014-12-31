@@ -169,12 +169,14 @@
     id mocked = [OCMockObject partialMockForObject:httpManager];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     userData.userID = @"1"; userData.firstName = @"Dan";
-    NSDictionary *expectedParams = @{@"user_id": userData.userID};
+    NSString *invitePageType = @"aiwekdk";
+    NSDictionary *expectedParams = @{@"user_id": userData.userID,
+                                     @"invite_page_type": invitePageType};
     [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/invite_page_open"
                                              methodType:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil];
-    [httpManager trackInvitePageOpenRequest:userData];
+    [httpManager trackInvitePageOpenRequest:userData pageType:invitePageType];
     [mocked verify];
 }
 

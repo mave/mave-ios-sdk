@@ -17,6 +17,12 @@
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
 
+NSString * const MAVEInvitePageTypeContactList = @"contact_list";
+NSString * const MAVEInvitePageTypeNoneNeedContactsPermission = @"none_need_contacts_permission";
+NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
+NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
+
+
 @interface MAVEInvitePageViewController ()
 
 @end
@@ -51,10 +57,6 @@
                       selector:@selector(deviceDidRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
-    
-    // Register the viewed invite page event with our API
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -166,9 +168,11 @@
 }
 
 - (void)determineAndSetViewBasedOnABPermissions {
+    MAVEUserData *userData = [MaveSDK sharedInstance].userData;
+
     // If address book permission already granted, load contacts view right now
-    ABAuthorizationStatus addrBookStatus = ABAddressBookGetAuthorizationStatus();
-    if (addrBookStatus == kABAuthorizationStatusAuthorized) {
+    NSString *abStatus = [MAVEABCollection addressBookPermissionStatus];
+    if ([abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
         DebugLog(@"Address book status was authorized");
         self.view = [self createAddressBookInviteView];
         [self layoutInvitePageViewAndSubviews];
@@ -177,33 +181,41 @@
                 [self.ABTableViewController updateTableData:indexedData];
             });
          }];
+        [[MaveSDK sharedInstance].HTTPManager
+            trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeContactList];
 
     // If status not determined, prompt for permission then load data
     // If permission not granted, swap empty for for permission denied view
-    } else if (addrBookStatus == kABAuthorizationStatusNotDetermined) {
+    } else if ([abStatus isEqualToString:MAVEABPermisssionStatusUnprompted]) {
         DebugLog(@"Address book status not determined, needed to prompt");
         self.view = [self createEmptyFallbackView];
         [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
+            // User must have
             if ([indexedContacts count] > 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.view = [self createAddressBookInviteView];
                     [self layoutInvitePageViewAndSubviews];
                     [self.ABTableViewController updateTableData:indexedContacts];
                 });
+                [[MaveSDK sharedInstance].HTTPManager
+                    trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeContactList];
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.view = [[MAVENoAddressBookPermissionView alloc] init];
                 });
+                [[MaveSDK sharedInstance].HTTPManager
+                    trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeNoneNeedContactsPermission];
             }
         }];
     // If status already denied, leave blank page for now
-    } else if (addrBookStatus == kABAuthorizationStatusDenied ||
-               addrBookStatus == kABAuthorizationStatusRestricted) {
+    } else if ([abStatus isEqualToString:MAVEABPermissionStatusDenied]) {
         DebugLog(@"Address book status denied");
         self.view = [self createEmptyFallbackView];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.view = [[MAVENoAddressBookPermissionView alloc] init];
         });
+        [[MaveSDK sharedInstance].HTTPManager
+            trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeNoneNeedContactsPermission];
     }
 }
 

@@ -76,8 +76,8 @@
     [properties setValue:[self appRelease] forKey: @"app_release"];
     [properties setValue:[self appVersion] forKey: @"app_version"];
     [properties setValue:[self carrier] forKey: @"carrier"];
-    [properties setValue:[self countryCode] forKey: @"country"];
-    [properties setValue:[self language] forKey: @"language"];
+    [properties setValue:[self countryCode] forKey: @"device_country"];
+    [properties setValue:[self language] forKey: @"device_language"];
     [properties setValue:MAVEAPIVersion forKey: @"mave_version"];
     [properties setValue:[self manufacturer] forKey: @"manufacturer"];
     [properties setValue:[self model] forKey: @"model"];

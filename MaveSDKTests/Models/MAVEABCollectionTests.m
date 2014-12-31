@@ -26,6 +26,15 @@
     [super tearDown];
 }
 
+- (void)testAddressBookPermissionStatus {
+    // Don't want to make the tests dependent on a particular status,
+    // so just test status is one of our defined string constants.
+    NSString *status = [MAVEABCollection addressBookPermissionStatus];
+    XCTAssertTrue(status == MAVEABPermissionStatusAllowed ||
+                  status == MAVEABPermissionStatusDenied ||
+                  status == MAVEABPermisssionStatusUnprompted);
+}
+
 - (void) testSortMAVEABPersonArray {
     NSMutableArray *ab = [[NSMutableArray alloc] init];
     MAVEABPerson *p1 = nil;
