@@ -71,17 +71,15 @@
     self.inviteTableHeaderView.searchBar.delegate = self;
     self.inviteTableHeaderView.searchBar.hidden = NO;
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
-    self.inviteTableHeaderView.searchBar.placeholder = @"SEARCH BAR";
 
     self.searchBar = [[UISearchBar alloc] init];
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.searchBar.delegate = self;
     CGRect searchBarFrame = self.searchBar.frame;
     searchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
-    searchBarFrame.origin = CGPointMake(0, 0); //self.tableView.frame.origin.y - MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
+    searchBarFrame.origin = CGPointMake(0, 0);
     self.searchBar.frame = searchBarFrame;
     self.searchBar.hidden = YES;
-    self.searchBar.placeholder = @"OTHER SEARCH BAR";
 
     [self.tableView addSubview:self.searchBar];
 }
@@ -98,7 +96,6 @@
     self.searchTableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
     [self.tableView registerClass:[MAVEABPersonCell class]
            forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
-
 }
 
 - (void)updateTableData:(NSDictionary *)data {
@@ -357,6 +354,7 @@
 
 - (void)addSearchBackgroundButton {
     CGRect searchBackgroundButtonFrame = self.searchBackgroundButton.frame;
+    searchBackgroundButtonFrame.size = self.tableView.frame.size;
     searchBackgroundButtonFrame.origin.y = self.searchBar.frame.origin.y;
     self.searchBackgroundButton.frame = searchBackgroundButtonFrame;
     [self.tableView addSubview:self.searchBackgroundButton];
