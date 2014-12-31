@@ -55,6 +55,7 @@
         self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 
         [self setupTableHeader];
+        [self setupSearchTableView];
     }
     return self;
 }
@@ -90,12 +91,14 @@
     self.searchTableView = [[UITableView alloc] init];
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
-    self.searchTableView.backgroundColor = [UIColor colorWithWhite:.5 alpha:.5]; //displayOptions.contactCellBackgroundColor;
+    self.searchTableView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
     self.searchTableView.separatorColor = displayOptions.contactSeparatorColor;
     self.searchTableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
     self.searchTableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
-    [self.tableView registerClass:[MAVEABPersonCell class]
-           forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
+    self.searchTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
+                                             UIViewAutoresizingFlexibleHeight);
+    [self.searchTableView registerClass:[MAVEABPersonCell class]
+                 forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
 }
 
 - (void)updateTableData:(NSDictionary *)data {
@@ -201,11 +204,15 @@
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
-    if (tableView == self.searchTableView) {
-        // if a row was selected in the searchTableView, then reload the main tableView so the same
-        // row appears tapped as well
-        [self.tableView reloadData];
+    if (tableView == self.tableView) {
+
+    } else {
+        [self.tableView bringSubviewToFront:self.searchBackgroundButton];
+        [self.tableView bringSubviewToFront:self.searchTableView];
     }
+
+    [self.tableView bringSubviewToFront:self.searchBar];
+    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
@@ -319,7 +326,7 @@
     if (!_searchBackgroundButton) {
         _searchBackgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _searchBackgroundButton.frame = self.tableView.frame;
-        _searchBackgroundButton.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        _searchBackgroundButton.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
         _searchBackgroundButton.autoresizingMask = (UIViewAutoresizingFlexibleHeight |
                                                     UIViewAutoresizingFlexibleWidth);
         [_searchBackgroundButton addTarget:self.searchBar action:@selector(resignFirstResponder)
@@ -369,19 +376,54 @@
     [self.tableView bringSubviewToFront:self.searchBar];
 }
 
+- (void)addSearchTableView {
+    CGRect searchTableViewFrame = self.tableView.frame;
+    searchTableViewFrame.origin.y = self.searchBar.frame.origin.y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
+    searchTableViewFrame.size.height = 350;
+    self.searchTableView.frame = searchTableViewFrame;
+    self.searchTableView.delegate = self;
+    self.searchTableView.dataSource = self;
+
+    [self.tableView addSubview:self.searchTableView];
+}
+
+- (void)removeSearchTableView {
+    // if a row was selected in the searchTableView, then reload the main tableView so the same
+    // row appears tapped as well
+    [self.tableView reloadData];
+    [self.searchTableView removeFromSuperview];
+}
+
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    self.searchBar.text = @"";
+    [self searchContacts:self.searchBar.text];
     self.isSearching = NO;
     self.tableView.scrollEnabled = YES;
+
+    [self.tableView bringSubviewToFront:self.searchBar];
 
     [UIView animateWithDuration:.3 animations:^{
         self.searchBackgroundButton.alpha = 0;
     } completion:^(BOOL finished) {
         [self.searchBackgroundButton removeFromSuperview];
+        [self.tableView bringSubviewToFront:self.searchBar];
+        [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
     }];
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     [self searchContacts:searchText];
+    [self.searchTableView reloadData];
+
+    if ([searchText isEqualToString:@""]) {
+        [self removeSearchTableView];
+    } else if (![self.searchTableView isDescendantOfView:self.tableView]) {
+        [self addSearchTableView];
+    }
+
+    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBackgroundButton afterDelay:0.01];
+    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchTableView afterDelay:0.01];
+    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.01];
 }
 
 @end

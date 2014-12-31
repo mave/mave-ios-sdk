@@ -235,7 +235,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     CGRect containerFrame = CGRectMake(0,
                                        0,
                                        appFrame.origin.x + appFrame.size.width,
-                                       appFrame.origin.y + appFrame.size.height);
+                                       self.keyboardFrame.origin.y);
 
     CGRect tableViewFrame = containerFrame;
 
