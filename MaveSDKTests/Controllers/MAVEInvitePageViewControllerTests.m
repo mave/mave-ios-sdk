@@ -29,6 +29,7 @@
     [MaveSDK sharedInstance].userData.userID = @"foo";
     [MaveSDK sharedInstance].displayOptions =
         [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].defaultSMSMessageText = @"dfeault text";
 }
 
 - (void)tearDown {
@@ -78,6 +79,29 @@
 
     [mock verify];
     [mock stopMocking];
+}
+
+- (void)testPresentShareSheet {
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    id mock = [OCMockObject partialMockForObject:ipvc];
+    id httpManagerMock =
+        [OCMockObject partialMockForObject:[MaveSDK sharedInstance].HTTPManager];
+    
+    [[mock expect] dismissSelf:1];
+    [[mock expect] presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
+        UIActivityViewController *shareSheetVC = obj;
+        XCTAssertNotNil(shareSheetVC);
+        shareSheetVC.completionHandler(nil, YES);
+        return YES;
+    }] animated:YES completion:nil];
+    
+    [[httpManagerMock expect] trackInvitePageOpenRequest:[OCMArg any]
+                                                pageType:MAVEInvitePageTypeNativeShareSheet];
+    
+    [ipvc presentShareSheet];
+    
+    [mock verify];
+    [httpManagerMock verify];
 }
 
 

@@ -93,7 +93,9 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 
     // Call dismissal block
     InvitePageDismissalBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
-    dismissalBlock(self, numberOfInvitesSent);
+    if (dismissalBlock) {
+        dismissalBlock(self, numberOfInvitesSent);
+    }
 }
 
 - (void)dismissAfterCancel {
@@ -399,6 +401,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         [self dismissSelf:numberShares];
     };
     [self presentViewController:activityVC animated:YES completion:nil];
+
     // Tracking event that share sheet was presented
     MAVEUserData *userData = [MaveSDK sharedInstance].userData;
     [[MaveSDK sharedInstance].HTTPManager
