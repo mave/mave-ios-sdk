@@ -222,9 +222,6 @@
 
     // Scrolled above search bar
     if (offsetY < MAVE_AB_TABLE_OFFSET_THRESHOLD_Y) {
-        self.inviteTableHeaderView.searchBar.hidden = NO;
-        self.searchBar.hidden = YES;
-
         UIEdgeInsets contentInset = self.tableView.contentInset;
         contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y;
         self.tableView.contentInset = contentInset;
@@ -232,21 +229,25 @@
         // "Center" the text in the inviteTableHeaderView
         CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
         [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
+
+        self.inviteTableHeaderView.searchBar.hidden = NO;
+        self.searchBar.hidden = YES;
     }
     else {
-        // Hide the inviteTableHeaderView's search bar
-        self.inviteTableHeaderView.searchBar.hidden = YES;
-        self.searchBar.hidden = NO;
-        [self.tableView bringSubviewToFront:self.searchBar];
-
         // Offset the searchBar while scrolling below the headerView
         CGRect newFrame = self.searchBar.frame;
         newFrame.origin.y = offsetY + MAVE_AB_TABLE_SEARCH_BAR_Y;
         self.searchBar.frame = newFrame;
 
+        // Move content below the searchBar
         UIEdgeInsets contentInset = self.tableView.contentInset;
         contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
         self.tableView.contentInset = contentInset;
+
+        // Hide the inviteTableHeaderView's search bar
+        self.inviteTableHeaderView.searchBar.hidden = YES;
+        self.searchBar.hidden = NO;
+        [self.tableView bringSubviewToFront:self.searchBar];
     }
 }
 
