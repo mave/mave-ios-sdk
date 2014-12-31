@@ -399,6 +399,10 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         [self dismissSelf:numberShares];
     };
     [self presentViewController:activityVC animated:YES completion:nil];
+    // Tracking event that share sheet was presented
+    MAVEUserData *userData = [MaveSDK sharedInstance].userData;
+    [[MaveSDK sharedInstance].HTTPManager
+        trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeNativeShareSheet];
 }
 
 @end
