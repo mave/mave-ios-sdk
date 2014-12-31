@@ -222,9 +222,9 @@
 
     // Scrolled above search bar
     if (offsetY < MAVE_AB_TABLE_OFFSET_THRESHOLD_Y) {
-        UIEdgeInsets contentInset = self.tableView.contentInset;
-        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y;
-        self.tableView.contentInset = contentInset;
+//        UIEdgeInsets contentInset = self.tableView.contentInset;
+//        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y;
+//        self.tableView.contentInset = contentInset;
 
         // "Center" the text in the inviteTableHeaderView
         CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
@@ -234,15 +234,15 @@
         self.searchBar.hidden = YES;
     }
     else {
+//        // Move content below the searchBar
+//        UIEdgeInsets contentInset = self.tableView.contentInset;
+//        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
+//        self.tableView.contentInset = contentInset;
+
         // Offset the searchBar while scrolling below the headerView
         CGRect newFrame = self.searchBar.frame;
         newFrame.origin.y = offsetY + MAVE_AB_TABLE_SEARCH_BAR_Y;
         self.searchBar.frame = newFrame;
-
-        // Move content below the searchBar
-        UIEdgeInsets contentInset = self.tableView.contentInset;
-        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
-        self.tableView.contentInset = contentInset;
 
         // Hide the inviteTableHeaderView's search bar
         self.inviteTableHeaderView.searchBar.hidden = YES;
@@ -358,7 +358,12 @@
     searchBackgroundButtonFrame.size = self.tableView.frame.size;
     searchBackgroundButtonFrame.origin.y = self.searchBar.frame.origin.y;
     self.searchBackgroundButton.frame = searchBackgroundButtonFrame;
+
+    self.searchBackgroundButton.alpha = 0;
     [self.tableView addSubview:self.searchBackgroundButton];
+    [UIView animateWithDuration:.3 animations:^{
+        self.searchBackgroundButton.alpha = .5;
+    }];
 
     self.tableView.scrollEnabled = NO;
     [self.tableView bringSubviewToFront:self.searchBar];
@@ -367,11 +372,15 @@
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
     self.isSearching = NO;
     self.tableView.scrollEnabled = YES;
-    [self.searchBackgroundButton removeFromSuperview];
+
+    [UIView animateWithDuration:.3 animations:^{
+        self.searchBackgroundButton.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self.searchBackgroundButton removeFromSuperview];
+    }];
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    NSLog(@"searchBar textDidChange: %@", searchText);
     [self searchContacts:searchText];
 }
 
