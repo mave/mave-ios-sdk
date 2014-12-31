@@ -16,7 +16,11 @@
 #import "MAVEABPersonCell.h"
 #import "MAVEABPerson.h"
 
-#define MAVE_AB_TABLE_VC_SEARCH_BAR_OFFSET_Y self.tableView.tableHeaderView.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT
+#define MAVE_AB_TABLE_STATUS_BAR_HEIGHT [UIApplication sharedApplication].statusBarFrame.size.height
+#define MAVE_AB_TABLE_NAVIGATION_BAR_HEIGHT self.parentViewController.navigationController.navigationBar.frame.size.height
+
+#define MAVE_AB_TABLE_SEARCH_BAR_Y (MAVE_AB_TABLE_STATUS_BAR_HEIGHT + MAVE_AB_TABLE_NAVIGATION_BAR_HEIGHT)
+#define MAVE_AB_TABLE_OFFSET_THRESHOLD_Y (self.inviteTableHeaderView.frame.size.height - MAVE_AB_TABLE_SEARCH_BAR_Y - MAVE_DEFAULT_SEARCH_BAR_HEIGHT)
 
 @interface MAVEABTableViewController ()
 
@@ -36,9 +40,6 @@
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
-//        self.parentViewController.automaticallyAdjustsScrollViewInsets = NO;
-//        self.parentViewController.edgesForExtendedLayout = UIRectEdgeNone;
-
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
 
         self.tableView = [[UITableView alloc] init];
@@ -223,13 +224,17 @@
     CGFloat offsetY = self.tableView.contentOffset.y;
 
     // Scrolled above search bar
-    if (offsetY < MAVE_AB_TABLE_VC_SEARCH_BAR_OFFSET_Y) {
+    if (offsetY < MAVE_AB_TABLE_OFFSET_THRESHOLD_Y) {
         self.inviteTableHeaderView.searchBar.hidden = NO;
         self.searchBar.hidden = YES;
 
-//        UIEdgeInsets contentInset = self.tableView.contentInset;
-//        contentInset.top = 0;
-//        self.tableView.contentInset = contentInset;
+        UIEdgeInsets contentInset = self.tableView.contentInset;
+        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y;
+        self.tableView.contentInset = contentInset;
+
+        // "Center" the text in the inviteTableHeaderView
+        CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
+        [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
     }
     else {
         // Hide the inviteTableHeaderView's search bar
@@ -239,12 +244,12 @@
 
         // Offset the searchBar while scrolling below the headerView
         CGRect newFrame = self.searchBar.frame;
-        newFrame.origin.y = offsetY;
+        newFrame.origin.y = offsetY + MAVE_AB_TABLE_SEARCH_BAR_Y;
         self.searchBar.frame = newFrame;
 
-//        UIEdgeInsets contentInset = self.tableView.contentInset;
-//        contentInset.top = 44;
-//        self.tableView.contentInset = contentInset;
+        UIEdgeInsets contentInset = self.tableView.contentInset;
+        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
+        self.tableView.contentInset = contentInset;
     }
 }
 
@@ -334,16 +339,15 @@
         return NO;
     }
 
-    [self addsearchBackgroundButton];
+    [self addSearchBackgroundButton];
     return YES;
 }
 
 - (void)beginSearchBarEditing {
     CGFloat offsetY = self.tableView.contentOffset.y;
-    CGFloat searchBarOffset = MAVE_AB_TABLE_VC_SEARCH_BAR_OFFSET_Y;
 
-    if (offsetY < searchBarOffset) {
-        [self.tableView setContentOffset:CGPointMake(0, searchBarOffset)
+    if (offsetY < MAVE_AB_TABLE_OFFSET_THRESHOLD_Y) {
+        [self.tableView setContentOffset:CGPointMake(0, MAVE_AB_TABLE_OFFSET_THRESHOLD_Y)
                                 animated:YES];
     }
 
@@ -351,9 +355,9 @@
     [self.searchBar becomeFirstResponder];
 }
 
-- (void)addsearchBackgroundButton {
+- (void)addSearchBackgroundButton {
     CGRect searchBackgroundButtonFrame = self.searchBackgroundButton.frame;
-    searchBackgroundButtonFrame.origin.y = self.tableView.frame.origin.y;
+    searchBackgroundButtonFrame.origin.y = self.searchBar.frame.origin.y;
     self.searchBackgroundButton.frame = searchBackgroundButtonFrame;
     [self.tableView addSubview:self.searchBackgroundButton];
 

@@ -230,10 +230,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 }
 
 - (void)layoutInvitePageViewAndSubviews {
-    self.automaticallyAdjustsScrollViewInsets = YES;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-
-//    CGRect screenFrame = [[UIScreen mainScreen] bounds];
     CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
 
     CGRect containerFrame = CGRectMake(0,
