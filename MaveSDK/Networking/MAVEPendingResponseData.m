@@ -8,7 +8,7 @@
 
 #import "MAVEPendingResponseData.h"
 #import "MaveSDK.h"
-#import "MAVEHTTPManager_Internal.h"
+#import "MAVEHTTPManager.h"
 
 @implementation MAVEPendingResponseData
 

@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Growthkit Inc. All rights reserved.
 //
 
+#import "MaveSDK.h"
 #import "MAVEConstants.h"
 #import "MAVEABCollection.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVEHTTPManager.h"
-#import "MAVEHTTPManager_Internal.h"
 #import "MAVEPendingResponseData.h"
 
 @implementation MAVEHTTPManager
@@ -40,6 +40,66 @@
     }
     return self;
 }
+
+- (NSMutableURLRequest *)prepareJSONRequestWithRoute:(NSString *)relativeURL
+                                          methodName:(NSString *)methodName
+                                              params:(NSDictionary *)params
+                                    preparationError:(NSError **)preparationError {
+    NSData *bodyData;
+    // For GET request, turn params into querystring params
+    if ([methodName isEqualToString:@"GET"]) {
+        relativeURL = [relativeURL stringByAppendingString:
+                       [[self class] dictToURLQueryStringFragment:params]];
+        bodyData = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    } else {
+        // Parse JSON for body and handle errors
+        NSError *jsonParseError;
+        if ([NSJSONSerialization isValidJSONObject:params]) {
+            NSError *jsonSerializationError;
+            bodyData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:&jsonSerializationError];
+            if (jsonSerializationError != nil) {
+                NSDictionary *userInfo = @{};
+                jsonParseError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
+                                                            code:MAVEHTTPErrorRequestJSONCode
+                                                        userInfo:userInfo];
+            }
+        } else {
+            NSDictionary *userInfo = @{};
+            jsonParseError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
+                                                        code:MAVEHTTPErrorRequestJSONCode
+                                                    userInfo:userInfo];
+        }
+        if (jsonParseError != nil) {
+            *preparationError = jsonParseError;
+            return nil;
+        }
+    }
+
+    NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:url];
+    [request setHTTPMethod:methodName];
+    [request setHTTPBody:bodyData];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    return request;
+}
+
+- (void)sendPreparedHTTPRequest:(NSURLRequest *)request
+                completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+    // Send request
+    NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
+                              ^(NSData *data, NSURLResponse *response, NSError *error) {
+        DebugLog(@"HTTP Request: \"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, request.HTTPMethod, request.URL);
+        [[self class] handleJSONResponseWithData:data
+                                        response:response
+                                           error:error
+                                 completionBlock:completionBlock];
+    }];
+    [task resume];
+    return;
+}
+
 
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodType:(NSString *)methodType
@@ -87,19 +147,18 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:self.applicationID forHTTPHeaderField:@"X-Application-Id"];
     [request setValue:self.applicationDeviceID forHTTPHeaderField:@"X-App-Device-Id"];
-    NSString *userAgent =
-        [[self class] userAgentWithUIDevice:[UIDevice currentDevice]];
-    NSString *screenSize =
-        [[self class] formattedScreenSize:[UIScreen mainScreen].bounds.size];
-    NSString *clientProperties =
-        [MAVEClientPropertyUtils encodedAutomaticClientProperties];
-    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    NSString *userAgent = [[self class] userAgentWithUIDevice:[UIDevice currentDevice]];
+    NSString *screenSize = [[self class] formattedScreenSize:[UIScreen mainScreen].bounds.size];
+    NSString *clientProperties = [MAVEClientPropertyUtils encodedAutomaticClientProperties];
+    
     [request setValue:screenSize forHTTPHeaderField:@"X-Device-Screen-Dimensions"];
     [request setValue:clientProperties forHTTPHeaderField:@"X-Client-Properties"];
+    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
     // Send request
-    NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:
-            ^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSURLSessionTask *task =
+            [self.session dataTaskWithRequest:request
+                            completionHandler: ^(NSData *data, NSURLResponse *response, NSError *error) {
         DebugLog(@"HTTP Request: \"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, methodType, relativeURL);
         [[self class] handleJSONResponseWithData:data
                                         response:response
@@ -265,6 +324,17 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     NSDictionary *params = [userData toDictionary];
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodType:@"PUT"
+                                      params:params
+                             completionBlock:nil];
+}
+
+- (void)trackGenericEventWithRoute:(NSString *)route
+                            params:(NSDictionary *)params {
+    if (!params) {
+        params = @{};
+    }
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodType:@"POST"
                                       params:params
                              completionBlock:nil];
 }

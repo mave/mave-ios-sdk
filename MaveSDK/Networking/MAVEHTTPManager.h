@@ -25,8 +25,28 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 + (NSString *)userAgentWithUIDevice:(UIDevice *)device;
 + (NSString *)formattedScreenSize:(CGSize)size;
 
-- (MAVEHTTPManager *)initWithApplicationID:(NSString *)applicationID
-                       applicationDeviceID:(NSString *)applicationDeviceID;
+
+- (instancetype)initWithApplicationID:(NSString *)applicationID
+                  applicationDeviceID:(NSString *)applicationDeviceID;
+
+// API request methods
+- (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
+                                methodType:(NSString *)methodType
+                                    params:(NSDictionary *)params
+                           completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+
+- (MAVEPendingResponseData *) preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
+                                                          methodType:(NSString *)methodType
+                                                              params:(NSDictionary *)params
+                                                         defaultData:(NSDictionary *)defaultResponse;
+
++ (void)handleJSONResponseWithData:(NSData *)data
+                          response:(NSURLResponse *)response
+                             error:(NSError *)error
+                   completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+
++ (NSString *)dictToURLQueryStringFragment:(NSDictionary *)dict;
+
 
 // Specific API Requests the app will make
 - (void)sendInvitesWithPersons:(NSArray *)persons

@@ -6,13 +6,13 @@
 //
 //
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <objc/runtime.h>
 #import "MAVEConstants.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVEHTTPManager.h"
-#import "MAVEHTTPManager_Internal.h"
 #import "MAVEPendingResponseData.h"
 
 #import <OCMock/OCMock.h>
