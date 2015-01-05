@@ -170,54 +170,34 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 }
 
 - (void)determineAndSetViewBasedOnABPermissions {
-    // If address book permission already granted, load contacts view right now
-    NSString *abStatus = [MAVEABUtils addressBookPermissionStatus];
-    if ([abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
-        DebugLog(@"Address book status was authorized");
-        self.view = [self createAddressBookInviteView];
-        [self layoutInvitePageViewAndSubviews];
-        MAVEABPermissionPromptHandler *permissionPrompter = [[MAVEABPermissionPromptHandler alloc] init];
-        [permissionPrompter promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
+    MAVEABPermissionPromptHandler *permissionPrompter =
+        [[MAVEABPermissionPromptHandler alloc] init];
+
+    [permissionPrompter promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
+        // Permission denied
+        if ([indexedContacts count] == 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.view = [[MAVENoAddressBookPermissionView alloc] init];
+            });
+            [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
+        // Permission granted
+        } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self layoutInvitePageViewAndSubviews];
                 [self.ABTableViewController updateTableData:indexedContacts];
             });
-         }];
-        [[MaveSDK sharedInstance].APIInterface
-         trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
+            [[MaveSDK sharedInstance].APIInterface
+                trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
+        }
+    }];
 
-    // If status not determined, prompt for permission then load data
-    // If permission not granted, swap empty for for permission denied view
-    } else if ([abStatus isEqualToString:MAVEABPermisssionStatusUnprompted]) {
-        DebugLog(@"Address book status not determined, needed to prompt");
-        self.view = [self createEmptyFallbackView];
-        MAVEABPermissionPromptHandler *permissionPrompter = [[MAVEABPermissionPromptHandler alloc] init];
-        [permissionPrompter promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
-            // User must have
-            if ([indexedContacts count] > 0) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.view = [self createAddressBookInviteView];
-                    [self layoutInvitePageViewAndSubviews];
-                    [self.ABTableViewController updateTableData:indexedContacts];
-                });
-                [[MaveSDK sharedInstance].APIInterface
-                 trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.view = [[MAVENoAddressBookPermissionView alloc] init];
-                });
-                [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
-            }
-        }];
-    // If status already denied, leave blank page for now
-    } else if ([abStatus isEqualToString:MAVEABPermissionStatusDenied]) {
-        DebugLog(@"Address book status denied");
-        self.view = [self createEmptyFallbackView];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.view = [[MAVENoAddressBookPermissionView alloc] init];
-        });
-        [[MaveSDK sharedInstance].APIInterface
-         trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
+    // If user has already said no to permissions, we don't want to flash the contacts
+    // page before switching to the share page, so check for that here.
+    if ([MAVEABUtils addressBookPermissionStatus] == MAVEABPermissionStatusDenied) {
+        self.view = [[MAVENoAddressBookPermissionView alloc] init];
+    } else {
+        self.view = [self createAddressBookInviteView];
+        [self layoutInvitePageViewAndSubviews];
     }
 }
 

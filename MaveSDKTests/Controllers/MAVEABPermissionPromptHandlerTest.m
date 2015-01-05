@@ -31,7 +31,49 @@
     [super tearDown];
 }
 
+///
+/// Test prompt function when status is already granted or denied
+///
+- (void)testPromptForContactsWhenPermissionDenied {
+    // Stub status
+    id utilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([utilsMock addressBookPermissionStatus])
+        .andReturn(MAVEABPermissionStatusDenied);
+
+    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+
+    id mock = OCMPartialMock(promptHandler);
+    OCMExpect([mock completeAfterPermissionDenied]);
+
+    [promptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
+
+    OCMVerifyAll(mock);
+}
+
+- (void)testPromptForContactsWhenPermissionGranted {
+    // Stub status
+    id utilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([utilsMock addressBookPermissionStatus])
+        .andReturn(MAVEABPermissionStatusAllowed);
+
+    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+
+    id mock = OCMPartialMock(promptHandler);
+    OCMExpect([mock loadAddressBookAndComplete]);
+
+    [promptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
+
+    OCMVerifyAll(mock);
+}
+
+///
+/// Test prompt function when status is unprompted
+///
 - (void)testPromptForContactsWhenDoublePromptYes; {
+    // Stub to make it look like we haven't prompted user yet
+    id utilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([utilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
+
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc]
         initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     XCTAssertTrue(remoteConfig.enableContactsPrePrompt);
@@ -67,6 +109,10 @@
 }
 
 - (void)testPromptForContactsWhenDoublePromptNo {
+    // Stub to make it look like we haven't prompted user yet
+    id utilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([utilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
+
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
     remoteConfig.enableContactsPrePrompt = 0;
 

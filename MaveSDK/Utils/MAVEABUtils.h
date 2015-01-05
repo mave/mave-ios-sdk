@@ -12,7 +12,7 @@
 
 extern NSString * const MAVEABPermissionStatusAllowed;
 extern NSString * const MAVEABPermissionStatusDenied;
-extern NSString * const MAVEABPermisssionStatusUnprompted;
+extern NSString * const MAVEABPermissionStatusUnprompted;
 
 @interface MAVEABUtils : NSObject
 

@@ -21,12 +21,27 @@
 // pre-prompt UIAlertView (i.e. double prompt for contacts), and if so the copy can come
 // from remote configuration as well.
 - (void)promptForContactsWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
+    self.completionBlock = completionBlock;
+    NSString *abStatus = [MAVEABUtils addressBookPermissionStatus];
+
+    // If permission already denied, abort early
+    if ([abStatus isEqualToString:MAVEABPermissionStatusDenied]) {
+        [self completeAfterPermissionDenied];
+        return;
+    }
+
+    // If permission already granted, just load the address book
+    if ([abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
+        [self loadAddressBookAndComplete];
+        return;
+    }
+
+    // Otherwise, decide how to prompt and prompt
     [[MaveSDK sharedInstance].remoteConfigurationBuilder
             initializeObjectWithTimeout:2.0 completionBlock:^(id obj) {
 
         MAVERemoteConfiguration *remoteConfig = obj;
         self.prePromptTemplate = remoteConfig.contactsPrePromptTemplate;
-        self.completionBlock = completionBlock;
 
         if (remoteConfig.enableContactsPrePrompt) {
             // purposely create retain cycle so it won't get dealloc'ed until alert view
@@ -93,6 +108,19 @@
 }
 
 
+// Tracking events
+- (void)logContactsPromptRelatedEventWithRoute:(NSString *)route {
+    NSDictionary *params = nil;
+    if (self.prePromptTemplate.templateID) {
+        params = @{MAVEAPIParamPrePromptTemplateID:
+                       self.prePromptTemplate.templateID};
+    }
+    [[MaveSDK sharedInstance].APIInterface trackGenericUserEventWithRoute:route
+                                                         additionalParams:params];
+}
+
+# pragma mark - pre prompt related Methods
+
 - (void)showPrePromptAlertWithTitle:(NSString *)title
                             message:(NSString *)message
                    cancelButtonCopy:(NSString *)cancelButtonCopy
@@ -107,19 +135,7 @@
     });
 }
 
-// Tracking events
-- (void)logContactsPromptRelatedEventWithRoute:(NSString *)route {
-    NSDictionary *params = nil;
-    if (self.prePromptTemplate.templateID) {
-        params = @{MAVEAPIParamPrePromptTemplateID:
-                       self.prePromptTemplate.templateID};
-    }
-    [[MaveSDK sharedInstance].APIInterface trackGenericUserEventWithRoute:route
-                                                         additionalParams:params];
-}
-
-# pragma mark - UIAlertViewDelegate methods
-
+// Respond to pre-prompt response
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     // let self get GC'd, this is a one-time use object
     self.retainSelf = nil;

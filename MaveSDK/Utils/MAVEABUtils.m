@@ -13,7 +13,7 @@
 
 NSString * const MAVEABPermissionStatusAllowed = @"allowed";
 NSString * const MAVEABPermissionStatusDenied = @"denied";
-NSString * const MAVEABPermisssionStatusUnprompted = @"unprompted";
+NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
 
 
 @implementation MAVEABUtils
@@ -23,7 +23,7 @@ NSString * const MAVEABPermisssionStatusUnprompted = @"unprompted";
     if (status == kABAuthorizationStatusAuthorized) {
         return MAVEABPermissionStatusAllowed;
     } else if (status == kABAuthorizationStatusNotDetermined) {
-        return MAVEABPermisssionStatusUnprompted;
+        return MAVEABPermissionStatusUnprompted;
     } else {  // there are two underlying statuses here
         return MAVEABPermissionStatusDenied;
     }

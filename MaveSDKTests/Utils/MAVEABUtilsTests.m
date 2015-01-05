@@ -31,7 +31,7 @@
     NSString *status = [MAVEABUtils addressBookPermissionStatus];
     XCTAssertTrue(status == MAVEABPermissionStatusAllowed ||
                   status == MAVEABPermissionStatusDenied ||
-                  status == MAVEABPermisssionStatusUnprompted);
+                  status == MAVEABPermissionStatusUnprompted);
 }
 
 - (void) testSortMAVEABPersonArray {
