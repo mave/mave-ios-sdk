@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MAVERemoteConfiguration.h"
 
 @interface MAVEABPermissionPromptHandler : NSObject<UIAlertViewDelegate>
 
+@property (nonatomic, strong) MAVERemoteConfigurationContactsPrePromptTemplate *prePromptTemplate;
 @property (nonatomic, copy) void(^completionBlock)(NSDictionary *contacts);
 @property (nonatomic, strong) id retainSelf;
-@property (nonatomic, copy) NSString *prePromptTemplateID;
 
 - (void)promptForContactsWithCompletionBlock:(void(^)(NSDictionary *indexedContacts))completionBlock;
 - (void)showPrePromptAlertWithTitle:(NSString *)title
@@ -21,7 +22,6 @@
                    cancelButtonCopy:(NSString *)cancelButtonCopy
                    acceptbuttonCopy:(NSString *)acceptButtonCopy;
 
-- (void)logContactsPromptRelatedEvent:(NSString *)eventRoute
-                  prePromptTemplateID:(NSString *)templateID;
+- (void)logContactsPromptRelatedEventWithRoute:(NSString *)route;
 
 @end

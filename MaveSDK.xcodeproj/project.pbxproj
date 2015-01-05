@@ -280,9 +280,9 @@
 		C022641C19EC4F940087FF37 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				0C1F1A0B1A44ADB500B2D482 /* MAVEPendingResponseDataTests.m */,
-				0C29BC321A5703E100C27DA5 /* MAVEHTTPStackTests.m */,
 				0C29BC341A572CEA00C27DA5 /* MAVEAPIInterfaceTests.m */,
+				0C29BC321A5703E100C27DA5 /* MAVEHTTPStackTests.m */,
+				0C1F1A0B1A44ADB500B2D482 /* MAVEPendingResponseDataTests.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -392,10 +392,10 @@
 		C02927EB19E82C3F006AEE43 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				0C29BC2F1A56FFA900C27DA5 /* MAVEHTTPStack.h */,
-				0C29BC301A56FFA900C27DA5 /* MAVEHTTPStack.m */,
 				0C29BC2C1A56FF6D00C27DA5 /* MAVEAPIInterface.h */,
 				0C29BC2D1A56FF6D00C27DA5 /* MAVEAPIInterface.m */,
+				0C29BC2F1A56FFA900C27DA5 /* MAVEHTTPStack.h */,
+				0C29BC301A56FFA900C27DA5 /* MAVEHTTPStack.m */,
 				0C1F1A061A437C0B00B2D482 /* MAVEPendingResponseData.h */,
 				0C1F1A071A437C0B00B2D482 /* MAVEPendingResponseData.m */,
 				0C1F1A0D1A51B10500B2D482 /* MAVEPendingResponseObjectBuilder.h */,

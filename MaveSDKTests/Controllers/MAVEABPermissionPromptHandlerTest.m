@@ -60,4 +60,23 @@
                           acceptbuttonCopy:remoteConfig.contactsPrePromptTemplate.acceptButtonCopy]);
 }
 
+- (void)testLogContactsPromptRelatedEventWithRoute {
+    NSString *fakeRoute = @"aasdk023radfnailwrf";
+    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+    promptHandler.prePromptTemplate =
+        [[MAVERemoteConfigurationContactsPrePromptTemplate alloc]initWithDictionary:
+        [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData]];
+    XCTAssertNotNil(promptHandler.prePromptTemplate.templateID);
+    id APIInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    
+    NSDictionary *expectedParams = @{MAVEAPIParamPrePromptTemplateID:
+                                         promptHandler.prePromptTemplate.templateID};
+    OCMExpect([APIInterfaceMock trackGenericUserEventWithRoute:fakeRoute
+                                              additionalParams:expectedParams]);
+
+    [promptHandler logContactsPromptRelatedEventWithRoute:fakeRoute];
+    
+    OCMVerifyAll(APIInterfaceMock);
+}
+
 @end

@@ -24,8 +24,8 @@ extern NSString * const MAVERouteTrackContactsPermissionPromptView;
 extern NSString * const MAVERouteTrackContactsPermissionGranted;
 extern NSString * const MAVERouteTrackContactsPermissionDenied;
 
-extern NSString * const MAVEParamKeyPrePromptTemplateID;
-extern NSString * const MAVEParamKeyInvitePageType;
+extern NSString * const MAVEAPIParamPrePromptTemplateID;
+extern NSString * const MAVEAPIParamInvitePageType;
 
 
 @interface MAVEAPIInterface : NSObject

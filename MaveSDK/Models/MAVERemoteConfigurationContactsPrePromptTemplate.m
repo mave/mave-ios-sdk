@@ -31,6 +31,7 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateAcceptCopy = @"accep
 
 + (NSDictionary *)defaultJSONData {
     return @{
+        MAVERemoteConfigKeyContactsPrePromptTemplateID: @"default",
         MAVERemoteConfigKeyContactsPrePromptTemplateTitle: @"Access your contacts?",
         MAVERemoteConfigKeyContactsPrePromptTemplateMessage:
             @"We need to access your contacts to suggest people to invite.",

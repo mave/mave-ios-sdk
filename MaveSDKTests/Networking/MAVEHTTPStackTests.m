@@ -211,10 +211,11 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
 }
 
 - (void)testPreFetchPreparedRequestNil {
+    // if the request is null to start with, mark as rejected right away
     NSDictionary *defaultData = @{@"foo": @"bar"};
-    MAVEPendingResponseData *response = [self.testHTTPStack preFetchPreparedRequest:nil
-                                                                        defaultData:defaultData];
-    
+    MAVEPendingResponseData *response =
+        [self.testHTTPStack preFetchPreparedRequest:nil defaultData:defaultData];
+    XCTAssertEqualObjects(response.responseData, response.defaultData);
 }
 
 

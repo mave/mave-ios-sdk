@@ -24,8 +24,8 @@ NSString * const MAVERouteTrackContactsPermissionPromptView = @"/events/contacts
 NSString * const MAVERouteTrackContactsPermissionGranted = @"/events/contacts_permission_granted";
 NSString * const MAVERouteTrackContactsPermissionDenied = @"/events/contacts_permission_denied";
 
-NSString * const MAVEParamKeyPrePromptTemplateID = @"contacts_pre_permission_prompt_template_id";
-NSString * const MAVEParamKeyInvitePageType = @"invite_page_type";
+NSString * const MAVEAPIParamPrePromptTemplateID = @"contacts_pre_permission_prompt_template_id";
+NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
 
 
 @implementation MAVEAPIInterface
@@ -67,7 +67,7 @@ NSString * const MAVEParamKeyInvitePageType = @"invite_page_type";
         invitePageType = @"unknown";
     }
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                        additionalParams:@{MAVEParamKeyInvitePageType: invitePageType}];
+                        additionalParams:@{MAVEAPIParamInvitePageType: invitePageType}];
 }
 
 ///

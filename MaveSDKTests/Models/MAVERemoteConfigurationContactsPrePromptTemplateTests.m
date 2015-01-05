@@ -34,6 +34,7 @@
     MAVERemoteConfigurationContactsPrePromptTemplate *config =
         [[MAVERemoteConfigurationContactsPrePromptTemplate alloc]
          initWithDictionary:[MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData]];
+    XCTAssertEqualObjects(config.templateID, @"default");
     XCTAssertEqualObjects(config.title, @"Access your contacts?");
     XCTAssertEqualObjects(config.message, @"We need to access your contacts to suggest people to invite.");
     XCTAssertEqualObjects(config.cancelButtonCopy, @"No thanks");

@@ -69,7 +69,7 @@
     NSString *type = @"blahblahtype";
     id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEParamKeyInvitePageType: type}]);
+                                  additionalParams:@{MAVEAPIParamInvitePageType: type}]);
     [self.testAPIInterface trackInvitePageOpenForPageType:type];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -77,14 +77,14 @@
     // nil and empty string get set as unknown
     mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEParamKeyInvitePageType: @"unknown"}]);
+                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}]);
     [self.testAPIInterface trackInvitePageOpenForPageType:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
     mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEParamKeyInvitePageType: @"unknown"}]);
+                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}]);
     [self.testAPIInterface trackInvitePageOpenForPageType:@""];
     OCMVerifyAll(mock);
     [mock stopMocking];

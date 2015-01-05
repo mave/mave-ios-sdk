@@ -10,6 +10,7 @@
 #import "MAVEABCollection.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVERemoteConfiguration.h"
+#import "MAVEAPIInterface.h"
 
 
 const NSString *MAVEEventRouteContactsPrePermissionPromptView = @"/events/contacts_pre_permission_prompt_view";
@@ -31,8 +32,7 @@ const NSString *MAVEEventRouteContactsPermissionDenied = @"/events/contacts_perm
             initializeObjectWithTimeout:2.0 completionBlock:^(id obj) {
 
         MAVERemoteConfiguration *remoteConfig = obj;
-        MAVERemoteConfigurationContactsPrePromptTemplate *tmpl = remoteConfig.contactsPrePromptTemplate;
-        self.prePromptTemplateID = tmpl.templateID;
+        self.prePromptTemplate = remoteConfig.contactsPrePromptTemplate;
 
         if (remoteConfig.enableContactsPrePrompt) {
             self.completionBlock = completionBlock;
@@ -40,10 +40,10 @@ const NSString *MAVEEventRouteContactsPermissionDenied = @"/events/contacts_perm
             // is displayed then dismissed
             self.retainSelf = self;
             
-            [self showPrePromptAlertWithTitle:tmpl.title
-                                      message:tmpl.message
-                             cancelButtonCopy:tmpl.cancelButtonCopy
-                             acceptbuttonCopy:tmpl.acceptButtonCopy];
+            [self showPrePromptAlertWithTitle:self.prePromptTemplate.title
+                                      message:self.prePromptTemplate.message
+                             cancelButtonCopy:self.prePromptTemplate.cancelButtonCopy
+                             acceptbuttonCopy:self.prePromptTemplate.acceptButtonCopy];
 
         } else {
             [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
@@ -68,16 +68,15 @@ const NSString *MAVEEventRouteContactsPermissionDenied = @"/events/contacts_perm
 }
 
 // Tracking events
-//- (void)logContactsPromptRelatedEvent:(NSString *)eventRoute
-//                  prePromptTemplateID:(NSString *)templateID {
-//    NSMutableDictionary *params = (NSMutableDictionary *)[[MaveSDK sharedInstance].userData toDictionaryIDOnly];
-//    
-//    [[MaveSDK sharedInstance].HTTPManager sendIdentifiedJSONRequestWithRoute:eventRoute
-//                                                                  methodType:@"POST"
-//                                                                      params:params
-//                                                             completionBlock:nil];
-//    
-//}
+- (void)logContactsPromptRelatedEventWithRoute:(NSString *)route {
+    NSDictionary *params = nil;
+    if (self.prePromptTemplate.templateID) {
+        params = @{MAVEAPIParamPrePromptTemplateID:
+                       self.prePromptTemplate.templateID};
+    }
+    [[MaveSDK sharedInstance].APIInterface trackGenericUserEventWithRoute:route
+                                                         additionalParams:params];
+}
 
 # pragma mark - UIAlertViewDelegate methods
 
