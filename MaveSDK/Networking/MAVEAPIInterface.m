@@ -1,12 +1,12 @@
 //
-//  MAVEHTTPInterface.m
+//  MAVEAPIInterface.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 1/2/15.
 //
 //
 
-#import "MAVEHTTPInterface.h"
+#import "MAVEAPIInterface.h"
 #import "MaveSDK.h"
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
@@ -28,7 +28,7 @@ NSString * const MAVEParamKeyPrePromptTemplateID = @"contacts_pre_permission_pro
 NSString * const MAVEParamKeyInvitePageType = @"invite_page_type";
 
 
-@implementation MAVEHTTPInterface
+@implementation MAVEAPIInterface
 
 - (instancetype)init {
     if (self = [super init]) {

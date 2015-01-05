@@ -10,7 +10,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEUserData.h"
-#import "MAVEHTTPInterface.h"
+#import "MAVEAPIInterface.h"
 #import "MAVERemoteConfiguration.h"
 
 @interface MaveSDK : NSObject
@@ -18,7 +18,7 @@
 @property (nonatomic, strong) MAVEInvitePageViewController *viewController;
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
 @property (nonatomic, copy) NSString *defaultSMSMessageText;
-@property (nonatomic, strong) MAVEHTTPInterface *APIInterface;
+@property (nonatomic, strong) MAVEAPIInterface *APIInterface;
 @property (nonatomic, strong) MAVEPendingResponseObjectBuilder *remoteConfigurationBuilder;
 
 @property (nonatomic, copy) NSString *appId;

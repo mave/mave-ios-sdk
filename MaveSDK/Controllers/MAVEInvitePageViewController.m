@@ -335,7 +335,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     }
     
     MaveSDK *mave = [MaveSDK sharedInstance];
-    MAVEHTTPInterface *apiInterface = mave.APIInterface;
+    MAVEAPIInterface *apiInterface = mave.APIInterface;
     [apiInterface sendInvitesWithPersons:phones
                                  message:message
                                   userId:mave.userData.userID

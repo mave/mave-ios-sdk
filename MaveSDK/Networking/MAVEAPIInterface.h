@@ -1,8 +1,8 @@
 //
-//  MAVEHTTPInterface.h
+//  MAVEAPIInterface.h
 //  MaveSDK
 //
-//  A session-aware interface to http requests for our app, appends the device & user information
+//  A session-aware interface to api requests for our app, appends the device & user information
 //  and authentication parameters that our API expects on every request.
 //  Created by Danny Cosson on 1/2/15.
 //
@@ -28,7 +28,7 @@ extern NSString * const MAVEParamKeyPrePromptTemplateID;
 extern NSString * const MAVEParamKeyInvitePageType;
 
 
-@interface MAVEHTTPInterface : NSObject
+@interface MAVEAPIInterface : NSObject
 
 @property (nonatomic, strong) MAVEHTTPStack *httpStack;
 

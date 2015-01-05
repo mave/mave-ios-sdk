@@ -10,16 +10,16 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
-#import "MAVEHTTPInterface.h"
+#import "MAVEAPIInterface.h"
 #import "MAVEClientPropertyUtils.h"
 
-@interface MAVEHTTPInterfaceTests : XCTestCase
+@interface MAVEAPIInterfaceTests : XCTestCase
 
-@property MAVEHTTPInterface *testHTTPInterface;
+@property MAVEAPIInterface *testHTTPInterface;
 
 @end
 
-@implementation MAVEHTTPInterfaceTests
+@implementation MAVEAPIInterfaceTests
 
 - (void)setUp {
     [super setUp];
@@ -31,7 +31,7 @@
                                                         email:nil
                                                         phone:nil];
     [[MaveSDK sharedInstance] identifyUser:user];
-    self.testHTTPInterface = [[MAVEHTTPInterface alloc] init];
+    self.testHTTPInterface = [[MAVEAPIInterface alloc] init];
     
 }
 

@@ -28,7 +28,7 @@
         _appId = appId;
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
-        _APIInterface = [[MAVEHTTPInterface alloc] init];
+        _APIInterface = [[MAVEAPIInterface alloc] init];
 
         NSDictionary *remoteConfigDefault = [MAVERemoteConfiguration defaultJSONData];
         _remoteConfigurationBuilder = [[MAVEPendingResponseObjectBuilder alloc]

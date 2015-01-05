@@ -13,7 +13,7 @@
 #import "MaveSDK_Internal.h"
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
-#import "MAVEHTTPInterface.h"
+#import "MAVEAPIInterface.h"
 
 @interface MaveSDKTests : XCTestCase
 
@@ -98,7 +98,7 @@
     MaveSDK *gk = [MaveSDK sharedInstance];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
-    id mockAPIInterface = [OCMockObject mockForClass:[MAVEHTTPInterface class]];
+    id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
     gk.APIInterface = mockAPIInterface;
     OCMExpect([mockAPIInterface identifyUser]);
 
@@ -112,7 +112,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     userData.userID = @"1";  // no first name
-    id mockAPIInterface = [OCMockObject mockForClass:[MAVEHTTPInterface class]];
+    id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
     MaveSDK *gk = [MaveSDK sharedInstance];
     gk.APIInterface = mockAPIInterface;
     [[mockAPIInterface reject] identifyUser];
@@ -251,7 +251,7 @@
 - (void)testTrackSignup {
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     // Verify the API request is sent
-    id mockAPIInterface = [OCMockObject mockForClass:[MAVEHTTPInterface class]];
+    id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
     MaveSDK *mave = [MaveSDK sharedInstance];
     mave.APIInterface = mockAPIInterface;
     mave.userData = userData;
