@@ -58,7 +58,7 @@ NSString * const MAVEABPermisssionStatusUnprompted = @"unprompted";
             DebugLog(@"User denied address book permission!");
         }
         if (addressBook != NULL) CFRelease(addressBook);
-        self.completionBlock([self indexedDictionaryOfMAVEABPersons]);
+        self.completionBlock([[self class] indexedDictionaryFromMAVEABPersonArray:self.data]);
     });
 }
 
@@ -78,17 +78,17 @@ NSString * const MAVEABPermisssionStatusUnprompted = @"unprompted";
     [input sortUsingSelector:@selector(compareNames:)];
 }
 
-- (NSDictionary *)indexedDictionaryOfMAVEABPersons {
-    if (self.data == nil || [self.data count] == 0) {
++ (NSDictionary *)indexedDictionaryFromMAVEABPersonArray:(NSArray *)persons {
+    if ([persons count] == 0) {
         return nil;
     }
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     MAVEABPerson *person = nil;
     NSString *indexLetter = nil;
-    for (NSUInteger i = 0; i < [self.data count]; i++) {
-        // person should never be Nil or it wouldn't have been inserted into array
-        person = self.data[i];
-        // person firstLetter should never be nil since you can't create a person
+    for (NSUInteger i = 0; i < [persons count]; i++) {
+        // person can never be Nil or it wouldn't have been inserted into array
+        person = persons[i];
+        // person firstLetter can never be nil since you can't create a person
         // with no first or last name
         indexLetter = [person firstLetter];
         if ([result objectForKey:indexLetter] == nil) {

@@ -65,24 +65,22 @@
 }
 
 - (void)testIndexedDictionaryOfMAVEABPersons {
-    MAVEABCollection *ab = [[MAVEABCollection alloc] init];
     MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Don" lastName:@"Adams"];
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Deb" lastName:@"Anderson"];
     MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Bernard"];
-    ab.data = @[p1, p2, p3];
+    NSArray *data = @[p1, p2, p3];
     NSDictionary *expected = @{@"D": @[p1, p2], @"F": @[p3]};
 
-    NSDictionary *indexed = [ab indexedDictionaryOfMAVEABPersons];
+    NSDictionary *indexed = [MAVEABCollection indexedDictionaryFromMAVEABPersonArray:data];
     XCTAssertEqualObjects(indexed, expected);
 }
 
 - (void)testIndexedDictionaryOfMAVEABPersonsAcceptsNilAndEmpty {
-    MAVEABCollection *ab = [[MAVEABCollection alloc] init];
-    ab.data = nil;
-    XCTAssertEqualObjects([ab indexedDictionaryOfMAVEABPersons], nil);
+    NSArray *data = nil;
+    XCTAssertNil([MAVEABCollection indexedDictionaryFromMAVEABPersonArray:data]);
     
-    ab.data = @[];
-    XCTAssertEqualObjects([ab indexedDictionaryOfMAVEABPersons], nil);
+    data = @[];
+    XCTAssertNil([MAVEABCollection indexedDictionaryFromMAVEABPersonArray:data]);
 }
 
 @end

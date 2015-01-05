@@ -181,7 +181,8 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                 [self.ABTableViewController updateTableData:indexedData];
             });
          }];
-        [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
+        [[MaveSDK sharedInstance].APIInterface
+         trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
 
     // If status not determined, prompt for permission then load data
     // If permission not granted, swap empty for for permission denied view
@@ -197,7 +198,8 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                     [self layoutInvitePageViewAndSubviews];
                     [self.ABTableViewController updateTableData:indexedContacts];
                 });
-                [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
+                [[MaveSDK sharedInstance].APIInterface
+                 trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.view = [[MAVENoAddressBookPermissionView alloc] init];
@@ -212,7 +214,8 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         dispatch_async(dispatch_get_main_queue(), ^{
             self.view = [[MAVENoAddressBookPermissionView alloc] init];
         });
-        [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
+        [[MaveSDK sharedInstance].APIInterface
+         trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
     }
 }
 

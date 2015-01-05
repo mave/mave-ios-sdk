@@ -6,20 +6,13 @@
 //
 //
 
+#import <AddressBook/AddressBook.h>
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 #import "MAVEABCollection.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEAPIInterface.h"
-
-
-const NSString *MAVEEventRouteContactsPrePermissionPromptView = @"/events/contacts_pre_permission_prompt_view";
-const NSString *MAVEEventRouteContactsPrePermissionGranted = @"/events/contacts_pre_permission_granted";
-const NSString *MAVEEventRouteContactsPrePermissionDenied = @"/events/contacts_pre_permission_denied";
-const NSString *MAVEEventRouteContactsPermissionPromptView = @"/events/contacts_permission_prompt_view";
-const NSString *MAVEEventRouteContactsPermissionGranted = @"/events/contacts_permission_granted";
-const NSString *MAVEEventRouteContactsPermissionDenied = @"/events/contacts_permission_granted";
-
 
 
 @implementation MAVEABPermissionPromptHandler
@@ -33,12 +26,14 @@ const NSString *MAVEEventRouteContactsPermissionDenied = @"/events/contacts_perm
 
         MAVERemoteConfiguration *remoteConfig = obj;
         self.prePromptTemplate = remoteConfig.contactsPrePromptTemplate;
+        self.completionBlock = completionBlock;
 
         if (remoteConfig.enableContactsPrePrompt) {
-            self.completionBlock = completionBlock;
             // purposely create retain cycle so it won't get dealloc'ed until alert view
             // is displayed then dismissed
             self.retainSelf = self;
+
+            [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView];
             
             [self showPrePromptAlertWithTitle:self.prePromptTemplate.title
                                       message:self.prePromptTemplate.message
@@ -46,12 +41,51 @@ const NSString *MAVEEventRouteContactsPermissionDenied = @"/events/contacts_perm
                              acceptbuttonCopy:self.prePromptTemplate.acceptButtonCopy];
 
         } else {
-            [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
-                completionBlock(indexedData);
-            }];
+            [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView];
+            [self loadAddressBookAndComplete];
         }
     }];
 }
+
+
+- (void)loadAddressBookAndComplete {
+    // Loads the address book, prompting user if user has not been prompted yet, and
+    // calls the completion block with the data (or with nil if permission denied)
+    CFErrorRef accessError;
+    ABAddressBookRef addressBook = [self getABAddressBookRef:accessError];
+    if (accessError != nil) {
+        self.completionBlock(nil);
+    }
+
+    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+        NSArray *maveABPersons;
+        if (granted) {
+            NSArray *addressBookNS = CFBridgingRelease(ABAddressBookCopyArrayOfAllPeople(addressBook));
+            maveABPersons = [MAVEABCollection copyEntireAddressBookToMAVEABPersonArray:addressBookNS];
+        } else {
+            DebugLog(@"User denied address book permission!");
+        }
+        if (addressBook != NULL) CFRelease(addressBook);
+        NSDictionary *indexedABPersons =
+            [MAVEABCollection indexedDictionaryFromMAVEABPersonArray:maveABPersons];
+        self.completionBlock(indexedABPersons);
+    });
+}
+
+- (ABAddressBookRef)getABAddressBookRef:(CFErrorRef)accessErrorCF {
+    // Wrapper around calling the CF function to create an address book object.
+    // Calls the completion block with nil if there's a problem
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
+    if (accessErrorCF != nil) {
+        NSError *abAccessError = (__bridge_transfer NSError *)accessErrorCF;
+        if (!([abAccessError.domain isEqualToString:@"ABAddressBookErrorDomain"]
+              && abAccessError.code == 1)) {
+            DebugLog(@"Unknown Error getting address book");
+        }
+    }
+    return addressBook;
+}
+
 
 - (void)showPrePromptAlertWithTitle:(NSString *)title
                             message:(NSString *)message
@@ -90,9 +124,7 @@ const NSString *MAVEEventRouteContactsPermissionDenied = @"/events/contacts_perm
 
     // clicked accept
     } else {
-        [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
-            self.completionBlock(indexedData);
-        }];
+        [self loadAddressBookAndComplete];
     }
 }
 

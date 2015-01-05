@@ -23,8 +23,12 @@ extern NSString * const MAVEABPermisssionStatusUnprompted;
 // mapping of ab status to states we care about, as a human-readable string
 + (NSString *)addressBookPermissionStatus;
 
+// argument is an NSArray * of ABRecordRef pointers (output of ABAddressBookCopyArrayOfAllPeople)
+// return value is an NSArray * of MAVEABPerson objects that is sorted.
++ (NSArray *)copyEntireAddressBookToMAVEABPersonArray:(NSArray *)addressBook;
+
 // Take an array of MAVEABPerson objects and return a dict mapping the first letter
 // of the sorted name to an array of MAVEABPerson objects beginning with that letter
-- (NSDictionary *)indexedDictionaryOfMAVEABPersons;
++ (NSDictionary *)indexedDictionaryFromMAVEABPersonArray:(NSArray *)persons;
 
 @end

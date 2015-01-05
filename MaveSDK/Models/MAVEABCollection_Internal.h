@@ -18,10 +18,6 @@
 
 @property UITableView *viewToReload;
 
-// argument is an NSArray * of ABRecordRef pointers (output of ABAddressBookCopyArrayOfAllPeople)
-// return value is an NSArray * of MAVEABPerson objects that is sorted.
-+ (NSArray *)copyEntireAddressBookToMAVEABPersonArray:(NSArray *)addressBook;
-
 + (void)sortMAVEABPersonArray:(NSMutableArray *)input;
 
 @end
