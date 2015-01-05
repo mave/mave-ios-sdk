@@ -1,5 +1,5 @@
 //
-//  AddressBookDataTests.m
+//  MAVEABUtilsTests.m
 //  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
@@ -7,15 +7,14 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "MAVEABCollection.h"
-#import "MAVEABCollection_Internal.h"
+#import "MAVEABUtils.h"
 #import "MAVEABTestDataFactory.h"
 
-@interface MAVEABCollectionTests : XCTestCase
+@interface MAVEABUtilsTests : XCTestCase
 
 @end
 
-@implementation MAVEABCollectionTests
+@implementation MAVEABUtilsTests
 
 - (void)setUp {
     [super setUp];
@@ -29,7 +28,7 @@
 - (void)testAddressBookPermissionStatus {
     // Don't want to make the tests dependent on a particular status,
     // so just test status is one of our defined string constants.
-    NSString *status = [MAVEABCollection addressBookPermissionStatus];
+    NSString *status = [MAVEABUtils addressBookPermissionStatus];
     XCTAssertTrue(status == MAVEABPermissionStatusAllowed ||
                   status == MAVEABPermissionStatusDenied ||
                   status == MAVEABPermisssionStatusUnprompted);
@@ -43,7 +42,7 @@
     
     p1 = ab[0];
     XCTAssertEqualObjects(p1.lastName, @"B");
-    [MAVEABCollection sortMAVEABPersonArray:ab];
+    [MAVEABUtils sortMAVEABPersonArray:ab];
     p1 = ab[0];
     XCTAssertEqualObjects(p1.lastName, @"A");
 }
@@ -54,7 +53,7 @@
                                             ABRecordCopyValue((__bridge ABRecordRef)addressBook[0], kABPersonFirstNameProperty));
     XCTAssertNotEqualObjects(firstName, nil);
     
-    NSArray *formattedAB = [MAVEABCollection copyEntireAddressBookToMAVEABPersonArray:addressBook];
+    NSArray *formattedAB = [MAVEABUtils copyEntireAddressBookToMAVEABPersonArray:addressBook];
     XCTAssertEqual([formattedAB count], 3);
     NSSet *firstNames = [[NSSet alloc] initWithObjects:
             ((MAVEABPerson *)formattedAB[0]).firstName,
@@ -71,16 +70,16 @@
     NSArray *data = @[p1, p2, p3];
     NSDictionary *expected = @{@"D": @[p1, p2], @"F": @[p3]};
 
-    NSDictionary *indexed = [MAVEABCollection indexedDictionaryFromMAVEABPersonArray:data];
+    NSDictionary *indexed = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data];
     XCTAssertEqualObjects(indexed, expected);
 }
 
 - (void)testIndexedDictionaryOfMAVEABPersonsAcceptsNilAndEmpty {
     NSArray *data = nil;
-    XCTAssertNil([MAVEABCollection indexedDictionaryFromMAVEABPersonArray:data]);
+    XCTAssertNil([MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data]);
     
     data = @[];
-    XCTAssertNil([MAVEABCollection indexedDictionaryFromMAVEABPersonArray:data]);
+    XCTAssertNil([MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data]);
 }
 
 @end

@@ -32,8 +32,8 @@ typedef void (^MAVEABDataBlock)(NSDictionary *indexedContacts);
 // Loads the address book and calls the completion block with results
 // If permission has not yet been asked for it will prompt user when called
 - (void)loadAddressBookAndComplete;
-// Helper objective-c wrapper around the CF function to create a new empty addressbook
-- (ABAddressBookRef)getABAddressBookRef:(CFErrorRef)accessErrorCF;
+- (void)completeAfterPermissionGranted:(NSArray *)MAVEABPersonsArray;
+- (void)completeAfterPermissionDenied;
 
 - (void)logContactsPromptRelatedEventWithRoute:(NSString *)route;
 

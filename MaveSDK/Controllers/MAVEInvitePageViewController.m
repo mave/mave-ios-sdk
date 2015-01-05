@@ -12,7 +12,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEInviteExplanationView.h"
 #import "MAVEABTableViewController.h"
-#import "MAVEABCollection.h"
+#import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
@@ -171,14 +171,16 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 
 - (void)determineAndSetViewBasedOnABPermissions {
     // If address book permission already granted, load contacts view right now
-    NSString *abStatus = [MAVEABCollection addressBookPermissionStatus];
+    NSString *abStatus = [MAVEABUtils addressBookPermissionStatus];
     if ([abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
         DebugLog(@"Address book status was authorized");
         self.view = [self createAddressBookInviteView];
         [self layoutInvitePageViewAndSubviews];
-        [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
+        MAVEABPermissionPromptHandler *permissionPrompter = [[MAVEABPermissionPromptHandler alloc] init];
+        [permissionPrompter promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.ABTableViewController updateTableData:indexedData];
+                [self layoutInvitePageViewAndSubviews];
+                [self.ABTableViewController updateTableData:indexedContacts];
             });
          }];
         [[MaveSDK sharedInstance].APIInterface

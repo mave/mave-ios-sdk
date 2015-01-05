@@ -9,7 +9,7 @@
 #import <AddressBook/AddressBook.h>
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
-#import "MAVEABCollection.h"
+#import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEAPIInterface.h"
@@ -51,39 +51,45 @@
 - (void)loadAddressBookAndComplete {
     // Loads the address book, prompting user if user has not been prompted yet, and
     // calls the completion block with the data (or with nil if permission denied)
-    CFErrorRef accessError;
-    ABAddressBookRef addressBook = [self getABAddressBookRef:accessError];
-    if (accessError != nil) {
-        self.completionBlock(nil);
-    }
-
-    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-        NSArray *maveABPersons;
-        if (granted) {
-            NSArray *addressBookNS = CFBridgingRelease(ABAddressBookCopyArrayOfAllPeople(addressBook));
-            maveABPersons = [MAVEABCollection copyEntireAddressBookToMAVEABPersonArray:addressBookNS];
-        } else {
-            DebugLog(@"User denied address book permission!");
-        }
-        if (addressBook != NULL) CFRelease(addressBook);
-        NSDictionary *indexedABPersons =
-            [MAVEABCollection indexedDictionaryFromMAVEABPersonArray:maveABPersons];
-        self.completionBlock(indexedABPersons);
-    });
-}
-
-- (ABAddressBookRef)getABAddressBookRef:(CFErrorRef)accessErrorCF {
-    // Wrapper around calling the CF function to create an address book object.
-    // Calls the completion block with nil if there's a problem
+    //
+    // This method will have to just be tested as part of the integration/UI tests in actually
+    // loading up an address book, it's more trouble than it's worth to stub out the CF functions
+    //
+    CFErrorRef accessErrorCF;
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
     if (accessErrorCF != nil) {
         NSError *abAccessError = (__bridge_transfer NSError *)accessErrorCF;
-        if (!([abAccessError.domain isEqualToString:@"ABAddressBookErrorDomain"]
-              && abAccessError.code == 1)) {
-            DebugLog(@"Unknown Error getting address book");
-        }
+        DebugLog(@"Error creating address book domain: %@ code: %ld",
+                 abAccessError.domain, (long)abAccessError.code);
+        if (addressBook != NULL) CFRelease(addressBook);
+        [self completeAfterPermissionDenied];
+        return;
     }
-    return addressBook;
+
+    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+        if (granted) {
+            NSArray *addressBookNS = CFBridgingRelease(ABAddressBookCopyArrayOfAllPeople(addressBook));
+            NSArray *maveABPersons = [MAVEABUtils copyEntireAddressBookToMAVEABPersonArray:addressBookNS];
+            if (addressBook != NULL) CFRelease(addressBook);
+            [self completeAfterPermissionGranted:maveABPersons];
+        } else {
+            if (addressBook != NULL) CFRelease(addressBook);
+            [self completeAfterPermissionDenied];
+        }
+    });
+}
+
+- (void)completeAfterPermissionGranted:(NSArray *)MAVEABPersonsArray {
+    DebugLog(@"User accepted address book permissions");
+    [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted];
+    NSDictionary *indexedPersons = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:MAVEABPersonsArray];
+    self.completionBlock(indexedPersons);
+}
+
+- (void)completeAfterPermissionDenied {
+    DebugLog(@"User denied address book permissions");
+    [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionDenied];
+    self.completionBlock(nil);
 }
 
 
@@ -120,10 +126,12 @@
 
     // clicked cancel
     if (buttonIndex == 0) {
+        [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionDenied];
         self.completionBlock(nil);
 
     // clicked accept
     } else {
+        [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionGranted];
         [self loadAddressBookAndComplete];
     }
 }

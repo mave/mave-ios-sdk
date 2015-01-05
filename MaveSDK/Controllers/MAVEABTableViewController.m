@@ -10,7 +10,7 @@
 #import "MAVEDisplayOptions.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEInviteExplanationView.h"
-#import "MAVEABCollection.h"
+#import "MAVEABUtils.h"
 #import "MAVEABPersonCell.h"
 #import "MAVEABPerson.h"
 

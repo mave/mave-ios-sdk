@@ -11,8 +11,9 @@
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
-#import "MAVEABCollection.h"
+#import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
+#import "MAVEABTestDataFactory.h"
 
 
 @interface MAVEABPermissionPromptHandlerTest : XCTestCase
@@ -105,10 +106,12 @@
         returnedData = indexedData;
     };
 
-    UIAlertView *alertView = [[UIAlertView alloc] init];
+    id mock = OCMPartialMock(promptHandler);
+    OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionDenied]);
 
-    [promptHandler alertView:alertView clickedButtonAtIndex:0];
+    [promptHandler alertView:nil clickedButtonAtIndex:0];
 
+    OCMVerifyAll(mock);
     XCTAssertTrue(called);
     XCTAssertNil(returnedData);
 }
@@ -119,11 +122,52 @@
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
     id mock = OCMPartialMock(promptHandler);
 
+    OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionGranted]);
     OCMExpect([mock loadAddressBookAndComplete]);
 
     [promptHandler alertView:nil clickedButtonAtIndex:1];
 
     OCMVerifyAll(mock);
+}
+
+- (void)testCompleteAfterPermissionGranted {
+    NSArray *fakeContacts = @[[MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Cosson"]];
+    NSDictionary *expectedIndexedData = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:fakeContacts];
+
+    // generate object under test and its block
+    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+    __block NSDictionary *returnedData;
+    promptHandler.completionBlock = ^void(NSDictionary *data) {
+        returnedData = data;
+    };
+
+    id mock = OCMPartialMock(promptHandler);
+    OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted]);
+
+    [promptHandler completeAfterPermissionGranted:fakeContacts];
+
+    OCMVerifyAll(mock);
+    XCTAssertEqualObjects(returnedData, expectedIndexedData);
+}
+
+- (void)testCompleteAfterPermissionDenied {
+    // generate object under test and its block
+    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+    __block NSDictionary *returnedData;
+    __block BOOL called;
+    promptHandler.completionBlock = ^void(NSDictionary *data) {
+        called = YES;
+        returnedData = data;
+    };
+
+    id mock = OCMPartialMock(promptHandler);
+    OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionDenied]);
+
+    [promptHandler completeAfterPermissionDenied];
+
+    OCMVerifyAll(mock);
+    XCTAssertTrue(called);
+    XCTAssertNil(returnedData);
 }
 
 - (void)testLogContactsPromptRelatedEventWithRoute {

@@ -1,5 +1,5 @@
 //
-//  AddressBookDataCollection.m
+//  MAVEABUtils.m
 //  MaveSDKDevApp
 //
 //  Created by dannycosson on 9/25/14.
@@ -7,8 +7,7 @@
 //
 
 #import "MAVEConstants.h"
-#import "MAVEABCollection.h"
-#import "MAVEABCollection_Internal.h"
+#import "MAVEABUtils.h"
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
 
@@ -17,7 +16,7 @@ NSString * const MAVEABPermissionStatusDenied = @"denied";
 NSString * const MAVEABPermisssionStatusUnprompted = @"unprompted";
 
 
-@implementation MAVEABCollection
+@implementation MAVEABUtils
 
 + (NSString *)addressBookPermissionStatus {
     ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
@@ -28,38 +27,6 @@ NSString * const MAVEABPermisssionStatusUnprompted = @"unprompted";
     } else {  // there are two underlying statuses here
         return MAVEABPermissionStatusDenied;
     }
-}
-
-+ (id)createAndLoadAddressBookWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
-    // TODO test with mocking out the load method
-    MAVEABCollection *result = [[[self class] alloc] init];
-    result.completionBlock = completionBlock;
-    [result loadAllDataFromAddressBook];
-    return result;
-}
-
-- (void)loadAllDataFromAddressBook {
-    CFErrorRef abAccessErrorCF = NULL;
-    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &abAccessErrorCF);
-    if (abAccessErrorCF != nil) {
-        NSError *abAccessError = (__bridge_transfer NSError *)abAccessErrorCF;
-        if (!([abAccessError.domain isEqualToString:@"ABAddressBookErrorDomain"]
-               && abAccessError.code == 1)) {
-            DebugLog(@"Unknown Error getting address book");
-        }
-        self.completionBlock(nil);
-    }
-    
-    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-        if (granted) {
-            NSArray *addressBookNS = CFBridgingRelease(ABAddressBookCopyArrayOfAllPeople(addressBook));
-            self.data = [[self class] copyEntireAddressBookToMAVEABPersonArray:addressBookNS];
-        } else {
-            DebugLog(@"User denied address book permission!");
-        }
-        if (addressBook != NULL) CFRelease(addressBook);
-        self.completionBlock([[self class] indexedDictionaryFromMAVEABPersonArray:self.data]);
-    });
 }
 
 + (NSArray *)copyEntireAddressBookToMAVEABPersonArray:(NSArray *)addressBook {

@@ -14,11 +14,7 @@ extern NSString * const MAVEABPermissionStatusAllowed;
 extern NSString * const MAVEABPermissionStatusDenied;
 extern NSString * const MAVEABPermisssionStatusUnprompted;
 
-@interface MAVEABCollection : NSObject
-
-// When done loading the address book, will call the completion block with the
-// indexed dictionary of people
-+ (id)createAndLoadAddressBookWithCompletionBlock:(void(^)(NSDictionary *indexedData))completionBlock;
+@interface MAVEABUtils : NSObject
 
 // mapping of ab status to states we care about, as a human-readable string
 + (NSString *)addressBookPermissionStatus;
@@ -30,5 +26,8 @@ extern NSString * const MAVEABPermisssionStatusUnprompted;
 // Take an array of MAVEABPerson objects and return a dict mapping the first letter
 // of the sorted name to an array of MAVEABPerson objects beginning with that letter
 + (NSDictionary *)indexedDictionaryFromMAVEABPersonArray:(NSArray *)persons;
+
+// Sorter
++ (void)sortMAVEABPersonArray:(NSMutableArray *)input;
 
 @end
