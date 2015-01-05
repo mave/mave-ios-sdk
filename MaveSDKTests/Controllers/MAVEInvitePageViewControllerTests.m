@@ -83,25 +83,23 @@
 
 - (void)testPresentShareSheet {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    id mock = [OCMockObject partialMockForObject:ipvc];
-    id httpManagerMock =
-        [OCMockObject partialMockForObject:[MaveSDK sharedInstance].HTTPManager];
+    id VCMock = OCMPartialMock(ipvc);
+    id APIInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     
-    [[mock expect] dismissSelf:1];
-    [[mock expect] presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
+    OCMExpect([VCMock dismissSelf:1]);
+    
+    OCMExpect([VCMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
         UIActivityViewController *shareSheetVC = obj;
         XCTAssertNotNil(shareSheetVC);
         shareSheetVC.completionHandler(nil, YES);
         return YES;
-    }] animated:YES completion:nil];
-    
-    [[httpManagerMock expect] trackInvitePageOpenRequest:[OCMArg any]
-                                                pageType:MAVEInvitePageTypeNativeShareSheet];
+    }] animated:YES completion:nil]);
+    OCMExpect([APIInterfaceMock trackInvitePageOpenForPageType:MAVEInvitePageTypeNativeShareSheet]);
     
     [ipvc presentShareSheet];
     
-    [mock verify];
-    [httpManagerMock verify];
+    OCMVerifyAll(VCMock);
+    OCMVerifyAll(APIInterfaceMock);
 }
 
 
@@ -205,15 +203,15 @@
     vc.inviteMessageContainerView.inviteMessageView.textView.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
-    id mockHTTPManager = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].HTTPManager];
+    id mockAPIInterface = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].APIInterface];
 
-    [[mockHTTPManager expect] sendInvitesWithPersons:invitePhones
+    [[mockAPIInterface expect] sendInvitesWithPersons:invitePhones
                                             message:inviteMessage
                                               userId:mave.userData.userID
                             inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
                                      completionBlock:[OCMArg any]];
     [vc sendInvites];
-    [mockHTTPManager verify];
+    [mockAPIInterface verify];
 }
 
 
@@ -223,12 +221,11 @@
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:userId firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     [MaveSDK sharedInstance].userData = userData;
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    id mockHTTPManager = [OCMockObject partialMockForObject: [MaveSDK sharedInstance].HTTPManager];
-    [[mockHTTPManager expect] trackInvitePageOpenRequest:userData
-                                                pageType:MAVEInvitePageTypeContactList];
+    id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([mockAPIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList]);
     
     [vc loadView];
     
-    [mockHTTPManager verify];
+    OCMVerifyAll(mockAPIInterface);
 }
 @end

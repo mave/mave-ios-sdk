@@ -13,7 +13,15 @@
 
 @property (nonatomic, copy) void(^completionBlock)(NSDictionary *contacts);
 @property (nonatomic, strong) id retainSelf;
+@property (nonatomic, copy) NSString *prePromptTemplateID;
 
-+ (void)promptForContactsWithCompletionBlock:(void(^)(NSDictionary *indexedContacts))completionBlock;
+- (void)promptForContactsWithCompletionBlock:(void(^)(NSDictionary *indexedContacts))completionBlock;
+- (void)showPrePromptAlertWithTitle:(NSString *)title
+                            message:(NSString *)message
+                   cancelButtonCopy:(NSString *)cancelButtonCopy
+                   acceptbuttonCopy:(NSString *)acceptButtonCopy;
+
+- (void)logContactsPromptRelatedEvent:(NSString *)eventRoute
+                  prePromptTemplateID:(NSString *)templateID;
 
 @end

@@ -153,11 +153,68 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
                                         completionBlock:[OCMArg any]]);
     
     [self.testHTTPStack sendPreparedRequest:req
-                        withCompletionBlock:^(NSError *error, NSDictionary *responseData) {}];
+                            completionBlock:^(NSError *error, NSDictionary *responseData) {}];
     
     OCMVerify([taskMock resume]);
     OCMVerifyAll(sessionMock);
     OCMVerifyAll(httpStackMock);
+}
+
+- (void)testPreFetchPreparedRequestNoError {
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] init];
+    NSDictionary *defaultData = @{@"foo": @"bar"};
+    NSDictionary *responseData = @{@"foo": @"baz"};
+    
+    // No Error
+    id mock = OCMPartialMock(self.testHTTPStack);
+    OCMExpect([mock sendPreparedRequest:req
+                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEHTTPCompletionBlock block = obj;
+        block(nil, responseData);
+        return YES;
+    }]]);
+    
+    MAVEPendingResponseData *response = [self.testHTTPStack preFetchPreparedRequest:req
+                                                                        defaultData:defaultData];
+    XCTAssertEqualObjects(response.responseData, responseData);
+    XCTAssertEqualObjects(response.defaultData, defaultData);
+    [mock stopMocking];
+    
+    // With empty response data
+    mock = OCMPartialMock(self.testHTTPStack);
+    OCMExpect([mock sendPreparedRequest:req
+                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEHTTPCompletionBlock block = obj;
+        block(nil, nil);
+        return YES;
+    }]]);
+    
+    response = [self.testHTTPStack preFetchPreparedRequest:req
+                                               defaultData:defaultData];
+    XCTAssertEqualObjects(response.responseData, defaultData);
+    XCTAssertEqualObjects(response.defaultData, defaultData);
+    [mock stopMocking];
+    
+    // With Error
+    mock = OCMPartialMock(self.testHTTPStack);
+    OCMExpect([mock sendPreparedRequest:req
+                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEHTTPCompletionBlock block = obj;
+        block([[NSError alloc] init], responseData);
+        return YES;
+    }]]);
+    
+    response = [self.testHTTPStack preFetchPreparedRequest:req
+                                               defaultData:defaultData];
+    XCTAssertEqualObjects(response.responseData, defaultData);
+    XCTAssertEqualObjects(response.defaultData, defaultData);
+}
+
+- (void)testPreFetchPreparedRequestNil {
+    NSDictionary *defaultData = @{@"foo": @"bar"};
+    MAVEPendingResponseData *response = [self.testHTTPStack preFetchPreparedRequest:nil
+                                                                        defaultData:defaultData];
+    
 }
 
 

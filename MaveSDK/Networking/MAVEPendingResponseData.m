@@ -39,7 +39,7 @@
         NSInteger waitVal = dispatch_semaphore_wait(self.gcd_semaphore, seconds * NSEC_PER_SEC);
         
         // Return data. If request has returned in time, this will be the response data.
-        // Otherwise this is the default dataf
+        // Otherwise this is the default data
         completionBlock(self.responseData, self.defaultData);
         
         // Re-wake the semaphore in case anyone else is waiting on it

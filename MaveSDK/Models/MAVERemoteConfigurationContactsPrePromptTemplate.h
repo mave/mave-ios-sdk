@@ -11,7 +11,7 @@
 
 @interface MAVERemoteConfigurationContactsPrePromptTemplate : NSObject<MAVEDictionaryInitializable>
 
-@property (nonatomic, strong) NSString *remoteConfigID;
+@property (nonatomic, strong) NSString *templateID;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *message;
 @property (nonatomic, strong) NSString *cancelButtonCopy;

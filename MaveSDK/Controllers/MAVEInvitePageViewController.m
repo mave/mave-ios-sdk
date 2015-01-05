@@ -170,8 +170,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 }
 
 - (void)determineAndSetViewBasedOnABPermissions {
-    MAVEUserData *userData = [MaveSDK sharedInstance].userData;
-
     // If address book permission already granted, load contacts view right now
     NSString *abStatus = [MAVEABCollection addressBookPermissionStatus];
     if ([abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
@@ -183,15 +181,15 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                 [self.ABTableViewController updateTableData:indexedData];
             });
          }];
-        [[MaveSDK sharedInstance].HTTPManager
-            trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeContactList];
+        [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
 
     // If status not determined, prompt for permission then load data
     // If permission not granted, swap empty for for permission denied view
     } else if ([abStatus isEqualToString:MAVEABPermisssionStatusUnprompted]) {
         DebugLog(@"Address book status not determined, needed to prompt");
         self.view = [self createEmptyFallbackView];
-        [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
+        MAVEABPermissionPromptHandler *permissionPrompter = [[MAVEABPermissionPromptHandler alloc] init];
+        [permissionPrompter promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
             // User must have
             if ([indexedContacts count] > 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -199,14 +197,12 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                     [self layoutInvitePageViewAndSubviews];
                     [self.ABTableViewController updateTableData:indexedContacts];
                 });
-                [[MaveSDK sharedInstance].HTTPManager
-                    trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeContactList];
+                [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.view = [[MAVENoAddressBookPermissionView alloc] init];
                 });
-                [[MaveSDK sharedInstance].HTTPManager
-                    trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeNoneNeedContactsPermission];
+                [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
             }
         }];
     // If status already denied, leave blank page for now
@@ -216,8 +212,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         dispatch_async(dispatch_get_main_queue(), ^{
             self.view = [[MAVENoAddressBookPermissionView alloc] init];
         });
-        [[MaveSDK sharedInstance].HTTPManager
-            trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeNoneNeedContactsPermission];
+        [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
     }
 }
 
@@ -340,10 +335,10 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     }
     
     MaveSDK *mave = [MaveSDK sharedInstance];
-    MAVEHTTPManager *httpManager = mave.HTTPManager;
-    [httpManager sendInvitesWithPersons:phones
-                                message:message
-                                 userId:mave.userData.userID
+    MAVEHTTPInterface *apiInterface = mave.APIInterface;
+    [apiInterface sendInvitesWithPersons:phones
+                                 message:message
+                                  userId:mave.userData.userID
                inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
                         completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
@@ -403,9 +398,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     [self presentViewController:activityVC animated:YES completion:nil];
 
     // Tracking event that share sheet was presented
-    MAVEUserData *userData = [MaveSDK sharedInstance].userData;
-    [[MaveSDK sharedInstance].HTTPManager
-        trackInvitePageOpenRequest:userData pageType:MAVEInvitePageTypeNativeShareSheet];
+    [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNativeShareSheet];
 }
 
 @end

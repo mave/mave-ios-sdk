@@ -9,6 +9,7 @@
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
 
+const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateID = @"template_id";
 const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateTitle = @"title";
 const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateMessage = @"message";
 const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateCancelCopy = @"cancel_buton_copy";
@@ -19,6 +20,7 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateAcceptCopy = @"accep
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [self init]) {
+        self.templateID = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateID];
         self.title = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateTitle];
         self.message = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateMessage];
         self.cancelButtonCopy = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateCancelCopy];

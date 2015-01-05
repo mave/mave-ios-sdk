@@ -6,11 +6,17 @@
 //
 //
 
+#import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MAVEClientPropertyUtils.h"
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
+
+// make screen bounds writable so we can stub the mainscreen for testing
+@interface UIScreen (BoundsWritable)
+@property (nonatomic, readwrite) CGRect bounds;
+@end
 
 @interface MAVEClientPropertyUtilsTests : XCTestCase
 
@@ -33,6 +39,40 @@
     NSDictionary *properties = [MAVEClientPropertyUtils base64DecodeJSONString:encProperties];
     // All properties should exist
     XCTAssertEqual([properties count], 11);
+}
+
+- (void)testUserAgentDeviceString {
+    NSString *iosVersionStr = [[UIDevice currentDevice].systemVersion
+                               stringByReplacingOccurrencesOfString:@"." withString:@"_"];
+    NSString *expectedUA = [NSString stringWithFormat:
+                            @"(iPhone; CPU iPhone OS %@ like Mac OS X)",
+                            iosVersionStr];
+    NSString *ua = [MAVEClientPropertyUtils userAgentDeviceString];
+    XCTAssertEqualObjects(ua, expectedUA);
+    
+}
+
+// Test formatting screen size - should convert the screen size to a string of the
+// format "AxB" that does not differ if we are in landscape mode and rounds decimals
+- (void)testFormattedScreenSizeSimple {
+    id mock = OCMPartialMock([UIScreen mainScreen]);
+    OCMStub([mock bounds]).andReturn(CGRectMake(0, 0, 10, 10));
+    XCTAssertEqualObjects([MAVEClientPropertyUtils formattedScreenSize], @"10x10");
+}
+- (void)testFormattedScreenSizeHeightLarger {
+    id mock = OCMPartialMock([UIScreen mainScreen]);
+    OCMStub([mock bounds]).andReturn(CGRectMake(0, 0, 10, 20));
+    XCTAssertEqualObjects([MAVEClientPropertyUtils formattedScreenSize], @"10x20");
+}
+- (void)testFormattedScreenSizeWidthLarger {
+    id mock = OCMPartialMock([UIScreen mainScreen]);
+    OCMStub([mock bounds]).andReturn(CGRectMake(0, 0, 20, 10));
+    XCTAssertEqualObjects([MAVEClientPropertyUtils formattedScreenSize], @"10x20");
+}
+- (void)testFormattedScreenSizeRoundDecimal {
+    id mock = OCMPartialMock([UIScreen mainScreen]);
+    OCMStub([mock bounds]).andReturn(CGRectMake(0, 0, 10.5001, 10.4999));
+    XCTAssertEqualObjects([MAVEClientPropertyUtils formattedScreenSize], @"10x11");
 }
 
 - (void)testBase64EncodeDictionary {

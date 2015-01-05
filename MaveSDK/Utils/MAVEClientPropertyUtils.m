@@ -68,6 +68,27 @@
     return [[UIDevice currentDevice] systemVersion];
 }
 
++ (NSString *)userAgentDeviceString {
+    UIDevice *device = [UIDevice currentDevice];
+    NSString *iosVersionStr =
+    [device.systemVersion stringByReplacingOccurrencesOfString:@"."
+                                                    withString:@"_"];
+    return [NSString stringWithFormat:@"(iPhone; CPU iPhone OS %@ like Mac OS X)",
+            iosVersionStr];
+}
+
++ (NSString *)formattedScreenSize {
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    long w = (long)round(size.width);
+    long h = (long)round(size.height);
+    if (w > h) {
+        long tmp = w;
+        w = h;
+        h = tmp;
+    }
+    return [NSString stringWithFormat:@"%ldx%ld", w, h];
+}
+
 + (NSString *)encodedAutomaticClientProperties {
     // use setValue:forKey: which will  omit setting the object in the
     // dictionary if nil, just in case a nil value sneaks in somehow

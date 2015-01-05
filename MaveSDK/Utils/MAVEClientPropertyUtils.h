@@ -32,11 +32,20 @@
 + (NSString *)os;
 + (NSString *)osVersion;
 
+// Returns the device part of the user agent string, which has all the info
+// available for matching current device against mobile Safari's user agent
+// string
++ (NSString *)userAgentDeviceString;
+
+// Returns screen size of  device in the format "AxB"
++ (NSString *)formattedScreenSize;
 
 // This is the dictionary of client properties to include in the event header
 // sent with all events to be able to segment later by any available properties.
 // Encoded in json base64 string.
 + (NSString *)encodedAutomaticClientProperties;
+
+
 
 // Helpers
 + (NSString *)base64EncodeDictionary:(NSDictionary *)dict;
