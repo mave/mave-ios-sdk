@@ -12,7 +12,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVEHTTPManager.h"
 #import "MAVEPendingResponseObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 

@@ -9,7 +9,6 @@
 #import "MaveSDK.h"
 #import "MAVEABCollection.h"
 #import "MAVEABPermissionPromptHandler.h"
-#import "MAVEHTTPManager.h"
 #import "MAVERemoteConfiguration.h"
 
 

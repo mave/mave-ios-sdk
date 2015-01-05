@@ -15,7 +15,7 @@
 
 @interface MAVEAPIInterfaceTests : XCTestCase
 
-@property MAVEAPIInterface *testHTTPInterface;
+@property MAVEAPIInterface *testAPIInterface;
 
 @end
 
@@ -31,7 +31,7 @@
                                                         email:nil
                                                         phone:nil];
     [[MaveSDK sharedInstance] identifyUser:user];
-    self.testHTTPInterface = [[MAVEAPIInterface alloc] init];
+    self.testAPIInterface = [[MAVEAPIInterface alloc] init];
     
 }
 
@@ -41,51 +41,51 @@
 }
 
 - (void)testInitAndCurrentUserProperties {
-    XCTAssertEqualObjects(self.testHTTPInterface.httpStack.baseURL, @"http://devapi.mave.io/v1.0");
-    XCTAssertEqualObjects(self.testHTTPInterface.applicationID, [MaveSDK sharedInstance].appId);
-    XCTAssertEqualObjects(self.testHTTPInterface.applicationDeviceID, [MaveSDK sharedInstance].appDeviceID);
-    XCTAssertEqualObjects(self.testHTTPInterface.userData, [MaveSDK sharedInstance].userData);
+    XCTAssertEqualObjects(self.testAPIInterface.httpStack.baseURL, @"http://devapi.mave.io/v1.0");
+    XCTAssertEqualObjects(self.testAPIInterface.applicationID, [MaveSDK sharedInstance].appId);
+    XCTAssertEqualObjects(self.testAPIInterface.applicationDeviceID, [MaveSDK sharedInstance].appDeviceID);
+    XCTAssertEqualObjects(self.testAPIInterface.userData, [MaveSDK sharedInstance].userData);
 }
 
 ///
 /// Specific tracking events
 ///
 - (void)testTrackAppOpen {
-    id mock = OCMPartialMock(self.testHTTPInterface);
+    id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:nil]);
-    [self.testHTTPInterface trackAppOpen];
+    [self.testAPIInterface trackAppOpen];
     OCMVerifyAll(mock);
 }
 
 - (void)testTrackSignup {
-    id mock = OCMPartialMock(self.testHTTPInterface);
+    id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil]);
-    [self.testHTTPInterface trackSignup];
+    [self.testAPIInterface trackSignup];
     OCMVerifyAll(mock);
 }
 
 - (void)testTrackInvitePageOpen {
     // With a value
     NSString *type = @"blahblahtype";
-    id mock = OCMPartialMock(self.testHTTPInterface);
+    id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
                                   additionalParams:@{MAVEParamKeyInvitePageType: type}]);
-    [self.testHTTPInterface trackInvitePageOpenForPageType:type];
+    [self.testAPIInterface trackInvitePageOpenForPageType:type];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
     // nil and empty string get set as unknown
-    mock = OCMPartialMock(self.testHTTPInterface);
+    mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
                                   additionalParams:@{MAVEParamKeyInvitePageType: @"unknown"}]);
-    [self.testHTTPInterface trackInvitePageOpenForPageType:nil];
+    [self.testAPIInterface trackInvitePageOpenForPageType:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
-    mock = OCMPartialMock(self.testHTTPInterface);
+    mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
                                   additionalParams:@{MAVEParamKeyInvitePageType: @"unknown"}]);
-    [self.testHTTPInterface trackInvitePageOpenForPageType:@""];
+    [self.testAPIInterface trackInvitePageOpenForPageType:@""];
     OCMVerifyAll(mock);
     [mock stopMocking];
 }
@@ -94,25 +94,25 @@
 /// Other specific requests
 ///
 - (void)testIdentifyUserRequest {
-    MAVEHTTPManager *httpManager = [[MAVEHTTPManager alloc] init];
-    id mocked = [OCMockObject partialMockForObject:httpManager];
+    id mock = OCMPartialMock(self.testAPIInterface);
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo" email:@"foo@bar.com" phone:@"18085551234"];
+    OCMStub([mock userData]).andReturn(userData);
     NSDictionary *expectedParams = @{@"user_id": userData.userID,
                                      @"first_name": userData.firstName,
                                      @"last_name": userData.lastName,
                                      @"email": userData.email,
                                      @"phone": userData.phone};
-    [[mocked expect] sendIdentifiedJSONRequestWithRoute:@"/users"
-                                             methodType:@"PUT"
-                                                 params:expectedParams
-                                        completionBlock:nil];
-    [httpManager identifyUserRequest:userData];
-    OCMVerifyAll(mocked);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/users"
+                                            methodName:@"PUT"
+                                                params:expectedParams
+                                       completionBlock:nil]);
+    [self.testAPIInterface identifyUser];
+    OCMVerifyAll(mock);
 }
 
 - (void)testIdentifyUserWithMinimalParams {
     // user id is the only property of the user data required to be non-nil to make the identify user request
-    id mocked = OCMPartialMock(self.testHTTPInterface);
+    id mocked = OCMPartialMock(self.testAPIInterface);
     [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
     // user id is missing so request will fail but it will still get attempted
     NSDictionary *expectedParams = @{};
@@ -120,12 +120,12 @@
                                              methodName:@"PUT"
                                                  params:expectedParams
                                         completionBlock:nil]);
-    [self.testHTTPInterface identifyUser];
+    [self.testAPIInterface identifyUser];
     OCMVerifyAll(mocked);
 }
 
 - (void)testSendInvites {
-    id mocked = OCMPartialMock(self.testHTTPInterface);
+    id mocked = OCMPartialMock(self.testAPIInterface);
     NSArray *recipients = @[@"18085551234", @"18085555678"];
     NSString *smsCopy = @"This is as test";
     NSString *userId = @"some-user-id";
@@ -139,7 +139,7 @@
                                              methodName:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil]);
-    [self.testHTTPInterface sendInvitesWithPersons:recipients
+    [self.testAPIInterface sendInvitesWithPersons:recipients
                                            message:smsCopy
                                             userId:userId
                           inviteLinkDestinationURL:linkDestination
@@ -148,7 +148,7 @@
 }
 
 - (void)testSendInvitesLinkDestinationOmittedIfEmpty {
-    id mocked = OCMPartialMock(self.testHTTPInterface);
+    id mocked = OCMPartialMock(self.testAPIInterface);
     NSString *linkDestination = nil;
     NSDictionary *expectedParams = @{@"recipients": @[],
                                      @"sms_copy": @"",
@@ -158,7 +158,7 @@
                                              methodName:@"POST"
                                                  params:expectedParams
                                         completionBlock:nil]);
-    [self.testHTTPInterface sendInvitesWithPersons:@[]
+    [self.testAPIInterface sendInvitesWithPersons:@[]
                                            message:@""
                                             userId:@""
                           inviteLinkDestinationURL:linkDestination
@@ -167,7 +167,7 @@
 }
 
 - (void)testGetReferringUser {
-    id mocked = OCMPartialMock(self.testHTTPInterface);
+    id mocked = OCMPartialMock(self.testAPIInterface);
     NSDictionary *fakeResponseData = @{@"user_id": @"1", @"first_name": @"dan"};
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_user"
                                               methodName:@"GET"
@@ -179,7 +179,7 @@
         return YES;
     }]]);
     __block MAVEUserData *userData;
-    [self.testHTTPInterface getReferringUser:^(MAVEUserData *_userData) {
+    [self.testAPIInterface getReferringUser:^(MAVEUserData *_userData) {
         userData = _userData;
     }];
     OCMVerifyAll(mocked);
@@ -189,7 +189,7 @@
 
 - (void)testGetReferringUserNull {
     // Same as above test, but this time the data returned from the server is nil
-    id mocked = OCMPartialMock(self.testHTTPInterface);
+    id mocked = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_user"
                                               methodName:@"GET"
                                                   params:nil
@@ -199,7 +199,7 @@
         return YES;
     }]]);
     __block MAVEUserData *userData;
-    [self.testHTTPInterface getReferringUser:^(MAVEUserData *_userData) {
+    [self.testAPIInterface getReferringUser:^(MAVEUserData *_userData) {
         userData = _userData;
     }];
     [mocked verify];
@@ -211,7 +211,7 @@
     NSURLRequest *req = [[NSURLRequest alloc] init];
     NSDictionary *defaultResponse = @{@"foo": @1};
     
-    id mock = OCMPartialMock(self.testHTTPInterface.httpStack);
+    id mock = OCMPartialMock(self.testAPIInterface.httpStack);
     OCMExpect([mock prepareJSONRequestWithRoute:@"/remote_configuration/ios"
                                        methodName:@"GET"
                                            params:nil preparationError:[OCMArg setTo:nil]])
@@ -219,7 +219,7 @@
     
     OCMExpect([mock preFetchPreparedRequest:req defaultData:defaultResponse]);
     
-    [self.testHTTPInterface preFetchRemoteConfiguration:defaultResponse];
+    [self.testAPIInterface preFetchRemoteConfiguration:defaultResponse];
     
     OCMVerifyAll(mock);
 }
@@ -232,7 +232,7 @@
     NSMutableURLRequest *req = [[NSMutableURLRequest alloc] init];
     XCTAssertEqual([req.allHTTPHeaderFields count], 0);
     
-    [self.testHTTPInterface addCustomUserHeadersToRequest:req];
+    [self.testAPIInterface addCustomUserHeadersToRequest:req];
     NSDictionary *headers = req.allHTTPHeaderFields;
     XCTAssertEqual([headers count], 5);
     XCTAssertEqualObjects([headers objectForKey:@"X-Application-Id"],
@@ -242,7 +242,7 @@
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     NSString *expectedDimensions = [NSString stringWithFormat:@"%ldx%ld",
                                     (long)screenSize.width, (long)screenSize.height];
-    NSString *expectedUserAgent = [MAVEHTTPManager userAgentWithUIDevice:[UIDevice currentDevice]];
+    NSString *expectedUserAgent = [MAVEClientPropertyUtils userAgentDeviceString];
     NSString *expectedClientProperties = [MAVEClientPropertyUtils encodedAutomaticClientProperties];
     XCTAssertEqualObjects([headers objectForKey:@"X-Device-Screen-Dimensions"],
                           expectedDimensions);
@@ -251,8 +251,8 @@
 }
 
 - (void)testSendIdentifiedJSONRequestSuccess {
-    id httpStackMock = OCMPartialMock(self.testHTTPInterface.httpStack);
-    id httpInterfaceMock = OCMPartialMock(self.testHTTPInterface);
+    id httpStackMock = OCMPartialMock(self.testAPIInterface.httpStack);
+    id httpInterfaceMock = OCMPartialMock(self.testAPIInterface);
     
     NSString *route = @"/blah/boo";
     NSString *methodName = @"DANNY";
@@ -266,7 +266,7 @@
     OCMExpect([httpStackMock sendPreparedRequest:[OCMArg any] completionBlock:completionBlock]);
     OCMExpect([httpInterfaceMock addCustomUserHeadersToRequest:[OCMArg any]]);
     
-    [self.testHTTPInterface sendIdentifiedJSONRequestWithRoute:route
+    [self.testAPIInterface sendIdentifiedJSONRequestWithRoute:route
                                                     methodName:methodName
                                                         params:params
                                                completionBlock:completionBlock];
@@ -275,7 +275,7 @@
 }
 
 - (void)testSendIdentifiedJSONRequestError {
-    id httpStackMock = OCMPartialMock(self.testHTTPInterface.httpStack);
+    id httpStackMock = OCMPartialMock(self.testAPIInterface.httpStack);
     
     NSString *route = @"/blah/boo";
     NSString *methodName = @"DANNY";
@@ -291,7 +291,7 @@
     __block BOOL called;
     __block NSError *returnedError;
     __block NSDictionary *returnedData;
-    [self.testHTTPInterface sendIdentifiedJSONRequestWithRoute:route
+    [self.testAPIInterface sendIdentifiedJSONRequestWithRoute:route
                                                     methodName:methodName
                                                         params:params
                                                completionBlock:^void(NSError *error, NSDictionary *responseData) {
@@ -312,33 +312,33 @@
                                      @"blah": @"ok"};
     
     // When user data is set, combine user_id and expected params
-    id mock = OCMPartialMock(self.testHTTPInterface);
+    id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:expectedParams
                                        completionBlock:nil]);
-    [self.testHTTPInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
+    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
     // When no user data set, the user id not added to the params
     [MaveSDK sharedInstance].userData = nil;
-    mock = OCMPartialMock(self.testHTTPInterface);
+    mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:additionalParams
                                        completionBlock:nil]);
-    [self.testHTTPInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
+    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
     // When additional params are nil, params are empty
-    mock = OCMPartialMock(self.testHTTPInterface);
+    mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:@{}
                                        completionBlock:nil]);
-    [self.testHTTPInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil];
+    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
 }

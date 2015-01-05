@@ -8,7 +8,6 @@
 
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
-#import "MAVEHTTPManager.h"
 
 const NSString *MAVERemoteConfigKeyEnableContactsPrePrompt = @"enable_contacts_pre_prompt";
 const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"contacts_pre_prompt_template";

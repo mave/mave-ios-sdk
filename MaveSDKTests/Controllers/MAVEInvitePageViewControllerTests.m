@@ -11,7 +11,6 @@
 #import "MaveSDK.h"
 #import "MAVEUserData.h"
 #import "MAVEInvitePageViewController.h"
-#import "MAVEHTTPManager.h"
 #import "MAVEDisplayOptionsFactory.h"
 #import "MAVEInviteMessageView.h"
 

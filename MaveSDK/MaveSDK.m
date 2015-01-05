@@ -12,7 +12,6 @@
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
 #import "MAVEDisplayOptions.h"
-#import "MAVEHTTPManager.h"
 #import "MAVERemoteConfiguration.h"
 
 @implementation MaveSDK {
