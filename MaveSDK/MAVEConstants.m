@@ -9,7 +9,7 @@
 #import "MAVEConstants.h"
 
 
-#ifdef USE_DEV_API
+#ifdef MAVE_USE_DEV_API
     NSString * const MAVEAPIBaseURL = @"http://devapi.mave.io/";
 #else
     NSString * const MAVEAPIBaseURL = @"http://api.mave.io/";

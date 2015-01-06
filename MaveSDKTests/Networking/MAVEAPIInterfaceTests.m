@@ -208,20 +208,19 @@
 }
 
 - (void)testPreFetchRemoteConfiguration {
-    NSURLRequest *req = [[NSURLRequest alloc] init];
-    NSDictionary *defaultResponse = @{@"foo": @1};
+    MAVEPendingResponseData *expectedResponse = [[MAVEPendingResponseData alloc] init];
+    NSDictionary *defaultData = @{@"foo": @1};
     
-    id mock = OCMPartialMock(self.testAPIInterface.httpStack);
-    OCMExpect([mock prepareJSONRequestWithRoute:@"/remote_configuration/ios"
-                                       methodName:@"GET"
-                                           params:nil preparationError:[OCMArg setTo:nil]])
-    .andReturn(req);
-    
-    OCMExpect([mock preFetchPreparedRequest:req defaultData:defaultResponse]);
-    
-    [self.testAPIInterface preFetchRemoteConfiguration:defaultResponse];
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock preFetchIdentifiedJSONRequestWithRoute:@"/remote_configuration/ios"
+                                                    params:nil
+                                       defaultResponseData:defaultData])
+        .andReturn(expectedResponse);
+
+    MAVEPendingResponseData *response = [self.testAPIInterface preFetchRemoteConfiguration:defaultData];
     
     OCMVerifyAll(mock);
+    XCTAssertEqualObjects(response, expectedResponse);
 }
 
 
@@ -303,6 +302,59 @@
     XCTAssertTrue(called);
     XCTAssertEqualObjects(returnedError, expectedError);
     XCTAssertNil(returnedData);
+}
+
+- (void)testPreFetchIdentifiedJSONRequest {
+    NSDictionary *defaultData = @{@"bar": @"default"};
+    NSDictionary *fakeParams = @{@"foo": @1};
+    NSString *fakeRoute = @"/blah";
+
+    NSMutableURLRequest *fakeRequest = [[NSMutableURLRequest alloc] init];
+    MAVEPendingResponseData *fakeResponseData = [[MAVEPendingResponseData alloc] init];
+
+
+    id httpStackMock = OCMPartialMock(self.testAPIInterface.httpStack);
+    id apiInterfaceMock = OCMPartialMock(self.testAPIInterface);
+
+    OCMExpect([httpStackMock prepareJSONRequestWithRoute:fakeRoute
+                                              methodName:@"GET"
+                                                  params:fakeParams preparationError:nil])
+        .andReturn(fakeRequest);
+    OCMExpect([apiInterfaceMock addCustomUserHeadersToRequest:fakeRequest]);
+    OCMExpect([httpStackMock preFetchPreparedRequest:fakeRequest
+                                         defaultData:defaultData])
+        .andReturn(fakeResponseData);
+
+    MAVEPendingResponseData *responseData =
+        [self.testAPIInterface preFetchIdentifiedJSONRequestWithRoute:fakeRoute
+                                                               params:fakeParams
+                                                  defaultResponseData:defaultData];
+    OCMVerifyAll(httpStackMock);
+    OCMVerifyAll(apiInterfaceMock);
+    XCTAssertEqualObjects(responseData, fakeResponseData);
+}
+
+- (void)testPreFetchIdentifiedJSONRequestNil {
+    // If there's a problem with params or something, prepare request could return nil
+    NSDictionary *defaultData = @{@"bar": @"default"};
+    NSString *fakeRoute = @"/route/route";
+    NSDictionary *fakeParams = @{@"foo": @1};
+
+    id httpStackMock = OCMPartialMock(self.testAPIInterface.httpStack);
+
+    OCMExpect([httpStackMock prepareJSONRequestWithRoute:fakeRoute
+                                              methodName:@"GET"
+                                                  params:fakeParams preparationError:nil])
+        .andReturn(nil);
+
+    OCMExpect([httpStackMock preFetchPreparedRequest:nil defaultData:defaultData]);
+
+
+    [self.testAPIInterface preFetchIdentifiedJSONRequestWithRoute:fakeRoute
+                                                            params:fakeParams
+                                                defaultResponseData:defaultData];
+
+    OCMVerifyAll(httpStackMock);
 }
 
 - (void)testTrackGenericUserEvent {

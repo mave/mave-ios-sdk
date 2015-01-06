@@ -73,6 +73,11 @@ extern NSString * const MAVEAPIParamInvitePageType;
                                     params:(NSDictionary *)params
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
+// Request method that returns a pending response data promise
+- (MAVEPendingResponseData *)preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
+                                                             params:(NSDictionary *)params
+                                                defaultResponseData:(NSDictionary *)data;
+
 // Send a POST request to the given event url to track the event, ignoring response.
 // If userData is not null, the user id will be included in the request data, plus any
 // additional params passed in.

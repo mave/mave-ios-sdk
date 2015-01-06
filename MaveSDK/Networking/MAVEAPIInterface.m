@@ -34,6 +34,7 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
     if (self = [super init]) {
         NSString *baseURL = [MAVEAPIBaseURL stringByAppendingString:MAVEAPIVersion];
         self.httpStack = [[MAVEHTTPStack alloc] initWithAPIBaseURL:baseURL];
+        DebugLog(@"Initialized MAVEAPIInterface on domain: %@", baseURL);
     }
     return self;
 }
@@ -127,12 +128,9 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
 
 - (MAVEPendingResponseData *)preFetchRemoteConfiguration:(NSDictionary *)defaultData {
     NSString *route = @"/remote_configuration/ios";
-    NSError *err;
-    NSMutableURLRequest *request = [self.httpStack prepareJSONRequestWithRoute:route
-                                                                    methodName:@"GET"
-                                                                        params:nil
-                                                              preparationError:&err];
-    return [self.httpStack preFetchPreparedRequest:request defaultData:defaultData];
+    return [self preFetchIdentifiedJSONRequestWithRoute:route
+                                                 params:nil
+                                    defaultResponseData:defaultData];
 }
 
 
@@ -141,6 +139,9 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
 /// Request Sending Helpers
 ///
 - (void)addCustomUserHeadersToRequest:(NSMutableURLRequest *)request {
+    if (!request) {
+        return;
+    }
     [request setValue:self.applicationID forHTTPHeaderField:@"X-Application-Id"];
     [request setValue:self.applicationDeviceID forHTTPHeaderField:@"X-App-Device-Id"];
     NSString *userAgent = [MAVEClientPropertyUtils userAgentDeviceString];
@@ -168,6 +169,22 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
     [self addCustomUserHeadersToRequest:request];
     
     [self.httpStack sendPreparedRequest:request completionBlock:completionBlock];
+}
+
+- (MAVEPendingResponseData *)preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
+                                                             params:(NSDictionary *)params
+                                                defaultResponseData:(NSDictionary *)defaultData {
+    NSMutableURLRequest *request =
+        [self.httpStack prepareJSONRequestWithRoute:relativeURL
+                                         methodName:@"GET"
+                                             params:params
+                                   preparationError:nil];
+    [self addCustomUserHeadersToRequest:request];
+//    if (request) {
+//
+//    }
+    return [self.httpStack preFetchPreparedRequest:request defaultData:defaultData];
+    return nil;
 }
 
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute
