@@ -40,14 +40,17 @@
     OCMStub([utilsMock addressBookPermissionStatus])
         .andReturn(MAVEABPermissionStatusDenied);
 
-    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+    id mock = OCMClassMock([MAVEABPermissionPromptHandler class]);
+    OCMExpect([mock alloc]).andReturn(mock);
+    OCMExpect([mock initCustom]).andReturn(mock);
 
-    id mock = OCMPartialMock(promptHandler);
     OCMExpect([mock completeAfterPermissionDenied]);
 
-    [promptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
+    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:
+        ^(NSDictionary *indexedContacts) {}];
 
     OCMVerifyAll(mock);
+    [mock stopMocking];
 }
 
 - (void)testPromptForContactsWhenPermissionGranted {
@@ -56,12 +59,13 @@
     OCMStub([utilsMock addressBookPermissionStatus])
         .andReturn(MAVEABPermissionStatusAllowed);
 
-    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+    id mock = OCMClassMock([MAVEABPermissionPromptHandler class]);
+    OCMExpect([mock alloc]).andReturn(mock);
+    OCMExpect([mock initCustom]).andReturn(mock);
 
-    id mock = OCMPartialMock(promptHandler);
     OCMExpect([mock loadAddressBookAndComplete]);
 
-    [promptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
+    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
 
     OCMVerifyAll(mock);
 }
@@ -74,24 +78,24 @@
     id utilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([utilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
 
+    id permissionPrompterMock =
+        OCMClassMock([MAVEABPermissionPromptHandler class]);
+    OCMExpect([permissionPrompterMock alloc]).andReturn(permissionPrompterMock);
+    OCMExpect([permissionPrompterMock initCustom]).andReturn(permissionPrompterMock);
+
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc]
         initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     XCTAssertTrue(remoteConfig.enableContactsPrePrompt);
 
-    MAVEABPermissionPromptHandler *permissionPrompter = [[MAVEABPermissionPromptHandler alloc] init];
-    
     // whole prompt method is wrapped in a block waiting on remote configuration
     // so we have to use mock check block to actually call the code we'll test
-    id mock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
-    OCMStub([mock initializeObjectWithTimeout:2.0 completionBlock:
+    id configBuilderMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
+    OCMStub([configBuilderMock initializeObjectWithTimeout:2.0 completionBlock:
              [OCMArg checkWithBlock:^BOOL(id obj) {
         void(^completionBlock)(id) = obj;
         completionBlock(remoteConfig);
         return YES;
     }]]);
-
-    // Mock expected behavior
-    id permissionPrompterMock = OCMPartialMock(permissionPrompter);
 
     OCMExpect([permissionPrompterMock
                showPrePromptAlertWithTitle:remoteConfig.contactsPrePromptTemplate.title
@@ -103,7 +107,7 @@
                logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView]);
 
     // Run the method under test
-    [permissionPrompter promptForContactsWithCompletionBlock:nil];
+    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:nil];
 
     OCMVerifyAll(permissionPrompterMock);
 }
@@ -112,6 +116,11 @@
     // Stub to make it look like we haven't prompted user yet
     id utilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([utilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
+
+    id permissionPrompterMock =
+    OCMClassMock([MAVEABPermissionPromptHandler class]);
+    OCMExpect([permissionPrompterMock alloc]).andReturn(permissionPrompterMock);
+    OCMExpect([permissionPrompterMock initCustom]).andReturn(permissionPrompterMock);
 
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
     remoteConfig.enableContactsPrePrompt = 0;
@@ -125,20 +134,20 @@
         return YES;
     }]]);
 
-    // Object under test, set up expectaions
-    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
-    id promptHandlerMock = OCMPartialMock(promptHandler);
-    OCMExpect([promptHandlerMock loadAddressBookAndComplete]);
-    OCMExpect([promptHandlerMock
+    MAVEABDataBlock completionBlock = ^void(NSDictionary *data){};
+
+    // set up expectaions
+    OCMExpect([permissionPrompterMock loadAddressBookAndComplete]);
+    OCMExpect([permissionPrompterMock
                logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView]);
+    OCMExpect([permissionPrompterMock setCompletionBlock:(id)completionBlock]);
+    OCMExpect([permissionPrompterMock setPrePromptTemplate:remoteConfig.contactsPrePromptTemplate]);
 
     // Code under test
-    MAVEABDataBlock completionBlock = ^void(NSDictionary *data){};
-    [promptHandler promptForContactsWithCompletionBlock:completionBlock];
 
-    OCMVerifyAll(promptHandlerMock);
-    XCTAssertEqualObjects(promptHandler.prePromptTemplate, remoteConfig.contactsPrePromptTemplate);
-    XCTAssertEqual(promptHandler.completionBlock, completionBlock);
+    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:completionBlock];
+
+    OCMVerifyAll(permissionPrompterMock);
 }
 
 - (void)testPrePromptPermissionDenied {

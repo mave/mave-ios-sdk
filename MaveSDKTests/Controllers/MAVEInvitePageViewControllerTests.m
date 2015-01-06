@@ -220,6 +220,7 @@
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:userId firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     [MaveSDK sharedInstance].userData = userData;
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+
     id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     OCMExpect([mockAPIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList]);
     

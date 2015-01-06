@@ -20,7 +20,9 @@ typedef void (^MAVEABDataBlock)(NSDictionary *indexedContacts);
 
 // This is the entry point for this class, use this method to prompt for contacts
 // after initializign the object with alloc init.
-- (void)promptForContactsWithCompletionBlock:(MAVEABDataBlock)completionBlock;
++ (void)promptForContactsWithCompletionBlock:(MAVEABDataBlock)completionBlock;
+
+- (instancetype)initCustom;
 
 // Underlying methods for different scenarios
 // Shows pre-prompt

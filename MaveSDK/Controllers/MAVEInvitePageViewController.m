@@ -170,10 +170,9 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 }
 
 - (void)determineAndSetViewBasedOnABPermissions {
-    MAVEABPermissionPromptHandler *permissionPrompter =
-        [[MAVEABPermissionPromptHandler alloc] init];
-
-    [permissionPrompter promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {
+    [MAVEABPermissionPromptHandler
+            promptForContactsWithCompletionBlock:
+            ^(NSDictionary *indexedContacts) {
         // Permission denied
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{

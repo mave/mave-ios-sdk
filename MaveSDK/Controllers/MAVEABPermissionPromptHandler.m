@@ -17,22 +17,28 @@
 
 @implementation MAVEABPermissionPromptHandler
 
+- (instancetype)initCustom {
+    // Override init method so we can stub it in tests
+    return [super init];
+}
+
 // Prompt for contacts permissions. Based on remote configuration settings, we may show a
 // pre-prompt UIAlertView (i.e. double prompt for contacts), and if so the copy can come
 // from remote configuration as well.
-- (void)promptForContactsWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
-    self.completionBlock = completionBlock;
++ (void)promptForContactsWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
+    MAVEABPermissionPromptHandler *this = [[[self class] alloc] init];
+    this.completionBlock = completionBlock;
     NSString *abStatus = [MAVEABUtils addressBookPermissionStatus];
 
     // If permission already denied, abort early
     if ([abStatus isEqualToString:MAVEABPermissionStatusDenied]) {
-        [self completeAfterPermissionDenied];
+        [this completeAfterPermissionDenied];
         return;
     }
 
     // If permission already granted, just load the address book
     if ([abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
-        [self loadAddressBookAndComplete];
+        [this loadAddressBookAndComplete];
         return;
     }
 
@@ -41,23 +47,23 @@
             initializeObjectWithTimeout:2.0 completionBlock:^(id obj) {
 
         MAVERemoteConfiguration *remoteConfig = obj;
-        self.prePromptTemplate = remoteConfig.contactsPrePromptTemplate;
+        this.prePromptTemplate = remoteConfig.contactsPrePromptTemplate;
 
         if (remoteConfig.enableContactsPrePrompt) {
             // purposely create retain cycle so it won't get dealloc'ed until alert view
             // is displayed then dismissed
-            self.retainSelf = self;
+            this.retainSelf = self;
 
-            [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView];
+            [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView];
             
-            [self showPrePromptAlertWithTitle:self.prePromptTemplate.title
-                                      message:self.prePromptTemplate.message
-                             cancelButtonCopy:self.prePromptTemplate.cancelButtonCopy
-                             acceptbuttonCopy:self.prePromptTemplate.acceptButtonCopy];
+            [this showPrePromptAlertWithTitle:this.prePromptTemplate.title
+                                      message:this.prePromptTemplate.message
+                             cancelButtonCopy:this.prePromptTemplate.cancelButtonCopy
+                             acceptbuttonCopy:this.prePromptTemplate.acceptButtonCopy];
 
         } else {
-            [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView];
-            [self loadAddressBookAndComplete];
+            [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView];
+            [this loadAddressBookAndComplete];
         }
     }];
 }
