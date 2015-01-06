@@ -180,11 +180,7 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
                                              params:params
                                    preparationError:nil];
     [self addCustomUserHeadersToRequest:request];
-//    if (request) {
-//
-//    }
     return [self.httpStack preFetchPreparedRequest:request defaultData:defaultData];
-    return nil;
 }
 
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute

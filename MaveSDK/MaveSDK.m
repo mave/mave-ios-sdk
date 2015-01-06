@@ -28,11 +28,6 @@
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
         _APIInterface = [[MAVEAPIInterface alloc] init];
-
-        NSDictionary *remoteConfigDefault = [MAVERemoteConfiguration defaultJSONData];
-        _remoteConfigurationBuilder = [[MAVEPendingResponseObjectBuilder alloc]
-            initWithClass:[MAVERemoteConfiguration class]
-            pendingResponseData: [_APIInterface preFetchRemoteConfiguration:remoteConfigDefault]];
     }
     return self;
 }
@@ -43,6 +38,7 @@ static dispatch_once_t sharedInstanceonceToken;
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
     dispatch_once(&sharedInstanceonceToken, ^{
         sharedInstance = [[self alloc] initWithAppId:applicationID];
+        [sharedInstance preFetchNetworkRequests];
         [sharedInstance trackAppOpen];
     });
 }
@@ -58,6 +54,15 @@ static dispatch_once_t sharedInstanceonceToken;
         DebugLog(@"Error: didn't setup shared instance with app id");
     }
     return sharedInstance;
+}
+
+- (void)preFetchNetworkRequests {
+    // for any needed data, remote configuration, etc., start fetching as early as possible
+    NSDictionary *remoteConfigDefault = [MAVERemoteConfiguration defaultJSONData];
+    self.remoteConfigurationBuilder = [[MAVEPendingResponseObjectBuilder alloc]
+        initWithClass:[MAVERemoteConfiguration class]
+        pendingResponseData:
+            [self.APIInterface preFetchRemoteConfiguration:remoteConfigDefault]];
 }
 
 - (NSError *)validateUserSetup {

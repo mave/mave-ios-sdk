@@ -35,11 +35,12 @@
 
 - (void)testSetupSharedInstance {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk1 = [MaveSDK sharedInstance];
-    XCTAssertEqualObjects(gk1.appId, @"foo123");
-    XCTAssertNotNil(gk1.displayOptions);
-    XCTAssertNil(gk1.defaultSMSMessageText);
-    XCTAssertNotNil(gk1.appDeviceID);
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    XCTAssertEqualObjects(mave.appId, @"foo123");
+    XCTAssertNotNil(mave.displayOptions);
+    XCTAssertNil(mave.defaultSMSMessageText);
+    XCTAssertNotNil(mave.appDeviceID);
+    XCTAssertNotNil(mave.remoteConfigurationBuilder);
 }
 
 
