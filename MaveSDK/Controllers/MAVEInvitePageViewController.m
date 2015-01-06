@@ -12,9 +12,16 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEInviteExplanationView.h"
 #import "MAVEABTableViewController.h"
-#import "MAVEABCollection.h"
+#import "MAVEABUtils.h"
+#import "MAVEABPermissionPromptHandler.h"
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
+
+NSString * const MAVEInvitePageTypeContactList = @"contact_list";
+NSString * const MAVEInvitePageTypeNoneNeedContactsPermission = @"none_need_contacts_permission";
+NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
+NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
+
 
 @interface MAVEInvitePageViewController ()
 
@@ -50,12 +57,6 @@
                       selector:@selector(deviceDidRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
-    
-    // Register the viewed invite page event with our API
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk.HTTPManager trackInvitePageOpenRequest:gk.userData];
-    
-    // Now it's no longer the first display
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -92,7 +93,9 @@
 
     // Call dismissal block
     InvitePageDismissalBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
-    dismissalBlock(self, numberOfInvitesSent);
+    if (dismissalBlock) {
+        dismissalBlock(self, numberOfInvitesSent);
+    }
 }
 
 - (void)dismissAfterCancel {
@@ -167,42 +170,33 @@
 }
 
 - (void)determineAndSetViewBasedOnABPermissions {
-    // If address book permission already granted, load contacts view right now
-    ABAuthorizationStatus addrBookStatus = ABAddressBookGetAuthorizationStatus();
-    if (addrBookStatus == kABAuthorizationStatusAuthorized) {
+    [MAVEABPermissionPromptHandler
+            promptForContactsWithCompletionBlock:
+            ^(NSDictionary *indexedContacts) {
+        // Permission denied
+        if ([indexedContacts count] == 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.view = [self createNoAddressBookPermissionView];
+            });
+            [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
+        // Permission granted
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self layoutInvitePageViewAndSubviews];
+                [self.ABTableViewController updateTableData:indexedContacts];
+            });
+            [[MaveSDK sharedInstance].APIInterface
+                trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
+        }
+    }];
+
+    // If user has already said no to permissions, we don't want to flash the contacts
+    // page before switching to the share page, so check for that here.
+    if ([MAVEABUtils addressBookPermissionStatus] == MAVEABPermissionStatusDenied) {
+        self.view = [self createNoAddressBookPermissionView];
+    } else {
         self.view = [self createAddressBookInviteView];
         [self layoutInvitePageViewAndSubviews];
-        [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.ABTableViewController updateTableData:indexedData];
-            });
-         }];
-
-    // If status not determined, prompt for permission then load data
-    // If permission not granted, swap empty for for permission denied view
-    } else if (addrBookStatus == kABAuthorizationStatusNotDetermined) {
-        self.view = [self createEmptyFallbackView];
-        [MAVEABCollection createAndLoadAddressBookWithCompletionBlock:^(NSDictionary *indexedData) {
-            if ([indexedData count] > 0) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.view = [self createAddressBookInviteView];
-                    [self layoutInvitePageViewAndSubviews];
-                    [self.ABTableViewController updateTableData:indexedData];
-                });
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.view = [[MAVENoAddressBookPermissionView alloc] init];
-                });
-            }
-         }];
-
-    // If status already denied, leave blank page for now
-    } else if (addrBookStatus == kABAuthorizationStatusDenied ||
-               addrBookStatus == kABAuthorizationStatusRestricted) {
-        self.view = [self createEmptyFallbackView];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.view = [[MAVENoAddressBookPermissionView alloc] init];
-        });
     }
 }
 
@@ -210,6 +204,10 @@
     UIView *view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     [view setBackgroundColor:[UIColor whiteColor]];
     return view;
+}
+
+- (UIView *)createNoAddressBookPermissionView {
+    return [[MAVENoAddressBookPermissionView alloc] init];
 }
 
 - (UIView *)createAddressBookInviteView {
@@ -325,10 +323,10 @@
     }
     
     MaveSDK *mave = [MaveSDK sharedInstance];
-    MAVEHTTPManager *httpManager = mave.HTTPManager;
-    [httpManager sendInvitesWithPersons:phones
-                                message:message
-                                 userId:mave.userData.userID
+    MAVEAPIInterface *apiInterface = mave.APIInterface;
+    [apiInterface sendInvitesWithPersons:phones
+                                 message:message
+                                  userId:mave.userData.userID
                inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
                         completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
@@ -386,6 +384,9 @@
         [self dismissSelf:numberShares];
     };
     [self presentViewController:activityVC animated:YES completion:nil];
+
+    // Tracking event that share sheet was presented
+    [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNativeShareSheet];
 }
 
 @end

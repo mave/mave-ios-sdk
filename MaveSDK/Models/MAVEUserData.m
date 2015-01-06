@@ -8,8 +8,6 @@
 
 #import "MAVEUserData.h"
 
-#define MAVEUserDataKeyUserID @"user_id"
-#define MAVEUserDataKeyUserID @"user_id"
 #define MAVEUserDataKeyFirstName @"first_name"
 #define MAVEUserDataKeyLastName @"last_name"
 #define MAVEUserDataKeyEmail @"email"

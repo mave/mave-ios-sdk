@@ -12,7 +12,7 @@
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
 #import "MAVEDisplayOptions.h"
-#import "MAVEHTTPManager.h"
+#import "MAVERemoteConfiguration.h"
 
 @implementation MaveSDK {
     // Controller
@@ -27,8 +27,12 @@
         _appId = appId;
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
-        _HTTPManager = [[MAVEHTTPManager alloc] initWithApplicationID:self.appId
-                                                  applicationDeviceID:self.appDeviceID];
+        _APIInterface = [[MAVEAPIInterface alloc] init];
+
+        NSDictionary *remoteConfigDefault = [MAVERemoteConfiguration defaultJSONData];
+        _remoteConfigurationBuilder = [[MAVEPendingResponseObjectBuilder alloc]
+            initWithClass:[MAVERemoteConfiguration class]
+            pendingResponseData: [_APIInterface preFetchRemoteConfiguration:remoteConfigDefault]];
     }
     return self;
 }
@@ -102,29 +106,29 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 //
-// Methods for consumer get get data from our sdk
+// Methods to get data from our sdk
 //
 - (void)getReferringUser:(void (^)(MAVEUserData *))referringUserHandler {
-    [self.HTTPManager getReferringUser:referringUserHandler];
+    [self.APIInterface getReferringUser:referringUserHandler];
 }
 
 //
 // Funnel events that need to be called explicitly by consumer
 //
 - (void)trackAppOpen {
-    [self.HTTPManager trackAppOpenRequest];
+    [self.APIInterface trackAppOpen];
 }
 
 - (void)identifyUser:(MAVEUserData *)userData {
     self.userData = userData;
     NSError *validationError = [self validateUserSetup];
     if (validationError == nil) {
-        [self.HTTPManager identifyUserRequest:userData];
+        [self.APIInterface identifyUser];
     }
 }
 
 - (void)trackSignup {
-    [self.HTTPManager trackSignupRequest:self.userData];
+    [self.APIInterface trackSignup];
 }
 
 //
@@ -144,18 +148,5 @@ static dispatch_once_t sharedInstanceonceToken;
     }
     return returnViewController;
 }
-
-//- (UIViewController *)invitePageViewControllerWithDelegate:(id<MAVEInvitePageDelegate>)delegate
-//                                     defaultSMSMessageText:(NSString *)defaultSMSMessageText
-//                                                     error:(NSError **)error {
-//    UIViewController *returnVC = nil;
-//    *error = [self validateSetup];
-//    if (!*error) {
-//        self.defaultSMSMessageText = defaultSMSMessageText;
-//        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] initWithDelegate:delegate];
-//        returnVC = [[UINavigationController alloc] initWithRootViewController:inviteController];
-//    }
-//    return returnVC;
-//}
 
 @end

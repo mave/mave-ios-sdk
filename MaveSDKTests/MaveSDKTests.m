@@ -13,7 +13,7 @@
 #import "MaveSDK_Internal.h"
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
-#import "MAVEHTTPManager.h"
+#import "MAVEAPIInterface.h"
 
 @interface MaveSDKTests : XCTestCase
 
@@ -66,36 +66,30 @@
 }
 
 - (void)testSetupSharedInstanceTriggersAppOpenEvent {
-    // Swizzle methods to check that calling our setup shared instance method also triggers
-    // a track app launch event
-    Method ogMethod = class_getInstanceMethod([MAVEHTTPManager class], @selector(trackAppOpenRequest));
-    Method mockMethod = class_getInstanceMethod([self class], @selector(fakeTrackAppOpenRequest));
-    method_exchangeImplementations(ogMethod, mockMethod);
+    id mock = OCMClassMock([MaveSDK class]);
+    OCMStub([mock alloc]).andReturn(mock);
+    OCMStub([mock initWithAppId:[OCMArg any]]).andReturn(mock);
+    
+    OCMExpect([mock trackAppOpen]);
     
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    XCTAssertEqual(_didCallFakeTrackAppOpenRequest, YES);
     
-    method_exchangeImplementations(mockMethod, ogMethod);
-
-}
-
-static BOOL _didCallFakeTrackAppOpenRequest = NO;
-- (void)fakeTrackAppOpenRequest {
-    _didCallFakeTrackAppOpenRequest = YES;
+    OCMVerifyAll(mock);
+    // explicitly stop mocking b/c it's a singleton and won't get cleaned up
+    [mock stopMocking];
 }
 
 - (void)testGetReferringUser {
     // Just ensure that the method on mock manager gets called with our block
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *mave = [MaveSDK sharedInstance];
-    id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
-    mave.HTTPManager = mockManager;
+    id mockAPIInterface = OCMPartialMock(mave.APIInterface);
     void (^emptyReferringUserBlock)(MAVEUserData *userData) = ^void(MAVEUserData *userData) {};
-    [[mockManager expect] getReferringUser:emptyReferringUserBlock];
+    OCMExpect([mockAPIInterface getReferringUser:emptyReferringUserBlock]);
     
     [mave getReferringUser:emptyReferringUserBlock];
     
-    [mockManager verify];
+    OCMVerifyAll(mockAPIInterface);
 }
 
 - (void)testIdentifyUser {
@@ -104,13 +98,13 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     MaveSDK *gk = [MaveSDK sharedInstance];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
-    id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
-    gk.HTTPManager = mockManager;
-    [[mockManager expect] identifyUserRequest:userData];
+    id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
+    gk.APIInterface = mockAPIInterface;
+    OCMExpect([mockAPIInterface identifyUser]);
 
     [gk identifyUser:userData];
 
-    [mockManager verify];
+    OCMVerifyAll(mockAPIInterface);
     XCTAssertEqualObjects(gk.userData, userData);
 }
 
@@ -118,14 +112,14 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     userData.userID = @"1";  // no first name
-    id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
+    id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
     MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.HTTPManager = mockManager;
-    [[mockManager reject] identifyUserRequest:userData];
+    gk.APIInterface = mockAPIInterface;
+    [[mockAPIInterface reject] identifyUser];
     
     [gk identifyUser:userData];
     
-    [mockManager verify];
+    [mockAPIInterface verify];
     XCTAssertEqualObjects(gk.userData, userData);
 }
 
@@ -247,25 +241,25 @@ static BOOL _didCallFakeTrackAppOpenRequest = NO;
 
 - (void)testTrackAppOpen {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    id httpManagerMock = [OCMockObject partialMockForObject: [MaveSDK sharedInstance].HTTPManager];
-    [[httpManagerMock expect] trackAppOpenRequest];
-    [gk trackAppOpen];
-    [httpManagerMock verify];
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([mockAPIInterface trackAppOpen]);
+    [mave trackAppOpen];
+    OCMVerifyAll(mockAPIInterface);
 }
 
 - (void)testTrackSignup {
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     // Verify the API request is sent
-    id mockManager = [OCMockObject mockForClass:[MAVEHTTPManager class]];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.HTTPManager = mockManager;
-    gk.userData = userData;
-    [[mockManager expect] trackSignupRequest:userData];
+    id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.APIInterface = mockAPIInterface;
+    mave.userData = userData;
+    OCMExpect([mockAPIInterface trackSignup]);
     
-    [gk trackSignup];
+    [mave trackSignup];
 
-    [mockManager verify];
+    OCMVerifyAll(mockAPIInterface);
 }
 
 @end

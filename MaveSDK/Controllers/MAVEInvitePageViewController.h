@@ -10,9 +10,13 @@
 #import "MAVEABTableViewController.h"
 #import "MAVEInviteExplanationView.h"
 #import "MAVEInviteMessageContainerView.h"
-#import "MAVEHTTPManager.h"
 
 typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, NSUInteger numberOfInvitesSent);
+
+extern NSString * const MAVEInvitePageTypeContactList;
+extern NSString * const MAVEInvitePageTypeNoneNeedContactsPermission;
+extern NSString * const MAVEInvitePageTypeCustomShare;
+extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 
 
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
@@ -28,6 +32,7 @@ typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, NSUIn
 
 // Setup self and children
 - (UIView *)createAddressBookInviteView;
+- (UIView *)createNoAddressBookPermissionView;
 - (UIView *)createEmptyFallbackView;
 - (void)setupNavigationBar;
 - (BOOL)shouldDisplayInviteMessageView;

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#define MAVEUserDataKeyUserID @"user_id"
 
 @interface MAVEUserData : NSObject
 
