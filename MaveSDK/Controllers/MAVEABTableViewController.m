@@ -91,6 +91,7 @@
     self.searchTableView = [[UITableView alloc] init];
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
+    self.searchTableView.showsVerticalScrollIndicator = NO;
     self.searchTableView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
     self.searchTableView.separatorColor = displayOptions.contactSeparatorColor;
     self.searchTableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
@@ -204,9 +205,8 @@
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
-    if (tableView == self.tableView) {
-
-    } else {
+    if (tableView == self.searchTableView) {
+        // For some reason, stuff gets shown in front of the searchTableView periodically
         [self.tableView bringSubviewToFront:self.searchBackgroundButton];
         [self.tableView bringSubviewToFront:self.searchTableView];
     }
@@ -216,11 +216,19 @@
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return tableSections;
+    if (tableView == self.tableView) {
+        return tableSections;
+    }
+
+    return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    return index;
+    if (tableView == self.tableView && !self.isSearching) {
+        return index;
+    }
+
+    return -1;
 }
 
 // Scroll delegate methods
@@ -326,7 +334,7 @@
     if (!_searchBackgroundButton) {
         _searchBackgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _searchBackgroundButton.frame = self.tableView.frame;
-        _searchBackgroundButton.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
+        _searchBackgroundButton.backgroundColor = [UIColor colorWithWhite:0 alpha:0.9];
         _searchBackgroundButton.autoresizingMask = (UIViewAutoresizingFlexibleHeight |
                                                     UIViewAutoresizingFlexibleWidth);
         [_searchBackgroundButton addTarget:self.searchBar action:@selector(resignFirstResponder)
@@ -337,6 +345,8 @@
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    self.isSearching = YES;
+
     if (searchBar == self.inviteTableHeaderView.searchBar) {
         self.inviteTableHeaderView.searchBar.hidden = YES;
         self.searchBar.hidden = NO;
@@ -356,7 +366,6 @@
                                 animated:YES];
     }
 
-    self.isSearching = YES;
     [self.searchBar becomeFirstResponder];
 }
 
