@@ -354,6 +354,7 @@
         return NO;
     }
 
+    [self.searchBar setShowsCancelButton:YES animated:YES];
     [self addSearchBackgroundButton];
     return YES;
 }
@@ -403,10 +404,17 @@
     [self.searchTableView removeFromSuperview];
 }
 
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [self removeSearchTableView];
+    [self.searchBar resignFirstResponder];
+}
+
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
     self.searchBar.text = @"";
     [self searchContacts:self.searchBar.text];
+
     self.isSearching = NO;
+    [self.searchBar setShowsCancelButton:NO animated:YES];
     self.tableView.scrollEnabled = YES;
 
     [self.tableView bringSubviewToFront:self.searchBar];
