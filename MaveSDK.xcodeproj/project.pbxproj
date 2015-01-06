@@ -95,10 +95,6 @@
 		0C141D2F1A0BC1A80036202A /* MAVEUserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEUserData.m; sourceTree = "<group>"; };
 		0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEUserDataTests.m; sourceTree = "<group>"; };
 		0C141D331A0BD6920036202A /* MaveSDK_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MaveSDK_Internal.h; sourceTree = "<group>"; };
-		0C1F19E91A3E278700B2D482 /* MAVEMerkleTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEMerkleTree.h; sourceTree = "<group>"; };
-		0C1F19EA1A3E278700B2D482 /* MAVEMerkleTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEMerkleTree.m; sourceTree = "<group>"; };
-		0C1F19EE1A3E2AA900B2D482 /* MAVEMerkleTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEMerkleTreeNode.h; sourceTree = "<group>"; };
-		0C1F19EF1A3E2AA900B2D482 /* MAVEMerkleTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEMerkleTreeNode.m; sourceTree = "<group>"; };
 		0C1F19FA1A432AA500B2D482 /* MAVEABPermissionPromptHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPermissionPromptHandler.h; sourceTree = "<group>"; };
 		0C1F19FB1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPermissionPromptHandler.m; sourceTree = "<group>"; };
 		0C1F1A001A435EAE00B2D482 /* MAVERemoteConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfiguration.h; sourceTree = "<group>"; };
@@ -218,18 +214,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0C1F19E81A3E226F00B2D482 /* MerkleTree */ = {
-			isa = PBXGroup;
-			children = (
-				0C1F19E91A3E278700B2D482 /* MAVEMerkleTree.h */,
-				0C1F19EA1A3E278700B2D482 /* MAVEMerkleTree.m */,
-				0C1F19EE1A3E2AA900B2D482 /* MAVEMerkleTreeNode.h */,
-				0C1F19EF1A3E2AA900B2D482 /* MAVEMerkleTreeNode.m */,
-			);
-			name = MerkleTree;
-			path = "/Users/dcosson/code/mave/ios/mave-ios-sdk/MaveSDK/Models/MerkleTree";
-			sourceTree = "<absolute>";
-		};
 		0C2D73151A1FCB480059CA54 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -439,7 +423,6 @@
 				0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */,
 				0C1F1A031A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplate.h */,
 				0C1F1A041A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplate.m */,
-				0C1F19E81A3E226F00B2D482 /* MerkleTree */,
 			);
 			path = Models;
 			sourceTree = "<group>";
