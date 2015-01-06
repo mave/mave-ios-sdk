@@ -176,7 +176,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         // Permission denied
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.view = [[MAVENoAddressBookPermissionView alloc] init];
+                self.view = [self createNoAddressBookPermissionView];
             });
             [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
         // Permission granted
@@ -193,7 +193,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     // If user has already said no to permissions, we don't want to flash the contacts
     // page before switching to the share page, so check for that here.
     if ([MAVEABUtils addressBookPermissionStatus] == MAVEABPermissionStatusDenied) {
-        self.view = [[MAVENoAddressBookPermissionView alloc] init];
+        self.view = [self createNoAddressBookPermissionView];
     } else {
         self.view = [self createAddressBookInviteView];
         [self layoutInvitePageViewAndSubviews];
@@ -204,6 +204,10 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     UIView *view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     [view setBackgroundColor:[UIColor whiteColor]];
     return view;
+}
+
+- (UIView *)createNoAddressBookPermissionView {
+    return [[MAVENoAddressBookPermissionView alloc] init];
 }
 
 - (UIView *)createAddressBookInviteView {

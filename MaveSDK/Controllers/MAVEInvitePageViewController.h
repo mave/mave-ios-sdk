@@ -32,6 +32,7 @@ extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 
 // Setup self and children
 - (UIView *)createAddressBookInviteView;
+- (UIView *)createNoAddressBookPermissionView;
 - (UIView *)createEmptyFallbackView;
 - (void)setupNavigationBar;
 - (BOOL)shouldDisplayInviteMessageView;
