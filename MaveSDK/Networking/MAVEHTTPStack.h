@@ -10,7 +10,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVEPendingResponseData.h"
 
 typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
 
@@ -30,8 +29,6 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
                                     preparationError:(NSError **)preparationError;
 - (void)sendPreparedRequest:(NSURLRequest *)request
             completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
-- (MAVEPendingResponseData *)preFetchPreparedRequest:(NSURLRequest *)request
-                                         defaultData:(NSDictionary *)defaultData;
 - (void)handleJSONResponseWithData:(NSData *)data
                           response:(NSURLResponse *)response
                              error:(NSError *)error

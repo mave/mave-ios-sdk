@@ -8,7 +8,6 @@
 
 #import "MAVEHTTPStack.h"
 #import "MAVEConstants.h"
-#import "MAVEPendingResponseData.h"
 
 @implementation MAVEHTTPStack
 
@@ -152,25 +151,6 @@
                          completionBlock:completionBlock];
     }];
     [task resume];
-}
-
-- (MAVEPendingResponseData *)preFetchPreparedRequest:(NSURLRequest *)request
-                                         defaultData:(NSDictionary *)defaultData {
-    MAVEPendingResponseData *resp = [[MAVEPendingResponseData alloc] initWithDefaultData:defaultData];
-    if (!request) {
-        [resp doNotSetResponseData];
-    }
-    [self sendPreparedRequest:request
-              completionBlock:^(NSError *error, NSDictionary *responseData) {
-        if (error) {
-            [resp doNotSetResponseData];
-        } else if ([responseData count] == 0) {
-            [resp doNotSetResponseData];
-        } else {
-            [resp setResponseData:responseData];
-        }
-    }];
-    return resp;
 }
 
 ///

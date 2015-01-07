@@ -126,13 +126,6 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
                              }];
 }
 
-- (MAVEPendingResponseData *)preFetchRemoteConfiguration:(NSDictionary *)defaultData {
-    NSString *route = @"/remote_configuration/ios";
-    return [self preFetchIdentifiedJSONRequestWithRoute:route
-                                                 params:nil
-                                    defaultResponseData:defaultData];
-}
-
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
     NSString *route = @"/remote_configuration/ios";
     [self sendIdentifiedJSONRequestWithRoute:route
@@ -177,18 +170,6 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
     [self addCustomUserHeadersToRequest:request];
     
     [self.httpStack sendPreparedRequest:request completionBlock:completionBlock];
-}
-
-- (MAVEPendingResponseData *)preFetchIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
-                                                             params:(NSDictionary *)params
-                                                defaultResponseData:(NSDictionary *)defaultData {
-    NSMutableURLRequest *request =
-        [self.httpStack prepareJSONRequestWithRoute:relativeURL
-                                         methodName:@"GET"
-                                             params:params
-                                   preparationError:nil];
-    [self addCustomUserHeadersToRequest:request];
-    return [self.httpStack preFetchPreparedRequest:request defaultData:defaultData];
 }
 
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute

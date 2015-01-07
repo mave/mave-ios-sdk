@@ -46,51 +46,11 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"contacts_pre_pr
 }
 
 + (NSDictionary *)defaultJSONData {
-    NSDictionary *data = [self loadJSONDataFromUserDefaults];
-    if (!data) {
-        data = [self defaultDefaultJSONData];
-    }
-    return data;
-}
-
-+ (NSDictionary *)defaultDefaultJSONData {
     return @{
-        MAVERemoteConfigKeyEnableContactsPrePrompt: @YES,
-        MAVERemoteConfigKeyContactsPrePromptTemplate:
-            [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData],
-    };
-}
-
-+ (NSString *)userDefaultsKey {
-    return @"MAVEUserDefaultsKeyRemoteConfiguration";
-}
-
-+ (void)saveJSONDataToUserDefaults:(NSDictionary *)data {
-    // use try/catch b/c we can have an error if data is not a property list, and
-    // probably if disk is full and all the other usual suspects when doing I/O
-    @try {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setObject:data
-                         forKey:[self userDefaultsKey]];
-        [userDefaults synchronize];
-    }
-    @catch (NSException *exception) {
-        DebugLog(@"Error saving data!");
-    }
-}
-
-+ (NSDictionary *)loadJSONDataFromUserDefaults {
-    NSDictionary *data;
-    @try {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        data = [userDefaults dictionaryForKey:[self userDefaultsKey]];
-    }
-    @catch (NSException *exception) {
-        data = nil;
-    }
-    @finally {
-        return data;
-    }
+             MAVERemoteConfigKeyEnableContactsPrePrompt: @YES,
+             MAVERemoteConfigKeyContactsPrePromptTemplate:
+                 [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData],
+             };
 }
 
 @end
