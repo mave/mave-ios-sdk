@@ -113,15 +113,15 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     userData.userID = @"1";  // no first name
-    id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.APIInterface = mockAPIInterface;
+    id mockAPIInterface = OCMClassMock([MAVEAPIInterface class]);
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.APIInterface = mockAPIInterface;
     [[mockAPIInterface reject] identifyUser];
     
-    [gk identifyUser:userData];
+    [mave identifyUser:userData];
     
-    [mockAPIInterface verify];
-    XCTAssertEqualObjects(gk.userData, userData);
+    OCMVerifyAll(mockAPIInterface);
+    XCTAssertEqualObjects(mave.userData, userData);
 }
 
 - (void)testIsSetupOkFailsWithNoApplicationID {

@@ -207,6 +207,18 @@
     XCTAssertNil(userData);
 }
 
+- (void)testGetRemoteConfiguration {
+    MAVEHTTPCompletionBlock myBlock = ^(NSError *error, NSDictionary *data){};
+
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/remote_configuration/ios"
+                                            methodName:@"GET"
+                                                params:nil
+                                       completionBlock:myBlock];
+    [self.testAPIInterface getRemoteConfigurationWithCompletionBlock:myBlock]);
+    OCMVerifyAll(mock);
+}
+
 - (void)testPreFetchRemoteConfiguration {
     MAVEPendingResponseData *expectedResponse = [[MAVEPendingResponseData alloc] init];
     NSDictionary *defaultData = @{@"foo": @1};

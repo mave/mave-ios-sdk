@@ -90,7 +90,7 @@
     // whole prompt method is wrapped in a block waiting on remote configuration
     // so we have to use mock check block to actually call the code we'll test
     id configBuilderMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
-    OCMStub([configBuilderMock initializeObjectWithTimeout:2.0 completionBlock:
+    OCMStub([configBuilderMock createObjectWithTimeout:2.0 completionBlock:
              [OCMArg checkWithBlock:^BOOL(id obj) {
         void(^completionBlock)(id) = obj;
         completionBlock(remoteConfig);
@@ -127,7 +127,7 @@
 
     // Since method under test is in a block, this wrapper calls the block to test the code
     id buildConfigMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
-    OCMStub([buildConfigMock initializeObjectWithTimeout:2.0 completionBlock:
+    OCMStub([buildConfigMock createObjectWithTimeout:2.0 completionBlock:
              [OCMArg checkWithBlock:^BOOL(id obj) {
         void(^completionBlock)(id) = obj;
         completionBlock(remoteConfig);

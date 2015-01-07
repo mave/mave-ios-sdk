@@ -12,6 +12,7 @@
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
 #import "MAVEDisplayOptions.h"
+#import "MAVERemoteConfigurator.h"
 #import "MAVERemoteConfiguration.h"
 
 @implementation MaveSDK {
@@ -38,8 +39,9 @@ static dispatch_once_t sharedInstanceonceToken;
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
     dispatch_once(&sharedInstanceonceToken, ^{
         sharedInstance = [[self alloc] initWithAppId:applicationID];
-        [sharedInstance preFetchNetworkRequests];
         [sharedInstance trackAppOpen];
+
+        sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteConfigurationBuilder];
     });
 }
 
@@ -54,15 +56,6 @@ static dispatch_once_t sharedInstanceonceToken;
         DebugLog(@"Error: didn't setup shared instance with app id");
     }
     return sharedInstance;
-}
-
-- (void)preFetchNetworkRequests {
-    // for any needed data, remote configuration, etc., start fetching as early as possible
-    NSDictionary *remoteConfigDefault = [MAVERemoteConfiguration defaultJSONData];
-    self.remoteConfigurationBuilder = [[MAVEPendingResponseObjectBuilder alloc]
-        initWithClass:[MAVERemoteConfiguration class]
-        pendingResponseData:
-            [self.APIInterface preFetchRemoteConfiguration:remoteConfigDefault]];
 }
 
 - (NSError *)validateUserSetup {

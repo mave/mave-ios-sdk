@@ -43,7 +43,8 @@
 - (void)setUp {
     [super setUp];
     self.userDefaultsKeyForTests = @"MAVETESTSRemoteConfiguratorTestsKey";
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    // in case anyone forgot to cleanup
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:self.userDefaultsKeyForTests];
 }
 
 - (void)tearDown {
@@ -103,7 +104,7 @@
     MAVERemoteConfigurator *configurator = [[MAVERemoteConfigurator alloc]
         initWithClassToCreate:[MAVERemoteConfiguratorDemo class]
         preFetchBlock:^(MAVEPromiseWithDefaultDictValues *promise) {
-            [promise reject];
+            [promise rejectPromise];
         } userDefaultsPersistanceKey:self.userDefaultsKeyForTests
         defaultData:defaultData
         preferLocallySavedData:NO];
@@ -137,7 +138,7 @@
     MAVERemoteConfigurator *configurator = [[MAVERemoteConfigurator alloc]
         initWithClassToCreate:[MAVERemoteConfiguratorDemo class]
         preFetchBlock:^(MAVEPromiseWithDefaultDictValues *promise) {
-            [promise reject];
+            [promise rejectPromise];
         } userDefaultsPersistanceKey:self.userDefaultsKeyForTests
         defaultData:defaultData
         preferLocallySavedData:NO];

@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, MAVEPromiseStatus) {
 - (NSValue *)defaultValue;
 - (void)setDefaultValue:(NSValue *)defaultValue;
 
-- (void)reject;
+- (void)rejectPromise;
 
 // Method to read data from the timeout
 // To return immediately use timeout 0

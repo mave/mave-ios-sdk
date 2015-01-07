@@ -40,7 +40,7 @@
     dispatch_semaphore_signal(self.gcd_semaphore);
 }
 
-- (void)reject {
+- (void)rejectPromise {
     _status = MAVEPromiseStatusRejected;
     dispatch_semaphore_signal(self.gcd_semaphore);
 }

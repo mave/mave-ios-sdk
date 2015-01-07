@@ -12,8 +12,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MAVERemoteConfigurator.h"
 #import "MAVEPendingResponseObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
+
+extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 
 
 @interface MAVERemoteConfiguration : NSObject<MAVEDictionaryInitializable>
@@ -21,6 +24,7 @@
 @property (nonatomic) NSNumber *enableContactsPrePrompt;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePromptTemplate *contactsPrePromptTemplate;
 
++ (MAVERemoteConfigurator *)remoteConfigurationBuilder;
 // data to use if we can't load configuration from server.
 // The last correct response we got will have been saved so this method should
 // return that, but on the first app open it returns a hard-coded default

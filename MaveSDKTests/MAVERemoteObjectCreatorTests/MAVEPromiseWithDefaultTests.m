@@ -57,7 +57,7 @@
     NSValue *defaultValue = (NSValue *)@"foo";
     MAVEPromiseWithDefault *promise = [[MAVEPromiseWithDefault alloc] initWithDefaultValue:defaultValue];
 
-    [promise reject];
+    [promise rejectPromise];
     XCTAssertEqualObjects(promise.fulfilledValue, nil);
     XCTAssertEqualObjects(promise.defaultValue, defaultValue);
     XCTAssertEqual(promise.status, MAVEPromiseStatusRejected);

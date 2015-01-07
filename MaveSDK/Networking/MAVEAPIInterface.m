@@ -133,6 +133,14 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
                                     defaultResponseData:defaultData];
 }
 
+- (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
+    NSString *route = @"/remote_configuration/ios";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"GET"
+                                      params:nil
+                             completionBlock:block];
+}
+
 
 
 ///

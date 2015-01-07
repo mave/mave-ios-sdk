@@ -59,6 +59,7 @@ extern NSString * const MAVEAPIParamInvitePageType;
 /// GET requests
 ///
 - (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
+- (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 - (MAVEPendingResponseData *)preFetchRemoteConfiguration:(NSDictionary *)defaultData;
 
 ///

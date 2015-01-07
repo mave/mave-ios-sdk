@@ -25,7 +25,7 @@
 
 // Initializing the object builder pre-fetches the request with which to build the object
 - (instancetype)initWithClassToCreate:(Class<MAVEDictionaryInitializable>)classToCreate
-                        preFetchBlock:(void(^)(MAVEPromiseWithDefaultDictValues *))preFetchBlock
+                        preFetchBlock:(void(^)(MAVEPromiseWithDefaultDictValues *promise))preFetchBlock
            userDefaultsPersistanceKey:(NSString *)userDefaultsKey
                           defaultData:(NSDictionary *)defaultData
                preferLocallySavedData:(BOOL)preferLocallySavedData;
