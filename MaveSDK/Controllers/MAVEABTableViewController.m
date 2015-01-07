@@ -32,8 +32,6 @@
 @implementation MAVEABTableViewController {
     NSDictionary *tableData;
     NSArray *tableSections;
-
-    NSArray *searchedTableData;
 }
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent {
@@ -176,7 +174,7 @@
         return [[tableData objectForKey:sectionTitle] count];
     }
     else {
-        return [searchedTableData count];
+        return [self.searchedTableData count];
     }
 }
 
@@ -276,7 +274,7 @@
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
     // TODO unit test
     if (tableView == self.searchTableView) {
-        return [searchedTableData objectAtIndex:indexPath.row];
+        return [self.searchedTableData objectAtIndex:indexPath.row];
     } else {
         NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
         return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
@@ -323,13 +321,32 @@
 }
 
 - (void)searchContacts:(NSString *)searchText {
+    // Modeled after the Contacts app basic search functionality
+    //  Search by search terms's fragments using BEGINSWITH (way faster than CONTAINS)
+    //  Ex: "Jo G" will match things like "John Graham" or "Josh Graham", but not "Graham"
+
     if (searchText.length > 0) {
-        NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:
-                                        @"(firstName BEGINSWITH[c] %@) OR (lastName BEGINSWITH[c] %@)",
-                                        searchText, searchText];
-        searchedTableData = [self.allPersons filteredArrayUsingPredicate:resultPredicate];
+        NSArray *fragments = [searchText componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        NSMutableArray *predicates = [NSMutableArray arrayWithCapacity:fragments.count];
+        for (NSString *fragment in fragments) {
+            if ([fragment isEqualToString:@""]) {
+                continue;
+            }
+
+            // For each fragment in the search text, check that either firstName
+            //  or lastName BEGINSWITH that fragment
+            NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:
+                                            @"(firstName BEGINSWITH[c] %@) OR (lastName BEGINSWITH[c] %@)",
+                                            fragment, fragment];
+            [predicates addObject:resultPredicate];
+        }
+
+        NSCompoundPredicate *compoundPredicate = [[NSCompoundPredicate alloc]
+                                                  initWithType:NSAndPredicateType
+                                                  subpredicates:predicates];
+        self.searchedTableData = [self.allPersons filteredArrayUsingPredicate:compoundPredicate];
     } else {
-        searchedTableData = @[];
+        self.searchedTableData = @[];
     }
 }
 
@@ -446,6 +463,7 @@
         [self addSearchTableView];
     }
 
+    // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
     [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBackgroundButton afterDelay:0.01];
     [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchTableView afterDelay:0.01];
     [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.01];

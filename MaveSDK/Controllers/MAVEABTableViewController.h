@@ -25,6 +25,7 @@
 
 // For searching
 @property (nonatomic, strong) NSArray *allPersons;
+@property (nonatomic, strong) NSArray *searchedTableData;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, assign) BOOL isSearching;
 
@@ -33,5 +34,8 @@
 - (void)updateTableData:(NSDictionary *)data;
 
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
+
+// For searching
+- (void)searchContacts:(NSString *)searchText;
 
 @end

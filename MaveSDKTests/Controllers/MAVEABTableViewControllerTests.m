@@ -130,7 +130,7 @@
 }
 
 - (void)testAllPersons {
-    // can't mock ipvc because it gets set in the
+    // can't mock ipvc because it gets set in the init
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
@@ -177,6 +177,85 @@
     XCTAssertFalse(vc.isSearching);
     XCTAssertFalse(vc.searchBar.isFirstResponder);
     XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
+}
+
+- (void)testSearchContacts {
+    // can't mock ipvc because it gets set in the init
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Abbie"; p1.lastName = @"Foo"; p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
+
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.firstName = @"John"; p2.lastName = @"Graham"; p2.phoneNumbers = @[@"18085551235"]; p2.selected = NO;
+
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.firstName = @"John"; p3.lastName = @"Smith"; p3.phoneNumbers = @[@"18085551236"]; p3.selected = NO;
+
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init];
+    p4.firstName = @"Danny"; p4.lastName = @"Cosson"; p4.phoneNumbers = @[@"18085551237"]; p4.selected = NO;
+
+    MAVEABPerson *p5 = [[MAVEABPerson alloc] init];
+    p5.firstName = @"Josh"; p5.lastName = @"Smith"; p5.phoneNumbers = @[@"18085551236"]; p5.selected = NO;
+
+
+    [vc updateTableData:@{@"a": @[p1],
+                          @"j": @[p2, p3, p5],
+                          @"d": @[p4]}];
+
+    // Searching for "Ab" will return 1 result (Abbie Foo)
+    [vc searchContacts:@"Ab"];
+    XCTAssertEqual(1, vc.searchedTableData.count);
+    XCTAssertEqual(p1, vc.searchedTableData[0]);
+
+    // Searching for "Ab" will return 1 result (Abbie Foo)
+    [vc searchContacts:@"Abbie "];
+    XCTAssertEqual(1, vc.searchedTableData.count);
+    XCTAssertEqual(p1, vc.searchedTableData[0]);
+
+    // Searching for "Ab" will return 1 result (Abbie Foo)
+    [vc searchContacts:@"Abbi F"];
+    XCTAssertEqual(1, vc.searchedTableData.count);
+    XCTAssertEqual(p1, vc.searchedTableData[0]);
+
+    // Searching for "Ab" will return 1 result (Abbie Foo)
+    [vc searchContacts:@"Abbie Foo "];
+    XCTAssertEqual(1, vc.searchedTableData.count);
+    XCTAssertEqual(p1, vc.searchedTableData[0]);
+
+    // Searching for "Jo" will return 3 results (John Graham, John Smith, Josh Smith)
+    [vc searchContacts:@"Jo"];
+    XCTAssertEqual(3, vc.searchedTableData.count);
+    XCTAssertEqual(p2, vc.searchedTableData[0]);
+    XCTAssertEqual(p3, vc.searchedTableData[1]);
+    XCTAssertEqual(p5, vc.searchedTableData[2]);
+
+    // Searching for "J Sm" will return 2 results (John Smith, Josh Smith)
+    [vc searchContacts:@"J Sm"];
+    XCTAssertEqual(2, vc.searchedTableData.count);
+    XCTAssertEqual(p3, vc.searchedTableData[0]);
+    XCTAssertEqual(p5, vc.searchedTableData[1]);
+
+    // Searching for "smi j" will return 2 results (John Smith, Josh Smith)
+    [vc searchContacts:@"smi j"];
+    XCTAssertEqual(2, vc.searchedTableData.count);
+    XCTAssertEqual(p3, vc.searchedTableData[0]);
+    XCTAssertEqual(p5, vc.searchedTableData[1]);
+
+    // Searching for "Jos S" will return 1 results (Josh Smith)
+    [vc searchContacts:@"Jos S"];
+    XCTAssertEqual(1, vc.searchedTableData.count);
+    XCTAssertEqual(p5, vc.searchedTableData[0]);
+
+    // Searching for "Jos S n" will return 0 results ()
+    [vc searchContacts:@"Jos S n"];
+    XCTAssertEqual(0, vc.searchedTableData.count);
+
+    // Searching for "zx" will return 0 results ()
+    [vc searchContacts:@"zx"];
+    XCTAssertEqual(0, vc.searchedTableData.count);
 }
 
 @end
