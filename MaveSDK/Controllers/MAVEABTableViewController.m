@@ -47,9 +47,9 @@
         self.tableView.dataSource = self;
         self.tableView.backgroundColor = displayOptions.contactCellBackgroundColor;
         self.tableView.separatorColor = displayOptions.contactSeparatorColor;
+        self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero]; // don't show cell separators between empty cells
         self.tableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
-        self.tableView.sectionIndexBackgroundColor =
-            displayOptions.contactSectionIndexBackgroundColor;
+        self.tableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
         [self.tableView registerClass:[MAVEABPersonCell class]
                forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
         self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
@@ -91,13 +91,11 @@
     self.searchTableView = [[UITableView alloc] init];
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
-    self.searchTableView.showsVerticalScrollIndicator = NO;
-    self.searchTableView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
+    self.searchTableView.backgroundColor = displayOptions.contactCellBackgroundColor;
     self.searchTableView.separatorColor = displayOptions.contactSeparatorColor;
-    self.searchTableView.sectionIndexColor = displayOptions.contactSectionIndexColor;
-    self.searchTableView.sectionIndexBackgroundColor = displayOptions.contactSectionIndexBackgroundColor;
     self.searchTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
                                              UIViewAutoresizingFlexibleHeight);
+    self.searchTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero]; // don't show cell separators between empty lines
     [self.searchTableView registerClass:[MAVEABPersonCell class]
                  forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
 }
@@ -152,9 +150,10 @@
         view.backgroundColor = displayOpts.contactSectionHeaderBackgroundColor;
         
         [view addSubview:label];
-        
+
         return view;
     }
+
     return nil;
 }
 
@@ -206,12 +205,18 @@
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
     if (tableView == self.searchTableView) {
-        // For some reason, stuff gets shown in front of the searchTableView periodically
+        NSMutableArray *indexPathCells = [NSMutableArray array];
+        for (MAVEABPersonCell *cell in [self.tableView visibleCells]) {
+            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+            [indexPathCells addObject:cellIndexPath];
+        }
+        [self.tableView reloadRowsAtIndexPaths:indexPathCells withRowAnimation:UITableViewRowAnimationNone];
+
+        // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
         [self.tableView bringSubviewToFront:self.searchBackgroundButton];
         [self.tableView bringSubviewToFront:self.searchTableView];
     }
 
-    [self.tableView bringSubviewToFront:self.searchBar];
     [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
 }
 
@@ -400,7 +405,7 @@
 - (void)removeSearchTableView {
     // if a row was selected in the searchTableView, then reload the main tableView so the same
     // row appears tapped as well
-    [self.tableView reloadData];
+    self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor;  // reshow section index titles
     [self.searchTableView removeFromSuperview];
 }
 
@@ -433,8 +438,11 @@
     [self.searchTableView reloadData];
 
     if ([searchText isEqualToString:@""]) {
+        self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor; // reshow section index titles
         [self removeSearchTableView];
     } else if (![self.searchTableView isDescendantOfView:self.tableView]) {
+        // Check if the searchTableView a subview of self.tableView (is it being displayed)
+        self.tableView.sectionIndexColor = [UIColor clearColor]; // hide section index titles
         [self addSearchTableView];
     }
 
