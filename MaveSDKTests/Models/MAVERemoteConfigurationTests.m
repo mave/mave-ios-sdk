@@ -13,20 +13,6 @@
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
-@interface Foo : NSObject<MAVEDictionaryInitializable>
-
-+ (void)foo;
-
-@end
-
-@implementation Foo
-
-+ (void)foo {
-    [[MAVERemoteConfigurator alloc] init];
-}
-
-@end
-
 @interface MAVERemoteConfigurationTests : XCTestCase
 
 @end
