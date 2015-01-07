@@ -7,6 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
+#include <stdlib.h>
+#import <objc/runtime.h>
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
@@ -14,16 +17,31 @@
 
 @end
 
-@implementation MAVERemoteConfigurationTests
+@implementation MAVERemoteConfigurationTests {
+    Method _originalUserDefaultsMethod;
+    Method _newUserDefaultsMethod;
+}
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    // Swizzle the key name so tests don't overwrite dev data
+    _originalUserDefaultsMethod = class_getClassMethod([MAVERemoteConfiguration class], @selector(userDefaultsKey));
+    _newUserDefaultsMethod = class_getClassMethod([self class], @selector(fakeUserDefaultsKeyName));
+    method_exchangeImplementations(_originalUserDefaultsMethod,
+                                   _newUserDefaultsMethod);
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    // clean up and un-swizzle
+    [[NSUserDefaults standardUserDefaults]
+     removeObjectForKey:[MAVERemoteConfiguration userDefaultsKey]];
+    method_exchangeImplementations(_newUserDefaultsMethod,
+                                   _originalUserDefaultsMethod);
     [super tearDown];
+}
++ (NSString *)fakeUserDefaultsKeyName {
+    return @"MAVEUserDefaultsTESTSKeyRemoteConfiguration";
 }
 
 - (void)testDefaultData {
@@ -40,6 +58,42 @@
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     XCTAssertTrue(config.enableContactsPrePrompt);
     XCTAssertNotNil(config.contactsPrePromptTemplate);
+}
+
+///
+/// Serialization tests
+///
+- (void)testSaveAndLoadValidJSONDataUserDefaults {
+    XCTAssertEqualObjects([MAVERemoteConfiguration userDefaultsKey],
+                          @"MAVEUserDefaultsTESTSKeyRemoteConfiguration");
+
+    // try all kinds of property list data
+    NSNumber *randomInt = [NSNumber numberWithInt:arc4random_uniform(74)];
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    [data setObject:@{@"data": @[@1, @YES, @"foo"]} forKey:@"foo"];
+    [data setObject:randomInt forKey:@"randomint"];
+
+    [MAVERemoteConfiguration saveJSONDataToUserDefaults:data];
+    NSDictionary *returnedData = [MAVERemoteConfiguration loadJSONDataFromUserDefaults];
+    XCTAssertNotNil(returnedData);
+    XCTAssertEqualObjects(returnedData, data);
+}
+
+- (void)testDefaultJSONDataIfSavedData {
+    NSDictionary *data = @{@"foo": @2};
+    [MAVERemoteConfiguration saveJSONDataToUserDefaults:data];
+
+    NSDictionary *returnedData = [MAVERemoteConfiguration defaultJSONData];
+
+    XCTAssertEqualObjects(returnedData, data);
+}
+
+- (void)testDefaultJSONDataIfNoSavedData {
+    NSDictionary *defaultData = [MAVERemoteConfiguration defaultDefaultJSONData];
+    NSDictionary *returnedData = [MAVERemoteConfiguration defaultJSONData];
+
+    XCTAssertNotNil(defaultData);
+    XCTAssertEqualObjects(returnedData, defaultData);
 }
 
 @end
