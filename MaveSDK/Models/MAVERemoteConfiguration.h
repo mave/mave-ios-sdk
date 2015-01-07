@@ -12,7 +12,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVERemoteConfigurator.h"
+//#import "MAVERemoteConfigurator.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
 extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
@@ -23,7 +23,7 @@ extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 @property (nonatomic) NSNumber *enableContactsPrePrompt;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePromptTemplate *contactsPrePromptTemplate;
 
-+ (MAVERemoteConfigurator *)remoteConfigurationBuilder;
++ (MAVERemoteConfigurator *)remoteBuilder;
 + (NSDictionary *)defaultJSONData;
 
 

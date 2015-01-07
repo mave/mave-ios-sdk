@@ -41,6 +41,7 @@
     XCTAssertNil(mave.defaultSMSMessageText);
     XCTAssertNotNil(mave.appDeviceID);
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
+    XCTAssertNotNil(mave.shareTokenBuilder);
 }
 
 

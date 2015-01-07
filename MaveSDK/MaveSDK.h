@@ -20,6 +20,8 @@
 @property (nonatomic, copy) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEAPIInterface *APIInterface;
 @property (nonatomic, strong) MAVERemoteConfigurator *remoteConfigurationBuilder;
+@property (nonatomic, strong) MAVERemoteConfigurator *shareTokenBuilder;
+
 
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;

@@ -12,8 +12,8 @@
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
 #import "MAVEDisplayOptions.h"
-#import "MAVERemoteConfigurator.h"
 #import "MAVERemoteConfiguration.h"
+#import "MAVEShareToken.h"
 
 @implementation MaveSDK {
     // Controller
@@ -41,7 +41,8 @@ static dispatch_once_t sharedInstanceonceToken;
         sharedInstance = [[self alloc] initWithAppId:applicationID];
         [sharedInstance trackAppOpen];
 
-        sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteConfigurationBuilder];
+        sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
+        sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
     });
 }
 

@@ -13,14 +13,25 @@
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
+@interface Foo : NSObject<MAVEDictionaryInitializable>
+
++ (void)foo;
+
+@end
+
+@implementation Foo
+
++ (void)foo {
+    [[MAVERemoteConfigurator alloc] init];
+}
+
+@end
+
 @interface MAVERemoteConfigurationTests : XCTestCase
 
 @end
 
-@implementation MAVERemoteConfigurationTests {
-    Method _originalUserDefaultsMethod;
-    Method _newUserDefaultsMethod;
-}
+@implementation MAVERemoteConfigurationTests
 
 - (void)setUp {
     [super setUp];
@@ -44,6 +55,22 @@
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     XCTAssertTrue(config.enableContactsPrePrompt);
     XCTAssertNotNil(config.contactsPrePromptTemplate);
+}
+
+- (void)testRemoteBuilder {
+    id mock = OCMClassMock([MAVERemoteConfigurator class]);
+
+    OCMExpect([mock alloc]).andReturn(mock);
+    OCMExpect([mock initWithClassToCreate:[MAVERemoteConfiguration class]
+                            preFetchBlock:[OCMArg any]
+               userDefaultsPersistanceKey:MAVEUserDefaultsKeyRemoteConfiguration
+                              defaultData:[MAVERemoteConfiguration defaultJSONData]
+                   preferLocallySavedData:NO]).andReturn(mock);
+    id returnedVal = [MAVERemoteConfiguration remoteBuilder];
+
+    OCMVerifyAll(mock);
+    XCTAssertEqualObjects(returnedVal, mock);
+    [mock stopMocking];
 }
 
 @end

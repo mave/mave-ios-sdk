@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
-#import "MAVERemoteConfigurator.h"
 #import "MAVERemoteConfiguration.h"
+#import "MAVERemoteConfigurator.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
 NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyRemoteConfiguration";
@@ -18,17 +18,18 @@ NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyR
 const NSString *MAVERemoteConfigKeyEnableContactsPrePrompt = @"enable_contacts_pre_prompt";
 const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"contacts_pre_prompt_template";
 
+
 @implementation MAVERemoteConfiguration
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
-    if (self = [self init]) {
+    if (self = [super init]) {
         self.enableContactsPrePrompt = [data objectForKey:MAVERemoteConfigKeyEnableContactsPrePrompt];
         self.contactsPrePromptTemplate = [[MAVERemoteConfigurationContactsPrePromptTemplate alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplate]];
     }
     return self;
 }
 
-+ (MAVERemoteConfigurator *)remoteConfigurationBuilder {
++ (MAVERemoteConfigurator *)remoteBuilder {
     return [[MAVERemoteConfigurator alloc]
             initWithClassToCreate:[self class]
             preFetchBlock:^(MAVEPromiseWithDefaultDictValues *promise) {
