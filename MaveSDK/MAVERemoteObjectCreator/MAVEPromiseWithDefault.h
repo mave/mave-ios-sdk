@@ -38,3 +38,12 @@ typedef NS_ENUM(NSInteger, MAVEPromiseStatus) {
          completionBlock:(void(^)(NSValue *value))completionBlock;
 
 @end
+
+@interface MAVEPromiseWithDefaultDictValues : MAVEPromiseWithDefault
+
+- (instancetype)initWithDefaultValue:(NSValue *)defaultValue;
+
+- (void)setFulfilledValue:(NSDictionary *)fulfilledValue;
+- (void)reject;
+
+@end
