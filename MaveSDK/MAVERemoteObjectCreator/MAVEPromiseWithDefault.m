@@ -9,7 +9,10 @@
 #import "MAVEPromiseWithDefault.h"
 #import "MAVEPromiseWithDefault_Internal.h"
 
-@implementation MAVEPromiseWithDefault
+@implementation MAVEPromiseWithDefault {
+    NSValue *_defaultValue;
+    NSValue *_fulfilledValue;
+}
 
 - (instancetype)initWithDefaultValue:(NSValue *)defaultValue {
     if (self = [super init]) {
@@ -21,6 +24,16 @@
     return self;
 }
 
+- (NSValue *)defaultValue {
+    return _defaultValue;
+}
+- (void)setDefaultValue:(NSValue *)defaultValue {
+    _defaultValue = defaultValue;
+}
+
+- (NSValue *)fulfilledValue {
+    return _fulfilledValue;
+}
 - (void)setFulfilledValue:(NSValue *)fulfilledValue {
     _fulfilledValue = fulfilledValue;
     _status = MAVEPromiseStatusFulfilled;
@@ -40,9 +53,9 @@
         NSInteger waitVal = dispatch_semaphore_wait(self.gcd_semaphore, seconds * NSEC_PER_SEC);
 
         if (self.status == MAVEPromiseStatusFulfilled) {
-            completionBlock(self.fulfilledValue);
+            completionBlock(_fulfilledValue);
         } else {
-            completionBlock(self.defaultValue);
+            completionBlock(_defaultValue);
         }
 
         // If we returned without a timeout re-wake the semaphore in case anyone else is waiting on it
@@ -50,6 +63,36 @@
             dispatch_semaphore_signal(self.gcd_semaphore);
         }
     });
+}
+
+@end
+
+
+@implementation MAVEPromiseWithDefaultDictValues
+
+- (instancetype)initWithDefaultValue:(NSDictionary *)defaultValue {
+    return [super initWithDefaultValue:(NSValue *)defaultValue];
+}
+
+- (NSDictionary *)fulfilledValue {
+    return (NSDictionary *)[super fulfilledValue];
+}
+- (void)setFulfilledValue:(NSDictionary *)fulfilledValue {
+    [super setFulfilledValue:(NSValue *)fulfilledValue];
+}
+
+- (NSDictionary *)defaultValue {
+    return (NSDictionary *)[super defaultValue];
+}
+- (void) setDefaultValue:(NSDictionary *)defaultValue {
+    [super setDefaultValue:(NSValue *)defaultValue];
+}
+
+- (void)valueWithTimeout:(float)seconds
+         completionBlock:(void (^)(NSDictionary *))completionBlock {
+    [super valueWithTimeout:seconds completionBlock:^(NSValue *value) {
+            completionBlock((NSDictionary *)value);
+    }];
 }
 
 @end

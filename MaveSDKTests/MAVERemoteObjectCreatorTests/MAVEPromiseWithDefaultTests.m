@@ -83,5 +83,23 @@
     XCTAssertNotEqual(dispatch_semaphore_wait(promise.gcd_semaphore, 0), 0);
 }
 
+#pragma mark - Promise with dict values
+- (void)testFulfillAndGetDictValue {
+    NSDictionary *defaultValue = @{@"foo": @1};
+    NSDictionary *fulfilledValue = @{@"foo": @2};
+
+    MAVEPromiseWithDefaultDictValues *promise = [[MAVEPromiseWithDefaultDictValues alloc] initWithDefaultValue:defaultValue];
+
+    promise.fulfilledValue = fulfilledValue;
+    XCTAssertEqualObjects(promise.fulfilledValue, fulfilledValue);
+    XCTAssertEqualObjects(promise.defaultValue, defaultValue);
+    XCTAssertEqual(promise.status, MAVEPromiseStatusFulfilled);
+
+    [promise valueWithTimeout:0
+              completionBlock:^(NSDictionary *value) {
+                  XCTAssertEqual(value, fulfilledValue);
+                  XCTAssertEqualObjects(promise.defaultValue, defaultValue);
+              }];
+}
 
 @end

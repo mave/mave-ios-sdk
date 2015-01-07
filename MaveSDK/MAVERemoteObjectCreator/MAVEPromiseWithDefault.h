@@ -18,15 +18,18 @@ typedef NS_ENUM(NSInteger, MAVEPromiseStatus) {
     MAVEPromiseStatusRejected = -1,
 };
 
+// generic NSValue promise
 @interface MAVEPromiseWithDefault : NSObject
 
 @property (nonatomic) NSInteger status;
-@property (nonatomic, strong) NSValue *fulfilledValue;
-@property (nonatomic, strong) NSValue *defaultValue;
 
 - (instancetype)initWithDefaultValue:(NSValue *)defaultValue;
 
+- (NSValue *)fulfilledValue;
 - (void)setFulfilledValue:(NSValue *)fulfilledValue;
+- (NSValue *)defaultValue;
+- (void)setDefaultValue:(NSValue *)defaultValue;
+
 - (void)reject;
 
 // Method to read data from the timeout
@@ -34,16 +37,22 @@ typedef NS_ENUM(NSInteger, MAVEPromiseStatus) {
 // The value will be fulfilled value if available else the default
 // You can also access the "defaultValue" property on the object
 //   if you need to, it won't change
-- (void)valueWithTimeout:(float)timeout
+- (void)valueWithTimeout:(float)seconds
          completionBlock:(void(^)(NSValue *value))completionBlock;
-
 @end
 
+
+// NSDictionary promise, just calls [super] methods and casts to NSDictionary
 @interface MAVEPromiseWithDefaultDictValues : MAVEPromiseWithDefault
 
-- (instancetype)initWithDefaultValue:(NSValue *)defaultValue;
+- (instancetype)initWithDefaultValue:(NSDictionary *)defaultValue;
 
+- (NSDictionary *)fulfilledValue;
 - (void)setFulfilledValue:(NSDictionary *)fulfilledValue;
-- (void)reject;
+- (NSDictionary *)defaultValue;
+- (void)setDefaultValue:(NSDictionary *)defaultValue;
+
+- (void)valueWithTimeout:(float)seconds
+         completionBlock:(void (^)(NSDictionary *))completionBlock;
 
 @end
