@@ -12,6 +12,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABPerson.h"
+#import "MAVEABTestDataFactory.h"
 
 @interface MAVEABTableViewControllerTests : XCTestCase
 
@@ -35,6 +36,43 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+}
+
+- (NSArray *)populateTableDataForABTableVC:(MAVEABTableViewController *)vc {
+    MAVEABPerson *p1  = [MAVEABTestDataFactory personWithFirstName:@"Abbie" lastName:@"Foo"];
+    MAVEABPerson *p2  = [MAVEABTestDataFactory personWithFirstName:@"Bbbie" lastName:@"Foo"];
+    MAVEABPerson *p3  = [MAVEABTestDataFactory personWithFirstName:@"Cbbie" lastName:@"Foo"];
+    MAVEABPerson *p4  = [MAVEABTestDataFactory personWithFirstName:@"Dbbie" lastName:@"Foo"];
+    MAVEABPerson *p5  = [MAVEABTestDataFactory personWithFirstName:@"Ebbie" lastName:@"Foo"];
+    MAVEABPerson *p6  = [MAVEABTestDataFactory personWithFirstName:@"Fbbie" lastName:@"Foo"];
+    MAVEABPerson *p7  = [MAVEABTestDataFactory personWithFirstName:@"Gbbie" lastName:@"Foo"];
+    MAVEABPerson *p8  = [MAVEABTestDataFactory personWithFirstName:@"Hbbie" lastName:@"Foo"];
+    MAVEABPerson *p9  = [MAVEABTestDataFactory personWithFirstName:@"Ibbie" lastName:@"Foo"];
+    MAVEABPerson *p10 = [MAVEABTestDataFactory personWithFirstName:@"Jbbie" lastName:@"Foo"];
+    MAVEABPerson *p11 = [MAVEABTestDataFactory personWithFirstName:@"Kbbie" lastName:@"Foo"];
+    MAVEABPerson *p12 = [MAVEABTestDataFactory personWithFirstName:@"Lbbie" lastName:@"Foo"];
+    MAVEABPerson *p13 = [MAVEABTestDataFactory personWithFirstName:@"Mbbie" lastName:@"Foo"];
+    MAVEABPerson *p14 = [MAVEABTestDataFactory personWithFirstName:@"Nbbie" lastName:@"Foo"];
+    MAVEABPerson *p15 = [MAVEABTestDataFactory personWithFirstName:@"Obbie" lastName:@"Foo"];
+    MAVEABPerson *p16 = [MAVEABTestDataFactory personWithFirstName:@"Ozzzz" lastName:@"Fzz"];
+
+    [vc updateTableData:@{@"a": @[p1],
+                          @"b": @[p2],
+                          @"c": @[p3],
+                          @"d": @[p4],
+                          @"e": @[p5],
+                          @"f": @[p6],
+                          @"g": @[p7],
+                          @"h": @[p8],
+                          @"i": @[p9],
+                          @"j": @[p10],
+                          @"k": @[p11],
+                          @"l": @[p12],
+                          @"m": @[p13],
+                          @"n": @[p14],
+                          @"o": @[p15, p16]}];
+
+    return @[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16];
 }
 
 - (void)testClickDidSelectRowAtIndexPath {
@@ -159,10 +197,57 @@
     XCTAssertEqual([expectedAllPersons count], [[vc allPersons] count]);
 }
 
+- (void)testPersonOnTableViewAtIndexPath {
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+    NSArray *addedABData = [self populateTableDataForABTableVC:vc];
+
+    // Test personOnTableView for tableView works
+    XCTAssertEqual(addedABData[0], [vc personOnTableView:vc.tableView
+                                             atIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]);
+    XCTAssertEqual(addedABData[14], [vc personOnTableView:vc.tableView
+                                             atIndexPath:[NSIndexPath indexPathForRow:0 inSection:14]]);
+    XCTAssertEqual(addedABData[15], [vc personOnTableView:vc.tableView
+                                              atIndexPath:[NSIndexPath indexPathForRow:1 inSection:14]]);
+
+    // Test personOnTableView for searchTableView works
+    [vc searchContacts:@"o"]; // Will return "Obbie Foo" and "Ozzzz Fzz"
+    XCTAssertEqual(addedABData[14], [vc personOnTableView:vc.searchTableView
+                                             atIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]);
+    XCTAssertEqual(addedABData[15], [vc personOnTableView:vc.searchTableView
+                                             atIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]]);
+}
+
+- (void)testSearchBarsDuringScroll {
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+    [self populateTableDataForABTableVC:vc];
+
+    // Starts at top, no scrolling yet
+    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.hidden);
+    XCTAssertTrue(vc.searchBar.hidden);
+
+    // Scroll to somewhere midway down
+    [vc.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:9]
+                        atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
+    XCTAssertFalse(vc.searchBar.hidden);
+
+    // Back to top
+    [vc.tableView setContentOffset:CGPointMake(0, -100) animated:NO];
+    [vc scrollViewDidScroll:vc.tableView]; // force call, which isn't happening in the above line
+    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.hidden);
+    XCTAssertTrue(vc.searchBar.hidden);
+}
+
 - (void)testSearchingFlags {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
+
+    XCTAssertFalse(vc.searchBar.showsCancelButton);
 
     [vc searchBarShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
     XCTAssertFalse(vc.searchBar.hidden);
@@ -170,6 +255,8 @@
     XCTAssertTrue(vc.isSearching);
 //    XCTAssertTrue(vc.searchBar.isFirstResponder); // firstResponder chain doesn't complete during tests
     XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
+    [vc searchBarShouldBeginEditing:vc.searchBar];
+    XCTAssertTrue(vc.searchBar.showsCancelButton);
 
     [vc searchBarTextDidEndEditing:vc.searchBar];
     XCTAssertFalse(vc.searchBar.hidden);
@@ -177,6 +264,7 @@
     XCTAssertFalse(vc.isSearching);
     XCTAssertFalse(vc.searchBar.isFirstResponder);
     XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
+    XCTAssertFalse(vc.searchBar.showsCancelButton);
 }
 
 - (void)testSearchContacts {
@@ -256,6 +344,22 @@
     // Searching for "zx" will return 0 results ()
     [vc searchContacts:@"zx"];
     XCTAssertEqual(0, vc.searchedTableData.count);
+}
+
+- (void)testSearchingIndexTitleBar {
+    // For some reason, the index titles alphabet side scroll bar is shown above all other
+    //  subviews. In order to "hide" it, set the sectionIndexColor to clear when the
+    //  searchTableView is being shown.
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+
+    [vc searchBarShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
+    [vc searchBarShouldBeginEditing:vc.searchBar];
+    XCTAssertNotEqual([UIColor clearColor], vc.tableView.sectionIndexColor);
+
+    [vc searchBar:vc.searchBar textDidChange:@"a"];
+    XCTAssertEqual([UIColor clearColor], vc.tableView.sectionIndexColor);
 }
 
 @end

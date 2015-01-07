@@ -14,7 +14,6 @@
 #import "MAVEInviteExplanationView.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPersonCell.h"
-#import "MAVEABPerson.h"
 
 #define MAVE_AB_TABLE_STATUS_BAR_HEIGHT [UIApplication sharedApplication].statusBarFrame.size.height
 #define MAVE_AB_TABLE_NAVIGATION_BAR_HEIGHT self.parentViewController.navigationController.navigationBar.frame.size.height
@@ -24,7 +23,6 @@
 
 @interface MAVEABTableViewController ()
 
-@property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, strong) UIButton *searchBackgroundButton;
 
 @end
@@ -272,7 +270,6 @@
 #pragma mark - Helpers
 
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
-    // TODO unit test
     if (tableView == self.searchTableView) {
         return [self.searchedTableData objectAtIndex:indexPath.row];
     } else {
@@ -458,8 +455,11 @@
         self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor; // reshow section index titles
         [self removeSearchTableView];
     } else if (![self.searchTableView isDescendantOfView:self.tableView]) {
-        // Check if the searchTableView a subview of self.tableView (is it being displayed)
-        self.tableView.sectionIndexColor = [UIColor clearColor]; // hide section index titles
+        // Checks if the searchTableView a subview of self.tableView (is it being displayed)
+
+        // For some reason, index titles show *above* all other subviews...
+        //  Make them clear in order to "hide" while searching
+        self.tableView.sectionIndexColor = [UIColor clearColor];
         [self addSearchTableView];
     }
 
