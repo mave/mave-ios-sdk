@@ -58,7 +58,7 @@
             completionBlock(_defaultValue);
         }
 
-        // If we returned without a timeout re-wake the semaphore in case anyone else is waiting on it
+        // If we returned without a timeout re-wake the semaphore in case anyone else is waiting
         if (waitVal == 0) {
             dispatch_semaphore_signal(self.gcd_semaphore);
         }

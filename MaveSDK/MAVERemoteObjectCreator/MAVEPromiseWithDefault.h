@@ -2,13 +2,14 @@
 //  MAVEPromiseWithDefault.h
 //  MaveSDK
 //
-//  A Promise object, lets you block on waiting for something to happen.
-//  If fulfilled by the timeout it returns the new value, if it is
-//  rejected or still waiting to be fulfilled it returns the default
-//  value you set when initializing it.
+//  This is not exactly a promise as definied in the spec but it's a similar idea.
+//
+//  It lets us block on waiting for something to happen, but instead of needing
+//  success and error callbacks there's just a success callback and the provided
+//  default value is used in place of the actual data if we explicitly call reject
+//  or timeout before the promise is fulfilled.
+//
 //  Created by Danny Cosson on 1/7/15.
-//
-//
 
 #import <Foundation/Foundation.h>
 
