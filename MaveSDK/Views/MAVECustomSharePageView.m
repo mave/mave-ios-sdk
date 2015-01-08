@@ -162,13 +162,13 @@
 
 - (UIButton *)facebookShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconFacebook.png"
-                                                andLabelText:@"FACEBOOK"];
+                                                andLabelText:@"SHARE"];
     return button;
 }
 
 - (UIButton *)twitterShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconTwitter.png"
-                                                andLabelText:@"TWITTER"];
+                                                andLabelText:@"TWEET"];
     return button;
 }
 
