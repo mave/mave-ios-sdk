@@ -35,6 +35,7 @@
 		0C29BC571A5DE74300C27DA5 /* MAVEShareTokenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC561A5DE74300C27DA5 /* MAVEShareTokenTests.m */; };
 		0C29BC581A5DE9DE00C27DA5 /* MAVEShareToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC531A5DD39400C27DA5 /* MAVEShareToken.m */; };
 		0C29BC5B1A5DED3A00C27DA5 /* MAVENativeSharePageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC5A1A5DED3A00C27DA5 /* MAVENativeSharePageView.m */; };
+		0C29BC5F1A5E109B00C27DA5 /* MAVEImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C29BC5E1A5E109B00C27DA5 /* MAVEImages.xcassets */; };
 		0C2D73181A1FCB640059CA54 /* MAVEIDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */; };
 		0C2D731B1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D731A1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m */; };
 		0C7200721A19414D00E12B91 /* MAVEInviteMessageContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7200711A19414D00E12B91 /* MAVEInviteMessageContainerView.m */; };
@@ -46,7 +47,6 @@
 		0CFDBE261A1A827C00DD2AAF /* MAVEReferralData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */; };
 		0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */; };
 		0CFDBE2B1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */; };
-		0CFDBE711A1CE1BC00DD2AAF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CFDBE701A1CE1BC00DD2AAF /* Default-568h@2x.png */; };
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
 		C022641619EC41010087FF37 /* MAVEABPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641119EC41010087FF37 /* MAVEABPersonTests.m */; };
 		C022641719EC41010087FF37 /* MAVEABUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* MAVEABUtilsTests.m */; };
@@ -137,6 +137,7 @@
 		0C29BC561A5DE74300C27DA5 /* MAVEShareTokenTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEShareTokenTests.m; sourceTree = "<group>"; };
 		0C29BC591A5DED3A00C27DA5 /* MAVENativeSharePageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVENativeSharePageView.h; sourceTree = "<group>"; };
 		0C29BC5A1A5DED3A00C27DA5 /* MAVENativeSharePageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVENativeSharePageView.m; sourceTree = "<group>"; };
+		0C29BC5E1A5E109B00C27DA5 /* MAVEImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MAVEImages.xcassets; sourceTree = "<group>"; };
 		0C2D73161A1FCB640059CA54 /* MAVEIDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEIDUtils.h; sourceTree = "<group>"; };
 		0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEIDUtils.m; sourceTree = "<group>"; };
 		0C2D731A1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEIDUtilsTests.m; sourceTree = "<group>"; };
@@ -154,7 +155,6 @@
 		0CFDBE271A1B875100DD2AAF /* MAVEInviteExplanationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteExplanationView.h; sourceTree = "<group>"; };
 		0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteExplanationView.m; sourceTree = "<group>"; };
 		0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteExplanationViewTests.m; sourceTree = "<group>"; };
-		0CFDBE701A1CE1BC00DD2AAF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2110DFB92C7B0700F5577B76 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5D1D110D19FDCF9921E21868 /* libPods-MaveSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MaveSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67DE4B21E0255868A78BD50B /* Pods-MaveSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MaveSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MaveSDKTests/Pods-MaveSDKTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -256,6 +256,13 @@
 			path = MAVERemoteObjectCreatorTests;
 			sourceTree = "<group>";
 		};
+		0C29BC601A5E10D000C27DA5 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		0C2D73151A1FCB480059CA54 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,6 +346,8 @@
 				C02927EC19E82C45006AEE43 /* Views */,
 				C02927EB19E82C3F006AEE43 /* Networking */,
 				0C2D73151A1FCB480059CA54 /* Utils */,
+				0C29BC601A5E10D000C27DA5 /* Assets */,
+				0C29BC5E1A5E109B00C27DA5 /* MAVEImages.xcassets */,
 			);
 			path = MaveSDK;
 			sourceTree = "<group>";
@@ -365,7 +374,6 @@
 				C029279B19E823E2006AEE43 /* HomeViewController.h */,
 				C029279C19E823E2006AEE43 /* HomeViewController.m */,
 				C02927A119E823E2006AEE43 /* Images.xcassets */,
-				0CFDBE701A1CE1BC00DD2AAF /* Default-568h@2x.png */,
 				C029279419E823E2006AEE43 /* Supporting Files */,
 			);
 			path = DemoApp;
@@ -599,9 +607,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C29BC5F1A5E109B00C27DA5 /* MAVEImages.xcassets in Resources */,
 				C02927A219E823E2006AEE43 /* Images.xcassets in Resources */,
 				C02927C619E827F9006AEE43 /* Main.storyboard in Resources */,
-				0CFDBE711A1CE1BC00DD2AAF /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

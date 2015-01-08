@@ -11,5 +11,12 @@
 @interface MAVENativeSharePageView : UIView
 
 @property (nonatomic, strong) UILabel *shareExplanationLabel;
+@property (nonatomic, strong) NSMutableArray *shareButtons;
+
+// Helpers
+- (CGSize)shareButtonSize;  // all share buttons should be the same size
+
+- (UIButton *)smsInviteButton;
+- (UIButton *)facebookShareButton;
 
 @end
