@@ -7,10 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MessageUI/MessageUI.h>
 
-@interface MAVEShareActions : NSObject
+@interface MAVEShareActions: UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate> 
 
 - (void)smsClientSideShare;
+- (void)emailClientSideShare;
 - (void)facebookiOSNativeShare;
+- (void)twitteriOSNativeShare;
+- (void)clipboardShare;
 
 @end

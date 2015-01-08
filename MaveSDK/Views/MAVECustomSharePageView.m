@@ -6,6 +6,7 @@
 //
 //
 
+#import <Social/Social.h>
 #import "MAVECustomSharePageView.h"
 #import "MaveSDK.h"
 #import "MAVEBuiltinUIElementUtils.h"
@@ -29,21 +30,28 @@
 
         // Add share buttons for services
         UIButton *shareButton;
-        shareButton = [self smsShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
+        if ([MFMessageComposeViewController canSendText]) {
+            shareButton = [self smsShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
+        if ([MFMailComposeViewController canSendMail]) {
+            shareButton = [self emailShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
 
-        shareButton = [self emailShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
+        if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+            shareButton = [self facebookShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
 
-        shareButton = [self facebookShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
-
-        shareButton = [self twitterShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
+        if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+            shareButton = [self twitterShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
 
         shareButton = [self clipboardShareButton];
         [self.shareButtons addObject:shareButton];
@@ -157,24 +165,36 @@
 - (UIButton *)emailShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconEmail.png"
                                                 andLabelText:@"EMAIL"];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(emailClientSideShare)
+     forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
 
 - (UIButton *)facebookShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconFacebook.png"
                                                 andLabelText:@"SHARE"];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(facebookiOSNativeShare)
+     forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
 
 - (UIButton *)twitterShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconTwitter.png"
                                                 andLabelText:@"TWEET"];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(twitteriOSNativeShare)
+     forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
 
 - (UIButton *)clipboardShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconClipboard.png"
                                                 andLabelText:@"COPY"];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(clipboardShare)
+     forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
 

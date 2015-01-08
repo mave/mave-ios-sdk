@@ -18,6 +18,8 @@
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
 
+#import <Social/Social.h>
+
 NSString * const MAVEInvitePageTypeContactList = @"contact_list";
 NSString * const MAVEInvitePageTypeNoneNeedContactsPermission = @"none_need_contacts_permission";
 NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
@@ -39,11 +41,12 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 
     [self setupNavigationBar];
     self.view = [[MAVECustomSharePageView alloc] init];
-//    if ([self canTryAddressBookInvites]) {
-//        [self determineAndSetViewBasedOnABPermissions];
-//    } else {
-//        self.view = [self createEmptyFallbackView];
-//    }
+    
+    if ([self canTryAddressBookInvites]) {
+        [self determineAndSetViewBasedOnABPermissions];
+    } else {
+        self.view = [self createEmptyFallbackView];
+    }
 }
 
 - (void)viewDidLoad {
@@ -178,7 +181,9 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         // Permission denied
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.view = [self createNoAddressBookPermissionView];
+                // TODO REMOVE
+                [self presentViewController:[MaveSDK sharedInstance].shareActions animated:NO completion:nil];
+//                self.view = [self createNoAddressBookPermissionView];
             });
             [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
         // Permission granted
