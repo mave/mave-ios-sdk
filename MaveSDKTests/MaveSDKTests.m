@@ -42,6 +42,7 @@
     XCTAssertNotNil(mave.appDeviceID);
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
     XCTAssertNotNil(mave.shareTokenBuilder);
+    XCTAssertNotNil(mave.shareActions);
 }
 
 

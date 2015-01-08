@@ -10,4 +10,7 @@
 
 @interface MAVEShareActions : NSObject
 
+- (void)smsClientSideShare;
+- (void)facebookiOSNativeShare;
+
 @end

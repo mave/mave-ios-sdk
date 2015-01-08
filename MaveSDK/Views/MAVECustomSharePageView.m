@@ -7,6 +7,7 @@
 //
 
 #import "MAVECustomSharePageView.h"
+#import "MaveSDK.h"
 
 @implementation MAVECustomSharePageView
 
@@ -62,13 +63,6 @@
                                                   explanationLabelSize.width,
                                                   explanationLabelSize.height);
 
-    Class fbClass = NSClassFromString(@"FBSession");
-    BOOL fbAvailable = NO;
-    if (fbClass) {
-        fbAvailable = YES;
-    }
-    NSLog(@"facebook available? %i", fbAvailable);
-
     [self layoutShareButtons];
 }
 
@@ -116,13 +110,15 @@
 - (UIButton *)genericShareButton:(UIImage *)image {
     UIButton *button = [[UIButton alloc] init];
     [button setImage:image forState:UIControlStateNormal];
-    [button setImage:image forState:UIControlStateHighlighted];
     [button setImage:image forState:UIControlStateSelected];
     return button;
 }
 
 - (UIButton *)smsShareButton {
     UIButton *button = [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(smsClientSideShare)
+     forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
 

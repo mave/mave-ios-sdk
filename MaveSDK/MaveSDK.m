@@ -14,6 +14,7 @@
 #import "MAVEDisplayOptions.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEShareToken.h"
+#import "MAVEShareActions.h"
 
 @implementation MaveSDK {
     // Controller
@@ -29,6 +30,7 @@
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
         _APIInterface = [[MAVEAPIInterface alloc] init];
+        _shareActions = [[MAVEShareActions alloc] init];
     }
     return self;
 }
