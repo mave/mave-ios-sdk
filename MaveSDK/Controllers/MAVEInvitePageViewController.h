@@ -11,8 +11,6 @@
 #import "MAVEInviteExplanationView.h"
 #import "MAVEInviteMessageContainerView.h"
 
-typedef void (^InvitePageDismissalBlock)(UIViewController *viewController, NSUInteger numberOfInvitesSent);
-
 extern NSString * const MAVEInvitePageTypeContactList;
 extern NSString * const MAVEInvitePageTypeNoneNeedContactsPermission;
 extern NSString * const MAVEInvitePageTypeCustomShare;

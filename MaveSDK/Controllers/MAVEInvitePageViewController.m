@@ -94,7 +94,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     [self.view endEditing:YES];
 
     // Call dismissal block
-    InvitePageDismissalBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
+    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
     if (dismissalBlock) {
         dismissalBlock(self, numberOfInvitesSent);
     }

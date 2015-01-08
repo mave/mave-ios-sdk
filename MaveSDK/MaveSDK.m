@@ -135,9 +135,10 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Methods for consumer to present/manage the invite page
 //
+
 - (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
                                         setupError:(NSError *__autoreleasing *)setupError
-                                    dismissalBlock:(InvitePageDismissalBlock) dismissalBlock {
+                                    dismissalBlock:(MAVEInvitePageDismissBlock) dismissalBlock {
     self.invitePageDismissalBlock = dismissalBlock;    
     UIViewController *returnViewController = nil;
     *setupError = [self validateSetup];
@@ -149,5 +150,15 @@ static dispatch_once_t sharedInstanceonceToken;
     }
     return returnViewController;
 }
+
+//- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+//                           dismissalBlock:(MAVEInvitePageDismissBlock)dismissBlock {
+//
+//}
+//
+//- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+//                           dismisslock:(MAVEInvitePageDismissBlock)dismissBlock {
+//
+//}
 
 @end

@@ -14,6 +14,9 @@
 #import "MAVERemoteConfigurator.h"
 #import "MAVEShareActions.h"
 
+typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteViewController);
+typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSUInteger numberOfInvitesSent);
+
 @interface MaveSDK : NSObject
 
 @property (nonatomic, strong) MAVEInvitePageViewController *viewController;
@@ -28,7 +31,7 @@
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;
 @property (strong, nonatomic) MAVEUserData *userData;
-@property (nonatomic, copy) InvitePageDismissalBlock invitePageDismissalBlock;
+@property (nonatomic, copy) MAVEInvitePageDismissBlock invitePageDismissalBlock;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
@@ -42,7 +45,15 @@
 - (void)identifyUser:(MAVEUserData *)userData;
 - (void)trackSignup;
 
+- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+                           dismissalBlock:(MAVEInvitePageDismissBlock)dismissBlock;
+- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+                           dismisslock:(MAVEInvitePageDismissBlock)dismissBlock;
+
+- (UINavigationController *)invitePageWithDismissalBlock:(MAVEInvitePageDismissBlock)dismissalBlock;
+- (UIViewController *)invitePageToPushOntoStackWithDismissalBlock:(MAVEInvitePageDismissBlock)dismissalBlock;
+
 - (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
                                         setupError:(NSError *__autoreleasing *)setupError
-                                    dismissalBlock:(InvitePageDismissalBlock)dismissalBlock;
+                                    dismissalBlock:(MAVEInvitePageDismissBlock)dismissalBlock;
 @end
