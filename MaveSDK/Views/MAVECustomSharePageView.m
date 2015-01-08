@@ -124,7 +124,6 @@
     }
     size.width = ceil(size.width);
     size.height = ceil(size.height);
-    NSLog(@"button max needed size is: %@", NSStringFromCGSize(size));
     return size;
 }
 
@@ -143,8 +142,6 @@
     button.titleLabel.font = [UIFont systemFontOfSize:10];
     [button setTitleColor:labelColor forState:UIControlStateNormal];
     button.paddingBetweenImageAndText = 4;
-
-    button.backgroundColor = [UIColor blueColor];
     return button;
 }
 
