@@ -8,6 +8,7 @@
 
 #import "MAVECustomSharePageView.h"
 #import "MaveSDK.h"
+#import "MAVEUIButtonWithImageAndText.h"
 
 @implementation MAVECustomSharePageView
 
@@ -92,6 +93,7 @@
     CGFloat coordX = marginWidth;
     for (UIButton *shareButton in self.shareButtons) {
         shareButton.frame = CGRectMake(coordX, coordY, shareButtonSize.width, shareButtonSize.height);
+        NSLog(@"adding button with size: %@", NSStringFromCGSize(shareButton.frame.size));
         coordX += shareButtonSize.width + marginWidth;
     }
 }
@@ -102,20 +104,25 @@
     if ([self.shareButtons count] == 0) {
         return CGSizeMake(0, 0);
     }
-    return ((UIButton *)[self.shareButtons objectAtIndex:0]).imageView.image.size;
+//    return ((UIButton *)[self.shareButtons objectAtIndex:0]).imageView.image.size;
+    return CGSizeMake(50, 50);
 }
 
 
 # pragma mark - Share buttons by service
-- (UIButton *)genericShareButton:(UIImage *)image {
-    UIButton *button = [[UIButton alloc] init];
+- (UIButton *)genericShareButtonWithIcon:(UIImage *)image text:(NSString *)text {
+    UIButton *button = [[MAVEUIButtonWithImageAndText alloc] init];
     [button setImage:image forState:UIControlStateNormal];
-    [button setImage:image forState:UIControlStateSelected];
+    [button setTitle:text forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont systemFontOfSize:11];
+    [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     return button;
 }
 
 - (UIButton *)smsShareButton {
-    UIButton *button = [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
+    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
+                                                   text:@"SMS"];
     [button addTarget:[MaveSDK sharedInstance].shareActions
                action:@selector(smsClientSideShare)
      forControlEvents:UIControlEventTouchUpInside];
@@ -123,19 +130,31 @@
 }
 
 - (UIButton *)emailShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
+    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
+                                                   text:@"EMAIL"];
+    return button;
 }
 
 - (UIButton *)facebookShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
+    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
+                                                   text:@"SMS"];
+    return button;
 }
 
 - (UIButton *)twitterShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
+    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
+                                                   text:@"SMS"];
+    return button;
 }
 
 - (UIButton *)clipboardShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
+    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
+                                                   text:@"SMS"];
+    return button;
 }
 
 @end

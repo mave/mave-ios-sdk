@@ -44,6 +44,7 @@
 		0CC6463619F9C6190006A1D0 /* MAVEABTableViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463519F9C6190006A1D0 /* MAVEABTableViewControllerTests.m */; };
 		0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73E819F858A4009C6385 /* RootDrawerController.m */; };
 		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
+		0CCC92B41A5F11DA008CB888 /* MAVEUIButtonWithImageAndText.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92B31A5F11DA008CB888 /* MAVEUIButtonWithImageAndText.m */; };
 		0CF6541F1A02D5E3008992F0 /* MAVENavigationBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF6541E1A02D5E3008992F0 /* MAVENavigationBarTests.m */; };
 		0CFDBE261A1A827C00DD2AAF /* MAVEReferralData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */; };
 		0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */; };
@@ -152,6 +153,8 @@
 		0CCC73E819F858A4009C6385 /* RootDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootDrawerController.m; sourceTree = "<group>"; };
 		0CCC73ED19F8708E009C6385 /* SideDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerController.h; sourceTree = "<group>"; };
 		0CCC73EE19F8708E009C6385 /* SideDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideDrawerController.m; sourceTree = "<group>"; };
+		0CCC92B21A5F11DA008CB888 /* MAVEUIButtonWithImageAndText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEUIButtonWithImageAndText.h; sourceTree = "<group>"; };
+		0CCC92B31A5F11DA008CB888 /* MAVEUIButtonWithImageAndText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEUIButtonWithImageAndText.m; sourceTree = "<group>"; };
 		0CF6541E1A02D5E3008992F0 /* MAVENavigationBarTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVENavigationBarTests.m; sourceTree = "<group>"; };
 		0CFDBE241A1A827C00DD2AAF /* MAVEReferralData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEReferralData.h; sourceTree = "<group>"; };
 		0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEReferralData.m; sourceTree = "<group>"; };
@@ -460,6 +463,8 @@
 				0C1134D01A12C42200631797 /* MAVENoAddressBookPermissionView.m */,
 				0C29BC591A5DED3A00C27DA5 /* MAVECustomSharePageView.h */,
 				0C29BC5A1A5DED3A00C27DA5 /* MAVECustomSharePageView.m */,
+				0CCC92B21A5F11DA008CB888 /* MAVEUIButtonWithImageAndText.h */,
+				0CCC92B31A5F11DA008CB888 /* MAVEUIButtonWithImageAndText.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -715,6 +720,7 @@
 				C029280619E82D0F006AEE43 /* MAVEDisplayOptions.m in Sources */,
 				0C1134D11A12C42200631797 /* MAVENoAddressBookPermissionView.m in Sources */,
 				0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */,
+				0CCC92B41A5F11DA008CB888 /* MAVEUIButtonWithImageAndText.m in Sources */,
 				C029280C19E82D18006AEE43 /* MAVEInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* MAVEABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,

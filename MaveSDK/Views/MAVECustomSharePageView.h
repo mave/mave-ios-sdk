@@ -15,7 +15,7 @@
 
 // Helpers
 - (CGSize)shareButtonSize;  // all share buttons should be the same size
-- (UIButton *)genericShareButton:(UIImage *)image;
+- (UIButton *)genericShareButtonWithIcon:(UIImage *)image text:(NSString *)text;
 
 - (UIButton *)smsShareButton;
 - (UIButton *)emailShareButton;
