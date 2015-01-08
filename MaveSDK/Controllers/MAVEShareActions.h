@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MAVEShareActions : NSObject
+@interface MAVEShareActions: NSObject
 
 - (void)smsClientSideShare;
 - (void)facebookiOSNativeShare;
+- (void)twitteriOSNativeShare;
 
 @end

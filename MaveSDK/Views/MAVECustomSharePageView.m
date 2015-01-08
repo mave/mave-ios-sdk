@@ -6,6 +6,7 @@
 //
 //
 
+#import <Social/Social.h>
 #import "MAVECustomSharePageView.h"
 #import "MaveSDK.h"
 
@@ -36,13 +37,17 @@
         [self.shareButtons addObject:shareButton];
         [self addSubview:shareButton];
 
-        shareButton = [self facebookShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
+        if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+            shareButton = [self facebookShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
 
-        shareButton = [self twitterShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
+        if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+            shareButton = [self twitterShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
 
         shareButton = [self clipboardShareButton];
         [self.shareButtons addObject:shareButton];
@@ -127,11 +132,21 @@
 }
 
 - (UIButton *)facebookShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"facebook.png"]];
+    UIButton *button = [self genericShareButton:[UIImage imageNamed:@"facebook.png"]];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(facebookiOSNativeShare)
+     forControlEvents:UIControlEventTouchUpInside];
+
+    return button;
 }
 
 - (UIButton *)twitterShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"twitter.png"]];
+    UIButton *button = [self genericShareButton:[UIImage imageNamed:@"twitter.png"]];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(twitteriOSNativeShare)
+     forControlEvents:UIControlEventTouchUpInside];
+    return button;
+
 }
 
 - (UIButton *)clipboardShareButton {
