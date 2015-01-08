@@ -14,6 +14,7 @@
 #import "MAVEABTableViewController.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
+#import "MAVENativeSharePageView.h"
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
 
@@ -37,11 +38,12 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     self.isFirstDisplay = YES;
 
     [self setupNavigationBar];
-    if ([self canTryAddressBookInvites]) {
-        [self determineAndSetViewBasedOnABPermissions];
-    } else {
-        self.view = [self createEmptyFallbackView];
-    }
+    self.view = [[MAVENativeSharePageView alloc] init];
+//    if ([self canTryAddressBookInvites]) {
+//        [self determineAndSetViewBasedOnABPermissions];
+//    } else {
+//        self.view = [self createEmptyFallbackView];
+//    }
 }
 
 - (void)viewDidLoad {
