@@ -115,7 +115,7 @@
 }
 
 - (UIButton *)smsShareButton {
-    UIButton *button = [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    UIButton *button = [self genericShareButton:[UIImage imageNamed:@"sms.png"]];
     [button addTarget:[MaveSDK sharedInstance].shareActions
                action:@selector(smsClientSideShare)
      forControlEvents:UIControlEventTouchUpInside];
@@ -123,19 +123,19 @@
 }
 
 - (UIButton *)emailShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    return [self genericShareButton:[UIImage imageNamed:@"email.png"]];
 }
 
 - (UIButton *)facebookShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    return [self genericShareButton:[UIImage imageNamed:@"facebook.png"]];
 }
 
 - (UIButton *)twitterShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    return [self genericShareButton:[UIImage imageNamed:@"twitter.png"]];
 }
 
 - (UIButton *)clipboardShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"SMS-icon.png"]];
+    return [self genericShareButton:[UIImage imageNamed:@"clipboard.png"]];
 }
 
 @end
