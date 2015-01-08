@@ -124,10 +124,10 @@
     
     // Copy to clipboard
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = @"paste me somewhere";
+    // TODO: use the data from the remote config
+    pasteboard.string = @"Join me on Swig";
     UIAlertView *alert;
     
-    // Add two newlines characters at the start of the message
     alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
                                         message:nil delegate:self
                               cancelButtonTitle:nil
