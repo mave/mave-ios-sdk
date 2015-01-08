@@ -33,7 +33,7 @@
             
         case MessageComposeResultFailed:
         {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [warningAlert show];
             break;
         }
@@ -115,8 +115,7 @@
     // TODO: use the data from the remote config
     SLComposeViewController *tweetSheet = [SLComposeViewController
                                            composeViewControllerForServiceType:SLServiceTypeTwitter];
-    [tweetSheet setInitialText:@"Join me"];
-    [tweetSheet addURL:[NSURL URLWithString:@"http://www.swig.co/"]];
+    [tweetSheet setInitialText:@"Join me http://www.hoteltonight.com/"];
     [self presentViewController:tweetSheet animated:YES completion:nil];
     return;
 }
