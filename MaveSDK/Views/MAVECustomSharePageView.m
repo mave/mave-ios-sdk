@@ -29,13 +29,16 @@
 
         // Add share buttons for services
         UIButton *shareButton;
-        shareButton = [self smsShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
-
-        shareButton = [self emailShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
+        if ([MFMessageComposeViewController canSendText]) {
+            shareButton = [self smsShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
+        if ([MFMailComposeViewController canSendMail]) {
+            shareButton = [self emailShareButton];
+            [self.shareButtons addObject:shareButton];
+            [self addSubview:shareButton];
+        }
 
         if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
             shareButton = [self facebookShareButton];
@@ -128,7 +131,12 @@
 }
 
 - (UIButton *)emailShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"email.png"]];
+    UIButton *button = [self genericShareButton:[UIImage imageNamed:@"email.png"]];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(emailClientSideShare)
+     forControlEvents:UIControlEventTouchUpInside];
+    return button;
+
 }
 
 - (UIButton *)facebookShareButton {
@@ -150,7 +158,12 @@
 }
 
 - (UIButton *)clipboardShareButton {
-    return [self genericShareButton:[UIImage imageNamed:@"clipboard.png"]];
+    UIButton *button = [self genericShareButton:[UIImage imageNamed:@"clipboard.png"]];
+    [button addTarget:[MaveSDK sharedInstance].shareActions
+               action:@selector(clipboardShare)
+     forControlEvents:UIControlEventTouchUpInside];
+    return button;
+
 }
 
 @end
