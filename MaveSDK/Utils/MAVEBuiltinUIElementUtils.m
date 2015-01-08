@@ -1,18 +1,43 @@
 //
-//  MAVEUIButtonWithImageAndText.m
+//  MAVEBuiltinUIElementUtils.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 1/8/15.
 //
 //
 
-#import "MAVEUIButtonWithImageAndText.h"
+#import "MAVEBuiltinUIElementUtils.h"
 
-NSString *const MAVEShareTypeClientSMS = @"MAVEShareTypeClientSMS";
-NSString *const MAVEShareTypeClientEmail = @"MAVEShareTypeClientEmail";
-NSString *const MAVEShareTypeOSNativeFacebook = @"MAVEShareTypeOSNativeFacebook";
-NSString *const MAVEShareTypeOSNativeTwitter = @"MAVEShareTypeOSNativeTwitter";
-NSString *const MAVESharetypeClipboardCopy = @"MAVEShareTypeClipboardCopy";
+@implementation MAVEBuiltinUIElementUtils
+
++ (UIImage *)tintWhitesInImage:(UIImage *)baseImage withColor:(UIColor *)tintColor {
+
+    CGRect drawRect = CGRectMake(0, 0, baseImage.size.width, baseImage.size.height);
+
+    UIGraphicsBeginImageContextWithOptions(baseImage.size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextTranslateCTM(context, 0, baseImage.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    // draw original image
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    CGContextDrawImage(context, drawRect, baseImage.CGImage);
+
+    // draw color atop
+    CGContextSetFillColorWithColor(context, tintColor.CGColor);
+    CGContextSetBlendMode(context, kCGBlendModeSourceAtop);
+    CGContextFillRect(context, drawRect);
+
+    UIImage *tintedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return tintedImage;
+}
+
+@end
+
+
 
 @implementation MAVEUIButtonWithImageAndText
 
@@ -34,8 +59,8 @@ NSString *const MAVESharetypeClipboardCopy = @"MAVEShareTypeClipboardCopy";
     titleLabelFrame.size.height = labelSize.height;
     titleLabelFrame.origin.x = (self.frame.size.width / 2) - (labelSize.width / 2);
     titleLabelFrame.origin.y = self.imageView.frame.origin.y +
-                               self.imageView.frame.size.height +
-                               self.paddingBetweenImageAndText;
+    self.imageView.frame.size.height +
+    self.paddingBetweenImageAndText;
     self.titleLabel.frame = titleLabelFrame;
 }
 

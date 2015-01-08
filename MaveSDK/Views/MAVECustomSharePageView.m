@@ -8,7 +8,7 @@
 
 #import "MAVECustomSharePageView.h"
 #import "MaveSDK.h"
-#import "MAVEUIButtonWithImageAndText.h"
+#import "MAVEBuiltinUIElementUtils.h"
 
 @implementation MAVECustomSharePageView
 
@@ -87,42 +87,70 @@
 
     // Make in between button and outer margins all the same size
     CGFloat numberMargins = numShareButtons + 1;
+//    CGFloat shareButtonsSize
     CGFloat combinedMarginWidth =  totalFrameSize.width - shareButtonSize.width * numShareButtons;
     CGFloat marginWidth = combinedMarginWidth / numberMargins;
 
     CGFloat coordX = marginWidth;
     for (UIButton *shareButton in self.shareButtons) {
         shareButton.frame = CGRectMake(coordX, coordY, shareButtonSize.width, shareButtonSize.height);
-        NSLog(@"adding button with size: %@", NSStringFromCGSize(shareButton.frame.size));
         coordX += shareButtonSize.width + marginWidth;
     }
 }
 
 - (CGSize)shareButtonSize {
-    // All share buttons should be same size so return the size of the first one
-    // unless there are none then return 0
-    if ([self.shareButtons count] == 0) {
-        return CGSizeMake(0, 0);
+    // Make them all the same size, pick that size to be the smallest
+    // that will fit the largest icon image and text of all the share buttons to display
+    CGSize size = CGSizeMake(0, 0);
+    CGFloat tmpHeight, tmpWidth;
+    CGSize tmpLabelSize;
+    for (MAVEUIButtonWithImageAndText *button in self.shareButtons) {
+        // Figure out height of button, it's the sum of the image height, paddding btwn
+        // image and title, and title height
+        tmpLabelSize = [button.titleLabel.text
+                        sizeWithAttributes:@{NSFontAttributeName:button.titleLabel.font}];
+        tmpHeight = button.imageView.image.size.height +
+                    button.paddingBetweenImageAndText +
+                    tmpLabelSize.height;
+        if (tmpHeight > size.height) {
+            size.height = tmpHeight;
+        }
+
+        // Figure out width of button, should be max(image width, text width)
+        tmpWidth = MAX(button.imageView.image.size.width, tmpLabelSize.width);
+        if (tmpWidth > size.width) {
+            size.width = tmpWidth;
+        }
     }
-//    return ((UIButton *)[self.shareButtons objectAtIndex:0]).imageView.image.size;
-    return CGSizeMake(50, 50);
+    size.width = ceil(size.width);
+    size.height = ceil(size.height);
+    NSLog(@"button max needed size is: %@", NSStringFromCGSize(size));
+    return size;
 }
 
 
 # pragma mark - Share buttons by service
-- (UIButton *)genericShareButtonWithIcon:(UIImage *)image text:(NSString *)text {
-    UIButton *button = [[MAVEUIButtonWithImageAndText alloc] init];
+- (UIButton *)genericShareButtonWithIconNamed:(NSString*)imageName andLabelText:(NSString *)text {
+    UIColor *labelColor = [UIColor colorWithWhite:0.5 alpha:1];
+    UIColor *iconColor = [UIColor redColor];
+
+    UIImage *image = [UIImage imageNamed:imageName];
+    image = [MAVEBuiltinUIElementUtils tintWhitesInImage:image withColor:iconColor];
+
+    MAVEUIButtonWithImageAndText *button = [[MAVEUIButtonWithImageAndText alloc] init];
     [button setImage:image forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont systemFontOfSize:11];
-    [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont systemFontOfSize:10];
+    [button setTitleColor:labelColor forState:UIControlStateNormal];
+    button.paddingBetweenImageAndText = 4;
+
+    button.backgroundColor = [UIColor blueColor];
     return button;
 }
 
 - (UIButton *)smsShareButton {
-    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
-    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
-                                                   text:@"SMS"];
+    UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png"
+                                                andLabelText:@"SMS"];
     [button addTarget:[MaveSDK sharedInstance].shareActions
                action:@selector(smsClientSideShare)
      forControlEvents:UIControlEventTouchUpInside];
@@ -130,30 +158,26 @@
 }
 
 - (UIButton *)emailShareButton {
-    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
-    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
-                                                   text:@"EMAIL"];
+    UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconEmail.png"
+                                                andLabelText:@"EMAIL"];
     return button;
 }
 
 - (UIButton *)facebookShareButton {
-    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
-    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
-                                                   text:@"SMS"];
+    UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconFacebook.png"
+                                                andLabelText:@"FACEBOOK"];
     return button;
 }
 
 - (UIButton *)twitterShareButton {
-    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
-    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
-                                                   text:@"SMS"];
+    UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconTwitter.png"
+                                                andLabelText:@"TWITTER"];
     return button;
 }
 
 - (UIButton *)clipboardShareButton {
-    UIImage *buttonIcon = [UIImage imageNamed:@"SMS-icon.png"];
-    UIButton *button = [self genericShareButtonWithIcon:buttonIcon
-                                                   text:@"SMS"];
+    UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconClipboard.png"
+                                                andLabelText:@"COPY"];
     return button;
 }
 
