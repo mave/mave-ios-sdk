@@ -8,15 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MAVENativeSharePageView : UIView
+@interface MAVECustomSharePageView : UIView
 
 @property (nonatomic, strong) UILabel *shareExplanationLabel;
 @property (nonatomic, strong) NSMutableArray *shareButtons;
 
 // Helpers
 - (CGSize)shareButtonSize;  // all share buttons should be the same size
+- (UIButton *)genericShareButton:(UIImage *)image;
 
-- (UIButton *)smsInviteButton;
+- (UIButton *)smsShareButton;
+- (UIButton *)emailShareButton;
 - (UIButton *)facebookShareButton;
+- (UIButton *)twitterShareButton;
+- (UIButton *)clipboardShareButton;
 
 @end
