@@ -51,7 +51,7 @@
         if (remoteConfig.enableContactsPrePrompt) {
             // purposely create retain cycle so it won't get dealloc'ed until alert view
             // is displayed then dismissed
-            this.retainSelf = self;
+            this.retainSelf = this;
 
             [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView];
             
