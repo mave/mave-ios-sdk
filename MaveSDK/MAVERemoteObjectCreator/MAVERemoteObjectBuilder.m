@@ -55,6 +55,13 @@
 
 - (void)createObjectWithTimeout:(CGFloat)seconds
                 completionBlock:(void (^)(id))completionBlock {
+    // if no promise just return without promise data
+    if (!self.promise ) {
+        id output = [self buildWithPrimaryThenFallBackToDefaultsWithData:nil];
+        return completionBlock(output);
+    }
+
+    // Otherwise call the async promise done block and return that data
     [self.promise done:^(NSValue *result) {
         id output = [self buildWithPrimaryThenFallBackToDefaultsWithData:(NSDictionary *)result];
         completionBlock(output);

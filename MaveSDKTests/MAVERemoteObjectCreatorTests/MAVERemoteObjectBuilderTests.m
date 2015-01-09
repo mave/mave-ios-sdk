@@ -176,6 +176,21 @@
     OCMVerifyAll(promiseMock);
 }
 
+// This is the create case when the preferLocallySavedData flag is YES
+- (void)testCreateSynchronousWhenNoPromise {
+    MAVERemoteObjectDemo *demoObject = [[MAVERemoteObjectDemo alloc] init];
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+
+    id builderMock = OCMPartialMock(builder);
+    OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:nil])
+        .andReturn(demoObject);
+
+    MAVERemoteObjectDemo *returnedObject = [builder createObjectSynchronousWithTimeout:1234];
+
+    OCMVerifyAll(builderMock);
+    XCTAssertEqualObjects(returnedObject, demoObject);
+}
+
 - (void)testCreateAsync {
     MAVERemoteObjectDemo *demoObject = [[MAVERemoteObjectDemo alloc] init];
 
@@ -205,6 +220,25 @@
     OCMVerifyAll(promiseMock);
 }
 
+- (void)testCreateAsyncWhenNoPromise {
+    MAVERemoteObjectDemo *demoObject = [[MAVERemoteObjectDemo alloc] init];
+
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+
+    id builderMock = OCMPartialMock(builder);
+
+    OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:nil])
+        .andReturn(demoObject);
+
+    __block MAVERemoteObjectDemo *returnedObject;
+    [builder createObjectWithTimeout:4.5
+                     completionBlock:^(id object) {
+                         returnedObject = object;
+                         XCTAssertEqualObjects(returnedObject, demoObject);
+                     }];
+
+    OCMVerifyAll(builderMock);
+}
 
 # pragma mark - Object constructor methods
 // Helpers for various scenarios of building object
