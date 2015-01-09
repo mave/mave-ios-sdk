@@ -48,16 +48,29 @@
     return self;
 }
 
-//- (instancetype)createObjectSynchronousWithTimeout:(CGFloat)seconds {
-//    
-//}
+- (id)createObjectSynchronousWithTimeout:(CGFloat)seconds {
+    NSDictionary *data = (NSDictionary *)[self.promise doneSynchronousWithTimeout:seconds];
+    return [self buildWithPrimaryThenFallBackToDefaultsWithData:data];
+}
+
+- (void)createObjectWithTimeout:(CGFloat)seconds
+                completionBlock:(void (^)(id))completionBlock {
+    [self.promise done:^(NSValue *result) {
+        id output = [self buildWithPrimaryThenFallBackToDefaultsWithData:(NSDictionary *)result];
+        completionBlock(output);
+    } withTimeout:seconds];
+
+}
 
 - (id)buildWithPrimaryThenFallBackToDefaultsWithData:(NSDictionary *)data {
-    id obj = [self buildObjectUsingData:data];
-    if (!obj) {
+    id obj;
+    if (data != nil) {
+        obj = [self buildObjectUsingData:data];
+    }
+    if (!obj && self.loadedFromDiskData != nil) {
         obj = [self buildObjectUsingData:self.loadedFromDiskData];
     }
-    if (!obj) {
+    if (!obj && self.defaultData != nil) {
         obj = [self buildObjectUsingData:self.defaultData];
     }
     return obj;

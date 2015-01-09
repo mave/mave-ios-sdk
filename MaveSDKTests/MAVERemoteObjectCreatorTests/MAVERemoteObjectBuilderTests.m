@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "OCMock/OCMock.h"
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVERemoteObjectBuilder_Internal.h"
 
@@ -138,6 +139,72 @@
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
 
+# pragma mark - Top level create object methods
+- (void)testCreateSynchronous {
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    MAVEPromise *promise = [[MAVEPromise alloc] init];
+    builder.promise = promise;
+    NSDictionary *someData = @{@"foo": @8};
+    MAVERemoteObjectDemo *demoObject = [[MAVERemoteObjectDemo alloc] init];
+    id builderMock = OCMPartialMock(builder);
+    id promiseMock = OCMPartialMock(promise);
+
+    OCMExpect([promiseMock doneSynchronousWithTimeout:3.5]).andReturn(someData);
+    OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:someData])
+        .andReturn(demoObject);
+
+    MAVERemoteObjectDemo *returnedObject = [builder createObjectSynchronousWithTimeout:3.5];
+
+    OCMVerifyAll(builderMock);
+    OCMVerifyAll(promiseMock);
+    XCTAssertEqualObjects(returnedObject, demoObject);
+}
+
+- (void)testCreateSynchronousWhenPromiseNull {
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    MAVEPromise *promise = [[MAVEPromise alloc] init];
+    builder.promise = promise;
+    id builderMock = OCMPartialMock(builder);
+    id promiseMock = OCMPartialMock(promise);
+
+    OCMExpect([promiseMock doneSynchronousWithTimeout:3.5]).andReturn(nil);
+    OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:nil]);
+
+    [builder createObjectSynchronousWithTimeout:3.5];
+
+    OCMVerifyAll(builderMock);
+    OCMVerifyAll(promiseMock);
+}
+
+- (void)testCreateAsync {
+    MAVERemoteObjectDemo *demoObject = [[MAVERemoteObjectDemo alloc] init];
+
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    MAVEPromise *promise = [[MAVEPromise alloc] init];
+    builder.promise = promise;
+    NSDictionary *someData = @{@"foo": @8};
+    id builderMock = OCMPartialMock(builder);
+    id promiseMock = OCMPartialMock(promise);
+
+    OCMExpect([promiseMock done:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void(^completionBlock)(NSValue *value) = obj;
+        completionBlock((NSValue *)someData);
+        return YES;
+    }] withTimeout:4.5]);
+    OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:someData])
+        .andReturn(demoObject);
+
+    __block MAVERemoteObjectDemo *returnedObject;
+    [builder createObjectWithTimeout:4.5
+                     completionBlock:^(id object) {
+                         returnedObject = object;
+                         XCTAssertEqualObjects(returnedObject, demoObject);
+                     }];
+
+    OCMVerifyAll(builderMock);
+    OCMVerifyAll(promiseMock);
+}
+
 
 # pragma mark - Object constructor methods
 // Helpers for various scenarios of building object
@@ -195,6 +262,33 @@
 
     MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder buildWithPrimaryThenFallBackToDefaultsWithData:primaryData];
     XCTAssertNil(obj);
+}
+
+- (void)testBuildWithPrimaryNilAndDiskLoadedNil {
+    NSDictionary *data = @{@"title_copy": @"This is title",
+                           @"body_copy": @"This is body"};
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    builder.classToCreate = [MAVERemoteObjectDemo class];
+    builder.defaultData = data;
+
+    MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder buildWithPrimaryThenFallBackToDefaultsWithData:nil];
+    XCTAssertNotNil(obj);
+    XCTAssertEqualObjects(obj.titleCopy, @"This is title");
+    XCTAssertEqualObjects(obj.bodyCopy, @"This is body");
+}
+
+- (void)testBuildWithPrimaryEmptyDict {
+    NSDictionary *primaryData = @{};
+    NSDictionary *data = @{@"title_copy": @"This is title",
+                           @"body_copy": @"This is body"};
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    builder.classToCreate = [MAVERemoteObjectDemo class];
+    builder.defaultData = data;
+
+    MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder buildWithPrimaryThenFallBackToDefaultsWithData:primaryData];
+    XCTAssertNotNil(obj);
+    XCTAssertNil(obj.titleCopy);
+    XCTAssertNil(obj.bodyCopy);
 }
 
 // Helpers for single attempt to construct

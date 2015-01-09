@@ -28,8 +28,14 @@
     saveIfSuccessfulToUserDefaultsKey:(NSString *)userDefaultsKey
                preferLocallySavedData:(BOOL)preferLocallySavedData;
 
+// Create the object synchronously. If timeout > 0, this may block the current
+// execution thread for up to that lock.
+// You can safely cast the returned id object to the type of the `classToCreate` passed in
 - (id)createObjectSynchronousWithTimeout:(CGFloat)seconds;
+
+// Create the object asynchronously, created object is passed to a block.
+// You can safely cast the returned id object to the type of the `classToCreate` passed in
 - (void)createObjectWithTimeout:(CGFloat)seconds
-                completionBlock:(void (^)(id))completionBlock;
+                completionBlock:(void (^)(id object))completionBlock;
 
 @end
