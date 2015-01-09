@@ -37,9 +37,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     // On load keyboard is hidden
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
-
-    [self setupNavigationBar];
-    self.view = [[MAVECustomSharePageView alloc] init];
+     self.view = [[MAVECustomSharePageView alloc] init];
     
     [self determineAndSetViewBasedOnABPermissions];
 }
@@ -133,21 +131,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 //
 // Load the correct view(s) with data
 //
-- (void)setupNavigationBar {
-    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
-    
-    self.navigationItem.title = displayOptions.navigationBarTitleCopy;
-    self.navigationController.navigationBar.titleTextAttributes = @{
-            NSForegroundColorAttributeName: displayOptions.navigationBarTitleTextColor,
-            NSFontAttributeName: displayOptions.navigationBarTitleFont,
-    };
-    self.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
-    
-    UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;
-    cancelBarButtonItem.target = self;
-    cancelBarButtonItem.action = @selector(dismissAfterCancel);
-    [self.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
-}
 
 - (void)determineAndSetViewBasedOnABPermissions {
     [MAVEABPermissionPromptHandler

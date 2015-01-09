@@ -10,6 +10,8 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MAVEInvitePageChooser.h"
+#import "MAVEInvitePageViewController.h"
+#import "MAVEShareActions.h"
 
 @interface MAVEInvitePageChooserTests : XCTestCase
 
@@ -51,6 +53,20 @@
 
     XCTAssertFalse([chooser isInSupportedRegionForServerSideSMSInvites]);
     OCMVerifyAll(localeClassMock);
+}
+
+- (void)testCreateAddressBookInvitePage {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    UIViewController *vc = [chooser createAddressBookInvitePage];
+    XCTAssertNotNil(vc);
+    XCTAssertTrue([vc isKindOfClass:[MAVEInvitePageViewController class]]);
+}
+
+- (void)testCreateCustomShareInvitePage {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    UIViewController *vc = [chooser createCustomShareInvitePage];
+    XCTAssertNotNil(vc);
+    XCTAssertTrue([vc isKindOfClass:[MAVEShareActions class]]);
 }
 
 @end

@@ -20,8 +20,12 @@
 // Helpers for business logic
 - (BOOL)isInSupportedRegionForServerSideSMSInvites;
 
-
+// Create custom view controllers
 - (UIViewController *)createAddressBookInvitePage;
 - (UIViewController *)createCustomShareInvitePage;
+
+// Alter view controllers
+- (void)embedInNavigationController:(UIViewController *)viewController;
+- (void)setupNavigationBar:(UIViewController *)viewController;
 
 @end

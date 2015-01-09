@@ -6,11 +6,13 @@
 //
 //
 
+#import "MaveSDK.h"
 #import "MAVEInvitePageChooser.h"
 #import "MAVEConstants.h"
 #import "MAVEABUtils.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEShareActions.h"
+#import "MAVEDisplayOptions.h"
 
 @implementation MAVEInvitePageChooser
 
@@ -29,9 +31,8 @@
     // If configured server-side to load share page, do that
 
 
-    
-
-    return nil;
+    // otherwise we can load the address book invite page
+    return [self createAddressBookInvitePage];
 }
 
 
@@ -47,14 +48,32 @@
 
 }
 
-#pragma mark - helpers to create the kinds of view controllers
+#pragma mark - helpers to create the kinds of view controllers & alter them
 
 - (UIViewController *)createAddressBookInvitePage {
     return [[MAVEInvitePageViewController alloc] init];
 }
 
 - (UIViewController *)createCustomShareInvitePage {
-    return nil;
+    return [[MAVEShareActions alloc] init];
 }
+
+- (void)setupNavigationBar:(UIViewController *)viewController {
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
+
+    viewController.navigationItem.title = displayOptions.navigationBarTitleCopy;
+    viewController.navigationController.navigationBar.titleTextAttributes = @{
+                                                                    NSForegroundColorAttributeName: displayOptions.navigationBarTitleTextColor,
+                                                                    NSFontAttributeName: displayOptions.navigationBarTitleFont,
+                                                                    };
+    viewController.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
+
+    UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;
+    cancelBarButtonItem.target = self;
+    cancelBarButtonItem.action = @selector(dismissAfterCancel);
+    [viewController.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
+}
+
+
 
 @end
