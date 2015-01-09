@@ -105,6 +105,7 @@
                                               composeViewControllerForServiceType:SLServiceTypeFacebook];
     [facebookSheet setInitialText:@"Join me on Swig"];
     [facebookSheet addURL:[NSURL URLWithString:@"http://www.swig.co/"]];
+    // TODO: Add completion handler http://stackoverflow.com/questions/13428304/slcomposeviewcontroller-completionhandler
     [self presentViewController:facebookSheet animated:YES completion:nil];
     return;
     
@@ -116,6 +117,7 @@
     SLComposeViewController *tweetSheet = [SLComposeViewController
                                            composeViewControllerForServiceType:SLServiceTypeTwitter];
     [tweetSheet setInitialText:@"Join me http://www.hoteltonight.com/"];
+    // TODO: Add completion handler http://stackoverflow.com/questions/13428304/slcomposeviewcontroller-completionhandler
     [self presentViewController:tweetSheet animated:YES completion:nil];
     return;
 }
