@@ -23,6 +23,7 @@ extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 @property (nonatomic) NSNumber *enableContactsPrePrompt;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePromptTemplate *contactsPrePromptTemplate;
 
+
 + (MAVERemoteObjectBuilder *)remoteBuilder;
 + (NSDictionary *)defaultJSONData;
 

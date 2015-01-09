@@ -31,12 +31,13 @@
     // If configured server-side to load share page, do that
 
 
+
     // otherwise we can load the address book invite page
     return [self createAddressBookInvitePage];
 }
 
 
-#pragma mark - choosing logic helpers
+#pragma mark - Logic about current conditions
 - (BOOL)isInSupportedRegionForServerSideSMSInvites {
     // Right now, we'll only try our address book flow for US devices until we can
     // thoroughly test different countries
@@ -45,8 +46,8 @@
         return YES;
     }
     return NO;
-
 }
+
 
 #pragma mark - helpers to create the kinds of view controllers
 

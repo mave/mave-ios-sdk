@@ -308,6 +308,29 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		0CCC92CD1A60807B008CB888 /* RemoteConfiguration */ = {
+			isa = PBXGroup;
+			children = (
+				0C1F1A001A435EAE00B2D482 /* MAVERemoteConfiguration.h */,
+				0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */,
+				0C1F1A031A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplate.h */,
+				0C1F1A041A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplate.m */,
+				0C29BC521A5DD39400C27DA5 /* MAVEShareToken.h */,
+				0C29BC531A5DD39400C27DA5 /* MAVEShareToken.m */,
+			);
+			path = RemoteConfiguration;
+			sourceTree = "<group>";
+		};
+		0CCC92CE1A608086008CB888 /* RemoteConfiguration */ = {
+			isa = PBXGroup;
+			children = (
+				0C29BC561A5DE74300C27DA5 /* MAVEShareTokenTests.m */,
+				0C1F1A121A51F18600B2D482 /* MAVERemoteConfigurationTests.m */,
+				0C1F1A161A51F4F300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplateTests.m */,
+			);
+			path = RemoteConfiguration;
+			sourceTree = "<group>";
+		};
 		BAF2AC82D5D9713890E196C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -325,12 +348,10 @@
 		C022641019EC40B40087FF37 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0CCC92CE1A608086008CB888 /* RemoteConfiguration */,
 				C022641119EC41010087FF37 /* MAVEABPersonTests.m */,
 				C022641519EC41010087FF37 /* MAVEABTestDataTests.m */,
 				0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */,
-				0C1F1A121A51F18600B2D482 /* MAVERemoteConfigurationTests.m */,
-				0C1F1A161A51F4F300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplateTests.m */,
-				0C29BC561A5DE74300C27DA5 /* MAVEShareTokenTests.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -491,18 +512,13 @@
 		C02927ED19E82C4B006AEE43 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0CCC92CD1A60807B008CB888 /* RemoteConfiguration */,
 				C029280019E82D0F006AEE43 /* MAVEABPerson.h */,
 				C029280119E82D0F006AEE43 /* MAVEABPerson.m */,
 				0C141D2E1A0BC1A80036202A /* MAVEUserData.h */,
 				0C141D2F1A0BC1A80036202A /* MAVEUserData.m */,
 				0CFDBE241A1A827C00DD2AAF /* MAVEReferralData.h */,
 				0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */,
-				0C1F1A001A435EAE00B2D482 /* MAVERemoteConfiguration.h */,
-				0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */,
-				0C1F1A031A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplate.h */,
-				0C1F1A041A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePromptTemplate.m */,
-				0C29BC521A5DD39400C27DA5 /* MAVEShareToken.h */,
-				0C29BC531A5DD39400C27DA5 /* MAVEShareToken.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
