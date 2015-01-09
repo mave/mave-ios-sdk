@@ -75,11 +75,12 @@
 - (void)testEmbedInNavigationController {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
 
-    UIViewController *vc = [[UIViewController alloc] init];
-    UINavigationController *nc = [chooser embedInNavigationController:vc];
+    UIViewController *viewController = [[UIViewController alloc] init];
+    UINavigationController *sampleNavigationController =
+        [chooser embedInNavigationController:viewController];
 
-    XCTAssertNotNil(nc);
-    XCTAssertEqualObjects(vc.navigationController, nc);
+    XCTAssertNotNil(sampleNavigationController);
+    XCTAssertEqualObjects(sampleNavigationController, viewController.navigationController);
 }
 
 - (void)testSetupNavigationBarOnViewController {
@@ -90,21 +91,43 @@
     MAVEDisplayOptions *displayOpts = [MAVEDisplayOptionsFactory generateDisplayOptions];
     [MaveSDK sharedInstance].displayOptions = displayOpts;
 
-    UIViewController *viewController = [[UIViewController alloc] init];
-    UINavigationController *sampleNavigationController =
-        [chooser embedInNavigationController:viewController];
-    XCTAssertNotNil(sampleNavigationController);
 
-    [chooser setupNavigationBar:viewController];
-    XCTAssertEqualObjects(viewController.navigationItem.title, displayOpts.navigationBarTitleCopy);
-    XCTAssertEqualObjects(viewController.navigationController.navigationBar.barTintColor,
+    UIViewController *vc = [[UIViewController alloc] init];
+    UINavigationController *sampleNavigationController =
+        [chooser embedInNavigationController:vc];
+    XCTAssertNotNil(sampleNavigationController);
+    NSObject *someObject = [[NSObject alloc] init];
+
+    [chooser setupNavigationBar:vc
+            leftBarButtonTarget:someObject
+            leftBarButtonAction:@selector(testEmbedInNavigationController)];
+    XCTAssertEqualObjects(vc.navigationItem.title, displayOpts.navigationBarTitleCopy);
+    XCTAssertEqualObjects(vc.navigationController.navigationBar.barTintColor,
                           displayOpts.navigationBarBackgroundColor);
     NSDictionary *expectedTitleTextAttrs = @{
-                                             NSForegroundColorAttributeName: displayOpts.navigationBarTitleTextColor,
-                                             NSFontAttributeName: displayOpts.navigationBarTitleFont,
-                                             };
-    XCTAssertEqualObjects(viewController.navigationController.navigationBar.titleTextAttributes,
+        NSForegroundColorAttributeName: displayOpts.navigationBarTitleTextColor,
+        NSFontAttributeName: displayOpts.navigationBarTitleFont,
+    };
+    XCTAssertEqualObjects(vc.navigationController.navigationBar.titleTextAttributes,
                           expectedTitleTextAttrs);
+
+    XCTAssertEqualObjects(vc.navigationItem.leftBarButtonItem.target, someObject);
+    XCTAssertEqual(vc.navigationItem.leftBarButtonItem.action,
+                   @selector(testEmbedInNavigationController));
+}
+
+- (void)testSetupNavigationBarIfNone {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    NSObject *someObject = [[NSObject alloc] init];
+
+    UIViewController *vc = [[UIViewController alloc] init];
+    XCTAssertNil(vc.navigationController);
+
+    [chooser setupNavigationBar:vc
+            leftBarButtonTarget:someObject
+            leftBarButtonAction:@selector(testEmbedInNavigationController)];
+
+    XCTAssertNil(vc.navigationController);
 }
 
 @end

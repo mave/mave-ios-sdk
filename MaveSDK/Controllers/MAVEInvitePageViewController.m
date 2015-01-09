@@ -46,7 +46,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     [super viewDidLoad];
 
     // Setup the cancel button
-    [self setLeftBarButtonActionIfNeeded];
+    [self setupNavigationBar];
 
     // Subscribe to events that change frame size
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -76,6 +76,13 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setupNavigationBar {
+    [[MaveSDK sharedInstance].invitePageChooser
+     setupNavigationBar:self
+     leftBarButtonTarget:self
+     leftBarButtonAction:@selector(dismissAfterCancel)];
+}
+
 // Cleanup to dismiss, then call the block method, passing back the
 // number of invites sent to the containing app
 - (void)dismissSelf:(unsigned int)numberOfInvitesSent {
@@ -91,13 +98,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 
 - (void)dismissAfterCancel {
     [self dismissSelf:0];
-}
-
-- (void)setLeftBarButtonActionIfNeeded {
-    if (self.navigationItem && !self.navigationItem.leftBarButtonItem.action) {
-        self.navigationItem.leftBarButtonItem.target = self;
-        self.navigationItem.leftBarButtonItem.action = @selector(dismissAfterCancel);
-    }
 }
 
 //
@@ -149,9 +149,9 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         // Permission denied
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                // TODO REMOVE
-                [self presentViewController:[MaveSDK sharedInstance].shareActions animated:NO completion:nil];
-//                self.view = [self createNoAddressBookPermissionView];
+                UIViewController *vc = [[MaveSDK sharedInstance].invitePageChooser createCustomShareInvitePage];
+                UIViewController *nvc = [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
+                [self presentViewController:nvc animated:NO completion:nil];
             });
             [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
         // Permission granted

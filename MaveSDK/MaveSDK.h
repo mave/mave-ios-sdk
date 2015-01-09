@@ -23,7 +23,6 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
 @property (nonatomic, copy) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEAPIInterface *APIInterface;
-@property (nonatomic, strong) MAVEShareActions *shareActions;
 @property (nonatomic, strong) MAVEInvitePageChooser *invitePageChooser;
 @property (nonatomic, strong) MAVERemoteConfigurator *remoteConfigurationBuilder;
 @property (nonatomic, strong) MAVERemoteConfigurator *shareTokenBuilder;

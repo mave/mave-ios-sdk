@@ -51,7 +51,7 @@
 #pragma mark - helpers to create the kinds of view controllers
 
 - (UIViewController *)createAddressBookInvitePage {
-    return [[MAVEInvitePageViewController alloc] init];
+     return [[MAVEInvitePageViewController alloc] init];
 }
 
 - (UIViewController *)createCustomShareInvitePage {
@@ -61,20 +61,30 @@
 #pragma mark - additional setup to view controllers
 
 - (UINavigationController *)embedInNavigationController:(UIViewController *)viewController {
-    return [[UINavigationController alloc] initWithRootViewController:viewController];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:viewController];
+    return nvc;
 }
 
-- (void)setupNavigationBar:(UIViewController *)viewController {
+- (void)setupNavigationBar:(UIViewController *)viewController
+       leftBarButtonTarget:(id)target
+       leftBarButtonAction:(SEL)action {
+    // if no navigation controller, no need to set up
+    if (!viewController.navigationController) {
+        return;
+    }
+
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
 
     viewController.navigationItem.title = displayOptions.navigationBarTitleCopy;
     viewController.navigationController.navigationBar.titleTextAttributes = @{
-                                                                    NSForegroundColorAttributeName: displayOptions.navigationBarTitleTextColor,
-                                                                    NSFontAttributeName: displayOptions.navigationBarTitleFont,
-                                                                    };
+        NSForegroundColorAttributeName: displayOptions.navigationBarTitleTextColor,
+        NSFontAttributeName: displayOptions.navigationBarTitleFont,
+    };
     viewController.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
 
     UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;
+    cancelBarButtonItem.target = target;
+    cancelBarButtonItem.action = action;
     [viewController.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
 }
 

@@ -32,6 +32,7 @@ extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 - (UIView *)createNoAddressBookPermissionView;
 - (UIView *)createEmptyFallbackView;
 
+- (void)setupNavigationBar;
 - (BOOL)shouldDisplayInviteMessageView;
 - (void)presentShareSheet;
 - (void)layoutInvitePageViewAndSubviews;
@@ -42,7 +43,6 @@ extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error;
 
 // Methods to dismiss self after user done sending invites or user hit cancel
-- (void)setLeftBarButtonActionIfNeeded;
 - (void)dismissSelf:(unsigned int)numberOfInvitesSent;
 - (void)dismissAfterCancel;
 @end

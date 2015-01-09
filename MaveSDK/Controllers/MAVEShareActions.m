@@ -17,12 +17,11 @@
 @implementation MAVEShareActions
 
 - (void)loadView {
-    self.view = [[MAVECustomSharePageView alloc] init];
+    self.view = [[MAVECustomSharePageView alloc] initWithDelegate:self];
 }
 
-+ (UIViewController *)rootViewController {
-    UIWindow *window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-    return window.rootViewController;
+- (void)viewDidLoad {
+//    [MaveSDK sharedInstance].invitePageChooser
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result

@@ -138,16 +138,33 @@
 
 }
 
-- (void)testViewDidLoadSetsUpLeftBarButtonAction {
+- (void)testViewDidLoadSetsUpNavigationBar {
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
-    [[MaveSDK sharedInstance].invitePageChooser setupNavigationBar:vc];
+
+    id mock = OCMPartialMock(vc);
+    OCMExpect([mock setupNavigationBar]);
 
     [vc viewDidLoad];
 
-    // Check that the cancel button is setup correctly
-    XCTAssertEqualObjects(vc.navigationItem.leftBarButtonItem.target, vc);
-    XCTAssertEqual(vc.navigationItem.leftBarButtonItem.action, @selector(dismissAfterCancel));
+    OCMVerifyAll(mock);
+}
+
+- (void)testSetupNavigationBar {
+    id chooserMock = OCMPartialMock([MaveSDK sharedInstance].invitePageChooser);
+
+    // setup view controller
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
+
+    // sets up look and display of bar
+    OCMExpect([chooserMock setupNavigationBar:vc
+                          leftBarButtonTarget:vc
+                          leftBarButtonAction:@selector(dismissAfterCancel)]);
+
+    [vc setupNavigationBar];
+
+    OCMVerifyAll(chooserMock);
 }
 
 //

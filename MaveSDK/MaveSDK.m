@@ -32,8 +32,6 @@
 
         _invitePageChooser = [[MAVEInvitePageChooser alloc] init];
         _APIInterface = [[MAVEAPIInterface alloc] init];
-        _shareActions = [[MAVEShareActions alloc] init];
-        
     }
     return self;
 }

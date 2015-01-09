@@ -26,6 +26,8 @@
 
 // Alter view controllers
 - (UINavigationController *)embedInNavigationController:(UIViewController *)viewController;
-- (void)setupNavigationBar:(UIViewController *)viewController;
+- (void)setupNavigationBar:(UIViewController *)viewController
+       leftBarButtonTarget:(id)target
+       leftBarButtonAction:(SEL)action;
 
 @end

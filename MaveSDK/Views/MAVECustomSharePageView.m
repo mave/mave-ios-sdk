@@ -13,8 +13,9 @@
 
 @implementation MAVECustomSharePageView
 
-- (instancetype)init {
+- (instancetype)initWithDelegate:(MAVEShareActions *)delegate {
     if (self = [super init]) {
+        self.delegate = delegate;
         self.shareButtons = [[NSMutableArray alloc] init];
 
         self.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
@@ -154,7 +155,7 @@
 - (UIButton *)smsShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png"
                                                 andLabelText:@"SMS"];
-    [button addTarget:[MaveSDK sharedInstance].shareActions
+    [button addTarget:self.delegate
                action:@selector(smsClientSideShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
@@ -163,7 +164,7 @@
 - (UIButton *)emailShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconEmail.png"
                                                 andLabelText:@"EMAIL"];
-    [button addTarget:[MaveSDK sharedInstance].shareActions
+    [button addTarget:self.delegate
                action:@selector(emailClientSideShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
@@ -172,7 +173,7 @@
 - (UIButton *)facebookShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconFacebook.png"
                                                 andLabelText:@"SHARE"];
-    [button addTarget:[MaveSDK sharedInstance].shareActions
+    [button addTarget:self.delegate
                action:@selector(facebookiOSNativeShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
@@ -181,7 +182,7 @@
 - (UIButton *)twitterShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconTwitter.png"
                                                 andLabelText:@"TWEET"];
-    [button addTarget:[MaveSDK sharedInstance].shareActions
+    [button addTarget:self.delegate
                action:@selector(twitteriOSNativeShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
@@ -190,7 +191,7 @@
 - (UIButton *)clipboardShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconClipboard.png"
                                                 andLabelText:@"COPY"];
-    [button addTarget:[MaveSDK sharedInstance].shareActions
+    [button addTarget:self.delegate
                action:@selector(clipboardShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
