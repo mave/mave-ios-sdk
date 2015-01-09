@@ -150,8 +150,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIViewController *vc = [[MaveSDK sharedInstance].invitePageChooser createCustomShareInvitePage];
-                UIViewController *nvc = [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
-                [self presentViewController:nvc animated:NO completion:nil];
+                [self.navigationController pushViewController:vc animated:NO];
             });
             [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
         // Permission granted

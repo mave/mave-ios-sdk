@@ -28,7 +28,14 @@
 }
 
 - (void)dismissAfterCancel {
+    // Cleanup for dismiss
+    [self.view endEditing:YES];
 
+    // Call dismissal block
+    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
+    if (dismissalBlock) {
+        dismissalBlock(self, 0);
+    }
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
