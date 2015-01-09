@@ -38,51 +38,6 @@
     [super tearDown];
 }
 
-- (void)testCanTryAddressBookInvites {
-    // on the simulator it's always US so this should always be true
-    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    XCTAssertTrue([ipvc canTryAddressBookInvites]);
-}
-
-- (void)testUseShareSheetIfCannotTryAddressBookInvites {
-    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    id mock = [OCMockObject partialMockForObject:ipvc];
-    [[[mock stub] andReturnValue:@NO] canTryAddressBookInvites];
-
-    // don't determine views by permissions, just use empty fallback
-    [[mock reject] determineAndSetViewBasedOnABPermissions];
-    [[mock expect] createEmptyFallbackView];
-
-    [ipvc loadView];
-
-    [[mock expect] presentShareSheet];
-
-    [ipvc viewDidAppear:NO];
-    [mock verify];
-    [mock stopMocking];
-    
-    // Now it's no longer the first display
-    XCTAssertFalse(ipvc.isFirstDisplay);
-}
-
-- (void)testUseAddressBookBasedInviteViewIfCanTryAddressBookInvites {
-    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    id mock = [OCMockObject partialMockForObject:ipvc];
-    [[[mock stub] andReturnValue:@YES] canTryAddressBookInvites];
-
-    // don't determine views by permissions, just use empty fallback
-    [[mock expect] determineAndSetViewBasedOnABPermissions];
-
-    [ipvc loadView];
-
-    [[mock reject] presentShareSheet];
-
-    [ipvc viewDidAppear:NO];
-
-    [mock verify];
-    [mock stopMocking];
-}
-
 - (void)testPresentShareSheet {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     id VCMock = OCMPartialMock(ipvc);

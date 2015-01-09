@@ -26,7 +26,6 @@ extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 // Helpers for keeping track of keyboard for frame resizing
 @property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame
 @property (atomic) BOOL isKeyboardVisible;
-@property (nonatomic) BOOL isFirstDisplay;
 
 // Setup self and children
 - (UIView *)createAddressBookInviteView;
@@ -34,7 +33,6 @@ extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 - (UIView *)createEmptyFallbackView;
 - (void)setupNavigationBar;
 - (BOOL)shouldDisplayInviteMessageView;
-- (BOOL)canTryAddressBookInvites;
 - (void)presentShareSheet;
 - (void)layoutInvitePageViewAndSubviews;
 - (void)determineAndSetViewBasedOnABPermissions;

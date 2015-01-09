@@ -37,16 +37,11 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     // On load keyboard is hidden
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
-    self.isFirstDisplay = YES;
 
     [self setupNavigationBar];
     self.view = [[MAVECustomSharePageView alloc] init];
     
-    if ([self canTryAddressBookInvites]) {
-        [self determineAndSetViewBasedOnABPermissions];
-    } else {
-        self.view = [self createEmptyFallbackView];
-    }
+    [self determineAndSetViewBasedOnABPermissions];
 }
 
 - (void)viewDidLoad {
@@ -62,16 +57,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                       selector:@selector(deviceDidRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    // If first time we're displaying this view, pop-up the share sheet
-    // automatically if we can't try address book invites
-    if (![self canTryAddressBookInvites] && self.isFirstDisplay) {
-        [self presentShareSheet];
-    }
-    // Now it's no longer the first time displaying this page
-    self.isFirstDisplay = NO;
 }
 
 - (void)dealloc {
@@ -143,16 +128,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     } else {
         return YES;
     }
-}
-
-- (BOOL)canTryAddressBookInvites {
-    // Right now, we'll only try our address book flow for US devices until we can
-    // thoroughly test different countries
-    NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-    if ([countryCode isEqualToString:MAVECountryCodeUnitedStates]) {
-        return YES;
-    }
-    return NO;
 }
 
 //
