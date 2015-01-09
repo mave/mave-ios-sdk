@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MAVEPromiseWithDefault.h"
+
+typedef NS_ENUM(NSInteger, MAVEPromiseStatus) {
+    MAVEPromiseStatusUnfulfilled = 0,
+    MAVEPromiseStatusFulfilled = 1,
+    MAVEPromiseStatusRejected = -1,
+};
 
 @interface MAVEPromise : NSObject
 

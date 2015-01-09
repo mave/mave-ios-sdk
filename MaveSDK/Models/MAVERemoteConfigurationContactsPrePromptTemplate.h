@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVERemoteConfigurator.h"
+#import "MAVERemoteObjectBuilder.h"
 
 @interface MAVERemoteConfigurationContactsPrePromptTemplate : NSObject<MAVEDictionaryInitializable>
 

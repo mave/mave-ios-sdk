@@ -12,7 +12,7 @@
 #import "MAVEUserData.h"
 #import "MAVEInvitePageChooser.h"
 #import "MAVEAPIInterface.h"
-#import "MAVERemoteConfigurator.h"
+#import "MAVERemoteObjectBuilder.h"
 #import "MAVECustomSharePageViewController.h"
 
 typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteViewController);
@@ -24,8 +24,8 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 @property (nonatomic, copy) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEAPIInterface *APIInterface;
 @property (nonatomic, strong) MAVEInvitePageChooser *invitePageChooser;
-@property (nonatomic, strong) MAVERemoteConfigurator *remoteConfigurationBuilder;
-@property (nonatomic, strong) MAVERemoteConfigurator *shareTokenBuilder;
+@property (nonatomic, strong) MAVERemoteObjectBuilder *remoteConfigurationBuilder;
+@property (nonatomic, strong) MAVERemoteObjectBuilder *shareTokenBuilder;
 
 
 @property (nonatomic, copy) NSString *appId;

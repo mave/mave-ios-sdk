@@ -6,7 +6,6 @@
 //
 //
 
-#import "MAVEPromiseWithDefault.h"
 #import "MAVEPromise.h"
 #import "MAVEPromise_Internal.h"
 

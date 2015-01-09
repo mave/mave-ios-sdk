@@ -10,7 +10,7 @@
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
 #import "MAVERemoteConfiguration.h"
-#import "MAVERemoteConfigurator.h"
+#import "MAVERemoteObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
 
 NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyRemoteConfiguration";
@@ -29,20 +29,20 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"contacts_pre_pr
     return self;
 }
 
-+ (MAVERemoteConfigurator *)remoteBuilder {
-    return [[MAVERemoteConfigurator alloc]
++ (MAVERemoteObjectBuilder *)remoteBuilder {
+    return [[MAVERemoteObjectBuilder alloc]
             initWithClassToCreate:[self class]
-            preFetchBlock:^(MAVEPromiseWithDefaultDictValues *promise) {
+            preFetchBlock:^(MAVEPromise *promise) {
                 [[MaveSDK sharedInstance].APIInterface
-                getRemoteConfigurationWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
-                    if (error) {
-                        [promise rejectPromise];
-                    } else {
-                        promise.fulfilledValue = responseData;
-                    }
-                }];
-            } userDefaultsPersistanceKey:MAVEUserDefaultsKeyRemoteConfiguration
-            defaultData:[self defaultJSONData]
+                 getRemoteConfigurationWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
+                     if (error) {
+                         [promise rejectPromise];
+                     } else {
+                         [promise fulfillPromise:(NSValue *)responseData];
+                     }
+                 }];
+            } defaultData:[self defaultJSONData]
+            saveIfSuccessfulToUserDefaultsKey:MAVEUserDefaultsKeyRemoteConfiguration
             preferLocallySavedData:NO];
 }
 

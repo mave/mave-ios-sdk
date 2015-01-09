@@ -13,7 +13,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVERemoteConfigurator.h"
+#import "MAVERemoteObjectBuilder.h"
 
 extern NSString * const MAVEUserDefaultsKeyShareToken;
 
@@ -21,7 +21,7 @@ extern NSString * const MAVEUserDefaultsKeyShareToken;
 
 @property (nonatomic, copy) NSString *shareToken;
 
-+ (MAVERemoteConfigurator *)remoteBuilder;
++ (MAVERemoteObjectBuilder *)remoteBuilder;
 + (NSDictionary *)defaultJSONData;
 
 @end

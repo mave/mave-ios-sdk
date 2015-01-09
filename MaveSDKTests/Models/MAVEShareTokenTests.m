@@ -38,14 +38,15 @@
 }
 
 - (void)testRemoteBuilder {
-    id mock = OCMClassMock([MAVERemoteConfigurator class]);
+    id mock = OCMClassMock([MAVERemoteObjectBuilder class]);
 
     OCMExpect([mock alloc]).andReturn(mock);
     OCMExpect([mock initWithClassToCreate:[MAVEShareToken class]
                             preFetchBlock:[OCMArg any]
-               userDefaultsPersistanceKey:MAVEUserDefaultsKeyShareToken
                               defaultData:[MAVEShareToken defaultJSONData]
+        saveIfSuccessfulToUserDefaultsKey:MAVEUserDefaultsKeyShareToken
                    preferLocallySavedData:YES]).andReturn(mock);
+
     id returnedVal = [MAVEShareToken remoteBuilder];
 
     OCMVerifyAll(mock);

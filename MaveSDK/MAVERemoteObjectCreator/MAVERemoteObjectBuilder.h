@@ -8,7 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "MAVEPromise.h"
-#import "MAVERemoteConfigurator.h"
+
+@protocol MAVEDictionaryInitializable <NSObject>
++ (instancetype)alloc;
+- (instancetype)initWithDictionary:(NSDictionary *)data;
+@end
 
 @interface MAVERemoteObjectBuilder : NSObject
 

@@ -21,21 +21,20 @@ NSString *const MAVEShareTokenKeyShareToken = @"share_token";
     return self;
 }
 
-+ (MAVERemoteConfigurator *)remoteBuilder {
-    return [[MAVERemoteConfigurator alloc]
-            initWithClassToCreate:[self class]
-            preFetchBlock:^(MAVEPromiseWithDefaultDictValues *promise) {
++ (MAVERemoteObjectBuilder *)remoteBuilder {
+    return [[MAVERemoteObjectBuilder alloc] initWithClassToCreate:[self class]
+            preFetchBlock:^(MAVEPromise *promise) {
                 [[MaveSDK sharedInstance].APIInterface
-                 getRemoteConfigurationWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
-                     if (error) {
-                         [promise rejectPromise];
-                     } else {
-                         promise.fulfilledValue = responseData;
-                     }
-                 }];
-            } userDefaultsPersistanceKey:MAVEUserDefaultsKeyShareToken
-            defaultData:[self defaultJSONData]
-            preferLocallySavedData:YES];
+                getRemoteConfigurationWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
+                    if (error) {
+                        [promise rejectPromise];
+                    } else {
+                        [promise fulfillPromise:(NSValue *)responseData];
+                    }
+                }];
+            } defaultData:[self defaultJSONData]
+            saveIfSuccessfulToUserDefaultsKey:MAVEUserDefaultsKeyShareToken
+                                           preferLocallySavedData:YES];
 }
 
 + (NSDictionary *)defaultJSONData {

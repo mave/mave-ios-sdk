@@ -6,7 +6,6 @@
 //
 //
 
-#import "MAVEPromiseWithDefault.h"
 #import "MAVEPromise.h"
 
 #ifndef MaveSDK_MAVEPromise_Internal_h
