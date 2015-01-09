@@ -17,7 +17,14 @@
 
 @property (nonatomic, strong) MAVEPromise *promise;
 @property (nonatomic) id classToCreate;
-@property (nonatomic, strong) MAVERemoteConfiguratorDataPersistor *persistor;
+@property (nonatomic, strong) NSDictionary *loadedFromDiskData;
+@property (nonatomic, strong) NSDictionary *defaultData;
+
+// Helper to try building with this data, then try relevant fallbacks
+- (id)buildWithPrimaryThenFallBackToDefaultsWithData:(NSDictionary *)data;
+
+// internal helper to build the object using this one piece of data
+- (id)buildObjectUsingData:(NSDictionary *)data;
 
 @end
 

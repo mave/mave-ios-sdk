@@ -28,7 +28,7 @@
     saveIfSuccessfulToUserDefaultsKey:(NSString *)userDefaultsKey
                preferLocallySavedData:(BOOL)preferLocallySavedData;
 
-- (id)createObjectBlockingWithTimeout:(CGFloat)seconds;
+- (id)createObjectSynchronousWithTimeout:(CGFloat)seconds;
 - (void)createObjectWithTimeout:(CGFloat)seconds
                 completionBlock:(void (^)(id))completionBlock;
 

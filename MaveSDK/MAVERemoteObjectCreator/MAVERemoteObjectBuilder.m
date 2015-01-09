@@ -25,8 +25,53 @@
     if (self = [super init]) {
         self.classToCreate = classToCreate;
         self.promise = [[MAVEPromise alloc] initWithBlock:preFetchBlock];
+        self.defaultData = defaultData;
     }
     return self;
+}
+
+- (instancetype)initWithClassToCreate:(Class<MAVEDictionaryInitializable>)classToCreate
+                        preFetchBlock:(void (^)(MAVEPromise *))preFetchBlock
+                          defaultData:(NSDictionary *)defaultData
+    saveIfSuccessfulToUserDefaultsKey:(NSString *)userDefaultsKey
+               preferLocallySavedData:(BOOL)preferLocallySavedData {
+    if (self = [super init]) {
+        self.classToCreate = classToCreate;
+        if (!preferLocallySavedData) {
+            self.promise = [[MAVEPromise alloc] initWithBlock:preFetchBlock];
+        }
+        MAVERemoteConfiguratorDataPersistor *persistor =
+        [[MAVERemoteConfiguratorDataPersistor alloc] initWithUserDefaultsKey:userDefaultsKey defaultJSONData:defaultData];
+        self.loadedFromDiskData = [persistor loadJSONDataFromUserDefaults];
+        self.defaultData = defaultData;
+    }
+    return self;
+}
+
+//- (instancetype)createObjectSynchronousWithTimeout:(CGFloat)seconds {
+//    
+//}
+
+- (id)buildWithPrimaryThenFallBackToDefaultsWithData:(NSDictionary *)data {
+    id obj = [self buildObjectUsingData:data];
+    if (!obj) {
+        obj = [self buildObjectUsingData:self.loadedFromDiskData];
+    }
+    if (!obj) {
+        obj = [self buildObjectUsingData:self.defaultData];
+    }
+    return obj;
+}
+
+- (id)buildObjectUsingData:(NSDictionary *)data {
+    id output;
+    @try {
+        output = [[self.classToCreate alloc] initWithDictionary:data];
+    }
+    @catch (NSException *exception) {
+        output = nil;
+    }
+    return output;
 }
 
 
