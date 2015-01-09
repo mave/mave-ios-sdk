@@ -128,19 +128,26 @@
 }
 
 - (void)testDismissAfterCancelCallsDismissSelf {
+    MAVEInvitePageViewController *vc =
+        [[MAVEInvitePageViewController alloc] init];
+
+    id mockVC =  OCMPartialMock(vc);
+    OCMExpect([mockVC dismissSelf:0]);
+    [vc dismissAfterCancel];
+    OCMVerifyAll(mockVC);
+
+}
+
+- (void)testViewDidLoadSetsUpLeftBarButtonAction {
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    [vc loadView];
+    [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
+    [[MaveSDK sharedInstance].invitePageChooser setupNavigationBar:vc];
+
     [vc viewDidLoad];
 
     // Check that the cancel button is setup correctly
-    UINavigationController *navVC = (UINavigationController *)vc;
-    XCTAssertEqual(navVC.navigationItem.leftBarButtonItem.target, navVC);
-    XCTAssertEqual(navVC.navigationItem.leftBarButtonItem.action, @selector(dismissAfterCancel));
-
-    id mockVC = [OCMockObject partialMockForObject:vc];
-    [[mockVC expect] dismissSelf:0];
-    [vc dismissAfterCancel];
-    [mockVC verify];
+    XCTAssertEqualObjects(vc.navigationItem.leftBarButtonItem.target, vc);
+    XCTAssertEqual(vc.navigationItem.leftBarButtonItem.action, @selector(dismissAfterCancel));
 }
 
 //

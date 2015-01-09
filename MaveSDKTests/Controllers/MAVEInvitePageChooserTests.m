@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MAVEDisplayOptionsFactory.h"
+#import "MaveSDK.h"
 #import "MAVEInvitePageChooser.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVEShareActions.h"
@@ -21,7 +23,7 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    [MaveSDK resetSharedInstanceForTesting];
 }
 
 - (void)tearDown {
@@ -67,6 +69,42 @@
     UIViewController *vc = [chooser createCustomShareInvitePage];
     XCTAssertNotNil(vc);
     XCTAssertTrue([vc isKindOfClass:[MAVEShareActions class]]);
+}
+
+// Navigation bar
+- (void)testEmbedInNavigationController {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+
+    UIViewController *vc = [[UIViewController alloc] init];
+    UINavigationController *nc = [chooser embedInNavigationController:vc];
+
+    XCTAssertNotNil(nc);
+    XCTAssertEqualObjects(vc.navigationController, nc);
+}
+
+- (void)testSetupNavigationBarOnViewController {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+
+    // Uses display options from the singleton
+    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    MAVEDisplayOptions *displayOpts = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].displayOptions = displayOpts;
+
+    UIViewController *viewController = [[UIViewController alloc] init];
+    UINavigationController *sampleNavigationController =
+        [chooser embedInNavigationController:viewController];
+    XCTAssertNotNil(sampleNavigationController);
+
+    [chooser setupNavigationBar:viewController];
+    XCTAssertEqualObjects(viewController.navigationItem.title, displayOpts.navigationBarTitleCopy);
+    XCTAssertEqualObjects(viewController.navigationController.navigationBar.barTintColor,
+                          displayOpts.navigationBarBackgroundColor);
+    NSDictionary *expectedTitleTextAttrs = @{
+                                             NSForegroundColorAttributeName: displayOpts.navigationBarTitleTextColor,
+                                             NSFontAttributeName: displayOpts.navigationBarTitleFont,
+                                             };
+    XCTAssertEqualObjects(viewController.navigationController.navigationBar.titleTextAttributes,
+                          expectedTitleTextAttrs);
 }
 
 @end

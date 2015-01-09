@@ -25,7 +25,7 @@
 - (UIViewController *)createCustomShareInvitePage;
 
 // Alter view controllers
-- (void)embedInNavigationController:(UIViewController *)viewController;
+- (UINavigationController *)embedInNavigationController:(UIViewController *)viewController;
 - (void)setupNavigationBar:(UIViewController *)viewController;
 
 @end

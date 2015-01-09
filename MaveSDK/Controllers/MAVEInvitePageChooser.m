@@ -48,7 +48,7 @@
 
 }
 
-#pragma mark - helpers to create the kinds of view controllers & alter them
+#pragma mark - helpers to create the kinds of view controllers
 
 - (UIViewController *)createAddressBookInvitePage {
     return [[MAVEInvitePageViewController alloc] init];
@@ -56,6 +56,12 @@
 
 - (UIViewController *)createCustomShareInvitePage {
     return [[MAVEShareActions alloc] init];
+}
+
+#pragma mark - additional setup to view controllers
+
+- (UINavigationController *)embedInNavigationController:(UIViewController *)viewController {
+    return [[UINavigationController alloc] initWithRootViewController:viewController];
 }
 
 - (void)setupNavigationBar:(UIViewController *)viewController {
@@ -69,8 +75,6 @@
     viewController.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
 
     UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;
-    cancelBarButtonItem.target = self;
-    cancelBarButtonItem.action = @selector(dismissAfterCancel);
     [viewController.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
 }
 

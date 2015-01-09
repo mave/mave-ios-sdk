@@ -29,8 +29,11 @@
         _appId = appId;
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
+
+        _invitePageChooser = [[MAVEInvitePageChooser alloc] init];
         _APIInterface = [[MAVEAPIInterface alloc] init];
         _shareActions = [[MAVEShareActions alloc] init];
+        
     }
     return self;
 }
@@ -144,9 +147,12 @@ static dispatch_once_t sharedInstanceonceToken;
     *setupError = [self validateSetup];
     if (!*setupError) {
         self.defaultSMSMessageText = defaultMessageText;
-        MAVEInvitePageViewController *inviteController = [[MAVEInvitePageViewController alloc] init];
-        returnViewController =
-            [[UINavigationController alloc] initWithRootViewController:inviteController];
+        UIViewController *viewController = [self.invitePageChooser chooseAndCreateInvitePageViewController];
+        returnViewController = [self.invitePageChooser embedInNavigationController:viewController];
+
+//        UIViewController *inviteController = [[MAVEInvitePageViewController alloc] init];
+//        returnViewController =
+//            [[UINavigationController alloc] initWithRootViewController:inviteController];
     }
     return returnViewController;
 }

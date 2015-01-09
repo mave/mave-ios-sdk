@@ -61,8 +61,6 @@
 }
 
 - (void)layoutSubviews {
-    CGSize totalSize = self.frame.size;
-
     CGSize explanationLabelSize = [self.shareExplanationLabel.text
         sizeWithAttributes:@{NSFontAttributeName: self.shareExplanationLabel.font}];
     CGFloat explanationLabelX = (self.frame.size.width - explanationLabelSize.width) / 2;

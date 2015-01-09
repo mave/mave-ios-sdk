@@ -10,6 +10,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEUserData.h"
+#import "MAVEInvitePageChooser.h"
 #import "MAVEAPIInterface.h"
 #import "MAVERemoteConfigurator.h"
 #import "MAVEShareActions.h"
@@ -19,11 +20,11 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 
 @interface MaveSDK : NSObject
 
-@property (nonatomic, strong) MAVEInvitePageViewController *viewController;
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
 @property (nonatomic, copy) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEAPIInterface *APIInterface;
 @property (nonatomic, strong) MAVEShareActions *shareActions;
+@property (nonatomic, strong) MAVEInvitePageChooser *invitePageChooser;
 @property (nonatomic, strong) MAVERemoteConfigurator *remoteConfigurationBuilder;
 @property (nonatomic, strong) MAVERemoteConfigurator *shareTokenBuilder;
 

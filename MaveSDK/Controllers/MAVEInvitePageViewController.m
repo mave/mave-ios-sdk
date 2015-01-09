@@ -45,6 +45,9 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    // Setup the cancel button
+    [self setLeftBarButtonActionIfNeeded];
+
     // Subscribe to events that change frame size
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self
@@ -88,6 +91,13 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 
 - (void)dismissAfterCancel {
     [self dismissSelf:0];
+}
+
+- (void)setLeftBarButtonActionIfNeeded {
+    if (self.navigationItem && !self.navigationItem.leftBarButtonItem.action) {
+        self.navigationItem.leftBarButtonItem.target = self;
+        self.navigationItem.leftBarButtonItem.action = @selector(dismissAfterCancel);
+    }
 }
 
 //
