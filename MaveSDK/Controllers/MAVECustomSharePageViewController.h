@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <MessageUI/MessageUI.h>
 
-@interface MAVEShareActions: UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate> 
+@interface MAVECustomSharePageViewController: UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
+
+- (void)dismissAfterCancel;
 
 - (void)smsClientSideShare;
 - (void)emailClientSideShare;

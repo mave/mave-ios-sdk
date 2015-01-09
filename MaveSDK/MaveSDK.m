@@ -14,7 +14,7 @@
 #import "MAVEDisplayOptions.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEShareToken.h"
-#import "MAVEShareActions.h"
+#import "MAVECustomSharePageViewController.h"
 
 @implementation MaveSDK {
     // Controller

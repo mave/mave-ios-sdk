@@ -10,18 +10,25 @@
 #import <Social/Social.h>
 #import <MessageUI/MessageUI.h>
 #import "MaveSDK.h"
-#import "MAVEShareActions.h"
+#import "MAVECustomSharePageViewController.h"
 #import "MAVECustomSharePageView.h"
 
 
-@implementation MAVEShareActions
+@implementation MAVECustomSharePageViewController
 
 - (void)loadView {
     self.view = [[MAVECustomSharePageView alloc] initWithDelegate:self];
 }
 
 - (void)viewDidLoad {
-//    [MaveSDK sharedInstance].invitePageChooser
+    [[MaveSDK sharedInstance].invitePageChooser
+     setupNavigationBar:self
+     leftBarButtonTarget:self
+     leftBarButtonAction:@selector(dismissAfterCancel)];
+}
+
+- (void)dismissAfterCancel {
+
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result

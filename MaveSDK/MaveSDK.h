@@ -13,7 +13,7 @@
 #import "MAVEInvitePageChooser.h"
 #import "MAVEAPIInterface.h"
 #import "MAVERemoteConfigurator.h"
-#import "MAVEShareActions.h"
+#import "MAVECustomSharePageViewController.h"
 
 typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteViewController);
 typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSUInteger numberOfInvitesSent);

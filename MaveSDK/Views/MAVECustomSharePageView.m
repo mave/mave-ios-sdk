@@ -13,7 +13,7 @@
 
 @implementation MAVECustomSharePageView
 
-- (instancetype)initWithDelegate:(MAVEShareActions *)delegate {
+- (instancetype)initWithDelegate:(MAVECustomSharePageViewController *)delegate {
     if (self = [super init]) {
         self.delegate = delegate;
         self.shareButtons = [[NSMutableArray alloc] init];

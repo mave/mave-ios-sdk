@@ -13,7 +13,7 @@
 #import "MaveSDK.h"
 #import "MAVEInvitePageChooser.h"
 #import "MAVEInvitePageViewController.h"
-#import "MAVEShareActions.h"
+#import "MAVECustomSharePageViewController.h"
 
 @interface MAVEInvitePageChooserTests : XCTestCase
 
@@ -68,7 +68,7 @@
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     UIViewController *vc = [chooser createCustomShareInvitePage];
     XCTAssertNotNil(vc);
-    XCTAssertTrue([vc isKindOfClass:[MAVEShareActions class]]);
+    XCTAssertTrue([vc isKindOfClass:[MAVECustomSharePageViewController class]]);
 }
 
 // Navigation bar

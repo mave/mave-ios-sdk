@@ -11,7 +11,7 @@
 #import "MAVEConstants.h"
 #import "MAVEABUtils.h"
 #import "MAVEInvitePageViewController.h"
-#import "MAVEShareActions.h"
+#import "MAVECustomSharePageViewController.h"
 #import "MAVEDisplayOptions.h"
 
 @implementation MAVEInvitePageChooser
@@ -55,7 +55,7 @@
 }
 
 - (UIViewController *)createCustomShareInvitePage {
-    return [[MAVEShareActions alloc] init];
+    return [[MAVECustomSharePageViewController alloc] init];
 }
 
 #pragma mark - additional setup to view controllers
