@@ -33,7 +33,7 @@
             
         case MessageComposeResultFailed:
         {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [warningAlert show];
             break;
         }
@@ -105,6 +105,7 @@
                                               composeViewControllerForServiceType:SLServiceTypeFacebook];
     [facebookSheet setInitialText:@"Join me on Swig"];
     [facebookSheet addURL:[NSURL URLWithString:@"http://www.swig.co/"]];
+    // TODO: Add completion handler http://stackoverflow.com/questions/13428304/slcomposeviewcontroller-completionhandler
     [self presentViewController:facebookSheet animated:YES completion:nil];
     return;
     
@@ -115,8 +116,8 @@
     // TODO: use the data from the remote config
     SLComposeViewController *tweetSheet = [SLComposeViewController
                                            composeViewControllerForServiceType:SLServiceTypeTwitter];
-    [tweetSheet setInitialText:@"Join me"];
-    [tweetSheet addURL:[NSURL URLWithString:@"http://www.swig.co/"]];
+    [tweetSheet setInitialText:@"Join me http://www.hoteltonight.com/"];
+    // TODO: Add completion handler http://stackoverflow.com/questions/13428304/slcomposeviewcontroller-completionhandler
     [self presentViewController:tweetSheet animated:YES completion:nil];
     return;
 }
@@ -125,10 +126,10 @@
     
     // Copy to clipboard
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = @"paste me somewhere";
+    // TODO: use the data from the remote config
+    pasteboard.string = @"Join me on Swig";
     UIAlertView *alert;
     
-    // Add two newlines characters at the start of the message
     alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
                                         message:nil delegate:self
                               cancelButtonTitle:nil
