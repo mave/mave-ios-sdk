@@ -11,12 +11,13 @@
 
 @interface MAVERemoteConfigurationContactsPrePrompt : NSObject<MAVEDictionaryInitializable>
 
-@property (nonatomic, strong) NSString *templateID;
 @property (nonatomic) BOOL enabled;
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSString *message;
-@property (nonatomic, strong) NSString *cancelButtonCopy;
-@property (nonatomic, strong) NSString *acceptButtonCopy;
+
+@property (nonatomic, copy) NSString *templateID;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *message;
+@property (nonatomic, copy) NSString *cancelButtonCopy;
+@property (nonatomic, copy) NSString *acceptButtonCopy;
 
 + (NSDictionary *)defaultJSONData;
 

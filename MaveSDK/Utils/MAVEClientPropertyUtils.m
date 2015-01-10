@@ -18,6 +18,16 @@
 
 @implementation MAVEClientPropertyUtils
 
+// This is the app name displayed e.g. on the homescreen & in settings
+// Apple uses the display name if set, if not then the bundle name
++ (NSString *)appName {
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    if (!appName) {
+        appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+    }
+    return appName;
+}
+
 + (NSString *)appRelease {
     return  [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
 }

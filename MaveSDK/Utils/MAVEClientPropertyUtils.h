@@ -16,7 +16,8 @@
 
 // This is the ID auto-generated and stored once per device by mave for identification
 + (NSString *)appDeviceID;
-// The host application's release & version numbers
+// The host application's name, release & version numbers
++ (NSString *)appName;
 + (NSString *)appRelease;
 + (NSString *)appVersion;
 // cell carrier the device is registered with (if any, e.g. iPad may not have)

@@ -9,7 +9,7 @@
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 
 
-const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateTemplate = @"template";
+const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"template";
 const NSString *MAVERemoteConfigKeyContactsPrePromptTemplateID = @"template_id";
 const NSString *MAVERemoteConfigKeyContactsPrePromptEnabled = @"enabled";
 const NSString *MAVERemoteConfigKeyContactsPrePromptTitle = @"title";
@@ -24,7 +24,7 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptAcceptCopy = @"accept_button
     if (self = [self init]) {
         self.enabled = [[data objectForKey:MAVERemoteConfigKeyContactsPrePromptEnabled] boolValue];
 
-        NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateTemplate];
+        NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplate];
         self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateID];
         self.title = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTitle];
         self.message = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptMessage];
@@ -37,7 +37,7 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptAcceptCopy = @"accept_button
 + (NSDictionary *)defaultJSONData {
     return @{
         MAVERemoteConfigKeyContactsPrePromptEnabled: @YES,
-        MAVERemoteConfigKeyContactsPrePromptTemplateTemplate: @{
+        MAVERemoteConfigKeyContactsPrePromptTemplate: @{
             MAVERemoteConfigKeyContactsPrePromptTemplateID: @"default",
             MAVERemoteConfigKeyContactsPrePromptTitle: @"Access your contacts?",
             MAVERemoteConfigKeyContactsPrePromptMessage:

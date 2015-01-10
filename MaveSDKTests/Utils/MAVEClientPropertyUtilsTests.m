@@ -86,6 +86,11 @@
 /// Test inidividual properties are rereasonable values
 ///
 
+- (void)testAppName {
+    // For this app, it's DemoApp
+    XCTAssertEqualObjects([MAVEClientPropertyUtils appName], @"DemoApp");
+}
+
 - (void)testAppRelease {
     NSString *appRelease = [MAVEClientPropertyUtils appRelease];
     XCTAssertNotNil(appRelease);
