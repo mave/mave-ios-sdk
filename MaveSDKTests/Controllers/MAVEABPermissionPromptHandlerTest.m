@@ -85,7 +85,7 @@
 
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc]
         initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    XCTAssertTrue(remoteConfig.contactsPrePromptTemplate.enabled);
+    XCTAssertTrue(remoteConfig.contactsPrePrompt.enabled);
 
     // whole prompt method is wrapped in a block waiting on remote configuration
     // so we have to use mock check block to actually call the code we'll test
@@ -98,10 +98,10 @@
     }]]);
 
     OCMExpect([permissionPrompterMock
-               showPrePromptAlertWithTitle:remoteConfig.contactsPrePromptTemplate.title
-               message:remoteConfig.contactsPrePromptTemplate.message
-               cancelButtonCopy:remoteConfig.contactsPrePromptTemplate.cancelButtonCopy
-               acceptbuttonCopy:remoteConfig.contactsPrePromptTemplate.acceptButtonCopy]);
+               showPrePromptAlertWithTitle:remoteConfig.contactsPrePrompt.title
+               message:remoteConfig.contactsPrePrompt.message
+               cancelButtonCopy:remoteConfig.contactsPrePrompt.cancelButtonCopy
+               acceptbuttonCopy:remoteConfig.contactsPrePrompt.acceptButtonCopy]);
 
     OCMExpect([permissionPrompterMock
                logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView]);
@@ -123,7 +123,7 @@
     OCMExpect([permissionPrompterMock initCustom]).andReturn(permissionPrompterMock);
 
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
-    remoteConfig.contactsPrePromptTemplate.enabled = 0;
+    remoteConfig.contactsPrePrompt.enabled = 0;
 
     // Since method under test is in a block, this wrapper calls the block to test the code
     id buildConfigMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
@@ -141,7 +141,7 @@
     OCMExpect([permissionPrompterMock
                logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView]);
     OCMExpect([permissionPrompterMock setCompletionBlock:(id)completionBlock]);
-    OCMExpect([permissionPrompterMock setPrePromptTemplate:remoteConfig.contactsPrePromptTemplate]);
+    OCMExpect([permissionPrompterMock setPrePromptTemplate:remoteConfig.contactsPrePrompt]);
 
     // Code under test
 

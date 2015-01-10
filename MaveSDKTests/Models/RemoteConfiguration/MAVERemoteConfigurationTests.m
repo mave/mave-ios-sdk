@@ -29,15 +29,19 @@
 
 - (void)testDefaultData {
     NSDictionary *defaults = [MAVERemoteConfiguration defaultJSONData];
-    XCTAssertNotNil([defaults objectForKey:@"contacts_pre_prompt_template"]);
-    XCTAssertEqualObjects([defaults objectForKey:@"contacts_pre_prompt_template"],
+    XCTAssertNotNil([defaults objectForKey:@"contacts_pre_permission_prompt"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"contacts_pre_permission_prompt"],
                           [MAVERemoteConfigurationContactsPrePrompt defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"contacts_invite_page"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"contacts_invite_page"],
+                           [MAVERemoteConfigurationContactsInvitePage defaultJSONData]);
 }
 
 - (void)testInitFromDefaultData {
     MAVERemoteConfiguration *config =
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    XCTAssertNotNil(config.contactsPrePromptTemplate);
+    XCTAssertNotNil(config.contactsPrePrompt);
+    XCTAssertNotNil(config.contactsInvitePage);
 }
 
 - (void)testRemoteBuilder {

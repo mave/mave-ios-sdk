@@ -29,7 +29,6 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSMSCopy = @"sms_copy";
     return self;
 }
 
-
 + (NSDictionary *)defaultJSONData {
     NSString *smsCopy = [NSString stringWithFormat:@"Join me on %@!",
                          [MAVEClientPropertyUtils appName]];

@@ -46,9 +46,9 @@
     [[MaveSDK sharedInstance].remoteConfigurationBuilder
      createObjectWithTimeout:2.0 completionBlock:^(id object) {
         MAVERemoteConfiguration *remoteConfig = object;
-        this.prePromptTemplate = remoteConfig.contactsPrePromptTemplate;
+        this.prePromptTemplate = remoteConfig.contactsPrePrompt;
 
-        if (remoteConfig.contactsPrePromptTemplate.enabled) {
+        if (remoteConfig.contactsPrePrompt.enabled) {
             // purposely create retain cycle so it won't get dealloc'ed until alert view
             // is displayed then dismissed
             this.retainSelf = this;
