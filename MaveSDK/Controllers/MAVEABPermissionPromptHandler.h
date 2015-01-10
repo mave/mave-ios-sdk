@@ -14,7 +14,7 @@ typedef void (^MAVEABDataBlock)(NSDictionary *indexedContacts);
 
 @interface MAVEABPermissionPromptHandler : NSObject<UIAlertViewDelegate>
 
-@property (nonatomic, strong) MAVERemoteConfigurationContactsPrePromptTemplate *prePromptTemplate;
+@property (nonatomic, strong) MAVERemoteConfigurationContactsPrePrompt *prePromptTemplate;
 @property (nonatomic, copy) void(^completionBlock)(NSDictionary *contacts);
 @property (nonatomic, strong) id retainSelf;
 

@@ -1,5 +1,5 @@
 //
-//  MAVERemoteConfigurationContactsPrePromptTemplate.h
+//  MAVERemoteConfigurationContactsPrePrompt.h
 //  MaveSDK
 //
 //  Created by Danny Cosson on 12/18/14.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MAVERemoteObjectBuilder.h"
 
-@interface MAVERemoteConfigurationContactsPrePromptTemplate : NSObject<MAVEDictionaryInitializable>
+@interface MAVERemoteConfigurationContactsPrePrompt : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic, strong) NSString *templateID;
 @property (nonatomic) BOOL enabled;

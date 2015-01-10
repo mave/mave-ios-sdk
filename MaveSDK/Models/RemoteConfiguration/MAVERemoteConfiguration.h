@@ -13,14 +13,14 @@
 
 #import <Foundation/Foundation.h>
 #import "MAVERemoteObjectBuilder.h"
-#import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
+#import "MAVERemoteConfigurationContactsPrePrompt.h"
 
 extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 
 
 @interface MAVERemoteConfiguration : NSObject<MAVEDictionaryInitializable>
 
-@property (nonatomic, strong) MAVERemoteConfigurationContactsPrePromptTemplate *contactsPrePromptTemplate;
+@property (nonatomic, strong) MAVERemoteConfigurationContactsPrePrompt *contactsPrePromptTemplate;
 
 
 + (MAVERemoteObjectBuilder *)remoteBuilder;

@@ -229,8 +229,8 @@
     NSString *fakeRoute = @"aasdk023radfnailwrf";
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
     promptHandler.prePromptTemplate =
-        [[MAVERemoteConfigurationContactsPrePromptTemplate alloc]initWithDictionary:
-        [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData]];
+        [[MAVERemoteConfigurationContactsPrePrompt alloc]initWithDictionary:
+        [MAVERemoteConfigurationContactsPrePrompt defaultJSONData]];
     XCTAssertNotNil(promptHandler.prePromptTemplate.templateID);
     id APIInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
 

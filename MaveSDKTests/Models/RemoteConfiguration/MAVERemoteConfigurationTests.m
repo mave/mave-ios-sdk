@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #import <objc/runtime.h>
 #import "MAVERemoteConfiguration.h"
-#import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
+#import "MAVERemoteConfigurationContactsPrePrompt.h"
 
 @interface MAVERemoteConfigurationTests : XCTestCase
 
@@ -31,7 +31,7 @@
     NSDictionary *defaults = [MAVERemoteConfiguration defaultJSONData];
     XCTAssertNotNil([defaults objectForKey:@"contacts_pre_prompt_template"]);
     XCTAssertEqualObjects([defaults objectForKey:@"contacts_pre_prompt_template"],
-                          [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData]);
+                          [MAVERemoteConfigurationContactsPrePrompt defaultJSONData]);
 }
 
 - (void)testInitFromDefaultData {

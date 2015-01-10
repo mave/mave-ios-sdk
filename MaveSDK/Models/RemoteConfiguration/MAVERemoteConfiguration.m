@@ -11,7 +11,7 @@
 #import "MAVEConstants.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteObjectBuilder.h"
-#import "MAVERemoteConfigurationContactsPrePromptTemplate.h"
+#import "MAVERemoteConfigurationContactsPrePrompt.h"
 
 NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyRemoteConfiguration";
 
@@ -22,7 +22,7 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"contacts_pre_pr
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
-        self.contactsPrePromptTemplate = [[MAVERemoteConfigurationContactsPrePromptTemplate alloc]
+        self.contactsPrePromptTemplate = [[MAVERemoteConfigurationContactsPrePrompt alloc]
                                           initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplate]];
     }
     return self;
@@ -45,7 +45,7 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptTemplate = @"contacts_pre_pr
 + (NSDictionary *)defaultJSONData {
     return @{
              MAVERemoteConfigKeyContactsPrePromptTemplate:
-                 [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData],
+                 [MAVERemoteConfigurationContactsPrePrompt defaultJSONData],
              };
 }
 
