@@ -85,7 +85,7 @@
 
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc]
         initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    XCTAssertTrue(remoteConfig.enableContactsPrePrompt);
+    XCTAssertTrue(remoteConfig.contactsPrePromptTemplate.enabled);
 
     // whole prompt method is wrapped in a block waiting on remote configuration
     // so we have to use mock check block to actually call the code we'll test
@@ -123,7 +123,7 @@
     OCMExpect([permissionPrompterMock initCustom]).andReturn(permissionPrompterMock);
 
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
-    remoteConfig.enableContactsPrePrompt = 0;
+    remoteConfig.contactsPrePromptTemplate.enabled = 0;
 
     // Since method under test is in a block, this wrapper calls the block to test the code
     id buildConfigMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);

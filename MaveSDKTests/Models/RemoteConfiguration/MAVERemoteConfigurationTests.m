@@ -29,8 +29,6 @@
 
 - (void)testDefaultData {
     NSDictionary *defaults = [MAVERemoteConfiguration defaultJSONData];
-    XCTAssertEqualObjects([defaults objectForKey:@"enable_contacts_pre_prompt"], @YES);
-
     XCTAssertNotNil([defaults objectForKey:@"contacts_pre_prompt_template"]);
     XCTAssertEqualObjects([defaults objectForKey:@"contacts_pre_prompt_template"],
                           [MAVERemoteConfigurationContactsPrePromptTemplate defaultJSONData]);
@@ -39,7 +37,6 @@
 - (void)testInitFromDefaultData {
     MAVERemoteConfiguration *config =
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    XCTAssertTrue(config.enableContactsPrePrompt);
     XCTAssertNotNil(config.contactsPrePromptTemplate);
 }
 
