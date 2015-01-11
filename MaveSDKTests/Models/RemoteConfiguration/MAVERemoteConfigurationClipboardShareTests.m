@@ -1,5 +1,5 @@
 //
-//  MAVERemoteConfigurationClientSMSTests.m
+//  MAVERemoteConfigurationClipboardShareTests.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 1/11/15.
@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "MAVERemoteConfigurationClientSMS.h"
+#import "MAVERemoteConfigurationClipboardShare.h"
 
-@interface MAVERemoteConfigurationClientSMSTests : XCTestCase
+@interface MAVERemoteConfigurationClipboardShareTests : XCTestCase
 
 @end
 
-@implementation MAVERemoteConfigurationClientSMSTests
+@implementation MAVERemoteConfigurationClipboardShareTests
 
 - (void)setUp {
     [super setUp];
@@ -27,28 +27,28 @@
 }
 
 - (void)testDefaultData {
-    NSDictionary *defaults = [MAVERemoteConfigurationClientSMS defaultJSONData];
+    NSDictionary *defaults = [MAVERemoteConfigurationClipboardShare defaultJSONData];
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy"],
-                          @"Join me on DemoApp! ");
+    XCTAssertEqualObjects([template objectForKey:@"copy"], @"");
 }
 
 - (void)testInitFromDefaultData {
-    MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:[MAVERemoteConfigurationClientSMS defaultJSONData]];
+    MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:[MAVERemoteConfigurationClipboardShare defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.text, @"Join me on DemoApp! ");
+    XCTAssertEqualObjects(obj.text, @"");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
-    // missing the "text" parameter
+    // missing the "copy" parameter
     NSDictionary *data = @{@"template_id": @"foo"};
-    MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:data];
+    MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:data];
 
     XCTAssertNil(obj);
 }
+
 
 @end

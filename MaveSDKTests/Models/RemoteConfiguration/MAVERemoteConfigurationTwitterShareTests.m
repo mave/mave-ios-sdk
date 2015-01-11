@@ -1,5 +1,5 @@
 //
-//  MAVERemoteConfigurationClientSMSTests.m
+//  MAVERemoteConfigurationTwitterShareTests.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 1/11/15.
@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "MAVERemoteConfigurationClientSMS.h"
+#import "MAVERemoteConfigurationTwitterShare.h"
 
-@interface MAVERemoteConfigurationClientSMSTests : XCTestCase
+@interface MAVERemoteConfigurationTwitterShareTests : XCTestCase
 
 @end
 
-@implementation MAVERemoteConfigurationClientSMSTests
+@implementation MAVERemoteConfigurationTwitterShareTests
 
 - (void)setUp {
     [super setUp];
@@ -27,26 +27,25 @@
 }
 
 - (void)testDefaultData {
-    NSDictionary *defaults = [MAVERemoteConfigurationClientSMS defaultJSONData];
+    NSDictionary *defaults = [MAVERemoteConfigurationTwitterShare defaultJSONData];
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy"],
-                          @"Join me on DemoApp! ");
+    XCTAssertEqualObjects([template objectForKey:@"copy"], @"I love DemoApp. Try it out: ");
 }
 
 - (void)testInitFromDefaultData {
-    MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:[MAVERemoteConfigurationClientSMS defaultJSONData]];
+    MAVERemoteConfigurationTwitterShare *obj = [[MAVERemoteConfigurationTwitterShare alloc] initWithDictionary:[MAVERemoteConfigurationTwitterShare defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.text, @"Join me on DemoApp! ");
+    XCTAssertEqualObjects(obj.text, @"I love DemoApp. Try it out: ");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
-    // missing the "text" parameter
+    // missing the "copy" parameter
     NSDictionary *data = @{@"template_id": @"foo"};
-    MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:data];
+    MAVERemoteConfigurationTwitterShare *obj = [[MAVERemoteConfigurationTwitterShare alloc] initWithDictionary:data];
 
     XCTAssertNil(obj);
 }

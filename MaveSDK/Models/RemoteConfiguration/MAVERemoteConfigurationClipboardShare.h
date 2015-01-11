@@ -11,6 +11,9 @@
 
 @interface MAVERemoteConfigurationClipboardShare : NSObject<MAVEDictionaryInitializable>
 
+@property (nonatomic, copy) NSString *templateID;
+@property (nonatomic, copy) NSString *text;
+
 + (NSDictionary *)defaultJSONData;
 
 @end
