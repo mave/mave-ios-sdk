@@ -40,6 +40,18 @@
     XCTAssertNotNil([defaults objectForKey:@"client_sms"]);
     XCTAssertEqualObjects([defaults objectForKey:@"client_sms"],
                           [MAVERemoteConfigurationClientSMS defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"client_email"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"client_email"],
+                          [MAVERemoteConfigurationClientEmail defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"facebook_share"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"facebook_share"],
+                          [MAVERemoteConfigurationFacebookShare defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"twitter_share"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"twitter_share"],
+                          [MAVERemoteConfigurationTwitterShare defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"clipboard_share"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"clipboard_share"],
+                          [MAVERemoteConfigurationClipboardShare defaultJSONData]);
 }
 
 - (void)testInitFromDefaultData {
@@ -48,6 +60,10 @@
     XCTAssertNotNil(config.contactsPrePrompt);
     XCTAssertNotNil(config.contactsInvitePage);
     XCTAssertNotNil(config.clientSMS);
+    XCTAssertNotNil(config.clientEmail);
+    XCTAssertNotNil(config.facebookShare);
+    XCTAssertNotNil(config.twitterShare);
+    XCTAssertNotNil(config.clipboardShare);
 }
 
 - (void)testInitFailsIfSubConfigurationObjectsFail {
