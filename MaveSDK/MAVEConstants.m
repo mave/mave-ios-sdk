@@ -16,6 +16,13 @@
 #endif
 NSString * const MAVEAPIVersion = @"v1.0";
 
+#ifdef MAVE_USE_DEV_API
+    NSString * const MAVEShortLinkBaseURL = @"http://dev.appjoin.us/";
+#else
+    NSString * const MAVEShortLinkBaseURL = @"http://dev.appjoin.us/";
+#endif
+
+
 NSString * const MAVE_HTTP_ERROR_DOMAIN = @"com.mave.http.error";
 NSInteger const MAVEHTTPErrorRequestJSONCode = 1000;
 NSInteger const MAVEHTTPErrorResponseIsNotJSONCode = 1010;

@@ -10,6 +10,7 @@
 #import <Social/Social.h>
 #import <MessageUI/MessageUI.h>
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVECustomSharePageView.h"
 
@@ -159,6 +160,18 @@
 
     });
     return;
+}
+
+
+#pragma mark - Helpers for building share content
+
++ (NSString *)buildShareLinkWithSubRouteLetter:(NSString *)subRoute
+                                    shareToken:(NSString *)shareToken {
+    NSString *output = MAVEShortLinkBaseURL;
+    output = [output stringByAppendingString:subRoute];
+    output = [output stringByAppendingString:@"/"];
+    output = [output stringByAppendingString:shareToken];
+    return output;
 }
 
 

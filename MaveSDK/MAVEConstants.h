@@ -17,6 +17,7 @@
 
 extern NSString * const MAVEAPIBaseURL;
 extern NSString * const MAVEAPIVersion;
+extern NSString * const MAVEShortLinkBaseURL;
 
 extern NSString * const MAVE_HTTP_ERROR_DOMAIN;
 

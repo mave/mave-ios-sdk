@@ -77,4 +77,10 @@
     XCTAssertEqual(numInvites, 0);
 }
 
+#pragma mark - Helpers for building share content
+- (void)testBuildShareLink {
+    NSString *link = [MAVECustomSharePageViewController buildShareLinkWithSubRouteLetter:@"d" shareToken:@"blahtok"];
+    XCTAssertEqualObjects(link, @"http://dev.appjoin.us/d/blahtok");
+}
+
 @end
