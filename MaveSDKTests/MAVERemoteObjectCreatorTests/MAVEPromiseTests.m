@@ -127,9 +127,7 @@
     [promise done:^(NSValue *result) {
         val = result;
         XCTAssertEqualObjects(val, returnValue);
-    } withTimeout:0.1];
-    // here val is still nil b/c it will get here before above times out
-    XCTAssertNil(val);
+    } withTimeout:0.01];
 }
 
 @end

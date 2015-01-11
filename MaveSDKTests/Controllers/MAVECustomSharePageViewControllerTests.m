@@ -22,6 +22,8 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+
 }
 
 - (void)tearDown {
@@ -56,11 +58,11 @@
     OCMVerifyAll(apiMock);
 }
 
-- (void)testDismissAfterCancel {
+- (void)testDismissSelf {
     MAVECustomSharePageViewController *vc =
         [[MAVECustomSharePageViewController alloc] init];
     [vc loadView];
-    __block BOOL numInvites;
+    __block NSUInteger numInvites;
     __block BOOL called;
     [MaveSDK sharedInstance].invitePageDismissalBlock =
         ^(UIViewController *vc, NSUInteger numberOfInvitesSent) {
@@ -70,12 +72,27 @@
     id viewMock = OCMPartialMock(vc.view);
     OCMExpect([viewMock endEditing:YES]);
 
-    [vc dismissAfterCancel];
+    [vc dismissSelf:101];
 
     OCMVerifyAll(viewMock);
     XCTAssertTrue(called);
-    XCTAssertEqual(numInvites, 0);
+    XCTAssertEqual(numInvites, 101);
 }
+
+- (void)testDismissAfterCancel {
+    MAVECustomSharePageViewController *vc =
+    [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    OCMExpect([vc dismissSelf:0]);
+    [vc dismissAfterCancel];
+    OCMVerifyAll(mock);
+}
+
+# pragma mark - Share methods
+- (void)testClientSideSMSShare {
+
+}
+
 
 #pragma mark - Helpers for building share content
 - (void)testBuildShareLink {

@@ -17,6 +17,10 @@ NSString *const MAVEShareTokenKeyShareToken = @"share_token";
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         self.shareToken = [data objectForKey:@"share_token"];
+        // nil is different than empty string
+        if (self.shareToken == nil) {
+            return nil;
+        }
     }
     return self;
 }
@@ -38,7 +42,9 @@ NSString *const MAVEShareTokenKeyShareToken = @"share_token";
 }
 
 + (NSDictionary *)defaultJSONData {
-    return @{};
+    return @{
+        MAVEShareTokenKeyShareToken: @"",
+    };
 }
 
 @end

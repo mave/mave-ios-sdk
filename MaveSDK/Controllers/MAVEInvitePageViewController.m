@@ -80,7 +80,7 @@
 
 // Cleanup to dismiss, then call the block method, passing back the
 // number of invites sent to the containing app
-- (void)dismissSelf:(unsigned int)numberOfInvitesSent {
+- (void)dismissSelf:(NSUInteger)numberOfInvitesSent {
     // Cleanup for dismiss
     [self.view endEditing:YES];
 

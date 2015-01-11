@@ -27,14 +27,20 @@
 }
 
 - (void)testDefaultJSONData {
-    XCTAssertEqualObjects([MAVEShareToken defaultJSONData], @{});
+    NSDictionary *defaults = [MAVEShareToken defaultJSONData];
+    XCTAssertEqualObjects([defaults objectForKey:@"share_token"], @"");
 }
 
 - (void)testInitFromDefaultJSONData {
     MAVEShareToken *shareToken = [[MAVEShareToken alloc]
                                   initWithDictionary:[MAVEShareToken defaultJSONData]];
     XCTAssertNotNil(shareToken);
-    XCTAssertNil(shareToken.shareToken);
+    XCTAssertEqualObjects(shareToken.shareToken, @"");
+}
+
+- (void)testInitWithNoShareTokenReturnsNil {
+    MAVEShareToken *shareToken = [[MAVEShareToken alloc] initWithDictionary:@{}];
+    XCTAssertNil(shareToken);
 }
 
 - (void)testRemoteBuilder {

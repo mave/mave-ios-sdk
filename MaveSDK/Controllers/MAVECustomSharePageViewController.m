@@ -13,6 +13,7 @@
 #import "MAVEConstants.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVECustomSharePageView.h"
+#import "MAVEShareToken.h"
 
 
 @implementation MAVECustomSharePageViewController
@@ -30,38 +31,19 @@
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeCustomShare];
 }
 
-- (void)dismissAfterCancel {
+- (void)dismissSelf:(NSUInteger)numberOfInvitesSent {
     // Cleanup for dismiss
     [self.view endEditing:YES];
 
     // Call dismissal block
     MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
     if (dismissalBlock) {
-        dismissalBlock(self, 0);
+        dismissalBlock(self, numberOfInvitesSent);
     }
 }
 
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
-{
-    switch (result) {
-        case MessageComposeResultCancelled:
-            break;
-            
-        case MessageComposeResultFailed:
-        {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-            break;
-        }
-            
-        case MessageComposeResultSent:
-            break;
-            
-        default:
-            break;
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)dismissAfterCancel {
+    return [self dismissSelf:0];
 }
 
 
@@ -80,7 +62,44 @@
     NSLog(@"sent local sms");
 }
 
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult) result
+{
+    switch (result) {
+        case MessageComposeResultCancelled:
+            break;
+
+        case MessageComposeResultFailed:
+        {
+            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [warningAlert show];
+            break;
+        }
+
+        case MessageComposeResultSent:
+            break;
+
+        default:
+            break;
+    }
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)emailClientSideShare {
+    // TODO: use the data from the remote config
+    MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
+    mailController.mailComposeDelegate = self;
+    [mailController setSubject:@"Join Swig"];
+    [mailController setMessageBody:@"Get wit it" isHTML:NO];
+    
+    [self presentViewController:mailController animated:YES completion:NULL];
+    return;
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error
 {
     switch (result) {
         case MFMailComposeResultSent:
@@ -99,19 +118,10 @@
             NSLog(@"An error occurred when trying to compose this email");
             break;
     }
-    
-    [self dismissViewControllerAnimated:YES completion:NULL];
-}
 
-- (void)emailClientSideShare {
-    // TODO: use the data from the remote config
-    MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
-    mailController.mailComposeDelegate = self;
-    [mailController setSubject:@"Join Swig"];
-    [mailController setMessageBody:@"Get wit it" isHTML:NO];
-    
-    [self presentViewController:mailController animated:YES completion:NULL];
-    return;
+    // This dismisses the email compose view, so the share page
+    // is still active
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)facebookiOSNativeShare {
@@ -164,6 +174,11 @@
 
 
 #pragma mark - Helpers for building share content
+
+- (NSString *)shareToken {
+    MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
+    return tokenObject.shareToken;
+}
 
 + (NSString *)buildShareLinkWithSubRouteLetter:(NSString *)subRoute
                                     shareToken:(NSString *)shareToken {
