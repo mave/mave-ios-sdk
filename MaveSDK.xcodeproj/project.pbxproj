@@ -15,6 +15,11 @@
 		0C1A8FB61A63183500518D9A /* MAVECustomSharePageViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FB51A63183500518D9A /* MAVECustomSharePageViewTests.m */; };
 		0C1A8FB91A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FB81A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m */; };
 		0C1A8FBB1A63276100518D9A /* MAVERemoteConfigurationClientSMSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FBA1A63276100518D9A /* MAVERemoteConfigurationClientSMSTests.m */; };
+		0C1A8FBE1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FBD1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.m */; };
+		0C1A8FC11A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FC01A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m */; };
+		0C1A8FC41A632B0000518D9A /* MAVERemoteConfigurationTwitterShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FC31A632B0000518D9A /* MAVERemoteConfigurationTwitterShare.m */; };
+		0C1A8FC71A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FC61A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m */; };
+		0C1A8FC91A632B9700518D9A /* MAVERemoteConfigurationClientEmailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FC81A632B9700518D9A /* MAVERemoteConfigurationClientEmailTests.m */; };
 		0C1F19FC1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F19FB1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m */; };
 		0C1F1A021A435EAE00B2D482 /* MAVERemoteConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */; };
 		0C1F1A051A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A041A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.m */; };
@@ -122,6 +127,15 @@
 		0C1A8FB71A63255C00518D9A /* MAVERemoteConfigurationClientSMS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationClientSMS.h; sourceTree = "<group>"; };
 		0C1A8FB81A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationClientSMS.m; sourceTree = "<group>"; };
 		0C1A8FBA1A63276100518D9A /* MAVERemoteConfigurationClientSMSTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationClientSMSTests.m; sourceTree = "<group>"; };
+		0C1A8FBC1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationClientEmail.h; sourceTree = "<group>"; };
+		0C1A8FBD1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationClientEmail.m; sourceTree = "<group>"; };
+		0C1A8FBF1A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationFacebookShare.h; sourceTree = "<group>"; };
+		0C1A8FC01A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationFacebookShare.m; sourceTree = "<group>"; };
+		0C1A8FC21A632B0000518D9A /* MAVERemoteConfigurationTwitterShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationTwitterShare.h; sourceTree = "<group>"; };
+		0C1A8FC31A632B0000518D9A /* MAVERemoteConfigurationTwitterShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationTwitterShare.m; sourceTree = "<group>"; };
+		0C1A8FC51A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationClipboardShare.h; sourceTree = "<group>"; };
+		0C1A8FC61A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationClipboardShare.m; sourceTree = "<group>"; };
+		0C1A8FC81A632B9700518D9A /* MAVERemoteConfigurationClientEmailTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationClientEmailTests.m; sourceTree = "<group>"; };
 		0C1F19FA1A432AA500B2D482 /* MAVEABPermissionPromptHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPermissionPromptHandler.h; sourceTree = "<group>"; };
 		0C1F19FB1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPermissionPromptHandler.m; sourceTree = "<group>"; };
 		0C1F1A001A435EAE00B2D482 /* MAVERemoteConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfiguration.h; sourceTree = "<group>"; };
@@ -333,6 +347,14 @@
 				0C29BC531A5DD39400C27DA5 /* MAVEShareToken.m */,
 				0C1A8FB71A63255C00518D9A /* MAVERemoteConfigurationClientSMS.h */,
 				0C1A8FB81A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m */,
+				0C1A8FBC1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.h */,
+				0C1A8FBD1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.m */,
+				0C1A8FBF1A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.h */,
+				0C1A8FC01A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m */,
+				0C1A8FC21A632B0000518D9A /* MAVERemoteConfigurationTwitterShare.h */,
+				0C1A8FC31A632B0000518D9A /* MAVERemoteConfigurationTwitterShare.m */,
+				0C1A8FC51A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.h */,
+				0C1A8FC61A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m */,
 			);
 			path = RemoteConfiguration;
 			sourceTree = "<group>";
@@ -345,6 +367,7 @@
 				0C1F1A161A51F4F300B2D482 /* MAVERemoteConfigurationContactsPrePromptTests.m */,
 				0C1A8FB31A61E7D500518D9A /* MAVERemoteConfigurationInvitePageTests.m */,
 				0C1A8FBA1A63276100518D9A /* MAVERemoteConfigurationClientSMSTests.m */,
+				0C1A8FC81A632B9700518D9A /* MAVERemoteConfigurationClientEmailTests.m */,
 			);
 			path = RemoteConfiguration;
 			sourceTree = "<group>";
@@ -458,10 +481,10 @@
 				0C29BC3A1A5D5BE500C27DA5 /* MAVERemoteObjectCreatorTests */,
 				C029282319E83189006AEE43 /* MaveSDKTests.m */,
 				C0834F3319F44DB000E52CA1 /* Factories */,
-				C0834F3019F44D4B00E52CA1 /* Views */,
 				C0425B8A19EDB93A006641AB /* Controllers */,
-				C022641C19EC4F940087FF37 /* Networking */,
 				C022641019EC40B40087FF37 /* Models */,
+				C0834F3019F44D4B00E52CA1 /* Views */,
+				C022641C19EC4F940087FF37 /* Networking */,
 				0C2D73191A1FCC230059CA54 /* Utils */,
 				C02927BE19E825A5006AEE43 /* Supporting Files */,
 			);
@@ -758,6 +781,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0425B9319EF2E5C006641AB /* MAVEConstants.m in Sources */,
+				0C1A8FBE1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.m in Sources */,
+				0C1A8FC71A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m in Sources */,
 				0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */,
 				C029279D19E823E2006AEE43 /* HomeViewController.m in Sources */,
 				C029280B19E82D18006AEE43 /* MAVEABPersonCell.m in Sources */,
@@ -775,6 +800,7 @@
 				C02927FA19E82D03006AEE43 /* MAVEInvitePageViewController.m in Sources */,
 				0C29BC671A5EC96600C27DA5 /* MAVECustomSharePageViewController.m in Sources */,
 				0CCC92B71A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m in Sources */,
+				0C1A8FC41A632B0000518D9A /* MAVERemoteConfigurationTwitterShare.m in Sources */,
 				0C2D73181A1FCB640059CA54 /* MAVEIDUtils.m in Sources */,
 				0C1A8FB21A61E7AD00518D9A /* MAVERemoteConfigurationContactsInvitePage.m in Sources */,
 				0C29BC5B1A5DED3A00C27DA5 /* MAVECustomSharePageView.m in Sources */,
@@ -789,6 +815,7 @@
 				0C1F1A1A1A53012000B2D482 /* MAVEClientPropertyUtils.m in Sources */,
 				0C1F1A021A435EAE00B2D482 /* MAVERemoteConfiguration.m in Sources */,
 				0C1F1A051A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.m in Sources */,
+				0C1A8FC11A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m in Sources */,
 				0C7200721A19414D00E12B91 /* MAVEInviteMessageContainerView.m in Sources */,
 				0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */,
 				0C141D301A0BC1A80036202A /* MAVEUserData.m in Sources */,
@@ -803,6 +830,7 @@
 			files = (
 				0C29BC581A5DE9DE00C27DA5 /* MAVEShareToken.m in Sources */,
 				0C29BC551A5DE6EA00C27DA5 /* MAVERemoteConfiguration.m in Sources */,
+				0C1A8FC91A632B9700518D9A /* MAVERemoteConfigurationClientEmailTests.m in Sources */,
 				0C1A8FBB1A63276100518D9A /* MAVERemoteConfigurationClientSMSTests.m in Sources */,
 				C0834F3819F54A9500E52CA1 /* MAVEDisplayOptionsTests.m in Sources */,
 				0C1A8FB61A63183500518D9A /* MAVECustomSharePageViewTests.m in Sources */,
