@@ -17,10 +17,13 @@ typedef void (^MAVEABDataBlock)(NSDictionary *indexedContacts);
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePrompt *prePromptTemplate;
 @property (nonatomic, copy) void(^completionBlock)(NSDictionary *contacts);
 @property (nonatomic, strong) id retainSelf;
+@property (nonatomic) BOOL beganFlowAsStatusUnprompted;
 
 // This is the entry point for this class, use this method to prompt for contacts
-// after initializign the object with alloc init.
-+ (void)promptForContactsWithCompletionBlock:(MAVEABDataBlock)completionBlock;
+// after initializing the object with alloc initCustom
+// It will retain itself until user completes prompts so no need to do anything
+// with the return value here
++ (instancetype)promptForContactsWithCompletionBlock:(MAVEABDataBlock)completionBlock;
 
 - (instancetype)initCustom;
 

@@ -44,12 +44,15 @@
     OCMExpect([mock alloc]).andReturn(mock);
     OCMExpect([mock initCustom]).andReturn(mock);
 
+    [[mock reject] setBeganFlowAsStatusUnprompted:YES];
+
     OCMExpect([mock completeAfterPermissionDenied]);
 
-    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:
+    MAVEABPermissionPromptHandler *handler = [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:
         ^(NSDictionary *indexedContacts) {}];
 
     OCMVerifyAll(mock);
+    XCTAssertEqualObjects(handler, mock);
     [mock stopMocking];
 }
 
@@ -63,11 +66,14 @@
     OCMExpect([mock alloc]).andReturn(mock);
     OCMExpect([mock initCustom]).andReturn(mock);
 
+    [[mock reject] setBeganFlowAsStatusUnprompted:YES];
+
     OCMExpect([mock loadAddressBookAndComplete]);
 
-    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
+    MAVEABPermissionPromptHandler *handler = [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
 
     OCMVerifyAll(mock);
+    XCTAssertEqualObjects(handler, mock);
 }
 
 ///
@@ -97,6 +103,8 @@
         return YES;
     }]]);
 
+    OCMExpect([permissionPrompterMock setBeganFlowAsStatusUnprompted:YES]);
+
     OCMExpect([permissionPrompterMock
                showPrePromptAlertWithTitle:remoteConfig.contactsPrePrompt.title
                message:remoteConfig.contactsPrePrompt.message
@@ -107,9 +115,10 @@
                logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView]);
 
     // Run the method under test
-    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:nil];
+    MAVEABPermissionPromptHandler *handler = [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:nil];
 
     OCMVerifyAll(permissionPrompterMock);
+    XCTAssertEqualObjects(handler, permissionPrompterMock);
 }
 
 - (void)testPromptForContactsWhenDoublePromptNo {
@@ -185,7 +194,7 @@
     OCMVerifyAll(mock);
 }
 
-- (void)testCompleteAfterPermissionGranted {
+- (void)testCompleteAfterPermissionUnfulfilledToGranted {
     NSArray *fakeContacts = @[[MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Cosson"]];
     NSDictionary *expectedIndexedData = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:fakeContacts];
 
@@ -196,6 +205,8 @@
         returnedData = data;
     };
 
+    // If had status unfulfilled to start with, it should log event
+    promptHandler.beganFlowAsStatusUnprompted = YES;
     id mock = OCMPartialMock(promptHandler);
     OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted]);
 
@@ -205,7 +216,23 @@
     XCTAssertEqualObjects(returnedData, expectedIndexedData);
 }
 
-- (void)testCompleteAfterPermissionDenied {
+- (void)testCompleteAfterPermissionAlreadyGranted {
+    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+    promptHandler.completionBlock = ^(NSDictionary *dict) {};
+
+    // If already had status granted to start with, don't log permission
+    // granted event (or any other event)
+    promptHandler.beganFlowAsStatusUnprompted = NO;
+    id mock = OCMPartialMock(promptHandler);
+    [[mock reject] logContactsPromptRelatedEventWithRoute:[OCMArg any]];
+
+    [promptHandler completeAfterPermissionGranted:nil];
+
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+}
+
+- (void)testCompleteAfterPermissionDeniedCallsBlock {
     // generate object under test and its block
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
     __block NSDictionary *returnedData;
@@ -214,7 +241,8 @@
         called = YES;
         returnedData = data;
     };
-
+    // If had status unfulfilled to start with, it should log event
+    promptHandler.beganFlowAsStatusUnprompted = YES;
     id mock = OCMPartialMock(promptHandler);
     OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionDenied]);
 
@@ -223,6 +251,22 @@
     OCMVerifyAll(mock);
     XCTAssertTrue(called);
     XCTAssertNil(returnedData);
+}
+
+- (void)testCompleteAfterPermissionAlreadyDenied {
+    MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
+    promptHandler.completionBlock = ^(NSDictionary *dict) {};
+
+    // If already had status granted to start with, don't log permission
+    // granted event (or any other event)
+    promptHandler.beganFlowAsStatusUnprompted = NO;
+    id mock = OCMPartialMock(promptHandler);
+    [[mock reject] logContactsPromptRelatedEventWithRoute:[OCMArg any]];
+
+    [promptHandler completeAfterPermissionDenied];
+
+    OCMVerifyAll(mock);
+    [mock stopMocking];
 }
 
 - (void)testLogContactsPromptRelatedEventWithRoute {

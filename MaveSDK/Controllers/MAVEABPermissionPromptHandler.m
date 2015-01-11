@@ -25,7 +25,7 @@
 // Prompt for contacts permissions. Based on remote configuration settings, we may show a
 // pre-prompt UIAlertView (i.e. double prompt for contacts), and if so the copy can come
 // from remote configuration as well.
-+ (void)promptForContactsWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
++ (instancetype)promptForContactsWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
     MAVEABPermissionPromptHandler *this = [[[self class] alloc] init];
     this.completionBlock = completionBlock;
     NSString *abStatus = [MAVEABUtils addressBookPermissionStatus];
@@ -33,14 +33,21 @@
     // If permission already denied, abort early
     if ([abStatus isEqualToString:MAVEABPermissionStatusDenied]) {
         [this completeAfterPermissionDenied];
-        return;
+        return this;
     }
 
     // If permission already granted, just load the address book
     if ([abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
         [this loadAddressBookAndComplete];
-        return;
+        return this;
     }
+
+    // If permission not yet prompted, mark it so we know to send user agreed/denied
+    // events after we do prompt
+    if ([abStatus isEqualToString:MAVEABPermissionStatusUnprompted]) {
+        this.beganFlowAsStatusUnprompted = YES;
+    }
+
 
     // Otherwise, decide how to prompt and prompt
     [[MaveSDK sharedInstance].remoteConfigurationBuilder
@@ -54,7 +61,6 @@
             this.retainSelf = this;
 
             [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView];
-            
             [this showPrePromptAlertWithTitle:this.prePromptTemplate.title
                                       message:this.prePromptTemplate.message
                              cancelButtonCopy:this.prePromptTemplate.cancelButtonCopy
@@ -65,6 +71,7 @@
             [this loadAddressBookAndComplete];
         }
     }];
+    return this;
 }
 
 
@@ -100,15 +107,19 @@
 }
 
 - (void)completeAfterPermissionGranted:(NSArray *)MAVEABPersonsArray {
-    DebugLog(@"User accepted address book permissions");
-    [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted];
+    if (self.beganFlowAsStatusUnprompted) {
+        DebugLog(@"User accepted address book permissions");
+        [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted];
+    }
     NSDictionary *indexedPersons = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:MAVEABPersonsArray];
     self.completionBlock(indexedPersons);
 }
 
 - (void)completeAfterPermissionDenied {
-    DebugLog(@"User denied address book permissions");
-    [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionDenied];
+    if (self.beganFlowAsStatusUnprompted) {
+        DebugLog(@"User denied address book permissions");
+        [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionDenied];
+    }
     self.completionBlock(nil);
 }
 
@@ -153,6 +164,7 @@
     // clicked accept
     } else {
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionGranted];
+        [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView];
         [self loadAddressBookAndComplete];
     }
 }
