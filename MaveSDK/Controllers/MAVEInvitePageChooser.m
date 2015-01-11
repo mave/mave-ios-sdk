@@ -10,6 +10,7 @@
 #import "MAVEInvitePageChooser.h"
 #import "MAVEConstants.h"
 #import "MAVEABUtils.h"
+#import "MAVERemoteConfiguration.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEDisplayOptions.h"
@@ -46,6 +47,11 @@
         return YES;
     }
     return NO;
+}
+
+- (BOOL)isContactsInvitePageEnabled {
+    MAVERemoteConfiguration *remoteConfig = [[MaveSDK sharedInstance].remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
+    return remoteConfig.contactsInvitePage.enabled;
 }
 
 

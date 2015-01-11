@@ -19,6 +19,7 @@
 
 // Helpers for business logic
 - (BOOL)isInSupportedRegionForServerSideSMSInvites;
+- (BOOL)isContactsInvitePageEnabled;
 
 // Create custom view controllers
 - (UIViewController *)createAddressBookInvitePage;

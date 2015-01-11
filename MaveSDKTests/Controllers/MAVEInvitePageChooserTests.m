@@ -12,6 +12,8 @@
 #import "MAVEDisplayOptionsFactory.h"
 #import "MaveSDK.h"
 #import "MAVEInvitePageChooser.h"
+#import "MAVERemoteConfiguration.h"
+#import "MAVERemoteConfigurationContactsInvitePage.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVECustomSharePageViewController.h"
 
@@ -24,6 +26,7 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
 }
 
 - (void)tearDown {
@@ -57,6 +60,34 @@
     OCMVerifyAll(localeClassMock);
 }
 
+- (void)testIsContactsInvitePageEnabled {
+    // Setup objects
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+
+    // Setup mock
+    id configBuilderMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
+    OCMExpect([configBuilderMock createObjectSynchronousWithTimeout:0]).andReturn(remoteConfig);
+
+    // Test when enabled NO
+    remoteConfig.contactsInvitePage.enabled = NO;
+    XCTAssertFalse([chooser isContactsInvitePageEnabled]);
+
+    OCMVerifyAll(configBuilderMock);
+    [configBuilderMock stopMocking];
+
+    configBuilderMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
+    remoteConfig.contactsInvitePage.enabled = YES;
+    OCMExpect([configBuilderMock createObjectSynchronousWithTimeout:0]).andReturn(remoteConfig);
+    XCTAssertTrue([chooser isContactsInvitePageEnabled]);
+
+    OCMVerifyAll(configBuilderMock);
+}
+
+
+#pragma mark - Create invite page methods
+
 - (void)testCreateAddressBookInvitePage {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     UIViewController *vc = [chooser createAddressBookInvitePage];
@@ -70,6 +101,8 @@
     XCTAssertNotNil(vc);
     XCTAssertTrue([vc isKindOfClass:[MAVECustomSharePageViewController class]]);
 }
+
+#pragma mark - additional setup of view controllers
 
 // Navigation bar
 - (void)testEmbedInNavigationController {
