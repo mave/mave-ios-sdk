@@ -12,6 +12,7 @@
 		0C141D321A0BCFB50036202A /* MAVEUserDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */; };
 		0C1A8FB21A61E7AD00518D9A /* MAVERemoteConfigurationContactsInvitePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FB11A61E7AD00518D9A /* MAVERemoteConfigurationContactsInvitePage.m */; };
 		0C1A8FB41A61E7D500518D9A /* MAVERemoteConfigurationInvitePageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FB31A61E7D500518D9A /* MAVERemoteConfigurationInvitePageTests.m */; };
+		0C1A8FB61A63183500518D9A /* MAVECustomSharePageViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FB51A63183500518D9A /* MAVECustomSharePageViewTests.m */; };
 		0C1F19FC1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F19FB1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m */; };
 		0C1F1A021A435EAE00B2D482 /* MAVERemoteConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */; };
 		0C1F1A051A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A041A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.m */; };
@@ -115,6 +116,7 @@
 		0C1A8FB01A61E7AD00518D9A /* MAVERemoteConfigurationContactsInvitePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationContactsInvitePage.h; sourceTree = "<group>"; };
 		0C1A8FB11A61E7AD00518D9A /* MAVERemoteConfigurationContactsInvitePage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationContactsInvitePage.m; sourceTree = "<group>"; };
 		0C1A8FB31A61E7D500518D9A /* MAVERemoteConfigurationInvitePageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationInvitePageTests.m; sourceTree = "<group>"; };
+		0C1A8FB51A63183500518D9A /* MAVECustomSharePageViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomSharePageViewTests.m; sourceTree = "<group>"; };
 		0C1F19FA1A432AA500B2D482 /* MAVEABPermissionPromptHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPermissionPromptHandler.h; sourceTree = "<group>"; };
 		0C1F19FB1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPermissionPromptHandler.m; sourceTree = "<group>"; };
 		0C1F1A001A435EAE00B2D482 /* MAVERemoteConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfiguration.h; sourceTree = "<group>"; };
@@ -551,6 +553,7 @@
 				C0834F3919F57F0000E52CA1 /* MAVEABTableViewTests.m */,
 				C0834F3119F44D7500E52CA1 /* MAVEInviteMessageViewTests.m */,
 				0C7200731A19A87900E12B91 /* MAVEInviteMessageContainerViewTests.m */,
+				0C1A8FB51A63183500518D9A /* MAVECustomSharePageViewTests.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -792,6 +795,7 @@
 				0C29BC581A5DE9DE00C27DA5 /* MAVEShareToken.m in Sources */,
 				0C29BC551A5DE6EA00C27DA5 /* MAVERemoteConfiguration.m in Sources */,
 				C0834F3819F54A9500E52CA1 /* MAVEDisplayOptionsTests.m in Sources */,
+				0C1A8FB61A63183500518D9A /* MAVECustomSharePageViewTests.m in Sources */,
 				C0425B9219EF1765006641AB /* MAVEConstants.m in Sources */,
 				0C1F1A1C1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m in Sources */,
 				0C29BC331A5703E100C27DA5 /* MAVEHTTPStackTests.m in Sources */,

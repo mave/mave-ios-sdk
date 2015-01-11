@@ -50,6 +50,13 @@
     opts.sendButtonTextColor = [self randomColor];
     opts.bottomViewBackgroundColor = [self randomColor];
     opts.bottomViewBorderColor = [self randomColor];
+
+    opts.sharePageBackgroundColor = [self randomColor];
+    opts.sharePageIconColor = [self randomColor];
+    opts.sharePageIconFont = [self randomFont];
+    opts.sharePageIconTextColor = [self randomColor];
+    opts.sharePageExplanationFont = [self randomFont];
+    opts.sharePageExplanationTextColor = [self randomColor];
     return opts;
 }
 

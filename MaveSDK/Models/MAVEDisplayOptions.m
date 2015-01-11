@@ -51,6 +51,17 @@
         self.sendButtonTextColor = [[self class] colorBlueTint];
         self.bottomViewBorderColor = [[self class] colorMediumGrey];
         self.bottomViewBackgroundColor = [[self class] colorWhite];
+
+        // SharePage options
+        //background
+        self.sharePageBackgroundColor = [[self class] colorExtraLightGrey];
+        // icons
+        self.sharePageIconColor = [[self class] colorBlueTint];
+        self.sharePageIconFont = [UIFont systemFontOfSize:12];
+        self.sharePageIconTextColor = [[self class] colorMediumGrey];
+        // explanation text
+        self.sharePageExplanationFont = [UIFont systemFontOfSize:16];
+        self.sharePageExplanationTextColor = [[self class] colorAlmostBlack];
     }
     return self;
 }

@@ -9,19 +9,28 @@
 #import <Social/Social.h>
 #import "MAVECustomSharePageView.h"
 #import "MaveSDK.h"
+#import "MAVEDisplayOptions.h"
 #import "MAVEBuiltinUIElementUtils.h"
 
 @implementation MAVECustomSharePageView
 
 - (instancetype)initWithDelegate:(MAVECustomSharePageViewController *)delegate {
-    if (self = [super init]) {
+    if (self = [self init]) {
         self.delegate = delegate;
+    }
+    return self;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
         self.shareButtons = [[NSMutableArray alloc] init];
 
-        self.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
+        MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
+        self.backgroundColor = opts.sharePageBackgroundColor;
         self.shareExplanationLabel = [[UILabel alloc] init];
         self.shareExplanationLabel.text = @"Share YourApp with friends and you\neach get $20 when they purchase";
-        self.shareExplanationLabel.font = [UIFont systemFontOfSize:15.0];
+        self.shareExplanationLabel.font = opts.sharePageExplanationFont;
+        self.shareExplanationLabel.textColor = opts.sharePageExplanationTextColor;
         self.shareExplanationLabel.textAlignment = NSTextAlignmentCenter;
         self.shareExplanationLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.shareExplanationLabel.numberOfLines = 0;
@@ -30,6 +39,7 @@
 
 
         // Add share buttons for services
+        // TODO: test this logic
         UIButton *shareButton;
         if ([MFMessageComposeViewController canSendText]) {
             shareButton = [self smsShareButton];
@@ -137,8 +147,10 @@
 
 # pragma mark - Share buttons by service
 - (UIButton *)genericShareButtonWithIconNamed:(NSString*)imageName andLabelText:(NSString *)text {
-    UIColor *labelColor = [UIColor colorWithWhite:0.5 alpha:1];
-    UIColor *iconColor = [UIColor redColor];
+    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
+    UIColor *labelColor = opts.sharePageIconTextColor;
+    UIFont *labelFont = opts.sharePageIconFont;
+    UIColor *iconColor = opts.sharePageIconColor;
 
     UIImage *image = [UIImage imageNamed:imageName];
     image = [MAVEBuiltinUIElementUtils tintWhitesInImage:image withColor:iconColor];
@@ -146,7 +158,7 @@
     MAVEUIButtonWithImageAndText *button = [[MAVEUIButtonWithImageAndText alloc] init];
     [button setImage:image forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont systemFontOfSize:10];
+    button.titleLabel.font = labelFont;
     [button setTitleColor:labelColor forState:UIControlStateNormal];
     button.paddingBetweenImageAndText = 4;
     return button;

@@ -34,6 +34,7 @@
     UIFont *sendButtonFont = [UIFont systemFontOfSize:18];
     UIFont *smallerFont = [UIFont systemFontOfSize:14];
     UIFont *smallerBoldFont = [UIFont boldSystemFontOfSize:14];
+    UIFont *smallestFont = [UIFont systemFontOfSize:12];
     UIColor *white = [[UIColor alloc] initWithWhite:1.0 alpha:1];
     UIColor *almostBlack = [[UIColor alloc] initWithWhite:0.15 alpha:1.0];
     UIColor *mediumGrey = [[UIColor alloc] initWithWhite:0.65 alpha:1.0];
@@ -77,6 +78,16 @@
     XCTAssertEqualObjects(opts.sendButtonTextColor, blueTint);
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
     XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
+
+    // SharePage options
+    XCTAssertEqualObjects(opts.sharePageBackgroundColor, extraLightGrey);
+
+    XCTAssertEqualObjects(opts.sharePageIconColor, blueTint);
+    XCTAssertEqualObjects(opts.sharePageIconFont, smallestFont);
+    XCTAssertEqualObjects(opts.sharePageIconTextColor, mediumGrey);
+
+    XCTAssertEqualObjects(opts.sharePageExplanationFont, defaultFont);
+    XCTAssertEqualObjects(opts.sharePageExplanationTextColor, almostBlack);
 }
 
 - (void)testFactoryFillsOptions {
@@ -100,6 +111,17 @@
     XCTAssertTrue([opts.bottomViewBorderColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.sendButtonFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.sendButtonTextColor isKindOfClass:[UIColor class]]);
+
+    // Share page options
+    // background
+    XCTAssertTrue([opts.sharePageBackgroundColor isKindOfClass:[UIColor class]]);
+    // Explanation text
+    XCTAssertTrue([opts.sharePageExplanationFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.sharePageExplanationTextColor isKindOfClass:[UIColor class]]);
+    // Icons
+    XCTAssertTrue([opts.sharePageIconColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.sharePageIconFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.sharePageIconTextColor isKindOfClass:[UIColor class]]);
 }
 
 @end

@@ -18,8 +18,8 @@
 + (UIColor *)colorWhite;
 + (UIColor *)colorBlueTint;
 
-// Invite friends page options:
-// Header options
+// Contacts list invite friends page options:
+// Header options (also used by share page invite page)
 @property (nonatomic, copy) NSString *navigationBarTitleCopy;
 @property (nonatomic, strong) UIFont   *navigationBarTitleFont;
 @property (nonatomic, strong) UIColor  *navigationBarTitleTextColor;
@@ -58,6 +58,21 @@
 @property (nonatomic, strong) UIColor *sendButtonTextColor;
 @property (nonatomic, strong) UIColor *bottomViewBackgroundColor;
 @property (nonatomic, strong) UIColor *bottomViewBorderColor;
+
+///
+/// Share page invite page
+///
+@property (nonatomic, strong) UIColor *sharePageBackgroundColor;
+
+// Icons
+@property (nonatomic, strong) UIColor *sharePageIconColor;
+@property (nonatomic, strong) UIFont *sharePageIconFont;
+@property (nonatomic, strong) UIColor *sharePageIconTextColor;
+
+// Explanation copy
+@property (nonatomic, strong) UIFont *sharePageExplanationFont;
+@property (nonatomic, strong) UIColor *sharePageExplanationTextColor;
+
 
 - (MAVEDisplayOptions *)initWithDefaults;
 
