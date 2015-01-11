@@ -44,7 +44,7 @@
 
     // Otherwise, decide how to prompt and prompt
     [[MaveSDK sharedInstance].remoteConfigurationBuilder
-     createObjectWithTimeout:2.0 completionBlock:^(id object) {
+     createObjectWithTimeout:1.0 completionBlock:^(id object) {
         MAVERemoteConfiguration *remoteConfig = object;
         this.prePromptTemplate = remoteConfig.contactsPrePrompt;
 
