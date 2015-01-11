@@ -12,6 +12,8 @@
 #import <objc/runtime.h>
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
+#import "MAVERemoteConfigurationContactsInvitePage.h"
+#import "MAVERemoteConfigurationClientSMS.h"
 
 @interface MAVERemoteConfigurationTests : XCTestCase
 
@@ -35,6 +37,9 @@
     XCTAssertNotNil([defaults objectForKey:@"contacts_invite_page"]);
     XCTAssertEqualObjects([defaults objectForKey:@"contacts_invite_page"],
                            [MAVERemoteConfigurationContactsInvitePage defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"client_sms"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"client_sms"],
+                          [MAVERemoteConfigurationClientSMS defaultJSONData]);
 }
 
 - (void)testInitFromDefaultData {
@@ -42,6 +47,7 @@
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     XCTAssertNotNil(config.contactsPrePrompt);
     XCTAssertNotNil(config.contactsInvitePage);
+    XCTAssertNotNil(config.clientSMS);
 }
 
 - (void)testInitFailsIfSubConfigurationObjectsFail {

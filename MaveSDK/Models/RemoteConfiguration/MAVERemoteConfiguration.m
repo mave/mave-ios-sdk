@@ -18,6 +18,7 @@ NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyR
 const NSString *MAVERemoteConfigKeyContactsPrePrompt = @"contacts_pre_permission_prompt";
 const NSString *MAVERemoteConfigKeyContactsInvitePage =
     @"contacts_invite_page";
+NSString * const MAVERemoteConfigKeyClientSMS = @"client_sms";
 
 
 @implementation MAVERemoteConfiguration
@@ -26,8 +27,11 @@ const NSString *MAVERemoteConfigKeyContactsInvitePage =
     if (self = [super init]) {
         self.contactsPrePrompt = [[MAVERemoteConfigurationContactsPrePrompt alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePrompt]];
         self.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsInvitePage]];
+        self.clientSMS = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyClientSMS]];
 
-        if (!self.contactsPrePrompt || !self.contactsInvitePage) {
+        if (!self.contactsPrePrompt
+            || !self.contactsInvitePage
+            || !self.clientSMS) {
             return nil;
         }
     }
@@ -50,10 +54,9 @@ const NSString *MAVERemoteConfigKeyContactsInvitePage =
 
 + (NSDictionary *)defaultJSONData {
     return @{
-             MAVERemoteConfigKeyContactsPrePrompt:
-                 [MAVERemoteConfigurationContactsPrePrompt defaultJSONData],
-             MAVERemoteConfigKeyContactsInvitePage:
-                 [MAVERemoteConfigurationContactsInvitePage defaultJSONData],
+             MAVERemoteConfigKeyContactsPrePrompt: [MAVERemoteConfigurationContactsPrePrompt defaultJSONData],
+             MAVERemoteConfigKeyContactsInvitePage:[MAVERemoteConfigurationContactsInvitePage defaultJSONData],
+             MAVERemoteConfigKeyClientSMS: [MAVERemoteConfigurationClientSMS defaultJSONData],
              };
 }
 

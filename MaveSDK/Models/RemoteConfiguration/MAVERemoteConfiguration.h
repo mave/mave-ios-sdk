@@ -15,6 +15,7 @@
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 #import "MAVERemoteConfigurationContactsInvitePage.h"
+#import "MAVERemoteConfigurationClientSMS.h"
 
 extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 
@@ -23,6 +24,8 @@ extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePrompt *contactsPrePrompt;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsInvitePage *contactsInvitePage;
+// Client share page templates
+@property (nonatomic, strong) MAVERemoteConfigurationClientSMS *clientSMS;
 
 
 + (MAVERemoteObjectBuilder *)remoteBuilder;
