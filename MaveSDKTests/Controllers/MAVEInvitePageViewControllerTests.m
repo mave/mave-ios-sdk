@@ -135,7 +135,6 @@
     OCMExpect([mockVC dismissSelf:0]);
     [vc dismissAfterCancel];
     OCMVerifyAll(mockVC);
-
 }
 
 - (void)testViewDidLoadSetsUpNavigationBar {
@@ -148,6 +147,17 @@
     [vc viewDidLoad];
 
     OCMVerifyAll(mock);
+}
+
+- (void)testViewDidLoadLogsInvitePageViewedEvent {
+    id apiMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+
+    OCMExpect([apiMock trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList]);
+
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    [vc viewDidLoad];
+
+    OCMVerifyAll(apiMock);
 }
 
 - (void)testSetupNavigationBar {
@@ -214,46 +224,12 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
 
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     id mockVC = OCMPartialMock(vc);
-    OCMExpect([mockAPIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList]);
     id fakeView = [[UIView alloc] init];
     OCMExpect([mockVC createAddressBookInviteView]).andReturn(fakeView);
     
     [vc loadView];
 
-    OCMVerifyAll(mockAPIInterface);
-    OCMVerifyAll(mockVC);
-    XCTAssertEqualObjects(vc.view, fakeView);
-    OCMVerifyAll(mockPrompter);
-    [mockABUtils stopMocking];
-    [mockPrompter stopMocking];
-}
-
-- (void)testLoadViewWhenContactsPermissionDenied {
-    // Mock permissions checking and setup to return fake data
-    id mockABUtils = OCMClassMock([MAVEABUtils class]);
-    OCMStub([mockABUtils addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusDenied);
-    id mockPrompter = OCMClassMock([MAVEABPermissionPromptHandler class]);
-    OCMExpect([mockPrompter promptForContactsWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        MAVEABDataBlock completionBlock = obj;
-        completionBlock(nil);
-        return YES;
-    }]]);
-
-    // setup code and add test expectations
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
-
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    id mockVC = OCMPartialMock(vc);
-    OCMExpect([mockAPIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission]);
-    id fakeView = [[UIView alloc] init];
-    OCMExpect([mockVC createNoAddressBookPermissionView]).andReturn(fakeView);
-
-    [vc loadView];
-
-    OCMVerifyAll(mockAPIInterface);
     OCMVerifyAll(mockVC);
     XCTAssertEqualObjects(vc.view, fakeView);
     OCMVerifyAll(mockPrompter);

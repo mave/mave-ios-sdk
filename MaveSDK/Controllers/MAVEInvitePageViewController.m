@@ -58,6 +58,9 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                       selector:@selector(deviceDidRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
+
+    // Log which invite page was viewed
+    [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
 }
 
 - (void)dealloc {
@@ -149,39 +152,22 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         // Permission denied
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIViewController *vc = [[MaveSDK sharedInstance].invitePageChooser createCustomShareInvitePage];
+                UIViewController *vc = [[MaveSDK sharedInstance]
+                    .invitePageChooser createCustomShareInvitePage];
                 [self.navigationController pushViewController:vc animated:NO];
             });
-            [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNoneNeedContactsPermission];
         // Permission granted
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self layoutInvitePageViewAndSubviews];
                 [self.ABTableViewController updateTableData:indexedContacts];
             });
-            [[MaveSDK sharedInstance].APIInterface
-                trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
         }
     }];
 
-    // If user has already said no to permissions, we don't want to flash the contacts
-    // page before switching to the share page, so check for that here.
-    if ([MAVEABUtils addressBookPermissionStatus] == MAVEABPermissionStatusDenied) {
-        self.view = [self createNoAddressBookPermissionView];
-    } else {
-        self.view = [self createAddressBookInviteView];
-        [self layoutInvitePageViewAndSubviews];
-    }
-}
-
-- (UIView *)createEmptyFallbackView {
-    UIView *view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    [view setBackgroundColor:[UIColor whiteColor]];
-    return view;
-}
-
-- (UIView *)createNoAddressBookPermissionView {
-    return [[MAVENoAddressBookPermissionView alloc] init];
+    // Use address book invite as background while prompting for permission)
+    self.view = [self createAddressBookInviteView];
+    [self layoutInvitePageViewAndSubviews];
 }
 
 - (UIView *)createAddressBookInviteView {

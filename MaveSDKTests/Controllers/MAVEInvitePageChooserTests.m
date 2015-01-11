@@ -34,6 +34,10 @@
     [super tearDown];
 }
 
+- (void)testChooseAndCreateInvitePageViewControllerAddressBookDenied {
+
+}
+
 // Helper functions tests
 - (void)testUSIsInSupportedRegionForServerSideSMSInvites {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
@@ -60,27 +64,26 @@
     OCMVerifyAll(localeClassMock);
 }
 
-- (void)testIsContactsInvitePageEnabled {
+- (void)testIsContactsInvitePageEnabledServerSide {
     // Setup objects
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
     remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
 
-    // Setup mock
+    // Setup mock, test when enabled NO
     id configBuilderMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
     OCMExpect([configBuilderMock createObjectSynchronousWithTimeout:0]).andReturn(remoteConfig);
-
-    // Test when enabled NO
     remoteConfig.contactsInvitePage.enabled = NO;
-    XCTAssertFalse([chooser isContactsInvitePageEnabled]);
+    XCTAssertFalse([chooser isContactsInvitePageEnabledServerSide]);
 
     OCMVerifyAll(configBuilderMock);
     [configBuilderMock stopMocking];
 
+    // Reset mock, test when enabled YES
     configBuilderMock = OCMPartialMock([MaveSDK sharedInstance].remoteConfigurationBuilder);
     remoteConfig.contactsInvitePage.enabled = YES;
     OCMExpect([configBuilderMock createObjectSynchronousWithTimeout:0]).andReturn(remoteConfig);
-    XCTAssertTrue([chooser isContactsInvitePageEnabled]);
+    XCTAssertTrue([chooser isContactsInvitePageEnabledServerSide]);
 
     OCMVerifyAll(configBuilderMock);
 }

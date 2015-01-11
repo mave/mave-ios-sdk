@@ -29,9 +29,10 @@
         return [self createCustomShareInvitePage];
     }
 
-    // If configured server-side to load share page, do that
-
-
+    // If configured server-side to tur off contacts invite page do that
+    if (![self isContactsInvitePageEnabledServerSide]) {
+        return [self createCustomShareInvitePage];
+    }
 
     // otherwise we can load the address book invite page
     return [self createAddressBookInvitePage];
@@ -49,7 +50,7 @@
     return NO;
 }
 
-- (BOOL)isContactsInvitePageEnabled {
+- (BOOL)isContactsInvitePageEnabledServerSide {
     MAVERemoteConfiguration *remoteConfig = [[MaveSDK sharedInstance].remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
     return remoteConfig.contactsInvitePage.enabled;
 }
