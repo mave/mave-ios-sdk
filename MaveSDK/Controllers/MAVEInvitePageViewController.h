@@ -11,11 +11,6 @@
 #import "MAVEInviteExplanationView.h"
 #import "MAVEInviteMessageContainerView.h"
 
-extern NSString * const MAVEInvitePageTypeContactList;
-extern NSString * const MAVEInvitePageTypeNoneNeedContactsPermission;
-extern NSString * const MAVEInvitePageTypeCustomShare;
-extern NSString * const MAVEInvitePageTypeNativeShareSheet;
-
 
 @interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
 

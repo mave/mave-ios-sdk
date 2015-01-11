@@ -50,4 +50,38 @@
     XCTAssertEqualObjects(obj.smsCopy, @"Join me on DemoApp!");
 }
 
+- (void)testInitFailsIfEnabledKeyIsMissing {
+    // init the normal values dict but leave "enabled" empty
+    NSDictionary *defaultDict = [MAVERemoteConfigurationContactsInvitePage defaultJSONData];
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:[defaultDict objectForKey:@"template"] forKey:@"template"];
+
+    MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
+
+    XCTAssertNil(obj);
+}
+
+- (void)testInitFailsIfEnabledTrueAndTemplateMissingFields {
+    NSDictionary *dict = @{
+        @"enabled": @YES,
+        @"template": @{
+            @"template_id": @"foo",
+            @"explanation_copy": @"blah"
+        }
+    };
+
+    MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
+
+    XCTAssertNil(obj);
+}
+
+- (void)testInitSuccessIfNoTemplateButEnabledFalse {
+    NSDictionary *dict = @{@"enabled": @NO};
+    MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
+
+    XCTAssertNotNil(obj);
+    XCTAssertFalse(obj.enabled);
+    XCTAssertNil(obj.templateID);
+}
+
 @end

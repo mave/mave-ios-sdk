@@ -15,26 +15,34 @@
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEDisplayOptions.h"
 
+NSString * const MAVEInvitePageTypeContactList = @"contact_list";
+NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
+NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
+
 @implementation MAVEInvitePageChooser
 
 - (UIViewController *)chooseAndCreateInvitePageViewController {
     // If contacts permission already denied, load the share page
     NSString *addressBookStatus = [MAVEABUtils addressBookPermissionStatus];
     if (addressBookStatus == MAVEABPermissionStatusDenied) {
+        DebugLog(@"Fallback to Custom Share invite page b/c address book permission already denied");
         return [self createCustomShareInvitePage];
     }
 
     // If not in a supported region, load the share page
     if (![self isInSupportedRegionForServerSideSMSInvites]) {
         return [self createCustomShareInvitePage];
+        DebugLog(@"Fallback to Custom Share invite page b/c not in supported region for server-side SMS");
     }
 
     // If configured server-side to tur off contacts invite page do that
     if (![self isContactsInvitePageEnabledServerSide]) {
+        DebugLog(@"Fallback to custom share page b/c contacts page set to NO server-side");
         return [self createCustomShareInvitePage];
     }
 
     // otherwise we can load the address book invite page
+    DebugLog(@"Displaying address book invite page");
     return [self createAddressBookInvitePage];
 }
 

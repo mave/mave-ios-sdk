@@ -20,11 +20,6 @@
 
 #import <Social/Social.h>
 
-NSString * const MAVEInvitePageTypeContactList = @"contact_list";
-NSString * const MAVEInvitePageTypeNoneNeedContactsPermission = @"none_need_contacts_permission";
-NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
-NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
-
 
 @interface MAVEInvitePageViewController ()
 
@@ -58,9 +53,6 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
                       selector:@selector(deviceDidRotate:)
                           name:UIDeviceOrientationDidChangeNotification
                         object:nil];
-
-    // Log which invite page was viewed
-    [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
 }
 
 - (void)dealloc {
@@ -145,6 +137,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 // Load the correct view(s) with data
 //
 
+// TODO: unit test this method
 - (void)determineAndSetViewBasedOnABPermissions {
     [MAVEABPermissionPromptHandler
             promptForContactsWithCompletionBlock:
@@ -161,6 +154,10 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self layoutInvitePageViewAndSubviews];
                 [self.ABTableViewController updateTableData:indexedContacts];
+
+                // Only if permission was granted should we log that we displayed
+                // the invite page with an address book list
+                [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
             });
         }
     }];

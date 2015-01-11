@@ -26,6 +26,10 @@ const NSString *MAVERemoteConfigKeyContactsInvitePage =
     if (self = [super init]) {
         self.contactsPrePrompt = [[MAVERemoteConfigurationContactsPrePrompt alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePrompt]];
         self.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsInvitePage]];
+
+        if (!self.contactsPrePrompt || !self.contactsInvitePage) {
+            return nil;
+        }
     }
     return self;
 }

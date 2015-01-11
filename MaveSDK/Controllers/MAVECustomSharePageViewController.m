@@ -25,6 +25,8 @@
      setupNavigationBar:self
      leftBarButtonTarget:self
      leftBarButtonAction:@selector(dismissAfterCancel)];
+
+    [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeCustomShare];
 }
 
 - (void)dismissAfterCancel {

@@ -12,6 +12,10 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString * const MAVEInvitePageTypeContactList;
+extern NSString * const MAVEInvitePageTypeCustomShare;
+extern NSString * const MAVEInvitePageTypeNativeShareSheet;
+
 @interface MAVEInvitePageChooser : NSObject
 
 // Choose which invite page to present and initialize is view controller

@@ -20,11 +20,22 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSMSCopy = @"sms_copy";
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
-        self.enabled = [[data objectForKey:MAVERemoteConfigKeyContactsInvitePageEnabled] boolValue];
+        // check for is-enabled key. Empty != key explicitly set to false
+        id enabledValue = [data objectForKey:MAVERemoteConfigKeyContactsInvitePageEnabled];
+        if (enabledValue == nil) {
+            return nil;
+        }
+        self.enabled = [enabledValue boolValue];
+
+        // Template values
         NSDictionary *template  = [data objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplate];
         self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplateID];
         self.explanationCopy = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageExplanationCopy];
         self.smsCopy = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSMSCopy];
+
+        if (!self.templateID || !self.smsCopy) {
+            return nil;
+        }
     }
     return self;
 }

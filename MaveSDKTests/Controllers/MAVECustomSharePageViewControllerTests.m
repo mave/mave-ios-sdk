@@ -44,6 +44,18 @@
     OCMVerifyAll(chooserMock);
 }
 
+- (void)testViewDidLoadLogsInvitePageView {
+    MAVECustomSharePageViewController *vc =
+        [[MAVECustomSharePageViewController alloc] init];
+
+    id apiMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiMock trackInvitePageOpenForPageType:MAVEInvitePageTypeCustomShare]);
+
+    [vc viewDidLoad];
+
+    OCMVerifyAll(apiMock);
+}
+
 - (void)testDismissAfterCancel {
     MAVECustomSharePageViewController *vc =
         [[MAVECustomSharePageViewController alloc] init];

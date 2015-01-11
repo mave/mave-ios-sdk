@@ -149,17 +149,6 @@
     OCMVerifyAll(mock);
 }
 
-- (void)testViewDidLoadLogsInvitePageViewedEvent {
-    id apiMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-
-    OCMExpect([apiMock trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList]);
-
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    [vc viewDidLoad];
-
-    OCMVerifyAll(apiMock);
-}
-
 - (void)testSetupNavigationBar {
     id chooserMock = OCMPartialMock([MaveSDK sharedInstance].invitePageChooser);
 

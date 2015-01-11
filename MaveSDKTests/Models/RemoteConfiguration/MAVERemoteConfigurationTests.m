@@ -44,6 +44,13 @@
     XCTAssertNotNil(config.contactsInvitePage);
 }
 
+- (void)testInitFailsIfSubConfigurationObjectsFail {
+    NSDictionary *dict = @{};
+    MAVERemoteConfiguration *obj = [[MAVERemoteConfiguration alloc] initWithDictionary:dict];
+
+    XCTAssertNil(obj);
+}
+
 - (void)testRemoteBuilder {
     id mock = OCMClassMock([MAVERemoteObjectBuilder class]);
 
