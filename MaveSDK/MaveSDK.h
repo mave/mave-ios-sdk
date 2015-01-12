@@ -46,7 +46,9 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 - (void)identifyUser:(MAVEUserData *)userData;
 // Use anonymous users if you don't have user accounts. Mave will generate
 // a user id to match this device in the future and try to get the user's name
-// from the device info. If we can't get the user's name 
+// from the device info. If we can't get the user's name
+- (void)identifyAnonymousUser;
+
 - (void)trackSignup;
 
 //- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock

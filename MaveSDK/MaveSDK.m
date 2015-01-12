@@ -86,25 +86,31 @@ static dispatch_once_t sharedInstanceonceToken;
                                   userInfo:@{@"message": humanError}];
 }
 
-- (NSError *)validateSetup {
-    NSError *error = [self validateUserSetup];
-    if (error) {
-        return error;
+- (NSError *)validateLibrarySetup {
+    NSMutableArray *errorStrings = [[NSMutableArray alloc] init];
+    if (self.appId == nil) {
+        [errorStrings addObject:@"applicationID is nil"];
+    }
+    if (self.invitePageDismissalBlock == nil) {
+        [errorStrings addObject:@"invite page dismiss block was nil"];
+    }
+    if (self.userData == nil) {
+        [errorStrings addObject:@"identifyUser: (or identifyAnonymousUser) method not called"];
     }
 
-    // Validate non user info fields
-    NSInteger errCode = 0;
-    NSString *humanError = @"";
-    if (self.invitePageDismissalBlock == nil) {
-        humanError = @"invite page dismissalBlock was nil";
-        errCode = MAVEValidationErrorDismissalBlockNotSetCode;
-    } else {
+    if ([errorStrings count] == 0) {
         return nil;
     }
-    DebugLog(@"Error with MaveSDK sharedInstance setup - %@", humanError);
-    return [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN
-                                      code:errCode
-                                  userInfo:@{@"message": humanError}];
+
+    // Log errors && return the validation error
+    NSString *errorContext = @"Issue with MaveSDK setup -%@.";
+    for (NSString *err in errorStrings) {
+        ErrorLog([NSString stringWithFormat:errorContext, err]);
+    }
+    NSError *validationError = [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN
+                                                          code:5
+                                                      userInfo:@{@"messages":errorStrings}];
+    return validationError;
 }
 
 //
@@ -149,15 +155,11 @@ static dispatch_once_t sharedInstanceonceToken;
                                     dismissalBlock:(MAVEInvitePageDismissBlock) dismissalBlock {
     self.invitePageDismissalBlock = dismissalBlock;    
     UIViewController *returnViewController = nil;
-    *setupError = [self validateSetup];
+    *setupError = [self validateLibrarySetup];
     if (!*setupError) {
         self.defaultSMSMessageText = defaultMessageText;
         UIViewController *viewController = [self.invitePageChooser chooseAndCreateInvitePageViewController];
         returnViewController = [self.invitePageChooser embedInNavigationController:viewController];
-
-//        UIViewController *inviteController = [[MAVEInvitePageViewController alloc] init];
-//        returnViewController =
-//            [[UINavigationController alloc] initWithRootViewController:inviteController];
     }
     return returnViewController;
 }

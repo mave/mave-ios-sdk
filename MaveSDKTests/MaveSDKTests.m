@@ -126,16 +126,18 @@
     XCTAssertEqualObjects(mave.userData, userData);
 }
 
-- (void)testIsSetupOkFailsWithNoApplicationID {
+- (void)testValidateLibrarySetupFailsWithNoApplicationID {
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
     MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
+    [gk identifyAnonymousUser];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
-    NSError *err = [gk validateSetup];
+    NSError *err = [gk validateLibrarySetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, MAVEValidationErrorApplicationIDNotSetCode);
-    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"applicationID is nil");
+    XCTAssertEqual(err.code, 5);
+    NSArray *errors = [err.userInfo objectForKey:@"messages"];
+    XCTAssertEqual([errors count], 1);
+    XCTAssertEqualObjects([errors objectAtIndex:0], @"applicationID is nil");
 }
 
 - (void)testIsSetupOkFailsWithNilUserData {
@@ -144,47 +146,25 @@
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
     [gk identifyUser:nil];
-    NSError *err = [gk validateSetup];
+    NSError *err = [gk validateLibrarySetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, MAVEValidationErrorUserIdentifyNeverCalledCode);
-    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"identifyUser not called");
-
-}
-
-- (void)testIsSetupOkFailsWithNoUserID {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk identifyUser:[[MAVEUserData alloc] initWithUserID:nil firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
-    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        NSUInteger numInvitesSent) {};
-    NSError *err = [gk validateSetup];
-    XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, MAVEValidationErrorUserIDNotSetCode);
-    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"userID set to nil");
-
-}
-
-- (void)testIsSetupOkFailsWithNoFirstName {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:nil lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
-    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        NSUInteger numInvitesSent) {};
-    NSError *err = [gk validateSetup];
-    XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, MAVEValidationErrorUserNameNotSetCode);
-    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"user firstName set to nil");
+    XCTAssertEqual(err.code, 5);
+    NSArray *errors = [err.userInfo objectForKey:@"messages"];
+    XCTAssertEqual([errors count], 1);
+    XCTAssertEqualObjects([errors objectAtIndex:0], @"identifyUser: (or identifyAnonymousUser) method not called");
 }
 
 - (void)testIsSetupOkFailsWithNoDismissalBlock {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"]];
+    [gk identifyAnonymousUser];
     // never set dismissal block so it's nil
-    NSError *err = [gk validateSetup];
+    NSError *err = [gk validateLibrarySetup];
     XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, MAVEValidationErrorDismissalBlockNotSetCode);
-    XCTAssertEqualObjects([err.userInfo objectForKey:@"message"], @"invite page dismissalBlock was nil");
+    XCTAssertEqual(err.code, 5);
+    NSArray *errors = [err.userInfo objectForKey:@"messages"];
+    XCTAssertEqual([errors count], 1);
+    XCTAssertEqualObjects([errors objectAtIndex:0], @"invite page dismiss block was nil");
 }
 
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
@@ -193,7 +173,7 @@
         [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:nil email:nil phone:nil]];
     gk.invitePageDismissalBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
-    NSError *err = [gk validateSetup];
+    NSError *err = [gk validateLibrarySetup];
     XCTAssertNil(err);
 }
 
@@ -224,9 +204,7 @@
 - (void)testInvitePageViewControllerErrorIfValidationError {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.userData = [[MAVEUserData alloc] init];
-    // user ID is nil
-    gk.userData.firstName = @"Dan";
+    gk.userData = nil;
 
     NSError *error;
     UIViewController *vc =
@@ -239,7 +217,7 @@
     XCTAssertNotNil(error);
     XCTAssertEqualObjects(gk.defaultSMSMessageText, nil);
     XCTAssertEqualObjects(error.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(error.code, MAVEValidationErrorUserIDNotSetCode);
+    XCTAssertEqual(error.code, 5);
 }
 
 - (void)testTrackAppOpen {
