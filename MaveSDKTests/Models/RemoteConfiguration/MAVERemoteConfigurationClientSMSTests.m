@@ -45,7 +45,7 @@
 
 - (void)testInitFailsIfTemplateMalformed {
     // missing the "text" parameter
-    NSDictionary *data = @{@"template_id": @"foo"};
+    NSDictionary *data = @{@"template": @{@"template_id": @"foo"}};
     MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:data];
 
     XCTAssertNil(obj);

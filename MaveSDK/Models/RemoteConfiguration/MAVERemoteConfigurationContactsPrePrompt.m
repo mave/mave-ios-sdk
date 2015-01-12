@@ -24,12 +24,15 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptAcceptCopy = @"accept_button
     if (self = [self init]) {
         self.enabled = [[data objectForKey:MAVERemoteConfigKeyContactsPrePromptEnabled] boolValue];
 
-        NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplate];
-        self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateID];
-        self.title = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTitle];
-        self.message = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptMessage];
-        self.cancelButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptCancelCopy];
-        self.acceptButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptAcceptCopy];
+        // only if it's enabled do we care about the templated options
+        if  (self.enabled) {
+            NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplate];
+            self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateID];
+            self.title = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTitle];
+            self.message = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptMessage];
+            self.cancelButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptCancelCopy];
+            self.acceptButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptAcceptCopy];
+        }
     }
     return self;
 }

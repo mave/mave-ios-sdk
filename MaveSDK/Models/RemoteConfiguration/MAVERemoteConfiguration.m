@@ -29,6 +29,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
+        NSLog(@"data is: %@", data);
         self.contactsPrePrompt = [[MAVERemoteConfigurationContactsPrePrompt alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePrompt]];
 
         self.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsInvitePage]];

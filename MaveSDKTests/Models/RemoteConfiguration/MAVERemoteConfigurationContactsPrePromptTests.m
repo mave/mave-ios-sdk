@@ -48,4 +48,17 @@
     XCTAssertEqualObjects(config.acceptButtonCopy, @"Sounds good");
 }
 
+- (void)testInitWhenDisabledTemplateEmpty {
+    NSDictionary *data = @{@"enabled": @0, @"template": [NSNull null]};
+
+    MAVERemoteConfigurationContactsPrePrompt *config = [[MAVERemoteConfigurationContactsPrePrompt alloc] initWithDictionary:data];
+
+    XCTAssertNotNil(config);
+    XCTAssertFalse(config.enabled);
+    XCTAssertNil(config.templateID);
+    XCTAssertNil(config.title);
+    XCTAssertNil(config.message);
+    // ... etc
+}
+
 @end

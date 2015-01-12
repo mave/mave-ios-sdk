@@ -76,7 +76,7 @@
 }
 
 - (void)testInitSuccessIfNoTemplateButEnabledFalse {
-    NSDictionary *dict = @{@"enabled": @NO};
+    NSDictionary *dict = @{@"enabled": @NO, @"template": [NSNull null]};
     MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
 
     XCTAssertNotNil(obj);
