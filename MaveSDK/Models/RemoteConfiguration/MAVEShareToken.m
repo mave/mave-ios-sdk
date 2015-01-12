@@ -27,6 +27,7 @@ NSString * const MAVEShareTokenKeyShareToken = @"share_token";
         if (self.shareToken == nil) {
             return nil;
         }
+        NSLog(@"Using share token %@", self.shareToken);
     }
     return self;
 }
@@ -35,7 +36,7 @@ NSString * const MAVEShareTokenKeyShareToken = @"share_token";
     return [[MAVERemoteObjectBuilder alloc] initWithClassToCreate:[self class]
             preFetchBlock:^(MAVEPromise *promise) {
                 [[MaveSDK sharedInstance].APIInterface
-                getRemoteConfigurationWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
+                getNewShareTokenWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
                     if (error) {
                         [promise rejectPromise];
                     } else {

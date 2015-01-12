@@ -165,6 +165,13 @@ NSString * const MAVEAPIParamShareAudience = @"audience";
                              completionBlock:block];
 }
 
+- (void)getNewShareTokenWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
+    NSString *route = @"/remote_configuration/universal/share_token";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"GET"
+                                      params:nil
+                             completionBlock:block];
+}
 
 
 ///

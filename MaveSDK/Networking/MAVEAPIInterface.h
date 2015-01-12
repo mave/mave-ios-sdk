@@ -70,6 +70,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 ///
 - (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
+- (void)getNewShareTokenWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 
 ///
 /// Request Sending Helpers
