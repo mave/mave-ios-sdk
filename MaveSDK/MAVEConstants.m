@@ -8,6 +8,7 @@
 
 #import "MAVEConstants.h"
 
+NSString * const MAVESDKVersion = @"0.3.0";
 
 #ifdef MAVE_USE_DEV_API
     NSString * const MAVEAPIBaseURL = @"http://devapi.mave.io/";

@@ -29,6 +29,8 @@
 + (NSString *)deviceNameParsed;
 // current language set in user's settings
 + (NSString *)language;
+// Mave Version, current version of the mave sdk
++ (NSString *)maveVersion;
 // Device manufacturer (Apple)
 + (NSString *)manufacturer;
 + (NSString *)model;
@@ -48,7 +50,6 @@
 // sent with all events to be able to segment later by any available properties.
 // Encoded in json base64 string.
 + (NSString *)encodedAutomaticClientProperties;
-
 
 
 // Helpers

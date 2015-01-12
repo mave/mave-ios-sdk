@@ -131,6 +131,12 @@
     XCTAssertEqualObjects([MAVEClientPropertyUtils appDeviceID], @"foobarid");
 }
 
+- (void)testMaveVersion {
+    XCTAssertNotNil([MAVEClientPropertyUtils maveVersion]);
+    XCTAssertEqualObjects([MAVEClientPropertyUtils maveVersion],
+                          MAVESDKVersion);
+}
+
 - (void)testManufacturer {
     XCTAssertEqualObjects([MAVEClientPropertyUtils manufacturer], @"Apple");
 }

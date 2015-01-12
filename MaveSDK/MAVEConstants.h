@@ -20,6 +20,7 @@
 // Custom log & reporting functions
 void MAVEExtendedLog(const char*prefix, const char *file, int lineNumber, const char *functionName, NSString *format, ...);
 
+extern NSString * const MAVESDKVersion;
 extern NSString * const MAVEAPIBaseURL;
 extern NSString * const MAVEAPIVersion;
 extern NSString * const MAVEShortLinkBaseURL;
