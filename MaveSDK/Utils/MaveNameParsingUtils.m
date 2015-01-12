@@ -1,14 +1,14 @@
 //
-//  MaveNameParsingUtils.m
+//  MAVENameParsingUtils.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 1/12/15.
 //
 //
 
-#import "MaveNameParsingUtils.h"
+#import "MAVENameParsingUtils.h"
 
-@implementation MaveNameParsingUtils
+@implementation MAVENameParsingUtils
 
 + (void)fillFirstName:(NSString *__autoreleasing *)firstName
              lastName:(NSString *__autoreleasing *)lastName

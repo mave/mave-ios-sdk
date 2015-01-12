@@ -8,6 +8,7 @@
 
 #import "MAVEUserData.h"
 #import "MaveSDK.h"
+#import "MAVENameParsingUtils.h"
 #import "MAVEClientPropertyUtils.h"
 
 #define MAVEUserDataKeyFirstName @"first_name"
@@ -45,11 +46,16 @@
 
 - (instancetype)initAutomaticallyFromDeviceName {
     if (self = [self init]) {
+        NSString *deviceName = [MAVEClientPropertyUtils deviceName];
+        NSString *firstName, *lastName;
+        [MAVENameParsingUtils fillFirstName:&firstName
+                                   lastName:&lastName
+                             fromDeviceName:deviceName];
 
-//        self.userID = [MaveSDK sharedInstance].appDeviceID;
-//        self.firstName = firstName;
-//        self.lastName = lastName;
-//        self.isSetAutomaticallyFromDevice = YES;
+        self.userID = [MaveSDK sharedInstance].appDeviceID;
+        self.firstName = firstName;
+        self.lastName = lastName;
+        self.isSetAutomaticallyFromDevice = YES;
     }
     return self;
 }

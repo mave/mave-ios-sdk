@@ -55,6 +55,31 @@
     XCTAssertEqualObjects(ud.phone, @"ph");
 }
 
+- (void)testInitAutomatically {
+    NSString *expectedAppDeviceID = [MaveSDK sharedInstance].appDeviceID;
+    XCTAssertNotNil(expectedAppDeviceID);
+
+    // Should parse the device name to figure out name
+    id propertyMock = OCMClassMock([MAVEClientPropertyUtils class]);
+    OCMStub([propertyMock deviceName]).andReturn(@"Danny Cosson's iPhone");
+    MAVEUserData *user = [[MAVEUserData alloc] initAutomaticallyFromDeviceName];
+    XCTAssertEqualObjects(user.userID, expectedAppDeviceID);
+    XCTAssertEqualObjects(user.firstName, @"Danny");
+    XCTAssertEqualObjects(user.lastName, @"Cosson");
+    XCTAssertNil(user.phone);
+    XCTAssertNil(user.email);
+    XCTAssertTrue(user.isSetAutomaticallyFromDevice);
+}
+
+- (void)testIsUserInfoOkToSendServerSideSMS {
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    XCTAssertFalse([user isUserInfoOkToSendServerSideSMS]);
+    user.userID = @"balsdf";
+    XCTAssertFalse([user isUserInfoOkToSendServerSideSMS]);
+    user.firstName = @"blahasdfasdf";
+    XCTAssertTrue([user isUserInfoOkToSendServerSideSMS]);
+}
+
 - (void)testToDictionaryAllNils {
     MAVEUserData *ud = [[MAVEUserData alloc] init];
     NSDictionary *dict = [ud toDictionary];

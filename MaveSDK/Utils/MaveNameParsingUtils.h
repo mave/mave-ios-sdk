@@ -1,5 +1,5 @@
 //
-//  MaveNameParsingUtils.h
+//  MAVENameParsingUtils.h
 //  MaveSDK
 //
 //  Helpers for parsing names, for anonymous users we want to gues
@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import "MAVEUserData.h"
 
-@interface MaveNameParsingUtils : NSObject
+@interface MAVENameParsingUtils : NSObject
 
 + (void)fillFirstName:(NSString **)firstName
              lastName:(NSString **)lastName

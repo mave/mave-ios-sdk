@@ -24,7 +24,7 @@
 		0C1A8FCD1A632F1800518D9A /* MAVERemoteConfigurationTwitterShareTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FCC1A632F1800518D9A /* MAVERemoteConfigurationTwitterShareTests.m */; };
 		0C1A8FCF1A632F8200518D9A /* MAVERemoteConfigurationClipboardShareTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FCE1A632F8200518D9A /* MAVERemoteConfigurationClipboardShareTests.m */; };
 		0C1A8FD41A641F8000518D9A /* MAVECustomSharePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC661A5EC96600C27DA5 /* MAVECustomSharePageViewController.m */; };
-		0C1A8FDA1A644D7900518D9A /* MaveNameParsingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FD91A644D7900518D9A /* MaveNameParsingUtils.m */; };
+		0C1A8FDA1A644D7900518D9A /* MAVENameParsingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FD91A644D7900518D9A /* MAVENameParsingUtils.m */; };
 		0C1A8FDC1A644E5C00518D9A /* MAVENameParsingUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FDB1A644E5C00518D9A /* MAVENameParsingUtilsTests.m */; };
 		0C1F19FC1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F19FB1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m */; };
 		0C1F1A021A435EAE00B2D482 /* MAVERemoteConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */; };
@@ -145,8 +145,8 @@
 		0C1A8FCA1A632E2100518D9A /* MAVERemoteConfigurationFacebookShareTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationFacebookShareTests.m; sourceTree = "<group>"; };
 		0C1A8FCC1A632F1800518D9A /* MAVERemoteConfigurationTwitterShareTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationTwitterShareTests.m; sourceTree = "<group>"; };
 		0C1A8FCE1A632F8200518D9A /* MAVERemoteConfigurationClipboardShareTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationClipboardShareTests.m; sourceTree = "<group>"; };
-		0C1A8FD81A644D7900518D9A /* MaveNameParsingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaveNameParsingUtils.h; sourceTree = "<group>"; };
-		0C1A8FD91A644D7900518D9A /* MaveNameParsingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaveNameParsingUtils.m; sourceTree = "<group>"; };
+		0C1A8FD81A644D7900518D9A /* MAVENameParsingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVENameParsingUtils.h; sourceTree = "<group>"; };
+		0C1A8FD91A644D7900518D9A /* MAVENameParsingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVENameParsingUtils.m; sourceTree = "<group>"; };
 		0C1A8FDB1A644E5C00518D9A /* MAVENameParsingUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVENameParsingUtilsTests.m; sourceTree = "<group>"; };
 		0C1F19FA1A432AA500B2D482 /* MAVEABPermissionPromptHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPermissionPromptHandler.h; sourceTree = "<group>"; };
 		0C1F19FB1A432AA500B2D482 /* MAVEABPermissionPromptHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPermissionPromptHandler.m; sourceTree = "<group>"; };
@@ -332,8 +332,8 @@
 				0C1F1A191A53012000B2D482 /* MAVEClientPropertyUtils.m */,
 				0CCC92B51A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.h */,
 				0CCC92B61A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m */,
-				0C1A8FD81A644D7900518D9A /* MaveNameParsingUtils.h */,
-				0C1A8FD91A644D7900518D9A /* MaveNameParsingUtils.m */,
+				0C1A8FD81A644D7900518D9A /* MAVENameParsingUtils.h */,
+				0C1A8FD91A644D7900518D9A /* MAVENameParsingUtils.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -830,7 +830,7 @@
 				C029280C19E82D18006AEE43 /* MAVEInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* MAVEABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
-				0C1A8FDA1A644D7900518D9A /* MaveNameParsingUtils.m in Sources */,
+				0C1A8FDA1A644D7900518D9A /* MAVENameParsingUtils.m in Sources */,
 				0C1F1A1A1A53012000B2D482 /* MAVEClientPropertyUtils.m in Sources */,
 				0C1F1A021A435EAE00B2D482 /* MAVERemoteConfiguration.m in Sources */,
 				0C1F1A051A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.m in Sources */,
