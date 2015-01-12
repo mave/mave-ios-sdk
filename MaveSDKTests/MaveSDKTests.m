@@ -126,6 +126,20 @@
     XCTAssertEqualObjects(mave.userData, userData);
 }
 
+- (void)testIdentifyAnonymousUser {
+    id userDataMock = OCMClassMock([MAVEUserData class]);
+    OCMExpect([userDataMock alloc]).andReturn(userDataMock);
+    OCMExpect([userDataMock initAutomaticallyFromDeviceName]).andReturn(userDataMock);
+
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock identifyUser:userDataMock]);
+
+    [[MaveSDK sharedInstance] identifyAnonymousUser];
+
+    OCMVerifyAll(userDataMock);
+    OCMVerifyAll(maveMock);
+}
+
 - (void)testValidateLibrarySetupFailsWithNoApplicationID {
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
     MaveSDK *gk = [MaveSDK sharedInstance];
