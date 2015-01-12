@@ -95,6 +95,7 @@ static dispatch_once_t sharedInstanceonceToken;
         [errorStrings addObject:@"invite page dismiss block was nil"];
     }
     if (self.userData == nil) {
+        // TODO: try to load the user data from disk, and have identify user persist it
         [errorStrings addObject:@"identifyUser: (or identifyAnonymousUser) method not called"];
     }
 
@@ -111,6 +112,27 @@ static dispatch_once_t sharedInstanceonceToken;
                                                           code:5
                                                       userInfo:@{@"messages":errorStrings}];
     return validationError;
+}
+
+- (MAVERemoteConfiguration *)remoteConfiguration {
+    id obj = [self.remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
+    return (MAVERemoteConfiguration *)obj;
+}
+
+- (NSString *)defaultSMSMessageText {
+    if (_defaultSMSMessageText) {
+        return _defaultSMSMessageText;
+    } else {
+        return self.remoteConfiguration.contactsInvitePage.smsCopy;
+    }
+}
+
+- (NSString *)inviteExplanationCopy {
+    if (self.displayOptions.inviteExplanationCopy) {
+        return self.displayOptions.inviteExplanationCopy;
+    } else {
+        return self.remoteConfiguration.contactsInvitePage.explanationCopy;
+    }
 }
 
 //
@@ -150,10 +172,25 @@ static dispatch_once_t sharedInstanceonceToken;
 // Methods for consumer to present/manage the invite page
 //
 
+- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+                             dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
+                            inviteContext:(NSString *)inviteContext {
+    self.invitePageDismissalBlock = dismissBlock;
+    NSError *setupError = [self validateLibrarySetup];
+    if (setupError) {
+        ErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
+        return;
+    }
+    UIViewController *vc = [self.invitePageChooser chooseAndCreateInvitePageViewController];
+    UIViewController *navigationVC = [self.invitePageChooser embedInNavigationController:vc];
+    presentBlock(navigationVC);
+}
+
+// Deprecated
 - (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
                                         setupError:(NSError *__autoreleasing *)setupError
                                     dismissalBlock:(MAVEInvitePageDismissBlock) dismissalBlock {
-    self.invitePageDismissalBlock = dismissalBlock;    
+    self.invitePageDismissalBlock = dismissalBlock;
     UIViewController *returnViewController = nil;
     *setupError = [self validateLibrarySetup];
     if (!*setupError) {
@@ -163,15 +200,5 @@ static dispatch_once_t sharedInstanceonceToken;
     }
     return returnViewController;
 }
-
-//- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-//                           dismissalBlock:(MAVEInvitePageDismissBlock)dismissBlock {
-//
-//}
-//
-//- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-//                           dismisslock:(MAVEInvitePageDismissBlock)dismissBlock {
-//
-//}
 
 @end

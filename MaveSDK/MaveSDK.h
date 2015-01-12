@@ -30,6 +30,7 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;
+@property (nonatomic, copy) NSString *inviteContext;
 @property (strong, nonatomic) MAVEUserData *userData;
 @property (nonatomic, copy) MAVEInvitePageDismissBlock invitePageDismissalBlock;
 
@@ -51,13 +52,28 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 
 - (void)trackSignup;
 
-//- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-//                             dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
-//                                  context:(NSString*)presentedFrom;
+// Present the view controller modally (or in a drawer, etc.)
+//
+// @presentBlock - block for you to present the Mave invite view controller from your app
+// @dismissBlock - block to transition back to your app after user sends invites or cancels.
+//                 It gets a "number of invites sent" parameter if you need to tell whether
+//                   the user sent any invites/shared or not.
+// @inviteContext - a string to identify where the invite page was presented from. If you are
+//                  displaying the invite page from multiple places in your app (e.g. from the
+//                  menu and in the signup flow) this is important for tracking because you
+//                  typically expect the page to perform differently depending on where it's
+//                  presented from.
+- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+                             dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
+                            inviteContext:(NSString*)inviteContext;
+
+// Present the invite page by pushing onto an existing navigation controller stack
+// Otherwise it's the same as previous method.
 //- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
 //                          dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
 //                               context:(NSString*)presentedFrom;
 
+// Deprecated, will be removed soon
 - (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
                                         setupError:(NSError *__autoreleasing *)setupError
                                     dismissalBlock:(MAVEInvitePageDismissBlock)dismissalBlock;

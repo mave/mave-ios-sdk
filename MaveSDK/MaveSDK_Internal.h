@@ -23,5 +23,10 @@
 // correctly have been initialized. It logs any errors with a big "ERROR"
 - (NSError *)validateLibrarySetup;
 
+- (MAVERemoteConfiguration *)remoteConfiguration;
+// Temporary, wrappers to access default sms text and invite explanation copy
+- (NSString *)defaultSMSMessageText;
+- (NSString *)inviteExplanationCopy;
+
 
 @end

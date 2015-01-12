@@ -82,6 +82,57 @@
     [mock stopMocking];
 }
 
+// Test getting properties on the mave object
+- (void) testRemoteConfiguration {
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    [MaveSDK sharedInstance].remoteConfigurationBuilder = builder;
+    id remoteConfig = [[MAVERemoteConfiguration alloc] init];
+
+    id builderMock = OCMPartialMock(builder);
+    OCMStub([builderMock createObjectSynchronousWithTimeout:0]).andReturn(remoteConfig);
+
+    XCTAssertEqualObjects([[MaveSDK sharedInstance] remoteConfiguration],
+                          remoteConfig);
+}
+- (void) testDefaultSMSText {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+
+    // can be set in remote config
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    remoteConfig.contactsInvitePage.smsCopy = @"foo";
+    id maveMock = OCMPartialMock(mave);
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    // if set explicitly, return that as explanation text
+    mave.defaultSMSMessageText = @"bar";
+    XCTAssertEqualObjects(mave.defaultSMSMessageText, @"bar");
+
+    // if not set, return the value from remote config
+    mave.defaultSMSMessageText = nil;
+    XCTAssertEqualObjects(mave.defaultSMSMessageText, @"foo");
+}
+
+- (void)testInviteExplanationCopy {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.displayOptions = [[MAVEDisplayOptions alloc] init];
+
+    // can be set in remote config
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    remoteConfig.contactsInvitePage.explanationCopy = @"foo";
+    id maveMock = OCMPartialMock(mave);
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    // if set explicitly in display options, return that as explanation text
+    mave.displayOptions.inviteExplanationCopy = @"bar";
+    XCTAssertEqualObjects(mave.inviteExplanationCopy, @"bar");
+
+    // if not set, return the value from remote config
+    mave.displayOptions.inviteExplanationCopy = nil;
+    XCTAssertEqualObjects(mave.inviteExplanationCopy, @"foo");
+}
+
 - (void)testGetReferringUser {
     // Just ensure that the method on mock manager gets called with our block
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
@@ -191,6 +242,7 @@
     XCTAssertNil(err);
 }
 
+# pragma mark - Displaying the invite page
 - (void)testInvitePageViewControllerNoErrorIfUserDataSet {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
