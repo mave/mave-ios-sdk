@@ -8,6 +8,7 @@
 
 #import "MAVEShareToken.h"
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 
 #ifdef UNITTESTING
 NSString * const MAVEUserDefaultsKeyShareToken = @"MAVETESTSUserDefaultsKeyShareToken";
@@ -38,6 +39,7 @@ NSString * const MAVEShareTokenKeyShareToken = @"share_token";
                     if (error) {
                         [promise rejectPromise];
                     } else {
+                        DebugLog(@"Using a new share token from server");
                         [promise fulfillPromise:(NSValue *)responseData];
                     }
                 }];

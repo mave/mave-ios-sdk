@@ -94,8 +94,17 @@
 - (void)testDismissAfterCancel {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
     id mock = OCMPartialMock(vc);
-    OCMExpect([vc dismissSelf:0]);
+    OCMExpect([mock dismissSelf:0]);
     [vc dismissAfterCancel];
+    OCMVerifyAll(mock);
+}
+
+- (void)testDismissAfterShare {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    OCMExpect([mock dismissSelf:1]);
+    OCMExpect([mock resetShareToken]);
+    [vc dismissAfterShare];
     OCMVerifyAll(mock);
 }
 
@@ -150,7 +159,7 @@
     [self setupPartialMockForClientShareTests];
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([self.viewControllerMock dismissSelf:1]);
+    OCMExpect([self.viewControllerMock dismissAfterShare]);
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
     OCMExpect([apiInterfaceMock trackShareWithShareType:@"client_sms" shareToken:[self.viewController shareToken] audience:nil]);
 
@@ -164,7 +173,7 @@
     [self setupPartialMockForClientShareTests];
 
     // When cancelled
-    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissSelf:1];
+    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissAfterShare];
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
 
     [self.viewController messageComposeViewController:nil didFinishWithResult:MessageComposeResultCancelled];
@@ -176,7 +185,7 @@
     [self setupPartialMockForClientShareTests];
 
     // When failed
-    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissSelf:1];
+    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissAfterShare];
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
 
     // TODO figure out how to mock the UIAlertView
@@ -218,7 +227,7 @@
     [self setupPartialMockForClientShareTests];
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([self.viewControllerMock dismissSelf:1]);
+    OCMExpect([self.viewControllerMock dismissAfterShare]);
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
     OCMExpect([apiInterfaceMock trackShareWithShareType:@"client_email" shareToken:[self.viewController shareToken] audience:nil]);
 
@@ -232,7 +241,7 @@
     [self setupPartialMockForClientShareTests];
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    [[self.viewControllerMock reject] dismissSelf:1];
+    [[self.viewControllerMock reject] dismissAfterShare];
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
     [[apiInterfaceMock reject] trackShareWithShareType:@"client_email" shareToken:[self.viewController shareToken] audience:nil];
 
@@ -281,7 +290,7 @@
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     OCMExpect([apiInterfaceMock trackShareWithShareType:@"facebook" shareToken:[self.viewController shareToken] audience:nil]);
-    OCMExpect([self.viewControllerMock dismissSelf:1]);
+    OCMExpect([self.viewControllerMock dismissAfterShare]);
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
     [self.viewControllerMock facebookHandleShareResult:SLComposeViewControllerResultDone];
 
@@ -294,7 +303,7 @@
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     [[apiInterfaceMock reject] trackShareWithShareType:@"facebook" shareToken:[self.viewController shareToken] audience:nil];
-    [[self.viewControllerMock reject] dismissSelf:1];
+    [[self.viewControllerMock reject] dismissAfterShare];
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
     [self.viewControllerMock facebookHandleShareResult:SLComposeViewControllerResultCancelled];
 
@@ -339,7 +348,7 @@
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     OCMExpect([apiInterfaceMock trackShareWithShareType:@"twitter" shareToken:[self.viewController shareToken] audience:nil]);
-    OCMExpect([self.viewControllerMock dismissSelf:1]);
+    OCMExpect([self.viewControllerMock dismissAfterShare]);
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
 
     [self.viewControllerMock twitterHandleShareResult:SLComposeViewControllerResultDone];
@@ -353,7 +362,7 @@
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     [[apiInterfaceMock reject] trackShareWithShareType:@"twitter" shareToken:[self.viewController shareToken] audience:nil];
-    [[self.viewControllerMock reject] dismissSelf:1];
+    [[self.viewControllerMock reject] dismissAfterShare];
     OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
 
     [self.viewControllerMock twitterHandleShareResult:SLComposeViewControllerResultCancelled];
@@ -368,6 +377,8 @@
 
     id pasteboardMock = OCMClassMock([UIPasteboard class]);
     OCMExpect([self.viewControllerMock _generalPasteboardForClipboardShare]).andReturn(pasteboardMock);
+    // since any copy operation might get shared, reset the share token on copy to clipboard
+    OCMExpect([self.viewControllerMock resetShareToken]);
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:@"clipboard"]);
@@ -401,6 +412,18 @@
     OCMStub([mock shareToken]).andReturn(@"blahtok");
     NSString *link = [vc shareLinkWithSubRouteLetter:@"d"];
     XCTAssertEqualObjects(link, @"http://dev.appjoin.us/d/blahtok");
+}
+- (void)testResetShareToken {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    MAVERemoteObjectBuilder *builderInitial = [MaveSDK sharedInstance].shareTokenBuilder;
+
+    id stClassMock = OCMClassMock([MAVEShareToken class]);
+
+    [vc resetShareToken];
+
+    OCMVerify([stClassMock clearUserDefaults]);
+    XCTAssertNotEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, builderInitial);
+    [stClassMock stopMocking];
 }
 
 @end

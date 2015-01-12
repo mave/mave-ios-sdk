@@ -95,14 +95,16 @@
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     UIViewController *vc = [chooser createAddressBookInvitePage];
     XCTAssertNotNil(vc);
-    XCTAssertTrue([vc isKindOfClass:[MAVEInvitePageViewController class]]);
+    XCTAssertEqualObjects(NSStringFromClass([MAVEInvitePageViewController class]),
+                          @"MAVEInvitePageViewController");
 }
 
 - (void)testCreateCustomShareInvitePage {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     UIViewController *vc = [chooser createCustomShareInvitePage];
     XCTAssertNotNil(vc);
-    XCTAssertTrue([vc isKindOfClass:[MAVECustomSharePageViewController class]]);
+    XCTAssertEqualObjects(NSStringFromClass([MAVECustomSharePageViewController class]),
+                          @"MAVECustomSharePageViewController");
 }
 
 #pragma mark - additional setup of view controllers

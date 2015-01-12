@@ -14,6 +14,7 @@
 @interface MAVECustomSharePageViewController: UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 - (void)dismissAfterCancel;
+- (void)dismissAfterShare;
 - (void)dismissSelf:(NSUInteger)numberOfInvitesSent;
 
 // Do the client side shares
@@ -39,6 +40,7 @@
 - (NSString *)shareToken;
 // Build a link of the format: http://appjoin.us/<subRoute>/SHARE-TOKEN
 - (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
+- (void)resetShareToken;
 
 
 @end

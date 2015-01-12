@@ -49,6 +49,13 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     }
 }
 
+// Call this after a successful share
+- (void)dismissAfterShare {
+    [self resetShareToken];
+    return [self dismissSelf:1];
+}
+
+// Call this after a cancel
 - (void)dismissAfterCancel {
     return [self dismissSelf:0];
 }
@@ -76,7 +83,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
                  didFinishWithResult:(MessageComposeResult) result
 {
-    BOOL dismissSentOneSMS = NO;
+    BOOL dismissSent = NO;
 
     switch (result) {
         case MessageComposeResultCancelled: {
@@ -89,7 +96,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
         } case MessageComposeResultSent: {
             [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self shareToken] audience:nil];
-            dismissSentOneSMS = YES;
+            dismissSent = YES;
             break;
 
         } default:
@@ -97,8 +104,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     }
 
     [self dismissViewControllerAnimated:YES completion:nil];
-    if (dismissSentOneSMS ) {
-        [self dismissSelf:1];
+    if (dismissSent) {
+        [self dismissAfterShare];
     }
 }
 
@@ -124,12 +131,12 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error
 {
-    BOOL dismissSentOneEmail = NO;
+    BOOL dismissSent = NO;
 
     switch (result) {
         case MFMailComposeResultSent:
             [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self shareToken] audience:nil];
-            dismissSentOneEmail = YES;
+            dismissSent = YES;
             break;
 
         case MFMailComposeResultSaved:
@@ -145,8 +152,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     // This dismisses the email compose view, so the share page
     // is still active
     [self dismissViewControllerAnimated:YES completion:nil];
-    if (dismissSentOneEmail) {
-        [self dismissSelf:1];
+    if (dismissSent) {
+        [self dismissAfterShare];
     }
 }
 
@@ -184,7 +191,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     }
     [self dismissViewControllerAnimated:YES completion:nil];
     if (dismissShared) {
-        [self dismissSelf:1];
+        [self dismissAfterShare];
     }
 }
 
@@ -218,7 +225,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     }
     [self dismissViewControllerAnimated:YES completion:nil];
     if (dismissShared) {
-        [self dismissSelf:1];
+        [self dismissAfterShare];
     }
 }
 
@@ -228,6 +235,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     pasteboard.string = [self shareLinkWithSubRouteLetter:@"c"];
 
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard];
+
+    // Any copy to clipboard might be shared, so reset the share token here
+    [self resetShareToken];
 
     UIAlertView *alert;
     alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
@@ -268,6 +278,12 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     output = [output stringByAppendingString:@"/"];
     output = [output stringByAppendingString:shareToken];
     return output;
+}
+
+- (void)resetShareToken {
+    DebugLog(@"Resetting share token after share");
+    [MAVEShareToken clearUserDefaults];
+    [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
 }
 
 
