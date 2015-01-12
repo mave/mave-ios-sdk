@@ -37,13 +37,16 @@
                preferLocallySavedData:(BOOL)preferLocallySavedData {
     if (self = [super init]) {
         self.classToCreate = classToCreate;
-        if (!preferLocallySavedData) {
-            self.promise = [[MAVEPromise alloc] initWithBlock:preFetchBlock];
-        }
         MAVERemoteConfiguratorDataPersistor *persistor =
         [[MAVERemoteConfiguratorDataPersistor alloc] initWithUserDefaultsKey:userDefaultsKey defaultJSONData:defaultData];
         self.loadedFromDiskData = [persistor loadJSONDataFromUserDefaults];
         self.defaultData = defaultData;
+
+        if (preferLocallySavedData && self.loadedFromDiskData) {
+            self.promise = nil;
+        } else {
+            self.promise = [[MAVEPromise alloc] initWithBlock:preFetchBlock];
+        }
     }
     return self;
 }

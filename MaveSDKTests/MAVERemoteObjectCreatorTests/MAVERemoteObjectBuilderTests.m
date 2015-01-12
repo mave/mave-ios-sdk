@@ -115,7 +115,7 @@
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
 
-- (void)testInitObjectBuilderWithPersistancePreferLocal {
+- (void)testInitObjectBuilderWithPersistancePreferLocalWithLocalData {
     // First persist some data
     NSDictionary *persistedData = @{@"title_copy": @"This is persisted title",
                                     @"body_copy": @"This is persisted body"};
@@ -132,10 +132,33 @@
                                         preferLocallySavedData:YES];
 
     XCTAssertEqualObjects(builder.classToCreate, [MAVERemoteObjectDemo class]);
-    // with prefer local block is not called so no promise
+    // using prefer local and there's existing data, so remote call is skipped (no promise)
     XCTAssertNil(builder.promise);
     XCTAssertNil(calledWithPromise);
     XCTAssertEqualObjects(builder.loadedFromDiskData, persistedData);
+    XCTAssertEqualObjects(builder.defaultData, defaultData);
+}
+
+- (void)testInitObjectBuilderWithPersistancePreferLocalNoLocalData {
+    // No persisted data
+    XCTAssertNil([[NSUserDefaults standardUserDefaults] objectForKey:self.userDefaultsKeyForTests]);
+    NSDictionary *defaultData = @{};
+
+    __block MAVEPromise *calledWithPromise;
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc]
+                                        initWithClassToCreate:[MAVERemoteObjectDemo class]
+                                        preFetchBlock:^(MAVEPromise *promise) {
+                                            calledWithPromise = promise;
+                                        } defaultData:defaultData
+                                        saveIfSuccessfulToUserDefaultsKey:self.userDefaultsKeyForTests
+                                        preferLocallySavedData:YES];
+
+    XCTAssertEqualObjects(builder.classToCreate, [MAVERemoteObjectDemo class]);
+    // using prefer local and there's no existing data, so remote call is made normally
+    // and promise created
+    XCTAssertNotNil(builder.promise);
+    XCTAssertEqualObjects(builder.promise, calledWithPromise);
+    XCTAssertNil(builder.loadedFromDiskData);
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
 
