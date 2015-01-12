@@ -18,6 +18,8 @@
 
 NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
 NSString * const MAVESharePageShareTypeClientEmail = @"client_email";
+NSString * const MAVESharePageShareTypeFacebook = @"facebook";
+NSString * const MAVESharePageShareTypeTwitter = @"twitter";
 
 
 @implementation MAVECustomSharePageViewController
@@ -121,52 +123,104 @@ NSString * const MAVESharePageShareTypeClientEmail = @"client_email";
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error
 {
+    BOOL dismissSentOneEmail = NO;
+
     switch (result) {
         case MFMailComposeResultSent:
-            NSLog(@"You sent the email.");
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self shareToken] audience:nil];
+            dismissSentOneEmail = YES;
             break;
+
         case MFMailComposeResultSaved:
-            NSLog(@"You saved a draft of this email");
             break;
         case MFMailComposeResultCancelled:
-            NSLog(@"You cancelled sending this email.");
             break;
         case MFMailComposeResultFailed:
-            NSLog(@"Mail failed:  An error occurred when trying to compose this email");
             break;
         default:
-            NSLog(@"An error occurred when trying to compose this email");
             break;
     }
 
     // This dismisses the email compose view, so the share page
     // is still active
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    if (dismissSentOneEmail) {
+        [self dismissSelf:1];
+    }
 }
 
 - (void)facebookiOSNativeShare {
-    // TODO: use the data from the remote config
     // TODO: if they don't have facebook connected in ios we should check if the app has the facebook sdk implemented with the appropriate callbacks.
-    SLComposeViewController *facebookSheet = [SLComposeViewController
-                                              composeViewControllerForServiceType:SLServiceTypeFacebook];
-    [facebookSheet setInitialText:@"Join me on Swig"];
-    [facebookSheet addURL:[NSURL URLWithString:@"http://www.swig.co/"]];
-    // TODO: Add completion handler http://stackoverflow.com/questions/13428304/slcomposeviewcontroller-completionhandler
+    NSString *message = self.remoteConfiguration.facebookShare.text;
+    NSString *url = [self shareLinkWithSubRouteLetter:@"s"];
+
+    SLComposeViewController *facebookSheet = [self _createFacebookComposeViewController];
+    [facebookSheet setInitialText:message];
+    [facebookSheet addURL:[NSURL URLWithString:url]];
+    facebookSheet.completionHandler = ^(SLComposeViewControllerResult result){
+        [self facebookHandleShareResult:result];
+    };
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeFacebook];
     [self presentViewController:facebookSheet animated:YES completion:nil];
     return;
-    
+}
+- (SLComposeViewController *)_createFacebookComposeViewController {
+    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+}
+
+- (void)facebookHandleShareResult:(SLComposeViewControllerResult) result {
+    BOOL dismissShared = NO;
+    switch (result) {
+        case SLComposeViewControllerResultDone: {
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[self shareToken] audience:nil];
+            dismissShared = YES;
+        } case SLComposeViewControllerResultCancelled: {
+            break;
+        }
+        default:
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    if (dismissShared) {
+        [self dismissSelf:1];
+    }
 }
 
 - (void)twitteriOSNativeShare {
+    NSString *message = [self.remoteConfiguration.twitterShare.text stringByAppendingString:[self shareLinkWithSubRouteLetter:@"t"]];
 
-    // TODO: use the data from the remote config
-    SLComposeViewController *tweetSheet = [SLComposeViewController
-                                           composeViewControllerForServiceType:SLServiceTypeTwitter];
-    [tweetSheet setInitialText:@"Join me http://www.hoteltonight.com/"];
-    // TODO: Add completion handler http://stackoverflow.com/questions/13428304/slcomposeviewcontroller-completionhandler
+    SLComposeViewController *tweetSheet = [self _createTwitterComposeViewController];
+    [tweetSheet setInitialText:message];
+    tweetSheet.completionHandler = ^(SLComposeViewControllerResult result) {
+        [self twitterHandleShareResult:result];
+    };
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeTwitter];
+
     [self presentViewController:tweetSheet animated:YES completion:nil];
-    return;
 }
+- (SLComposeViewController *)_createTwitterComposeViewController {
+    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+}
+
+- (void)twitterHandleShareResult:(SLComposeViewControllerResult) result {
+    BOOL dismissShared = NO;
+    switch (result) {
+        case SLComposeViewControllerResultDone: {
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[self shareToken] audience:nil];
+            dismissShared = YES;
+        } case SLComposeViewControllerResultCancelled: {
+            break;
+        }
+        default:
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    if (dismissShared) {
+        [self dismissSelf:1];
+    }
+}
+
 
 - (void)clipboardShare {
     

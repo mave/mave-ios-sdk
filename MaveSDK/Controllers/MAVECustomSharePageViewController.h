@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Social/Social.h>
 #import <MessageUI/MessageUI.h>
 #import "MAVERemoteConfiguration.h"
 
@@ -23,7 +24,11 @@
 - (void)emailClientSideShare;
 - (MFMailComposeViewController *)_createMailComposeViewController;
 - (void)facebookiOSNativeShare;
+- (SLComposeViewController *)_createFacebookComposeViewController;
+- (void)facebookHandleShareResult:(SLComposeViewControllerResult) result;
 - (void)twitteriOSNativeShare;
+- (SLComposeViewController *)_createTwitterComposeViewController;
+- (void)twitterHandleShareResult:(SLComposeViewControllerResult) result;
 - (void)clipboardShare;
 
 // Helpers
