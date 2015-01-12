@@ -10,10 +10,15 @@
 
 // Macro for debug logging
 #ifdef DEBUG
-#define DebugLog( s, ... ) NSLog( @"<%@:(%d)> %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#define DebugLog(args...) MAVEExtendedLog("MAVE LOG", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+#define ErrorLog(args...) MAVEExtendedLog("MAVE ERROR!", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
 #else
-#define DebugLog( s, ... )
+#define DebugLog(s, ... )
+#define ErrorLog(args...)
 #endif
+
+// Custom log & reporting functions
+void MAVEExtendedLog(const char*prefix, const char *file, int lineNumber, const char *functionName, NSString *format, ...);
 
 extern NSString * const MAVEAPIBaseURL;
 extern NSString * const MAVEAPIVersion;

@@ -129,6 +129,13 @@ static dispatch_once_t sharedInstanceonceToken;
     }
 }
 
+- (void)identifyAnonymousUser {
+    MAVEUserData *user = [[MAVEUserData alloc] initAutomaticallyFromDeviceName];
+    if (user) {
+        [self identifyUser:user];
+    }
+}
+
 - (void)trackSignup {
     [self.APIInterface trackSignup];
 }

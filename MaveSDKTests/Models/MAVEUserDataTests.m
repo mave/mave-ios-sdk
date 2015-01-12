@@ -74,10 +74,27 @@
 - (void)testIsUserInfoOkToSendServerSideSMS {
     MAVEUserData *user = [[MAVEUserData alloc] init];
     XCTAssertFalse([user isUserInfoOkToSendServerSideSMS]);
+
+    user = [[MAVEUserData alloc] init];
     user.userID = @"balsdf";
     XCTAssertFalse([user isUserInfoOkToSendServerSideSMS]);
+
+    user = [[MAVEUserData alloc] init];
+    user.userID = @"balsdf";
     user.firstName = @"blahasdfasdf";
     XCTAssertTrue([user isUserInfoOkToSendServerSideSMS]);
+
+    user = nil;
+    XCTAssertFalse([user isUserInfoOkToSendServerSideSMS]);
+}
+
+- (void)testEmptyStringNameNotOkForInvites {
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"foo"
+                                                    firstName:@""
+                                                     lastName:nil
+                                                        email:nil
+                                                        phone:nil];
+    XCTAssertFalse([user isUserInfoOkToSendServerSideSMS]);
 }
 
 - (void)testToDictionaryAllNils {

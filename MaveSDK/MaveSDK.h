@@ -42,7 +42,11 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 #endif
 
 - (void)getReferringUser:(void(^)(MAVEUserData * userData))referringUserHandler;
+// Use this to identify your logged-in users to us
 - (void)identifyUser:(MAVEUserData *)userData;
+// Use anonymous users if you don't have user accounts. Mave will generate
+// a user id to match this device in the future and try to get the user's name
+// from the device info. If we can't get the user's name 
 - (void)trackSignup;
 
 //- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock

@@ -62,7 +62,8 @@
 
 - (BOOL)isUserInfoOkToSendServerSideSMS {
     // it's ok to send if they have a user id and first name
-    return self.userID && self.firstName;
+    return ([self.userID length] > 0
+            && [self.firstName length] > 0);
 }
 
 - (NSDictionary *)toDictionary {

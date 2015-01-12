@@ -35,9 +35,16 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
         DebugLog(@"Fallback to Custom Share invite page b/c not in supported region for server-side SMS");
     }
 
-    // If configured server-side to tur off contacts invite page do that
+    // If configured server-side to turn off contacts invite page, use share page instead
     if (![self isContactsInvitePageEnabledServerSide]) {
         DebugLog(@"Fallback to custom share page b/c contacts page set to NO server-side");
+        return [self createCustomShareInvitePage];
+    }
+
+    // If user data doesn't have a legit user id & first name, can't send server-side SMS
+    // so use share page instead
+    if (![[MaveSDK sharedInstance].userData isUserInfoOkToSendServerSideSMS]) {
+        DebugLog(@"Fallback to custom share page b/c user info invalid");
         return [self createCustomShareInvitePage];
     }
 
