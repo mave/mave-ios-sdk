@@ -113,7 +113,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     // TODO: use the data from the remote config
     MFMailComposeViewController *mailController = [self _createMailComposeViewController];
     NSString *subject = self.remoteConfiguration.clientEmail.subject;
-    NSString *message = [self.remoteConfiguration.clientEmail.body stringByAppendingString:[self shareLinkWithSubRouteLetter:@"s"]];
+    NSString *message = [self.remoteConfiguration.clientEmail.body stringByAppendingString:[self shareLinkWithSubRouteLetter:@"e"]];
 
     mailController.mailComposeDelegate = self;
     mailController.subject = subject;
@@ -160,7 +160,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)facebookiOSNativeShare {
     // TODO: if they don't have facebook connected in ios we should check if the app has the facebook sdk implemented with the appropriate callbacks.
     NSString *message = self.remoteConfiguration.facebookShare.text;
-    NSString *url = [self shareLinkWithSubRouteLetter:@"s"];
+    NSString *url = [self shareLinkWithSubRouteLetter:@"f"];
 
     SLComposeViewController *facebookSheet = [self _createFacebookComposeViewController];
     [facebookSheet setInitialText:message];

@@ -198,7 +198,7 @@
 - (void)testClientEmailShare {
     [self setupPartialMockForClientShareTests];
     NSString *expectedSubject = @"Join DemoApp";
-    NSString *expectedBody = @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\nhttp://dev.appjoin.us/s/foobarsharetoken";
+    NSString *expectedBody = @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\nhttp://dev.appjoin.us/e/foobarsharetoken";
 
     id mailComposerMock = OCMClassMock([MFMailComposeViewController class]);
     OCMExpect([self.viewControllerMock _createMailComposeViewController]).andReturn(mailComposerMock);
@@ -254,7 +254,7 @@
 - (void)testFacebookiOSNativeShare {
     [self setupPartialMockForClientShareTests];
     NSString *expectedCopy = @"I love DemoApp. You should try it. ";
-    NSString *expectedURL = @"http://dev.appjoin.us/s/foobarsharetoken";
+    NSString *expectedURL = @"http://dev.appjoin.us/f/foobarsharetoken";
 
     id fbVC = OCMClassMock([SLComposeViewController class]);
     OCMExpect([self.viewControllerMock _createFacebookComposeViewController]).andReturn(fbVC);
