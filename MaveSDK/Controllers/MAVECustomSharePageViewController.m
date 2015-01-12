@@ -16,6 +16,8 @@
 #import "MAVERemoteConfiguration.h"
 #import "MAVEShareToken.h"
 
+NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
+
 
 @implementation MAVECustomSharePageViewController
 
@@ -68,35 +70,46 @@
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
                  didFinishWithResult:(MessageComposeResult) result
 {
+    BOOL dismissSentOneSMS = NO;
+
     switch (result) {
-        case MessageComposeResultCancelled:
+        case MessageComposeResultCancelled: {
             break;
 
-        case MessageComposeResultFailed:
-        {
+        } case MessageComposeResultFailed: {
             UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [warningAlert show];
             break;
-        }
 
-        case MessageComposeResultSent:
+        } case MessageComposeResultSent: {
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self shareToken] audience:nil];
+            dismissSentOneSMS = YES;
             break;
 
-        default:
+        } default:
             break;
     }
 
     [self dismissViewControllerAnimated:YES completion:nil];
+    if (dismissSentOneSMS ) {
+        [self dismissSelf:1];
+    }
 }
 
 - (void)emailClientSideShare {
     // TODO: use the data from the remote config
-    MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
+    MFMailComposeViewController *mailController = [self _createMailComposeViewController];
+    NSString *subject = self.remoteConfiguration.clientEmail.subject;
+    NSString *message = [self.remoteConfiguration.clientEmail.body stringByAppendingString:[self shareLinkWithSubRouteLetter:@"s"]];
+
     mailController.mailComposeDelegate = self;
-    [mailController setSubject:@"Join Swig"];
-    [mailController setMessageBody:@"Get wit it" isHTML:NO];
+    mailController.subject = subject;
+    [mailController setMessageBody:message isHTML:NO];
     
     [self presentViewController:mailController animated:YES completion:nil];
+}
+- (MFMailComposeViewController *)_createMailComposeViewController {
+    return [[MFMailComposeViewController alloc] init];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller

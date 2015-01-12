@@ -21,6 +21,7 @@
 // message compose controller
 - (MFMessageComposeViewController *)_createMessageComposeViewController;
 - (void)emailClientSideShare;
+- (MFMailComposeViewController *)_createMailComposeViewController;
 - (void)facebookiOSNativeShare;
 - (void)twitteriOSNativeShare;
 - (void)clipboardShare;

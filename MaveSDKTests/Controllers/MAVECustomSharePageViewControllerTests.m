@@ -141,22 +141,68 @@
     OCMVerifyAll(smsComposerMock);
 }
 
-- (void)testClientSideSMSShareHandler {
+- (void)testClientSideSMSShareHandlerSMSSent {
+    [self setupPartialMockForClientShareTests];
 
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([self.viewControllerMock dismissSelf:1]);
+    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:@"client_sms" shareToken:[self.viewController shareToken] audience:nil]);
+
+    [self.viewController messageComposeViewController:nil didFinishWithResult:MessageComposeResultSent];
+
+    OCMVerifyAll(self.viewControllerMock);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testClientSideSMSShareHandlerSMSCancelled {
+    [self setupPartialMockForClientShareTests];
+
+    // When cancelled
+    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissSelf:1];
+    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
+
+    [self.viewController messageComposeViewController:nil didFinishWithResult:MessageComposeResultCancelled];
+
+    OCMVerifyAll(self.viewControllerMock);
+}
+
+- (void)testClientSideSMSShareHandlerSMSFailed {
+    [self setupPartialMockForClientShareTests];
+
+    // When failed
+    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissSelf:1];
+    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
+
+    // TODO figure out how to mock the UIAlertView
+
+    [self.viewController messageComposeViewController:nil didFinishWithResult:MessageComposeResultCancelled];
+
+    OCMVerifyAll(self.viewControllerMock);
 }
 
 - (void)testClientEmailShare {
     [self setupPartialMockForClientShareTests];
+    NSString *expectedSubject = @"Join DemoApp";
+    NSString *expectedBody = @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\nhttp://dev.appjoin.us/s/foobarsharetoken";
+
+    id mailComposerMock = OCMClassMock([MFMailComposeViewController class]);
+    OCMExpect([self.viewControllerMock _createMailComposeViewController]).andReturn(mailComposerMock);
 
     OCMExpect([self.viewControllerMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
         MFMailComposeViewController *controller = obj;
-        XCTAssertNotNil(controller);
+        XCTAssertEqualObjects(controller, mailComposerMock);
         return YES;
     }] animated:YES completion:nil]);
+
+    OCMExpect([mailComposerMock setMailComposeDelegate:self.viewController]);
+    OCMExpect([mailComposerMock setSubject:expectedSubject]);
+    OCMExpect([mailComposerMock setMessageBody:expectedBody isHTML:NO]);
 
     [self.viewController emailClientSideShare];
 
     OCMVerifyAll(self.viewControllerMock);
+    OCMVerifyAll(mailComposerMock);
 }
 
 
