@@ -123,7 +123,7 @@
     [properties setValue:[self countryCode] forKey: @"device_country"];
     [properties setValue:[self language] forKey: @"device_language"];
     [properties setValue:[self deviceName] forKey:@"device_name"];
-    [properties setValue:[self deviceNameParsed] forKey:@"deviceName"];
+    [properties setValue:[self deviceNameParsed] forKey:@"device_name_parsed"];
     [properties setValue:MAVEAPIVersion forKey: @"mave_version"];
     [properties setValue:[self manufacturer] forKey: @"manufacturer"];
     [properties setValue:[self model] forKey: @"model"];
