@@ -14,6 +14,7 @@
 #import <UIKit/UIKit.h>
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
+#import "MAVENameParsingUtils.h"
 
 
 @implementation MAVEClientPropertyUtils
@@ -50,6 +51,14 @@
 
 + (NSString *)deviceName {
     return [UIDevice currentDevice].name;
+}
+
++ (NSString *)deviceNameParsed {
+    NSString *firstName, *lastName;
+    [MAVENameParsingUtils fillFirstName:&firstName
+                               lastName:&lastName
+                         fromDeviceName:[self deviceName]];
+    return [NSString stringWithFormat:@"%@%@", firstName, lastName];
 }
 
 + (NSString *)language {

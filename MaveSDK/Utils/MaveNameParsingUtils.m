@@ -10,6 +10,21 @@
 
 @implementation MAVENameParsingUtils
 
++ (NSString *)joinFirstName:(NSString *)firstName
+                andLastName:(NSString *)lastName {
+    NSString *full;
+    if ([firstName length] > 0 && [lastName length] > 0) {
+        full = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+    } else if ([firstName length] > 0 && [lastName length] == 0) {
+        full = firstName;
+    } else if ([firstName length] == 0 && [lastName length] > 0) {
+        full = lastName;
+    } else {
+        full = nil;
+    }
+    return full;
+}
+
 + (void)fillFirstName:(NSString *__autoreleasing *)firstName
              lastName:(NSString *__autoreleasing *)lastName
        fromDeviceName:(NSString *)deviceName {

@@ -17,6 +17,9 @@
              lastName:(NSString **)lastName
        fromDeviceName:(NSString *)deviceName;
 
++ (NSString *)joinFirstName:(NSString *)firstName
+                andLastName:(NSString *)lastName;
+
 // checks against bad word list, case insensitive
 + (BOOL)isBadWord:(NSString *)word;
 

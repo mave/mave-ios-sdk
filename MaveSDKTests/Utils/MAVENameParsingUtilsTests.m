@@ -26,6 +26,24 @@
     [super tearDown];
 }
 
+- (void)testJoinFirstAndLastName {
+    NSString *full;
+    full = [MAVENameParsingUtils joinFirstName:@"Foo" andLastName:@"Bar"];
+    XCTAssertEqualObjects(full, @"Foo Bar");
+
+    full = [MAVENameParsingUtils joinFirstName:@"Foo" andLastName:nil];
+    XCTAssertEqualObjects(full, @"Foo");
+
+    full = [MAVENameParsingUtils joinFirstName:@"Foo" andLastName:@""];
+    XCTAssertEqualObjects(full, @"Foo");
+
+    full = [MAVENameParsingUtils joinFirstName:nil andLastName:@"Bar"];
+    XCTAssertEqualObjects(full, @"Bar");
+
+    full = [MAVENameParsingUtils joinFirstName:nil andLastName:nil];
+    XCTAssertEqualObjects(full, nil);
+}
+
 // Tests for the name parsing utility, variations of "name <device type>"
 - (void)testParseNameDeviceTypeStyleNames {
     NSString *firstName, *lastName;

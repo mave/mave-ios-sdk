@@ -26,6 +26,7 @@
 + (NSString *)countryCode;
 // the device's name (e.g. Danny's iPad)
 + (NSString *)deviceName;
++ (NSString *)deviceNameParsed;
 // current language set in user's settings
 + (NSString *)language;
 // Device manufacturer (Apple)
@@ -39,11 +40,6 @@
 // available for matching current device against mobile Safari's user agent
 // string
 + (NSString *)userAgentDeviceString;
-
-// Guess the user's name from the device name, e.g. from "Danny's iPhone"
-// we have a good first name guess
-+ (NSString *)userNameFromDevice;
-+ (NSString *)_userNameFromDeviceName:(NSString *)deviceName;
 
 // Returns screen size of  device in the format "AxB"
 + (NSString *)formattedScreenSize;
