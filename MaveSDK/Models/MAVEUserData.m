@@ -7,6 +7,8 @@
 //
 
 #import "MAVEUserData.h"
+#import "MaveSDK.h"
+#import "MAVEClientPropertyUtils.h"
 
 #define MAVEUserDataKeyFirstName @"first_name"
 #define MAVEUserDataKeyLastName @"last_name"
@@ -39,6 +41,22 @@
         self.phone = [dict objectForKey:MAVEUserDataKeyPhone];
     }
     return self;
+}
+
+- (instancetype)initAutomaticallyFromDeviceName {
+    if (self = [self init]) {
+
+//        self.userID = [MaveSDK sharedInstance].appDeviceID;
+//        self.firstName = firstName;
+//        self.lastName = lastName;
+//        self.isSetAutomaticallyFromDevice = YES;
+    }
+    return self;
+}
+
+- (BOOL)isUserInfoOkToSendServerSideSMS {
+    // it's ok to send if they have a user id and first name
+    return self.userID && self.firstName;
 }
 
 - (NSDictionary *)toDictionary {

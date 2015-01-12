@@ -1,0 +1,26 @@
+//
+//  MaveNameParsingUtils.h
+//  MaveSDK
+//
+//  Helpers for parsing names, for anonymous users we want to gues
+//  user names from the device name.
+//  Created by Danny Cosson on 1/12/15.
+//
+//
+
+#import <Foundation/Foundation.h>
+#import "MAVEUserData.h"
+
+@interface MaveNameParsingUtils : NSObject
+
++ (void)fillFirstName:(NSString **)firstName
+             lastName:(NSString **)lastName
+       fromDeviceName:(NSString *)deviceName;
+
+// checks against bad word list, case insensitive
++ (BOOL)isBadWord:(NSString *)word;
+
+// Google's list of bad words http://fffff.at/googles-official-list-of-bad-words/
++ (NSDictionary *)badWordsList;
+
+@end

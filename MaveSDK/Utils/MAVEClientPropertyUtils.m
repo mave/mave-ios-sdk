@@ -48,6 +48,10 @@
     return [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
 }
 
++ (NSString *)deviceName {
+    return [UIDevice currentDevice].name;
+}
+
 + (NSString *)language {
     return [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleLanguageCode];
 }

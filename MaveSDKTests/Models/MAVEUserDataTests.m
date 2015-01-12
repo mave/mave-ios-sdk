@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVEUserData.h"
+#import "MaveSDK.h"
+#import "MAVEClientPropertyUtils.h"
 
 @interface MAVEUserDataTests : XCTestCase
 
@@ -19,6 +22,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
 }
 
 - (void)tearDown {

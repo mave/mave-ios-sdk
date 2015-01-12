@@ -108,6 +108,10 @@
     XCTAssertEqualObjects([MAVEClientPropertyUtils countryCode], @"US");
 }
 
+- (void)testDeviceName {
+    XCTAssertEqualObjects([MAVEClientPropertyUtils deviceName], @"iPhone Simulator");
+}
+
 - (void)testLanguage {
     XCTAssertEqualObjects([MAVEClientPropertyUtils language], @"en");
 }
