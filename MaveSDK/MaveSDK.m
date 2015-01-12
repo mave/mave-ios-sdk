@@ -183,6 +183,7 @@ static dispatch_once_t sharedInstanceonceToken;
     }
     UIViewController *vc = [self.invitePageChooser chooseAndCreateInvitePageViewController];
     UIViewController *navigationVC = [self.invitePageChooser embedInNavigationController:vc];
+    self.inviteContext = inviteContext;
     presentBlock(navigationVC);
 }
 

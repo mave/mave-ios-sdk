@@ -243,6 +243,28 @@
 }
 
 # pragma mark - Displaying the invite page
+- (void)testPresentInvitePageModally {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+
+    id maveMock = OCMPartialMock(mave);
+    OCMExpect([maveMock validateLibrarySetup]).andReturn(nil);
+
+    MAVEInvitePageDismissBlock dismissalBlock = ^(UIViewController *viewController, NSUInteger numberOfInvitesSent) {};
+
+    __block UIViewController *returnedController;
+    [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteViewController) {
+        returnedController = inviteViewController;
+    } dismissBlock:dismissalBlock inviteContext:@"foocontext"];
+
+    // Returns a navigation controller since this is the present modally variation,
+    // and set the necessary properties
+    OCMVerifyAll(maveMock);
+    XCTAssertEqualObjects(mave.invitePageDismissalBlock, dismissalBlock);
+    XCTAssertEqualObjects(mave.inviteContext, @"foocontext");
+    XCTAssertNotNil(returnedController);
+    XCTAssertTrue([returnedController isKindOfClass:[UINavigationController class]]);
+}
+
 - (void)testInvitePageViewControllerNoErrorIfUserDataSet {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
