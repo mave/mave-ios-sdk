@@ -293,7 +293,7 @@
                 [self showErrorAndResetAfterSendInvitesFailure:error];
             });
         } else {
-            DebugLog(@"Invites sent! response: %@", responseData);
+            DebugLog(@"Invites sent!");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.inviteMessageContainerView.sendingInProgressView completeSendingProgress];
             });

@@ -31,9 +31,9 @@ void MAVEExtendedLog(const char*prefix, const char *file, int lineNumber, const 
     // Initialize a variable argument list.
     va_start (ap, format);
 
-    // NSLog only adds a newline to the end of the NSLog format if
+    // regular ns log only adds a newline to the end of the format if
     // one is not already there.
-    // Here we are utilizing this feature of NSLog()
+    // Here we are utilizing this feature
     if (![format hasSuffix: @"\n"])
     {
         format = [format stringByAppendingString: @"\n"];
