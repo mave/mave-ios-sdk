@@ -17,6 +17,7 @@
 #import "MAVEShareToken.h"
 
 NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
+NSString * const MAVESharePageShareTypeClientEmail = @"client_email";
 
 
 @implementation MAVECustomSharePageViewController
@@ -57,6 +58,8 @@ NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
 
     controller.messageComposeDelegate = self;
     controller.body = message;
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientSMS];
     
     // Present message view controller on screen
     [self presentViewController:controller animated:YES completion:nil];
@@ -105,6 +108,8 @@ NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
     mailController.mailComposeDelegate = self;
     mailController.subject = subject;
     [mailController setMessageBody:message isHTML:NO];
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientEmail];
     
     [self presentViewController:mailController animated:YES completion:nil];
 }

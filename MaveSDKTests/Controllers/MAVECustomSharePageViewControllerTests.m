@@ -125,6 +125,9 @@
     id smsComposerMock = OCMClassMock([MFMessageComposeViewController class]);
     OCMExpect([self.viewControllerMock _createMessageComposeViewController]).andReturn(smsComposerMock);
 
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:@"client_sms"]);
+
     OCMExpect([self.viewControllerMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
         MFMessageComposeViewController *controller = (MFMessageComposeViewController *)obj;
         XCTAssertNotNil(controller);
@@ -139,6 +142,7 @@
 
     OCMVerifyAll(self.viewControllerMock);
     OCMVerifyAll(smsComposerMock);
+    OCMVerifyAll(apiInterfaceMock);
 }
 
 - (void)testClientSideSMSShareHandlerSMSSent {
@@ -189,6 +193,9 @@
     id mailComposerMock = OCMClassMock([MFMailComposeViewController class]);
     OCMExpect([self.viewControllerMock _createMailComposeViewController]).andReturn(mailComposerMock);
 
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:@"client_email"]);
+
     OCMExpect([self.viewControllerMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
         MFMailComposeViewController *controller = obj;
         XCTAssertEqualObjects(controller, mailComposerMock);
@@ -203,6 +210,7 @@
 
     OCMVerifyAll(self.viewControllerMock);
     OCMVerifyAll(mailComposerMock);
+    OCMVerifyAll(apiInterfaceMock);
 }
 
 
