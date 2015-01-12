@@ -10,10 +10,16 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
+#import "MAVEShareToken.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEInvitePageChooser.h"
 
 @interface MAVECustomSharePageViewControllerTests : XCTestCase
+
+@property (nonatomic, strong) MAVECustomSharePageViewController *viewController;
+@property (nonatomic, strong) id viewControllerMock;
+@property (nonatomic, strong) MAVERemoteConfiguration *remoteConfig;
+@property (nonatomic, copy) NSString *shareToken;
 
 @end
 
@@ -23,11 +29,16 @@
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-
+    self.viewController = nil;
+    self.viewControllerMock = nil;
+    self.remoteConfig = nil;
+    self.shareToken = nil;
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    if (self.viewControllerMock) {
+        [self.viewControllerMock stopMocking];
+    }
     [super tearDown];
 }
 
@@ -80,8 +91,7 @@
 }
 
 - (void)testDismissAfterCancel {
-    MAVECustomSharePageViewController *vc =
-    [[MAVECustomSharePageViewController alloc] init];
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
     id mock = OCMPartialMock(vc);
     OCMExpect([vc dismissSelf:0]);
     [vc dismissAfterCancel];
@@ -89,14 +99,84 @@
 }
 
 # pragma mark - Share methods
-- (void)testClientSideSMSShare {
+// setup helper for some methods that want mocked data
+- (void)setupPartialMockForClientShareTests {
+    self.viewController = [[MAVECustomSharePageViewController alloc] init];
+    self.remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    self.shareToken = @"foobarsharetoken";
 
+    self.viewControllerMock = OCMPartialMock(self.viewController);
+    OCMStub([self.viewControllerMock remoteConfiguration]).andReturn(self.remoteConfig);
+    OCMStub([self.viewControllerMock shareToken]).andReturn(self.shareToken);
+}
+- (void)testSetupMock {
+    [self setupPartialMockForClientShareTests];
+}
+
+- (void)testClientSideSMSShare {
+    [self setupPartialMockForClientShareTests];
+    NSString *expectedSMS = @"Join me on DemoApp! http://dev.appjoin.us/s/foobarsharetoken";
+
+    // SMS compose controller can't even init in the simulator, i.e:
+    MFMessageComposeViewController *_cntrlr = [[MFMessageComposeViewController alloc] init];
+    XCTAssertNil(_cntrlr);
+
+    // So we mock it
+    id smsComposerMock = OCMClassMock([MFMessageComposeViewController class]);
+    OCMExpect([self.viewControllerMock _createMessageComposeViewController]).andReturn(smsComposerMock);
+
+    OCMExpect([self.viewControllerMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MFMessageComposeViewController *controller = (MFMessageComposeViewController *)obj;
+        XCTAssertNotNil(controller);
+        XCTAssertEqualObjects(controller, smsComposerMock);
+        return YES;
+    }] animated:YES completion:nil]);
+
+    OCMExpect([smsComposerMock setMessageComposeDelegate:self.viewController]);
+    OCMExpect([smsComposerMock setBody:expectedSMS]);
+
+    [self.viewController smsClientSideShare];
+
+    OCMVerifyAll(self.viewControllerMock);
+    OCMVerifyAll(smsComposerMock);
+}
+
+- (void)testClientSideSMSShareHandler {
+
+}
+
+- (void)testClientEmailShare {
+    [self setupPartialMockForClientShareTests];
+
+    OCMExpect([self.viewControllerMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MFMailComposeViewController *controller = obj;
+        XCTAssertNotNil(controller);
+        return YES;
+    }] animated:YES completion:nil]);
+
+    [self.viewController emailClientSideShare];
+
+    OCMVerifyAll(self.viewControllerMock);
 }
 
 
 #pragma mark - Helpers for building share content
+- (void)testShareToken {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    MAVEShareToken *tokenObj = [[MAVEShareToken alloc] init];
+    tokenObj.shareToken = @"blahasdf";
+
+    id mock = OCMPartialMock([MaveSDK sharedInstance].shareTokenBuilder);
+    OCMExpect([mock createObjectSynchronousWithTimeout:0]).andReturn(tokenObj);
+    NSString *token = [vc shareToken];
+    OCMVerifyAll(mock);
+    XCTAssertEqualObjects(token, @"blahasdf");
+}
 - (void)testBuildShareLink {
-    NSString *link = [MAVECustomSharePageViewController buildShareLinkWithSubRouteLetter:@"d" shareToken:@"blahtok"];
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    OCMStub([mock shareToken]).andReturn(@"blahtok");
+    NSString *link = [vc shareLinkWithSubRouteLetter:@"d"];
     XCTAssertEqualObjects(link, @"http://dev.appjoin.us/d/blahtok");
 }
 

@@ -90,6 +90,47 @@
     [mock stopMocking];
 }
 
+- (void)testTrackShareActionClick {
+    // With a value
+    NSString *type = @"foo";
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick additionalParams:@{@"medium": type}]);
+    [self.testAPIInterface trackShareActionClickWithShareType:type];
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+
+     // if type is nil it becomes "unkown"
+    type = nil;
+    mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick additionalParams:@{@"medium": @"unknown"}]);
+    [self.testAPIInterface trackShareActionClickWithShareType:type];
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+}
+
+- (void)testTracKShare {
+    // With a value
+    NSString *type = @"foo";
+    NSString *token = @"bar";
+    NSString *audience = @"all";
+    id mock = OCMPartialMock(self.testAPIInterface);
+    NSDictionary *params = @{@"medium": type, @"share_token": token, @"audience": audience};
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params]);
+    [self.testAPIInterface trackShareWithShareType:type shareToken:token audience:audience];
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+
+    // if type is nil it becomes "unkown" and nil for token
+    type = nil; token = nil; audience = nil;
+    mock = OCMPartialMock(self.testAPIInterface);
+    params = @{@"medium": @"unknown", @"share_token": @"", @"audience": @"unknown"};
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params]);
+    [self.testAPIInterface trackShareWithShareType:type shareToken:token audience:audience];
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+
+}
+
 ///
 /// Other specific requests
 ///

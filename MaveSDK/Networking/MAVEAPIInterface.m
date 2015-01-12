@@ -13,9 +13,11 @@
 #import "MAVEClientPropertyUtils.h"
 
 
-NSString * const MAVERouteTrackSignup = @"/signup";
-NSString * const MAVERouteTrackAppLaunch = @"/launch";
-NSString * const MAVERouteTrackInvitePageOpen = @"/invite_page";
+NSString * const MAVERouteTrackSignup = @"/events/signup";
+NSString * const MAVERouteTrackAppLaunch = @"/events/launch";
+NSString * const MAVERouteTrackInvitePageOpen = @"/events/invite_page_open";
+NSString * const MAVERouteTrackShareActionClick = @"/events/share_action_click";
+NSString * const MAVERouteTrackShare = @"/events/share";
 
 NSString * const MAVERouteTrackContactsPrePermissionPromptView = @"/events/contacts_pre_permission_prompt_view";
 NSString * const MAVERouteTrackContactsPrePermissionGranted = @"/events/contacts_pre_permission_granted";
@@ -26,6 +28,9 @@ NSString * const MAVERouteTrackContactsPermissionDenied = @"/events/contacts_per
 
 NSString * const MAVEAPIParamPrePromptTemplateID = @"contacts_pre_permission_prompt_template_id";
 NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
+NSString * const MAVEAPIParamShareMedium = @"medium";
+NSString * const MAVEAPIParamShareToken = @"share_token";
+NSString * const MAVEAPIParamShareAudience = @"audience";
 
 
 @implementation MAVEAPIInterface
@@ -69,6 +74,32 @@ NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
     }
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
                         additionalParams:@{MAVEAPIParamInvitePageType: invitePageType}];
+}
+
+- (void)trackShareActionClickWithShareType:(NSString *)shareType {
+    if ([shareType length] == 0) {
+        shareType = @"unknown";
+    }
+    [self trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick
+                        additionalParams:@{MAVEAPIParamShareMedium: shareType}];
+}
+
+- (void)trackShareWithShareType:(NSString *)shareType
+                     shareToken:(NSString *)shareToken
+                       audience:(NSString *)audience {
+    if ([shareType length] == 0) {
+        shareType = @"unknown";
+    }
+    if ([shareToken length] == 0) {
+        shareToken = @"";
+    }
+    if ([audience length] == 0) {
+        audience = @"unknown";
+    }
+    NSDictionary *params = @{MAVEAPIParamShareMedium: shareType,
+                             MAVEAPIParamShareToken: shareToken,
+                             MAVEAPIParamShareAudience: audience};
+    [self trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params];
 }
 
 ///

@@ -13,6 +13,7 @@
 #import "MAVEConstants.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVECustomSharePageView.h"
+#import "MAVERemoteConfiguration.h"
 #import "MAVEShareToken.h"
 
 
@@ -48,18 +49,20 @@
 
 
 - (void)smsClientSideShare {
+    MFMessageComposeViewController *controller = [self _createMessageComposeViewController];
 
-    //TODO: test this on a phone, can't test on a simulator
-    NSString *message = [NSString stringWithFormat:@"Join me on Swig http://swig.co"];
-    
-    MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+    NSString *message = [self.remoteConfiguration.clientSMS.text stringByAppendingString:[self shareLinkWithSubRouteLetter:@"s"]];
 
-    messageController.messageComposeDelegate = self;
-    [messageController setBody:message];
+    controller.messageComposeDelegate = self;
+    controller.body = message;
     
     // Present message view controller on screen
-    [self presentViewController:messageController animated:YES completion:nil];
-    NSLog(@"sent local sms");
+    [self presentViewController:controller animated:YES completion:nil];
+}
+// This method can easily be mocked when we can't create a real
+// one of these controllers
+- (MFMessageComposeViewController *)_createMessageComposeViewController {
+    return [[MFMessageComposeViewController alloc] init];
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
@@ -93,8 +96,7 @@
     [mailController setSubject:@"Join Swig"];
     [mailController setMessageBody:@"Get wit it" isHTML:NO];
     
-    [self presentViewController:mailController animated:YES completion:NULL];
-    return;
+    [self presentViewController:mailController animated:YES completion:nil];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller
@@ -157,9 +159,10 @@
     UIAlertView *alert;
     
     alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
-                                        message:nil delegate:self
+                                        message:nil
+                                      delegate:self
                               cancelButtonTitle:nil
-                              otherButtonTitles: nil];
+                              otherButtonTitles:nil];
     
     [alert show];
     
@@ -175,13 +178,18 @@
 
 #pragma mark - Helpers for building share content
 
+- (MAVERemoteConfiguration *)remoteConfiguration {
+    MAVERemoteConfiguration *config = [[MaveSDK sharedInstance].remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
+    return config;
+}
+
 - (NSString *)shareToken {
     MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
     return tokenObject.shareToken;
 }
 
-+ (NSString *)buildShareLinkWithSubRouteLetter:(NSString *)subRoute
-                                    shareToken:(NSString *)shareToken {
+- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
+    NSString *shareToken = [self shareToken];
     NSString *output = MAVEShortLinkBaseURL;
     output = [output stringByAppendingString:subRoute];
     output = [output stringByAppendingString:@"/"];
