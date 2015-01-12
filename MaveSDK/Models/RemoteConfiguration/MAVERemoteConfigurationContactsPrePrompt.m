@@ -38,7 +38,7 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptAcceptCopy = @"accept_button
     return @{
         MAVERemoteConfigKeyContactsPrePromptEnabled: @YES,
         MAVERemoteConfigKeyContactsPrePromptTemplate: @{
-            MAVERemoteConfigKeyContactsPrePromptTemplateID: @"default",
+            MAVERemoteConfigKeyContactsPrePromptTemplateID: @"0",
             MAVERemoteConfigKeyContactsPrePromptTitle: @"Access your contacts?",
             MAVERemoteConfigKeyContactsPrePromptMessage:
                 @"We need to access your contacts to suggest people to invite.",

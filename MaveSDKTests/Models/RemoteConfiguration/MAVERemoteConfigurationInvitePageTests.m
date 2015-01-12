@@ -31,7 +31,7 @@
 
     XCTAssertTrue([[defaults objectForKey:@"enabled"] boolValue]);
     NSDictionary *template = [defaults objectForKey:@"template"];
-    XCTAssertEqualObjects([template objectForKey:@"template_id"], @"default");
+    XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
 
     XCTAssertNil([template objectForKey:@"explanation_copy"]);
     // The actual app name here comes from the bundle name, this test always runs in
@@ -45,7 +45,7 @@
         initWithDictionary:[
             MAVERemoteConfigurationContactsInvitePage defaultJSONData]];
     XCTAssertTrue(obj.enabled);
-    XCTAssertEqualObjects(obj.templateID, @"default");
+    XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertNil(obj.explanationCopy);
     XCTAssertEqualObjects(obj.smsCopy, @"Join me on DemoApp!");
 }

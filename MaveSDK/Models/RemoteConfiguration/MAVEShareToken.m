@@ -27,7 +27,6 @@ NSString * const MAVEShareTokenKeyShareToken = @"share_token";
         if (self.shareToken == nil) {
             return nil;
         }
-        NSLog(@"Using share token %@", self.shareToken);
     }
     return self;
 }
@@ -40,7 +39,7 @@ NSString * const MAVEShareTokenKeyShareToken = @"share_token";
                     if (error) {
                         [promise rejectPromise];
                     } else {
-                        DebugLog(@"Using a new share token from server");
+                        DebugLog(@"Got a new share token from server %@", responseData);
                         [promise fulfillPromise:(NSValue *)responseData];
                     }
                 }];

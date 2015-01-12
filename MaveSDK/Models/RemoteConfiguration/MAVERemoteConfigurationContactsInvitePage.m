@@ -46,7 +46,7 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSMSCopy = @"sms_copy";
     return @{
         MAVERemoteConfigKeyContactsInvitePageEnabled: @YES,
         MAVERemoteConfigKeyContactsInvitePageTemplate: @{
-            MAVERemoteConfigKeyContactsInvitePageTemplateID: @"default",
+            MAVERemoteConfigKeyContactsInvitePageTemplateID: @"0",
             // Explanation key defaults to nil, so leaving empty
             MAVERemoteConfigKeyContactsInvitePageSMSCopy: smsCopy,
         }

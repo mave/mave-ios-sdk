@@ -29,7 +29,7 @@
     NSDictionary *defaults = [MAVERemoteConfigurationContactsPrePrompt defaultJSONData];
     XCTAssertTrue([[defaults objectForKey:@"enabled"] boolValue]);
     NSDictionary *template = [defaults objectForKey:@"template"];
-    XCTAssertEqualObjects([template objectForKey:@"template_id"], @"default");
+    XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
     XCTAssertEqualObjects([template objectForKey:@"title"], @"Access your contacts?");
     XCTAssertEqualObjects([template objectForKey:@"message"], @"We need to access your contacts to suggest people to invite.");
     XCTAssertEqualObjects([template objectForKey:@"cancel_button_copy"], @"No thanks");
@@ -40,7 +40,7 @@
     MAVERemoteConfigurationContactsPrePrompt *config =
         [[MAVERemoteConfigurationContactsPrePrompt alloc]
          initWithDictionary:[MAVERemoteConfigurationContactsPrePrompt defaultJSONData]];
-    XCTAssertEqualObjects(config.templateID, @"default");
+    XCTAssertEqualObjects(config.templateID, @"0");
     XCTAssertEqual(config.enabled, YES);
     XCTAssertEqualObjects(config.title, @"Access your contacts?");
     XCTAssertEqualObjects(config.message, @"We need to access your contacts to suggest people to invite.");
