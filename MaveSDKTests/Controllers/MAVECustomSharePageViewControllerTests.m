@@ -362,6 +362,26 @@
     OCMVerifyAll(apiInterfaceMock);
 }
 
+- (void)testClipboardShare {
+    [self setupPartialMockForClientShareTests];
+    NSString *expectedCopy = @"http://dev.appjoin.us/c/foobarsharetoken";
+
+    id pasteboardMock = OCMClassMock([UIPasteboard class]);
+    OCMExpect([self.viewControllerMock _generalPasteboardForClipboardShare]).andReturn(pasteboardMock);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:@"clipboard"]);
+
+    // TODO: test the uialert view
+
+    OCMExpect([pasteboardMock setString:expectedCopy]);
+
+    [self.viewController clipboardShare];
+
+    OCMVerifyAll(self.viewControllerMock);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
 
 #pragma mark - Helpers for building share content
 - (void)testShareToken {

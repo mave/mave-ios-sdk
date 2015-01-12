@@ -30,6 +30,7 @@
 - (SLComposeViewController *)_createTwitterComposeViewController;
 - (void)twitterHandleShareResult:(SLComposeViewControllerResult) result;
 - (void)clipboardShare;
+- (UIPasteboard *)_generalPasteboardForClipboardShare;
 
 // Helpers
 

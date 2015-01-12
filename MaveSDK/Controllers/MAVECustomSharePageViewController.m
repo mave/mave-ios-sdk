@@ -20,6 +20,7 @@ NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
 NSString * const MAVESharePageShareTypeClientEmail = @"client_email";
 NSString * const MAVESharePageShareTypeFacebook = @"facebook";
 NSString * const MAVESharePageShareTypeTwitter = @"twitter";
+NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 
 @implementation MAVECustomSharePageViewController
@@ -223,28 +224,28 @@ NSString * const MAVESharePageShareTypeTwitter = @"twitter";
 
 
 - (void)clipboardShare {
-    
-    // Copy to clipboard
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    // TODO: use the data from the remote config
-    pasteboard.string = @"Join me on Swig";
+    UIPasteboard *pasteboard = [self _generalPasteboardForClipboardShare];
+    pasteboard.string = [self shareLinkWithSubRouteLetter:@"c"];
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard];
+
     UIAlertView *alert;
-    
     alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
                                         message:nil
                                       delegate:self
                               cancelButtonTitle:nil
                               otherButtonTitles:nil];
-    
     [alert show];
     
     double delayInSeconds = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [alert dismissWithClickedButtonIndex:0 animated:YES];
-
     });
     return;
+}
+- (UIPasteboard *)_generalPasteboardForClipboardShare {
+    return [UIPasteboard generalPasteboard];
 }
 
 
