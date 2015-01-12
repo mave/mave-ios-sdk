@@ -23,5 +23,6 @@ extern NSString * const MAVEUserDefaultsKeyShareToken;
 
 + (MAVERemoteObjectBuilder *)remoteBuilder;
 + (NSDictionary *)defaultJSONData;
++ (void)clearUserDefaults;
 
 @end

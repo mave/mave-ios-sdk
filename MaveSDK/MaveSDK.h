@@ -46,9 +46,11 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 - (void)trackSignup;
 
 //- (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-//                           dismissalBlock:(MAVEInvitePageDismissBlock)dismissBlock;
+//                             dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
+//                                  context:(NSString*)presentedFrom;
 //- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-//                           dismisslock:(MAVEInvitePageDismissBlock)dismissBlock;
+//                          dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
+//                               context:(NSString*)presentedFrom;
 
 - (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
                                         setupError:(NSError *__autoreleasing *)setupError

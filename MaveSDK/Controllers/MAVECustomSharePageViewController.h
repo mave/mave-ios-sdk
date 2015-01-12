@@ -17,6 +17,7 @@
 - (void)dismissSelf:(NSUInteger)numberOfInvitesSent;
 
 // Do the client side shares
+// the helpers let us test in the simulator
 - (void)smsClientSideShare;
 // this is a helper to let us test in the simulater where we can't init the
 // message compose controller

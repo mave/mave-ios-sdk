@@ -9,8 +9,13 @@
 #import "MAVEShareToken.h"
 #import "MaveSDK.h"
 
+#ifdef UNITTESTING
+NSString * const MAVEUserDefaultsKeyShareToken = @"MAVETESTSUserDefaultsKeyShareToken";
+#else
 NSString * const MAVEUserDefaultsKeyShareToken = @"MAVEUserDefaultsKeyShareToken";
-NSString *const MAVEShareTokenKeyShareToken = @"share_token";
+#endif
+
+NSString * const MAVEShareTokenKeyShareToken = @"share_token";
 
 @implementation MAVEShareToken
 
@@ -45,6 +50,10 @@ NSString *const MAVEShareTokenKeyShareToken = @"share_token";
     return @{
         MAVEShareTokenKeyShareToken: @"",
     };
+}
+
++ (void)clearUserDefaults {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:MAVEUserDefaultsKeyShareToken];
 }
 
 @end

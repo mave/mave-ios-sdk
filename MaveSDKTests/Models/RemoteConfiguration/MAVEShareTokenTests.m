@@ -60,4 +60,20 @@
     [mock stopMocking];
 }
 
+- (void)testUserDefaultsKey {
+    // in testing mode it should have TESTS in the name
+    XCTAssertEqualObjects(MAVEUserDefaultsKeyShareToken, @"MAVETESTSUserDefaultsKeyShareToken");
+}
+
+- (void)testClearUserDefaults {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:@"foo" forKey:MAVEUserDefaultsKeyShareToken];
+
+    XCTAssertEqualObjects([defaults objectForKey:MAVEUserDefaultsKeyShareToken], @"foo");
+    XCTAssertEqualObjects([defaults objectForKey:MAVEUserDefaultsKeyShareToken], @"foo");
+
+    [MAVEShareToken clearUserDefaults];
+    XCTAssertNil([defaults objectForKey:MAVEUserDefaultsKeyShareToken]);
+}
+
 @end
