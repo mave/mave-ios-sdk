@@ -38,7 +38,7 @@
     NSString *encProperties = [MAVEClientPropertyUtils encodedAutomaticClientProperties];
     NSDictionary *properties = [MAVEClientPropertyUtils base64DecodeJSONString:encProperties];
     // All properties should exist
-    XCTAssertEqual([properties count], 11);
+    XCTAssertEqual([properties count], 12);
 }
 
 - (void)testUserAgentDeviceString {
@@ -110,6 +110,10 @@
 
 - (void)testDeviceName {
     XCTAssertEqualObjects([MAVEClientPropertyUtils deviceName], @"iPhone Simulator");
+}
+
+- (void)testDeviceNameParsed {
+    XCTAssertNil([MAVEClientPropertyUtils deviceNameParsed]);
 }
 
 - (void)testLanguage {

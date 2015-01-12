@@ -58,7 +58,7 @@
     [MAVENameParsingUtils fillFirstName:&firstName
                                lastName:&lastName
                          fromDeviceName:[self deviceName]];
-    return [NSString stringWithFormat:@"%@%@", firstName, lastName];
+    return [MAVENameParsingUtils joinFirstName:firstName andLastName:lastName];
 }
 
 + (NSString *)language {
@@ -122,6 +122,8 @@
     [properties setValue:[self carrier] forKey: @"carrier"];
     [properties setValue:[self countryCode] forKey: @"device_country"];
     [properties setValue:[self language] forKey: @"device_language"];
+    [properties setValue:[self deviceName] forKey:@"device_name"];
+    [properties setValue:[self deviceNameParsed] forKey:@"deviceName"];
     [properties setValue:MAVEAPIVersion forKey: @"mave_version"];
     [properties setValue:[self manufacturer] forKey: @"manufacturer"];
     [properties setValue:[self model] forKey: @"model"];
