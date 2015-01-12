@@ -8,6 +8,7 @@
 
 #import "MAVEInviteExplanationView.h"
 #import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 
 const CGFloat LABEL_MARGIN_X = 20;
 const CGFloat LABEL_MARGIN_Y = 20;
@@ -29,7 +30,7 @@ const CGFloat LABEL_MARGIN_Y = 20;
     self.messageCopy = [[UILabel alloc] init];
     self.messageCopy.font = displayOptions.inviteExplanationFont;
     self.messageCopy.textColor = displayOptions.inviteExplanationTextColor;
-    self.messageCopy.text = displayOptions.inviteExplanationCopy;
+    self.messageCopy.text = [MaveSDK sharedInstance].inviteExplanationCopy;;
     self.messageCopy.textAlignment = NSTextAlignmentCenter;
     self.messageCopy.lineBreakMode = NSLineBreakByWordWrapping;
     self.messageCopy.numberOfLines = 0;

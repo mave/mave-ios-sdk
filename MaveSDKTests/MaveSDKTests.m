@@ -38,7 +38,7 @@
     MaveSDK *mave = [MaveSDK sharedInstance];
     XCTAssertEqualObjects(mave.appId, @"foo123");
     XCTAssertNotNil(mave.displayOptions);
-    XCTAssertNil(mave.defaultSMSMessageText);
+    XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.contactsInvitePage.smsCopy);
     XCTAssertNotNil(mave.appDeviceID);
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
     XCTAssertNotNil(mave.shareTokenBuilder);
@@ -281,7 +281,7 @@
     }];
     XCTAssertNil(vc);
     XCTAssertNotNil(error);
-    XCTAssertEqualObjects(gk.defaultSMSMessageText, nil);
+    XCTAssertEqualObjects(gk.defaultSMSMessageText, gk.remoteConfiguration.contactsInvitePage.smsCopy);
     XCTAssertEqualObjects(error.domain, MAVE_VALIDATION_ERROR_DOMAIN);
     XCTAssertEqual(error.code, 5);
 }
