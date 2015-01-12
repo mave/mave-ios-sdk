@@ -268,7 +268,6 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 - (NSString *)shareToken {
     MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
-    NSLog(@"Share token: %@", tokenObject.shareToken);
     return tokenObject.shareToken;
 }
 
@@ -282,7 +281,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)resetShareToken {
-    DebugLog(@"Resetting share token after share");
+    DebugLog(@"Resetting share token after share, was: %@", [self shareToken]);
     [MAVEShareToken clearUserDefaults];
     [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
 }
