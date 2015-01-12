@@ -72,8 +72,9 @@ NSString * const MAVEAPIParamShareAudience = @"audience";
     if ([invitePageType length] == 0) {
         invitePageType = @"unknown";
     }
+    NSDictionary *params = @{MAVEAPIParamInvitePageType: invitePageType};
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                        additionalParams:@{MAVEAPIParamInvitePageType: invitePageType}];
+                        additionalParams:params];
 }
 
 - (void)trackShareActionClickWithShareType:(NSString *)shareType {
