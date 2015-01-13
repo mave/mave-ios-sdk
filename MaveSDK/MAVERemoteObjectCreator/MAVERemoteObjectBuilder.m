@@ -37,7 +37,7 @@
                preferLocallySavedData:(BOOL)preferLocallySavedData {
     if (self = [super init]) {
         self.classToCreate = classToCreate;
-        self.persistor = [[MAVERemoteConfiguratorDataPersistor alloc] initWithUserDefaultsKey:userDefaultsKey defaultJSONData:defaultData];
+        self.persistor = [[MAVERemoteObjectBuilderDataPersistor alloc] initWithUserDefaultsKey:userDefaultsKey];
         self.loadedFromDiskData = [self.persistor loadJSONDataFromUserDefaults];
         self.defaultData = defaultData;
 
@@ -45,6 +45,13 @@
             self.promise = nil;
         } else {
             self.promise = [[MAVEPromise alloc] initWithBlock:preFetchBlock];
+            // Whenever the promise does return, call our method that initializes the
+            // object & saves if successful so that even if the object isn't used during
+            // this app session it still gets saved for later use (which is expected
+            // behavior, particularly `preferLocallySavedData` is true).
+            [self.promise done:^(NSValue *result) {
+                [self createObjectSynchronousWithTimeout:0];
+            } withTimeout:30];
         }
     }
     return self;

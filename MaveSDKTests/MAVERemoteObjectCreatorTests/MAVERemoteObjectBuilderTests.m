@@ -166,6 +166,23 @@
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
 
+- (void)testInitObjectBuilderCreatesOwnObjectOnceOnPromiseDone {
+    __block MAVEPromise *calledWithPromise;
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc]
+                                        initWithClassToCreate:[MAVERemoteObjectDemo class]
+                                        preFetchBlock:^(MAVEPromise *promise) {
+                                            calledWithPromise = promise;
+                                        } defaultData:@{}
+                                        saveIfSuccessfulToUserDefaultsKey:self.userDefaultsKeyForTests
+                                        preferLocallySavedData:NO];
+    id builderMock = OCMPartialMock(builder);
+    OCMExpect([builderMock createObjectSynchronousWithTimeout:0]);
+
+    [calledWithPromise fulfillPromise:(NSValue *)@"foo"];
+
+    OCMVerifyAllWithDelay(builderMock, 0.1);
+}
+
 # pragma mark - Top level create object methods
 - (void)testCreateSynchronous {
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
@@ -274,7 +291,7 @@
                            @"body_copy": @"This is body"};
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
     builder.classToCreate = [MAVERemoteObjectDemo class];
-    id persistorMock = OCMClassMock([MAVERemoteConfiguratorDataPersistor class]);
+    id persistorMock = OCMClassMock([MAVERemoteObjectBuilderDataPersistor class]);
     builder.persistor = persistorMock;
     OCMExpect([persistorMock saveJSONDataToUserDefaults:data]);
 
@@ -293,7 +310,7 @@
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
     builder.classToCreate = [MAVERemoteObjectDemo class];
     builder.loadedFromDiskData = data;
-    id persistorMock = OCMClassMock([MAVERemoteConfiguratorDataPersistor class]);
+    id persistorMock = OCMClassMock([MAVERemoteObjectBuilderDataPersistor class]);
     builder.persistor = persistorMock;
     [[persistorMock reject] saveJSONDataToUserDefaults:data];
 
@@ -315,7 +332,7 @@
     builder.classToCreate = [MAVERemoteObjectDemo class];
     builder.loadedFromDiskData = fromDiskData;
     builder.defaultData = data;
-    id persistorMock = OCMClassMock([MAVERemoteConfiguratorDataPersistor class]);
+    id persistorMock = OCMClassMock([MAVERemoteObjectBuilderDataPersistor class]);
     builder.persistor = persistorMock;
     [[persistorMock reject] saveJSONDataToUserDefaults:data];
 

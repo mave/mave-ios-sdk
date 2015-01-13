@@ -6,25 +6,15 @@
 //
 //
 
-#import "MAVERemoteConfiguratorDataPersistor.h"
+#import "MAVERemoteObjectBuilderDataPersistor.h"
 
-@implementation MAVERemoteConfiguratorDataPersistor
+@implementation MAVERemoteObjectBuilderDataPersistor
 
-- (instancetype) initWithUserDefaultsKey:(NSString *)userDefaultsKey
-                         defaultJSONData:(NSDictionary *)defaultData {
+- (instancetype) initWithUserDefaultsKey:(NSString *)userDefaultsKey {
     if (self = [super init]) {
         self.userDefaultsKey = userDefaultsKey;
-        self.defaultData = defaultData;
     }
     return self;
-}
-
-- (NSDictionary *)JSONData {
-    NSDictionary *data = [self loadJSONDataFromUserDefaults];
-    if (!data) {
-        data = self.defaultData;
-    }
-    return data;
 }
 
 - (void)saveJSONDataToUserDefaults:(NSDictionary *)data {
@@ -36,8 +26,7 @@
     // is full and all the other usual I/O suspects
     @try {
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setObject:data
-                         forKey:self.userDefaultsKey];
+        [userDefaults setObject:data forKey:self.userDefaultsKey];
         [userDefaults synchronize];
     }
     @catch (NSException *exception) {

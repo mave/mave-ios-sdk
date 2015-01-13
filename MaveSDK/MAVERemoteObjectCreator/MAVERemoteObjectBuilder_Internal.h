@@ -8,7 +8,7 @@
 
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVEPromise.h"
-#import "MAVERemoteConfiguratorDataPersistor.h"
+#import "MAVERemoteObjectBuilderDataPersistor.h"
 
 #ifndef MaveSDK_MAVERemoteObjectBuilder_Internal_h
 #define MaveSDK_MAVERemoteObjectBuilder_Internal_h
@@ -17,7 +17,7 @@
 
 @property (nonatomic, strong) MAVEPromise *promise;
 @property (nonatomic) id classToCreate;
-@property (nonatomic, strong) MAVERemoteConfiguratorDataPersistor *persistor;
+@property (nonatomic, strong) MAVERemoteObjectBuilderDataPersistor *persistor;
 @property (nonatomic, strong) NSDictionary *loadedFromDiskData;
 @property (nonatomic, strong) NSDictionary *defaultData;
 
