@@ -98,8 +98,10 @@
     NSDictionary *persistedData = @{@"title_copy": @"This is persisted title",
                                   @"body_copy": @"This is persisted body"};
     NSDictionary *defaultData = @{};
-    [[NSUserDefaults standardUserDefaults] setObject:persistedData
-                                              forKey:self.userDefaultsKeyForTests];
+    MAVERemoteObjectBuilderDataPersistor *persistor = [[MAVERemoteObjectBuilderDataPersistor alloc]
+                                                       initWithUserDefaultsKey:self.userDefaultsKeyForTests];
+    [persistor saveJSONDataToUserDefaults:persistedData];
+
     __block MAVEPromise *calledWithPromise;
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc]
     initWithClassToCreate:[MAVERemoteObjectDemo class]
@@ -122,8 +124,10 @@
     NSDictionary *persistedData = @{@"title_copy": @"This is persisted title",
                                     @"body_copy": @"This is persisted body"};
     NSDictionary *defaultData = @{};
-    [[NSUserDefaults standardUserDefaults] setObject:persistedData
-                                              forKey:self.userDefaultsKeyForTests];
+    MAVERemoteObjectBuilderDataPersistor *persistor = [[MAVERemoteObjectBuilderDataPersistor alloc]
+                                                       initWithUserDefaultsKey:self.userDefaultsKeyForTests];
+    [persistor saveJSONDataToUserDefaults:persistedData];
+
     __block MAVEPromise *calledWithPromise;
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc]
                                         initWithClassToCreate:[MAVERemoteObjectDemo class]
