@@ -9,6 +9,7 @@
 #import <Social/Social.h>
 #import "MAVECustomSharePageView.h"
 #import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 #import "MAVEConstants.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEBuiltinUIElementUtils.h"
@@ -27,9 +28,10 @@
         self.shareButtons = [[NSMutableArray alloc] init];
 
         MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
+        MAVERemoteConfiguration *remoteConfig = [MaveSDK sharedInstance].remoteConfiguration;
         self.backgroundColor = opts.sharePageBackgroundColor;
         self.shareExplanationLabel = [[UILabel alloc] init];
-        self.shareExplanationLabel.text = @"Share YourApp with friends and you\neach get $20 when they purchase";
+        self.shareExplanationLabel.text = remoteConfig.customSharePage.explanationCopy;
         self.shareExplanationLabel.font = opts.sharePageExplanationFont;
         self.shareExplanationLabel.textColor = opts.sharePageExplanationTextColor;
         self.shareExplanationLabel.textAlignment = NSTextAlignmentCenter;

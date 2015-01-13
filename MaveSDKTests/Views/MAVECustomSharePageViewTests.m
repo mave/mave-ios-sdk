@@ -32,13 +32,15 @@
     [super tearDown];
 }
 
-- (void)testInitStyles {
+- (void)testInitConfigurationAndStyles {
     MAVECustomSharePageView *view = [[MAVECustomSharePageView alloc] init];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
     XCTAssertEqualObjects(view.backgroundColor,
                           opts.sharePageBackgroundColor);
     XCTAssertEqualObjects(view.shareExplanationLabel.font,
                           opts.sharePageExplanationFont);
+    XCTAssertEqualObjects(view.shareExplanationLabel.text,
+                          @"Share DemoApp with friends");
     XCTAssertEqualObjects(view.shareExplanationLabel.textColor,
                           opts.sharePageExplanationTextColor);
 }
