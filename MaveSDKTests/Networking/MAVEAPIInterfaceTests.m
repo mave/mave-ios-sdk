@@ -277,12 +277,15 @@
 /// Request building logic
 ///
 - (void)testAddCustomUserHeadersToRequest {
+    // invite context is stored on singleton object
+    [MaveSDK sharedInstance].inviteContext = @"foobartestcontext";
+
     NSMutableURLRequest *req = [[NSMutableURLRequest alloc] init];
     XCTAssertEqual([req.allHTTPHeaderFields count], 0);
     
     [self.testAPIInterface addCustomUserHeadersToRequest:req];
     NSDictionary *headers = req.allHTTPHeaderFields;
-    XCTAssertEqual([headers count], 5);
+    XCTAssertEqual([headers count], 6);
     XCTAssertEqualObjects([headers objectForKey:@"X-Application-Id"],
                           [MaveSDK sharedInstance].appId);
     XCTAssertEqualObjects([headers objectForKey:@"X-App-Device-Id"],
@@ -292,10 +295,23 @@
                                     (long)screenSize.width, (long)screenSize.height];
     NSString *expectedUserAgent = [MAVEClientPropertyUtils userAgentDeviceString];
     NSString *expectedClientProperties = [MAVEClientPropertyUtils encodedAutomaticClientProperties];
+    NSString *expectedContextProperties = [MAVEClientPropertyUtils base64EncodeDictionary:@{@"invite_context": @"foobartestcontext"}];
     XCTAssertEqualObjects([headers objectForKey:@"X-Device-Screen-Dimensions"],
                           expectedDimensions);
     XCTAssertEqualObjects([headers objectForKey:@"User-Agent"], expectedUserAgent);
     XCTAssertEqualObjects([headers objectForKey:@"X-Client-Properties"], expectedClientProperties);
+    XCTAssertEqualObjects([headers objectForKey:@"X-Context-Properties"],
+                          expectedContextProperties);
+}
+
+- (void)testSilentlyDontAddContextHeaderPropertyWhenNotSet {
+    // invite context is stored on singleton object
+    [MaveSDK sharedInstance].inviteContext = nil;
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] init];
+
+    [self.testAPIInterface addCustomUserHeadersToRequest:req];
+    NSDictionary *headers = req.allHTTPHeaderFields;
+    XCTAssertNil([headers objectForKey:@"X-Context-Properties"]);
 }
 
 - (void)testSendIdentifiedJSONRequestSuccess {
