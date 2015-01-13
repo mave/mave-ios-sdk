@@ -425,6 +425,35 @@
     NSString *link = [vc shareLinkWithSubRouteLetter:@"d"];
     XCTAssertEqualObjects(link, @"http://dev.appjoin.us/d/blahtok");
 }
+
+- (void)testBuildShareCopyWhenCopyNotEmpty {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    OCMExpect([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");
+
+    NSString *text = [vc shareCopyFromCopy:@"foo"
+                 andLinkWithSubRouteLetter:@"d"];
+
+    NSString *expectedText = @"foo fakelink";
+
+    OCMVerifyAll(mock);
+    XCTAssertEqualObjects(text, expectedText);
+}
+
+- (void)testBuildShareCopyWhenCopyEmpty {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    OCMExpect([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");
+
+    NSString *text = [vc shareCopyFromCopy:nil
+                 andLinkWithSubRouteLetter:@"d"];
+
+    NSString *expectedText = @"fakelink";
+
+    OCMVerifyAll(mock);
+    XCTAssertEqualObjects(text, expectedText);
+}
+
 - (void)testResetShareToken {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
     MAVERemoteObjectBuilder *builderInitial = [MaveSDK sharedInstance].shareTokenBuilder;

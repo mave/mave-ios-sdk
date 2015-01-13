@@ -273,6 +273,19 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return tokenObject.shareToken;
 }
 
+- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
+      andLinkWithSubRouteLetter:(NSString *)letter {
+    NSString* link = [self shareLinkWithSubRouteLetter:letter];
+    NSString *outputText = shareCopy;
+    if ([outputText length] == 0) {
+        outputText = link;
+    } else {
+        outputText = [[outputText stringByAppendingString:@" "]
+                      stringByAppendingString:link];
+    }
+    return outputText;
+}
+
 - (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
     NSString *shareToken = [self shareToken];
     NSString *output = MAVEShortLinkBaseURL;
