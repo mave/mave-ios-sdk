@@ -16,6 +16,7 @@
 #import "MAVECustomSharePageView.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEShareToken.h"
+#import "MAVEClientPropertyUtils.h"
 
 NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
 NSString * const MAVESharePageShareTypeClientEmail = @"client_email";
@@ -296,10 +297,18 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 - (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
     NSString *shareToken = [self shareToken];
-    NSString *output = MAVEShortLinkBaseURL;
-    output = [output stringByAppendingString:subRoute];
-    output = [output stringByAppendingString:@"/"];
-    output = [output stringByAppendingString:shareToken];
+    NSString *output;// = MAVEShortLinkBaseURL;
+
+    if ([shareToken length] > 0) {
+        NSString *shareToken = [self shareToken];
+        output = [NSString stringWithFormat:@"%@%@/%@",
+                  MAVEShortLinkBaseURL, subRoute, shareToken];
+    } else {
+        NSString *appID = [MaveSDK sharedInstance].appId;
+        appID = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:appID];
+        output = [NSString stringWithFormat:@"%@o/%@/%@",
+                  MAVEShortLinkBaseURL, subRoute, appID];
+    }
     return output;
 }
 

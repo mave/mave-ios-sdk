@@ -14,6 +14,7 @@
 #import "MAVEShareToken.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEInvitePageChooser.h"
+#import "MAVEClientPropertyUtils.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -432,7 +433,7 @@
 
 - (void)testBuildShareLinkWhenNoShareToken {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
-    NSString *base64AppID = @"foo";
+    NSString *base64AppID = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:self.applicationID];
     NSString *expectedLink = [NSString stringWithFormat:@"http://dev.appjoin.us/o/d/%@", base64AppID];
     id mock = OCMPartialMock(vc);
     OCMStub([mock shareToken]).andReturn(nil);
