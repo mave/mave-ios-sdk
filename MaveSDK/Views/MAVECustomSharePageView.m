@@ -32,6 +32,7 @@
         self.backgroundColor = opts.sharePageBackgroundColor;
         self.shareExplanationLabel = [[UILabel alloc] init];
         self.shareExplanationLabel.text = remoteConfig.customSharePage.explanationCopy;
+
         self.shareExplanationLabel.font = opts.sharePageExplanationFont;
         self.shareExplanationLabel.textColor = opts.sharePageExplanationTextColor;
         self.shareExplanationLabel.textAlignment = NSTextAlignmentCenter;
@@ -75,24 +76,39 @@
 }
 
 - (void)layoutSubviews {
+    CGSize totalFrameSize = self.frame.size;
+    BOOL isInPortrait = totalFrameSize.width < totalFrameSize.height;
+
     CGSize explanationLabelSize = [self.shareExplanationLabel.text
         sizeWithAttributes:@{NSFontAttributeName: self.shareExplanationLabel.font}];
-    CGFloat explanationLabelX = (self.frame.size.width - explanationLabelSize.width) / 2;
-    CGFloat explanationLabelY = 125;
+    CGFloat explanationLabelX = (totalFrameSize.width - explanationLabelSize.width) / 2;
+    // space between the explanation copy and row of share buttons
+
+    // Layout content. Should be lower in landscape
+    CGFloat explanationShareButtonMarginRatio;
+    CGFloat explanationVerticalRatio;
+    if (isInPortrait) {
+        explanationVerticalRatio = 0.22;
+        explanationShareButtonMarginRatio = 0.13;
+    } else {
+        explanationVerticalRatio = 0.30;
+        explanationShareButtonMarginRatio = 0.20;
+    }
+    CGFloat explanationLabelY = round(totalFrameSize.height * explanationVerticalRatio);
+    CGFloat explanationShareButtonMargin = round(totalFrameSize.height * explanationShareButtonMarginRatio);
+    CGFloat shareButtonsY = explanationLabelY + explanationLabelSize.height + explanationShareButtonMargin;
+
     self.shareExplanationLabel.frame = CGRectMake(explanationLabelX,
                                                   explanationLabelY,
                                                   explanationLabelSize.width,
                                                   explanationLabelSize.height);
 
-    [self layoutShareButtons];
+    [self layoutShareButtonsWithYCoordinate:shareButtonsY];
 }
 
-- (void)layoutShareButtons {
-    // Assigns frames to the array of self.shareButtons to lay them out
+- (void)layoutShareButtonsWithYCoordinate:(CGFloat)shareButtonsYCoordinate {
     CGSize totalFrameSize = self.frame.size;
-    // Vertically the row of share buttons should have their centers 40%
-    // of the way down the screen
-    CGFloat verticalCenterRatioDownPage = 0.44;
+
     CGSize shareButtonSize = [self shareButtonSize];
     CGFloat numShareButtons = [self.shareButtons count];
     if (shareButtonSize.width * [self.shareButtons count] > totalFrameSize.width) {
@@ -100,10 +116,6 @@
         // We won't get here for now but if there's a variable number of
         // share icons or something later we may want to cover this case
     }
-
-
-    CGFloat coordYCenters = verticalCenterRatioDownPage * totalFrameSize.height;
-    CGFloat coordY = coordYCenters - (shareButtonSize.height / 2);
 
     // Make in between button and outer margins all the same size
     CGFloat numberMargins = numShareButtons + 1;
@@ -113,7 +125,7 @@
 
     CGFloat coordX = marginWidth;
     for (UIButton *shareButton in self.shareButtons) {
-        shareButton.frame = CGRectMake(coordX, coordY, shareButtonSize.width, shareButtonSize.height);
+        shareButton.frame = CGRectMake(coordX, shareButtonsYCoordinate, shareButtonSize.width, shareButtonSize.height);
         coordX += shareButtonSize.width + marginWidth;
     }
 }
