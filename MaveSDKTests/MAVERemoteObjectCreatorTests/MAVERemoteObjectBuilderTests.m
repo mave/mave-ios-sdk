@@ -89,6 +89,7 @@
     XCTAssertNotNil(builder.promise);
     XCTAssertEqualObjects(builder.promise, calledWithpromise);
     XCTAssertNil(builder.loadedFromDiskData);
+    XCTAssertNil(builder.persistor);
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
 
@@ -111,6 +112,7 @@
     XCTAssertEqualObjects(builder.classToCreate, [MAVERemoteObjectDemo class]);
     XCTAssertNotNil(builder.promise);
     XCTAssertEqualObjects(builder.promise, calledWithPromise);
+    XCTAssertNotNil(builder.persistor);
     XCTAssertEqualObjects(builder.loadedFromDiskData, persistedData);
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
@@ -135,6 +137,7 @@
     // using prefer local and there's existing data, so remote call is skipped (no promise)
     XCTAssertNil(builder.promise);
     XCTAssertNil(calledWithPromise);
+    XCTAssertNotNil(builder.persistor);
     XCTAssertEqualObjects(builder.loadedFromDiskData, persistedData);
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
@@ -158,6 +161,7 @@
     // and promise created
     XCTAssertNotNil(builder.promise);
     XCTAssertEqualObjects(builder.promise, calledWithPromise);
+    XCTAssertNotNil(builder.persistor);
     XCTAssertNil(builder.loadedFromDiskData);
     XCTAssertEqualObjects(builder.defaultData, defaultData);
 }
@@ -270,8 +274,13 @@
                            @"body_copy": @"This is body"};
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
     builder.classToCreate = [MAVERemoteObjectDemo class];
+    id persistorMock = OCMClassMock([MAVERemoteConfiguratorDataPersistor class]);
+    builder.persistor = persistorMock;
+    OCMExpect([persistorMock saveJSONDataToUserDefaults:data]);
 
     MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder buildWithPrimaryThenFallBackToDefaultsWithData:data];
+
+    OCMVerifyAll(persistorMock);
     XCTAssertNotNil(obj);
     XCTAssertEqualObjects(obj.titleCopy, @"This is title");
     XCTAssertEqualObjects(obj.bodyCopy, @"This is body");
@@ -284,8 +293,13 @@
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
     builder.classToCreate = [MAVERemoteObjectDemo class];
     builder.loadedFromDiskData = data;
+    id persistorMock = OCMClassMock([MAVERemoteConfiguratorDataPersistor class]);
+    builder.persistor = persistorMock;
+    [[persistorMock reject] saveJSONDataToUserDefaults:data];
 
     MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder buildWithPrimaryThenFallBackToDefaultsWithData:primaryData];
+
+    OCMVerifyAll(persistorMock);
     XCTAssertNotNil(obj);
     XCTAssertEqualObjects(obj.titleCopy, @"This is title");
     XCTAssertEqualObjects(obj.bodyCopy, @"This is body");
@@ -301,8 +315,13 @@
     builder.classToCreate = [MAVERemoteObjectDemo class];
     builder.loadedFromDiskData = fromDiskData;
     builder.defaultData = data;
+    id persistorMock = OCMClassMock([MAVERemoteConfiguratorDataPersistor class]);
+    builder.persistor = persistorMock;
+    [[persistorMock reject] saveJSONDataToUserDefaults:data];
 
     MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder buildWithPrimaryThenFallBackToDefaultsWithData:primaryData];
+
+    OCMVerifyAll(persistorMock);
     XCTAssertNotNil(obj);
     XCTAssertEqualObjects(obj.titleCopy, @"This is title");
     XCTAssertEqualObjects(obj.bodyCopy, @"This is body");

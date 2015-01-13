@@ -53,7 +53,7 @@
             [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft
                                               animated:YES
                                             completion:nil];
-        } inviteContext:@"side-drawer"];
+        } inviteContext:@"side-drawer-menu"];
 
     } else {
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];

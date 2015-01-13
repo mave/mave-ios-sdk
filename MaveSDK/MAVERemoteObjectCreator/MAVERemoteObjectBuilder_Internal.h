@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) MAVEPromise *promise;
 @property (nonatomic) id classToCreate;
+@property (nonatomic, strong) MAVERemoteConfiguratorDataPersistor *persistor;
 @property (nonatomic, strong) NSDictionary *loadedFromDiskData;
 @property (nonatomic, strong) NSDictionary *defaultData;
 

@@ -37,9 +37,8 @@
                preferLocallySavedData:(BOOL)preferLocallySavedData {
     if (self = [super init]) {
         self.classToCreate = classToCreate;
-        MAVERemoteConfiguratorDataPersistor *persistor =
-        [[MAVERemoteConfiguratorDataPersistor alloc] initWithUserDefaultsKey:userDefaultsKey defaultJSONData:defaultData];
-        self.loadedFromDiskData = [persistor loadJSONDataFromUserDefaults];
+        self.persistor = [[MAVERemoteConfiguratorDataPersistor alloc] initWithUserDefaultsKey:userDefaultsKey defaultJSONData:defaultData];
+        self.loadedFromDiskData = [self.persistor loadJSONDataFromUserDefaults];
         self.defaultData = defaultData;
 
         if (preferLocallySavedData && self.loadedFromDiskData) {
@@ -76,6 +75,9 @@
     id obj;
     if (data != nil) {
         obj = [self buildObjectUsingData:data];
+        if (obj && self.persistor) {
+            [self.persistor saveJSONDataToUserDefaults:data];
+        }
     }
     if (!obj && self.loadedFromDiskData != nil) {
         obj = [self buildObjectUsingData:self.loadedFromDiskData];
