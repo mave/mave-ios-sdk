@@ -81,6 +81,35 @@
     XCTAssertEqualObjects([MAVEClientPropertyUtils base64DecodeJSONString:b64], dict);
 }
 
+- (void)testUrlSafeBase64EncodeDecodeString {
+    // use a string that will have the special characters - and _
+    NSString *s1 = [@"" stringByAppendingFormat:@"%c%c%c",
+                    (char)0xff, (char)0xff, (char)0xfe];
+    NSString *expectedS1Encoded = @"w7_Dv8O-";
+
+    // and use a string that would be padded with '='
+    NSString *s2 = @"food";
+    NSString *expectedS2Encoded = @"Zm9vZA";
+
+    NSString *encoded1 = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:s1];
+
+    NSString *encoded2 = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:s2];
+
+    XCTAssertEqualObjects(encoded1, expectedS1Encoded);
+    XCTAssertEqualObjects(encoded2, expectedS2Encoded);
+
+//    NSString *decoded1 = [MAVEClientPropertyUtils urlSafeBase64PadAndDecodeString:expectedS1Encoded];
+//    NSString *decoded2 = [MAVEClientPropertyUtils urlSafeBase64PadAndDecodeString:expectedS2Encoded];
+//
+//    XCTAssertEqualObjects(decoded1, s1);
+//    XCTAssertEqualObjects(decoded2, s2);
+}
+
+- (void)testUrlSafeBase64EncodedEmpty {
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:@""], @"");
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:nil], @"");
+}
+
 
 ///
 /// Test inidividual properties are rereasonable values

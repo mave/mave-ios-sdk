@@ -24,6 +24,7 @@
 @property (nonatomic, strong) MAVECustomSharePageViewController *viewController;
 @property (nonatomic, strong) id viewControllerMock;
 @property (nonatomic, strong) MAVERemoteConfiguration *remoteConfig;
+@property (nonatomic, copy) NSString *applicationID;
 @property (nonatomic, copy) NSString *shareToken;
 
 @end
@@ -33,7 +34,8 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    self.applicationID = @"foo123";
+    [MaveSDK setupSharedInstanceWithApplicationID:self.applicationID];
     self.viewController = nil;
     self.viewControllerMock = nil;
     self.remoteConfig = nil;
@@ -418,12 +420,39 @@
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(token, @"blahasdf");
 }
+
+
 - (void)testBuildShareLink {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
     id mock = OCMPartialMock(vc);
     OCMStub([mock shareToken]).andReturn(@"blahtok");
     NSString *link = [vc shareLinkWithSubRouteLetter:@"d"];
     XCTAssertEqualObjects(link, @"http://dev.appjoin.us/d/blahtok");
+}
+
+- (void)testBuildShareLinkWhenNoShareToken {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    NSString *base64AppID = @"foo";
+    NSString *expectedLink = [NSString stringWithFormat:@"http://dev.appjoin.us/o/d/%@", base64AppID];
+    id mock = OCMPartialMock(vc);
+    OCMStub([mock shareToken]).andReturn(nil);
+
+    NSString *link = [vc shareLinkWithSubRouteLetter:@"d"];
+
+    XCTAssertEqualObjects(link, expectedLink);
+}
+
+- (void)testResetShareToken {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    MAVERemoteObjectBuilder *builderInitial = [MaveSDK sharedInstance].shareTokenBuilder;
+
+    id stClassMock = OCMClassMock([MAVEShareToken class]);
+
+    [vc resetShareToken];
+
+    OCMVerify([stClassMock clearUserDefaults]);
+    XCTAssertNotEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, builderInitial);
+    [stClassMock stopMocking];
 }
 
 - (void)testBuildShareCopyWhenCopyIsNormal {
@@ -471,19 +500,6 @@
 
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(text, expectedText);
-}
-
-- (void)testResetShareToken {
-    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
-    MAVERemoteObjectBuilder *builderInitial = [MaveSDK sharedInstance].shareTokenBuilder;
-
-    id stClassMock = OCMClassMock([MAVEShareToken class]);
-
-    [vc resetShareToken];
-
-    OCMVerify([stClassMock clearUserDefaults]);
-    XCTAssertNotEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, builderInitial);
-    [stClassMock stopMocking];
 }
 
 @end

@@ -56,4 +56,10 @@
 + (NSString *)base64EncodeDictionary:(NSDictionary *)dict;
 + (NSDictionary *)base64DecodeJSONString:(NSString *)encodedString;
 
+// Base 64 encode, but replace + and / with - and _ so they can be URL values,
+// and strip padding = chars since they can be added back (the string length of
+// base64 just needs to be a multiple of 4 to make sense).
++ (NSString *)urlSafeBase64EncodeAndStripString:(NSString *)value;
+//+ (NSString *)urlSafeBase64PadAndDecodeString:(NSString *)value;
+
 @end

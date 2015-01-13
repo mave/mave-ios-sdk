@@ -161,5 +161,29 @@
     return output;
 }
 
++ (NSString *)urlSafeBase64EncodeAndStripString:(NSString *)value {
+    NSData *dataValue = [value dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *output = [dataValue base64EncodedStringWithOptions:0];
+    if ([output length] == 0) {
+        return @"";
+    }
+
+    // replace / and + with _ and -
+    output = [output stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    output = [output stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
+
+    // Strip trailing '=' chars
+    NSString *lastLetter;
+    while (YES) {
+        lastLetter = [output substringFromIndex:([output length]-1)];
+        if ([lastLetter isEqualToString:@"="]) {
+            output = [output substringToIndex:([output length]-1)];
+        } else {
+            break;
+        }
+    }
+    return output;
+}
+
 
 @end
