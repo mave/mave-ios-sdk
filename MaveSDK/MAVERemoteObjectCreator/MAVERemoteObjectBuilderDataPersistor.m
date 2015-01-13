@@ -18,15 +18,16 @@
 }
 
 - (void)saveJSONDataToUserDefaults:(NSDictionary *)data {
-    if (![NSPropertyListSerialization propertyList:data
-                                 isValidForFormat:NSPropertyListBinaryFormat_v1_0]) {
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
+                                                       options:0 error:nil];
+    if (!jsonData) {
         return;
     }
     // use try/catch b/c we can have probably still have errors, e.g. disk
     // is full and all the other usual I/O suspects
     @try {
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setObject:data forKey:self.userDefaultsKey];
+        [userDefaults setObject:jsonData forKey:self.userDefaultsKey];
         [userDefaults synchronize];
     }
     @catch (NSException *exception) {
@@ -35,16 +36,18 @@
 }
 
 - (NSDictionary *)loadJSONDataFromUserDefaults {
-    NSDictionary *data;
+    NSDictionary *output;
     @try {
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        data = [userDefaults dictionaryForKey:self.userDefaultsKey];
+        NSData *data = [userDefaults dataForKey:self.userDefaultsKey];
+        output = [NSJSONSerialization JSONObjectWithData:data
+                                                 options:0 error:nil];
     }
     @catch (NSException *exception) {
-        data = nil;
+        output = nil;
     }
     @finally {
-        return data;
+        return output;
     }
 }
 
