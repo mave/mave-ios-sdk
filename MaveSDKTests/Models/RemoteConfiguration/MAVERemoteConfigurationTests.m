@@ -13,6 +13,7 @@
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 #import "MAVERemoteConfigurationContactsInvitePage.h"
+#import "MAVERemoteConfigurationCustomSharePage.h"
 #import "MAVERemoteConfigurationClientSMS.h"
 
 @interface MAVERemoteConfigurationTests : XCTestCase
@@ -37,6 +38,9 @@
     XCTAssertNotNil([defaults objectForKey:@"contacts_invite_page"]);
     XCTAssertEqualObjects([defaults objectForKey:@"contacts_invite_page"],
                            [MAVERemoteConfigurationContactsInvitePage defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"share_page"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"share_page"],
+                          [MAVERemoteConfigurationCustomSharePage defaultJSONData]);
     XCTAssertNotNil([defaults objectForKey:@"client_sms"]);
     XCTAssertEqualObjects([defaults objectForKey:@"client_sms"],
                           [MAVERemoteConfigurationClientSMS defaultJSONData]);
@@ -59,6 +63,7 @@
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     XCTAssertNotNil(config.contactsPrePrompt);
     XCTAssertNotNil(config.contactsInvitePage);
+    XCTAssertNotNil(config.customSharePage);
     XCTAssertNotNil(config.clientSMS);
     XCTAssertNotNil(config.clientEmail);
     XCTAssertNotNil(config.facebookShare);
