@@ -14,6 +14,9 @@
 
 @interface MAVEBuiltinUIElementUtils : NSObject
 
+// Transparently get images just by name or from a bundle
++ (UIImage *)imageNamed:(NSString *)imageName fromBundle:(NSString *)bundleName;
+
 // Mask a white & transparent image (like an icon) with the given color
 + (UIImage *)tintWhitesInImage:(UIImage *)baseImage withColor:(UIColor *)tintColor;
 

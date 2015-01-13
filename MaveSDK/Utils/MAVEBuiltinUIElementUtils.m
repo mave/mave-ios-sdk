@@ -10,7 +10,29 @@
 
 @implementation MAVEBuiltinUIElementUtils
 
++ (UIImage *)imageNamed:(NSString *)imageName fromBundle:(NSString *)bundleName {
+    UIImage *image;
+    // Try getting it from the bundle (how it will be fetched live)
+    NSURL *bundleURL; NSBundle *bundle;
+    bundleURL = [[NSBundle mainBundle] URLForResource:bundleName withExtension:@"bundle"];
+    if (bundleURL) {
+        bundle = [NSBundle bundleWithURL:bundleURL];
+    }
+    if (bundle) {
+        image = [UIImage imageWithContentsOfFile:[[bundle resourcePath] stringByAppendingPathComponent:imageName]];
+    }
+
+    // Otherwise fall back to getting image by name (when running this DemoApp or tests)
+    if (!image) {
+        image = [UIImage imageNamed:imageName];
+    }
+    return image;
+}
+
 + (UIImage *)tintWhitesInImage:(UIImage *)baseImage withColor:(UIColor *)tintColor {
+    if (!baseImage) {
+        return nil;
+    }
 
     CGRect drawRect = CGRectMake(0, 0, baseImage.size.width, baseImage.size.height);
 

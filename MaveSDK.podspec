@@ -6,10 +6,11 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
+# Note the version needs to be manually kept up to date with MAVESDKVersion constant in the code
 
 Pod::Spec.new do |s|
   s.name             = "MaveSDK"
-  s.version          = "0.0.1"
+  s.version          = "0.3.0"
   s.summary          = "A short description of MaveSDK."
   s.description      = <<-DESC
                        An optional longer description of MaveSDK
@@ -29,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'MaveSDK/**/*.{m,h}'
   s.resource_bundles = {
-    'MaveSDK' => ['Pod/Assets/*.png']
+    'MaveSDK' => ['MaveSDK/Resources/Images/*.png']
   }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'

@@ -9,6 +9,7 @@
 #import <Social/Social.h>
 #import "MAVECustomSharePageView.h"
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEBuiltinUIElementUtils.h"
 
@@ -152,7 +153,7 @@
     UIFont *labelFont = opts.sharePageIconFont;
     UIColor *iconColor = opts.sharePageIconColor;
 
-    UIImage *image = [UIImage imageNamed:imageName];
+    UIImage *image = [MAVEBuiltinUIElementUtils imageNamed:imageName fromBundle:MAVEResourceBundleName];
     image = [MAVEBuiltinUIElementUtils tintWhitesInImage:image withColor:iconColor];
 
     MAVEUIButtonWithImageAndText *button = [[MAVEUIButtonWithImageAndText alloc] init];

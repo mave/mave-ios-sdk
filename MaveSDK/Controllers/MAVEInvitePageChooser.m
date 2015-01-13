@@ -7,6 +7,7 @@
 //
 
 #import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 #import "MAVEInvitePageChooser.h"
 #import "MAVEConstants.h"
 #import "MAVEABUtils.h"
@@ -66,8 +67,7 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 }
 
 - (BOOL)isContactsInvitePageEnabledServerSide {
-    MAVERemoteConfiguration *remoteConfig = [[MaveSDK sharedInstance].remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
-    return remoteConfig.contactsInvitePage.enabled;
+    return [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.enabled;
 }
 
 

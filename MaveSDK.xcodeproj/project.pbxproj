@@ -46,10 +46,24 @@
 		0C29BC571A5DE74300C27DA5 /* MAVEShareTokenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC561A5DE74300C27DA5 /* MAVEShareTokenTests.m */; };
 		0C29BC581A5DE9DE00C27DA5 /* MAVEShareToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC531A5DD39400C27DA5 /* MAVEShareToken.m */; };
 		0C29BC5B1A5DED3A00C27DA5 /* MAVECustomSharePageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC5A1A5DED3A00C27DA5 /* MAVECustomSharePageView.m */; };
-		0C29BC5F1A5E109B00C27DA5 /* MAVEImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C29BC5E1A5E109B00C27DA5 /* MAVEImages.xcassets */; };
 		0C29BC671A5EC96600C27DA5 /* MAVECustomSharePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC661A5EC96600C27DA5 /* MAVECustomSharePageViewController.m */; };
 		0C2D73181A1FCB640059CA54 /* MAVEIDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */; };
 		0C2D731B1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D731A1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m */; };
+		0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */; };
+		0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */; };
+		0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */; };
+		0C58FDF01A649AF4007F8F12 /* MAVEShareIconEmail@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE41A649AF4007F8F12 /* MAVEShareIconEmail@1x.png */; };
+		0C58FDF11A649AF4007F8F12 /* MAVEShareIconEmail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE51A649AF4007F8F12 /* MAVEShareIconEmail@2x.png */; };
+		0C58FDF21A649AF4007F8F12 /* MAVEShareIconEmail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE61A649AF4007F8F12 /* MAVEShareIconEmail@3x.png */; };
+		0C58FDF31A649AF4007F8F12 /* MAVEShareIconFacebook@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE71A649AF4007F8F12 /* MAVEShareIconFacebook@1x.png */; };
+		0C58FDF41A649AF4007F8F12 /* MAVEShareIconFacebook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE81A649AF4007F8F12 /* MAVEShareIconFacebook@2x.png */; };
+		0C58FDF51A649AF4007F8F12 /* MAVEShareIconFacebook@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE91A649AF4007F8F12 /* MAVEShareIconFacebook@3x.png */; };
+		0C58FDF61A649AF4007F8F12 /* MAVEShareIconSMS@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDEA1A649AF4007F8F12 /* MAVEShareIconSMS@1x.png */; };
+		0C58FDF71A649AF4007F8F12 /* MAVEShareIconSMS@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDEB1A649AF4007F8F12 /* MAVEShareIconSMS@2x.png */; };
+		0C58FDF81A649AF4007F8F12 /* MAVEShareIconSMS@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDEC1A649AF4007F8F12 /* MAVEShareIconSMS@3x.png */; };
+		0C58FDF91A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDED1A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png */; };
+		0C58FDFA1A649AF4007F8F12 /* MAVEShareIconTwitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDEE1A649AF4007F8F12 /* MAVEShareIconTwitter@2x.png */; };
+		0C58FDFB1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDEF1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png */; };
 		0C7200721A19414D00E12B91 /* MAVEInviteMessageContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7200711A19414D00E12B91 /* MAVEInviteMessageContainerView.m */; };
 		0C7200741A19A87900E12B91 /* MAVEInviteMessageContainerViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7200731A19A87900E12B91 /* MAVEInviteMessageContainerViewTests.m */; };
 		0CC6463619F9C6190006A1D0 /* MAVEABTableViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463519F9C6190006A1D0 /* MAVEABTableViewControllerTests.m */; };
@@ -174,12 +188,26 @@
 		0C29BC561A5DE74300C27DA5 /* MAVEShareTokenTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEShareTokenTests.m; sourceTree = "<group>"; };
 		0C29BC591A5DED3A00C27DA5 /* MAVECustomSharePageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVECustomSharePageView.h; sourceTree = "<group>"; };
 		0C29BC5A1A5DED3A00C27DA5 /* MAVECustomSharePageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomSharePageView.m; sourceTree = "<group>"; };
-		0C29BC5E1A5E109B00C27DA5 /* MAVEImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MAVEImages.xcassets; sourceTree = "<group>"; };
 		0C29BC651A5EC96600C27DA5 /* MAVECustomSharePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVECustomSharePageViewController.h; sourceTree = "<group>"; };
 		0C29BC661A5EC96600C27DA5 /* MAVECustomSharePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomSharePageViewController.m; sourceTree = "<group>"; };
 		0C2D73161A1FCB640059CA54 /* MAVEIDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEIDUtils.h; sourceTree = "<group>"; };
 		0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEIDUtils.m; sourceTree = "<group>"; };
 		0C2D731A1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEIDUtilsTests.m; sourceTree = "<group>"; };
+		0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@1x.png"; sourceTree = "<group>"; };
+		0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@2x.png"; sourceTree = "<group>"; };
+		0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@3x.png"; sourceTree = "<group>"; };
+		0C58FDE41A649AF4007F8F12 /* MAVEShareIconEmail@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconEmail@1x.png"; sourceTree = "<group>"; };
+		0C58FDE51A649AF4007F8F12 /* MAVEShareIconEmail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconEmail@2x.png"; sourceTree = "<group>"; };
+		0C58FDE61A649AF4007F8F12 /* MAVEShareIconEmail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconEmail@3x.png"; sourceTree = "<group>"; };
+		0C58FDE71A649AF4007F8F12 /* MAVEShareIconFacebook@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconFacebook@1x.png"; sourceTree = "<group>"; };
+		0C58FDE81A649AF4007F8F12 /* MAVEShareIconFacebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconFacebook@2x.png"; sourceTree = "<group>"; };
+		0C58FDE91A649AF4007F8F12 /* MAVEShareIconFacebook@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconFacebook@3x.png"; sourceTree = "<group>"; };
+		0C58FDEA1A649AF4007F8F12 /* MAVEShareIconSMS@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconSMS@1x.png"; sourceTree = "<group>"; };
+		0C58FDEB1A649AF4007F8F12 /* MAVEShareIconSMS@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconSMS@2x.png"; sourceTree = "<group>"; };
+		0C58FDEC1A649AF4007F8F12 /* MAVEShareIconSMS@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconSMS@3x.png"; sourceTree = "<group>"; };
+		0C58FDED1A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconTwitter@1x.png"; sourceTree = "<group>"; };
+		0C58FDEE1A649AF4007F8F12 /* MAVEShareIconTwitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconTwitter@2x.png"; sourceTree = "<group>"; };
+		0C58FDEF1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconTwitter@3x.png"; sourceTree = "<group>"; };
 		0C7200701A19414D00E12B91 /* MAVEInviteMessageContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteMessageContainerView.h; sourceTree = "<group>"; };
 		0C7200711A19414D00E12B91 /* MAVEInviteMessageContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteMessageContainerView.m; sourceTree = "<group>"; };
 		0C7200731A19A87900E12B91 /* MAVEInviteMessageContainerViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteMessageContainerViewTests.m; sourceTree = "<group>"; };
@@ -314,13 +342,6 @@
 			path = MAVERemoteObjectCreatorTests;
 			sourceTree = "<group>";
 		};
-		0C29BC601A5E10D000C27DA5 /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
 		0C2D73151A1FCB480059CA54 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -347,6 +368,36 @@
 				0C1A8FDB1A644E5C00518D9A /* MAVENameParsingUtilsTests.m */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		0C58FDDC1A649498007F8F12 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0C58FDDD1A6494B1007F8F12 /* Images */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		0C58FDDD1A6494B1007F8F12 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */,
+				0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */,
+				0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */,
+				0C58FDE41A649AF4007F8F12 /* MAVEShareIconEmail@1x.png */,
+				0C58FDE51A649AF4007F8F12 /* MAVEShareIconEmail@2x.png */,
+				0C58FDE61A649AF4007F8F12 /* MAVEShareIconEmail@3x.png */,
+				0C58FDE71A649AF4007F8F12 /* MAVEShareIconFacebook@1x.png */,
+				0C58FDE81A649AF4007F8F12 /* MAVEShareIconFacebook@2x.png */,
+				0C58FDE91A649AF4007F8F12 /* MAVEShareIconFacebook@3x.png */,
+				0C58FDEA1A649AF4007F8F12 /* MAVEShareIconSMS@1x.png */,
+				0C58FDEB1A649AF4007F8F12 /* MAVEShareIconSMS@2x.png */,
+				0C58FDEC1A649AF4007F8F12 /* MAVEShareIconSMS@3x.png */,
+				0C58FDED1A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png */,
+				0C58FDEE1A649AF4007F8F12 /* MAVEShareIconTwitter@2x.png */,
+				0C58FDEF1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 		0CCC92CD1A60807B008CB888 /* RemoteConfiguration */ = {
@@ -450,8 +501,7 @@
 				C02927EC19E82C45006AEE43 /* Views */,
 				C02927EB19E82C3F006AEE43 /* Networking */,
 				0C2D73151A1FCB480059CA54 /* Utils */,
-				0C29BC601A5E10D000C27DA5 /* Assets */,
-				0C29BC5E1A5E109B00C27DA5 /* MAVEImages.xcassets */,
+				0C58FDDC1A649498007F8F12 /* Resources */,
 			);
 			path = MaveSDK;
 			sourceTree = "<group>";
@@ -714,10 +764,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C29BC5F1A5E109B00C27DA5 /* MAVEImages.xcassets in Resources */,
 				0CCC92BE1A5F849F008CB888 /* Default-568h@2x.png in Resources */,
 				C02927A219E823E2006AEE43 /* Images.xcassets in Resources */,
+				0C58FDF61A649AF4007F8F12 /* MAVEShareIconSMS@1x.png in Resources */,
+				0C58FDF01A649AF4007F8F12 /* MAVEShareIconEmail@1x.png in Resources */,
+				0C58FDF31A649AF4007F8F12 /* MAVEShareIconFacebook@1x.png in Resources */,
+				0C58FDF41A649AF4007F8F12 /* MAVEShareIconFacebook@2x.png in Resources */,
+				0C58FDF51A649AF4007F8F12 /* MAVEShareIconFacebook@3x.png in Resources */,
+				0C58FDF11A649AF4007F8F12 /* MAVEShareIconEmail@2x.png in Resources */,
+				0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */,
+				0C58FDF21A649AF4007F8F12 /* MAVEShareIconEmail@3x.png in Resources */,
+				0C58FDF81A649AF4007F8F12 /* MAVEShareIconSMS@3x.png in Resources */,
+				0C58FDFA1A649AF4007F8F12 /* MAVEShareIconTwitter@2x.png in Resources */,
+				0C58FDF71A649AF4007F8F12 /* MAVEShareIconSMS@2x.png in Resources */,
 				C02927C619E827F9006AEE43 /* Main.storyboard in Resources */,
+				0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */,
+				0C58FDFB1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png in Resources */,
+				0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */,
+				0C58FDF91A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

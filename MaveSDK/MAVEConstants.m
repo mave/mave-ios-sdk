@@ -23,6 +23,8 @@ NSString * const MAVEAPIVersion = @"v1.0";
     NSString * const MAVEShortLinkBaseURL = @"http://dev.appjoin.us/";
 #endif
 
+NSString * const MAVEResourceBundleName = @"MaveSDK";
+
 // Debug log code
 void MAVEExtendedLog(const char*prefix, const char *file, int lineNumber, const char *functionName, NSString *format, ...)
 {

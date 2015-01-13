@@ -25,6 +25,9 @@ extern NSString * const MAVEAPIBaseURL;
 extern NSString * const MAVEAPIVersion;
 extern NSString * const MAVEShortLinkBaseURL;
 
+// Cocoapods resource bundle name
+extern NSString * const MAVEResourceBundleName;
+
 extern NSString * const MAVE_HTTP_ERROR_DOMAIN;
 
 extern NSInteger const MAVEHTTPErrorRequestJSONCode;
