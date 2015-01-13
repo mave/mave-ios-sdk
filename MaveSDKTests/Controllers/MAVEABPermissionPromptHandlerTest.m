@@ -15,6 +15,9 @@
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABTestDataFactory.h"
 
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
 
 @interface MAVEABPermissionPromptHandlerTest : XCTestCase
 

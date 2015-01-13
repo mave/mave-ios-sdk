@@ -13,6 +13,10 @@
 #import "MAVEAPIInterface.h"
 #import "MAVEClientPropertyUtils.h"
 
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
+
 @interface MAVEAPIInterfaceTests : XCTestCase
 
 @property MAVEAPIInterface *testAPIInterface;

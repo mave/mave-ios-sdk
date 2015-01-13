@@ -55,6 +55,8 @@ void MAVEExtendedLog(const char*prefix, const char *file, int lineNumber, const 
             [body UTF8String]);
 }
 
+void MAVENoopLog(NSString *format, ...) {};
+
 
 NSString * const MAVE_HTTP_ERROR_DOMAIN = @"com.mave.http.error";
 NSInteger const MAVEHTTPErrorRequestJSONCode = 1000;

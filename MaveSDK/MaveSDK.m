@@ -49,6 +49,7 @@ static dispatch_once_t sharedInstanceonceToken;
     });
 }
 
+// ability to reset singleton during tests
 # if DEBUG
 + (void)resetSharedInstanceForTesting {
     sharedInstanceonceToken = 0;

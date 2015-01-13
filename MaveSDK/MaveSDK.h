@@ -37,11 +37,6 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSU
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
 
-// Ability to reset the object in tests
-# if DEBUG
-+ (void)resetSharedInstanceForTesting;
-#endif
-
 - (void)getReferringUser:(void(^)(MAVEUserData * userData))referringUserHandler;
 // Use this to identify your logged-in users to us
 - (void)identifyUser:(MAVEUserData *)userData;

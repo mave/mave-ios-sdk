@@ -13,12 +13,13 @@
 #define DebugLog(args...) MAVEExtendedLog("MAVE LOG", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
 #define ErrorLog(args...) MAVEExtendedLog("MAVE ERROR!", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
 #else
-#define DebugLog(s, ... )
-#define ErrorLog(args...)
+#define DebugLog(args...) MAVENoopLog(args);
+#define ErrorLog(args...) MAVENoopLog(args);
 #endif
 
 // Custom log & reporting functions
 void MAVEExtendedLog(const char*prefix, const char *file, int lineNumber, const char *functionName, NSString *format, ...);
+void MAVENoopLog(NSString *format, ...);
 
 extern NSString * const MAVESDKVersion;
 extern NSString * const MAVEAPIBaseURL;
