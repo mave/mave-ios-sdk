@@ -65,7 +65,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)smsClientSideShare {
     MFMessageComposeViewController *controller = [self _createMessageComposeViewController];
 
-    NSString *message = [self.remoteConfiguration.clientSMS.text stringByAppendingString:[self shareLinkWithSubRouteLetter:@"s"]];
+    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.clientSMS.text
+                      andLinkWithSubRouteLetter:@"s"];
 
     controller.messageComposeDelegate = self;
     controller.body = message;
@@ -114,7 +115,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     // TODO: use the data from the remote config
     MFMailComposeViewController *mailController = [self _createMailComposeViewController];
     NSString *subject = self.remoteConfiguration.clientEmail.subject;
-    NSString *message = [self.remoteConfiguration.clientEmail.body stringByAppendingString:[self shareLinkWithSubRouteLetter:@"e"]];
+    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.clientEmail.body
+                      andLinkWithSubRouteLetter:@"e"];
 
     mailController.mailComposeDelegate = self;
     mailController.subject = subject;
@@ -197,7 +199,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)twitteriOSNativeShare {
-    NSString *message = [self.remoteConfiguration.twitterShare.text stringByAppendingString:[self shareLinkWithSubRouteLetter:@"t"]];
+    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.twitterShare.text
+                      andLinkWithSubRouteLetter:@"t"];
 
     SLComposeViewController *tweetSheet = [self _createTwitterComposeViewController];
     [tweetSheet setInitialText:message];
@@ -232,7 +235,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 
 - (void)clipboardShare {
-    NSString *message = [self.remoteConfiguration.clipboardShare.text stringByAppendingString:[self shareLinkWithSubRouteLetter:@"c"]];
+    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.clipboardShare.text
+                      andLinkWithSubRouteLetter:@"c"];
 
     UIPasteboard *pasteboard = [self _generalPasteboardForClipboardShare];
     pasteboard.string = message;
@@ -280,8 +284,12 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     if ([outputText length] == 0) {
         outputText = link;
     } else {
-        outputText = [[outputText stringByAppendingString:@" "]
-                      stringByAppendingString:link];
+        // if string doesn't end in a whitespace char, append a regular space
+        NSString *lastLetter = [outputText substringFromIndex:([outputText length] - 1)];
+        if (![@[@" ", @"\n"] containsObject:lastLetter]) {
+            outputText = [outputText stringByAppendingString:@" "];
+        }
+        outputText = [outputText stringByAppendingString:link];
     }
     return outputText;
 }

@@ -30,7 +30,7 @@ NSString * const MAVERemoteConfigKeyClientSMSCopy = @"copy";
 }
 
 + (NSDictionary *)defaultJSONData {
-    NSString *text = [NSString stringWithFormat:@"Join me on %@! ",
+    NSString *text = [NSString stringWithFormat:@"Join me on %@!",
                       [MAVEClientPropertyUtils appName]];
     return @{
         MAVERemoteConfigKeyClientSMSTemplate: @{

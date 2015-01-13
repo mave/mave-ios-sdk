@@ -257,7 +257,7 @@
 
 - (void)testFacebookiOSNativeShare {
     [self setupPartialMockForClientShareTests];
-    NSString *expectedCopy = @"I love DemoApp. You should try it. ";
+    NSString *expectedCopy = @"I love DemoApp. You should try it.";
     NSString *expectedURL = @"http://dev.appjoin.us/f/foobarsharetoken";
 
     id fbVC = OCMClassMock([SLComposeViewController class]);
@@ -426,7 +426,7 @@
     XCTAssertEqualObjects(link, @"http://dev.appjoin.us/d/blahtok");
 }
 
-- (void)testBuildShareCopyWhenCopyNotEmpty {
+- (void)testBuildShareCopyWhenCopyIsNormal {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
     id mock = OCMPartialMock(vc);
     OCMExpect([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");
@@ -440,7 +440,26 @@
     XCTAssertEqualObjects(text, expectedText);
 }
 
-- (void)testBuildShareCopyWhenCopyEmpty {
+- (void)testBuildShareCopyWhenCopyEndsInSpace {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    OCMStub([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");
+
+    NSString *text = [vc shareCopyFromCopy:@"foo "
+                 andLinkWithSubRouteLetter:@"d"];
+
+    NSString *expectedText = @"foo fakelink";
+    XCTAssertEqualObjects(text, expectedText);
+
+    // newline should count as a space too
+    text = [vc shareCopyFromCopy:@"foo\n"
+            andLinkWithSubRouteLetter:@"d"];
+
+    expectedText = @"foo\nfakelink";
+    XCTAssertEqualObjects(text, expectedText);
+}
+
+- (void)testBuildShareCopyWhenCopyIsEmpty {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
     id mock = OCMPartialMock(vc);
     OCMExpect([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");

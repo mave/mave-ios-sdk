@@ -32,14 +32,14 @@
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"initial_text"], @"I love DemoApp. You should try it. ");
+    XCTAssertEqualObjects([template objectForKey:@"initial_text"], @"I love DemoApp. You should try it.");
 }
 
 - (void)testInitFromDefaultData {
     MAVERemoteConfigurationFacebookShare *obj = [[MAVERemoteConfigurationFacebookShare alloc] initWithDictionary:[MAVERemoteConfigurationFacebookShare defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.text, @"I love DemoApp. You should try it. ");
+    XCTAssertEqualObjects(obj.text, @"I love DemoApp. You should try it.");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
