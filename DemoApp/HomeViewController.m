@@ -39,6 +39,7 @@
                                         action:nil];
     [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
 
+    // Still presenting the older way
     NSError *setupError;
     NSString *defaultMessage = @"Join me on DEMO APP!";
     UIViewController *inviteController = [[MaveSDK sharedInstance]

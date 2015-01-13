@@ -40,29 +40,25 @@
 
     self.currentIndex = indexPath.row;
     NSString *controllerIdentifier = self.sideDrawerMenuItemIdentifiers[indexPath.row];
-    UIViewController * centerViewController;
     if ([controllerIdentifier isEqualToString:kDrawerInviteController]) {
         // Style the bar button for drawer controller use
         MMDrawerBarButtonItem *bbi = [[MMDrawerBarButtonItem alloc] initWithTarget:nil action:nil];
         [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
 
-        NSError *setupError;
-        NSString *defaultMessage = @"Join me on DEMO APP! it's a fun way to do some things blah blah blah ok cool that's nice. Also invite codes.";
-        centerViewController = [[MaveSDK sharedInstance]
-            invitePageWithDefaultMessage:defaultMessage
-                              setupError:&setupError
-                          dismissalBlock:^(UIViewController *viewController,
-                                           NSUInteger numberOfInvitesSent) {
-                              [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
-        }];
-        if (setupError) {
-            [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
-            return;
-        }
+        [[MaveSDK sharedInstance] presentInvitePageModallyWithBlock:^(UIViewController *inviteViewController) {
+            [self.mm_drawerController setCenterViewController:inviteViewController
+                                           withCloseAnimation:YES
+                                                   completion:nil];
+        } dismissBlock:^(UIViewController *viewController, NSUInteger numberOfInvitesSent) {
+            [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft
+                                              animated:YES
+                                            completion:nil];
+        } inviteContext:@"side-drawer"];
+
     } else {
-        centerViewController = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:controllerIdentifier];
+        [self.mm_drawerController setCenterViewController:vc withCloseAnimation:YES completion:nil];
     }
-    [self.mm_drawerController setCenterViewController:centerViewController withCloseAnimation:YES completion:nil];
 }
 
 #pragma mark - Table View Data Source
