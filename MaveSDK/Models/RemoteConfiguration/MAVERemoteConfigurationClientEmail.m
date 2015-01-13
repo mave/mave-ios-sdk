@@ -22,7 +22,7 @@ NSString * const MAVERemoteConfigKeyClientEmailBody = @"body";
         self.templateID = [template objectForKey:MAVERemoteConfigKeyClientEmailTemplateID];
         self.subject = [template objectForKey:MAVERemoteConfigKeyClientEmailSubject];
         self.body = [template objectForKey:MAVERemoteConfigKeyClientEmailBody];
-        if (!self.templateID || !self.subject || !self.body) {
+        if (!self.subject || !self.body) {
             return nil;
         }
     }

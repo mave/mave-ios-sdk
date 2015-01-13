@@ -30,7 +30,7 @@ const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanatio
             NSDictionary *template  = [data objectForKey:MAVERemoteConfigKeyCustomSharePageTemplate];
             self.templateID = [template objectForKey:MAVERemoteConfigKeyCustomSharePageTemplateID];
             self.explanationCopy = [template objectForKey:MAVERemoteConfigKeyCustomSharePageExplanationCopy];
-            if (!self.templateID || !self.explanationCopy) {
+            if (!self.explanationCopy) {
                 return nil;
             }
         }

@@ -11,7 +11,7 @@
 
 NSString * const MAVERemoteConfigKeyFacebookShareTemplate = @"template";
 NSString * const MAVERemoteConfigKeyFacebookShareTemplateID = @"template_id";
-NSString * const MAVERemoteConfigKeyFacebookShareCopy = @"copy";
+NSString * const MAVERemoteConfigKeyFacebookShareCopy = @"initial_text";
 
 @implementation MAVERemoteConfigurationFacebookShare
 
@@ -20,7 +20,7 @@ NSString * const MAVERemoteConfigKeyFacebookShareCopy = @"copy";
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyFacebookShareTemplate];
         self.templateID = [template objectForKey:MAVERemoteConfigKeyFacebookShareTemplateID];
         self.text = [template objectForKey:MAVERemoteConfigKeyFacebookShareCopy];
-        if (!self.templateID || !self.text) {
+        if (!self.text) {
             return nil;
         }
 

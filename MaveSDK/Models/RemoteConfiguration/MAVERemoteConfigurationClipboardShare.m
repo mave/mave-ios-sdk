@@ -20,7 +20,7 @@ NSString * const MAVERemoteConfigKeyClipboardShareCopy = @"copy";
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyClipboardShareTemplate];
         self.templateID = [template objectForKey:MAVERemoteConfigKeyClipboardShareTemplateID];
         self.text = [template objectForKey:MAVERemoteConfigKeyClipboardShareCopy];
-        if (!self.templateID || !self.text) {
+        if (!self.text) {
             return nil;
         }
 

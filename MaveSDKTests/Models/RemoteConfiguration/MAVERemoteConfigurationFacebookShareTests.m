@@ -32,7 +32,7 @@
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy"], @"I love DemoApp. You should try it. ");
+    XCTAssertEqualObjects([template objectForKey:@"initial_text"], @"I love DemoApp. You should try it. ");
 }
 
 - (void)testInitFromDefaultData {

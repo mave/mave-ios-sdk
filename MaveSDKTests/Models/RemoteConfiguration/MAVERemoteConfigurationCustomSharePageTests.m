@@ -71,11 +71,10 @@
     XCTAssertNil(obj);
 }
 
-- (void)testInitSucceedsIfTemplatePresentButEmpty {
+- (void)testInitSucceedsIfTemplateIDEmpty {
     NSDictionary *dict = @{
                            @"enabled": @YES,
                            @"template": @{
-                                   @"template_id": @"foo",
                                    @"explanation_copy": @"",
                                    }
                            };

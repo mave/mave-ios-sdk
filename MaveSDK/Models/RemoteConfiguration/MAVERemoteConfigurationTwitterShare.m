@@ -20,7 +20,7 @@ NSString * const MAVERemoteConfigKeyTwitterShareCopy = @"copy";
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyTwitterShareTemplate];
         self.templateID = [template objectForKey:MAVERemoteConfigKeyTwitterShareTemplateID];
         self.text = [template objectForKey:MAVERemoteConfigKeyTwitterShareCopy];
-        if (!self.templateID || !self.text) {
+        if (!self.text) {
             return nil;
         }
 

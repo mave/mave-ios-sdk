@@ -15,6 +15,10 @@
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEInvitePageChooser.h"
 
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
+
 @interface MAVECustomSharePageViewControllerTests : XCTestCase
 
 @property (nonatomic, strong) MAVECustomSharePageViewController *viewController;

@@ -75,6 +75,20 @@
     XCTAssertNil(obj);
 }
 
+- (void)testInitSucceedsIfTemplateIDNil {
+    NSDictionary *dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                   @"sms_copy": @"blah"
+                                   }
+                           };
+
+    MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
+    
+    XCTAssertNotNil(obj);
+    XCTAssertEqualObjects(obj.smsCopy, @"blah");
+}
+
 - (void)testInitSuccessIfNoTemplateButEnabledFalse {
     NSDictionary *dict = @{@"enabled": @NO, @"template": [NSNull null]};
     MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];

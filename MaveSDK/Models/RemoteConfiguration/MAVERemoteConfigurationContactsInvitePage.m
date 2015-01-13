@@ -33,7 +33,7 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSMSCopy = @"sms_copy";
             self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplateID];
             self.explanationCopy = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageExplanationCopy];
             self.smsCopy = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSMSCopy];
-            if (!self.templateID || !self.smsCopy) {
+            if (!self.smsCopy) {
                 return nil;
             }
         }
