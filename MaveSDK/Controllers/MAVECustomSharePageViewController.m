@@ -10,6 +10,7 @@
 #import <Social/Social.h>
 #import <MessageUI/MessageUI.h>
 #import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 #import "MAVEConstants.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVECustomSharePageView.h"
@@ -231,8 +232,10 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 
 - (void)clipboardShare {
+    NSString *message = [self.remoteConfiguration.clipboardShare.text stringByAppendingString:[self shareLinkWithSubRouteLetter:@"c"]];
+
     UIPasteboard *pasteboard = [self _generalPasteboardForClipboardShare];
-    pasteboard.string = [self shareLinkWithSubRouteLetter:@"c"];
+    pasteboard.string = message;
 
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard];
 
@@ -262,8 +265,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 #pragma mark - Helpers for building share content
 
 - (MAVERemoteConfiguration *)remoteConfiguration {
-    MAVERemoteConfiguration *config = [[MaveSDK sharedInstance].remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
-    return config;
+    return [MaveSDK sharedInstance].remoteConfiguration;
 }
 
 - (NSString *)shareToken {

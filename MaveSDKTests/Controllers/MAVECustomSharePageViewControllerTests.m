@@ -377,7 +377,14 @@
 
 - (void)testClipboardShare {
     [self setupPartialMockForClientShareTests];
-    NSString *expectedCopy = @"http://dev.appjoin.us/c/foobarsharetoken";
+    NSString *expectedShareCopy = @"http://dev.appjoin.us/c/foobarsharetoken";
+
+// TODO: test taht remote config copy appended to link
+//    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+//    remoteConfig.clipboardShare = [[MAVERemoteConfigurationClipboardShare alloc] init];
+//    remoteConfig.clipboardShare.text = @"Blah copy";
+//
+//    OCMExpect([self.viewControllerMock remoteConfiguration]).andReturn(remoteConfig);
 
     id pasteboardMock = OCMClassMock([UIPasteboard class]);
     OCMExpect([self.viewControllerMock _generalPasteboardForClipboardShare]).andReturn(pasteboardMock);
@@ -389,10 +396,11 @@
 
     // TODO: test the uialert view
 
-    OCMExpect([pasteboardMock setString:expectedCopy]);
+    OCMExpect([pasteboardMock setString:expectedShareCopy]);
 
     [self.viewController clipboardShare];
 
+    OCMVerifyAll(pasteboardMock);
     OCMVerifyAll(self.viewControllerMock);
     OCMVerifyAll(apiInterfaceMock);
 }
