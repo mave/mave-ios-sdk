@@ -16,6 +16,7 @@
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 #import "MAVERemoteConfigurationContactsInvitePage.h"
 #import "MAVERemoteConfigurationCustomSharePage.h"
+#import "MAVERemoteConfigurationServerSMS.h"
 #import "MAVERemoteConfigurationClientSMS.h"
 #import "MAVERemoteConfigurationClientEmail.h"
 #import "MAVERemoteConfigurationFacebookShare.h"
@@ -31,7 +32,8 @@ extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsInvitePage *contactsInvitePage;
 @property (nonatomic, strong) MAVERemoteConfigurationCustomSharePage *customSharePage;
 
-// Client share page templates
+// Invite & share template
+@property (nonatomic, strong) MAVERemoteConfigurationServerSMS *serverSMS;
 @property (nonatomic, strong) MAVERemoteConfigurationClientSMS *clientSMS;
 @property (nonatomic, strong) MAVERemoteConfigurationClientEmail *clientEmail;
 @property (nonatomic, strong) MAVERemoteConfigurationFacebookShare *facebookShare;

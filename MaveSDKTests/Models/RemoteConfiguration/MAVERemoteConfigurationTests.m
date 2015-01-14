@@ -41,6 +41,9 @@
     XCTAssertNotNil([defaults objectForKey:@"share_page"]);
     XCTAssertEqualObjects([defaults objectForKey:@"share_page"],
                           [MAVERemoteConfigurationCustomSharePage defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"server_sms"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"server_sms"],
+                          [MAVERemoteConfigurationServerSMS defaultJSONData]);
     XCTAssertNotNil([defaults objectForKey:@"client_sms"]);
     XCTAssertEqualObjects([defaults objectForKey:@"client_sms"],
                           [MAVERemoteConfigurationClientSMS defaultJSONData]);
@@ -64,6 +67,7 @@
     XCTAssertNotNil(config.contactsPrePrompt);
     XCTAssertNotNil(config.contactsInvitePage);
     XCTAssertNotNil(config.customSharePage);
+    XCTAssertNotNil(config.serverSMS);
     XCTAssertNotNil(config.clientSMS);
     XCTAssertNotNil(config.clientEmail);
     XCTAssertNotNil(config.facebookShare);

@@ -13,7 +13,6 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageEnabled = @"enabled";
 const NSString *MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
 const NSString *MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
 const NSString *MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy";
-const NSString *MAVERemoteConfigKeyContactsInvitePageSMSCopy = @"sms_copy";
 
 
 @implementation MAVERemoteConfigurationContactsInvitePage
@@ -32,24 +31,17 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSMSCopy = @"sms_copy";
             NSDictionary *template  = [data objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplate];
             self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplateID];
             self.explanationCopy = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageExplanationCopy];
-            self.smsCopy = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSMSCopy];
-            if (!self.smsCopy) {
-                return nil;
-            }
         }
     }
     return self;
 }
 
 + (NSDictionary *)defaultJSONData {
-    NSString *smsCopy = [NSString stringWithFormat:@"Join me on %@!",
-                         [MAVEClientPropertyUtils appName]];
     return @{
         MAVERemoteConfigKeyContactsInvitePageEnabled: @YES,
         MAVERemoteConfigKeyContactsInvitePageTemplate: @{
             MAVERemoteConfigKeyContactsInvitePageTemplateID: @"0",
             // Explanation key defaults to nil, so leaving empty
-            MAVERemoteConfigKeyContactsInvitePageSMSCopy: smsCopy,
         }
     };
 }

@@ -23,6 +23,7 @@ NSString * const MAVERemoteConfigKeyContactsPrePrompt = @"contacts_pre_permissio
 NSString * const MAVERemoteConfigKeyContactsInvitePage =
     @"contacts_invite_page";
 NSString * const MAVERemoteConfigKeyCustomSharePage = @"share_page";
+NSString * const MAVERemoteConfigKeyServerSMS = @"server_sms";
 NSString * const MAVERemoteConfigKeyClientSMS = @"client_sms";
 NSString * const MAVERemoteConfigKeyClientEmail = @"client_email";
 NSString * const MAVERemoteConfigKeyFacebookShare = @"facebook_share";
@@ -40,6 +41,8 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
         self.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyCustomSharePage]];
 
+        self.serverSMS = [[MAVERemoteConfigurationServerSMS alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyServerSMS]];
+
         self.clientSMS = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyClientSMS]];
 
         self.clientEmail = [[MAVERemoteConfigurationClientEmail alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyClientEmail]];
@@ -53,6 +56,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
         if (!self.contactsPrePrompt
             || !self.contactsInvitePage
             || !self.customSharePage
+            || !self.serverSMS
             || !self.clientSMS
             || !self.clientEmail
             || !self.facebookShare
@@ -84,6 +88,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
         MAVERemoteConfigKeyContactsPrePrompt: [MAVERemoteConfigurationContactsPrePrompt defaultJSONData],
         MAVERemoteConfigKeyContactsInvitePage:[MAVERemoteConfigurationContactsInvitePage defaultJSONData],
         MAVERemoteConfigKeyCustomSharePage: [MAVERemoteConfigurationCustomSharePage defaultJSONData],
+        MAVERemoteConfigKeyServerSMS: [MAVERemoteConfigurationServerSMS defaultJSONData],
         MAVERemoteConfigKeyClientSMS: [MAVERemoteConfigurationClientSMS defaultJSONData],
         MAVERemoteConfigKeyClientEmail: [MAVERemoteConfigurationClientEmail defaultJSONData],
         MAVERemoteConfigKeyFacebookShare: [MAVERemoteConfigurationFacebookShare defaultJSONData],

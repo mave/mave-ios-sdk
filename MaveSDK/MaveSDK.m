@@ -110,7 +110,7 @@ static dispatch_once_t sharedInstanceonceToken;
     if (_defaultSMSMessageText) {
         return _defaultSMSMessageText;
     } else {
-        return self.remoteConfiguration.contactsInvitePage.smsCopy;
+        return self.remoteConfiguration.serverSMS.text;
     }
 }
 

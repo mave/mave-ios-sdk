@@ -34,10 +34,6 @@
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
 
     XCTAssertNil([template objectForKey:@"explanation_copy"]);
-    // The actual app name here comes from the bundle name, this test always runs in
-    // the context of the demo app
-    XCTAssertEqualObjects([template objectForKey:@"sms_copy"],
-                          @"Join me on DemoApp!");
 }
 
 - (void)testInitWithDefaultData {
@@ -47,7 +43,6 @@
     XCTAssertTrue(obj.enabled);
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertNil(obj.explanationCopy);
-    XCTAssertEqualObjects(obj.smsCopy, @"Join me on DemoApp!");
 }
 
 - (void)testInitFailsIfEnabledKeyIsMissing {
@@ -61,32 +56,15 @@
     XCTAssertNil(obj);
 }
 
-- (void)testInitFailsIfEnabledTrueAndTemplateMissingFields {
-    NSDictionary *dict = @{
-        @"enabled": @YES,
-        @"template": @{
-            @"template_id": @"foo",
-            @"explanation_copy": @"blah"
-        }
-    };
-
-    MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
-
-    XCTAssertNil(obj);
-}
-
 - (void)testInitSucceedsIfTemplateIDNil {
     NSDictionary *dict = @{
                            @"enabled": @YES,
-                           @"template": @{
-                                   @"sms_copy": @"blah"
-                                   }
+                           @"template": @{}
                            };
 
     MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
     
     XCTAssertNotNil(obj);
-    XCTAssertEqualObjects(obj.smsCopy, @"blah");
 }
 
 - (void)testInitSuccessIfNoTemplateButEnabledFalse {
