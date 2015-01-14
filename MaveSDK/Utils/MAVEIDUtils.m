@@ -23,7 +23,7 @@
         appDeviceID = [[NSString alloc] initWithData:data
                                             encoding:NSUTF8StringEncoding];
     } else {
-        DebugLog(@"Generating new UUID for this app on this device");
+        MAVEInfoLog(@"Generating new UUID for this app on this device");
         appDeviceID = [self generateAppDeviceIDUUIDString];
         [userDefaults setObject:[appDeviceID dataUsingEncoding:NSUTF8StringEncoding]
                          forKey:MAVEUserDefaultsKeyAppDeviceID];

@@ -26,31 +26,31 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
     // If contacts permission already denied, load the share page
     NSString *addressBookStatus = [MAVEABUtils addressBookPermissionStatus];
     if (addressBookStatus == MAVEABPermissionStatusDenied) {
-        DebugLog(@"Fallback to Custom Share invite page b/c address book permission already denied");
+        MAVEInfoLog(@"Fallback to Custom Share invite page b/c address book permission already denied");
         return [self createCustomShareInvitePage];
     }
 
     // If not in a supported region, load the share page
     if (![self isInSupportedRegionForServerSideSMSInvites]) {
         return [self createCustomShareInvitePage];
-        DebugLog(@"Fallback to Custom Share invite page b/c not in supported region for server-side SMS");
+        MAVEInfoLog(@"Fallback to Custom Share invite page b/c not in supported region for server-side SMS");
     }
 
     // If configured server-side to turn off contacts invite page, use share page instead
     if (![self isContactsInvitePageEnabledServerSide]) {
-        DebugLog(@"Fallback to custom share page b/c contacts page set to NO server-side");
+        MAVEInfoLog(@"Fallback to custom share page b/c contacts page set to NO server-side");
         return [self createCustomShareInvitePage];
     }
 
     // If user data doesn't have a legit user id & first name, can't send server-side SMS
     // so use share page instead
     if (![[MaveSDK sharedInstance].userData isUserInfoOkToSendServerSideSMS]) {
-        DebugLog(@"Fallback to custom share page b/c user info invalid");
+        MAVEInfoLog(@"Fallback to custom share page b/c user info invalid");
         return [self createCustomShareInvitePage];
     }
 
     // otherwise we can load the address book invite page
-    DebugLog(@"Displaying address book invite page");
+    MAVEInfoLog(@"Displaying address book invite page");
     return [self createAddressBookInvitePage];
 }
 

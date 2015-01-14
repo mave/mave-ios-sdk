@@ -8,13 +8,22 @@
 
 #import <Foundation/Foundation.h>
 
-// Macro for debug logging
-#ifdef DEBUG
-#define DebugLog(args...) MAVEExtendedLog("MAVE LOG", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
-#define ErrorLog(args...) MAVEExtendedLog("MAVE ERROR!", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+// Macro for logging. Debug logging should only show up with a special MAVE_DEBUG_LOG
+#if defined(DEBUG)
+  #if defined(MAVE_DEBUG_LOG)
+  #define MAVEDebugLog(args...) MAVEExtendedLog("MAVE [DEBUG]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+  #else
+  #define MAVEDebugLog(args...) MAVENoopLog(args)
+  #endif
+
+#define MAVEInfoLog(args...) MAVEExtendedLog("MAVE [INFO]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+
+#define MAVEErrorLog(args...) MAVEExtendedLog("MAVE [ERROR]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+
 #else
-#define DebugLog(args...) MAVENoopLog(args);
-#define ErrorLog(args...) MAVENoopLog(args);
+#define MAVEDebugLog(args...) MAVENoopLog(args);
+#define MAVEInfoLog(args...) MAVENoopLog(args);
+#define MAVEErrorLog(args...) MAVENoopLog(args);
 #endif
 
 // Custom log & reporting functions

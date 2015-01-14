@@ -58,7 +58,7 @@ static dispatch_once_t sharedInstanceonceToken;
 
 + (instancetype)sharedInstance {
     if (sharedInstance == nil) {
-        DebugLog(@"Error: didn't setup shared instance with app id");
+        MAVEErrorLog(@"You did not set up shared instance with app id");
     }
     return sharedInstance;
 }
@@ -81,7 +81,7 @@ static dispatch_once_t sharedInstanceonceToken;
     } else {
         return nil;
     }
-    DebugLog(@"Error with MaveSDK sharedInstance user info setup - %@", humanError);
+    MAVEDebugLog(@"Error with MaveSDK sharedInstance user info setup - %@", humanError);
     return [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN
                                       code:errCode
                                   userInfo:@{@"message": humanError}];
@@ -91,11 +91,11 @@ static dispatch_once_t sharedInstanceonceToken;
     NSString *errorFormat = @"Issue with MaveSDK setup - %@.";
     BOOL ok = YES;
     if (!self.appId) {
-        ErrorLog(errorFormat, @"applicationID is nil");
+        MAVEErrorLog(errorFormat, @"applicationID is nil");
         ok = NO;
     }
     if (!self.invitePageDismissalBlock) {
-        ErrorLog(errorFormat, @"invite page dismiss block was nil");
+        MAVEErrorLog(errorFormat, @"invite page dismiss block was nil");
         ok = NO;
     }
     return ok;
@@ -164,7 +164,7 @@ static dispatch_once_t sharedInstanceonceToken;
                             inviteContext:(NSString *)inviteContext {
     self.invitePageDismissalBlock = dismissBlock;
     if (![self isSetupOK]) {
-        ErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
+        MAVEErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
         return;
     }
     UIViewController *vc = [self.invitePageChooser chooseAndCreateInvitePageViewController];

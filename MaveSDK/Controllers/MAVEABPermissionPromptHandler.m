@@ -86,7 +86,7 @@
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
     if (accessErrorCF != nil) {
         NSError *abAccessError = (__bridge_transfer NSError *)accessErrorCF;
-        DebugLog(@"Error creating address book domain: %@ code: %ld",
+        MAVEErrorLog(@"ABAddressBookCreate failed error domain: %@ code: %ld",
                  abAccessError.domain, (long)abAccessError.code);
         if (addressBook != NULL) CFRelease(addressBook);
         [self completeAfterPermissionDenied];
@@ -108,7 +108,7 @@
 
 - (void)completeAfterPermissionGranted:(NSArray *)MAVEABPersonsArray {
     if (self.beganFlowAsStatusUnprompted) {
-        DebugLog(@"User accepted address book permissions");
+        MAVEInfoLog(@"User accepted address book permissions");
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted];
     }
     NSDictionary *indexedPersons = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:MAVEABPersonsArray];
@@ -117,7 +117,7 @@
 
 - (void)completeAfterPermissionDenied {
     if (self.beganFlowAsStatusUnprompted) {
-        DebugLog(@"User denied address book permissions");
+        MAVEInfoLog(@"User denied address book permissions");
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionDenied];
     }
     self.completionBlock(nil);

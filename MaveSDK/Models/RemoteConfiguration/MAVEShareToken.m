@@ -39,7 +39,7 @@ NSString * const MAVEShareTokenKeyShareToken = @"share_token";
                     if (error) {
                         [promise rejectPromise];
                     } else {
-                        DebugLog(@"Got new share token from server %@",
+                        MAVEDebugLog(@"Got new share token from server %@",
                                  [responseData objectForKey:MAVEShareTokenKeyShareToken]);
                         [promise fulfillPromise:(NSValue *)responseData];
                     }

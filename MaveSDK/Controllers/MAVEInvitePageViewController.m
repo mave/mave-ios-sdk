@@ -56,7 +56,7 @@
 }
 
 - (void)dealloc {
-    DebugLog(@"dealloc MAVEInvitePageViewController");
+    MAVEDebugLog(@"dealloc MAVEInvitePageViewController");
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
                              name:UIKeyboardWillChangeFrameNotification
@@ -271,11 +271,11 @@
 // Send invites and update UI when done
 //
 - (void)sendInvites {
-    DebugLog(@"Sending invites");
     NSString *message = self.inviteMessageContainerView.inviteMessageView.textView.text;
     NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
-    if ([phones count] == 0) {
-        DebugLog(@"Pressed Send but no recipients selected");
+    NSInteger numberInvites = [phones count];
+    if (numberInvites == 0) {
+        MAVEDebugLog(@"Pressed Send but no recipients selected");
         return;
     }
     
@@ -287,13 +287,13 @@
                inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
                         completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
-            DebugLog(@"Invites failed to send, error: %@, response: %@",
+            MAVEDebugLog(@"Invites failed to send, error: %@, response: %@",
                   error, responseData);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self showErrorAndResetAfterSendInvitesFailure:error];
             });
         } else {
-            DebugLog(@"Invites sent!");
+            MAVEInfoLog(@"Sent %d invites!", numberInvites);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.inviteMessageContainerView.sendingInProgressView completeSendingProgress];
             });

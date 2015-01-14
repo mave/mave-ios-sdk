@@ -147,7 +147,7 @@
                                                          options:0
                                                            error:&serializationError];
     if (serializationError) {
-        DebugLog(@"Error serializing json in base64 helper: %@: %@", serializationError, dict);
+        MAVEErrorLog(@"Error serializing json in base64 helper: %@: %@", serializationError, dict);
         jsonString = [@"" dataUsingEncoding:NSUTF8StringEncoding];
     }
     return [jsonString base64EncodedStringWithOptions:0];
@@ -158,7 +158,7 @@
     NSError *serializationError;
     NSDictionary *output = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&serializationError];
     if (serializationError) {
-        DebugLog(@"ERROR deserializing json in base64 helper: %@: %@", serializationError, jsonData);
+        MAVEErrorLog(@"ERROR deserializing json in base64 helper: %@: %@", serializationError, jsonData);
         output = @{};
     }
     return output;

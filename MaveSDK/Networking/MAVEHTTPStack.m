@@ -125,7 +125,7 @@
             NSError *serializationError;
             returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
             if (serializationError != nil) {
-                DebugLog(@"Bad JSON error: %@", data);
+                MAVEDebugLog(@"Bad JSON error: %@", data);
                 returnError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
                                                          code:MAVEHTTPErrorResponseJSONCode
                                                      userInfo:@{}];
@@ -144,7 +144,7 @@
     // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request
                     completionHandler: ^(NSData *data, NSURLResponse *response, NSError *error) {
-        DebugLog(@"HTTP Request: \"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, request.HTTPMethod, request.URL);
+        MAVEDebugLog(@"HTTP Request: \"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, request.HTTPMethod, request.URL);
         [self handleJSONResponseWithData:data
                                 response:response
                                    error:error

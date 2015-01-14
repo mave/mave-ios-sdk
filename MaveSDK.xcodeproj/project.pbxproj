@@ -993,7 +993,10 @@
 		C029277D19E8217E006AEE43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = "MAVE_USE_DEV_API=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"MAVE_USE_DEV_API=1",
+					"MAVE_DEBUG_LOG=1",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
