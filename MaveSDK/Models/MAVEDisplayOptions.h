@@ -54,6 +54,7 @@
 @property (nonatomic, strong) UIFont  *messageFieldFont;
 @property (nonatomic, strong) UIColor *messageFieldTextColor;
 @property (nonatomic, strong) UIColor *messageFieldBackgroundColor;
+@property (nonatomic, copy) NSString *sendButtonCopy;
 @property (nonatomic, strong) UIFont  *sendButtonFont;
 @property (nonatomic, strong) UIColor *sendButtonTextColor;
 @property (nonatomic, strong) UIColor *bottomViewBackgroundColor;

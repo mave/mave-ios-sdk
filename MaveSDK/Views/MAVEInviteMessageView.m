@@ -28,7 +28,7 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
     
     // Button attributes
-    NSString *buttonTitle = @"Send";
+    NSString *buttonTitle = displayOptions.sendButtonCopy;
 
     // Create own containing view
     if (self = [super init]) {

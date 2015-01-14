@@ -35,6 +35,7 @@
 - (void)testMessageViewStyleOnInit {
     // Setup and get opts to compare it to
     [MaveSDK sharedInstance].defaultSMSMessageText = @"tmp message";
+    [MaveSDK sharedInstance].displayOptions.sendButtonCopy = @"CUSTOM SEND";
     MAVEInviteMessageView *view = [[MAVEInviteMessageView alloc] init];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
@@ -53,9 +54,9 @@
 
     // Test Button Style
     XCTAssertFalse(view.sendButton.enabled);
-    XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateNormal], @"Send");
+    XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateNormal], @"CUSTOM SEND");
     XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateNormal], opts.sendButtonTextColor);
-    XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateDisabled], @"Send");
+    XCTAssertEqualObjects([view.sendButton titleForState:UIControlStateDisabled], @"CUSTOM SEND");
     XCTAssertEqualObjects([view.sendButton titleColorForState:UIControlStateDisabled],
                           [MAVEDisplayOptions colorMediumGrey]);
     

@@ -74,6 +74,7 @@
     XCTAssertEqualObjects(opts.messageFieldFont, defaultFont);
     XCTAssertEqualObjects(opts.messageFieldTextColor, almostBlack);
     XCTAssertEqualObjects(opts.messageFieldBackgroundColor, white);
+    XCTAssertEqualObjects(opts.sendButtonCopy, @"Send");
     XCTAssertEqualObjects(opts.sendButtonFont, sendButtonFont);
     XCTAssertEqualObjects(opts.sendButtonTextColor, blueTint);
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
@@ -109,6 +110,8 @@
     // Message and Send section options
     XCTAssertTrue([opts.bottomViewBackgroundColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.bottomViewBorderColor isKindOfClass:[UIColor class]]);
+    XCTAssertNotNil(opts.sendButtonCopy);
+    XCTAssertNotEqualObjects(opts.sendButtonCopy, @"Send");
     XCTAssertTrue([opts.sendButtonFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.sendButtonTextColor isKindOfClass:[UIColor class]]);
 
