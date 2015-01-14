@@ -173,21 +173,4 @@ static dispatch_once_t sharedInstanceonceToken;
     presentBlock(navigationVC);
 }
 
-// Deprecated
-- (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
-                                        setupError:(NSError *__autoreleasing *)setupError
-                                    dismissalBlock:(MAVEInvitePageDismissBlock) dismissalBlock {
-    self.invitePageDismissalBlock = dismissalBlock;
-    UIViewController *returnViewController = nil;
-    if ([self isSetupOK]) {
-        self.defaultSMSMessageText = defaultMessageText;
-        UIViewController *viewController = [self.invitePageChooser chooseAndCreateInvitePageViewController];
-        returnViewController = [self.invitePageChooser embedInNavigationController:viewController];
-    } else {
-        *setupError = [[NSError alloc]initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN code:5 userInfo:@{@"message": @"MaveSDK not setup properly, check the logs"}];
-
-    }
-    return returnViewController;
-}
-
 @end

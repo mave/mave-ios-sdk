@@ -266,48 +266,6 @@
     XCTAssertFalse(called);
 }
 
-- (void)testInvitePageViewControllerNoErrorIfUserDataSet {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.userData = [[MAVEUserData alloc] init];
-    gk.userData.userID = @"123";
-    gk.userData.firstName = @"Dan";
-
-    NSError *error;
-    __block BOOL blockCalled = NO;
-    UIViewController *vc =
-        [gk invitePageWithDefaultMessage:@"tmp"
-                              setupError:&error
-                          dismissalBlock:^(UIViewController *viewController,
-                                           NSUInteger numberOfInvitesSent) {
-                             blockCalled = YES;
-    }];
-    XCTAssertNotNil(vc);
-    XCTAssertNil(error);
-    XCTAssertEqualObjects(gk.defaultSMSMessageText, @"tmp");
-    // Assert dismissal block set
-    gk.invitePageDismissalBlock(vc, 10);
-    XCTAssertTrue(blockCalled);
-}
-
-- (void)testInvitePageViewControllerErrorIfValidationError {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-
-    ErrorLog(@"foo");
-    NSError *error;
-    // dismissal block nil triggers an error
-    UIViewController *vc =
-        [gk invitePageWithDefaultMessage:@"tmp"
-                              setupError:&error
-                          dismissalBlock:nil];
-    XCTAssertNil(vc);
-    XCTAssertNotNil(error);
-    XCTAssertEqualObjects(gk.defaultSMSMessageText, gk.remoteConfiguration.contactsInvitePage.smsCopy);
-    XCTAssertEqualObjects(error.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(error.code, 5);
-}
-
 - (void)testTrackAppOpen {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *mave = [MaveSDK sharedInstance];

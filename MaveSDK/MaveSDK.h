@@ -72,9 +72,4 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInte
 //- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
 //                          dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
 //                               context:(NSString*)presentedFrom;
-
-// Deprecated, will be removed soon
-- (UIViewController *)invitePageWithDefaultMessage:(NSString *)defaultMessageText
-                                        setupError:(NSError *__autoreleasing *)setupError
-                                    dismissalBlock:(MAVEInvitePageDismissBlock)dismissalBlock;
 @end
