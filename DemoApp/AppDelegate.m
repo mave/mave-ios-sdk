@@ -88,6 +88,7 @@
     mave.displayOptions.messageFieldFont = [UIFont systemFontOfSize:16];
     mave.displayOptions.messageFieldTextColor = black;
     mave.displayOptions.messageFieldBackgroundColor = white;
+    mave.displayOptions.sendButtonCopy = @"Send";
     mave.displayOptions.sendButtonFont = font1Bold;
     mave.displayOptions.sendButtonTextColor = green;
     mave.displayOptions.bottomViewBorderColor = gray;
