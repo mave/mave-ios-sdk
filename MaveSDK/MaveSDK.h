@@ -16,7 +16,7 @@
 #import "MAVECustomSharePageViewController.h"
 
 typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteController);
-typedef void (^MAVEInvitePageDismissBlock)(UIViewController *viewController, NSUInteger numberOfInvitesSent);
+typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInteger numberOfInvitesSent);
 
 @interface MaveSDK : NSObject
 

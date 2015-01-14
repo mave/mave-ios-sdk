@@ -39,19 +39,13 @@
                                         action:nil];
     [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
 
-    // Still presenting the older way
-    NSError *setupError;
-    NSString *defaultMessage = @"Join me on DEMO APP!";
-    UIViewController *inviteController = [[MaveSDK sharedInstance]
-        invitePageWithDefaultMessage:defaultMessage
-                          setupError:&setupError
-                      dismissalBlock:^(UIViewController *viewController,
-                                       NSUInteger numberOfInvitesSent) {
-                          [viewController dismissViewControllerAnimated:YES completion:nil];
-    }];
-    if (!setupError) {
+    // Presenting the page in same way as the docs
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
         [self presentViewController:inviteController animated:YES completion:nil];
-    }
+    } dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    } inviteContext:@"home-page-link"];
 }
 
 // Methods to present this home view in the drawer

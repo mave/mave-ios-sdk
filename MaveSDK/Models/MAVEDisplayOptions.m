@@ -23,7 +23,6 @@
         self.navigationBarCancelButton.title = @"Cancel";
         
         // Explanation of how the referral program works section
-        self.inviteExplanationCopy = nil;
         self.inviteExplanationFont = [UIFont systemFontOfSize:14];
         self.inviteExplanationTextColor = [[self class] colorAlmostBlack];
         self.inviteExplanationCellBackgroundColor = [[self class] colorExtraLightGrey];
@@ -55,11 +54,9 @@
         // SharePage options
         //background
         self.sharePageBackgroundColor = [[self class] colorExtraLightGrey];
-        // icons
         self.sharePageIconColor = [[self class] colorBlueTint];
         self.sharePageIconFont = [UIFont systemFontOfSize:12];
         self.sharePageIconTextColor = [[self class] colorMediumGrey];
-        // explanation text
         self.sharePageExplanationFont = [UIFont systemFontOfSize:16];
         self.sharePageExplanationTextColor = [[self class] colorAlmostBlack];
     }
