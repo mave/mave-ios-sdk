@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MAVEConstants.h"
 #import "MAVEShareToken.h"
 
 @interface MAVEShareTokenTests : XCTestCase
@@ -62,6 +63,7 @@
 
 - (void)testUserDefaultsKey {
     // in testing mode it should have TESTS in the name
+    XCTAssertEqualObjects(MAVEAPIBaseURL, @"test-api-mave-io/");
     XCTAssertEqualObjects(MAVEUserDefaultsKeyShareToken, @"MAVETESTSUserDefaultsKeyShareToken");
 }
 

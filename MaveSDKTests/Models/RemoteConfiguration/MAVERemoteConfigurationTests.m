@@ -10,6 +10,7 @@
 #import <OCMock/OCMock.h>
 #include <stdlib.h>
 #import <objc/runtime.h>
+#import "MAVEConstants.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 #import "MAVERemoteConfigurationContactsInvitePage.h"

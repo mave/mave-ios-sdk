@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 #import "MAVEAPIInterface.h"
 #import "MAVEClientPropertyUtils.h"
 
@@ -45,7 +46,8 @@
 }
 
 - (void)testInitAndCurrentUserProperties {
-    XCTAssertEqualObjects(self.testAPIInterface.httpStack.baseURL, @"http://devapi.mave.io/v1.0");
+    XCTAssertEqualObjects(MAVEAPIBaseURL, @"test-api-mave-io/");
+    XCTAssertEqualObjects(self.testAPIInterface.httpStack.baseURL, @"test-api-mave-io/v1.0");
     XCTAssertEqualObjects(self.testAPIInterface.applicationID, [MaveSDK sharedInstance].appId);
     XCTAssertEqualObjects(self.testAPIInterface.applicationDeviceID, [MaveSDK sharedInstance].appDeviceID);
     XCTAssertEqualObjects(self.testAPIInterface.userData, [MaveSDK sharedInstance].userData);

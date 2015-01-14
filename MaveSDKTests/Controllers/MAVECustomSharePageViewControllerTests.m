@@ -11,6 +11,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 #import "MAVEShareToken.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEInvitePageChooser.h"
@@ -132,7 +133,7 @@
 
 - (void)testClientSideSMSShare {
     [self setupPartialMockForClientShareTests];
-    NSString *expectedSMS = @"Join me on DemoApp! http://dev.appjoin.us/s/foobarsharetoken";
+    NSString *expectedSMS = [NSString stringWithFormat:@"Join me on DemoApp! %@s/foobarsharetoken", MAVEShortLinkBaseURL];
 
     // SMS compose controller can't even init in the simulator, i.e:
     MFMessageComposeViewController *_cntrlr = [[MFMessageComposeViewController alloc] init];
@@ -205,7 +206,7 @@
 - (void)testClientEmailShare {
     [self setupPartialMockForClientShareTests];
     NSString *expectedSubject = @"Join DemoApp";
-    NSString *expectedBody = @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\nhttp://dev.appjoin.us/e/foobarsharetoken";
+    NSString *expectedBody = [NSString stringWithFormat:@"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\n%@e/foobarsharetoken", MAVEShortLinkBaseURL];
 
     id mailComposerMock = OCMClassMock([MFMailComposeViewController class]);
     OCMExpect([self.viewControllerMock _createMailComposeViewController]).andReturn(mailComposerMock);
@@ -261,7 +262,7 @@
 - (void)testFacebookiOSNativeShare {
     [self setupPartialMockForClientShareTests];
     NSString *expectedCopy = @"I love DemoApp. You should try it.";
-    NSString *expectedURL = @"http://dev.appjoin.us/f/foobarsharetoken";
+    NSString *expectedURL = [NSString stringWithFormat:@"%@f/foobarsharetoken", MAVEShortLinkBaseURL];
 
     id fbVC = OCMClassMock([SLComposeViewController class]);
     OCMExpect([self.viewControllerMock _createFacebookComposeViewController]).andReturn(fbVC);
@@ -320,7 +321,7 @@
 
 - (void)testTwitteriOSNativeShare {
     [self setupPartialMockForClientShareTests];
-    NSString *expectedCopy = @"I love DemoApp. Try it out http://dev.appjoin.us/t/foobarsharetoken";
+    NSString *expectedCopy = [NSString stringWithFormat:@"I love DemoApp. Try it out %@t/foobarsharetoken", MAVEShortLinkBaseURL];
 
     id twitterVC = OCMClassMock([SLComposeViewController class]);
     OCMExpect([self.viewControllerMock _createTwitterComposeViewController]).andReturn(twitterVC);
@@ -380,7 +381,7 @@
 
 - (void)testClipboardShare {
     [self setupPartialMockForClientShareTests];
-    NSString *expectedShareCopy = @"http://dev.appjoin.us/c/foobarsharetoken";
+    NSString *expectedShareCopy = [NSString stringWithFormat:@"%@c/foobarsharetoken", MAVEShortLinkBaseURL];
 
 // TODO: test taht remote config copy appended to link
 //    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
@@ -424,16 +425,17 @@
 
 
 - (void)testBuildShareLink {
+    NSString *expectedLink = [NSString stringWithFormat:@"%@d/blahtok", MAVEShortLinkBaseURL];
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
     id mock = OCMPartialMock(vc);
     OCMStub([mock shareToken]).andReturn(@"blahtok");
     NSString *link = [vc shareLinkWithSubRouteLetter:@"d"];
-    XCTAssertEqualObjects(link, @"http://dev.appjoin.us/d/blahtok");
+    XCTAssertEqualObjects(link, expectedLink);
 }
 
 - (void)testBuildShareLinkWhenNoShareToken {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
-    NSString *expectedLink = [NSString stringWithFormat:@"http://dev.appjoin.us/o/d/%@",
+    NSString *expectedLink = [NSString stringWithFormat:@"%@o/d/%@", MAVEShortLinkBaseURL,
                               [MAVEClientPropertyUtils urlSafeBase64ApplicationID]];
     id mock = OCMPartialMock(vc);
     OCMStub([mock shareToken]).andReturn(nil);

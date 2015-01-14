@@ -11,18 +11,21 @@
 NSString * const MAVESDKVersion = @"0.3.0";
 
 #ifdef MAVE_USE_DEV_API
+
+    #ifdef UNIT_TESTING
+    // Use fake URL's in unit testing
+    NSString * const MAVEAPIBaseURL = @"test-api-mave-io/";
+    NSString * const MAVEShortLinkBaseURL = @"test-appjoin-us/";
+    #else
     NSString * const MAVEAPIBaseURL = @"http://devapi.mave.io/";
-#else
-    NSString * const MAVEAPIBaseURL = @"http://api.mave.io/";
-#endif
-NSString * const MAVEAPIVersion = @"v1.0";
-
-#ifdef MAVE_USE_DEV_API
     NSString * const MAVEShortLinkBaseURL = @"http://dev.appjoin.us/";
+    #endif
 #else
-    NSString * const MAVEShortLinkBaseURL = @"http://appjoin.us/";
+NSString * const MAVEAPIBaseURL = @"http://api.mave.io/";
+NSString * const MAVEShortLinkBaseURL = @"http://appjoin.us/";
 #endif
 
+NSString * const MAVEAPIVersion = @"v1.0";
 NSString * const MAVEResourceBundleName = @"MaveSDK";
 
 // Debug log code
