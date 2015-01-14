@@ -195,55 +195,31 @@
     OCMVerifyAll(maveMock);
 }
 
-- (void)testValidateLibrarySetupFailsWithNoApplicationID {
+- (void)testIsSetupOKFailsWithNoApplicationID {
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk identifyAnonymousUser];
-    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    [mave identifyAnonymousUser];
+    mave.invitePageDismissalBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
-    NSError *err = [gk validateLibrarySetup];
-    XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, 5);
-    NSArray *errors = [err.userInfo objectForKey:@"messages"];
-    XCTAssertEqual([errors count], 1);
-    XCTAssertEqualObjects([errors objectAtIndex:0], @"applicationID is nil");
-}
-
-- (void)testIsSetupOkFailsWithNilUserData {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        NSUInteger numInvitesSent) {};
-    [gk identifyUser:nil];
-    NSError *err = [gk validateLibrarySetup];
-    XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, 5);
-    NSArray *errors = [err.userInfo objectForKey:@"messages"];
-    XCTAssertEqual([errors count], 1);
-    XCTAssertEqualObjects([errors objectAtIndex:0], @"identifyUser: (or identifyAnonymousUser) method not called");
+    XCTAssertFalse([mave isSetupOK]);
 }
 
 - (void)testIsSetupOkFailsWithNoDismissalBlock {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    [gk identifyAnonymousUser];
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    [mave identifyAnonymousUser];
+
     // never set dismissal block so it's nil
-    NSError *err = [gk validateLibrarySetup];
-    XCTAssertEqualObjects(err.domain, MAVE_VALIDATION_ERROR_DOMAIN);
-    XCTAssertEqual(err.code, 5);
-    NSArray *errors = [err.userInfo objectForKey:@"messages"];
-    XCTAssertEqual([errors count], 1);
-    XCTAssertEqualObjects([errors objectAtIndex:0], @"invite page dismiss block was nil");
+    XCTAssertFalse([mave isSetupOK]);
 }
 
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-        [gk identifyUser:[[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:nil email:nil phone:nil]];
-    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    // didn't identify user, but it's ok
+    mave.invitePageDismissalBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
-    NSError *err = [gk validateLibrarySetup];
-    XCTAssertNil(err);
+    XCTAssertTrue([mave isSetupOK]);
 }
 
 # pragma mark - Displaying the invite page
@@ -251,13 +227,15 @@
     MaveSDK *mave = [MaveSDK sharedInstance];
 
     id maveMock = OCMPartialMock(mave);
-    OCMExpect([maveMock validateLibrarySetup]).andReturn(nil);
+    OCMExpect([maveMock isSetupOK]).andReturn(YES);
 
     MAVEInvitePageDismissBlock dismissalBlock = ^(UIViewController *viewController, NSUInteger numberOfInvitesSent) {};
 
     __block UIViewController *returnedController;
+    __block BOOL called;
     [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteViewController) {
         returnedController = inviteViewController;
+        called = YES;
     } dismissBlock:dismissalBlock inviteContext:@"foocontext"];
 
     // Returns a navigation controller since this is the present modally variation,
@@ -265,8 +243,27 @@
     OCMVerifyAll(maveMock);
     XCTAssertEqualObjects(mave.invitePageDismissalBlock, dismissalBlock);
     XCTAssertEqualObjects(mave.inviteContext, @"foocontext");
+    XCTAssertTrue(called);
     XCTAssertNotNil(returnedController);
     XCTAssertTrue([returnedController isKindOfClass:[UINavigationController class]]);
+}
+
+- (void)testPresentInvitePageModallyWithError {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+
+    id maveMock = OCMPartialMock(mave);
+    OCMExpect([maveMock isSetupOK]).andReturn(NO);
+
+    __block BOOL called;
+    // dismissal block nil triggers error
+    [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteViewController) {
+        called = YES;
+    } dismissBlock:nil inviteContext:@"foocontext"];
+
+    // Returns a navigation controller since this is the present modally variation,
+    // and set the necessary properties
+    OCMVerifyAll(maveMock);
+    XCTAssertFalse(called);
 }
 
 - (void)testInvitePageViewControllerNoErrorIfUserDataSet {
@@ -296,15 +293,14 @@
 - (void)testInvitePageViewControllerErrorIfValidationError {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.userData = nil;
 
+    ErrorLog(@"foo");
     NSError *error;
+    // dismissal block nil triggers an error
     UIViewController *vc =
         [gk invitePageWithDefaultMessage:@"tmp"
                               setupError:&error
-                          dismissalBlock:^(UIViewController *viewController,
-                                           NSUInteger numberOfInvitesSent) {
-    }];
+                          dismissalBlock:nil];
     XCTAssertNil(vc);
     XCTAssertNotNil(error);
     XCTAssertEqualObjects(gk.defaultSMSMessageText, gk.remoteConfiguration.contactsInvitePage.smsCopy);

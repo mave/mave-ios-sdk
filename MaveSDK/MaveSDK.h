@@ -40,6 +40,8 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInte
 // Internal, method to access the remote configuration
 - (MAVERemoteConfiguration *)remoteConfiguration;
 
+- (BOOL)isSetupOK;
+
 - (void)getReferringUser:(void(^)(MAVEUserData * userData))referringUserHandler;
 // Use this to identify your logged-in users to us
 - (void)identifyUser:(MAVEUserData *)userData;

@@ -21,7 +21,6 @@
 
 // This function checks that required fields for the MaveSDK invite page to work
 // correctly have been initialized. It logs any errors with a big "ERROR"
-- (NSError *)validateLibrarySetup;
 
 // Temporary, wrappers to access default sms text and invite explanation copy
 - (NSString *)defaultSMSMessageText;

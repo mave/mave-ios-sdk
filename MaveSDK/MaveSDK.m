@@ -87,32 +87,18 @@ static dispatch_once_t sharedInstanceonceToken;
                                   userInfo:@{@"message": humanError}];
 }
 
-- (NSError *)validateLibrarySetup {
-    NSMutableArray *errorStrings = [[NSMutableArray alloc] init];
-    if (self.appId == nil) {
-        [errorStrings addObject:@"applicationID is nil"];
+- (BOOL)isSetupOK {
+    NSString *errorFormat = @"Issue with MaveSDK setup - %@.";
+    BOOL ok = YES;
+    if (!self.appId) {
+        ErrorLog(errorFormat, @"applicationID is nil");
+        ok = NO;
     }
-    if (self.invitePageDismissalBlock == nil) {
-        [errorStrings addObject:@"invite page dismiss block was nil"];
+    if (!self.invitePageDismissalBlock) {
+        ErrorLog(errorFormat, @"invite page dismiss block was nil");
+        ok = NO;
     }
-    if (self.userData == nil) {
-        // TODO: try to load the user data from disk, and have identify user persist it
-        [errorStrings addObject:@"identifyUser: (or identifyAnonymousUser) method not called"];
-    }
-
-    if ([errorStrings count] == 0) {
-        return nil;
-    }
-
-    // Log errors && return the validation error
-    NSString *errorContext = @"Issue with MaveSDK setup -%@.";
-    for (NSString *err in errorStrings) {
-        ErrorLog([NSString stringWithFormat:errorContext, err]);
-    }
-    NSError *validationError = [[NSError alloc] initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN
-                                                          code:5
-                                                      userInfo:@{@"messages":errorStrings}];
-    return validationError;
+    return ok;
 }
 
 - (MAVERemoteConfiguration *)remoteConfiguration {
@@ -177,8 +163,7 @@ static dispatch_once_t sharedInstanceonceToken;
                              dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
                             inviteContext:(NSString *)inviteContext {
     self.invitePageDismissalBlock = dismissBlock;
-    NSError *setupError = [self validateLibrarySetup];
-    if (setupError) {
+    if (![self isSetupOK]) {
         ErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
         return;
     }
@@ -194,11 +179,13 @@ static dispatch_once_t sharedInstanceonceToken;
                                     dismissalBlock:(MAVEInvitePageDismissBlock) dismissalBlock {
     self.invitePageDismissalBlock = dismissalBlock;
     UIViewController *returnViewController = nil;
-    *setupError = [self validateLibrarySetup];
-    if (!*setupError) {
+    if ([self isSetupOK]) {
         self.defaultSMSMessageText = defaultMessageText;
         UIViewController *viewController = [self.invitePageChooser chooseAndCreateInvitePageViewController];
         returnViewController = [self.invitePageChooser embedInNavigationController:viewController];
+    } else {
+        *setupError = [[NSError alloc]initWithDomain:MAVE_VALIDATION_ERROR_DOMAIN code:5 userInfo:@{@"message": @"MaveSDK not setup properly, check the logs"}];
+
     }
     return returnViewController;
 }
