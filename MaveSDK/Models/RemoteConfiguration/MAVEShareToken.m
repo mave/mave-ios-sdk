@@ -10,12 +10,6 @@
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
 
-#ifdef UNITTESTING
-NSString * const MAVEUserDefaultsKeyShareToken = @"MAVETESTSUserDefaultsKeyShareToken";
-#else
-NSString * const MAVEUserDefaultsKeyShareToken = @"MAVEUserDefaultsKeyShareToken";
-#endif
-
 NSString * const MAVEShareTokenKeyShareToken = @"share_token";
 
 @implementation MAVEShareToken

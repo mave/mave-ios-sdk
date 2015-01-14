@@ -15,8 +15,6 @@
 #import <Foundation/Foundation.h>
 #import "MAVERemoteObjectBuilder.h"
 
-extern NSString * const MAVEUserDefaultsKeyShareToken;
-
 @interface MAVEShareToken : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic, copy) NSString *shareToken;

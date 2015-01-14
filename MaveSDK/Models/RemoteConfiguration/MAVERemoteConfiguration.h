@@ -23,9 +23,6 @@
 #import "MAVERemoteConfigurationTwitterShare.h"
 #import "MAVERemoteConfigurationClipboardShare.h"
 
-extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
-
-
 @interface MAVERemoteConfiguration : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePrompt *contactsPrePrompt;

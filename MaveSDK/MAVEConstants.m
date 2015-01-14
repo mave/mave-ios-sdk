@@ -57,7 +57,19 @@ void MAVEExtendedLog(const char*prefix, const char *file, int lineNumber, const 
 
 void MAVENoopLog(NSString *format, ...) {};
 
+// User defaults keys
+NSString * const MAVEUserDefaultsKeyAppDeviceID = @"MAVEUserDefaultsKeyAppDeviceID";
 
+#ifdef UNIT_TESTING
+NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVETESTSUserDefaultsKeyRemoteConfiguration";
+NSString * const MAVEUserDefaultsKeyShareToken = @"MAVETESTSUserDefaultsKeyShareToken";
+#else
+NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyRemoteConfiguration";
+NSString * const MAVEUserDefaultsKeyShareToken = @"MAVEUserDefaultsKeyShareToken";
+#endif
+
+
+// HTTP Error codes
 NSString * const MAVE_HTTP_ERROR_DOMAIN = @"com.mave.http.error";
 NSInteger const MAVEHTTPErrorRequestJSONCode = 1000;
 NSInteger const MAVEHTTPErrorResponseIsNotJSONCode = 1010;

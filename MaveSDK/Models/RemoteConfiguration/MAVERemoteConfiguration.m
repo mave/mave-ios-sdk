@@ -13,12 +13,6 @@
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 
-#ifdef UNITTESTING
-NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVETESTSUserDefaultsKeyRemoteConfiguration";
-#else
-NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyRemoteConfiguration";
-#endif
-
 NSString * const MAVERemoteConfigKeyContactsPrePrompt = @"contacts_pre_permission_prompt";
 NSString * const MAVERemoteConfigKeyContactsInvitePage =
     @"contacts_invite_page";

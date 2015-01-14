@@ -10,20 +10,20 @@
 
 // Macro for logging. Debug logging should only show up with a special MAVE_DEBUG_LOG
 #if defined(DEBUG)
+
   #if defined(MAVE_DEBUG_LOG)
-  #define MAVEDebugLog(args...) MAVEExtendedLog("MAVE [DEBUG]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+    #define MAVEDebugLog(args...) MAVEExtendedLog("MAVE [DEBUG]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
   #else
-  #define MAVEDebugLog(args...) MAVENoopLog(args)
+    #define MAVEDebugLog(args...) MAVENoopLog(args)
   #endif
 
-#define MAVEInfoLog(args...) MAVEExtendedLog("MAVE [INFO]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
-
-#define MAVEErrorLog(args...) MAVEExtendedLog("MAVE [ERROR]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+  #define MAVEInfoLog(args...) MAVEExtendedLog("MAVE [INFO]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
+  #define MAVEErrorLog(args...) MAVEExtendedLog("MAVE [ERROR]", __FILE__,__LINE__,__PRETTY_FUNCTION__,args);
 
 #else
-#define MAVEDebugLog(args...) MAVENoopLog(args);
-#define MAVEInfoLog(args...) MAVENoopLog(args);
-#define MAVEErrorLog(args...) MAVENoopLog(args);
+  #define MAVEDebugLog(args...) MAVENoopLog(args);
+  #define MAVEInfoLog(args...) MAVENoopLog(args);
+  #define MAVEErrorLog(args...) MAVENoopLog(args);
 #endif
 
 // Custom log & reporting functions
@@ -35,11 +35,20 @@ extern NSString * const MAVEAPIBaseURL;
 extern NSString * const MAVEAPIVersion;
 extern NSString * const MAVEShortLinkBaseURL;
 
+
+// App-device-id storage user defaults (should never get cleared,
+// want this to be as permanent as possible as an id for the device)
+extern NSString * const MAVEUserDefaultsKeyAppDeviceID;
+
+// Server response cache user defaults
+extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
+extern NSString * const MAVEUserDefaultsKeyShareToken;
+
 // Cocoapods resource bundle name
 extern NSString * const MAVEResourceBundleName;
 
+// Custom HTTP Errors
 extern NSString * const MAVE_HTTP_ERROR_DOMAIN;
-
 extern NSInteger const MAVEHTTPErrorRequestJSONCode;
 extern NSInteger const MAVEHTTPErrorResponseIsNotJSONCode;
 extern NSInteger const MAVEHTTPErrorResponseJSONCode;
@@ -47,6 +56,7 @@ extern NSInteger const MAVEHTTPErrorResponseNilCode;
 extern NSInteger const MAVEHTTPErrorResponse400LevelCode;
 extern NSInteger const MAVEHTTPErrorResponse500LevelCode;
 
+// Custom validation errors
 extern NSString * const MAVE_VALIDATION_ERROR_DOMAIN;
 extern NSInteger const MAVEValidationErrorApplicationIDNotSetCode;
 extern NSInteger const MAVEValidationErrorUserIdentifyNeverCalledCode;
