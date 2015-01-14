@@ -42,6 +42,13 @@
 
 }
 
+- (void)testChooseAndCreateFallsBackToShareSheetIfNoUserData {
+    [MaveSDK sharedInstance].userData = nil;
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    UIViewController *vc = [chooser chooseAndCreateInvitePageViewController];
+    XCTAssertEqualObjects(NSStringFromClass([vc class]), @"MAVECustomSharePageViewController");
+}
+
 // Helper functions tests
 - (void)testUSIsInSupportedRegionForServerSideSMSInvites {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
