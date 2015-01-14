@@ -98,6 +98,10 @@
     MAVEInvitePageViewController *ipvc =
     [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
+
+
+
+
     
     XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, 0);
     XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, 0);

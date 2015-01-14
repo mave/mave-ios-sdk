@@ -42,11 +42,11 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptAcceptCopy = @"accept_button
         MAVERemoteConfigKeyContactsPrePromptEnabled: @YES,
         MAVERemoteConfigKeyContactsPrePromptTemplate: @{
             MAVERemoteConfigKeyContactsPrePromptTemplateID: @"0",
-            MAVERemoteConfigKeyContactsPrePromptTitle: @"Access your contacts?",
+            MAVERemoteConfigKeyContactsPrePromptTitle: @"Use address book?",
             MAVERemoteConfigKeyContactsPrePromptMessage:
-                @"We need to access your contacts to suggest people to invite.",
-            MAVERemoteConfigKeyContactsPrePromptAcceptCopy: @"Sounds good",
-            MAVERemoteConfigKeyContactsPrePromptCancelCopy: @"No thanks",
+                @"This allows you to select friends from your address book to invite.",
+            MAVERemoteConfigKeyContactsPrePromptAcceptCopy: @"OK",
+            MAVERemoteConfigKeyContactsPrePromptCancelCopy: @"Not now",
         }
     };
 }

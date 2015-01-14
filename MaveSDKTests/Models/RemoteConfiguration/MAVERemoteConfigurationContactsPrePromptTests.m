@@ -30,10 +30,10 @@
     XCTAssertTrue([[defaults objectForKey:@"enabled"] boolValue]);
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"title"], @"Access your contacts?");
-    XCTAssertEqualObjects([template objectForKey:@"message"], @"We need to access your contacts to suggest people to invite.");
-    XCTAssertEqualObjects([template objectForKey:@"cancel_button_copy"], @"No thanks");
-    XCTAssertEqualObjects([template objectForKey:@"accept_button_copy"], @"Sounds good");
+    XCTAssertEqualObjects([template objectForKey:@"title"], @"Use address book?");
+    XCTAssertEqualObjects([template objectForKey:@"message"], @"This allows you to select friends from your address book to invite.");
+    XCTAssertEqualObjects([template objectForKey:@"cancel_button_copy"], @"Not now");
+    XCTAssertEqualObjects([template objectForKey:@"accept_button_copy"], @"OK");
 }
 
 - (void)testInitFromDefaultData {
@@ -42,10 +42,10 @@
          initWithDictionary:[MAVERemoteConfigurationContactsPrePrompt defaultJSONData]];
     XCTAssertEqualObjects(config.templateID, @"0");
     XCTAssertEqual(config.enabled, YES);
-    XCTAssertEqualObjects(config.title, @"Access your contacts?");
-    XCTAssertEqualObjects(config.message, @"We need to access your contacts to suggest people to invite.");
-    XCTAssertEqualObjects(config.cancelButtonCopy, @"No thanks");
-    XCTAssertEqualObjects(config.acceptButtonCopy, @"Sounds good");
+    XCTAssertEqualObjects(config.title, @"Use address book?");
+    XCTAssertEqualObjects(config.message, @"This allows you to select friends from your address book to invite.");
+    XCTAssertEqualObjects(config.cancelButtonCopy, @"Not now");
+    XCTAssertEqualObjects(config.acceptButtonCopy, @"OK");
 }
 
 - (void)testInitWhenDisabledTemplateEmpty {
