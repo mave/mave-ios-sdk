@@ -304,10 +304,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
         output = [NSString stringWithFormat:@"%@%@/%@",
                   MAVEShortLinkBaseURL, subRoute, shareToken];
     } else {
-        NSString *appID = [MaveSDK sharedInstance].appId;
-        appID = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:appID];
+        NSString * base64AppID = [MAVEClientPropertyUtils urlSafeBase64ApplicationID];
         output = [NSString stringWithFormat:@"%@o/%@/%@",
-                  MAVEShortLinkBaseURL, subRoute, appID];
+                  MAVEShortLinkBaseURL, subRoute, base64AppID];
     }
     return output;
 }

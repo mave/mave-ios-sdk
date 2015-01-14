@@ -33,6 +33,9 @@
 }
 
 - (void)testInitConfigurationAndStyles {
+    NSString *expectedLabelText = [MaveSDK sharedInstance].remoteConfiguration.customSharePage.explanationCopy;
+    XCTAssertGreaterThan([expectedLabelText length], 0);
+
     MAVECustomSharePageView *view = [[MAVECustomSharePageView alloc] init];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
@@ -40,7 +43,8 @@
                           opts.sharePageBackgroundColor);
     XCTAssertEqualObjects(view.shareExplanationLabel.font,
                           opts.sharePageExplanationFont);
-    XCTAssertEqualObjects(view.shareExplanationLabel.text, @"Share DemoApp with friends");
+    XCTAssertEqualObjects(view.shareExplanationLabel.text,
+                          expectedLabelText);
     XCTAssertEqualObjects(view.shareExplanationLabel.textColor,
                           opts.sharePageExplanationTextColor);
 }

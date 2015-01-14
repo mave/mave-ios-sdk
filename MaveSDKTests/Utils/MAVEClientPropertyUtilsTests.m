@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MaveSDK.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
@@ -81,33 +82,49 @@
     XCTAssertEqualObjects([MAVEClientPropertyUtils base64DecodeJSONString:b64], dict);
 }
 
-- (void)testUrlSafeBase64EncodeDecodeString {
+- (void)testUrlSafeBase64EncodeData {
     // use a string that will have the special characters - and _
     NSString *s1 = [@"" stringByAppendingFormat:@"%c%c%c",
                     (char)0xff, (char)0xff, (char)0xfe];
+    NSData *data1 = [s1 dataUsingEncoding:NSUTF8StringEncoding];
     NSString *expectedS1Encoded = @"w7_Dv8O-";
 
     // and use a string that would be padded with '='
     NSString *s2 = @"food";
+    NSData *data2 = [s2 dataUsingEncoding:NSUTF8StringEncoding];
     NSString *expectedS2Encoded = @"Zm9vZA";
 
-    NSString *encoded1 = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:s1];
+    NSString *encoded1 = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripData:data1];
 
-    NSString *encoded2 = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:s2];
+    NSString *encoded2 = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripData:data2];
 
     XCTAssertEqualObjects(encoded1, expectedS1Encoded);
     XCTAssertEqualObjects(encoded2, expectedS2Encoded);
-
-//    NSString *decoded1 = [MAVEClientPropertyUtils urlSafeBase64PadAndDecodeString:expectedS1Encoded];
-//    NSString *decoded2 = [MAVEClientPropertyUtils urlSafeBase64PadAndDecodeString:expectedS2Encoded];
-//
-//    XCTAssertEqualObjects(decoded1, s1);
-//    XCTAssertEqualObjects(decoded2, s2);
 }
 
 - (void)testUrlSafeBase64EncodedEmpty {
-    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:@""], @"");
-    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:nil], @"");
+    NSData *data1 = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64EncodeAndStripData:data1], @"");
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64EncodeAndStripData:nil], @"");
+}
+
+- (void)testUrlSafeBase64EncodeAppIDWhenBigInteger {
+    [MaveSDK sharedInstance].appId = @"202834210204166";
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
+                          @"AAC4egUMKgY");
+
+    [MaveSDK sharedInstance].appId = @"0";
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
+                          @"AAAAAAAAAAA");
+}
+
+- (void)testUrlSafeBase64EncodeAppIDWhenString {
+    [MaveSDK sharedInstance].appId = @"10afdkjl3";
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
+                          @"MTBhZmRramwz");
+    [MaveSDK sharedInstance].appId = @"";
+    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
+                          @"");
 }
 
 

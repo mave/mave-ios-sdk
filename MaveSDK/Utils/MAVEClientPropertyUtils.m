@@ -12,6 +12,7 @@
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <UIKit/UIKit.h>
+#import "MaveSDK.h"
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
 #import "MAVENameParsingUtils.h"
@@ -116,6 +117,8 @@
     return [NSString stringWithFormat:@"%ldx%ld", w, h];
 }
 
+
+
 + (NSString *)encodedAutomaticClientProperties {
     // use setValue:forKey: which will  omit setting the object in the
     // dictionary if nil, just in case a nil value sneaks in somehow
@@ -161,9 +164,8 @@
     return output;
 }
 
-+ (NSString *)urlSafeBase64EncodeAndStripString:(NSString *)value {
-    NSData *dataValue = [value dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *output = [dataValue base64EncodedStringWithOptions:0];
++ (NSString *)urlSafeBase64EncodeAndStripData:(NSData *)value {
+    NSString *output = [value base64EncodedStringWithOptions:0];
     if ([output length] == 0) {
         return @"";
     }
@@ -183,6 +185,30 @@
         }
     }
     return output;
+}
+
+// Encode the application id as base64.
+// Try to use the integer encoding so it'll be as short as possible, but if
+// app ID is not a valid 8 byte integer just encode as utf8 string
++ (NSString *)urlSafeBase64ApplicationID {
+    NSString *appID = [MaveSDK sharedInstance].appId;
+
+    // check if it's an 8 byte integer by converting to a number then back
+    // to string and making sure it's the same number
+    long long idAsNumber = [appID integerValue];
+    NSString *backToString = [NSString stringWithFormat:@"%lld", idAsNumber];
+    BOOL isIDNumber = [backToString isEqualToString:appID];
+
+    NSData *appIDData;
+    if (isIDNumber) {
+        long long idNetworkEndian = NSSwapHostLongLongToBig(idAsNumber);
+        appIDData = [NSData dataWithBytes:&idNetworkEndian
+                                   length:sizeof(idNetworkEndian)];
+    } else {
+        appIDData = [appID dataUsingEncoding:NSUTF8StringEncoding];
+    }
+
+    return [self urlSafeBase64EncodeAndStripData:appIDData];
 }
 
 

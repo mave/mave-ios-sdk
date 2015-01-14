@@ -433,8 +433,8 @@
 
 - (void)testBuildShareLinkWhenNoShareToken {
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
-    NSString *base64AppID = [MAVEClientPropertyUtils urlSafeBase64EncodeAndStripString:self.applicationID];
-    NSString *expectedLink = [NSString stringWithFormat:@"http://dev.appjoin.us/o/d/%@", base64AppID];
+    NSString *expectedLink = [NSString stringWithFormat:@"http://dev.appjoin.us/o/d/%@",
+                              [MAVEClientPropertyUtils urlSafeBase64ApplicationID]];
     id mock = OCMPartialMock(vc);
     OCMStub([mock shareToken]).andReturn(nil);
 
