@@ -84,7 +84,7 @@
     [vc loadView];
     __block NSUInteger numInvites;
     __block BOOL called;
-    [MaveSDK sharedInstance].invitePageDismissalBlock =
+    [MaveSDK sharedInstance].invitePageDismissBlock =
         ^(UIViewController *vc, NSUInteger numberOfInvitesSent) {
             called = YES;
             numInvites = numberOfInvitesSent;

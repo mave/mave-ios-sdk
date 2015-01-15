@@ -154,7 +154,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
+    gk.invitePageDismissBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
     id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
     gk.APIInterface = mockAPIInterface;
@@ -199,7 +199,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
     MaveSDK *mave = [MaveSDK sharedInstance];
     [mave identifyAnonymousUser];
-    mave.invitePageDismissalBlock = ^void(UIViewController *vc,
+    mave.invitePageDismissBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
     XCTAssertFalse([mave isSetupOK]);
 }
@@ -217,7 +217,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *mave = [MaveSDK sharedInstance];
     // didn't identify user, but it's ok
-    mave.invitePageDismissalBlock = ^void(UIViewController *vc,
+    mave.invitePageDismissBlock = ^void(UIViewController *vc,
                                         NSUInteger numInvitesSent) {};
     XCTAssertTrue([mave isSetupOK]);
 }
@@ -241,7 +241,7 @@
     // Returns a navigation controller since this is the present modally variation,
     // and set the necessary properties
     OCMVerifyAll(maveMock);
-    XCTAssertEqualObjects(mave.invitePageDismissalBlock, dismissalBlock);
+    XCTAssertEqualObjects(mave.invitePageDismissBlock, dismissalBlock);
     XCTAssertEqualObjects(mave.inviteContext, @"foocontext");
     XCTAssertTrue(called);
     XCTAssertNotNil(returnedController);

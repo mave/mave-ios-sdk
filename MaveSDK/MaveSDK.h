@@ -15,9 +15,6 @@
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVECustomSharePageViewController.h"
 
-typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteController);
-typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInteger numberOfInvitesSent);
-
 @interface MaveSDK : NSObject
 
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
@@ -32,7 +29,8 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInte
 @property (nonatomic, copy) NSString *appDeviceID;
 @property (nonatomic, copy) NSString *inviteContext;
 @property (strong, nonatomic) MAVEUserData *userData;
-@property (nonatomic, copy) MAVEInvitePageDismissBlock invitePageDismissalBlock;
+@property (nonatomic, copy) MAVEInvitePageDismissBlock invitePageDismissBlock;
+@property (nonatomic, copy) MAVEInvitePageDismissBlock invitePageForwardBlock;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
@@ -69,7 +67,8 @@ typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInte
 
 // Present the invite page by pushing onto an existing navigation controller stack
 // Otherwise it's the same as previous method.
-//- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-//                          dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
-//                               context:(NSString*)presentedFrom;
+- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+                             nextBlock:(MAVEInvitePageDismissBlock)nextBlock
+                             backBlock:(MAVEInvitePageDismissBlock)backBlock
+                         inviteContext:(NSString *)inviteContext;
 @end

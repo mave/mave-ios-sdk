@@ -33,7 +33,7 @@
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
      self.view = [[MAVECustomSharePageView alloc] init];
-    
+
     [self determineAndSetViewBasedOnABPermissions];
 }
 
@@ -85,7 +85,7 @@
     [self.view endEditing:YES];
 
     // Call dismissal block
-    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
+    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissBlock;
     if (dismissalBlock) {
         dismissalBlock(self, numberOfInvitesSent);
     }
@@ -147,7 +147,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIViewController *vc = [[MaveSDK sharedInstance]
                     .invitePageChooser createCustomShareInvitePage];
-                [self.navigationController pushViewController:vc animated:NO];
+                UINavigationController *navController = self.navigationController;
+//                [navController popViewControllerAnimated:NO];
+                [navController pushViewController:vc animated:NO];
             });
         // Permission granted
         } else {

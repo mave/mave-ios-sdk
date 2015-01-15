@@ -45,7 +45,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     [self.view endEditing:YES];
 
     // Call dismissal block
-    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
+    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissBlock;
     if (dismissalBlock) {
         dismissalBlock(self, numberOfInvitesSent);
     }

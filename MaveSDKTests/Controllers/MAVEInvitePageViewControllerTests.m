@@ -120,7 +120,7 @@
 
 - (void)testAppropriateTeardownOnDismissSelf {
     __block NSUInteger numSent = 0;
-    [MaveSDK sharedInstance].invitePageDismissalBlock =
+    [MaveSDK sharedInstance].invitePageDismissBlock =
         ^void(UIViewController *viewController,
               NSUInteger numberOfInvitesSent) {
         numSent = numberOfInvitesSent;

@@ -94,7 +94,7 @@ static dispatch_once_t sharedInstanceonceToken;
         MAVEErrorLog(errorFormat, @"applicationID is nil");
         ok = NO;
     }
-    if (!self.invitePageDismissalBlock) {
+    if (!self.invitePageDismissBlock) {
         MAVEErrorLog(errorFormat, @"invite page dismiss block was nil");
         ok = NO;
     }
@@ -162,15 +162,36 @@ static dispatch_once_t sharedInstanceonceToken;
 - (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
                              dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
                             inviteContext:(NSString *)inviteContext {
-    self.invitePageDismissalBlock = dismissBlock;
+    self.invitePageDismissBlock = dismissBlock;
     if (![self isSetupOK]) {
         MAVEErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
         return;
     }
-    UIViewController *vc = [self.invitePageChooser chooseAndCreateInvitePageViewController];
-    UIViewController *navigationVC = [self.invitePageChooser embedInNavigationController:vc];
+    self.invitePageChooser = [[MAVEInvitePageChooser alloc]
+                              initForModalPresentWithCancelBlock:dismissBlock];
+    [self.invitePageChooser chooseAndCreateInvitePageViewController];
+    [self.invitePageChooser setupNavigationBarForActiveViewController];
     self.inviteContext = inviteContext;
-    presentBlock(navigationVC);
+    presentBlock(self.invitePageChooser.activeViewController.navigationController);
+}
+
+- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+                             nextBlock:(MAVEInvitePageDismissBlock)forwardBlock
+                            backBlock:(MAVEInvitePageDismissBlock)backBlock
+                         inviteContext:(NSString *)inviteContext {
+    self.invitePageDismissBlock = backBlock;
+    self.invitePageForwardBlock = forwardBlock;
+    if (![self isSetupOK]) {
+        MAVEErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
+        return;
+    }
+    self.invitePageChooser = [[MAVEInvitePageChooser alloc]
+                              initForPushPresentWithBackBlock:backBlock
+                              nextBlock:forwardBlock];
+    [self.invitePageChooser chooseAndCreateInvitePageViewController];
+    [self.invitePageChooser setupNavigationBarForActiveViewController];
+    self.inviteContext = inviteContext;
+    presentBlock(self.invitePageChooser.activeViewController);
 }
 
 @end
