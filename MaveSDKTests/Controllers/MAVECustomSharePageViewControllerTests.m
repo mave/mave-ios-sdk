@@ -51,21 +51,6 @@
     [super tearDown];
 }
 
-- (void)testViewDidLoadSetsUpNavigationBar {
-    MAVECustomSharePageViewController *vc =
-        [[MAVECustomSharePageViewController alloc] init];
-
-    id chooserMock = OCMPartialMock([MaveSDK sharedInstance].invitePageChooser);
-
-    OCMExpect([chooserMock setupNavigationBar:vc
-                          leftBarButtonTarget:vc
-                          leftBarButtonAction:@selector(dismissAfterCancel)]);
-
-    [vc viewDidLoad];
-
-    OCMVerifyAll(chooserMock);
-}
-
 - (void)testViewDidLoadLogsInvitePageView {
     MAVECustomSharePageViewController *vc =
         [[MAVECustomSharePageViewController alloc] init];

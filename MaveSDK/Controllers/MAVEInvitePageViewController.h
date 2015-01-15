@@ -25,7 +25,6 @@
 // Setup self and children
 - (UIView *)createAddressBookInviteView;
 
-- (void)setupNavigationBar;
 - (BOOL)shouldDisplayInviteMessageView;
 - (void)presentShareSheet;
 - (void)layoutInvitePageViewAndSubviews;

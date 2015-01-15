@@ -52,16 +52,6 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 // Handling the changing of view controllers
 //
 
-// Alter view controllers
-- (UINavigationController *)embedInNavigationController:(UIViewController *)viewController;
-- (void)setupNavigationBar:(UIViewController *)viewController
-       leftBarButtonTarget:(id)target
-       leftBarButtonAction:(SEL)action;
-
-
-// older method for setting up navigation bar
-- (void)setupNavigationBar:(UIViewController *)viewController;
-
 // Navigation bar methods
 // This is the entry point, the following are helpers for it
 - (void)setupNavigationBarForActiveViewController;

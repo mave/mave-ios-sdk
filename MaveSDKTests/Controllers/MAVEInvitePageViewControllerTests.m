@@ -146,35 +146,6 @@
     OCMVerifyAll(mockVC);
 }
 
-- (void)testViewDidLoadSetsUpNavigationBar {
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
-
-    id mock = OCMPartialMock(vc);
-    OCMExpect([mock setupNavigationBar]);
-
-    [vc viewDidLoad];
-
-    OCMVerifyAll(mock);
-}
-
-- (void)testSetupNavigationBar {
-    id chooserMock = OCMPartialMock([MaveSDK sharedInstance].invitePageChooser);
-
-    // setup view controller
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
-
-    // sets up look and display of bar
-    OCMExpect([chooserMock setupNavigationBar:vc
-                          leftBarButtonTarget:vc
-                          leftBarButtonAction:@selector(dismissAfterCancel)]);
-
-    [vc setupNavigationBar];
-
-    OCMVerifyAll(chooserMock);
-}
-
 //
 // Sending requests
 //

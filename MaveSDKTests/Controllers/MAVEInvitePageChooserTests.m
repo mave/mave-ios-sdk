@@ -287,67 +287,64 @@
 /// Forward and back/cancel actions
 ///
 
-
-
-// Navigation bar
-- (void)testEmbedInNavigationControllerOld {
+-(void)testCancelAction {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
 
-    UIViewController *viewController = [[UIViewController alloc] init];
-    UINavigationController *sampleNavigationController =
-        [chooser embedInNavigationController:viewController];
+    // with no back block, does nothing
+    [chooser handleCancelAction];
 
-    XCTAssertNotNil(sampleNavigationController);
-    XCTAssertEqualObjects(sampleNavigationController, viewController.navigationController);
-}
-
-
-
-// Tests for old style method
-- (void)testSetupNavigationBarOnViewController {
-    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-
-    // Uses display options from the singleton
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
-    MAVEDisplayOptions *displayOpts = [MAVEDisplayOptionsFactory generateDisplayOptions];
-    [MaveSDK sharedInstance].displayOptions = displayOpts;
-
-
-    UIViewController *vc = [[UIViewController alloc] init];
-    UINavigationController *sampleNavigationController =
-        [chooser embedInNavigationController:vc];
-    XCTAssertNotNil(sampleNavigationController);
-    NSObject *someObject = [[NSObject alloc] init];
-
-    [chooser setupNavigationBar:vc
-            leftBarButtonTarget:someObject
-            leftBarButtonAction:@selector(testEmbedInNavigationController)];
-    XCTAssertEqualObjects(vc.navigationItem.title, displayOpts.navigationBarTitleCopy);
-    XCTAssertEqualObjects(vc.navigationController.navigationBar.barTintColor,
-                          displayOpts.navigationBarBackgroundColor);
-    NSDictionary *expectedTitleTextAttrs = @{
-        NSForegroundColorAttributeName: displayOpts.navigationBarTitleTextColor,
-        NSFontAttributeName: displayOpts.navigationBarTitleFont,
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationCancelBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
     };
-    XCTAssertEqualObjects(vc.navigationController.navigationBar.titleTextAttributes,
-                          expectedTitleTextAttrs);
 
-    XCTAssertEqualObjects(vc.navigationItem.leftBarButtonItem.target, someObject);
-    XCTAssertEqual(vc.navigationItem.leftBarButtonItem.action,
-                   @selector(testEmbedInNavigationController));
+    [chooser handleCancelAction];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
 }
-- (void)testSetupNavigationBarIfNone {
+
+- (void)testBackAction {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    NSObject *someObject = [[NSObject alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
 
-    UIViewController *vc = [[UIViewController alloc] init];
-    XCTAssertNil(vc.navigationController);
+    // with no back block, does nothing
+    [chooser handleBackAction];
 
-    [chooser setupNavigationBar:vc
-            leftBarButtonTarget:someObject
-            leftBarButtonAction:@selector(testEmbedInNavigationController)];
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationBackBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
 
-    XCTAssertNil(vc.navigationController);
+    [chooser handleBackAction];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
+}
+
+- (void)testForwardAction {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser handleForwardAction];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationForwardBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser handleForwardAction];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
 }
 
 @end

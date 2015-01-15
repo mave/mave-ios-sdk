@@ -40,9 +40,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // Setup the cancel button
-    [self setupNavigationBar];
-
     // Subscribe to events that change frame size
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self
@@ -69,13 +66,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)setupNavigationBar {
-    [[MaveSDK sharedInstance].invitePageChooser
-     setupNavigationBar:self
-     leftBarButtonTarget:self
-     leftBarButtonAction:@selector(dismissAfterCancel)];
 }
 
 // Cleanup to dismiss, then call the block method, passing back the
@@ -145,11 +135,7 @@
         // Permission denied
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIViewController *vc = [[MaveSDK sharedInstance]
-                    .invitePageChooser createCustomShareInvitePage];
-                UINavigationController *navController = self.navigationController;
-//                [navController popViewControllerAnimated:NO];
-                [navController pushViewController:vc animated:NO];
+                [[MaveSDK sharedInstance].invitePageChooser replaceActiveViewControllerWithSharePage];
             });
         // Permission granted
         } else {

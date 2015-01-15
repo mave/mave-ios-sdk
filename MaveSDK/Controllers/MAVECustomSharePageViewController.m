@@ -32,11 +32,6 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)viewDidLoad {
-    [[MaveSDK sharedInstance].invitePageChooser
-     setupNavigationBar:self
-     leftBarButtonTarget:self
-     leftBarButtonAction:@selector(dismissAfterCancel)];
-
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeCustomShare];
 }
 

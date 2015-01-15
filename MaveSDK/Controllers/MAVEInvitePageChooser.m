@@ -121,45 +121,6 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     _activeViewController = activeViewController;
 }
 
-
-- (UINavigationController *)embedInNavigationController:(UIViewController *)viewController {
-    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:viewController];
-    return nvc;
-}
-
-- (void)setupNavigationBar:(UIViewController *)viewController
-       leftBarButtonTarget:(id)target
-       leftBarButtonAction:(SEL)action {
-    // if no navigation controller, no need to set up
-    if (!viewController.navigationController) {
-        return;
-    }
-
-//    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
-//
-//    viewController.navigationItem.title = displayOptions.navigationBarTitleCopy;
-//    viewController.navigationController.navigationBar.titleTextAttributes = @{
-//        NSForegroundColorAttributeName: displayOptions.navigationBarTitleTextColor,
-//        NSFontAttributeName: displayOptions.navigationBarTitleFont,
-//    };
-//    viewController.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
-//
-//    UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;
-//    cancelBarButtonItem.target = target;
-//    cancelBarButtonItem.action = action;
-//    [viewController.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
-
-//    viewController.navigationItem.leftBarButtonItem.target = target;
-//    viewController.navigationItem.leftBarButtonItem.action = action;
-//
-//    UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"Next"
-//                                                                 style:UIBarButtonItemStylePlain
-//                                                                target:self
-//                                                                action:@selector(navigationNext)];
-//    [viewController.navigationItem setRightBarButtonItem:nextItem];
-
-}
-
 - (void)setupNavigationBarForActiveViewController {
     if (!self.activeViewController.navigationController) {
         [self _embedActiveViewControllerInNewNavigationController];
@@ -224,19 +185,29 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     self.activeViewController.navigationItem.rightBarButtonItem = forwardButton;
 }
 
-- (void)handleCancelAction {
+- (void)replaceActiveViewControllerWithSharePage {
+    UINavigationController *navigationController = self.activeNavigationController;
+    [navigationController popViewControllerAnimated:NO];
+    [self createCustomShareInvitePage];
+    [self setupNavigationBarForActiveViewController];
+    [navigationController pushViewController:self.activeViewController animated:NO];
+}
 
+- (void)handleCancelAction {
+    if (self.navigationCancelBlock) {
+        self.navigationCancelBlock(self.activeViewController, 0);
+    }
 }
 
 - (void)handleBackAction {
-    if ([MaveSDK sharedInstance].invitePageDismissBlock) {
-        [MaveSDK sharedInstance].invitePageDismissBlock(self.activeViewController, 0);
+    if (self.navigationBackBlock) {
+        self.navigationBackBlock(self.activeViewController, 0);
     }
 }
 
 - (void)handleForwardAction {
-    if ([MaveSDK sharedInstance].invitePageForwardBlock) {
-        [MaveSDK sharedInstance].invitePageForwardBlock(self.activeViewController, 0);
+    if (self.navigationForwardBlock) {
+        self.navigationForwardBlock(self.activeViewController, 0);
     }
 }
 
