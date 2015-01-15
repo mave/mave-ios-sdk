@@ -35,28 +35,11 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeCustomShare];
 }
 
-- (void)dismissSelf:(NSUInteger)numberOfInvitesSent {
-    // Cleanup for dismiss
-    [self.view endEditing:YES];
-
-    // Call dismissal block
-    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissBlock;
-    if (dismissalBlock) {
-        dismissalBlock(self, numberOfInvitesSent);
-    }
-}
-
 // Call this after a successful share
 - (void)dismissAfterShare {
     [self resetShareToken];
-    return [self dismissSelf:1];
+    return [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
 }
-
-// Call this after a cancel
-- (void)dismissAfterCancel {
-    return [self dismissSelf:0];
-}
-
 
 - (void)smsClientSideShare {
     MFMessageComposeViewController *controller = [self _createMessageComposeViewController];

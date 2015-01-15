@@ -77,6 +77,7 @@
 
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(handler, mock);
+    [mock stopMocking];
 }
 
 ///
@@ -122,6 +123,7 @@
 
     OCMVerifyAll(permissionPrompterMock);
     XCTAssertEqualObjects(handler, permissionPrompterMock);
+    [permissionPrompterMock stopMocking];
 }
 
 - (void)testPromptForContactsWhenDoublePromptNo {
@@ -160,6 +162,7 @@
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:completionBlock];
 
     OCMVerifyAll(permissionPrompterMock);
+    [permissionPrompterMock stopMocking];
 }
 
 - (void)testPrePromptPermissionDenied {

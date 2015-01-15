@@ -52,8 +52,11 @@
                         object:nil];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [self.view endEditing:YES];
+}
+
 - (void)dealloc {
-    MAVEDebugLog(@"dealloc MAVEInvitePageViewController");
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
                              name:UIKeyboardWillChangeFrameNotification
@@ -71,18 +74,7 @@
 // Cleanup to dismiss, then call the block method, passing back the
 // number of invites sent to the containing app
 - (void)dismissSelf:(NSUInteger)numberOfInvitesSent {
-    // Cleanup for dismiss
-    [self.view endEditing:YES];
-
-    // Call dismissal block
-    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissBlock;
-    if (dismissalBlock) {
-        dismissalBlock(self, numberOfInvitesSent);
-    }
-}
-
-- (void)dismissAfterCancel {
-    [self dismissSelf:0];
+    [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:numberOfInvitesSent];
 }
 
 //

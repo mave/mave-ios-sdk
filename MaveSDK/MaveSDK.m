@@ -29,8 +29,6 @@
         _appId = appId;
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
-
-        _invitePageChooser = [[MAVEInvitePageChooser alloc] init];
         _APIInterface = [[MAVEAPIInterface alloc] init];
     }
     return self;
@@ -92,10 +90,6 @@ static dispatch_once_t sharedInstanceonceToken;
     BOOL ok = YES;
     if (!self.appId) {
         MAVEErrorLog(errorFormat, @"applicationID is nil");
-        ok = NO;
-    }
-    if (!self.invitePageDismissBlock) {
-        MAVEErrorLog(errorFormat, @"invite page dismiss block was nil");
         ok = NO;
     }
     return ok;
@@ -162,7 +156,6 @@ static dispatch_once_t sharedInstanceonceToken;
 - (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
                              dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
                             inviteContext:(NSString *)inviteContext {
-    self.invitePageDismissBlock = dismissBlock;
     if (![self isSetupOK]) {
         MAVEErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
         return;
@@ -179,15 +172,13 @@ static dispatch_once_t sharedInstanceonceToken;
                              nextBlock:(MAVEInvitePageDismissBlock)forwardBlock
                             backBlock:(MAVEInvitePageDismissBlock)backBlock
                          inviteContext:(NSString *)inviteContext {
-    self.invitePageDismissBlock = backBlock;
-    self.invitePageForwardBlock = forwardBlock;
     if (![self isSetupOK]) {
         MAVEErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
         return;
     }
     self.invitePageChooser = [[MAVEInvitePageChooser alloc]
-                              initForPushPresentWithBackBlock:backBlock
-                              nextBlock:forwardBlock];
+                              initForPushPresentWithForwardBlock:forwardBlock
+                              backBlock:backBlock];
     [self.invitePageChooser chooseAndCreateInvitePageViewController];
     [self.invitePageChooser setupNavigationBarForActiveViewController];
     self.inviteContext = inviteContext;

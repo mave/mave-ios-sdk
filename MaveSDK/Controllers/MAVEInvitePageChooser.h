@@ -33,8 +33,8 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 @property (nonatomic, copy) MAVEInvitePageDismissBlock navigationForwardBlock;
 
 - (instancetype) initForModalPresentWithCancelBlock:(MAVEInvitePageDismissBlock)cancelBlock;
-- (instancetype) initForPushPresentWithBackBlock:(MAVEInvitePageDismissBlock)backBlock
-                                       nextBlock:(MAVEInvitePageDismissBlock)nextBlock;
+- (instancetype) initForPushPresentWithForwardBlock:(MAVEInvitePageDismissBlock)backBlock
+                                       backBlock:(MAVEInvitePageDismissBlock)nextBlock;
 
 
 // Choose which invite page to present and initialize is view controller
@@ -63,8 +63,9 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 // Helper to replace whatever the active controller is with a new share page view controller
 - (void)replaceActiveViewControllerWithSharePage;
 
-- (void)handleCancelAction;
-- (void)handleBackAction;
-- (void)handleForwardAction;
+- (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent;
+- (void)dismissOnCancel;
+- (void)dismissOnBack;
+- (void)dismissOnForward;
 
 @end

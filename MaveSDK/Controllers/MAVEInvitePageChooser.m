@@ -37,12 +37,12 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     return self;
 }
 
-- (instancetype)initForPushPresentWithBackBlock:(MAVEInvitePageDismissBlock)backBlock
-                                      nextBlock:(MAVEInvitePageDismissBlock)nextBlock {
+- (instancetype)initForPushPresentWithForwardBlock:(MAVEInvitePageDismissBlock)forwardBlock
+                                      backBlock:(MAVEInvitePageDismissBlock)backBlock {
     if (self = [super init]) {
         self.navigationPresentedFormat = MAVEInvitePagePresentFormatPush;
+        self.navigationForwardBlock = forwardBlock;
         self.navigationBackBlock = backBlock;
-        self.navigationForwardBlock = nextBlock;
     }
     return self;
 }
@@ -160,7 +160,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
         button.style = UIBarButtonItemStylePlain;
     }
     button.target = self;
-    button.action = @selector(handleCancelAction);
+    button.action = @selector(dismissOnCancel);
     self.activeViewController.navigationItem.leftBarButtonItem = button;
 }
 
@@ -169,7 +169,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     UIBarButtonItem *backButton = [MaveSDK sharedInstance].displayOptions.navigationBarBackButton;
     if (backButton) {
         backButton.target = self;
-        backButton.action = @selector(handleBackAction);
+        backButton.action = @selector(dismissOnBack);
         self.activeViewController.navigationItem.leftBarButtonItem = backButton;
     }
 
@@ -181,31 +181,51 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
         forwardButton.style = UIBarButtonItemStylePlain;
     }
     forwardButton.target = self;
-    forwardButton.action = @selector(handleForwardAction);
+    forwardButton.action = @selector(dismissOnForward);
     self.activeViewController.navigationItem.rightBarButtonItem = forwardButton;
 }
 
 - (void)replaceActiveViewControllerWithSharePage {
+    // if displaying pushed on stack, pop then push to replace it on the stack
+    //
+    // if displaying modally, we can push just it onto our new modal stack b/c
+    // the cancel button still dismisses the whole modal navigation controller
     UINavigationController *navigationController = self.activeNavigationController;
-    [navigationController popViewControllerAnimated:NO];
+    if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
+        [navigationController popViewControllerAnimated:NO];
+    }
     [self createCustomShareInvitePage];
     [self setupNavigationBarForActiveViewController];
     [navigationController pushViewController:self.activeViewController animated:NO];
 }
 
-- (void)handleCancelAction {
+- (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent {
+    if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatModal]) {
+        if (self.navigationCancelBlock) {
+            self.navigationCancelBlock(self.activeViewController,
+                                       numberOfInvitesSent);
+        }
+    } else if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
+        if (self.navigationForwardBlock) {
+            self.navigationForwardBlock(self.activeViewController,
+                                        numberOfInvitesSent);
+        }
+    }
+}
+
+- (void)dismissOnCancel {
     if (self.navigationCancelBlock) {
         self.navigationCancelBlock(self.activeViewController, 0);
     }
 }
 
-- (void)handleBackAction {
+- (void)dismissOnBack {
     if (self.navigationBackBlock) {
         self.navigationBackBlock(self.activeViewController, 0);
     }
 }
 
-- (void)handleForwardAction {
+- (void)dismissOnForward {
     if (self.navigationForwardBlock) {
         self.navigationForwardBlock(self.activeViewController, 0);
     }

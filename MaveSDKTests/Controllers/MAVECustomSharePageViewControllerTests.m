@@ -63,40 +63,13 @@
     OCMVerifyAll(apiMock);
 }
 
-- (void)testDismissSelf {
-    MAVECustomSharePageViewController *vc =
-        [[MAVECustomSharePageViewController alloc] init];
-    [vc loadView];
-    __block NSUInteger numInvites;
-    __block BOOL called;
-    [MaveSDK sharedInstance].invitePageDismissBlock =
-        ^(UIViewController *vc, NSUInteger numberOfInvitesSent) {
-            called = YES;
-            numInvites = numberOfInvitesSent;
-        };
-    id viewMock = OCMPartialMock(vc.view);
-    OCMExpect([viewMock endEditing:YES]);
-
-    [vc dismissSelf:101];
-
-    OCMVerifyAll(viewMock);
-    XCTAssertTrue(called);
-    XCTAssertEqual(numInvites, 101);
-}
-
-- (void)testDismissAfterCancel {
-    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
-    id mock = OCMPartialMock(vc);
-    OCMExpect([mock dismissSelf:0]);
-    [vc dismissAfterCancel];
-    OCMVerifyAll(mock);
-}
-
 - (void)testDismissAfterShare {
+    [MaveSDK sharedInstance].invitePageChooser = [[MAVEInvitePageChooser alloc] init];
     MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
-    id mock = OCMPartialMock(vc);
-    OCMExpect([mock dismissSelf:1]);
-    OCMExpect([mock resetShareToken]);
+    [MaveSDK sharedInstance].invitePageChooser.activeViewController = vc;
+
+    id mock = OCMPartialMock([MaveSDK sharedInstance].invitePageChooser);
+    OCMExpect([mock dismissOnSuccess:1]);
     [vc dismissAfterShare];
     OCMVerifyAll(mock);
 }
@@ -406,6 +379,7 @@
     NSString *token = [vc shareToken];
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(token, @"blahasdf");
+    [mock stopMocking];
 }
 
 

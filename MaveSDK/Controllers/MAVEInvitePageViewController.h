@@ -36,5 +36,4 @@
 
 // Methods to dismiss self after user done sending invites or user hit cancel
 - (void)dismissSelf:(NSUInteger)numberOfInvitesSent;
-- (void)dismissAfterCancel;
 @end

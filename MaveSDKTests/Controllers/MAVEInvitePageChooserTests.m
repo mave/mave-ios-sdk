@@ -51,7 +51,8 @@
 - (void)testInitForPushPresent {
     MAVEInvitePageDismissBlock backBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {};
     MAVEInvitePageDismissBlock nextBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {};
-    MAVEInvitePageChooser *ipc = [[MAVEInvitePageChooser alloc] initForPushPresentWithBackBlock:backBlock nextBlock:nextBlock];
+    MAVEInvitePageChooser *ipc = [[MAVEInvitePageChooser alloc] initForPushPresentWithForwardBlock:nextBlock
+                                                                                         backBlock:backBlock];
 
     XCTAssertEqualObjects(ipc.navigationPresentedFormat, MAVEInvitePagePresentFormatPush);
     XCTAssertEqualObjects(ipc.navigationBackBlock, backBlock);
@@ -226,7 +227,7 @@
     XCTAssertEqualObjects(cancelButton,
                           [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton);
     XCTAssertEqualObjects(cancelButton.target, chooser);
-    XCTAssertEqual(cancelButton.action, @selector(handleCancelAction));
+    XCTAssertEqual(cancelButton.action, @selector(dismissOnCancel));
 }
 
 - (void)testSetupNavigationButtonsModalDefaults {
@@ -240,7 +241,7 @@
     XCTAssertEqualObjects(cancelButton.title, @"Cancel");
     XCTAssertEqual(cancelButton.style, UIBarButtonItemStylePlain);
     XCTAssertEqualObjects(cancelButton.target, chooser);
-    XCTAssertEqual(cancelButton.action, @selector(handleCancelAction));
+    XCTAssertEqual(cancelButton.action, @selector(dismissOnCancel));
 }
 
 - (void)testSetupNavigationButtonsPushWhenCustom {
@@ -256,11 +257,11 @@
     XCTAssertEqualObjects(backButton,
                           [MaveSDK sharedInstance].displayOptions.navigationBarBackButton);
     XCTAssertEqualObjects(backButton.target, chooser);
-    XCTAssertEqual(backButton.action, @selector(handleBackAction));
+    XCTAssertEqual(backButton.action, @selector(dismissOnBack));
 
     XCTAssertEqualObjects(forwardButton, [MaveSDK sharedInstance].displayOptions.navigationBarForwardButton);
     XCTAssertEqualObjects(forwardButton.target, chooser);
-    XCTAssertEqual(forwardButton.action, @selector(handleForwardAction));
+    XCTAssertEqual(forwardButton.action, @selector(dismissOnForward));
 }
 
 - (void)testsetupnavigationButtonsPushDefaults {
@@ -280,19 +281,20 @@
     XCTAssertEqualObjects(forwardButton.title, @"Skip");
     XCTAssertEqual(forwardButton.style, UIBarButtonItemStylePlain);
     XCTAssertEqualObjects(forwardButton.target, chooser);
-    XCTAssertEqual(forwardButton.action, @selector(handleForwardAction));
+    XCTAssertEqual(forwardButton.action, @selector(dismissOnForward));
 }
 
 ///
 /// Forward and back/cancel actions
 ///
-
--(void)testCancelAction {
+- (void)testDismissOnSuccessWhenModal {
+    // When modal, dismiss on success calls the cancel block
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
     chooser.activeViewController = [[UIViewController alloc] init];
 
     // with no back block, does nothing
-    [chooser handleCancelAction];
+    [chooser dismissOnSuccess:101];
 
     __block UIViewController *calledWithVC;
     __block NSUInteger numInvites;
@@ -301,38 +303,20 @@
         numInvites = numberOfInvitesSent;
     };
 
-    [chooser handleCancelAction];
+    [chooser dismissOnSuccess:102];
 
     XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
-    XCTAssertEqual(numInvites, 0);
+    XCTAssertEqual(numInvites, 102);
 }
 
-- (void)testBackAction {
+- (void)testDismissOnSuccessWhenPush {
+    // When pushed, dismiss on success calls the forward block
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatPush;
     chooser.activeViewController = [[UIViewController alloc] init];
 
     // with no back block, does nothing
-    [chooser handleBackAction];
-
-    __block UIViewController *calledWithVC;
-    __block NSUInteger numInvites;
-    chooser.navigationBackBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
-        calledWithVC = controller;
-        numInvites = numberOfInvitesSent;
-    };
-
-    [chooser handleBackAction];
-
-    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
-    XCTAssertEqual(numInvites, 0);
-}
-
-- (void)testForwardAction {
-    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    chooser.activeViewController = [[UIViewController alloc] init];
-
-    // with no back block, does nothing
-    [chooser handleForwardAction];
+    [chooser dismissOnSuccess:101];
 
     __block UIViewController *calledWithVC;
     __block NSUInteger numInvites;
@@ -341,7 +325,67 @@
         numInvites = numberOfInvitesSent;
     };
 
-    [chooser handleForwardAction];
+    [chooser dismissOnSuccess:102];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 102);
+}
+
+-(void)testDismissOnCancel {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnCancel];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationCancelBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnCancel];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
+}
+
+- (void)testDismissOnBack {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnBack];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationBackBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnBack];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
+}
+
+- (void)testDismissOnForward {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnForward];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationForwardBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnForward];
 
     XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
     XCTAssertEqual(numInvites, 0);
