@@ -29,8 +29,6 @@
         _appId = appId;
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
-
-        _invitePageChooser = [[MAVEInvitePageChooser alloc] init];
         _APIInterface = [[MAVEAPIInterface alloc] init];
     }
     return self;
@@ -92,10 +90,6 @@ static dispatch_once_t sharedInstanceonceToken;
     BOOL ok = YES;
     if (!self.appId) {
         MAVEErrorLog(errorFormat, @"applicationID is nil");
-        ok = NO;
-    }
-    if (!self.invitePageDismissalBlock) {
-        MAVEErrorLog(errorFormat, @"invite page dismiss block was nil");
         ok = NO;
     }
     return ok;
@@ -162,15 +156,33 @@ static dispatch_once_t sharedInstanceonceToken;
 - (void)presentInvitePageModallyWithBlock:(MAVEInvitePagePresentBlock)presentBlock
                              dismissBlock:(MAVEInvitePageDismissBlock)dismissBlock
                             inviteContext:(NSString *)inviteContext {
-    self.invitePageDismissalBlock = dismissBlock;
     if (![self isSetupOK]) {
         MAVEErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
         return;
     }
-    UIViewController *vc = [self.invitePageChooser chooseAndCreateInvitePageViewController];
-    UIViewController *navigationVC = [self.invitePageChooser embedInNavigationController:vc];
+    self.invitePageChooser = [[MAVEInvitePageChooser alloc]
+                              initForModalPresentWithCancelBlock:dismissBlock];
+    [self.invitePageChooser chooseAndCreateInvitePageViewController];
+    [self.invitePageChooser setupNavigationBarForActiveViewController];
     self.inviteContext = inviteContext;
-    presentBlock(navigationVC);
+    presentBlock(self.invitePageChooser.activeViewController.navigationController);
+}
+
+- (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
+                          forwardBlock:(MAVEInvitePageDismissBlock)forwardBlock
+                            backBlock:(MAVEInvitePageDismissBlock)backBlock
+                         inviteContext:(NSString *)inviteContext {
+    if (![self isSetupOK]) {
+        MAVEErrorLog(@"Not displaying Mave invite page because parameters not all set, see other log errors");
+        return;
+    }
+    self.invitePageChooser = [[MAVEInvitePageChooser alloc]
+                              initForPushPresentWithForwardBlock:forwardBlock
+                              backBlock:backBlock];
+    [self.invitePageChooser chooseAndCreateInvitePageViewController];
+    [self.invitePageChooser setupNavigationBarForActiveViewController];
+    self.inviteContext = inviteContext;
+    presentBlock(self.invitePageChooser.activeViewController);
 }
 
 @end

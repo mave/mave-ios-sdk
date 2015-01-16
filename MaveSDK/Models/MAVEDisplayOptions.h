@@ -24,10 +24,16 @@
 @property (nonatomic, strong) UIFont   *navigationBarTitleFont;
 @property (nonatomic, strong) UIColor  *navigationBarTitleTextColor;
 @property (nonatomic, strong) UIColor  *navigationBarBackgroundColor;
-// Note: any target & action set on the navigation bar cancel button item will
-// be ignored, on cancel we run our own teardown code and then call your
-// dismissalBlock
+
+// Note: any target & action set on the navigation bar buttons will
+// be ignored, we run the block you provide instead.
+//
+// Cancel button is used when the invite page is presented modally
+// (whether native present modally or some custom way like in a drawer, etc).
 @property (nonatomic, strong) UIBarButtonItem *navigationBarCancelButton;
+// Back and forward buttons are used when the invite page is pushed
+@property (nonatomic, strong) UIBarButtonItem *navigationBarBackButton;
+@property (nonatomic, strong) UIBarButtonItem *navigationBarForwardButton;
 
 // Explanation of how the referral program works section
 @property (nonatomic, copy) NSString *inviteExplanationCopy;

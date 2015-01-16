@@ -49,7 +49,7 @@
 }
 
 - (void)done:(void (^)(NSValue *))completionBlock withTimeout:(CGFloat)seconds {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSValue *val = [self doneSynchronousWithTimeout:seconds];
         completionBlock(val);
     });

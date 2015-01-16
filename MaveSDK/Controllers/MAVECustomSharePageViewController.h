@@ -13,9 +13,7 @@
 
 @interface MAVECustomSharePageViewController: UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
-- (void)dismissAfterCancel;
 - (void)dismissAfterShare;
-- (void)dismissSelf:(NSUInteger)numberOfInvitesSent;
 
 // Do the client side shares
 // the helpers let us test in the simulator
