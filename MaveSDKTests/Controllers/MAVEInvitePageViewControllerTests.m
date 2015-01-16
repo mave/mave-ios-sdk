@@ -16,6 +16,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptionsFactory.h"
 #import "MAVEInviteMessageView.h"
+#import "MAVEInviteTableHeaderView.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -65,12 +66,13 @@
 
 
 - (void)testDoLayoutInviteExplanationBoxIfCopyNotNil {
-    MAVEInvitePageViewController *ipvc =
-        [[MAVEInvitePageViewController alloc] init];
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
 
+    MAVEABTableViewController *abtvc = ipvc.ABTableViewController;
+
     CGFloat expectedWidth = ipvc.view.frame.size.width;
-    CGFloat expectedHeight = round([ipvc.inviteExplanationView computeHeightWithWidth:expectedWidth]);
+    CGFloat expectedHeight = round([abtvc.inviteTableHeaderView computeHeightWithWidth:expectedWidth]);
     XCTAssertGreaterThan(expectedWidth, 0);
     XCTAssertGreaterThan(expectedHeight, 0);
 
@@ -80,12 +82,18 @@
     XCTAssertEqualObjects(ipvc.ABTableViewController.tableView.tableHeaderView,
                           ipvc.inviteExplanationView);
 
+    // Next 3 assertions from JG"s search addition
+    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.width, expectedWidth);
+    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.height, expectedHeight);
+    XCTAssertEqualObjects(abtvc.tableView.tableHeaderView,
+                          abtvc.inviteTableHeaderView);
+
     // Top "bounce region" should look like it connects to the header and be at the top
     // of the table view tall as the whole screen
-    XCTAssertEqualObjects(ipvc.ABTableViewController.aboveTableContentView.backgroundColor,
-                          ipvc.inviteExplanationView.backgroundColor);
-    XCTAssertEqualObjects(ipvc.ABTableViewController.aboveTableContentView.superview,
-                          ipvc.ABTableViewController.tableView);
+    XCTAssertEqualObjects(abtvc.aboveTableContentView.backgroundColor,
+                          abtvc.inviteTableHeaderView.inviteExplanationView.backgroundColor);
+    XCTAssertEqualObjects(abtvc.aboveTableContentView.superview,
+                          abtvc.tableView);
     CGFloat fullAppHeight = ipvc.view.frame.size.height;
     CGRect expectedAboveViewFrame = CGRectMake(0, 0 - fullAppHeight, expectedWidth, fullAppHeight);
     CGRect aboveViewFrame = ipvc.ABTableViewController.aboveTableContentView.frame;
@@ -95,13 +103,14 @@
 - (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {
     [MaveSDK sharedInstance].displayOptions.inviteExplanationCopy = nil;
 
-    MAVEInvitePageViewController *ipvc =
-    [[MAVEInvitePageViewController alloc] init];
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
+
+    MAVEABTableViewController *abtvc = ipvc.ABTableViewController;
     
-    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, 0);
-    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, 0);
-    XCTAssertNil(ipvc.ABTableViewController.tableView.tableHeaderView);
+    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.width, abtvc.tableView.frame.size.width);
+    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.height, MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
+    XCTAssertNil(abtvc.inviteTableHeaderView.inviteExplanationView);
 }
 
 //

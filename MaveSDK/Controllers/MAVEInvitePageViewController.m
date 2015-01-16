@@ -10,7 +10,6 @@
 #import <AddressBook/AddressBook.h>
 #import "MaveSDK.h"
 #import "MAVEInvitePageViewController.h"
-#import "MAVEInviteExplanationView.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
@@ -150,7 +149,6 @@
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.inviteExplanationView = [[MAVEInviteExplanationView alloc] init];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
@@ -163,7 +161,6 @@
     };
     
     UIView *containerView = [[UIView alloc] init];
-    [self.ABTableViewController.tableView addSubview:self.ABTableViewController.aboveTableContentView];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageContainerView];
     return containerView;
@@ -171,18 +168,16 @@
 
 - (void)layoutInvitePageViewAndSubviews {
     CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+
     CGRect containerFrame = CGRectMake(0,
                                        0,
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
-    CGRect tableViewFrame = CGRectMake(containerFrame.origin.x,
-                                       containerFrame.origin.y,
-                                       containerFrame.size.width,
-                                       containerFrame.size.height);
+    CGRect tableViewFrame = containerFrame;
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
-                            computeHeightWithWidth:containerFrame.size.width];
+                                computeHeightWithWidth:containerFrame.size.width];
 
     // Extend bottom of table view content so invite message view doesn't overlap it
     UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
@@ -204,31 +199,14 @@
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
     self.ABTableViewController.aboveTableContentView.frame =
-        CGRectMake(0, tableViewFrame.origin.y - containerFrame.size.height,
-               containerFrame.size.width, containerFrame.size.height);
+        CGRectMake(0,
+                   tableViewFrame.origin.y - containerFrame.size.height,
+                   containerFrame.size.width,
+                   containerFrame.size.height);
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
-    
-    //
-    // Add in the explanation view if text has been set
-    //
-    if ([self.inviteExplanationView.messageCopy.text length] > 0) {
-        CGRect prevInviteExplanationViewFrame = self.inviteExplanationView.frame;
-        // use ceil so rounding errors won't cause tiny gap below the table header view
-        CGFloat inviteExplanationViewHeight = ceil([self.inviteExplanationView
-                                                    computeHeightWithWidth:containerFrame.size.width]);
-        CGRect inviteExplanationViewFrame = CGRectMake(0, 0, containerFrame.size.width,
-                                                       ceil(inviteExplanationViewHeight));
 
-        // table header view needs to be re-assigned when frame changes or the rest
-        // of the table doesn't get offset and the header overlaps it
-        if (!CGRectEqualToRect(inviteExplanationViewFrame, prevInviteExplanationViewFrame)) {
-            self.inviteExplanationView.frame = inviteExplanationViewFrame;
-            self.ABTableViewController.tableView.tableHeaderView = self.inviteExplanationView;
-            // match above table color to explanation view color so it looks like one view
-            self.ABTableViewController.aboveTableContentView.backgroundColor =
-                self.inviteExplanationView.backgroundColor;
-        }
-    }
+    // Resize the header based on width
+    [self.ABTableViewController layoutHeaderViewForWidth:containerFrame.size.width];
 }
 //
 // Respond to children's Events
