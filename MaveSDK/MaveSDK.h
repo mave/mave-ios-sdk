@@ -66,7 +66,7 @@
 // Present the invite page by pushing onto an existing navigation controller stack
 // Otherwise it's the same as previous method.
 - (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-                             nextBlock:(MAVEInvitePageDismissBlock)nextBlock
+                             forwardBlock:(MAVEInvitePageDismissBlock)forwardBlock
                              backBlock:(MAVEInvitePageDismissBlock)backBlock
                          inviteContext:(NSString *)inviteContext;
 @end

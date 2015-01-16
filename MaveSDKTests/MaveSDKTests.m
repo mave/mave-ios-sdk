@@ -266,7 +266,7 @@
         returnedController = inviteController;
         called = YES;
     }
-                               nextBlock:forwardBlock
+                               forwardBlock:forwardBlock
                                backBlock:backBlock
                            inviteContext:@"foocontext"];
 
@@ -294,7 +294,7 @@
     [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
         called = YES;
     }
-                               nextBlock:nil
+                               forwardBlock:nil
                                backBlock:nil
                            inviteContext:@"foocontext"];
     // does not call block to present since the invite controller will be null

@@ -169,7 +169,7 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 - (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock
-                             nextBlock:(MAVEInvitePageDismissBlock)forwardBlock
+                          forwardBlock:(MAVEInvitePageDismissBlock)forwardBlock
                             backBlock:(MAVEInvitePageDismissBlock)backBlock
                          inviteContext:(NSString *)inviteContext {
     if (![self isSetupOK]) {

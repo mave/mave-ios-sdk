@@ -65,7 +65,7 @@
     [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
 
         [self.navigationController pushViewController:inviteController animated:YES];
-    } nextBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+    } forwardBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
 
         [controller.navigationController pushViewController:afterInvitesPage animated:YES];
     } backBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
