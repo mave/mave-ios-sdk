@@ -38,6 +38,28 @@
     [super tearDown];
 }
 
+- (void)testInitForModalPresent {
+    MAVEInvitePageDismissBlock dismissBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {};
+    MAVEInvitePageChooser *ipc = [[MAVEInvitePageChooser alloc] initForModalPresentWithCancelBlock:dismissBlock];
+
+    XCTAssertEqualObjects(ipc.navigationPresentedFormat, MAVEInvitePagePresentFormatModal);
+    XCTAssertEqualObjects(ipc.navigationCancelBlock, dismissBlock);
+    XCTAssertNil(ipc.navigationBackBlock);
+    XCTAssertNil(ipc.navigationForwardBlock);
+}
+
+- (void)testInitForPushPresent {
+    MAVEInvitePageDismissBlock backBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {};
+    MAVEInvitePageDismissBlock nextBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {};
+    MAVEInvitePageChooser *ipc = [[MAVEInvitePageChooser alloc] initForPushPresentWithForwardBlock:nextBlock
+                                                                                         backBlock:backBlock];
+
+    XCTAssertEqualObjects(ipc.navigationPresentedFormat, MAVEInvitePagePresentFormatPush);
+    XCTAssertEqualObjects(ipc.navigationBackBlock, backBlock);
+    XCTAssertEqualObjects(ipc.navigationForwardBlock, nextBlock);
+    XCTAssertNil(ipc.navigationCancelBlock);
+}
+
 - (void)testChooseAndCreateInvitePageViewControllerAddressBookDenied {
 
 }
@@ -49,7 +71,9 @@
     XCTAssertEqualObjects(NSStringFromClass([vc class]), @"MAVECustomSharePageViewController");
 }
 
-// Helper functions tests
+
+# pragma mark - Tests for logic that determines which page to show
+
 - (void)testUSIsInSupportedRegionForServerSideSMSInvites {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     NSDictionary *fakeCurrentLocale = @{NSLocaleCountryCode: @"US"};
@@ -108,6 +132,7 @@
     XCTAssertNotNil(vc);
     XCTAssertEqualObjects(NSStringFromClass([MAVEInvitePageViewController class]),
                           @"MAVEInvitePageViewController");
+    XCTAssertEqualObjects(chooser.activeViewController, vc);
 }
 
 - (void)testCreateCustomShareInvitePage {
@@ -116,67 +141,254 @@
     XCTAssertNotNil(vc);
     XCTAssertEqualObjects(NSStringFromClass([MAVECustomSharePageViewController class]),
                           @"MAVECustomSharePageViewController");
+    XCTAssertEqualObjects(chooser.activeViewController, vc);
 }
 
-#pragma mark - additional setup of view controllers
+#pragma mark - Navigation controller setup logic
 
-// Navigation bar
+- (void)testSetupNavigationBarForActiveViewControllerModal {
+    // If presented modal, should do modal button setup
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
+    UIViewController *vc = [[UIViewController alloc] init];
+    chooser.activeViewController = vc;
+    XCTAssertNil(chooser.activeViewController.navigationController);
+
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock _embedActiveViewControllerInNewNavigationController]);
+    OCMExpect([chooserMock _styleNavigationItemForActiveViewController]);
+    OCMExpect([chooserMock _setupNavigationBarButtonsModalStyle]);
+
+    [chooser setupNavigationBarForActiveViewController];
+
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testSetupNavigationBarForActiveViewControllerPush {
+    // If presented push, should do push button setup
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatPush;
+    UIViewController *vc = [[UIViewController alloc] init];
+    chooser.activeViewController = vc;
+
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock _embedActiveViewControllerInNewNavigationController]);
+    OCMExpect([chooserMock _styleNavigationItemForActiveViewController]);
+    OCMExpect([chooserMock _setupNavigationBarButtonsPushStyle]);
+
+    [chooser setupNavigationBarForActiveViewController];
+
+    OCMVerifyAll(chooserMock);
+}
+
 - (void)testEmbedInNavigationController {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+    XCTAssertNil(chooser.activeViewController.navigationController);
 
-    UIViewController *viewController = [[UIViewController alloc] init];
-    UINavigationController *sampleNavigationController =
-        [chooser embedInNavigationController:viewController];
+    [chooser _embedActiveViewControllerInNewNavigationController];
 
-    XCTAssertNotNil(sampleNavigationController);
-    XCTAssertEqualObjects(sampleNavigationController, viewController.navigationController);
+    XCTAssertNotNil(chooser.activeViewController.navigationController);
 }
 
-- (void)testSetupNavigationBarOnViewController {
-    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-
+- (void)testStyleNavigationController {
     // Uses display options from the singleton
     [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
     MAVEDisplayOptions *displayOpts = [MAVEDisplayOptionsFactory generateDisplayOptions];
     [MaveSDK sharedInstance].displayOptions = displayOpts;
 
-
+    // set up view controller & chooser
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     UIViewController *vc = [[UIViewController alloc] init];
-    UINavigationController *sampleNavigationController =
-        [chooser embedInNavigationController:vc];
-    XCTAssertNotNil(sampleNavigationController);
-    NSObject *someObject = [[NSObject alloc] init];
+    chooser.activeViewController = vc;
+    [chooser _embedActiveViewControllerInNewNavigationController];
 
-    [chooser setupNavigationBar:vc
-            leftBarButtonTarget:someObject
-            leftBarButtonAction:@selector(testEmbedInNavigationController)];
+    [chooser _styleNavigationItemForActiveViewController];
+
     XCTAssertEqualObjects(vc.navigationItem.title, displayOpts.navigationBarTitleCopy);
     XCTAssertEqualObjects(vc.navigationController.navigationBar.barTintColor,
                           displayOpts.navigationBarBackgroundColor);
     NSDictionary *expectedTitleTextAttrs = @{
-        NSForegroundColorAttributeName: displayOpts.navigationBarTitleTextColor,
-        NSFontAttributeName: displayOpts.navigationBarTitleFont,
-    };
+                                             NSForegroundColorAttributeName: displayOpts.navigationBarTitleTextColor,
+                                             NSFontAttributeName: displayOpts.navigationBarTitleFont,
+                                             };
     XCTAssertEqualObjects(vc.navigationController.navigationBar.titleTextAttributes,
                           expectedTitleTextAttrs);
-
-    XCTAssertEqualObjects(vc.navigationItem.leftBarButtonItem.target, someObject);
-    XCTAssertEqual(vc.navigationItem.leftBarButtonItem.action,
-                   @selector(testEmbedInNavigationController));
 }
 
-- (void)testSetupNavigationBarIfNone {
+- (void)testSetupNavigationButtonsModalWhenCustom {
+    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    NSObject *someObject = [[NSObject alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
 
-    UIViewController *vc = [[UIViewController alloc] init];
-    XCTAssertNil(vc.navigationController);
+    [chooser _setupNavigationBarButtonsModalStyle];
 
-    [chooser setupNavigationBar:vc
-            leftBarButtonTarget:someObject
-            leftBarButtonAction:@selector(testEmbedInNavigationController)];
+    UIBarButtonItem *cancelButton = chooser.activeViewController.navigationItem.leftBarButtonItem;
+    XCTAssertEqualObjects(cancelButton,
+                          [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton);
+    XCTAssertEqualObjects(cancelButton.target, chooser);
+    XCTAssertEqual(cancelButton.action, @selector(dismissOnCancel));
+}
 
-    XCTAssertNil(vc.navigationController);
+- (void)testSetupNavigationButtonsModalDefaults {
+    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = nil;
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    [chooser _setupNavigationBarButtonsModalStyle];
+
+    UIBarButtonItem *cancelButton = chooser.activeViewController.navigationItem.leftBarButtonItem;
+    XCTAssertEqualObjects(cancelButton.title, @"Cancel");
+    XCTAssertEqual(cancelButton.style, UIBarButtonItemStylePlain);
+    XCTAssertEqualObjects(cancelButton.target, chooser);
+    XCTAssertEqual(cancelButton.action, @selector(dismissOnCancel));
+}
+
+- (void)testSetupNavigationButtonsPushWhenCustom {
+    [MaveSDK sharedInstance].displayOptions.navigationBarBackButton = [[UIBarButtonItem alloc] init];
+    [MaveSDK sharedInstance].displayOptions.navigationBarForwardButton = [[UIBarButtonItem alloc] init];
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    [chooser _setupNavigationBarButtonsPushStyle];
+
+    UIBarButtonItem *backButton = chooser.activeViewController.navigationItem.leftBarButtonItem;
+    UIBarButtonItem *forwardButton = chooser.activeViewController.navigationItem.rightBarButtonItem;
+    XCTAssertEqualObjects(backButton,
+                          [MaveSDK sharedInstance].displayOptions.navigationBarBackButton);
+    XCTAssertEqualObjects(backButton.target, chooser);
+    XCTAssertEqual(backButton.action, @selector(dismissOnBack));
+
+    XCTAssertEqualObjects(forwardButton, [MaveSDK sharedInstance].displayOptions.navigationBarForwardButton);
+    XCTAssertEqualObjects(forwardButton.target, chooser);
+    XCTAssertEqual(forwardButton.action, @selector(dismissOnForward));
+}
+
+- (void)testsetupnavigationButtonsPushDefaults {
+    [MaveSDK sharedInstance].displayOptions.navigationBarBackButton = nil;
+    [MaveSDK sharedInstance].displayOptions.navigationBarForwardButton = nil;
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    [chooser _setupNavigationBarButtonsPushStyle];
+
+    UIBarButtonItem *backButton = chooser.activeViewController.navigationItem.leftBarButtonItem;
+    UIBarButtonItem *forwardButton = chooser.activeViewController.navigationItem.rightBarButtonItem;
+
+    // Back button not build yet
+    XCTAssertNil(backButton);
+    XCTAssertNotNil(forwardButton);
+    XCTAssertEqualObjects(forwardButton.title, @"Skip");
+    XCTAssertEqual(forwardButton.style, UIBarButtonItemStylePlain);
+    XCTAssertEqualObjects(forwardButton.target, chooser);
+    XCTAssertEqual(forwardButton.action, @selector(dismissOnForward));
+}
+
+///
+/// Forward and back/cancel actions
+///
+- (void)testDismissOnSuccessWhenModal {
+    // When modal, dismiss on success calls the cancel block
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnSuccess:101];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationCancelBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnSuccess:102];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 102);
+}
+
+- (void)testDismissOnSuccessWhenPush {
+    // When pushed, dismiss on success calls the forward block
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatPush;
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnSuccess:101];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationForwardBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnSuccess:102];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 102);
+}
+
+-(void)testDismissOnCancel {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnCancel];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationCancelBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnCancel];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
+}
+
+- (void)testDismissOnBack {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnBack];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationBackBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnBack];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
+}
+
+- (void)testDismissOnForward {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+
+    // with no back block, does nothing
+    [chooser dismissOnForward];
+
+    __block UIViewController *calledWithVC;
+    __block NSUInteger numInvites;
+    chooser.navigationForwardBlock = ^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        calledWithVC = controller;
+        numInvites = numberOfInvitesSent;
+    };
+
+    [chooser dismissOnForward];
+
+    XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
+    XCTAssertEqual(numInvites, 0);
 }
 
 @end

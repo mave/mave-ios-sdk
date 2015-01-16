@@ -11,6 +11,7 @@
 #import <objc/runtime.h>
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
+#import "MAVEInvitePageChooser.h"
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
 #import "MAVEAPIInterface.h"
@@ -46,7 +47,6 @@
     XCTAssertNotNil(mave.appDeviceID);
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
     XCTAssertNotNil(mave.shareTokenBuilder);
-    XCTAssertNotNil(mave.invitePageChooser);
 }
 
 
@@ -153,17 +153,15 @@
 - (void)testIdentifyUser {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
-    MaveSDK *gk = [MaveSDK sharedInstance];
-    gk.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        NSUInteger numInvitesSent) {};
+    MaveSDK *mave = [MaveSDK sharedInstance];
     id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
-    gk.APIInterface = mockAPIInterface;
+    mave.APIInterface = mockAPIInterface;
     OCMExpect([mockAPIInterface identifyUser]);
 
-    [gk identifyUser:userData];
+    [mave identifyUser:userData];
 
     OCMVerifyAll(mockAPIInterface);
-    XCTAssertEqualObjects(gk.userData, userData);
+    XCTAssertEqualObjects(mave.userData, userData);
 }
 
 - (void)testIdentifyUserInvalidDoesntMakeNetworkRequest {
@@ -199,17 +197,6 @@
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
     MaveSDK *mave = [MaveSDK sharedInstance];
     [mave identifyAnonymousUser];
-    mave.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        NSUInteger numInvitesSent) {};
-    XCTAssertFalse([mave isSetupOK]);
-}
-
-- (void)testIsSetupOkFailsWithNoDismissalBlock {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *mave = [MaveSDK sharedInstance];
-    [mave identifyAnonymousUser];
-
-    // never set dismissal block so it's nil
     XCTAssertFalse([mave isSetupOK]);
 }
 
@@ -217,8 +204,6 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *mave = [MaveSDK sharedInstance];
     // didn't identify user, but it's ok
-    mave.invitePageDismissalBlock = ^void(UIViewController *vc,
-                                        NSUInteger numInvitesSent) {};
     XCTAssertTrue([mave isSetupOK]);
 }
 
@@ -241,7 +226,8 @@
     // Returns a navigation controller since this is the present modally variation,
     // and set the necessary properties
     OCMVerifyAll(maveMock);
-    XCTAssertEqualObjects(mave.invitePageDismissalBlock, dismissalBlock);
+    XCTAssertEqualObjects(mave.invitePageChooser.navigationPresentedFormat, MAVEInvitePagePresentFormatModal);
+    XCTAssertEqualObjects(mave.invitePageChooser.navigationCancelBlock, dismissalBlock);
     XCTAssertEqualObjects(mave.inviteContext, @"foocontext");
     XCTAssertTrue(called);
     XCTAssertNotNil(returnedController);
@@ -260,8 +246,58 @@
         called = YES;
     } dismissBlock:nil inviteContext:@"foocontext"];
 
-    // Returns a navigation controller since this is the present modally variation,
+    OCMVerifyAll(maveMock);
+    XCTAssertFalse(called);
+}
+
+- (void)testPresentInvitePagePush {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+
+    id maveMock = OCMPartialMock(mave);
+    OCMExpect([maveMock isSetupOK]).andReturn(YES);
+
+    MAVEInvitePageDismissBlock backBlock = ^(UIViewController *viewController, NSUInteger numberOfInvitesSent) {};
+    MAVEInvitePageDismissBlock forwardBlock = ^(UIViewController *viewController, NSUInteger numberOfInvitesSent) {};
+
+
+    __block UIViewController *returnedController;
+    __block BOOL called;
+    [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
+        returnedController = inviteController;
+        called = YES;
+    }
+                               forwardBlock:forwardBlock
+                               backBlock:backBlock
+                           inviteContext:@"foocontext"];
+
+    // Returns a view controller since this is the present push variation,
     // and set the necessary properties
+    OCMVerifyAll(maveMock);
+    XCTAssertEqualObjects(mave.invitePageChooser.navigationPresentedFormat, MAVEInvitePagePresentFormatPush);
+    XCTAssertNil(mave.invitePageChooser.navigationCancelBlock);
+    XCTAssertEqualObjects(mave.invitePageChooser.navigationForwardBlock, forwardBlock);
+    XCTAssertEqualObjects(mave.invitePageChooser.navigationBackBlock, backBlock);
+    XCTAssertEqualObjects(mave.inviteContext, @"foocontext");
+    XCTAssertTrue(called);
+    XCTAssertNotNil(returnedController);
+    XCTAssertFalse([returnedController isKindOfClass:[UINavigationController class]]);
+}
+
+- (void)testPresentInvitePagePushWithError {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+
+    id maveMock = OCMPartialMock(mave);
+    OCMExpect([maveMock isSetupOK]).andReturn(NO);
+
+    __block BOOL called;
+    // dismissal block nil triggers error
+    [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
+        called = YES;
+    }
+                               forwardBlock:nil
+                               backBlock:nil
+                           inviteContext:@"foocontext"];
+    // does not call block to present since the invite controller will be null
     OCMVerifyAll(maveMock);
     XCTAssertFalse(called);
 }

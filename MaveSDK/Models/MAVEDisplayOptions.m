@@ -19,6 +19,7 @@
         self.navigationBarTitleFont = [UIFont systemFontOfSize:16];
         self.navigationBarTitleTextColor = [[self class] colorAlmostBlack];
         self.navigationBarBackgroundColor = [[self class] colorWhite];
+
         self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
         self.navigationBarCancelButton.title = @"Cancel";
         

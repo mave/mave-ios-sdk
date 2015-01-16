@@ -33,15 +33,12 @@
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
      self.view = [[MAVECustomSharePageView alloc] init];
-    
+
     [self determineAndSetViewBasedOnABPermissions];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // Setup the cancel button
-    [self setupNavigationBar];
 
     // Subscribe to events that change frame size
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -55,8 +52,11 @@
                         object:nil];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [self.view endEditing:YES];
+}
+
 - (void)dealloc {
-    MAVEDebugLog(@"dealloc MAVEInvitePageViewController");
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
                              name:UIKeyboardWillChangeFrameNotification
@@ -71,28 +71,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setupNavigationBar {
-    [[MaveSDK sharedInstance].invitePageChooser
-     setupNavigationBar:self
-     leftBarButtonTarget:self
-     leftBarButtonAction:@selector(dismissAfterCancel)];
-}
-
 // Cleanup to dismiss, then call the block method, passing back the
 // number of invites sent to the containing app
 - (void)dismissSelf:(NSUInteger)numberOfInvitesSent {
-    // Cleanup for dismiss
-    [self.view endEditing:YES];
-
-    // Call dismissal block
-    MAVEInvitePageDismissBlock dismissalBlock = [MaveSDK sharedInstance].invitePageDismissalBlock;
-    if (dismissalBlock) {
-        dismissalBlock(self, numberOfInvitesSent);
-    }
-}
-
-- (void)dismissAfterCancel {
-    [self dismissSelf:0];
+    [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:numberOfInvitesSent];
 }
 
 //
@@ -145,9 +127,7 @@
         // Permission denied
         if ([indexedContacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIViewController *vc = [[MaveSDK sharedInstance]
-                    .invitePageChooser createCustomShareInvitePage];
-                [self.navigationController pushViewController:vc animated:NO];
+                [[MaveSDK sharedInstance].invitePageChooser replaceActiveViewControllerWithSharePage];
             });
         // Permission granted
         } else {

@@ -98,10 +98,6 @@
     MAVEInvitePageViewController *ipvc =
     [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
-
-
-
-
     
     XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, 0);
     XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, 0);
@@ -118,59 +114,16 @@
     OCMVerify(mock);
 }
 
-- (void)testAppropriateTeardownOnDismissSelf {
-    __block NSUInteger numSent = 0;
-    [MaveSDK sharedInstance].invitePageDismissalBlock =
-        ^void(UIViewController *viewController,
-              NSUInteger numberOfInvitesSent) {
-        numSent = numberOfInvitesSent;
-    };
+- (void)testDismissSelf {
+    id chooserMock = OCMClassMock([MAVEInvitePageChooser class]);
+    [MaveSDK sharedInstance].invitePageChooser = chooserMock;
+
+    OCMExpect([chooserMock dismissOnSuccess:304]);
+
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     [vc loadView]; [vc viewDidLoad];
-    id vcViewMock = [OCMockObject partialMockForObject:vc.view];
-    [[vcViewMock expect] endEditing:YES];
 
-    [vc dismissSelf:3];
-
-    XCTAssertEqual(numSent, 3);
-    [vcViewMock verify];
-}
-
-- (void)testDismissAfterCancelCallsDismissSelf {
-    MAVEInvitePageViewController *vc =
-        [[MAVEInvitePageViewController alloc] init];
-
-    id mockVC =  OCMPartialMock(vc);
-    OCMExpect([mockVC dismissSelf:0]);
-    [vc dismissAfterCancel];
-    OCMVerifyAll(mockVC);
-}
-
-- (void)testViewDidLoadSetsUpNavigationBar {
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
-
-    id mock = OCMPartialMock(vc);
-    OCMExpect([mock setupNavigationBar]);
-
-    [vc viewDidLoad];
-
-    OCMVerifyAll(mock);
-}
-
-- (void)testSetupNavigationBar {
-    id chooserMock = OCMPartialMock([MaveSDK sharedInstance].invitePageChooser);
-
-    // setup view controller
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    [[MaveSDK sharedInstance].invitePageChooser embedInNavigationController:vc];
-
-    // sets up look and display of bar
-    OCMExpect([chooserMock setupNavigationBar:vc
-                          leftBarButtonTarget:vc
-                          leftBarButtonAction:@selector(dismissAfterCancel)]);
-
-    [vc setupNavigationBar];
+    [vc dismissSelf:304];
 
     OCMVerifyAll(chooserMock);
 }

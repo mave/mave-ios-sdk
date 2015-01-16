@@ -20,7 +20,33 @@ NSString * const MAVEInvitePageTypeContactList = @"contact_list";
 NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
 NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 
-@implementation MAVEInvitePageChooser
+NSString * const MAVEInvitePagePresentFormatModal = @"modal";
+NSString * const MAVEInvitePagePresentFormatPush = @"push";
+
+@implementation MAVEInvitePageChooser {
+    // This is just the view controller's navigation controller, but that's a weak reference
+    // so sometimes we'll want to store it here
+    __strong UINavigationController *_activeNavigationController;
+}
+
+- (instancetype)initForModalPresentWithCancelBlock:(MAVEInvitePageDismissBlock)cancelBlock {
+    if (self = [super init]) {
+        self.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
+        self.navigationCancelBlock = cancelBlock;
+    }
+    return self;
+}
+
+- (instancetype)initForPushPresentWithForwardBlock:(MAVEInvitePageDismissBlock)forwardBlock
+                                      backBlock:(MAVEInvitePageDismissBlock)backBlock {
+    if (self = [super init]) {
+        self.navigationPresentedFormat = MAVEInvitePagePresentFormatPush;
+        self.navigationForwardBlock = forwardBlock;
+        self.navigationBackBlock = backBlock;
+    }
+    return self;
+}
+
 
 - (UIViewController *)chooseAndCreateInvitePageViewController {
     // If contacts permission already denied, load the share page
@@ -74,41 +100,135 @@ NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 #pragma mark - helpers to create the kinds of view controllers
 
 - (UIViewController *)createAddressBookInvitePage {
-     return [[MAVEInvitePageViewController alloc] init];
+    self.activeViewController = [[MAVEInvitePageViewController alloc] init];
+    return self.activeViewController;
 }
 
 - (UIViewController *)createCustomShareInvitePage {
-    return [[MAVECustomSharePageViewController alloc] init];
+    self.activeViewController = [[MAVECustomSharePageViewController alloc] init];
+    return self.activeViewController;
 }
 
 #pragma mark - additional setup to view controllers
 
-- (UINavigationController *)embedInNavigationController:(UIViewController *)viewController {
-    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:viewController];
-    return nvc;
+// View controller and navigation controller custom getters/setters
+- (UINavigationController *)activeNavigationController {
+    return self.activeViewController.navigationController;
+}
+- (void)setActiveViewController:(UIViewController *)activeViewController {
+    // drop reference to active navigation controller
+    _activeNavigationController = nil;
+    _activeViewController = activeViewController;
 }
 
-- (void)setupNavigationBar:(UIViewController *)viewController
-       leftBarButtonTarget:(id)target
-       leftBarButtonAction:(SEL)action {
-    // if no navigation controller, no need to set up
-    if (!viewController.navigationController) {
-        return;
+- (void)setupNavigationBarForActiveViewController {
+    if (!self.activeViewController.navigationController) {
+        [self _embedActiveViewControllerInNewNavigationController];
     }
 
-    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
+    [self _styleNavigationItemForActiveViewController];
 
-    viewController.navigationItem.title = displayOptions.navigationBarTitleCopy;
-    viewController.navigationController.navigationBar.titleTextAttributes = @{
+    if ([self.navigationPresentedFormat isEqualToString:
+         MAVEInvitePagePresentFormatModal]) {
+        [self _setupNavigationBarButtonsModalStyle];
+    } else if ([self.navigationPresentedFormat isEqualToString:
+                MAVEInvitePagePresentFormatPush]) {
+        [self _setupNavigationBarButtonsPushStyle];
+    }
+}
+
+- (void)_embedActiveViewControllerInNewNavigationController {
+    _activeNavigationController = [[UINavigationController alloc] initWithRootViewController:self.activeViewController];
+}
+
+- (void)_styleNavigationItemForActiveViewController {
+    MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
+    self.activeViewController.navigationItem.title = displayOptions.navigationBarTitleCopy;
+    self.activeViewController.navigationController.navigationBar.titleTextAttributes = @{
         NSForegroundColorAttributeName: displayOptions.navigationBarTitleTextColor,
         NSFontAttributeName: displayOptions.navigationBarTitleFont,
     };
-    viewController.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
+    self.activeViewController.navigationController.navigationBar.barTintColor = displayOptions.navigationBarBackgroundColor;
+}
 
-    UIBarButtonItem *cancelBarButtonItem = displayOptions.navigationBarCancelButton;
-    cancelBarButtonItem.target = target;
-    cancelBarButtonItem.action = action;
-    [viewController.navigationItem setLeftBarButtonItem:cancelBarButtonItem];
+// Setup the single "Cancel" button to close the modal window/return to drawer
+- (void)_setupNavigationBarButtonsModalStyle {
+    UIBarButtonItem *button = [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton;
+    if (!button) {
+        button = [[UIBarButtonItem alloc] init];
+        button.title = @"Cancel";
+        button.style = UIBarButtonItemStylePlain;
+    }
+    button.target = self;
+    button.action = @selector(dismissOnCancel);
+    self.activeViewController.navigationItem.leftBarButtonItem = button;
+}
+
+- (void)_setupNavigationBarButtonsPushStyle {
+    // Back button is optional, if not set ios will set a default
+    UIBarButtonItem *backButton = [MaveSDK sharedInstance].displayOptions.navigationBarBackButton;
+    if (backButton) {
+        backButton.target = self;
+        backButton.action = @selector(dismissOnBack);
+        self.activeViewController.navigationItem.leftBarButtonItem = backButton;
+    }
+
+    // for forward button, we need to build a default if none was given
+    UIBarButtonItem *forwardButton = [MaveSDK sharedInstance].displayOptions.navigationBarForwardButton;
+    if (!forwardButton) {
+        forwardButton = [[UIBarButtonItem alloc] init];
+        forwardButton.title = @"Skip";
+        forwardButton.style = UIBarButtonItemStylePlain;
+    }
+    forwardButton.target = self;
+    forwardButton.action = @selector(dismissOnForward);
+    self.activeViewController.navigationItem.rightBarButtonItem = forwardButton;
+}
+
+- (void)replaceActiveViewControllerWithSharePage {
+    // if displaying pushed on stack, pop then push to replace it on the stack
+    //
+    // if displaying modally, we can push just it onto our new modal stack b/c
+    // the cancel button still dismisses the whole modal navigation controller
+    UINavigationController *navigationController = self.activeNavigationController;
+    if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
+        [navigationController popViewControllerAnimated:NO];
+    }
+    [self createCustomShareInvitePage];
+    [self setupNavigationBarForActiveViewController];
+    [navigationController pushViewController:self.activeViewController animated:NO];
+}
+
+- (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent {
+    if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatModal]) {
+        if (self.navigationCancelBlock) {
+            self.navigationCancelBlock(self.activeViewController,
+                                       numberOfInvitesSent);
+        }
+    } else if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
+        if (self.navigationForwardBlock) {
+            self.navigationForwardBlock(self.activeViewController,
+                                        numberOfInvitesSent);
+        }
+    }
+}
+
+- (void)dismissOnCancel {
+    if (self.navigationCancelBlock) {
+        self.navigationCancelBlock(self.activeViewController, 0);
+    }
+}
+
+- (void)dismissOnBack {
+    if (self.navigationBackBlock) {
+        self.navigationBackBlock(self.activeViewController, 0);
+    }
+}
+
+- (void)dismissOnForward {
+    if (self.navigationForwardBlock) {
+        self.navigationForwardBlock(self.activeViewController, 0);
+    }
 }
 
 
