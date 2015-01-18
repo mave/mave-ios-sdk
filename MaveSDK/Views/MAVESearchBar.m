@@ -12,20 +12,31 @@ CGFloat const MAVESearchBarRowHeight = 44.0;
 
 @implementation MAVESearchBar
 
-- (instancetype)init {
-    if (self = [super init]) {
-        self.backgroundColor = [UIColor whiteColor];
-        self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-        self.font = [self placeholderFont];
-        self.attributedPlaceholder = [[NSAttributedString alloc]
-            initWithString:@"Enter name or phone number"
-            attributes:@{NSForegroundColorAttributeName: [self placeholderTextColor],
-                         NSFontAttributeName: [self placeholderFont],
-        }];
-
-        [self setupLeftLabelView];
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self setupInit];
     }
     return self;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        [self setupInit];
+    }
+    return self;
+}
+
+- (void)setupInit {
+    self.backgroundColor = [UIColor whiteColor];
+    self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.font = [self placeholderFont];
+    self.attributedPlaceholder = [[NSAttributedString alloc]
+                                  initWithString:@"Enter name or phone number"
+                                  attributes:@{NSForegroundColorAttributeName: [self placeholderTextColor],
+                                               NSFontAttributeName: [self placeholderFont],
+                                               }];
+    
+    [self setupLeftLabelView];
 }
 
 // UI colors & sizes to use, will be displayOptions later

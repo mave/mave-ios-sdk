@@ -16,12 +16,13 @@
 - (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num;
 @end
 
-@interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate>
+@interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate, UITextFieldDelegate>
 
 @property (nonatomic, weak) UIViewController<MAVEABTableViewAdditionalDelegate> *parentViewController;
 @property (nonatomic, strong) MAVEInviteTableHeaderView *inviteTableHeaderView;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIView *aboveTableContentView;
+@property (nonatomic, assign) CGFloat contentInsetTopWithoutSearch;
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
 
 // For searching
@@ -30,6 +31,7 @@
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, assign) BOOL isSearching;
+@property (atomic, assign) BOOL isAnimatingSearchBarReplace;
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
 

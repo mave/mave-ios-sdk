@@ -9,6 +9,7 @@
 #import "MAVEInviteTableHeaderView.h"
 #import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
+#import "MAVESearchBar.h"
 
 @implementation MAVEInviteTableHeaderView
 
@@ -29,7 +30,7 @@
         self.backgroundColor = displayOptions.inviteExplanationCellBackgroundColor;
     }
 
-    self.searchBar = [[UISearchBar alloc] initWithFrame:
+    self.searchBar = [[MAVESearchBar alloc] initWithFrame:
                       CGRectMake(0,
                                  self.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT,
                                  self.frame.size.width,
@@ -51,16 +52,6 @@
                                                          inviteExplanationViewHeight);
         self.inviteExplanationView.frame = newInviteExplanationViewRect;
     }
-}
-
-- (void)repositionSearchBar {
-    [self bringSubviewToFront:self.searchBar];
-    CGRect searchBarFrame = self.searchBar.frame;
-    searchBarFrame.size.height = MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
-    searchBarFrame.origin.y = self.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
-    [UIView animateWithDuration:.2 animations:^{
-        self.searchBar.frame = searchBarFrame;
-    }];
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {

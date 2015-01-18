@@ -30,6 +30,7 @@
 @implementation MAVEABTableViewController {
     NSDictionary *tableData;
     NSArray *tableSections;
+    NSDictionary *recordIDsToindexPaths;
 }
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent {
@@ -72,11 +73,11 @@
     self.searchBar = [[UISearchBar alloc] init];
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.searchBar.delegate = self;
-    CGRect searchBarFrame = self.searchBar.frame;
-    searchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
-    searchBarFrame.origin = CGPointMake(0, 0);
-    self.searchBar.frame = searchBarFrame;
-    self.searchBar.hidden = YES;
+    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
+//    searchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
+//    searchBarFrame.origin = CGPointMake(0, 0);
+//    self.searchBar.frame = searchBarFrame;
+//    self.searchBar.hidden = NO;
 
     [self.tableView addSubview:self.searchBar];
 }
@@ -96,10 +97,42 @@
                  forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
 }
 
+- (void)adjustTopInsetForSearch {
+    if (!self.contentInsetTopWithoutSearch) {
+        self.contentInsetTopWithoutSearch = self.tableView.contentInset.top;
+    }
+    CGFloat increaseBy = self.searchBar.frame.size.height;
+    CGFloat newTopInset = self.contentInsetTopWithoutSearch + increaseBy;
+    if (self.tableView.contentInset.top != newTopInset) {
+        // adjust the inset and adjust the offset to make up for it
+        UIEdgeInsets inset = self.tableView.contentInset;
+        inset.top = newTopInset;
+
+        CGPoint offset = self.tableView.contentOffset;
+        offset.y = offset.y - increaseBy;
+
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tableView setContentInset:inset];
+//        });
+    }
+}
+
+- (void)adjustTopInsetForNoSearch {
+    if (!self.contentInsetTopWithoutSearch) {
+        self.contentInsetTopWithoutSearch = self.tableView.contentInset.top;
+    }
+    if (self.tableView.contentInset.top != self.contentInsetTopWithoutSearch) {
+        UIEdgeInsets inset = self.tableView.contentInset;
+        inset.top = self.contentInsetTopWithoutSearch;
+        self.tableView.contentInset = inset;
+    }
+}
+
 - (void)updateTableData:(NSDictionary *)data {
     tableData = data;
     tableSections = [[tableData allKeys]
                      sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+
     [self.tableView reloadData];
 
     if (self.isSearching) {
@@ -232,41 +265,6 @@
     return -1;
 }
 
-// Scroll delegate methods
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat offsetY = self.tableView.contentOffset.y;
-
-    // Scrolled above search bar
-    if (offsetY < MAVE_AB_TABLE_OFFSET_THRESHOLD_Y) {
-//        UIEdgeInsets contentInset = self.tableView.contentInset;
-//        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y;
-//        self.tableView.contentInset = contentInset;
-
-        // "Center" the text in the inviteTableHeaderView
-        CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
-        [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
-
-        self.inviteTableHeaderView.searchBar.hidden = NO;
-        self.searchBar.hidden = YES;
-    }
-    else {
-//        // Move content below the searchBar
-//        UIEdgeInsets contentInset = self.tableView.contentInset;
-//        contentInset.top = MAVE_AB_TABLE_SEARCH_BAR_Y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
-//        self.tableView.contentInset = contentInset;
-
-        // Offset the searchBar while scrolling below the headerView
-        CGRect newFrame = self.searchBar.frame;
-        newFrame.origin.y = offsetY + MAVE_AB_TABLE_SEARCH_BAR_Y;
-        self.searchBar.frame = newFrame;
-
-        // Hide the inviteTableHeaderView's search bar
-        self.inviteTableHeaderView.searchBar.hidden = YES;
-        self.searchBar.hidden = NO;
-        [self.tableView bringSubviewToFront:self.searchBar];
-    }
-}
-
 #pragma mark - Helpers
 
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
@@ -277,6 +275,7 @@
         return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
     }
 }
+
 
 #pragma mark - Layout
 
@@ -347,6 +346,46 @@
     }
 }
 
+#pragma mark - Arranging search bars and content
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat offsetY = self.tableView.contentOffset.y;
+    NSLog(@"Offset in scroll: %f", offsetY);
+
+    // Scrolled above search bar
+    if (offsetY < MAVE_AB_TABLE_OFFSET_THRESHOLD_Y) {
+        [self adjustTopInsetForNoSearch];
+
+        // "Center" the text in the inviteTableHeaderView
+        CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
+        [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
+
+        self.inviteTableHeaderView.searchBar.hidden = NO;
+        self.searchBar.hidden = YES;
+    }
+    else {
+        // kind of a hack - on first scroll event after searchbar animation
+        // adjusting the top inset will interfere with the animation, so wait
+        // until the next scroll event to adjust the inset
+        if (self.isAnimatingSearchBarReplace) {
+            self.isAnimatingSearchBarReplace = NO;
+        } else {
+            [self adjustTopInsetForSearch];
+        }
+
+        // Offset the searchBar while scrolling below the headerView
+        CGRect newFrame = self.searchBar.frame;
+        newFrame.origin.y = offsetY + MAVE_AB_TABLE_SEARCH_BAR_Y;
+        self.searchBar.frame = newFrame;
+
+        // Hide the inviteTableHeaderView's search bar
+        self.inviteTableHeaderView.searchBar.hidden = YES;
+        self.searchBar.hidden = NO;
+        [self.tableView bringSubviewToFront:self.searchBar];
+    }
+}
+
+
 #pragma mark - Search TableView management
 
 - (UIView *)searchBackgroundButton {
@@ -363,20 +402,38 @@
     return _searchBackgroundButton;
 }
 
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    self.isSearching = YES;
-
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)searchBar {
     if (searchBar == self.inviteTableHeaderView.searchBar) {
-        self.inviteTableHeaderView.searchBar.hidden = YES;
-        self.searchBar.hidden = NO;
-        [self beginSearchBarEditing];
+        [self transitionHeaderSearchBarToRealSearchBar];
         return NO;
     }
-
-    [self.searchBar setShowsCancelButton:YES animated:YES];
-    [self addSearchBackgroundButton];
     return YES;
 }
+
+- (void)transitionHeaderSearchBarToRealSearchBar {
+    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
+    [self.searchBar becomeFirstResponder];
+    self.isAnimatingSearchBarReplace = YES;
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.tableView setContentOffset:CGPointMake(0, MAVE_AB_TABLE_OFFSET_THRESHOLD_Y)
+                                animated:NO];
+    }];
+}
+
+//- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+//    self.isSearching = YES;
+//
+//    if (searchBar == self.inviteTableHeaderView.searchBar) {
+//        self.inviteTableHeaderView.searchBar.hidden = YES;
+//        self.searchBar.hidden = NO;
+//        [self beginSearchBarEditing];
+//        return NO;
+//    }
+//
+//    [self.searchBar setShowsCancelButton:YES animated:YES];
+//    [self addSearchBackgroundButton];
+//    return YES;
+//}
 
 - (void)beginSearchBarEditing {
     CGFloat offsetY = self.tableView.contentOffset.y;
@@ -385,8 +442,6 @@
         [self.tableView setContentOffset:CGPointMake(0, MAVE_AB_TABLE_OFFSET_THRESHOLD_Y)
                                 animated:YES];
     }
-
-    [self.searchBar becomeFirstResponder];
 }
 
 - (void)addSearchBackgroundButton {
