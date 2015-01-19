@@ -25,6 +25,7 @@
 @property (nonatomic, strong) UIView *aboveTableContentView;
 @property (nonatomic, assign) CGFloat contentInsetTopWithoutSearch;
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
+@property (atomic, strong) NSDictionary *personToIndexPathIndex;
 
 // For searching
 @property (nonatomic, strong) NSArray *allPersons;
@@ -47,8 +48,8 @@
 - (CGFloat)showingTableHeaderOffsetThreshold;
 
 - (void)updateTableData:(NSDictionary *)data;
-- (MAVEABPerson *)personOnMainTableViewAtIndexPath:(NSIndexPath *)indexPath;
-- (MAVEABPerson *)personOnSearchTableViewAtIndexPath:(NSIndexPath *)indexPath;
+- (void)updatePersontoIndexPathIndex;
+- (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
 

@@ -13,6 +13,7 @@
 - (id)initFromABRecordRef:(ABRecordRef)record {
     if (self = [self init]) {
         @try {
+            self.recordID = ABRecordGetRecordID(record);
             self.firstName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonFirstNameProperty);
             self.lastName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonLastNameProperty);
             if (self.firstName == nil && self.lastName ==nil) {

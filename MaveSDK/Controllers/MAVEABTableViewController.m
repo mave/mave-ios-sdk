@@ -102,6 +102,7 @@
     }
 }
 
+
 - (CGFloat)navigationBarHeight {
     return self.parentViewController.navigationController.navigationBar.frame.size.height;
 }
@@ -196,26 +197,14 @@
     static NSString *cellIdentifier = MAVEInvitePageABPersonCellID;
     MAVEABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                              forIndexPath:indexPath];
-    MAVEABPerson *person;
-    if (tableView == self.tableView) {
-        person = [self personOnMainTableViewAtIndexPath:indexPath];
-    } else {
-        person = [self personOnSearchTableViewAtIndexPath:indexPath];
-    }
+    MAVEABPerson *person = [self personOnTableView:tableView atIndexPath:indexPath];
     [cell setupCellWithPerson:person];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // choose person clicked on
-    MAVEABPerson *person;
-    if (tableView == self.tableView) {
-        person = [self personOnMainTableViewAtIndexPath:indexPath];
-    } else if (tableView == self.searchTableView) {
-        person = [self personOnSearchTableViewAtIndexPath:indexPath];
-    } else {
-        return;
-    }
+    MAVEABPerson *person = [self personOnTableView:tableView atIndexPath:indexPath];
 
     // deal with selected state of person
     person.selected = !person.selected;
@@ -262,13 +251,15 @@
 //    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
 }
 
-- (MAVEABPerson *)personOnMainTableViewAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
-    return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
-}
-
-- (MAVEABPerson *)personOnSearchTableViewAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.searchedTableData objectAtIndex:indexPath.row];
+- (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
+    // main table view
+    if (tableView == self.tableView) {
+        NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
+        return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
+    // search table view
+    } else {
+        return [self.searchedTableData objectAtIndex:indexPath.row];
+    }
 }
 
 - (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person {

@@ -76,12 +76,6 @@
     XCTAssertGreaterThan(expectedWidth, 0);
     XCTAssertGreaterThan(expectedHeight, 0);
 
-    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.width, expectedWidth);
-    // TODO: look into why this test is flaky
-//    XCTAssertEqual(ipvc.inviteExplanationView.frame.size.height, expectedHeight);
-    XCTAssertEqualObjects(ipvc.ABTableViewController.tableView.tableHeaderView,
-                          ipvc.inviteExplanationView);
-
     // Next 3 assertions from JG"s search addition
     XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.width, expectedWidth);
     XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.height, expectedHeight);

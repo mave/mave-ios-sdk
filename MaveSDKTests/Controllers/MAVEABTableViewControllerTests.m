@@ -247,8 +247,6 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
 
-    XCTAssertFalse(vc.searchBar.showsCancelButton);
-
     [vc searchBarShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
     XCTAssertFalse(vc.searchBar.hidden);
     XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
@@ -256,7 +254,6 @@
 //    XCTAssertTrue(vc.searchBar.isFirstResponder); // firstResponder chain doesn't complete during tests
     XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
     [vc searchBarShouldBeginEditing:vc.searchBar];
-    XCTAssertTrue(vc.searchBar.showsCancelButton);
 
     [vc searchBarTextDidEndEditing:vc.searchBar];
     XCTAssertFalse(vc.searchBar.hidden);
@@ -264,7 +261,6 @@
     XCTAssertFalse(vc.isSearching);
     XCTAssertFalse(vc.searchBar.isFirstResponder);
     XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
-    XCTAssertFalse(vc.searchBar.showsCancelButton);
 }
 
 - (void)testSearchContacts {

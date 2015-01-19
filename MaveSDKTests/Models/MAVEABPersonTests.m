@@ -45,7 +45,9 @@
     ABRecordSetValue(pref, kABPersonEmailProperty, emv, nil);
 
     // Load as MAVEABPerson record and test
+    // record ID when not actually inserted in an address book is -1
     MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:pref];
+    XCTAssertEqual(p.recordID, -1);
     XCTAssertEqualObjects(p.firstName, @"John");
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
