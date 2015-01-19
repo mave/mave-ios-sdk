@@ -10,12 +10,15 @@
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
 #import "MAVEABTestDataFactory.h"
+#include <stdlib.h>
 #import "Gizou.h"
 
 @implementation MAVEABTestDataFactory
 
 + (MAVEABPerson *)personWithFirstName:(NSString *)firstName lastName:(NSString *)lastName {
     MAVEABPerson *p = [[MAVEABPerson alloc] init];
+    u_int32_t maxRecordID = 1 + (int)(pow(2, 32) - 2);
+    p.recordID = arc4random_uniform(maxRecordID);
     p.firstName = firstName; p.lastName = lastName;
     return p;
 }

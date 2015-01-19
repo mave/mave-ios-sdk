@@ -10,8 +10,11 @@
 #import <UIKit/UIKit.h>
 #import "MAVEABPerson.h"
 
+#define MAVEInvitePageABPersonCellID @"MAVEInvitePageABPersonCell"
+
 @interface MAVEABPersonCell : UITableViewCell
 
+- (void)setupCellForNoPersonFound;
 - (void)setupCellWithPerson:(MAVEABPerson *)person;
 
 @end

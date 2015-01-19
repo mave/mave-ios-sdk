@@ -45,7 +45,9 @@
     ABRecordSetValue(pref, kABPersonEmailProperty, emv, nil);
 
     // Load as MAVEABPerson record and test
+    // record ID when not actually inserted in an address book is -1
     MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:pref];
+    XCTAssertEqual(p.recordID, -1);
     XCTAssertEqualObjects(p.firstName, @"John");
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
@@ -173,6 +175,12 @@
 //
 // Methods on the MAVEABPerson Object
 //
+- (void)testInitRandomPersonWithName {
+    MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"Foo"];
+    XCTAssertGreaterThan(p1.recordID, 0);
+    XCTAssertEqualObjects(p1.firstName, @"Dan");
+    XCTAssertEqualObjects(p1.lastName, @"Foo");
+}
 - (void)testFirstLetter {
     MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"Foo"];
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"foo"];

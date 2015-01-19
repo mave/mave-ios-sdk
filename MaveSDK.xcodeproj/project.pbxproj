@@ -82,12 +82,14 @@
 		0CCC92C61A603996008CB888 /* MAVERemoteObjectBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92C51A603996008CB888 /* MAVERemoteObjectBuilder.m */; };
 		0CCC92C91A603DFD008CB888 /* MAVERemoteObjectBuilderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92C81A603DFD008CB888 /* MAVERemoteObjectBuilderTests.m */; };
 		0CCC92CB1A603FDF008CB888 /* MAVEPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92CA1A603FDF008CB888 /* MAVEPromiseTests.m */; };
+		0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */; };
 		0CFDBE261A1A827C00DD2AAF /* MAVEReferralData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */; };
 		0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */; };
 		0CFDBE2B1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */; };
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
 		6A056CC01A5F2F4B00AAD8B0 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A056CBF1A5F2F4B00AAD8B0 /* Social.framework */; };
 		6A056CC21A5F437F00AAD8B0 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A056CC11A5F437F00AAD8B0 /* MessageUI.framework */; };
+		9C123D641A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C123D631A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m */; };
 		C022641619EC41010087FF37 /* MAVEABPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641119EC41010087FF37 /* MAVEABPersonTests.m */; };
 		C022641719EC41010087FF37 /* MAVEABUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641219EC41010087FF37 /* MAVEABUtilsTests.m */; };
 		C022641819EC41010087FF37 /* MAVEABTestDataFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C022641319EC41010087FF37 /* MAVEABTestDataFactory.m */; };
@@ -241,6 +243,8 @@
 		0CCC92C81A603DFD008CB888 /* MAVERemoteObjectBuilderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteObjectBuilderTests.m; sourceTree = "<group>"; };
 		0CCC92CA1A603FDF008CB888 /* MAVEPromiseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEPromiseTests.m; sourceTree = "<group>"; };
 		0CCC92CC1A604082008CB888 /* MAVEPromise_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MAVEPromise_Internal.h; sourceTree = "<group>"; };
+		0CEEDE951A6C4FCB00A81804 /* MAVESearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESearchBar.h; sourceTree = "<group>"; };
+		0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESearchBar.m; sourceTree = "<group>"; };
 		0CFDBE241A1A827C00DD2AAF /* MAVEReferralData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEReferralData.h; sourceTree = "<group>"; };
 		0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEReferralData.m; sourceTree = "<group>"; };
 		0CFDBE271A1B875100DD2AAF /* MAVEInviteExplanationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteExplanationView.h; sourceTree = "<group>"; };
@@ -254,6 +258,8 @@
 		8ACB3F29796B0AB7B74C3393 /* Pods-DemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.release.xcconfig"; sourceTree = "<group>"; };
 		8FF2F891BB968F1E433C7489 /* Pods-MaveSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MaveSDKTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MaveSDKTests/Pods-MaveSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
 		95BA8557394AD1E344016951 /* libPods-DemoApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DemoApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C123D621A48A92200A0E1F5 /* MAVEInviteTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteTableHeaderView.h; sourceTree = "<group>"; };
+		9C123D631A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteTableHeaderView.m; sourceTree = "<group>"; };
 		C022641119EC41010087FF37 /* MAVEABPersonTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPersonTests.m; sourceTree = "<group>"; };
 		C022641219EC41010087FF37 /* MAVEABUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABUtilsTests.m; sourceTree = "<group>"; };
 		C022641319EC41010087FF37 /* MAVEABTestDataFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MAVEABTestDataFactory.m; path = ../Models/MAVEABTestDataFactory.m; sourceTree = "<group>"; };
@@ -614,10 +620,14 @@
 		C02927EC19E82C45006AEE43 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0CEEDE951A6C4FCB00A81804 /* MAVESearchBar.h */,
+				0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */,
 				C029280219E82D0F006AEE43 /* MAVEDisplayOptions.h */,
 				C029280319E82D0F006AEE43 /* MAVEDisplayOptions.m */,
 				0CFDBE271A1B875100DD2AAF /* MAVEInviteExplanationView.h */,
 				0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */,
+				9C123D621A48A92200A0E1F5 /* MAVEInviteTableHeaderView.h */,
+				9C123D631A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m */,
 				C029280719E82D18006AEE43 /* MAVEABPersonCell.h */,
 				C029280819E82D18006AEE43 /* MAVEABPersonCell.m */,
 				0C7200701A19414D00E12B91 /* MAVEInviteMessageContainerView.h */,
@@ -881,6 +891,7 @@
 				C0425B9319EF2E5C006641AB /* MAVEConstants.m in Sources */,
 				0C1A8FBE1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.m in Sources */,
 				0C1A8FC71A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m in Sources */,
+				9C123D641A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m in Sources */,
 				0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */,
 				C029279D19E823E2006AEE43 /* HomeViewController.m in Sources */,
 				C029280B19E82D18006AEE43 /* MAVEABPersonCell.m in Sources */,
@@ -919,6 +930,7 @@
 				0C1A8FC11A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m in Sources */,
 				0C7200721A19414D00E12B91 /* MAVEInviteMessageContainerView.m in Sources */,
 				0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */,
+				0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */,
 				0C141D301A0BC1A80036202A /* MAVEUserData.m in Sources */,
 				C0F4C8EE19F162B80003D209 /* MAVEInviteSendingProgressView.m in Sources */,
 				C029280419E82D0F006AEE43 /* MAVEABUtils.m in Sources */,

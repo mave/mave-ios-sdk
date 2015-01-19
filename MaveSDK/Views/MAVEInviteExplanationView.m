@@ -41,12 +41,12 @@ const CGFloat LABEL_MARGIN_Y = 20;
 // Dynamic layout
 - (void)layoutSubviews {
     CGSize labelSize = [self messageCopyLabelSizeWithWidth:self.frame.size.width];
-    self.messageCopy.frame = CGRectMake(LABEL_MARGIN_X, LABEL_MARGIN_Y, labelSize.width, labelSize.height);
+    self.messageCopy.frame = CGRectMake(LABEL_MARGIN_X, LABEL_MARGIN_Y - MAVESearchBarHeight, labelSize.width, labelSize.height);
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {
     CGFloat labelHeight = [self messageCopyLabelSizeWithWidth:width].height;
-    return labelHeight + 2*LABEL_MARGIN_Y;
+    return labelHeight + 2*LABEL_MARGIN_Y - MAVESearchBarHeight;
 }
 
 - (CGSize)messageCopyLabelSizeWithWidth:(CGFloat)width {

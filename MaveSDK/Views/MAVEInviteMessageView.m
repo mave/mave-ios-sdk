@@ -110,7 +110,7 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
 }
 
 - (CGSize)textViewSizeWithContainerWidth:(CGFloat)containerWidth {
-    float tfWidth = containerWidth - 2*textViewOuterPaddingWidth - textViewButtonSpacingWidth - [self sendButtonSize].width;
+    CGFloat tfWidth = containerWidth - 2*textViewOuterPaddingWidth - textViewButtonSpacingWidth - [self sendButtonSize].width;
     CGFloat tfHeight = [self.textView sizeThatFits:CGSizeMake(tfWidth, FLT_MAX)].height;
     return CGSizeMake(tfWidth, tfHeight);
 }
@@ -137,12 +137,12 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
     CGSize textViewSize = [self textViewSizeWithContainerWidth:containerSize.width];
 
     // Button
-    float buttonOffsetX = containerSize.width - textViewOuterPaddingWidth - buttonSize.width;
-    float buttonOffsetY = (containerSize.height - buttonSize.height) / 2;
+    CGFloat buttonOffsetX = containerSize.width - textViewOuterPaddingWidth - buttonSize.width;
+    CGFloat buttonOffsetY = (containerSize.height - buttonSize.height) / 2;
 
     // Send medium indicator derived attributes
-    float smiOffsetX = (containerSize.width - smiSize.width) / 2;
-    float smiOffsetY = textViewOuterPaddingHeight + textViewSize.height + textViewSendMediumIndicatorSpacingHeight;
+    CGFloat smiOffsetX = (containerSize.width - smiSize.width) / 2;
+    CGFloat smiOffsetY = textViewOuterPaddingHeight + textViewSize.height + textViewSendMediumIndicatorSpacingHeight;
 
     // Set pointers to return multiple values
     *textViewFrame = CGRectMake(textViewOuterPaddingWidth, textViewOuterPaddingHeight, textViewSize.width, textViewSize.height);

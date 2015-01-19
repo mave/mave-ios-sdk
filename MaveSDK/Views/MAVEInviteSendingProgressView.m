@@ -11,10 +11,10 @@
 
 @implementation MAVEInviteSendingProgressView
 
-float const MAX_PROGRESS = 0.8;
-float const SECS_TO_FILL_PROGRESS_BAR = 2.0;
-float const PROGRESS_TIMER_INVERVAL = 0.1;
-float const INCREMENT_PROGRESS_BAR_BY = MAX_PROGRESS / (SECS_TO_FILL_PROGRESS_BAR / PROGRESS_TIMER_INVERVAL);
+CGFloat const MAX_PROGRESS = 0.8;
+CGFloat const SECS_TO_FILL_PROGRESS_BAR = 2.0;
+CGFloat const PROGRESS_TIMER_INVERVAL = 0.1;
+CGFloat const INCREMENT_PROGRESS_BAR_BY = MAX_PROGRESS / (SECS_TO_FILL_PROGRESS_BAR / PROGRESS_TIMER_INVERVAL);
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -57,7 +57,7 @@ float const INCREMENT_PROGRESS_BAR_BY = MAX_PROGRESS / (SECS_TO_FILL_PROGRESS_BA
 #pragma mark - displaying progress
 
 - (void)completeSendingProgress {
-    float currentProgress = self.progressView.progress;
+    CGFloat currentProgress = self.progressView.progress;
     if (currentProgress < 1.0) {
         [self.progressView setProgress:1.0 animated:YES];
     }
@@ -76,7 +76,7 @@ float const INCREMENT_PROGRESS_BAR_BY = MAX_PROGRESS / (SECS_TO_FILL_PROGRESS_BA
 }
 
 - (void)updateProgressViewFromTimer:(NSTimer *)timer {
-    float currentProgress = self.progressView.progress;
+    CGFloat currentProgress = self.progressView.progress;
     if (currentProgress >= MAX_PROGRESS) {
         if ([timer isValid]) {  // timer.valid is iOS8 only
             [timer invalidate];
