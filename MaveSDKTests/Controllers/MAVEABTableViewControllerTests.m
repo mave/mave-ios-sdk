@@ -247,7 +247,7 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
 
-    [vc searchBarShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
+    [vc textFieldShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
     XCTAssertFalse(vc.searchBar.hidden);
     XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
     XCTAssertTrue(vc.isSearching);

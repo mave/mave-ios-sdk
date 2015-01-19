@@ -132,11 +132,6 @@
     [self updatePersontoIndexPathIndex];
 
     [self.tableView reloadData];
-
-    if (self.isSearching) {
-        [self searchContacts:self.inviteTableHeaderView.searchBar.text];
-        [self.searchTableView reloadData];
-    }
 }
 
 - (void)updatePersontoIndexPathIndex {

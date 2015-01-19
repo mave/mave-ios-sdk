@@ -32,7 +32,6 @@
 @property (nonatomic, strong) NSArray *searchedTableData;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UITableView *searchTableView;
-@property (nonatomic, assign) BOOL isSearching;
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
 
