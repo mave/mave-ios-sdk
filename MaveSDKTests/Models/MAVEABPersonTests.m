@@ -175,6 +175,12 @@
 //
 // Methods on the MAVEABPerson Object
 //
+- (void)testInitRandomPersonWithName {
+    MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"Foo"];
+    XCTAssertGreaterThan(p1.recordID, 0);
+    XCTAssertEqualObjects(p1.firstName, @"Dan");
+    XCTAssertEqualObjects(p1.lastName, @"Foo");
+}
 - (void)testFirstLetter {
     MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"Foo"];
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"foo"];

@@ -75,6 +75,73 @@
     return @[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16];
 }
 
+- (void)testUpdateTableData {
+    // check that it copies data and the appropriate transformations
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] init];
+    NSArray *peopleArray = [self populateTableDataForABTableVC:vc];
+    NSArray *expectedIndexes = @[@"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n", @"o"];
+    MAVEABPerson *lastPerson = [peopleArray objectAtIndex:[peopleArray count]-1];
+    NSInteger numPeople = [peopleArray count];
+    NSInteger numSections = [expectedIndexes count];
+    XCTAssertEqual(numPeople, 16);
+    XCTAssertEqual(numSections, 15);
+
+    XCTAssertEqual([vc.tableData count], numSections);
+    XCTAssertEqualObjects(vc.tableSections, expectedIndexes);
+
+    XCTAssertEqual([vc.personToIndexPathIndex count], numPeople);
+    XCTAssertEqualObjects([vc indexPathOnMainTableViewForPerson:lastPerson],
+                          [NSIndexPath indexPathForRow:1 inSection:14]);
+}
+
+- (void)testIndexPathOnMainTableWhenBadData {
+    NSIndexPath *fallbackIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    // no record ID
+    MAVEABPerson *p1  = [[MAVEABPerson alloc] init];
+    XCTAssertEqual(p1.recordID, 0);
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] init];
+    [vc updateTableData:@{@"a": @[p1]}];
+    XCTAssertEqualObjects([vc indexPathOnMainTableViewForPerson:p1],
+                          fallbackIndexPath);
+
+    // person not in table
+    MAVEABPerson *p2  = [MAVEABTestDataFactory personWithFirstName:@"Bbbie" lastName:@"Foo"];
+    XCTAssertGreaterThan(p2.recordID, 0);
+    [vc updateTableData:@{}];
+    XCTAssertEqualObjects([vc indexPathOnMainTableViewForPerson:p2],
+                          fallbackIndexPath);
+}
+
+- (void)testAllPersons {
+    // can't mock ipvc because it gets set in the init
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Abbie"; p1.lastName = @"Foo";
+    p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
+
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.firstName = @"John"; p2.lastName = @"Graham";
+    p2.phoneNumbers = @[@"18085551235"]; p2.selected = NO;
+
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.firstName = @"John"; p3.lastName = @"Smith";
+    p3.phoneNumbers = @[@"18085551236"]; p3.selected = NO;
+
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init];
+    p4.firstName = @"Danny"; p4.lastName = @"Cosson";
+    p4.phoneNumbers = @[@"18085551237"]; p4.selected = NO;
+
+    [vc updateTableData:@{@"a": @[p1],
+                          @"j": @[p2, p3],
+                          @"d": @[p4]}];
+
+    NSArray *expectedAllPersons = @[p1, p2, p3, p4];
+    XCTAssertEqual([expectedAllPersons count], [[vc allPersons] count]);
+}
+
 - (void)testClickDidSelectRowAtIndexPath {
     // selecting the row should toggle the corresponding person's selected attribute and call
     // a method on the parent to inform of the update
@@ -165,36 +232,6 @@
     // Verify
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
     [mockedIPVC verify];
-}
-
-- (void)testAllPersons {
-    // can't mock ipvc because it gets set in the init
-    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
-                                     initTableViewWithParent:ipvc];
-
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.firstName = @"Abbie"; p1.lastName = @"Foo";
-    p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
-
-    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
-    p2.firstName = @"John"; p2.lastName = @"Graham";
-    p2.phoneNumbers = @[@"18085551235"]; p2.selected = NO;
-
-    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
-    p3.firstName = @"John"; p3.lastName = @"Smith";
-    p3.phoneNumbers = @[@"18085551236"]; p3.selected = NO;
-
-    MAVEABPerson *p4 = [[MAVEABPerson alloc] init];
-    p4.firstName = @"Danny"; p4.lastName = @"Cosson";
-    p4.phoneNumbers = @[@"18085551237"]; p4.selected = NO;
-
-    [vc updateTableData:@{@"a": @[p1],
-                          @"j": @[p2, p3],
-                          @"d": @[p4]}];
-
-    NSArray *expectedAllPersons = @[p1, p2, p3, p4];
-    XCTAssertEqual([expectedAllPersons count], [[vc allPersons] count]);
 }
 
 - (void)testPersonOnTableViewAtIndexPath {

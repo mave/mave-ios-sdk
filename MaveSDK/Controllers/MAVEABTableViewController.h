@@ -27,9 +27,14 @@
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
 @property (atomic, strong) NSDictionary *personToIndexPathIndex;
 
-// For searching
+// Different forms of table data
+@property (nonatomic, strong) NSDictionary *tableData;
 @property (nonatomic, strong) NSArray *allPersons;
 @property (nonatomic, strong) NSArray *searchedTableData;
+@property (nonatomic, strong) NSArray *tableSections;
+@property (nonatomic, strong) NSDictionary *recordIDsToindexPaths;
+
+// For searching
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UITableView *searchTableView;
 
@@ -47,7 +52,7 @@
 - (CGFloat)showingTableHeaderOffsetThreshold;
 
 - (void)updateTableData:(NSDictionary *)data;
-- (void)updatePersontoIndexPathIndex;
+- (void)updatePersonToIndexPathIndex;
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;

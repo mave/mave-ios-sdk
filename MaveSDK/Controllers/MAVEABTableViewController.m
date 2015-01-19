@@ -15,11 +15,7 @@
 #import "MAVEABUtils.h"
 #import "MAVEABPersonCell.h"
 
-@implementation MAVEABTableViewController {
-    NSDictionary *tableData;
-    NSArray *tableSections;
-    NSDictionary *recordIDsToindexPaths;
-}
+@implementation MAVEABTableViewController
 
 #pragma mark - Init and Layout
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent {
@@ -127,20 +123,23 @@
 
 # pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
-    tableData = data;
-    tableSections = [[tableData allKeys]
-                     sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    [self updatePersontoIndexPathIndex];
+    self.tableData = data;
+    self.tableSections = [[self.tableData allKeys]
+                          sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    [self updatePersonToIndexPathIndex];
 
     [self.tableView reloadData];
 }
 
-- (void)updatePersontoIndexPathIndex {
+- (void)updatePersonToIndexPathIndex {
     NSInteger sectionIdx = 0, rowIdx = 0;
     NSMutableDictionary *index = [[NSMutableDictionary alloc] init];
-    for (NSString *key in tableSections) {
+    for (NSString *key in self.tableSections) {
         rowIdx = 0;
-        for (MAVEABPerson *person in [tableData objectForKey:key]) {
+        for (MAVEABPerson *person in [self.tableData objectForKey:key]) {
+            if ([index objectForKey:[NSNumber numberWithInteger:person.recordID]]) {
+                
+            }
             [index setObject:[NSIndexPath indexPathForRow:rowIdx inSection:sectionIdx]
                       forKey:[NSNumber numberWithInteger:person.recordID]];
             rowIdx++;
@@ -153,8 +152,8 @@
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
     // main table view
     if (tableView == self.tableView) {
-        NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
-        return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
+        NSString *sectionTitle = [self.tableSections objectAtIndex:indexPath.section];
+        return [[self.tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
     // search table view
     } else {
         // search results empty
@@ -183,7 +182,7 @@
 //
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (tableView == self.tableView) {
-        return [tableSections count];
+        return [self.tableSections count];
     }
     else {
         return 1;
@@ -240,7 +239,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (tableView == self.tableView) {
-        return [tableSections objectAtIndex:section];
+        return [self.tableSections objectAtIndex:section];
     } else {
         return @"Search results";
     }
@@ -249,8 +248,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger numberOfRows;
     if (tableView == self.tableView) {
-        NSString *sectionTitle = [tableSections objectAtIndex:section];
-        numberOfRows = [[tableData objectForKey:sectionTitle] count];
+        NSString *sectionTitle = [self.tableSections objectAtIndex:section];
+        numberOfRows = [[self.tableData objectForKey:sectionTitle] count];
     }
     else {
         numberOfRows = [self.searchedTableData count];
@@ -313,7 +312,7 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     if (tableView == self.tableView) {
-        return tableSections;
+        return self.tableSections;
     } else {
         return nil;
     }
@@ -336,7 +335,7 @@
 
     NSMutableArray *mutableAllPeople = [NSMutableArray array];
 
-    for (NSArray *section in [tableData allValues]) {
+    for (NSArray *section in [self.tableData allValues]) {
         [mutableAllPeople addObjectsFromArray:section];
     }
 
