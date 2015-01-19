@@ -21,6 +21,7 @@
     NSDictionary *recordIDsToindexPaths;
 }
 
+#pragma mark - Init and Layout
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent {
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
@@ -85,6 +86,41 @@
                  forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
 }
 
+- (void)layoutHeaderViewForWidth:(CGFloat)width {
+    CGRect prevInviteTableHeaderViewFrame = self.inviteTableHeaderView.frame;
+    // use ceil so rounding errors won't cause tiny gap below the table header view
+    CGFloat inviteTableHeaderViewHeight = ceil([self.inviteTableHeaderView
+                                                computeHeightWithWidth:width]);
+    CGRect inviteExplanationViewFrame = CGRectMake(0, 0, width, inviteTableHeaderViewHeight);
+
+    // table header view needs to be re-assigned when frame changes or the rest
+    // of the table doesn't get offset and the header overlaps it
+    if (!CGRectEqualToRect(inviteExplanationViewFrame, prevInviteTableHeaderViewFrame)) {
+        self.inviteTableHeaderView.frame = inviteExplanationViewFrame;
+        self.tableView.tableHeaderView = self.inviteTableHeaderView;
+
+        // match above table color to explanation view color so it looks like one view
+        if (self.inviteTableHeaderView.showsExplanation) {
+            self.aboveTableContentView.backgroundColor = self.inviteTableHeaderView.backgroundColor;
+        }
+    }
+}
+
+- (CGFloat)navigationBarHeight {
+    return self.parentViewController.navigationController.navigationBar.frame.size.height;
+}
+
+- (CGFloat)fixedSearchBarYCoord {
+    CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
+    return statusBarHeight + self.navigationBarHeight;
+}
+
+
+- (CGFloat)showingTableHeaderOffsetThreshold {
+    return self.inviteTableHeaderView.frame.size.height - [self fixedSearchBarYCoord] - MAVESearchBarHeight;
+}
+
+# pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
     tableData = data;
     tableSections = [[tableData allKeys]
@@ -135,26 +171,6 @@
         indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     }
     return indexPath;
-}
-
-// Some constants for helping with layout
-- (CGFloat)navigationBarHeight {
-    return self.parentViewController.navigationController.navigationBar.frame.size.height;
-}
-
-- (CGFloat)fixedSearchBarYCoord {
-    CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
-    return statusBarHeight + self.navigationBarHeight;
-}
-
-// If the main table view contentOffset is less than this, we're displaying the above table
-// view and explanation views along with the "fake" table header search bar. If contentOffset
-// is >= to this, we're displaying the content of the table with the "real" search bar fixed
-// at the top of the table
-- (CGFloat)showingTableHeaderOffsetThreshold {
-//    return self.inviteTableHeaderView.frame.size.height - [self fixedSearchBarYCoord] -
-//    (self.inviteTableHeaderView.frame.size.height - MAVE_AB_TABLE_SEARCH_BAR_Y - MAVE_DEFAULT_SEARCH_BAR_HEIGHT)
-    return self.inviteTableHeaderView.frame.size.height - [self fixedSearchBarYCoord] - MAVESearchBarHeight;
 }
 
 //
@@ -293,29 +309,6 @@
     }
 }
 
-
-#pragma mark - Layout
-
-- (void)layoutHeaderViewForWidth:(CGFloat)width {
-    CGRect prevInviteTableHeaderViewFrame = self.inviteTableHeaderView.frame;
-    // use ceil so rounding errors won't cause tiny gap below the table header view
-    CGFloat inviteTableHeaderViewHeight = ceil([self.inviteTableHeaderView
-                                                computeHeightWithWidth:width]);
-    CGRect inviteExplanationViewFrame = CGRectMake(0, 0, width, inviteTableHeaderViewHeight);
-
-    // table header view needs to be re-assigned when frame changes or the rest
-    // of the table doesn't get offset and the header overlaps it
-    if (!CGRectEqualToRect(inviteExplanationViewFrame, prevInviteTableHeaderViewFrame)) {
-        self.inviteTableHeaderView.frame = inviteExplanationViewFrame;
-        self.tableView.tableHeaderView = self.inviteTableHeaderView;
-
-        // match above table color to explanation view color so it looks like one view
-        if (self.inviteTableHeaderView.showsExplanation) {
-            self.aboveTableContentView.backgroundColor = self.inviteTableHeaderView.backgroundColor;
-        }
-    }
-}
-
 #pragma mark - Search Results
 
 - (NSArray *)allPersons {
@@ -419,9 +412,15 @@
 }
 
 - (void)textFieldDidChange:(UITextField *)textField  {
+    // This will always be the fixed search bar, text is not editable in the search bar at the botton
+    // of the table header
+
     NSString *searchText = textField.text;
     [self searchContacts:searchText];
     [self.searchTableView reloadData];
+
+    // keep text up-to-date with table header
+    self.inviteTableHeaderView.searchBar.text = searchText;
 
     if ([searchText isEqualToString:@""]) {
         self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor; // reshow section index titles
@@ -459,14 +458,17 @@
     [self.searchBar resignFirstResponder];
 }
 
-//- (void)textFieldDidEndEditing:(UITextField *)searchBar {
-//    self.searchBar.text = @"";
+// Even though there's no cancel or done button, this gets triggered when user starts scrolling
+// away while text is still in text field
+- (void)textFieldDidEndEditing:(UITextField *)searchBar {
+    self.searchBar.text = @"";
+    self.inviteTableHeaderView.searchBar.text = @"";
 //    [self searchContacts:self.searchBar.text];
 //
 //    self.isSearching = NO;
 ////    self.tableView.scrollEnabled = YES;
 //    [self.tableView bringSubviewToFront:self.searchBar];
-//}
+}
 
 
 @end
