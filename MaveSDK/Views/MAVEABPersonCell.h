@@ -14,6 +14,7 @@
 
 @interface MAVEABPersonCell : UITableViewCell
 
+- (void)setupCellForNoPersonFound;
 - (void)setupCellWithPerson:(MAVEABPerson *)person;
 
 @end

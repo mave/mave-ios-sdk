@@ -30,6 +30,13 @@
     return self;
 }
 
+- (void)setupCellForNoPersonFound {
+    self.textLabel.text = @"No results match";
+    self.accessoryType = UITableViewCellAccessoryNone;
+    self.detailTextLabel.text = nil;
+    self.userInteractionEnabled = NO;
+}
+
 - (void)setupCellWithPerson:(MAVEABPerson *)person {
     self.textLabel.text = [person fullName];
     if (person.selected) {
@@ -39,6 +46,7 @@
         self.accessoryType = UITableViewCellAccessoryNone;
         self.detailTextLabel.text = nil;
     }
+    self.userInteractionEnabled = YES;
 }
 
 @end

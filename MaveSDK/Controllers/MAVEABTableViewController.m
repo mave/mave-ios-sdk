@@ -155,9 +155,14 @@
     if (tableView == self.tableView) {
         NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
         return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
-        // search table view
+    // search table view
     } else {
-        return [self.searchedTableData objectAtIndex:indexPath.row];
+        // search results empty
+        if ([self.searchedTableData count] == 0) {
+            return nil;
+        } else {
+            return [self.searchedTableData objectAtIndex:indexPath.row];
+        }
     }
 }
 
@@ -242,13 +247,19 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger numberOfRows;
     if (tableView == self.tableView) {
         NSString *sectionTitle = [tableSections objectAtIndex:section];
-        return [[tableData objectForKey:sectionTitle] count];
+        numberOfRows = [[tableData objectForKey:sectionTitle] count];
     }
     else {
-        return [self.searchedTableData count];
+        numberOfRows = [self.searchedTableData count];
+        // if no data, we'll show a "no results" empty cell
+        if (numberOfRows == 0) {
+            numberOfRows = 1;
+        }
     }
+    return numberOfRows;
 }
 
 //
@@ -259,7 +270,11 @@
     MAVEABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                              forIndexPath:indexPath];
     MAVEABPerson *person = [self personOnTableView:tableView atIndexPath:indexPath];
-    [cell setupCellWithPerson:person];
+    if (!person) {
+        [cell setupCellForNoPersonFound];
+    } else {
+        [cell setupCellWithPerson:person];
+    }
     return cell;
 }
 
