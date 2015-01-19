@@ -101,35 +101,6 @@
                  forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
 }
 
-- (void)adjustTopInsetForSearch {
-    if (!self.contentInsetTopWithoutSearch) {
-        self.contentInsetTopWithoutSearch = self.tableView.contentInset.top;
-    }
-    CGFloat increaseBy = self.searchBar.frame.size.height;
-    CGFloat newTopInset = self.contentInsetTopWithoutSearch + increaseBy;
-    if (self.tableView.contentInset.top != newTopInset) {
-        // adjust the inset and adjust the offset to make up for it
-        UIEdgeInsets inset = self.tableView.contentInset;
-        inset.top = newTopInset;
-
-        CGPoint offset = self.tableView.contentOffset;
-        offset.y = offset.y - increaseBy;
-
-        [self.tableView setContentInset:inset];
-    }
-}
-
-- (void)adjustTopInsetForNoSearch {
-    if (!self.contentInsetTopWithoutSearch) {
-        self.contentInsetTopWithoutSearch = self.tableView.contentInset.top;
-    }
-    if (self.tableView.contentInset.top != self.contentInsetTopWithoutSearch) {
-        UIEdgeInsets inset = self.tableView.contentInset;
-        inset.top = self.contentInsetTopWithoutSearch;
-        self.tableView.contentInset = inset;
-    }
-}
-
 - (void)updateTableData:(NSDictionary *)data {
     tableData = data;
     tableSections = [[tableData allKeys]
@@ -218,14 +189,28 @@
     static NSString *cellIdentifier = MAVEInvitePageABPersonCellID;
     MAVEABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                              forIndexPath:indexPath];
-
-    [cell setupCellWithPerson:[self personOnTableView:tableView atIndexPath:indexPath]];
-
+    MAVEABPerson *person;
+    if (tableView == self.tableView) {
+        person = [self personOnMainTableViewAtIndexPath:indexPath];
+    } else {
+        person = [self personOnSearchTableViewAtIndexPath:indexPath];
+    }
+    [cell setupCellWithPerson:person];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    MAVEABPerson *person = [self personOnTableView:tableView atIndexPath:indexPath];
+    // choose person clicked on
+    MAVEABPerson *person;
+    if (tableView == self.tableView) {
+        person = [self personOnMainTableViewAtIndexPath:indexPath];
+    } else if (tableView == self.searchTableView) {
+        person = [self personOnSearchTableViewAtIndexPath:indexPath];
+    } else {
+        return;
+    }
+
+    // deal with selected state of person
     person.selected = !person.selected;
     if (person.selected) {
         [self.selectedPhoneNumbers addObject:person.bestPhone];
@@ -235,20 +220,43 @@
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
+    // if selected/un-selected on search table view, switch back to main table view with person selected
     if (tableView == self.searchTableView) {
-        NSMutableArray *indexPathCells = [NSMutableArray array];
-        for (MAVEABPersonCell *cell in [self.tableView visibleCells]) {
-            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
-            [indexPathCells addObject:cellIndexPath];
-        }
-        [self.tableView reloadRowsAtIndexPaths:indexPathCells withRowAnimation:UITableViewRowAnimationNone];
-
-        // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
-        [self.tableView bringSubviewToFront:self.searchBackgroundButton];
-        [self.tableView bringSubviewToFront:self.searchTableView];
+        NSIndexPath *mainTableIndex = [self indexPathOnMainTableViewForPerson:person];
+        [self removeSearchTableView];
+        [self.tableView scrollToRowAtIndexPath:mainTableIndex
+                              atScrollPosition:UITableViewScrollPositionTop
+                                      animated:NO];
     }
 
-    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
+
+//    if (tableView == self.searchTableView) {
+//        NSMutableArray *indexPathCells = [NSMutableArray array];
+//        for (MAVEABPersonCell *cell in [self.tableView visibleCells]) {
+//            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+//            [indexPathCells addObject:cellIndexPath];
+//        }
+//        [self.tableView reloadRowsAtIndexPaths:indexPathCells withRowAnimation:UITableViewRowAnimationNone];
+//
+//        // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
+//        [self.tableView bringSubviewToFront:self.searchBackgroundButton];
+//        [self.tableView bringSubviewToFront:self.searchTableView];
+//    }
+//
+//    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
+}
+
+- (MAVEABPerson *)personOnMainTableViewAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
+    return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
+}
+
+- (MAVEABPerson *)personOnSearchTableViewAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.searchedTableData objectAtIndex:indexPath.row];
+}
+
+- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person {
+    return [NSIndexPath indexPathForRow:0 inSection:5];
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
@@ -265,17 +273,6 @@
     }
 
     return -1;
-}
-
-#pragma mark - Helpers
-
-- (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
-    if (tableView == self.searchTableView) {
-        return [self.searchedTableData objectAtIndex:indexPath.row];
-    } else {
-        NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
-        return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
-    }
 }
 
 
@@ -356,9 +353,8 @@
 
     // Scrolled above search bar
     if (offsetY < MAVE_AB_TABLE_OFFSET_THRESHOLD_Y) {
-        [self adjustTopInsetForNoSearch];
 
-        // "Center" the text in the inviteTableHeaderView
+        // Vertically center the text above the table
         CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
         [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
 
@@ -366,14 +362,6 @@
         self.searchBar.hidden = YES;
     }
     else {
-        // kind of a hack - on first scroll event after searchbar animation
-        // adjusting the top inset will interfere with the animation, so wait
-        // until the next scroll event to adjust the inset
-        if (self.isAnimatingSearchBarReplace) {
-            self.isAnimatingSearchBarReplace = NO;
-        } else {
-            [self adjustTopInsetForSearch];
-        }
 
         // Offset the searchBar while scrolling below the headerView
         CGRect newFrame = self.searchBar.frame;
@@ -422,7 +410,8 @@
     }];
 }
 
-- (void)textFieldDidChange:(NSString *)searchText  {
+- (void)textFieldDidChange:(UITextField *)textField  {
+    NSString *searchText = textField.text;
     [self searchContacts:searchText];
     [self.searchTableView reloadData];
 
@@ -439,7 +428,6 @@
     }
 
     // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
-    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBackgroundButton afterDelay:0.01];
     [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchTableView afterDelay:0.01];
     [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.01];
 }

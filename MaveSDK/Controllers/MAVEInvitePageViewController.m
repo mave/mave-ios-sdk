@@ -16,6 +16,7 @@
 #import "MAVECustomSharePageView.h"
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
+#import "MAVESearchBar.h"
 
 #import <Social/Social.h>
 
@@ -180,8 +181,10 @@
                                 computeHeightWithWidth:containerFrame.size.width];
 
     // Extend bottom of table view content so invite message view doesn't overlap it
+    // and adjust top to leave room for search bar to anchor to the top of the table
     UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
     abTableViewInsets.bottom = inviteViewHeight;
+    abTableViewInsets.top = abTableViewInsets.top + (MAVESearchBarHeight / 2); // why is dividing by 2 necessary??
     self.ABTableViewController.tableView.contentInset = abTableViewInsets;
 
     // Put the invite message view off bottom of screen unless we should display it,

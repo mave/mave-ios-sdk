@@ -37,7 +37,9 @@
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
 
 - (void)updateTableData:(NSDictionary *)data;
-- (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
+- (MAVEABPerson *)personOnMainTableViewAtIndexPath:(NSIndexPath *)indexPath;
+- (MAVEABPerson *)personOnSearchTableViewAtIndexPath:(NSIndexPath *)indexPath;
+- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
 
 // For searching

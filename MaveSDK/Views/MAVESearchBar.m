@@ -8,7 +8,7 @@
 
 #import "MAVESearchBar.h"
 
-CGFloat const MAVESearchBarRowHeight = 44.0;
+CGFloat const MAVESearchBarHeight = 44.0;
 
 @implementation MAVESearchBar
 
@@ -35,7 +35,6 @@ CGFloat const MAVESearchBarRowHeight = 44.0;
                                   attributes:@{NSForegroundColorAttributeName: [self placeholderTextColor],
                                                NSFontAttributeName: [self placeholderFont],
                                                }];
-    
     [self setupLeftLabelView];
 }
 

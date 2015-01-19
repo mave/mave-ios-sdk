@@ -69,7 +69,7 @@
     if (shiftedOffsetY < 0) {
         CGRect explanationTextFrame = self.inviteExplanationView.messageCopy.frame;
         explanationTextFrame.origin.y =
-        roundf(DEFAULT_INNER_EXPLANATION_OFFSET + (shiftedOffsetY / 2));
+            roundf(DEFAULT_INNER_EXPLANATION_OFFSET + (shiftedOffsetY / 2) - MAVESearchBarHeight);
         self.inviteExplanationView.messageCopy.frame = explanationTextFrame;
     }
 }
