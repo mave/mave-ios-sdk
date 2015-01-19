@@ -396,12 +396,20 @@
     if (searchBar == self.inviteTableHeaderView.searchBar) {
         [self transitionHeaderSearchBarToRealSearchBar];
         return NO;
+    } else {
+        // Strange hack, enabling editing on the fixed search bar at the top of the table view
+        // causes the table view to scroll the distance of the top inset for no apparent reason.
+        // So we disable it then enable it after field becomes editable
+        self.tableView.scrollEnabled = NO;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.tableView.scrollEnabled = YES;
+        });
     }
     return YES;
 }
 
 - (void)transitionHeaderSearchBarToRealSearchBar {
-//    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
+    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
     [self.searchBar becomeFirstResponder];
     [UIView animateWithDuration:0.3 animations:^{
         [self.tableView setContentOffset:CGPointMake(0, [self showingTableHeaderOffsetThreshold])
