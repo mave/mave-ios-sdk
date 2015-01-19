@@ -58,7 +58,6 @@
     self.inviteTableHeaderView.searchBar.hidden = NO;
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
-//    self.searchBar = [[UISearchBar alloc] init];
     self.searchBar = [[MAVESearchBar alloc] init];
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.searchBar.delegate = self;
@@ -66,10 +65,6 @@
     [self.searchBar addTarget:self
                        action:@selector(textFieldDidChange:)
              forControlEvents:UIControlEventEditingChanged];
-//    searchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
-//    searchBarFrame.origin = CGPointMake(0, 0);
-//    self.searchBar.frame = searchBarFrame;
-//    self.searchBar.hidden = NO;
 
     [self.tableView addSubview:self.searchBar];
 }
@@ -84,7 +79,8 @@
     self.searchTableView.separatorColor = displayOptions.contactSeparatorColor;
     self.searchTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
                                              UIViewAutoresizingFlexibleHeight);
-    self.searchTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero]; // don't show cell separators between empty lines
+    // don't show cell separators between empty lines
+    self.searchTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.searchTableView registerClass:[MAVEABPersonCell class]
                  forCellReuseIdentifier:MAVEInvitePageABPersonCellID];
 }
@@ -174,36 +170,43 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    CGFloat labelMarginY = 0.0;
+    CGFloat labelOffsetX = 14.0;
+    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
+    NSString *labelText = [self tableView:tableView
+                  titleForHeaderInSection:section];
+    UIFont *labelFont = displayOpts.contactSectionHeaderFont;
+    CGSize labelSize = [labelText sizeWithAttributes:@{NSFontAttributeName: labelFont}];
+    CGRect labelFrame = CGRectMake(labelOffsetX,
+                                   labelMarginY,
+                                   labelSize.width,
+                                   labelSize.height);
+    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+    label.text = labelText;
+    label.textColor = displayOpts.contactSectionHeaderTextColor;
+    label.font = labelFont;
+
+    CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
+    // section width gets ignored, always stretches to full width
+    CGFloat sectionWidth = 0.0;
+    CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
+    UIView *view = [[UIView alloc] initWithFrame:viewFrame];
+    view.backgroundColor = displayOpts.contactSectionHeaderBackgroundColor;
+    
+    [view addSubview:label];
+
     if (tableView == self.tableView) {
-        CGFloat labelMarginY = 0.0;
-        CGFloat labelOffsetX = 14.0;
-        MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
-        NSString *labelText = [self tableView:tableView
-                      titleForHeaderInSection:section];
-        UIFont *labelFont = displayOpts.contactSectionHeaderFont;
-        CGSize labelSize = [labelText sizeWithAttributes:@{NSFontAttributeName: labelFont}];
-        CGRect labelFrame = CGRectMake(labelOffsetX,
-                                       labelMarginY,
-                                       labelSize.width,
-                                       labelSize.height);
-        UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-        label.text = labelText;
-        label.textColor = displayOpts.contactSectionHeaderTextColor;
-        label.font = labelFont;
-
-        CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
-        // section width gets ignored, always stretches to full width
-        CGFloat sectionWidth = 0.0;
-        CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
-        UIView *view = [[UIView alloc] initWithFrame:viewFrame];
-        view.backgroundColor = displayOpts.contactSectionHeaderBackgroundColor;
-        
-        [view addSubview:label];
-
-        return view;
+        // When scrolling up through the table index, when a given header is at the top of the screen (e.g. "M")
+        // the header before it (e.g. "L") gets rendered onto the view just above the offset at the very front of
+        // the view stack so it's visible over the text bar.
+        // As a workaround, whenever we return a view for a header we move the search bar to the front on a
+        // very small delay. There may be a flash on the screen but it's a relatively edge case scenario anyway
+        // so it's acceptable for now.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView bringSubviewToFront:self.searchBar];
+        });
     }
-
-    return nil;
+    return view;
 }
 
 // Since we size the headers dynamically based on height of the text
@@ -215,8 +218,11 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    // this tableView will always be self.tableView
-    return [tableSections objectAtIndex:section];
+    if (tableView == self.tableView) {
+        return [tableSections objectAtIndex:section];
+    } else {
+        return @"Search results";
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -240,6 +246,7 @@
     [cell setupCellWithPerson:person];
     return cell;
 }
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // choose person clicked on
@@ -273,17 +280,17 @@
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     if (tableView == self.tableView) {
         return tableSections;
+    } else {
+        return nil;
     }
-
-    return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    if (tableView == self.tableView && !self.isSearching) {
+    if (tableView == self.tableView) {
         return index;
+    } else {
+        return -1;
     }
-
-    return -1;
 }
 
 
@@ -380,7 +387,6 @@
         // Hide the inviteTableHeaderView's search bar
         self.inviteTableHeaderView.searchBar.hidden = YES;
         self.searchBar.hidden = NO;
-        [self.tableView bringSubviewToFront:self.searchBar];
     }
 }
 
@@ -428,10 +434,6 @@
         self.tableView.sectionIndexColor = [UIColor clearColor];
         [self addSearchTableView];
     }
-
-    // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
-    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchTableView afterDelay:0.01];
-    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.01];
 }
 
 - (void)addSearchTableView {
@@ -441,7 +443,7 @@
     self.searchTableView.frame = searchTableViewFrame;
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
-
+    self.tableView.scrollEnabled = NO;
     [self.tableView addSubview:self.searchTableView];
 }
 
@@ -449,6 +451,7 @@
     // re-show section index titles
     self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor;
     [self.searchTableView removeFromSuperview];
+    self.tableView.scrollEnabled = YES;
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -456,34 +459,14 @@
     [self.searchBar resignFirstResponder];
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)searchBar {
-    self.searchBar.text = @"";
-    [self searchContacts:self.searchBar.text];
+//- (void)textFieldDidEndEditing:(UITextField *)searchBar {
+//    self.searchBar.text = @"";
+//    [self searchContacts:self.searchBar.text];
+//
+//    self.isSearching = NO;
+////    self.tableView.scrollEnabled = YES;
+//    [self.tableView bringSubviewToFront:self.searchBar];
+//}
 
-    self.isSearching = NO;
-//    self.tableView.scrollEnabled = YES;
-    [self.tableView bringSubviewToFront:self.searchBar];
-}
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    [self searchContacts:searchText];
-    [self.searchTableView reloadData];
-
-    if ([searchText isEqualToString:@""]) {
-        self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor; // reshow section index titles
-        [self removeSearchTableView];
-    } else if (![self.searchTableView isDescendantOfView:self.tableView]) {
-        // Checks if the searchTableView a subview of self.tableView (is it being displayed)
-
-        // For some reason, index titles show *above* all other subviews...
-        //  Make them clear in order to "hide" while searching
-        self.tableView.sectionIndexColor = [UIColor clearColor];
-        [self addSearchTableView];
-    }
-
-    // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
-    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchTableView afterDelay:0.01];
-    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.01];
-}
 
 @end
