@@ -17,7 +17,7 @@
 - (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num;
 @end
 
-@interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate, UITextFieldDelegate>
+@interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
 @property (nonatomic, weak) UIViewController<MAVEABTableViewAdditionalDelegate> *parentViewController;
 @property (nonatomic, strong) MAVEInviteTableHeaderView *inviteTableHeaderView;
@@ -52,6 +52,9 @@
 - (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
 - (BOOL)isSearchTableVisible;
+
+// add an additional ui text field delegate field, by monitoring an event
+- (void)textFieldDidChange:(UITextField *)textField;
 
 // For searching
 - (void)searchContacts:(NSString *)searchText;

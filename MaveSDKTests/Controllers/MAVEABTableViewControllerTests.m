@@ -219,7 +219,7 @@
                                              atIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]]);
 }
 
-- (void)testSearchBarsDuringScroll {
+- (void)testSearchBarsHiddenStatusDuringScroll {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
@@ -240,27 +240,6 @@
     [vc scrollViewDidScroll:vc.tableView]; // force call, which isn't happening in the above line
     XCTAssertFalse(vc.inviteTableHeaderView.searchBar.hidden);
     XCTAssertTrue(vc.searchBar.hidden);
-}
-
-- (void)testSearchingFlags {
-    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
-                                     initTableViewWithParent:ipvc];
-
-    [vc textFieldShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
-    XCTAssertFalse(vc.searchBar.hidden);
-    XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
-    XCTAssertTrue(vc.isSearching);
-//    XCTAssertTrue(vc.searchBar.isFirstResponder); // firstResponder chain doesn't complete during tests
-    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
-    [vc searchBarShouldBeginEditing:vc.searchBar];
-
-    [vc searchBarTextDidEndEditing:vc.searchBar];
-    XCTAssertFalse(vc.searchBar.hidden);
-    XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
-    XCTAssertFalse(vc.isSearching);
-    XCTAssertFalse(vc.searchBar.isFirstResponder);
-    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.isFirstResponder);
 }
 
 - (void)testSearchContacts {
@@ -350,11 +329,12 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
 
-    [vc searchBarShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
-    [vc searchBarShouldBeginEditing:vc.searchBar];
+    [vc textFieldShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
+    [vc textFieldShouldBeginEditing:vc.searchBar];
     XCTAssertNotEqual([UIColor clearColor], vc.tableView.sectionIndexColor);
 
-    [vc searchBar:vc.searchBar textDidChange:@"a"];
+    vc.searchBar.text = @"a";  // it changed
+    [vc textFieldDidChange:vc.searchBar];
     XCTAssertEqual([UIColor clearColor], vc.tableView.sectionIndexColor);
 }
 

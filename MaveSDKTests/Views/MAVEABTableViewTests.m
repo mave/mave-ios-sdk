@@ -33,7 +33,9 @@
 }
 
 - (void)testTableStyle {
-    NSDictionary *data = @{@"D": @[@"Danny"]};
+    MAVEABPerson *person = [[MAVEABPerson alloc] init];
+    person.firstName = @"Danny";
+    NSDictionary *data = @{@"D": @[person]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:nil];
     [vc updateTableData:data];
     XCTAssertNotNil(vc.tableView);
@@ -64,7 +66,9 @@
 }
 
 - (void)testTableSectionStyle {
-    NSDictionary *data = @{@"D": @[@"Danny"]};
+    MAVEABPerson *person = [[MAVEABPerson alloc] init];
+    person.firstName = @"Danny";
+    NSDictionary *data = @{@"D": @[person]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:nil];
     [vc updateTableData:data];
     MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;

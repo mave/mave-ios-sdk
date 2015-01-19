@@ -63,6 +63,7 @@
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.searchBar.delegate = self;
     self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
+    self.searchBar.hidden = YES;
     [self.searchBar addTarget:self
                        action:@selector(textFieldDidChange:)
              forControlEvents:UIControlEventEditingChanged];
@@ -423,6 +424,7 @@
 
 - (void)transitionHeaderSearchBarToRealSearchBar {
     self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
+    self.searchBar.hidden = NO;
     [self.searchBar becomeFirstResponder];
     [UIView animateWithDuration:0.3 animations:^{
         [self.tableView setContentOffset:CGPointMake(0, [self showingTableHeaderOffsetThreshold])
@@ -431,12 +433,11 @@
 }
 
 - (void)textFieldDidChange:(UITextField *)textField  {
-    // This will always be the fixed search bar, text is not editable in the search bar at the botton
-    // of the table header
-    NSLog(@"did text field change");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSLog(@"scroll enabled: %d", self.tableView.scrollEnabled);
-    });
+    // This will always be the fixed search bar, text is not editable
+    // in the search bar at the botton of the table header
+    if (![textField isEqual: self.searchBar]) {
+        return;
+    }
 
     NSString *searchText = textField.text;
     [self searchContacts:searchText];
@@ -446,7 +447,6 @@
         [self removeSearchTableView];
 
     } else if (![self isSearchTableVisible]) {
-        // Checks if the searchTableView a subview of self.tableView (is it being displayed)
         [self addSearchTableView];
     }
 }
