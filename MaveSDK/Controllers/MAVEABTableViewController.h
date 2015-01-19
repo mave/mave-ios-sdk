@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVEInviteTableHeaderView.h"
+#import "MAVESearchBar.h"
 #import "MAVEABPerson.h"
 
 // This view controller can alert an additional delegate when the number of people selected changes
@@ -28,7 +29,7 @@
 // For searching
 @property (nonatomic, strong) NSArray *allPersons;
 @property (nonatomic, strong) NSArray *searchedTableData;
-@property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, assign) BOOL isSearching;
 @property (atomic, assign) BOOL isAnimatingSearchBarReplace;

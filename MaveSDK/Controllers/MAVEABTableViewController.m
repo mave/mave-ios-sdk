@@ -70,10 +70,14 @@
     self.inviteTableHeaderView.searchBar.hidden = NO;
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
-    self.searchBar = [[UISearchBar alloc] init];
+//    self.searchBar = [[UISearchBar alloc] init];
+    self.searchBar = [[MAVESearchBar alloc] init];
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.searchBar.delegate = self;
     self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
+    [self.searchBar addTarget:self
+                       action:@selector(textFieldDidChange:)
+             forControlEvents:UIControlEventEditingChanged];
 //    searchBarFrame.size = self.inviteTableHeaderView.searchBar.frame.size;
 //    searchBarFrame.origin = CGPointMake(0, 0);
 //    self.searchBar.frame = searchBarFrame;
@@ -111,9 +115,7 @@
         CGPoint offset = self.tableView.contentOffset;
         offset.y = offset.y - increaseBy;
 
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.tableView setContentInset:inset];
-//        });
+        [self.tableView setContentInset:inset];
     }
 }
 
@@ -420,6 +422,28 @@
     }];
 }
 
+- (void)textFieldDidChange:(NSString *)searchText  {
+    [self searchContacts:searchText];
+    [self.searchTableView reloadData];
+
+    if ([searchText isEqualToString:@""]) {
+        self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor; // reshow section index titles
+        [self removeSearchTableView];
+    } else if (![self.searchTableView isDescendantOfView:self.tableView]) {
+        // Checks if the searchTableView a subview of self.tableView (is it being displayed)
+
+        // For some reason, index titles show *above* all other subviews...
+        //  Make them clear in order to "hide" while searching
+        self.tableView.sectionIndexColor = [UIColor clearColor];
+        [self addSearchTableView];
+    }
+
+    // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
+    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBackgroundButton afterDelay:0.01];
+    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchTableView afterDelay:0.01];
+    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.01];
+}
+
 //- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
 //    self.isSearching = YES;
 //
@@ -483,24 +507,33 @@
     [self.searchBar resignFirstResponder];
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+- (void)textFieldDidEndEditing:(UITextField *)searchBar {
     self.searchBar.text = @"";
     [self searchContacts:self.searchBar.text];
 
     self.isSearching = NO;
-    [self.searchBar setShowsCancelButton:NO animated:YES];
     self.tableView.scrollEnabled = YES;
-
     [self.tableView bringSubviewToFront:self.searchBar];
-
-    [UIView animateWithDuration:.3 animations:^{
-        self.searchBackgroundButton.alpha = 0;
-    } completion:^(BOOL finished) {
-        [self.searchBackgroundButton removeFromSuperview];
-        [self.tableView bringSubviewToFront:self.searchBar];
-        [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
-    }];
 }
+
+//- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+//    self.searchBar.text = @"";
+//    [self searchContacts:self.searchBar.text];
+//
+//    self.isSearching = NO;
+//    [self.searchBar setShowsCancelButton:NO animated:YES];
+//    self.tableView.scrollEnabled = YES;
+//
+//    [self.tableView bringSubviewToFront:self.searchBar];
+//
+//    [UIView animateWithDuration:.3 animations:^{
+//        self.searchBackgroundButton.alpha = 0;
+//    } completion:^(BOOL finished) {
+//        [self.searchBackgroundButton removeFromSuperview];
+//        [self.tableView bringSubviewToFront:self.searchBar];
+//        [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
+//    }];
+//}
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     [self searchContacts:searchText];
