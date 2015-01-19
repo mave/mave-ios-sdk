@@ -120,6 +120,10 @@
     return self.inviteTableHeaderView.frame.size.height - [self fixedSearchBarYCoord] - MAVESearchBarHeight;
 }
 
+- (BOOL)isSearchTableVisible {
+    return [self.searchTableView isDescendantOfView:self.tableView];
+}
+
 # pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
     tableData = data;
@@ -378,7 +382,6 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offsetY = self.tableView.contentOffset.y;
-    NSLog(@"Offset in scroll: %f", offsetY);
 
     // Scrolled above search bar
     if (offsetY < [self showingTableHeaderOffsetThreshold]) {
@@ -389,6 +392,7 @@
 
         self.inviteTableHeaderView.searchBar.hidden = NO;
         self.searchBar.hidden = YES;
+
     } else {
         // Offset the searchBar while scrolling below the headerView
         CGRect newFrame = self.searchBar.frame;
@@ -414,7 +418,9 @@
         // So we disable it then enable it after field becomes editable
         self.tableView.scrollEnabled = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.tableView.scrollEnabled = YES;
+            if (![self isSearchTableVisible]) {
+                self.tableView.scrollEnabled = YES;
+            }
         });
     }
     return YES;
@@ -432,6 +438,10 @@
 - (void)textFieldDidChange:(UITextField *)textField  {
     // This will always be the fixed search bar, text is not editable in the search bar at the botton
     // of the table header
+    NSLog(@"did text field change");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"scroll enabled: %d", self.tableView.scrollEnabled);
+    });
 
     NSString *searchText = textField.text;
     [self searchContacts:searchText];
@@ -440,17 +450,16 @@
     if ([searchText isEqualToString:@""]) {
         [self removeSearchTableView];
 
-    } else if (![self.searchTableView isDescendantOfView:self.tableView]) {
+    } else if (![self isSearchTableVisible]) {
         // Checks if the searchTableView a subview of self.tableView (is it being displayed)
-
-        // For some reason, index titles show *above* all other subviews...
-        //  Make them clear in order to "hide" while searching
-        self.tableView.sectionIndexColor = [UIColor clearColor];
         [self addSearchTableView];
     }
 }
 
 - (void)addSearchTableView {
+    // The index shows above all other subviews, make clear to hide while searching
+    self.tableView.sectionIndexColor = [UIColor clearColor];
+
     CGRect searchTableViewFrame = self.tableView.frame;
     searchTableViewFrame.origin.y = self.searchBar.frame.origin.y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
     searchTableViewFrame.size.height = 350;

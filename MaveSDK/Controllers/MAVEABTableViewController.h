@@ -52,6 +52,7 @@
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
+- (BOOL)isSearchTableVisible;
 
 // For searching
 - (void)searchContacts:(NSString *)searchText;
