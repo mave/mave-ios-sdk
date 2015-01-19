@@ -29,6 +29,11 @@
     opts.inviteExplanationTextColor = [self randomColor];
     opts.inviteExplanationCellBackgroundColor = [self randomColor];
 
+    opts.searchBarFont = [self randomFont];
+    opts.searchBarPlaceholderTextColor = [self randomColor];
+    opts.searchBarSearchTextColor = [self randomColor];
+    opts.searchBarBackgroundColor = [self randomColor];
+
     opts.contactNameFont = [self randomFont];
     opts.contactNameTextColor = [self randomColor];
     opts.contactDetailsFont = [self randomFont];

@@ -55,7 +55,7 @@
     self.inviteTableHeaderView.searchBar.hidden = NO;
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
-    self.searchBar = [[MAVESearchBar alloc] init];
+    self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.searchBar.delegate = self;
     self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;

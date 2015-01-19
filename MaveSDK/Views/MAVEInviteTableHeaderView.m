@@ -30,11 +30,11 @@
         self.backgroundColor = displayOptions.inviteExplanationCellBackgroundColor;
     }
 
-    self.searchBar = [[MAVESearchBar alloc] initWithFrame:
-                      CGRectMake(0,
-                                 self.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT,
-                                 self.frame.size.width,
-                                 MAVE_DEFAULT_SEARCH_BAR_HEIGHT)];
+    self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
+    self.searchBar.frame = CGRectMake(0,
+                                      self.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT,
+                                      self.frame.size.width,
+                                      MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:self.searchBar];
 }

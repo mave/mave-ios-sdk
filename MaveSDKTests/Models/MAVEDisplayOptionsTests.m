@@ -55,6 +55,12 @@
     XCTAssertEqualObjects(opts.inviteExplanationTextColor, almostBlack);
     XCTAssertEqualObjects(opts.inviteExplanationCellBackgroundColor, extraLightGrey);
 
+    // Search Bar
+    XCTAssertEqualObjects(opts.searchBarFont, defaultFont);
+    XCTAssertEqualObjects(opts.searchBarPlaceholderTextColor, mediumGrey);
+    XCTAssertEqualObjects(opts.searchBarSearchTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.searchBarBackgroundColor, white);
+
     // "Friends to invite" table options
     XCTAssertEqualObjects(opts.contactNameFont, defaultFont);
     XCTAssertEqualObjects(opts.contactNameTextColor, almostBlack);
@@ -99,7 +105,13 @@
     XCTAssertTrue([opts.navigationBarTitleTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.navigationBarTitleFont isKindOfClass:[UIFont class]]);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
-    
+
+    // Search Bar
+    XCTAssertTrue([opts.searchBarFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.searchBarPlaceholderTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.searchBarSearchTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.searchBarBackgroundColor isKindOfClass:[UIColor class]]);
+
     // "Friends to invite" table options
     XCTAssertTrue([opts.contactNameFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.contactDetailsFont isKindOfClass:[UIFont class]]);

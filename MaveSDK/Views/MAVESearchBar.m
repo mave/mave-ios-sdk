@@ -7,46 +7,43 @@
 //
 
 #import "MAVESearchBar.h"
+#import "MaveSDK.h"
 
 CGFloat const MAVESearchBarHeight = 44.0;
 
 @implementation MAVESearchBar
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+- (instancetype)initWithSingletonSearchBarDisplayOptions {
+    if (self = [super init]) {
+        [self setupDefaults];
+        MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
+        self.searchBarFont = displayOptions.searchBarFont;
+        self.searchBarPlaceholderTextColor = displayOptions.searchBarPlaceholderTextColor;
+        self.searchBarTextColor = displayOptions.searchBarSearchTextColor;
+        self.backgroundColor = displayOptions.searchBarBackgroundColor;
+
         [self setupInit];
     }
     return self;
 }
 
-- (instancetype)init {
-    if (self = [super init]) {
-        [self setupInit];
-    }
-    return self;
+- (void)setupDefaults {
+    self.placeholderText = @"Enter name or phone number";
+    self.placeholderToFieldText = @"To:";
 }
 
 - (void)setupInit {
-    self.backgroundColor = [UIColor whiteColor];
     self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    self.font = [self placeholderFont];
+    self.font = self.searchBarFont;
+    self.textColor = self.searchBarTextColor;
     self.attributedPlaceholder = [[NSAttributedString alloc]
-                                  initWithString:@"Enter name or phone number"
-                                  attributes:@{NSForegroundColorAttributeName: [self placeholderTextColor],
-                                               NSFontAttributeName: [self placeholderFont],
+                                  initWithString:self.placeholderText
+                                  attributes:@{NSForegroundColorAttributeName: self.searchBarPlaceholderTextColor,
+                                               NSFontAttributeName: self.searchBarFont,
                                                }];
     self.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.autocorrectionType = UITextAutocorrectionTypeNo;
     [self setupLeftLabelView];
-}
-
-// UI colors & sizes to use, will be displayOptions later
-- (UIColor *)placeholderTextColor {
-    return [UIColor grayColor];
-}
-
-- (UIFont *)placeholderFont {
-    return [UIFont systemFontOfSize:16];
 }
 
 - (void)setupLeftLabelView {
@@ -54,9 +51,9 @@ CGFloat const MAVESearchBarHeight = 44.0;
     CGFloat paddingXPost = 10;
 
     UILabel *label = [[UILabel alloc] init];
-    label.text = @"To:";
-    label.textColor = [self placeholderTextColor];
-    label.font = [self placeholderFont];
+    label.text = self.placeholderToFieldText;
+    label.textColor = self.searchBarPlaceholderTextColor;
+    label.font = self.searchBarFont;
 
     CGSize textSize = [label.text sizeWithAttributes:@{NSFontAttributeName:label.font}];
     textSize.width = ceil(textSize.width);

@@ -41,6 +41,12 @@
 @property (nonatomic, strong) UIColor  *inviteExplanationTextColor;
 @property (nonatomic, strong) UIColor  *inviteExplanationCellBackgroundColor;
 
+// Search bar options
+@property (nonatomic, strong) UIFont *searchBarFont;
+@property (nonatomic, strong) UIColor *searchBarPlaceholderTextColor;
+@property (nonatomic, strong) UIColor *searchBarSearchTextColor;
+@property (nonatomic, strong) UIColor *searchBarBackgroundColor;
+
 // "Friends to invite" table options
 @property (nonatomic, strong) UIFont  *contactNameFont;
 @property (nonatomic, strong) UIColor *contactNameTextColor;

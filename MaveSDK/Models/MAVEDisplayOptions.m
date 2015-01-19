@@ -28,6 +28,12 @@
         self.inviteExplanationTextColor = [[self class] colorAlmostBlack];
         self.inviteExplanationCellBackgroundColor = [[self class] colorExtraLightGrey];
 
+        // Search Bar
+        self.searchBarFont = [UIFont systemFontOfSize:16];
+        self.searchBarPlaceholderTextColor = [[self class] colorMediumGrey];
+        self.searchBarSearchTextColor = [[self class] colorAlmostBlack];
+        self.searchBarBackgroundColor = [[self class] colorWhite];
+
         // "Friends to invite" table options
         self.contactNameFont = [UIFont systemFontOfSize:16];
         self.contactNameTextColor = [[self class] colorAlmostBlack];

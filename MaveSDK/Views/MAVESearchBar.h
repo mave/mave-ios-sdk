@@ -12,4 +12,14 @@ extern CGFloat const MAVESearchBarHeight;
 
 @interface MAVESearchBar : UITextField
 
+// the properties to be styled
+@property (nonatomic, strong) UIFont *searchBarFont;
+@property (nonatomic, strong) UIColor *searchBarPlaceholderTextColor;
+@property (nonatomic, strong) UIColor *searchBarTextColor;
+// and backgroundColor
+@property (nonatomic, copy) NSString *placeholderText;
+@property (nonatomic, copy) NSString *placeholderToFieldText;
+
+- (instancetype)initWithSingletonSearchBarDisplayOptions;
+
 @end
