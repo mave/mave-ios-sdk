@@ -32,9 +32,19 @@
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, assign) BOOL isSearching;
-@property (atomic, assign) BOOL isAnimatingSearchBarReplace;
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
+
+// constants for determining layout sizes
+// height of navigation bar currently
+- (CGFloat)navigationBarHeight;
+// y-coordinate of the fixed search bar (just below navigation bar)
+- (CGFloat)fixedSearchBarYCoord;
+// threshold for when the table header with its "fake" search bar & the above
+// table content is visible. If main table view contentOffset is less than this,
+// it's visible, otherwise just the body of the table with the fixed search bar
+// is visible.
+- (CGFloat)showingTableHeaderOffsetThreshold;
 
 - (void)updateTableData:(NSDictionary *)data;
 - (MAVEABPerson *)personOnMainTableViewAtIndexPath:(NSIndexPath *)indexPath;

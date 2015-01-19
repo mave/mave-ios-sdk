@@ -41,15 +41,15 @@
     [super viewDidLoad];
 
     // Subscribe to events that change frame size
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter addObserver:self
-                      selector:@selector(keyboardWillChangeFrame:)
-                          name:UIKeyboardWillChangeFrameNotification
-                        object:nil];
-    [defaultCenter addObserver:self
-                      selector:@selector(deviceDidRotate:)
-                          name:UIDeviceOrientationDidChangeNotification
-                        object:nil];
+//    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+//    [defaultCenter addObserver:self
+//                      selector:@selector(keyboardWillChangeFrame:)
+//                          name:UIKeyboardWillChangeFrameNotification
+//                        object:nil];
+//    [defaultCenter addObserver:self
+//                      selector:@selector(deviceDidRotate:)
+//                          name:UIDeviceOrientationDidChangeNotification
+//                        object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -184,7 +184,7 @@
     // and adjust top to leave room for search bar to anchor to the top of the table
     UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
     abTableViewInsets.bottom = inviteViewHeight;
-    abTableViewInsets.top = abTableViewInsets.top + (MAVESearchBarHeight / 2); // why is dividing by 2 necessary??
+    abTableViewInsets.top = 64 + MAVESearchBarHeight;
     self.ABTableViewController.tableView.contentInset = abTableViewInsets;
 
     // Put the invite message view off bottom of screen unless we should display it,
