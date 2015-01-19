@@ -277,8 +277,8 @@
     }
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
 
-    // if selected/un-selected on search table view, switch back to main table view with person selected
-    // (and reload row)
+    // if selected/un-selected on search table view, switch back to main table view with same person
+    // selected, reload row, and clear search bar
     if (tableView == self.searchTableView) {
         NSIndexPath *mainTableIndex = [self indexPathOnMainTableViewForPerson:person];
         [self removeSearchTableView];
@@ -287,6 +287,9 @@
                                       animated:NO];
         [self.tableView reloadRowsAtIndexPaths:@[mainTableIndex]
                               withRowAnimation:UITableViewRowAnimationNone];
+        self.searchBar.text = @"";
+        [self.searchBar resignFirstResponder];
+
     } else {
         [tableView reloadRowsAtIndexPaths:@[indexPath]
                          withRowAnimation:UITableViewRowAnimationNone];
@@ -419,12 +422,9 @@
     [self searchContacts:searchText];
     [self.searchTableView reloadData];
 
-    // keep text up-to-date with table header
-    self.inviteTableHeaderView.searchBar.text = searchText;
-
     if ([searchText isEqualToString:@""]) {
-        self.tableView.sectionIndexColor = [MaveSDK sharedInstance].displayOptions.contactSectionIndexColor; // reshow section index titles
         [self removeSearchTableView];
+
     } else if (![self.searchTableView isDescendantOfView:self.tableView]) {
         // Checks if the searchTableView a subview of self.tableView (is it being displayed)
 
@@ -462,12 +462,6 @@
 // away while text is still in text field
 - (void)textFieldDidEndEditing:(UITextField *)searchBar {
     self.searchBar.text = @"";
-    self.inviteTableHeaderView.searchBar.text = @"";
-//    [self searchContacts:self.searchBar.text];
-//
-//    self.isSearching = NO;
-////    self.tableView.scrollEnabled = YES;
-//    [self.tableView bringSubviewToFront:self.searchBar];
 }
 
 
