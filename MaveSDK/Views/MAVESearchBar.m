@@ -35,6 +35,8 @@ CGFloat const MAVESearchBarHeight = 44.0;
                                   attributes:@{NSForegroundColorAttributeName: [self placeholderTextColor],
                                                NSFontAttributeName: [self placeholderFont],
                                                }];
+    self.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.autocorrectionType = UITextAutocorrectionTypeNo;
     [self setupLeftLabelView];
 }
 
