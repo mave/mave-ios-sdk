@@ -41,15 +41,15 @@
     [super viewDidLoad];
 
     // Subscribe to events that change frame size
-//    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-//    [defaultCenter addObserver:self
-//                      selector:@selector(keyboardWillChangeFrame:)
-//                          name:UIKeyboardWillChangeFrameNotification
-//                        object:nil];
-//    [defaultCenter addObserver:self
-//                      selector:@selector(deviceDidRotate:)
-//                          name:UIDeviceOrientationDidChangeNotification
-//                        object:nil];
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self
+                      selector:@selector(keyboardWillChangeFrame:)
+                          name:UIKeyboardWillChangeFrameNotification
+                        object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(deviceDidRotate:)
+                          name:UIDeviceOrientationDidChangeNotification
+                        object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

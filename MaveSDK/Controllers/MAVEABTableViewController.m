@@ -93,6 +93,7 @@
     tableData = data;
     tableSections = [[tableData allKeys]
                      sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    [self updatePersontoIndexPathIndex];
 
     [self.tableView reloadData];
 
@@ -102,7 +103,45 @@
     }
 }
 
+- (void)updatePersontoIndexPathIndex {
+    NSInteger sectionIdx = 0, rowIdx = 0;
+    NSMutableDictionary *index = [[NSMutableDictionary alloc] init];
+    for (NSString *key in tableSections) {
+        rowIdx = 0;
+        for (MAVEABPerson *person in [tableData objectForKey:key]) {
+            [index setObject:[NSIndexPath indexPathForRow:rowIdx inSection:sectionIdx]
+                      forKey:[NSNumber numberWithInteger:person.recordID]];
+            rowIdx++;
+        }
+        sectionIdx++;
+    }
+    self.personToIndexPathIndex = index;
+}
 
+- (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
+    // main table view
+    if (tableView == self.tableView) {
+        NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
+        return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
+        // search table view
+    } else {
+        return [self.searchedTableData objectAtIndex:indexPath.row];
+    }
+}
+
+- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person {
+    NSIndexPath *indexPath;
+    if (person.recordID > 0) {
+        NSNumber *recordID = [NSNumber numberWithInteger:person.recordID];
+        indexPath = [self.personToIndexPathIndex objectForKey:recordID];
+    }
+    if (!indexPath) {
+        indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    }
+    return indexPath;
+}
+
+// Some constants for helping with layout
 - (CGFloat)navigationBarHeight {
     return self.parentViewController.navigationController.navigationBar.frame.size.height;
 }
@@ -214,56 +253,21 @@
         [self.selectedPhoneNumbers removeObject:person.bestPhone];
     }
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
-    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
     // if selected/un-selected on search table view, switch back to main table view with person selected
+    // (and reload row)
     if (tableView == self.searchTableView) {
         NSIndexPath *mainTableIndex = [self indexPathOnMainTableViewForPerson:person];
         [self removeSearchTableView];
-        UIEdgeInsets inset = self.tableView.contentInset;
-        CGPoint offset = self.tableView.contentOffset;
-        NSLog(@"inset before removing: %@", NSStringFromUIEdgeInsets(inset));
-        NSLog(@"offset before removing: %@", NSStringFromCGPoint(offset));
-//        [self.searchTableView removeFromSuperview];
-        inset = self.tableView.contentInset;
-        offset = self.tableView.contentOffset;
-        NSLog(@"inset after removing: %@", NSStringFromUIEdgeInsets(inset));
-        NSLog(@"offset after removing: %@", NSStringFromCGPoint(offset));
-//        [self.tableView scrollToRowAtIndexPath:mainTableIndex
-//                              atScrollPosition:UITableViewScrollPositionTop
-//                                      animated:NO];
-    }
-
-
-//    if (tableView == self.searchTableView) {
-//        NSMutableArray *indexPathCells = [NSMutableArray array];
-//        for (MAVEABPersonCell *cell in [self.tableView visibleCells]) {
-//            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
-//            [indexPathCells addObject:cellIndexPath];
-//        }
-//        [self.tableView reloadRowsAtIndexPaths:indexPathCells withRowAnimation:UITableViewRowAnimationNone];
-//
-//        // Subviews gets shown in front of the searchTableView when tableView's cells get reloaded
-//        [self.tableView bringSubviewToFront:self.searchBackgroundButton];
-//        [self.tableView bringSubviewToFront:self.searchTableView];
-//    }
-//
-//    [self.tableView performSelector:@selector(bringSubviewToFront:) withObject:self.searchBar afterDelay:0.0];
-}
-
-- (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
-    // main table view
-    if (tableView == self.tableView) {
-        NSString *sectionTitle = [tableSections objectAtIndex:indexPath.section];
-        return [[tableData objectForKey:sectionTitle] objectAtIndex:indexPath.row];
-    // search table view
+        [self.tableView scrollToRowAtIndexPath:mainTableIndex
+                              atScrollPosition:UITableViewScrollPositionTop
+                                      animated:NO];
+        [self.tableView reloadRowsAtIndexPaths:@[mainTableIndex]
+                              withRowAnimation:UITableViewRowAnimationNone];
     } else {
-        return [self.searchedTableData objectAtIndex:indexPath.row];
+        [tableView reloadRowsAtIndexPaths:@[indexPath]
+                         withRowAnimation:UITableViewRowAnimationNone];
     }
-}
-
-- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person {
-    return [NSIndexPath indexPathForRow:0 inSection:5];
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
