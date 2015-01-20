@@ -34,7 +34,7 @@
     MAVESearchBar *searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     XCTAssertEqualObjects(searchBar.backgroundColor, opts.searchBarBackgroundColor);
 
-    NSAttributedString *expectedAttributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter name or phone number" attributes:@{NSForegroundColorAttributeName: opts.searchBarPlaceholderTextColor, NSFontAttributeName: opts.searchBarFont}];
+    NSAttributedString *expectedAttributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter name to search" attributes:@{NSForegroundColorAttributeName: opts.searchBarPlaceholderTextColor, NSFontAttributeName: opts.searchBarFont}];
     XCTAssertEqualObjects(searchBar.attributedPlaceholder, expectedAttributedPlaceholder);
 
     XCTAssertEqualObjects(searchBar.textColor, opts.searchBarSearchTextColor);

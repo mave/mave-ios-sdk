@@ -28,7 +28,7 @@ CGFloat const MAVESearchBarHeight = 44.0;
 }
 
 - (void)setupDefaults {
-    self.placeholderText = @"Enter name or phone number";
+    self.placeholderText = @"Enter name to search";
     self.placeholderToFieldText = @"To:";
 }
 
