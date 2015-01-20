@@ -44,10 +44,27 @@
 
 - (void)testInitFailsIfTemplateMalformed {
     // missing the "copy" parameter
-    NSDictionary *data = @{@"template_id": @"foo"};
+    NSDictionary *data = @{@"template": @{@"template_id": @"foo"}};
     MAVERemoteConfigurationFacebookShare *obj = [[MAVERemoteConfigurationFacebookShare alloc] initWithDictionary:data];
-
     XCTAssertNil(obj);
+
+    data = @{@"template": @{@"template_id": @"foo", @"initial_text": [NSNull null]}};
+    obj = [[MAVERemoteConfigurationFacebookShare alloc] initWithDictionary:data];
+    XCTAssertNil(obj);
+}
+
+- (void)testNSNullVauesChangedToNil {
+    NSDictionary *dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                   @"template_id": [NSNull null],
+                                   @"initial_text": @"foo",
+                                   }
+                           };
+    MAVERemoteConfigurationFacebookShare *obj = [[MAVERemoteConfigurationFacebookShare alloc] initWithDictionary:dict];
+    // should be nil, not nsnull
+    XCTAssertNotNil(obj);
+    XCTAssertNil(obj.templateID);
 }
 
 @end

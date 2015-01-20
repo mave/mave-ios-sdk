@@ -48,7 +48,24 @@
     NSDictionary *data = @{@"template": @{@"template_id": @"foo"}};
     MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:data];
 
+    data = @{@"template": @{@"template_id": @"foo", @"copy": [NSNull null]}};
+    obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:data];
+
     XCTAssertNil(obj);
+}
+
+- (void)testNSNullVauesChangedToNil {
+    NSDictionary *dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                   @"template_id": [NSNull null],
+                                   @"copy": @"foo",
+                                   }
+                           };
+    MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:dict];
+    // should be nil, not nsnull
+    XCTAssertNotNil(obj);
+    XCTAssertNil(obj.templateID);
 }
 
 @end

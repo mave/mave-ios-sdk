@@ -19,9 +19,19 @@ NSString * const MAVERemoteConfigKeyClientEmailBody = @"body";
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyClientEmailTemplate];
-        self.templateID = [template objectForKey:MAVERemoteConfigKeyClientEmailTemplateID];
-        self.subject = [template objectForKey:MAVERemoteConfigKeyClientEmailSubject];
-        self.body = [template objectForKey:MAVERemoteConfigKeyClientEmailBody];
+
+        NSString *templateID = [template objectForKey:MAVERemoteConfigKeyClientEmailTemplateID];
+        if (![templateID isEqual:[NSNull null]]) {
+            self.templateID = templateID;
+        }
+        NSString *subject = [template objectForKey:MAVERemoteConfigKeyClientEmailSubject];
+        if (![subject isEqual:[NSNull null]]) {
+            self.subject = subject;
+        }
+        NSString *body = [template objectForKey:MAVERemoteConfigKeyClientEmailBody];
+        if (![body isEqual:[NSNull null]]) {
+            self.body = body;
+        }
         if (!self.subject || !self.body) {
             return nil;
         }

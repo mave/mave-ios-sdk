@@ -18,8 +18,15 @@ NSString * const MAVERemoteConfigKeyClipboardShareCopy = @"copy";
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyClipboardShareTemplate];
-        self.templateID = [template objectForKey:MAVERemoteConfigKeyClipboardShareTemplateID];
-        self.text = [template objectForKey:MAVERemoteConfigKeyClipboardShareCopy];
+
+        NSString *templateID = [template objectForKey:MAVERemoteConfigKeyClipboardShareTemplateID];
+        if (![templateID isEqual: [NSNull null]]) {
+            self.templateID = templateID;
+        }
+        NSString *text = [template objectForKey:MAVERemoteConfigKeyClipboardShareCopy];
+        if (![text isEqual:[NSNull null]]) {
+            self.text = text;
+        }
         if (!self.text) {
             return nil;
         }

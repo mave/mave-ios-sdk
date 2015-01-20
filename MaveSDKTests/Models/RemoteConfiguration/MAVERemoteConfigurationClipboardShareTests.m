@@ -44,10 +44,28 @@
 
 - (void)testInitFailsIfTemplateMalformed {
     // missing the "copy" parameter
-    NSDictionary *data = @{@"template_id": @"foo"};
+    NSDictionary *data = @{@"template": @{@"template_id": @"foo"}};
     MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:data];
-
     XCTAssertNil(obj);
+
+    data = @{@"template": @{@"template_id": @"foo", @"copy": [NSNull null]}};
+    obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:data];
+    XCTAssertNil(obj);
+
+}
+
+- (void)testNSNullVauesChangedToNil {
+    NSDictionary *dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                   @"template_id": [NSNull null],
+                                   @"copy": @"foo",
+                                   }
+                           };
+    MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:dict];
+    // should be nil, not nsnull
+    XCTAssertNotNil(obj);
+    XCTAssertNil(obj.templateID);
 }
 
 

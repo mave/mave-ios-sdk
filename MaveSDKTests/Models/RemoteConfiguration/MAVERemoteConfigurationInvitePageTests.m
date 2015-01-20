@@ -56,15 +56,40 @@
     XCTAssertNil(obj);
 }
 
-- (void)testInitSucceedsIfTemplateIDNil {
+- (void)testInitSucceedsIfTemplateEmpty {
     NSDictionary *dict = @{
                            @"enabled": @YES,
                            @"template": @{}
-                           };
-
+    };
     MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
-    
     XCTAssertNotNil(obj);
+
+    // Or if nsnull values
+    dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                   @"template_id": [NSNull null],
+                                   @"explanation_copy": [NSNull null]}
+                           };
+    obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
+    XCTAssertNotNil(obj);
+}
+
+- (void)testNSNullVauesChangedToNil {
+    NSDictionary *dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                @"template_id": [NSNull null],
+                                @"explanation_copy": [NSNull null],
+                            }
+    };
+    MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
+    // should be nil, not nsnull
+    XCTAssertNotNil(obj);
+    XCTAssertNil(obj.templateID);
+    XCTAssertNotEqualObjects(obj.templateID, [NSNull null]);
+    XCTAssertNil(obj.explanationCopy);
+    XCTAssertNotEqualObjects(obj.explanationCopy, [NSNull null]);
 }
 
 - (void)testInitSuccessIfNoTemplateButEnabledFalse {

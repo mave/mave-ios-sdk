@@ -65,7 +65,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 + (MAVERemoteObjectBuilder *)remoteBuilder {
     return [[MAVERemoteObjectBuilder alloc] initWithClassToCreate:[self class] preFetchBlock:^(MAVEPromise *promise) {
             [[MaveSDK sharedInstance].APIInterface getRemoteConfigurationWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
-//                DebugLog(@"RemoteConfiguration data was: %@", responseData);
+                MAVEDebugLog(@"RemoteConfiguration data was: %@", responseData);
                  if (error) {
                      [promise rejectPromise];
                  } else {

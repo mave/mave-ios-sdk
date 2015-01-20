@@ -65,9 +65,16 @@
                                    @"template_id": @"foo",
                                    }
                            };
-
     MAVERemoteConfigurationCustomSharePage *obj = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:dict];
+    XCTAssertNil(obj);
 
+    // or if required fields are nsnull
+    dict = @{ @"enabled": @YES, @"template": @{
+                    @"template_id": @"foo",
+                    @"explanation_copy": [NSNull null],
+            }
+    };
+    obj = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:dict];
     XCTAssertNil(obj);
 }
 
@@ -83,6 +90,21 @@
 
     XCTAssertNotNil(obj);
     XCTAssertEqualObjects(obj.explanationCopy, @"");
+}
+
+- (void)testNSNullConvertedToNil {
+    NSDictionary *dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                   @"explanation_copy": @"foo",
+                                   @"template_id": [NSNull null],
+                                   }
+                           };
+
+    MAVERemoteConfigurationCustomSharePage *obj = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:dict];
+
+    XCTAssertNotNil(obj);
+    XCTAssertNil(obj.templateID);
 }
 
 - (void)testInitSuccessIfNoTemplateButEnabledFalse {

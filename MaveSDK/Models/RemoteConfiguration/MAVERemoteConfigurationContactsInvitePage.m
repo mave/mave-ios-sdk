@@ -28,9 +28,17 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explana
 
         // Template values, only care about if enabled is true
         if (self.enabled) {
-            NSDictionary *template  = [data objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplate];
-            self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplateID];
-            self.explanationCopy = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageExplanationCopy];
+            NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplate];
+
+            NSString *templateIDVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageTemplateID];
+            if (![templateIDVal isEqual:[NSNull null]]) {
+                self.templateID = templateIDVal;
+            }
+
+            NSString *explanationCopyVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageExplanationCopy];
+            if (explanationCopyVal != (id)[NSNull null]) {
+                self.explanationCopy = explanationCopyVal;
+            }
         }
     }
     return self;

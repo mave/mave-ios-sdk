@@ -18,8 +18,15 @@ NSString * const MAVERemoteConfigKeyTwitterShareCopy = @"copy";
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyTwitterShareTemplate];
-        self.templateID = [template objectForKey:MAVERemoteConfigKeyTwitterShareTemplateID];
-        self.text = [template objectForKey:MAVERemoteConfigKeyTwitterShareCopy];
+
+        NSString *templateID = [template objectForKey:MAVERemoteConfigKeyTwitterShareTemplateID];
+        if (![templateID isEqual:[NSNull null]]) {
+            self.templateID = templateID;
+        }
+        NSString *text = [template objectForKey:MAVERemoteConfigKeyTwitterShareCopy];
+        if (![text isEqual:[NSNull null]]) {
+            self.text = text;
+        }
         if (!self.text) {
             return nil;
         }

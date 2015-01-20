@@ -61,4 +61,25 @@
     // ... etc
 }
 
+- (void)testNSNullConvertedToNilWhenAllValuesEmpty {
+    NSDictionary *data =
+    @{@"enabled": @1,
+      @"template": @{
+            @"template_id": [NSNull null],
+            @"title": [NSNull null],
+            @"message": [NSNull null],
+            @"cancel_button_copy": [NSNull null],
+            @"accept_button_copy": [NSNull null],
+      }
+     };
+    MAVERemoteConfigurationContactsPrePrompt *config = [[MAVERemoteConfigurationContactsPrePrompt alloc] initWithDictionary:data];
+
+    XCTAssertNotNil(config);
+    XCTAssertNil(config.templateID);
+    XCTAssertNil(config.title);
+    XCTAssertNil(config.message);
+    XCTAssertNil(config.cancelButtonCopy);
+    XCTAssertNil(config.acceptButtonCopy);
+}
+
 @end

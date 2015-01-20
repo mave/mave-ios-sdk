@@ -27,11 +27,27 @@ const NSString *MAVERemoteConfigKeyContactsPrePromptAcceptCopy = @"accept_button
         // only if it's enabled do we care about the templated options
         if  (self.enabled) {
             NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplate];
-            self.templateID = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateID];
-            self.title = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTitle];
-            self.message = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptMessage];
-            self.cancelButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptCancelCopy];
-            self.acceptButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptAcceptCopy];
+
+            NSString *templateID = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTemplateID];
+            if (![templateID isEqual:[NSNull null]]) {
+                self.templateID = templateID;
+            }
+            NSString *title = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptTitle];
+            if (![title isEqual:[NSNull null]]) {
+                self.title = title;
+            }
+            NSString *message = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptMessage];
+            if (![message isEqual:[NSNull null]]) {
+                self.message = message;
+            }
+            NSString *cancelButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptCancelCopy];
+            if (![cancelButtonCopy isEqual:[NSNull null]]) {
+                self.cancelButtonCopy = cancelButtonCopy;
+            }
+            NSString *acceptButtonCopy = [template objectForKey:MAVERemoteConfigKeyContactsPrePromptAcceptCopy];
+            if (![acceptButtonCopy isEqual:[NSNull null]]) {
+                self.acceptButtonCopy = acceptButtonCopy;
+            }
         }
     }
     return self;

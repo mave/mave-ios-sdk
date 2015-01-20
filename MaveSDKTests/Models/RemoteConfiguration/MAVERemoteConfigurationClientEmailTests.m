@@ -45,11 +45,29 @@
 }
 
 - (void)testInitFailsIfTemplateMalformed {
-    // missing the "body" parameter
-    NSDictionary *data = @{@"template_id": @"foo", @"subject": @"blah"};
+    // missing the subject & body parameter
+    NSDictionary *data = @{@"template": @{@"template_id": @"foo"}};
     MAVERemoteConfigurationClientEmail *obj = [[MAVERemoteConfigurationClientEmail alloc] initWithDictionary:data];
 
+    data = @{@"template": @{@"template_id": @"foo", @"subject": [NSNull null], @"body": [NSNull null]}};
+    obj = [[MAVERemoteConfigurationClientEmail alloc] initWithDictionary:data];
+
     XCTAssertNil(obj);
+}
+
+- (void)testNSNullVauesChangedToNil {
+    NSDictionary *dict = @{
+                           @"enabled": @YES,
+                           @"template": @{
+                                   @"template_id": [NSNull null],
+                                   @"subject": @"a",
+                                   @"body": @"b",
+                                   }
+                           };
+    MAVERemoteConfigurationClientEmail *obj = [[MAVERemoteConfigurationClientEmail alloc] initWithDictionary:dict];
+    // should be nil, not nsnull
+    XCTAssertNotNil(obj);
+    XCTAssertNil(obj.templateID);
 }
 
 @end

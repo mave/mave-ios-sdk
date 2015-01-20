@@ -28,8 +28,16 @@ const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanatio
         // Template values, only care about if enabled is true
         if (self.enabled) {
             NSDictionary *template  = [data objectForKey:MAVERemoteConfigKeyCustomSharePageTemplate];
-            self.templateID = [template objectForKey:MAVERemoteConfigKeyCustomSharePageTemplateID];
-            self.explanationCopy = [template objectForKey:MAVERemoteConfigKeyCustomSharePageExplanationCopy];
+
+            NSString *templateID = [template objectForKey:MAVERemoteConfigKeyCustomSharePageTemplateID];
+            if (![templateID isEqual: [NSNull null]]) {
+                self.templateID = templateID;
+            }
+
+            NSString *explanationCopy = [template objectForKey:MAVERemoteConfigKeyCustomSharePageExplanationCopy];
+            if (![explanationCopy isEqual:[NSNull null]]) {
+                self.explanationCopy = explanationCopy;
+            }
             if (!self.explanationCopy) {
                 return nil;
             }

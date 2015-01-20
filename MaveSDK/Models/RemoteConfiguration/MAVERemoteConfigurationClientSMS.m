@@ -19,8 +19,15 @@ NSString * const MAVERemoteConfigKeyClientSMSCopy = @"copy";
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyClientSMSTemplate];
-        self.templateID = [template objectForKey:MAVERemoteConfigKeyClientSMSTemplateID];
-        self.text = [template objectForKey:MAVERemoteConfigKeyClientSMSCopy];
+
+        NSString *templateID = [template objectForKey:MAVERemoteConfigKeyClientSMSTemplateID];
+        if (![templateID isEqual:[NSNull null]]) {
+            self.templateID = templateID;
+        }
+        NSString *text = [template objectForKey:MAVERemoteConfigKeyClientSMSCopy];
+        if (![text isEqual:[NSNull null]]) {
+            self.text = text;
+        }
         if (!self.text) {
             return nil;
         }

@@ -454,13 +454,13 @@
 				0C1F1A121A51F18600B2D482 /* MAVERemoteConfigurationTests.m */,
 				0C1F1A161A51F4F300B2D482 /* MAVERemoteConfigurationContactsPrePromptTests.m */,
 				0C1A8FB31A61E7D500518D9A /* MAVERemoteConfigurationInvitePageTests.m */,
+				0C58FDFF1A657A8C007F8F12 /* MAVERemoteConfigurationCustomSharePageTests.m */,
 				0C58FE041A66D977007F8F12 /* MAVERemoteConfigurationServerSMSTests.m */,
 				0C1A8FBA1A63276100518D9A /* MAVERemoteConfigurationClientSMSTests.m */,
 				0C1A8FC81A632B9700518D9A /* MAVERemoteConfigurationClientEmailTests.m */,
 				0C1A8FCA1A632E2100518D9A /* MAVERemoteConfigurationFacebookShareTests.m */,
 				0C1A8FCC1A632F1800518D9A /* MAVERemoteConfigurationTwitterShareTests.m */,
 				0C1A8FCE1A632F8200518D9A /* MAVERemoteConfigurationClipboardShareTests.m */,
-				0C58FDFF1A657A8C007F8F12 /* MAVERemoteConfigurationCustomSharePageTests.m */,
 			);
 			path = RemoteConfiguration;
 			sourceTree = "<group>";

@@ -18,8 +18,14 @@ NSString * const MAVERemoteConfigKeyFacebookShareCopy = @"initial_text";
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
         NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyFacebookShareTemplate];
-        self.templateID = [template objectForKey:MAVERemoteConfigKeyFacebookShareTemplateID];
-        self.text = [template objectForKey:MAVERemoteConfigKeyFacebookShareCopy];
+        NSString *templateID = [template objectForKey:MAVERemoteConfigKeyFacebookShareTemplateID];
+        if (![templateID isEqual:[NSNull null]]) {
+            self.templateID = templateID;
+        }
+        NSString *text = [template objectForKey:MAVERemoteConfigKeyFacebookShareCopy];
+        if (![text isEqual:[NSNull null]]) {
+            self.text = text;
+        }
         if (!self.text) {
             return nil;
         }
