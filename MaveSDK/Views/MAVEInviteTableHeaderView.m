@@ -64,12 +64,15 @@
 }
 
 - (void)resizeWithShiftedOffsetY:(CGFloat)shiftedOffsetY {
-    // TODO: use a container view so this is 0
+    // this is how far from the origin we want the text to be when page is static
     CGFloat DEFAULT_INNER_EXPLANATION_OFFSET = 20;
     if (shiftedOffsetY < 0) {
         CGRect explanationTextFrame = self.inviteExplanationView.messageCopy.frame;
-        explanationTextFrame.origin.y =
-            roundf(DEFAULT_INNER_EXPLANATION_OFFSET + (shiftedOffsetY / 2) - MAVESearchBarHeight);
+        CGFloat newYCoord =
+            roundf(DEFAULT_INNER_EXPLANATION_OFFSET
+                   + (shiftedOffsetY / 2)
+                   - MAVESearchBarHeight);
+        explanationTextFrame.origin.y = newYCoord;
         self.inviteExplanationView.messageCopy.frame = explanationTextFrame;
     }
 }

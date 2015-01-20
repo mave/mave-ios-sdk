@@ -380,16 +380,23 @@
 
     // Scrolled above search bar
     if (offsetY < [self showingTableHeaderOffsetThreshold]) {
-
         // Vertically center the text above the table
+        //
+        // On some page loads (e.g. hitting back button from the next page in nav stack)
+        // for some reason content inset is off by 64 when this method is called, so we
+        // set the shifted offset to 0 in that case. Doing this causes the resizeWithShiftedOffsetY
+        // method to be a noop b/c it only resizes when the offset is negative.
         CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
+        if (-1 * shiftedOffsetY != [self fixedSearchBarYCoord]) {
+            shiftedOffsetY = 0;
+        }
         [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
 
         self.inviteTableHeaderView.searchBar.hidden = NO;
         self.searchBar.hidden = YES;
 
     } else {
-        // Offset the searchBar while scrolling below the headerView
+        // Fix the real search bar to top of the view
         CGRect newFrame = self.searchBar.frame;
         newFrame.origin.y = offsetY + [self fixedSearchBarYCoord];
         self.searchBar.frame = newFrame;

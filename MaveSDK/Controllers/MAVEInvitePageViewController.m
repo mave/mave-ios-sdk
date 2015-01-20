@@ -184,7 +184,7 @@
     // and adjust top to leave room for search bar to anchor to the top of the table
     UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
     abTableViewInsets.bottom = inviteViewHeight;
-    abTableViewInsets.top = 64 + MAVESearchBarHeight;
+    abTableViewInsets.top = [self.ABTableViewController fixedSearchBarYCoord] + MAVESearchBarHeight;
     self.ABTableViewController.tableView.contentInset = abTableViewInsets;
 
     // Put the invite message view off bottom of screen unless we should display it,
