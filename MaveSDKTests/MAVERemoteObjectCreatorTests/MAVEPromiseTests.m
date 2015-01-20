@@ -44,6 +44,19 @@
     XCTAssertNotEqual(result, 0);
 }
 
+- (void)testInitWithPreFetchBlockNil {
+    // Should create the promise and not crash trying to call a nil block
+    MAVEPromise *promise = [[MAVEPromise alloc] initWithBlock:nil];
+
+    XCTAssertNotNil(promise);
+    XCTAssertNil(promise.value);
+    XCTAssertEqual(promise.status, MAVEPromiseStatusUnfulfilled);
+
+    // assert the semaphone is not available to get
+    NSInteger result = dispatch_semaphore_wait(promise.gcd_semaphore, 0);
+    XCTAssertNotEqual(result, 0);
+}
+
 - (void)testFulfill {
     // Should create the promise and run the block
     NSValue *returnValue = (NSValue *)@"foo";

@@ -16,7 +16,9 @@
         self.status = MAVEPromiseStatusUnfulfilled;
         self.value = nil;
         self.gcd_semaphore = dispatch_semaphore_create(0);
-        runBlock(self);
+        if (runBlock) {
+            runBlock(self);
+        }
     }
     return self;
 }

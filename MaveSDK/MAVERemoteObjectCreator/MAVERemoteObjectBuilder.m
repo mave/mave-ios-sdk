@@ -57,6 +57,10 @@
     return self;
 }
 
+- (id)object {
+    return [self createObjectSynchronousWithTimeout:0];
+}
+
 - (id)createObjectSynchronousWithTimeout:(CGFloat)seconds {
     NSDictionary *data = (NSDictionary *)[self.promise doneSynchronousWithTimeout:seconds];
     return [self buildWithPrimaryThenFallBackToDefaultsWithData:data];
@@ -79,9 +83,20 @@
 }
 
 - (id)buildWithPrimaryThenFallBackToDefaultsWithData:(NSDictionary *)data {
+    // if we've already created the object once, we want to use the same
+    // instance of the object. Note that this cached value will only have
+    // gotten set if we didn't fall back to the on-disk or hard-coded
+    // default value previously
+    if (self.createdObject ) {
+        return self.createdObject;
+    }
+
     id obj;
     if (data != nil) {
         obj = [self buildObjectUsingData:data];
+        if (obj) {
+            self.createdObject = obj;
+        }
         if (obj && self.persistor) {
             [self.persistor saveJSONDataToUserDefaults:data];
         }

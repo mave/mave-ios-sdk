@@ -16,6 +16,11 @@
 
 @interface MAVERemoteObjectBuilder : NSObject
 
+// The underlying promise object for coordinating between the setting and getting of
+// the data. Only need to use this explicitly if you don't pass in a preFetchBlock
+// and want to, say,
+@property (atomic, strong) MAVEPromise *promise;
+
 // Initialize builder to use response from promise or the hard-coded default data
 - (instancetype)initWithClassToCreate:(Class<MAVEDictionaryInitializable>)classToCreate
                         preFetchBlock:(void(^)(MAVEPromise *promise))preFetchBlock
@@ -36,6 +41,9 @@
 // execution thread for up to that lock.
 // You can safely cast the returned id object to the type of the `classToCreate` passed in
 - (id)createObjectSynchronousWithTimeout:(CGFloat)seconds;
+
+// Alias for create synchronous with timeout 0, lets you use dot accessors
+- (id)object;
 
 // Create the object asynchronously, created object is passed to a block.
 // You can safely cast the returned id object to the type of the `classToCreate` passed in

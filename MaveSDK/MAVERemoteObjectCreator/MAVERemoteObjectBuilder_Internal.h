@@ -15,11 +15,11 @@
 
 @interface MAVERemoteObjectBuilder ()
 
-@property (atomic, strong) MAVEPromise *promise;
 @property (atomic) id classToCreate;
 @property (atomic, strong) MAVERemoteObjectBuilderDataPersistor *persistor;
 @property (atomic, strong) NSDictionary *loadedFromDiskData;
 @property (atomic, strong) NSDictionary *defaultData;
+@property (atomic, strong) id createdObject;
 
 // Helper to try building with this data, then try relevant fallbacks
 - (id)buildWithPrimaryThenFallBackToDefaultsWithData:(NSDictionary *)data;

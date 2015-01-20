@@ -71,6 +71,10 @@
     MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder createObjectSynchronousWithTimeout:0];
     XCTAssertEqualObjects(obj.titleCopy, @"This is real title");
     XCTAssertEqualObjects(obj.bodyCopy, @"This is real body");
+
+    // calling the create object a second time should return the same object
+    MAVERemoteObjectDemo *obj2 = (MAVERemoteObjectDemo *)[builder createObjectSynchronousWithTimeout:0];
+    XCTAssertEqualObjects(obj, obj2);
 }
 
 #pragma mark - Init Methods
@@ -208,7 +212,21 @@
     XCTAssertEqualObjects(returnedObject, demoObject);
 }
 
+- (void)testObjectHelperAccessorForCreateSynchronous0 {
+    MAVERemoteObjectDemo *obj = [[MAVERemoteObjectDemo alloc] init];
+
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    id mock = OCMPartialMock(builder);
+    OCMExpect([mock createObjectSynchronousWithTimeout:0]).andReturn(obj);
+
+    XCTAssertEqualObjects(builder.object, obj);
+
+    OCMVerifyAll(mock);
+}
+
 - (void)testCreateSynchronousWhenPromiseNull {
+    MAVERemoteObjectDemo *demoObject = [[MAVERemoteObjectDemo alloc] init];
+
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
     MAVEPromise *promise = [[MAVEPromise alloc] init];
     builder.promise = promise;
@@ -216,10 +234,11 @@
     id promiseMock = OCMPartialMock(promise);
 
     OCMExpect([promiseMock doneSynchronousWithTimeout:3.5]).andReturn(nil);
-    OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:nil]);
+    OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:nil]).andReturn(demoObject);
 
-    [builder createObjectSynchronousWithTimeout:3.5];
+    MAVERemoteObjectDemo *returnedObject = [builder createObjectSynchronousWithTimeout:3.5];
 
+    XCTAssertEqualObjects(returnedObject, demoObject);
     OCMVerifyAll(builderMock);
     OCMVerifyAll(promiseMock);
 }
@@ -237,6 +256,10 @@
 
     OCMVerifyAll(builderMock);
     XCTAssertEqualObjects(returnedObject, demoObject);
+}
+
+- (void)testCreateSynchronousTwiceReturnsSameObject {
+
 }
 
 - (void)testCreateAsync {
@@ -290,6 +313,20 @@
 
 # pragma mark - Object constructor methods
 // Helpers for various scenarios of building object
+- (void)testBuildWithPrimaryWhenObjectAlreadyBeenCreatedOnce {
+    NSDictionary *data = @{@"title_copy": @"This is title",
+                           @"body_copy": @"This is body"};
+    MAVERemoteObjectDemo *demoObject = [[MAVERemoteObjectDemo alloc] initWithDictionary:data];
+    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
+    builder.createdObject = demoObject;
+    builder.classToCreate = [MAVERemoteObjectDemo class];
+
+    MAVERemoteObjectDemo *obj = (MAVERemoteObjectDemo *)[builder buildWithPrimaryThenFallBackToDefaultsWithData:@{}];
+
+    XCTAssertNotNil(obj);
+    XCTAssertEqualObjects(builder.createdObject, obj);
+}
+
 - (void)testBuildWithPrimarySuccess {
     NSDictionary *data = @{@"title_copy": @"This is title",
                            @"body_copy": @"This is body"};
@@ -303,6 +340,7 @@
 
     OCMVerifyAll(persistorMock);
     XCTAssertNotNil(obj);
+    XCTAssertEqualObjects(builder.createdObject, obj);
     XCTAssertEqualObjects(obj.titleCopy, @"This is title");
     XCTAssertEqualObjects(obj.bodyCopy, @"This is body");
 }
@@ -322,6 +360,8 @@
 
     OCMVerifyAll(persistorMock);
     XCTAssertNotNil(obj);
+    // does not set the createdObject cache when using fallback data
+    XCTAssertNil(builder.createdObject);
     XCTAssertEqualObjects(obj.titleCopy, @"This is title");
     XCTAssertEqualObjects(obj.bodyCopy, @"This is body");
 
@@ -344,6 +384,8 @@
 
     OCMVerifyAll(persistorMock);
     XCTAssertNotNil(obj);
+    // does not set createdObject cache
+    XCTAssertNil(builder.createdObject);
     XCTAssertEqualObjects(obj.titleCopy, @"This is title");
     XCTAssertEqualObjects(obj.bodyCopy, @"This is body");
 }
