@@ -46,15 +46,9 @@
 
 - (instancetype)initAutomaticallyFromDeviceName {
     if (self = [self init]) {
-        NSString *deviceName = [MAVEClientPropertyUtils deviceName];
-        NSString *firstName, *lastName;
-        [MAVENameParsingUtils fillFirstName:&firstName
-                                   lastName:&lastName
-                             fromDeviceName:deviceName];
-
         self.userID = [MaveSDK sharedInstance].appDeviceID;
-        self.firstName = firstName;
-        self.lastName = lastName;
+        self.firstName = [MAVEClientPropertyUtils deviceUsersFirstName];
+        self.lastName = [MAVEClientPropertyUtils deviceUsersLastName];
         self.isSetAutomaticallyFromDevice = YES;
     }
     return self;

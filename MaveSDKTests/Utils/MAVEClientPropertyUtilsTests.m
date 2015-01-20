@@ -13,6 +13,7 @@
 #import "MAVEClientPropertyUtils.h"
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
+#import "MAVENameParsingUtils.h"
 
 // make screen bounds writable so we can stub the mainscreen for testing
 @interface UIScreen (BoundsWritable)
@@ -158,8 +159,29 @@
     XCTAssertEqualObjects([MAVEClientPropertyUtils deviceName], @"iPhone Simulator");
 }
 
-- (void)testDeviceNameParsed {
-    XCTAssertNil([MAVEClientPropertyUtils deviceNameParsed]);
+- (void)testDeviceUsersFullName {
+    id nameParserMock = OCMClassMock([MAVENameParsingUtils class]);
+    OCMStub([nameParserMock fillFirstName:[OCMArg setTo:@"Foo"]
+                                 lastName:[OCMArg setTo:@"Bar"]
+                           fromDeviceName:@"iPhone Simulator"]);
+    XCTAssertEqualObjects([MAVEClientPropertyUtils deviceUsersFullName],
+                          @"Foo Bar");
+}
+
+- (void)testDeviceUsersFirstName {
+    id nameParserMock = OCMClassMock([MAVENameParsingUtils class]);
+    OCMStub([nameParserMock fillFirstName:[OCMArg setTo:@"Foo"]
+                                 lastName:[OCMArg setTo:@"NONE"]
+                           fromDeviceName:@"iPhone Simulator"]);
+    XCTAssertEqualObjects([MAVEClientPropertyUtils deviceUsersFirstName], @"Foo");
+}
+
+- (void)testDeviceUsersLastName {
+    id nameParserMock = OCMClassMock([MAVENameParsingUtils class]);
+    OCMStub([nameParserMock fillFirstName:[OCMArg setTo:@"NONE"]
+                                 lastName:[OCMArg setTo:@"Bar"]
+                           fromDeviceName:@"iPhone Simulator"]);
+    XCTAssertEqualObjects([MAVEClientPropertyUtils deviceUsersLastName], @"Bar");
 }
 
 - (void)testLanguage {

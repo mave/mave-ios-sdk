@@ -26,7 +26,9 @@
 + (NSString *)countryCode;
 // the device's name (e.g. Danny's iPad)
 + (NSString *)deviceName;
-+ (NSString *)deviceNameParsed;
++ (NSString *)deviceUsersFullName;
++ (NSString *)deviceUsersFirstName;
++ (NSString *)deviceUsersLastName;
 // current language set in user's settings
 + (NSString *)language;
 // Mave Version, current version of the mave sdk

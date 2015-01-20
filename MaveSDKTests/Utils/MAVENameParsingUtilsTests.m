@@ -102,6 +102,12 @@
                          fromDeviceName:@"kortina5iphone"];
     XCTAssertEqualObjects(firstName, @"kortina");
     XCTAssertNil(lastName);
+
+    firstName = nil; lastName = nil;
+    [MAVENameParsingUtils fillFirstName:&firstName lastName:&lastName
+                         fromDeviceName:@"Jordan_Whitney's iPhone"];
+    XCTAssertEqualObjects(firstName, @"Jordan");
+    XCTAssertEqualObjects(lastName, @"Whitney");
 }
 
 // Test initializing for device name's that don't contain the person's name

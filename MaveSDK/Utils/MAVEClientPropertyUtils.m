@@ -54,12 +54,28 @@
     return [UIDevice currentDevice].name;
 }
 
-+ (NSString *)deviceNameParsed {
++ (NSString *)deviceUsersFullName {
     NSString *firstName, *lastName;
     [MAVENameParsingUtils fillFirstName:&firstName
                                lastName:&lastName
                          fromDeviceName:[self deviceName]];
     return [MAVENameParsingUtils joinFirstName:firstName andLastName:lastName];
+}
+
++ (NSString *)deviceUsersFirstName {
+    NSString *firstName, *unused;
+    [MAVENameParsingUtils fillFirstName:&firstName
+                               lastName:&unused
+                         fromDeviceName:[self deviceName]];
+    return firstName;
+}
+
++ (NSString *)deviceUsersLastName {
+    NSString *unused, *lastName;
+    [MAVENameParsingUtils fillFirstName:&unused
+                               lastName:&lastName
+                         fromDeviceName:[self deviceName]];
+    return lastName;
 }
 
 + (NSString *)language {
@@ -130,7 +146,7 @@
     [properties setValue:[self countryCode] forKey: @"device_country"];
     [properties setValue:[self language] forKey: @"device_language"];
     [properties setValue:[self deviceName] forKey:@"device_name"];
-    [properties setValue:[self deviceNameParsed] forKey:@"device_name_parsed"];
+    [properties setValue:[self deviceUsersFullName] forKey:@"device_name_parsed"];
     [properties setValue:[self maveVersion] forKey: @"mave_version"];
     [properties setValue:[self manufacturer] forKey: @"manufacturer"];
     [properties setValue:[self model] forKey: @"model"];
