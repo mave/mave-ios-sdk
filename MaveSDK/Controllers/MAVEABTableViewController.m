@@ -387,7 +387,7 @@
         // set the shifted offset to 0 in that case. Doing this causes the resizeWithShiftedOffsetY
         // method to be a noop b/c it only resizes when the offset is negative.
         CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
-        if (-1 * shiftedOffsetY != [self fixedSearchBarYCoord]) {
+        if (shiftedOffsetY == -1 * [self fixedSearchBarYCoord]) {
             shiftedOffsetY = 0;
         }
         [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
