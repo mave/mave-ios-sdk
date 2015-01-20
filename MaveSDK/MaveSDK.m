@@ -19,6 +19,9 @@
 @implementation MaveSDK {
     // Controller
     UINavigationController *invitePageNavController;
+
+    // Properties with overwritten getters & setters
+    MAVEUserData *_userData;
 }
 
 //
@@ -114,6 +117,25 @@ static dispatch_once_t sharedInstanceonceToken;
     } else {
         return self.remoteConfiguration.contactsInvitePage.explanationCopy;
     }
+}
+
+// Persist userData to disk, if app doesn't set it we can use the on-disk value
+// that it set last time (if any)
+- (MAVEUserData *)userData {
+    if (!_userData) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary *userDataAttrs = (NSDictionary *)[defaults objectForKey:MAVEUserDefaultsKeyUserData];
+        if (userDataAttrs) {
+            _userData = [[MAVEUserData alloc] initWithDictionary:userDataAttrs];
+        }
+    }
+    return _userData;
+}
+
+- (void)setUserData:(MAVEUserData *)userData {
+    _userData = userData;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[userData toDictionary] forKey:MAVEUserDefaultsKeyUserData];
 }
 
 //

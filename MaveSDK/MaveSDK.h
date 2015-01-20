@@ -28,7 +28,7 @@
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;
 @property (nonatomic, copy) NSString *inviteContext;
-@property (strong, nonatomic) MAVEUserData *userData;
+@property (nonatomic, strong) MAVEUserData *userData;
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;

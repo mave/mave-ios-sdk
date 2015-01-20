@@ -64,9 +64,11 @@ void MAVENoopLog(NSString *format, ...) {};
 NSString * const MAVEUserDefaultsKeyAppDeviceID = @"MAVEUserDefaultsKeyAppDeviceID";
 
 #ifdef UNIT_TESTING
+NSString * const MAVEUserDefaultsKeyUserData = @"MAVETESTSUserDefaultsKeyRemoteConfiguration";
 NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVETESTSUserDefaultsKeyRemoteConfiguration";
 NSString * const MAVEUserDefaultsKeyShareToken = @"MAVETESTSUserDefaultsKeyShareToken";
 #else
+NSString * const MAVEUserDefaultsKeyUserData = @"MAVEUserDefaultsKeyRemoteConfiguration";
 NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyRemoteConfiguration";
 NSString * const MAVEUserDefaultsKeyShareToken = @"MAVEUserDefaultsKeyShareToken";
 #endif

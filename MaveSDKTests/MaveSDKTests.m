@@ -193,6 +193,42 @@
     OCMVerifyAll(maveMock);
 }
 
+- (void)testSetUserDataPersistsToUserDefaults {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:MAVEUserDefaultsKeyUserData];
+
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.firstName = @"aa238";
+    [MaveSDK sharedInstance].userData = user;
+
+    NSDictionary *persistedData = (NSDictionary *)[defaults objectForKey:MAVEUserDefaultsKeyUserData];
+    XCTAssertNotNil(persistedData);
+    MAVEUserData *queriedData = [[MAVEUserData alloc] initWithDictionary:persistedData];
+    XCTAssertEqualObjects(queriedData.firstName, @"aa238");
+}
+
+- (void)testGetUserDataGetsFromUserDefaultsIfNotSet {
+    // Make sure state is reset
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK sharedInstance].userData = nil;
+    [defaults removeObjectForKey:MAVEUserDefaultsKeyUserData];
+    XCTAssertNil([MaveSDK sharedInstance].userData);
+
+    // set the user data in user defaults, but it's still nil on the object
+    // will be equal to what we persisted to defaults
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.firstName = @"aa239";
+    [defaults setObject:[user toDictionary] forKey:MAVEUserDefaultsKeyUserData];
+    XCTAssertEqualObjects([MaveSDK sharedInstance].userData.firstName, @"aa239");
+
+    // Explicitly set the user data, should be equal to that
+    user.firstName = @"aa240";
+    [MaveSDK sharedInstance].userData = user;
+    XCTAssertEqualObjects([MaveSDK sharedInstance].userData.firstName, @"aa240");
+}
+
 - (void)testIsSetupOKFailsWithNoApplicationID {
     [MaveSDK setupSharedInstanceWithApplicationID:nil];
     MaveSDK *mave = [MaveSDK sharedInstance];

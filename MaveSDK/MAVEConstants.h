@@ -40,6 +40,9 @@ extern NSString * const MAVEShortLinkBaseURL;
 // want this to be as permanent as possible as an id for the device)
 extern NSString * const MAVEUserDefaultsKeyAppDeviceID;
 
+// Key where we cache the user data set by the application
+extern NSString *const MAVEUserDefaultsKeyUserData;
+
 // Server response cache user defaults
 extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;
 extern NSString * const MAVEUserDefaultsKeyShareToken;
