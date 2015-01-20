@@ -55,10 +55,11 @@
 }
 
 + (NSString *)deviceUsersFullName {
+    NSString *deviceName = [self deviceName];
     NSString *firstName, *lastName;
     [MAVENameParsingUtils fillFirstName:&firstName
                                lastName:&lastName
-                         fromDeviceName:[self deviceName]];
+                         fromDeviceName:deviceName];
     return [MAVENameParsingUtils joinFirstName:firstName andLastName:lastName];
 }
 

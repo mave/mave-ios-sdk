@@ -51,13 +51,20 @@
     // Try with a standard device name
     firstName = nil; lastName = nil;
     [MAVENameParsingUtils fillFirstName:&firstName lastName:&lastName
+                         fromDeviceName:@"Danny’s iPhone"];
+    XCTAssertEqualObjects(firstName, @"Danny");
+    XCTAssertNil(lastName);
+
+    // Regular keyboard apostrophe instead of u+2019
+    firstName = nil; lastName = nil;
+    [MAVENameParsingUtils fillFirstName:&firstName lastName:&lastName
                          fromDeviceName:@"Danny's iPhone"];
     XCTAssertEqualObjects(firstName, @"Danny");
     XCTAssertNil(lastName);
 
     firstName = nil; lastName = nil;
     [MAVENameParsingUtils fillFirstName:&firstName lastName:&lastName
-                         fromDeviceName:@"Danny's iPhone 5s"];
+                         fromDeviceName:@"Danny’s iPhone 5s"];
     XCTAssertEqualObjects(firstName, @"Danny");
     XCTAssertNil(lastName);
 
@@ -87,7 +94,7 @@
 
     firstName = nil; lastName = nil;
     [MAVENameParsingUtils fillFirstName:&firstName lastName:&lastName
-                         fromDeviceName:@"Danny Cosson's iPhone 5s"];
+                         fromDeviceName:@"Danny Cosson’s iPhone 5s"];
     XCTAssertEqualObjects(firstName, @"Danny");
     XCTAssertEqualObjects(lastName, @"Cosson");
 
@@ -105,7 +112,7 @@
 
     firstName = nil; lastName = nil;
     [MAVENameParsingUtils fillFirstName:&firstName lastName:&lastName
-                         fromDeviceName:@"Jordan_Whitney's iPhone"];
+                         fromDeviceName:@"Jordan_Whitney’s iPhone"];
     XCTAssertEqualObjects(firstName, @"Jordan");
     XCTAssertEqualObjects(lastName, @"Whitney");
 }

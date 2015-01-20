@@ -31,7 +31,7 @@
 
     // Regex to catch matches of names of the type "<person name><device type>" e.g. Danny's iPhone 6
     NSString *nameMatch;
-    NSString *regexPattern = @"^(.*?)(?:'s)?(?: |-|_)?(?:iPhone|iPad|iPod).*";
+    NSString *regexPattern = @"^(.*?)(?:['’]s)?(?: |-|_)?(?:iPhone|iPad|iPod).*";
     NSRegularExpression *nameRegex = [NSRegularExpression regularExpressionWithPattern:regexPattern options:NSRegularExpressionCaseInsensitive error:nil];
     NSArray *matches = [nameRegex matchesInString:deviceName
                                           options:0
