@@ -333,7 +333,9 @@
 
 -(void)testDismissOnCancel {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id viewMock = OCMClassMock([UIView class]);
     chooser.activeViewController = [[UIViewController alloc] init];
+    chooser.activeViewController.view = viewMock;
 
     // with no back block, does nothing
     [chooser dismissOnCancel];
@@ -347,6 +349,7 @@
 
     [chooser dismissOnCancel];
 
+    OCMVerify([viewMock endEditing:YES]);
     XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
     XCTAssertEqual(numInvites, 0);
 }

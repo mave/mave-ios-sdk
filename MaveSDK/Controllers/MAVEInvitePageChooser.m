@@ -215,6 +215,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 
 - (void)dismissOnCancel {
     if (self.navigationCancelBlock) {
+        [self.activeViewController.view endEditing:YES];
         self.navigationCancelBlock(self.activeViewController, 0);
     }
 }
