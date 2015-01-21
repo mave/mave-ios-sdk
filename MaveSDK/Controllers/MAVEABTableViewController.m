@@ -301,7 +301,6 @@
         [self.tableView reloadRowsAtIndexPaths:@[mainTableIndex]
                               withRowAnimation:UITableViewRowAnimationNone];
         self.searchBar.text = @"";
-        [self.searchBar resignFirstResponder];
 
     } else {
         [tableView reloadRowsAtIndexPaths:@[indexPath]
