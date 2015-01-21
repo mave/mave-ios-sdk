@@ -43,6 +43,51 @@
     XCTAssertEqual([properties count], 12);
 }
 
+- (void)testEncodedContextProperties {
+    [MaveSDK sharedInstance].inviteContext = @"foobartestcontext";
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    id builderMock = OCMClassMock([MAVERemoteObjectBuilder class]);
+    OCMExpect([builderMock object]).andReturn(remoteConfig);
+    [MaveSDK sharedInstance].remoteConfigurationBuilder = builderMock;
+
+    NSString *base64Properties = [MAVEClientPropertyUtils encodedContextProperties];
+    NSDictionary *properties = [MAVEClientPropertyUtils base64DecodeJSONString:base64Properties];
+    XCTAssertEqual([properties count], 10);
+    XCTAssertEqualObjects([properties objectForKey:@"contacts_pre_permission_prompt_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"contacts_invite_page_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"share_page_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"server_sms_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"client_sms_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"client_email_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"facebook_share_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"twitter_share_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"clipboard_share_template_id"], @"0");
+    XCTAssertEqualObjects([properties objectForKey:@"invite_context"], @"foobartestcontext");
+    OCMVerifyAll(builderMock);
+}
+
+- (void)testEncodedContextPropertiesNull {
+    [MaveSDK sharedInstance].inviteContext = @"foobartestcontext";
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    remoteConfig.contactsInvitePage.templateID = nil;
+
+    id builderMock = OCMClassMock([MAVERemoteObjectBuilder class]);
+    OCMExpect([builderMock object]).andReturn(remoteConfig);
+    [MaveSDK sharedInstance].remoteConfigurationBuilder = builderMock;
+
+    NSString *base64Properties = [MAVEClientPropertyUtils encodedContextProperties];
+    NSDictionary *properties = [MAVEClientPropertyUtils base64DecodeJSONString:base64Properties];
+    NSString *propertiesString = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:base64Properties options:0] encoding:NSUTF8StringEncoding];
+
+    // Check that the json string that gets set explicitly has the "null" value
+    NSString *expectedNullString = @"\"contacts_invite_page_template_id\":null";
+    XCTAssertNotEqual([propertiesString rangeOfString:expectedNullString].location,
+                      NSNotFound);
+    XCTAssertEqual([properties count], 10);
+}
+
+
 - (void)testUserAgentDeviceString {
     NSString *iosVersionStr = [[UIDevice currentDevice].systemVersion
                                stringByReplacingOccurrencesOfString:@"." withString:@"_"];

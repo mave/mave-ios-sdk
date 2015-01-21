@@ -157,6 +157,62 @@
     return [self base64EncodeDictionary:properties];
 }
 
+
++ (NSString *)encodedContextProperties {
+    NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+    NSString *propertyVal;
+
+    // Set in the explicitly-set-by-application invite_context value
+    propertyVal = [MaveSDK sharedInstance].inviteContext;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"invite_context"];
+
+    // Also fill in the template ids for all remote configuration data objects.
+    // If any are nil, set to NSNull so the json key will still be created with "null"
+    // Note that these could all be the default value of "0" or the previously-saved value
+    // if the remote configuration hasn't returned yet (e.g. the track app open request).
+    MAVERemoteConfiguration *remoteConfig = [MaveSDK sharedInstance].remoteConfigurationBuilder.object;
+    propertyVal = remoteConfig.contactsPrePrompt.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"contacts_pre_permission_prompt_template_id"];
+
+    propertyVal = remoteConfig.contactsInvitePage.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"contacts_invite_page_template_id"];
+
+    propertyVal = remoteConfig.customSharePage.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"share_page_template_id"];
+
+    propertyVal = remoteConfig.serverSMS.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"server_sms_template_id"];
+
+    propertyVal = remoteConfig.clientSMS.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"client_sms_template_id"];
+
+    propertyVal = remoteConfig.clientEmail.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"client_email_template_id"];
+
+    propertyVal = remoteConfig.facebookShare.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"facebook_share_template_id"];
+
+    propertyVal = remoteConfig.twitterShare.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"twitter_share_template_id"];
+
+    propertyVal = remoteConfig.clipboardShare.templateID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"clipboard_share_template_id"];
+
+    return [self base64EncodeDictionary:properties];
+}
+
+
+
 + (NSString *)base64EncodeDictionary:(NSDictionary *)dict {
     // Base64 encode the dictionary
     NSError *serializationError;

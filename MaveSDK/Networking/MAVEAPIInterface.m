@@ -189,18 +189,12 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     NSString *userAgent = [MAVEClientPropertyUtils userAgentDeviceString];
     NSString *screenSize = [MAVEClientPropertyUtils formattedScreenSize];
     NSString *clientProperties = [MAVEClientPropertyUtils encodedAutomaticClientProperties];
+    NSString *contextProperties = [MAVEClientPropertyUtils encodedContextProperties];
 
+    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
     [request setValue:screenSize forHTTPHeaderField:@"X-Device-Screen-Dimensions"];
     [request setValue:clientProperties forHTTPHeaderField:@"X-Client-Properties"];
-    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
-
-    // Context properties are to give us info on current state when invite/share page is displayed
-    if ([MaveSDK sharedInstance].inviteContext) {
-        NSString *contextProperties = [MAVEClientPropertyUtils base64EncodeDictionary:
-                                       @{MAVEAPIHeaderContextPropertiesInviteContext:
-                                             [MaveSDK sharedInstance].inviteContext}];
-        [request setValue:contextProperties forHTTPHeaderField:@"X-Context-Properties"];
-    }
+    [request setValue:contextProperties forHTTPHeaderField:@"X-Context-Properties"];
 }
 
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL

@@ -53,8 +53,14 @@
 // Encoded in json base64 string.
 + (NSString *)encodedAutomaticClientProperties;
 
+///
+/// Context Properties
+///
++ (NSString *)encodedContextProperties;
 
-// Helpers
+///
+/// Helpers
+///
 + (NSString *)base64EncodeDictionary:(NSDictionary *)dict;
 + (NSDictionary *)base64DecodeJSONString:(NSString *)encodedString;
 

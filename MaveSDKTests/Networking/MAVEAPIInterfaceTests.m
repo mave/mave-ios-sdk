@@ -301,13 +301,12 @@
                                     (long)screenSize.width, (long)screenSize.height];
     NSString *expectedUserAgent = [MAVEClientPropertyUtils userAgentDeviceString];
     NSString *expectedClientProperties = [MAVEClientPropertyUtils encodedAutomaticClientProperties];
-    NSString *expectedContextProperties = [MAVEClientPropertyUtils base64EncodeDictionary:@{@"invite_context": @"foobartestcontext"}];
+    NSString *expectedContextProperties = [MAVEClientPropertyUtils encodedContextProperties];
     XCTAssertEqualObjects([headers objectForKey:@"X-Device-Screen-Dimensions"],
                           expectedDimensions);
     XCTAssertEqualObjects([headers objectForKey:@"User-Agent"], expectedUserAgent);
     XCTAssertEqualObjects([headers objectForKey:@"X-Client-Properties"], expectedClientProperties);
-    XCTAssertEqualObjects([headers objectForKey:@"X-Context-Properties"],
-                          expectedContextProperties);
+    XCTAssertEqualObjects([headers objectForKey:@"X-Context-Properties"], expectedContextProperties);
 }
 
 - (void)testSilentlyDontAddContextHeaderPropertyWhenNotSet {
