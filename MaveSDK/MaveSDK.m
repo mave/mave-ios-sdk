@@ -123,10 +123,15 @@ static dispatch_once_t sharedInstanceonceToken;
 // that it set last time (if any)
 - (MAVEUserData *)userData {
     if (!_userData) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSDictionary *userDataAttrs = (NSDictionary *)[defaults objectForKey:MAVEUserDefaultsKeyUserData];
-        if (userDataAttrs) {
-            _userData = [[MAVEUserData alloc] initWithDictionary:userDataAttrs];
+        @try {
+            NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:MAVEUserDefaultsKeyUserData];
+            NSDictionary *userDataAttrs = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            if (userDataAttrs && [userDataAttrs count] > 0) {
+                _userData = [[MAVEUserData alloc] initWithDictionary:userDataAttrs];
+            }
+        }
+        @catch (NSException *exception) {
+            _userData = nil;
         }
     }
     return _userData;
@@ -134,8 +139,8 @@ static dispatch_once_t sharedInstanceonceToken;
 
 - (void)setUserData:(MAVEUserData *)userData {
     _userData = userData;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[userData toDictionary] forKey:MAVEUserDefaultsKeyUserData];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[userData toDictionary]];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:MAVEUserDefaultsKeyUserData];
 }
 
 //
