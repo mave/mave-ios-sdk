@@ -207,6 +207,13 @@
                    containerFrame.size.width,
                    containerFrame.size.height);
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
+    // adjust the search table bottom content inset so it doesn't hide results behind
+    // the area taken up by keyboard + invite message container view
+    CGFloat searchViewOffset = self.keyboardFrame.size.height - self.ABTableViewController.tableView.contentInset.top;
+    if ([self shouldDisplayInviteMessageView]) {
+        searchViewOffset += self.inviteMessageContainerView.frame.size.height;
+    }
+    self.ABTableViewController.searchTableView.contentInset = UIEdgeInsetsMake(0, 0, searchViewOffset, 0);
 
     // Resize the header based on width
     [self.ABTableViewController layoutHeaderViewForWidth:containerFrame.size.width];

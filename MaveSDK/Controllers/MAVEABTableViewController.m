@@ -75,8 +75,7 @@
     self.searchTableView.dataSource = self;
     self.searchTableView.backgroundColor = displayOptions.contactCellBackgroundColor;
     self.searchTableView.separatorColor = displayOptions.contactSeparatorColor;
-    self.searchTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
-                                             UIViewAutoresizingFlexibleHeight);
+    self.searchTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     // don't show cell separators between empty lines
     self.searchTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.searchTableView registerClass:[MAVEABPersonCell class]
