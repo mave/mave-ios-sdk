@@ -59,7 +59,7 @@
     if (self.showsExplanation) {
         return [self.inviteExplanationView computeHeightWithWidth:width] + searchBarHeight;
     } else {
-        return searchBarHeight;
+        return 0;
     }
 }
 
