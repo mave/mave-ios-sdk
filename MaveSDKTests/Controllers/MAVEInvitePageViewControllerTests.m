@@ -95,7 +95,8 @@
 }
 
 - (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {
-    [MaveSDK sharedInstance].displayOptions.inviteExplanationCopy = nil;
+    id sdkMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([sdkMock inviteExplanationCopy]).andReturn(nil);
 
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
@@ -103,8 +104,9 @@
     MAVEABTableViewController *abtvc = ipvc.ABTableViewController;
     
     XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.width, abtvc.tableView.frame.size.width);
-    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.height, MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
+    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.height, 0);
     XCTAssertNil(abtvc.inviteTableHeaderView.inviteExplanationView);
+    OCMVerifyAll(sdkMock);
 }
 
 //

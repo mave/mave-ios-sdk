@@ -8,6 +8,7 @@
 
 #import "MAVEInviteTableHeaderView.h"
 #import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVESearchBar.h"
 
@@ -23,7 +24,7 @@
 - (void)setupInit {
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
 
-    _showsExplanation = displayOptions.inviteExplanationCopy.length > 0;
+    _showsExplanation = [MaveSDK sharedInstance].inviteExplanationCopy.length > 0;
     if (self.showsExplanation) {
         self.inviteExplanationView = [[MAVEInviteExplanationView alloc] init];
         [self addSubview:self.inviteExplanationView];

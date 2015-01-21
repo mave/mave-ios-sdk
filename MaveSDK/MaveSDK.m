@@ -112,10 +112,11 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 - (NSString *)inviteExplanationCopy {
+    NSString *serverCopy = self.remoteConfiguration.contactsInvitePage.explanationCopy;
     if (self.displayOptions.inviteExplanationCopy) {
         return self.displayOptions.inviteExplanationCopy;
     } else {
-        return self.remoteConfiguration.contactsInvitePage.explanationCopy;
+        return serverCopy;
     }
 }
 
