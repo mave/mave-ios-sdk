@@ -309,16 +309,6 @@
     XCTAssertEqualObjects([headers objectForKey:@"X-Context-Properties"], expectedContextProperties);
 }
 
-- (void)testSilentlyDontAddContextHeaderPropertyWhenNotSet {
-    // invite context is stored on singleton object
-    [MaveSDK sharedInstance].inviteContext = nil;
-    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] init];
-
-    [self.testAPIInterface addCustomUserHeadersToRequest:req];
-    NSDictionary *headers = req.allHTTPHeaderFields;
-    XCTAssertNil([headers objectForKey:@"X-Context-Properties"]);
-}
-
 - (void)testSendIdentifiedJSONRequestSuccess {
     id httpStackMock = OCMPartialMock(self.testAPIInterface.httpStack);
     id httpInterfaceMock = OCMPartialMock(self.testAPIInterface);
