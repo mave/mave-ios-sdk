@@ -1,7 +1,7 @@
 ## Mave SDK releases
 
 ### v0.4.0
-- adds a search bar and ability to search through contacts to the invite page (thanks @johngraham262 #21 for getting this most of the way there)
+- adds a search bar and ability to search through contacts to the invite page (thanks [@johngraham262](https://github.com/johngraham262) [#21](https://github.com/mave/mave-ios-sdk/pull/21) for getting this most of the way there)
 - a number of small UI improvements and bugfixes
 
 ### v0.3.0
