@@ -16,6 +16,7 @@
 extern NSString * const MAVERouteTrackSignup;
 extern NSString * const MAVERouteTrackAppLaunch;
 extern NSString * const MAVERouteTrackInvitePageOpen;
+extern NSString * const MAVERouteTrackInvitePageSelectedContact;
 extern NSString * const MAVERouteTrackShareActionClick;
 extern NSString * const MAVERouteTrackShare;
 
@@ -28,6 +29,7 @@ extern NSString * const MAVERouteTrackContactsPermissionDenied;
 
 extern NSString * const MAVEAPIParamPrePromptTemplateID;
 extern NSString * const MAVEAPIParamInvitePageType;
+extern NSString * const MAVEAPIParamContactSelectedFromList;
 extern NSString * const MAVEAPIParamShareMedium;
 extern NSString * const MAVEAPIParamShareToken;
 extern NSString * const MAVEAPIParamShareAudience;
@@ -50,6 +52,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 - (void)trackAppOpen;
 - (void)trackSignup;
 - (void)trackInvitePageOpenForPageType:(NSString *)invitePageType;
+- (void)trackInvitePageSelectedContactFromList:(NSString *)listType;
 - (void)trackShareActionClickWithShareType:(NSString *)shareType;
 - (void)trackShareWithShareType:(NSString *)shareType
                      shareToken:(NSString *)shareToken

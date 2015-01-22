@@ -12,6 +12,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEABPerson.h"
+#import "MaveSDK.h"
 #import "MAVEABTestDataFactory.h"
 
 @interface MAVEABTableViewControllerTests : XCTestCase
@@ -144,13 +145,16 @@
 
 - (void)testClickDidSelectRowAtIndexPath {
     // selecting the row should toggle the corresponding person's selected attribute and call
-    // a method on the parent to inform of the update
+    // a method on the parent to inform of the update, and send the tracking call via api interface
 
     // Set up data
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    id mockedTableView = [OCMockObject mockForClass:[UITableView class]];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
+    id mockedTableView = OCMPartialMock(vc.tableView);
+    id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    id mockedIPVC = OCMClassMock([MAVEInvitePageViewController class]);
+    vc.parentViewController = mockedIPVC;
 
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.firstName = @"Abbie"; p1.lastName = @"Foo";
@@ -158,18 +162,59 @@
     [vc updateTableData:@{@"A": @[p1]}];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 
-    id mockedIPVC = [OCMockObject mockForClass:[MAVEInvitePageViewController class]];
-    vc.parentViewController = mockedIPVC;
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
-    [[mockedIPVC expect] ABTableViewControllerNumberSelectedChanged:1];
-    [[mockedTableView expect] reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
+    OCMExpect([mockedTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]);
+    OCMExpect([mockAPIInterface trackInvitePageSelectedContactFromList:@"contacts"]);
     
     // Run
     [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
     
     // Verify
     XCTAssertEqualObjects(vc.selectedPhoneNumbers, [NSSet setWithArray:@[@"18085551234"]]);
-    [mockedIPVC verify];
+    OCMVerifyAll(mockedTableView);
+    OCMVerifyAll(mockedIPVC);
+    OCMVerifyAll(mockAPIInterface);
+}
+
+- (void)testClickDidSelectRowAtIndexPathWithSearchTableView {
+    // Set up data
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+    vc.searchTableView = [[UITableView alloc] init];
+    id mockedTableView = OCMPartialMock(vc.tableView);
+    id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    id mockedIPVC = OCMClassMock([MAVEInvitePageViewController class]);
+    vc.parentViewController = mockedIPVC;
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Abbie"; p1.lastName = @"Foo";
+    p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
+    [vc updateTableData:@{@"A": @[p1]}];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+
+    XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
+    OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
+    OCMExpect([mockedTableView scrollToRowAtIndexPath:[OCMArg any]
+                                     atScrollPosition:UITableViewScrollPositionTop
+                                             animated:NO]);
+    OCMExpect([mockedTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]);
+    OCMExpect([mockAPIInterface trackInvitePageSelectedContactFromList:@"contacts_search"]);
+
+    // Run
+    vc.searchBar.text = @"foo";
+    [vc textFieldDidChange:vc.searchBar];
+    XCTAssertTrue([vc.searchTableView isDescendantOfView:vc.tableView]);
+    [vc tableView:vc.searchTableView didSelectRowAtIndexPath:indexPath];
+
+    // Verify
+    XCTAssertEqualObjects(vc.selectedPhoneNumbers, [NSSet setWithArray:@[@"18085551234"]]);
+    XCTAssertEqualObjects(vc.searchBar.text, @""); // text gets reset after searching
+    XCTAssertFalse([vc.searchTableView isDescendantOfView:vc.tableView]);
+    OCMVerifyAll(mockedTableView);
+    OCMVerifyAll(mockedIPVC);
+    OCMVerifyAll(mockAPIInterface);
 }
 
 - (void)testClickDidSelectRowAtIndexPathAddsBestNumberToSelectedPhoneNumbers {

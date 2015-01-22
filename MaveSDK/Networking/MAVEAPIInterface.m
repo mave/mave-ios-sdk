@@ -16,6 +16,7 @@
 NSString * const MAVERouteTrackSignup = @"/events/signup";
 NSString * const MAVERouteTrackAppLaunch = @"/events/launch";
 NSString * const MAVERouteTrackInvitePageOpen = @"/events/invite_page_open";
+NSString * const MAVERouteTrackInvitePageSelectedContact = @"/events/selected_contact_on_invite_page";
 NSString * const MAVERouteTrackShareActionClick = @"/events/share_action_click";
 NSString * const MAVERouteTrackShare = @"/events/share";
 
@@ -28,9 +29,11 @@ NSString * const MAVERouteTrackContactsPermissionDenied = @"/events/contacts_per
 
 NSString * const MAVEAPIParamPrePromptTemplateID = @"contacts_pre_permission_prompt_template_id";
 NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
+NSString * const MAVEAPIParamContactSelectedFromList = @"from_list";
 NSString * const MAVEAPIParamShareMedium = @"medium";
 NSString * const MAVEAPIParamShareToken = @"share_token";
 NSString * const MAVEAPIParamShareAudience = @"audience";
+
 
 NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context";
 
@@ -76,6 +79,15 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     NSDictionary *params = @{MAVEAPIParamInvitePageType: invitePageType};
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
+                        additionalParams:params];
+}
+
+- (void)trackInvitePageSelectedContactFromList:(NSString *)listType {
+    if ([listType length] == 0) {
+        listType = @"unknown";
+    }
+    NSDictionary *params = @{MAVEAPIParamContactSelectedFromList: listType};
+    [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageSelectedContact
                         additionalParams:params];
 }
 

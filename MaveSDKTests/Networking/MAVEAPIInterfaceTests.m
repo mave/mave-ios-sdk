@@ -96,6 +96,25 @@
     [mock stopMocking];
 }
 
+- (void)testTrackInvitePageSelectedContact {
+    NSString *listType = @"fooblahtype";
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageSelectedContact
+                                  additionalParams:@{MAVEAPIParamContactSelectedFromList: listType}]);
+    [self.testAPIInterface trackInvitePageSelectedContactFromList:listType];
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+
+    // if list type is empty it'll be set to unknown
+    listType = nil;
+    mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageSelectedContact
+                                  additionalParams:@{MAVEAPIParamContactSelectedFromList: @"unknown"}]);
+    [self.testAPIInterface trackInvitePageSelectedContactFromList:listType];
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+}
+
 - (void)testTrackShareActionClick {
     // With a value
     NSString *type = @"foo";
@@ -134,7 +153,6 @@
     [self.testAPIInterface trackShareWithShareType:type shareToken:token audience:audience];
     OCMVerifyAll(mock);
     [mock stopMocking];
-
 }
 
 ///

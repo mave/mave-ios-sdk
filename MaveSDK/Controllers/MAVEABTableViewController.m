@@ -290,6 +290,14 @@
     }
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
 
+    // Tracking events
+    MAVEAPIInterface *apiInterface = [MaveSDK sharedInstance].APIInterface;
+    if (tableView == self.searchTableView) {
+        [apiInterface trackInvitePageSelectedContactFromList:@"contacts_search"];
+    } else {
+        [apiInterface trackInvitePageSelectedContactFromList:@"contacts"];
+    }
+
     // if selected/un-selected on search table view, switch back to main table view with same person
     // selected, reload row, and clear search bar
     if (tableView == self.searchTableView) {
