@@ -62,6 +62,7 @@
     mave.displayOptions.navigationBarCancelButton = backButton;
 
     // Invite explanation options
+//    mave.displayOptions.inviteExplanationCopy = @"";
 //    mave.displayOptions.inviteExplanationCopy = @"Short line";
 //        @"Invite friends to DemoApp!\nGet $20 for each person that signs up.";
     mave.displayOptions.inviteExplanationFont = font1SmallerBold;

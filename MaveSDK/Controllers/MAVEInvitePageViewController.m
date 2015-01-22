@@ -145,6 +145,7 @@
     // Use address book invite as background while prompting for permission)
     self.view = [self createAddressBookInviteView];
     [self layoutInvitePageViewAndSubviews];
+    self.ABTableViewController.tableView.contentOffset = CGPointMake(0, -1 * MAVESearchBarHeight);
 }
 
 - (UIView *)createAddressBookInviteView {
