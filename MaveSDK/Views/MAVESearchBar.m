@@ -47,7 +47,7 @@ CGFloat const MAVESearchBarHeight = 44.0;
 }
 
 - (void)setupLeftLabelView {
-    CGFloat paddingXPre = 8;
+    CGFloat paddingXPre = 14;
     CGFloat paddingXPost = 10;
 
     UILabel *label = [[UILabel alloc] init];
