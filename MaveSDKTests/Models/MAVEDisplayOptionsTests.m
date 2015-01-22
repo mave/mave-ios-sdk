@@ -75,7 +75,7 @@
     XCTAssertEqualObjects(opts.contactSectionHeaderTextColor, almostBlack);
     XCTAssertEqualObjects(opts.contactSectionHeaderBackgroundColor, extraLightGrey);
     XCTAssertEqualObjects(opts.contactSectionIndexColor, lightGrey);
-    XCTAssertEqualObjects(opts.contactSectionIndexBackgroundColor, white);
+    XCTAssertEqualObjects(opts.contactSectionIndexBackgroundColor, [UIColor clearColor]);
     
     // Message and Send section options
     XCTAssertEqualObjects(opts.messageFieldFont, defaultFont);

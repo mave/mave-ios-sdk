@@ -48,7 +48,7 @@
         self.contactSectionHeaderTextColor = [[self class] colorAlmostBlack];
         self.contactSectionHeaderBackgroundColor = [[self class] colorExtraLightGrey];
         self.contactSectionIndexColor = [[self class] colorLightGrey];
-        self.contactSectionIndexBackgroundColor = [[self class] colorWhite];
+        self.contactSectionIndexBackgroundColor = [UIColor clearColor];
 
         // Message and Send section options
         self.messageFieldFont = [UIFont systemFontOfSize:16];
