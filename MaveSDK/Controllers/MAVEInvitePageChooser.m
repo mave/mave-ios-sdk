@@ -200,8 +200,8 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent {
+    [self.activeViewController.view endEditing:YES];
     if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatModal]) {
-        [self.activeViewController.view endEditing:YES];
         if (self.navigationCancelBlock) {
             self.navigationCancelBlock(self.activeViewController,
                                        numberOfInvitesSent);
@@ -222,6 +222,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (void)dismissOnBack {
+    [self.activeViewController.view endEditing:YES];
     if (self.navigationBackBlock) {
         self.navigationBackBlock(self.activeViewController, 0);
     }
