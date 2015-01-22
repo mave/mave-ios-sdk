@@ -82,9 +82,9 @@
     // This method will have to just be tested as part of the integration/UI tests in actually
     // loading up an address book, it's more trouble than it's worth to stub out the CF functions
     //
-    CFErrorRef accessErrorCF;
+    CFErrorRef accessErrorCF = NULL;
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
-    if (accessErrorCF != nil) {
+    if (accessErrorCF != NULL) {
         NSError *abAccessError = (__bridge_transfer NSError *)accessErrorCF;
         MAVEErrorLog(@"ABAddressBookCreate failed error domain: %@ code: %ld",
                  abAccessError.domain, (long)abAccessError.code);
@@ -113,6 +113,7 @@
     }
     NSDictionary *indexedPersons = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:MAVEABPersonsArray];
     self.completionBlock(indexedPersons);
+    self.retainSelf = nil; // let self get GC'd after completion block called
 }
 
 - (void)completeAfterPermissionDenied {
@@ -121,6 +122,7 @@
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionDenied];
     }
     self.completionBlock(nil);
+//    self.retainSelf = nil; // let self get GC'd after completion block called
 }
 
 
@@ -153,13 +155,11 @@
 
 // Respond to pre-prompt response
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    // let self get GC'd, this is a one-time use object
-    self.retainSelf = nil;
-
     // clicked cancel
     if (buttonIndex == 0) {
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionDenied];
         self.completionBlock(nil);
+        self.retainSelf = nil; // let self get GC'd after completion block called
 
     // clicked accept
     } else {
