@@ -28,4 +28,4 @@ Danny Cosson, danny@mave.io
 
 ## License
 
-This SDK is released under a proprietary license, to use it in your released application you need to be using the Mave platform (sign up for our beta at [mave.io](http://mave.io). See the LICENSE file.
+This SDK is released under a proprietary license, to use it in your released application you need to be using the Mave platform (sign up for our beta at [mave.io](http://mave.io)). See the LICENSE file.
