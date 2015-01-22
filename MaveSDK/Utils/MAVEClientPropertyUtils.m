@@ -167,6 +167,11 @@
     if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
     [properties setValue:propertyVal forKey:@"invite_context"];
 
+    // Set the user id
+    propertyVal = [MaveSDK sharedInstance].userData.userID;
+    if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
+    [properties setValue:propertyVal forKey:@"user_id"];
+
     // Also fill in the template ids for all remote configuration data objects.
     // If any are nil, set to NSNull so the json key will still be created with "null"
     // Note that these could all be the default value of "0" or the previously-saved value

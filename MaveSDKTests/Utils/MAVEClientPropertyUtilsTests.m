@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
+#import "MaveSDK_Internal.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVEConstants.h"
 #import "MAVEIDUtils.h"
@@ -45,6 +46,7 @@
 
 - (void)testEncodedContextProperties {
     [MaveSDK sharedInstance].inviteContext = @"foobartestcontext";
+    XCTAssertNotNil([MaveSDK sharedInstance].userData.userID);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     id builderMock = OCMClassMock([MAVERemoteObjectBuilder class]);
     OCMExpect([builderMock object]).andReturn(remoteConfig);
@@ -52,7 +54,10 @@
 
     NSString *base64Properties = [MAVEClientPropertyUtils encodedContextProperties];
     NSDictionary *properties = [MAVEClientPropertyUtils base64DecodeJSONString:base64Properties];
-    XCTAssertEqual([properties count], 10);
+    XCTAssertEqual([properties count], 11);
+    XCTAssertEqualObjects([properties objectForKey:@"invite_context"], @"foobartestcontext");
+    XCTAssertEqualObjects([properties objectForKey:@"user_id"], [MaveSDK sharedInstance].userData.userID);
+
     XCTAssertEqualObjects([properties objectForKey:@"contacts_pre_permission_prompt_template_id"], @"0");
     XCTAssertEqualObjects([properties objectForKey:@"contacts_invite_page_template_id"], @"0");
     XCTAssertEqualObjects([properties objectForKey:@"share_page_template_id"], @"0");
@@ -62,7 +67,6 @@
     XCTAssertEqualObjects([properties objectForKey:@"facebook_share_template_id"], @"0");
     XCTAssertEqualObjects([properties objectForKey:@"twitter_share_template_id"], @"0");
     XCTAssertEqualObjects([properties objectForKey:@"clipboard_share_template_id"], @"0");
-    XCTAssertEqualObjects([properties objectForKey:@"invite_context"], @"foobartestcontext");
     OCMVerifyAll(builderMock);
 }
 
@@ -84,7 +88,7 @@
     NSString *expectedNullString = @"\"contacts_invite_page_template_id\":null";
     XCTAssertNotEqual([propertiesString rangeOfString:expectedNullString].location,
                       NSNotFound);
-    XCTAssertEqual([properties count], 10);
+    XCTAssertEqual([properties count], 11);
 }
 
 
