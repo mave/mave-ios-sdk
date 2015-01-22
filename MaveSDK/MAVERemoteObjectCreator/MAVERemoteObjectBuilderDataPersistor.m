@@ -40,7 +40,7 @@
 - (NSDictionary *)loadJSONDataFromUserDefaults {
     NSDictionary *output;
     @try {
-        NSData *data = [self.userDefaults dataForKey:self.userDefaultsKey];
+        NSData *data = [self.userDefaults objectForKey:self.userDefaultsKey];
         output = [NSJSONSerialization JSONObjectWithData:data
                                                  options:0 error:nil];
     }
