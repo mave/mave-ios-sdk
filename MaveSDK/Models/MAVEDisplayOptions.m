@@ -22,6 +22,9 @@
 
         self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
         self.navigationBarCancelButton.title = @"Cancel";
+
+        // If pushing onto the navigation stack, you can set self.navigationBarBackButton
+        // && self.navigationBarForwardButton
         
         // Explanation of how the referral program works section
         self.inviteExplanationFont = [UIFont systemFontOfSize:14];

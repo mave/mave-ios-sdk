@@ -36,7 +36,8 @@
     // Set some variables for our app's common fonts and colors
     UIColor *green = [[UIColor alloc] initWithRed:43.0/255 green:202.0/255
                                              blue:125.0/255 alpha:1.0];
-    UIColor *white = [[UIColor alloc] initWithWhite:1.0 alpha:1.0];
+    UIColor *clear = [UIColor clearColor];
+    UIColor *white = [UIColor whiteColor];
     UIColor *black = [[UIColor alloc] initWithWhite:0.15 alpha: 1.0];
     UIColor *gray = [[UIColor alloc] initWithWhite:0.50 alpha: 1.0];
     UIColor *lightGray = [[UIColor alloc] initWithWhite:0.96 alpha: 1.0];
@@ -56,15 +57,23 @@
     mave.displayOptions.navigationBarTitleFont = font1Bold;
     mave.displayOptions.navigationBarTitleTextColor = black;
     mave.displayOptions.navigationBarBackgroundColor = lightGray;
-    // the cancel button can be any custom UIBarButtonItem, but note
-    // that the action and target will be ignored since we call the
-    // dismissalBlock you passed us instead
+
+    // Set the cancel button if displaying the page modally, or the
+    // back and forward buttons if pushing onto a navigation stack.
+    // (note the button target & actions are ignored, we call your
+    // dismiss/back/forward blocks instead)
     mave.displayOptions.navigationBarCancelButton = backButton;
+    // mave.displayOptions.navigationBarBackButton = ...
+    // mave.displayOptions.navigationBarForwardButton = ...
+
+    // Search bar options
+    mave.displayOptions.searchBarFont = font1;
+    mave.displayOptions.searchBarPlaceholderTextColor = gray;
+    mave.displayOptions.searchBarSearchTextColor = black;
+    mave.displayOptions.searchBarBackgroundColor = white;
+    mave.displayOptions.searchBarTopBorderColor = clear;
 
     // Invite explanation options
-//    mave.displayOptions.inviteExplanationCopy = @"";
-//    mave.displayOptions.inviteExplanationCopy = @"Short line";
-//        @"Invite friends to DemoApp!\nGet $20 for each person that signs up.";
     mave.displayOptions.inviteExplanationFont = font1SmallerBold;
     mave.displayOptions.inviteExplanationTextColor = black;
     mave.displayOptions.inviteExplanationCellBackgroundColor = green;
@@ -83,7 +92,7 @@
     mave.displayOptions.contactSectionHeaderTextColor = black;
     mave.displayOptions.contactSectionHeaderBackgroundColor = lightGray;
     mave.displayOptions.contactSectionIndexColor = black;
-    mave.displayOptions.contactSectionIndexBackgroundColor = [UIColor colorWithWhite:1 alpha:0];
+    mave.displayOptions.contactSectionIndexBackgroundColor = clear;
 
     // Message and Send section options
     mave.displayOptions.messageFieldFont = [UIFont systemFontOfSize:16];
@@ -94,6 +103,15 @@
     mave.displayOptions.sendButtonTextColor = green;
     mave.displayOptions.bottomViewBorderColor = gray;
     mave.displayOptions.bottomViewBackgroundColor = lightGray;
+
+    // The client-side share page (the fallback if the normal invite
+    // page can't be displayed)
+    mave.displayOptions.sharePageBackgroundColor = lightGray;
+    mave.displayOptions.sharePageIconColor = green;
+    mave.displayOptions.sharePageIconFont = [UIFont systemFontOfSize:12];
+    mave.displayOptions.sharePageIconTextColor = gray;
+    mave.displayOptions.sharePageExplanationFont = [UIFont systemFontOfSize:16];
+    mave.displayOptions.sharePageExplanationTextColor = black;
     return YES;
 }
 
