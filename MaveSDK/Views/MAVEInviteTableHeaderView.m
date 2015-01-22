@@ -31,11 +31,17 @@
         self.backgroundColor = displayOptions.inviteExplanationCellBackgroundColor;
     }
 
+    self.searchBarTopBorder = [[UIView alloc] init];
+    self.searchBarTopBorder.backgroundColor = displayOptions.searchBarTopBorderColor;
+    self.searchBarTopBorder.hidden = NO;
+    self.searchBarTopBorder.frame = CGRectMake(0, 0, 0, 1);
+    [self addSubview:self.searchBarTopBorder];
+
     self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     self.searchBar.frame = CGRectMake(0,
-                                      self.frame.size.height - MAVE_DEFAULT_SEARCH_BAR_HEIGHT,
+                                      self.frame.size.height - MAVESearchBarHeight,
                                       self.frame.size.width,
-                                      MAVE_DEFAULT_SEARCH_BAR_HEIGHT);
+                                      MAVESearchBarHeight);
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:self.searchBar];
 }
@@ -44,15 +50,21 @@
     [super layoutSubviews];
 
     CGRect frame = self.frame;
-
+    CGFloat inviteExplanationViewHeight = 0;
     if (self.showsExplanation) {
         // Reposition the inviteExplanationView based on width of text
-        CGFloat inviteExplanationViewHeight = ceil([self.inviteExplanationView
-                                                    computeHeightWithWidth:frame.size.width]);
+        inviteExplanationViewHeight = ceil([self.inviteExplanationView
+                                            computeHeightWithWidth:frame.size.width]);
         CGRect newInviteExplanationViewRect = CGRectMake(0, 0, frame.size.width,
                                                          inviteExplanationViewHeight);
         self.inviteExplanationView.frame = newInviteExplanationViewRect;
     }
+
+    CGRect searchBarTopBorderFrame = self.searchBarTopBorder.frame;
+    searchBarTopBorderFrame.origin.y = inviteExplanationViewHeight;
+    searchBarTopBorderFrame.size.width = frame.size.width;
+    self.searchBarTopBorder.frame = searchBarTopBorderFrame;
+    [self bringSubviewToFront:self.searchBarTopBorder];
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {

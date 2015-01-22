@@ -33,6 +33,7 @@
         self.searchBarPlaceholderTextColor = [[self class] colorMediumGrey];
         self.searchBarSearchTextColor = [[self class] colorAlmostBlack];
         self.searchBarBackgroundColor = [[self class] colorWhite];
+        self.searchBarTopBorderColor = [[self class] colorExtraLightGrey];
 
         // "Friends to invite" table options
         self.contactNameFont = [UIFont systemFontOfSize:16];

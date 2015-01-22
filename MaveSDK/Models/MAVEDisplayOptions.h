@@ -46,6 +46,7 @@
 @property (nonatomic, strong) UIColor *searchBarPlaceholderTextColor;
 @property (nonatomic, strong) UIColor *searchBarSearchTextColor;
 @property (nonatomic, strong) UIColor *searchBarBackgroundColor;
+@property (nonatomic, strong) UIColor *searchBarTopBorderColor;
 
 // "Friends to invite" table options
 @property (nonatomic, strong) UIFont  *contactNameFont;

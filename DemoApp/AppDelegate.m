@@ -65,7 +65,7 @@
 //    mave.displayOptions.inviteExplanationCopy = @"Short line";
 //        @"Invite friends to DemoApp!\nGet $20 for each person that signs up.";
     mave.displayOptions.inviteExplanationFont = font1SmallerBold;
-    mave.displayOptions.inviteExplanationTextColor = white;
+    mave.displayOptions.inviteExplanationTextColor = black;
     mave.displayOptions.inviteExplanationCellBackgroundColor = green;
 
     // Contacts table options

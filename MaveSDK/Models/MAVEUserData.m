@@ -35,7 +35,6 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
     if (self = [self init]) {
-        NSLog(@"dict class is: %@", [dict class]);
         self.userID = [dict objectForKey:MAVEUserDataKeyUserID];
         self.firstName = [dict objectForKey:MAVEUserDataKeyFirstName];
         self.lastName = [dict objectForKey:MAVEUserDataKeyLastName];

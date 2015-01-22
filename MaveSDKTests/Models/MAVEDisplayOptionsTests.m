@@ -60,6 +60,7 @@
     XCTAssertEqualObjects(opts.searchBarPlaceholderTextColor, mediumGrey);
     XCTAssertEqualObjects(opts.searchBarSearchTextColor, almostBlack);
     XCTAssertEqualObjects(opts.searchBarBackgroundColor, white);
+    XCTAssertEqualObjects(opts.searchBarTopBorderColor, extraLightGrey);
 
     // "Friends to invite" table options
     XCTAssertEqualObjects(opts.contactNameFont, defaultFont);
@@ -111,6 +112,7 @@
     XCTAssertTrue([opts.searchBarPlaceholderTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.searchBarSearchTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.searchBarBackgroundColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.searchBarTopBorderColor isKindOfClass:[UIColor class]]);
 
     // "Friends to invite" table options
     XCTAssertTrue([opts.contactNameFont isKindOfClass:[UIFont class]]);

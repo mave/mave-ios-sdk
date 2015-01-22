@@ -17,6 +17,7 @@
 @property (readonly, assign) BOOL showsExplanation;
 
 @property (nonatomic, strong) MAVEInviteExplanationView *inviteExplanationView;
+@property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width;

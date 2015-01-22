@@ -33,6 +33,7 @@
     opts.searchBarPlaceholderTextColor = [self randomColor];
     opts.searchBarSearchTextColor = [self randomColor];
     opts.searchBarBackgroundColor = [self randomColor];
+    opts.searchBarTopBorderColor = [self randomColor];
 
     opts.contactNameFont = [self randomFont];
     opts.contactNameTextColor = [self randomColor];
