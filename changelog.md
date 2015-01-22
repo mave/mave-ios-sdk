@@ -1,4 +1,4 @@
-## Mave SDK changes
+## Mave SDK releases
 
 ### v0.4.0
 - adds a search bar and ability to search through contacts to the invite page
