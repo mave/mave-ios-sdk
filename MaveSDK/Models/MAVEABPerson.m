@@ -142,7 +142,6 @@
     return [NSString stringWithFormat:@"(%@)\u00a0%@-%@", areaCode, first3, last4];
 }
 
-
 - (NSComparisonResult)compareNames:(MAVEABPerson *)otherPerson {
     return [[self nameForCompareNames] compare:[otherPerson nameForCompareNames]];
 }
@@ -153,6 +152,16 @@
     NSString *ln = self.lastName;
     if (ln == nil) ln = @"";
     return [NSString stringWithFormat:@"%@%@",fn,ln];
+}
+
+- (NSComparisonResult)compareRecordIDs:(MAVEABPerson *)otherPerson {
+    if (self.recordID > otherPerson.recordID) {
+        return NSOrderedDescending;
+    } else if (self.recordID == otherPerson.recordID) {
+        return NSOrderedSame;
+    } else {
+        return NSOrderedAscending;
+    }
 }
 
 @end

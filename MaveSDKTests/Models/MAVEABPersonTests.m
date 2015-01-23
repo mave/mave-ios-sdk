@@ -320,4 +320,24 @@
     XCTAssertEqual([p2 compareNames:p1], NSOrderedDescending);
 }
 
+- (void)testCompareRecordIDs {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = 100;
+    MAVEABPerson *p2 =  [[MAVEABPerson alloc] init];
+    p2.recordID = 101;
+    XCTAssertEqual([p1 compareRecordIDs:p2], NSOrderedAscending);
+    XCTAssertEqual([p2 compareRecordIDs:p1], NSOrderedDescending);
+
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.recordID = 101;
+    XCTAssertEqual([p2 compareRecordIDs:p3], NSOrderedSame);
+    XCTAssertEqual([p3 compareRecordIDs:p2], NSOrderedSame);
+
+    // Sorting them should work as expected, and be stable sort
+    NSArray *people = @[p3, p2, p1];
+    NSArray *sortedPeople = [people sortedArrayUsingSelector:@selector(compareRecordIDs:)];
+    NSArray *expected = @[p1, p3, p2];
+    XCTAssertEqualObjects(sortedPeople, expected);
+}
+
 @end

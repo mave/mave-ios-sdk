@@ -149,6 +149,21 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              completionBlock:nil];
 }
 
+- (void)uploadContactList:(NSArray *)contactList {
+    NSString *route = @"/address_book_upload";
+    NSError *requestCreationError;
+    NSMutableURLRequest *request = [self.httpStack prepareJSONRequestWithRoute:route
+                                                                    methodName:@"PUT"
+                                                                        params:nil
+                                                              preparationError:&requestCreationError];
+    if (requestCreationError) {
+        MAVEErrorLog(@"initializing request to upload contacts");
+        return;
+    }
+
+    [self addCustomUserHeadersToRequest:request];
+    [self.httpStack sendPreparedRequest:request completionBlock:nil];
+}
 
 
 //

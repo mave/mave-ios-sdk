@@ -32,6 +32,9 @@
 // if it exists, otherwise first name
 - (NSComparisonResult)compareNames:(MAVEABPerson *)otherPerson;
 
+// Compare people by record ID's
+- (NSComparisonResult)compareRecordIDs:(MAVEABPerson *)otherPerson;
+
 // Returns the first letter, capitalized, of the name being used for sorting
 // (last name if it exists, otherwise first name)
 - (NSString *)firstLetter;
