@@ -13,8 +13,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *defaultMessageCopy;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *colorSchemes;
 
-@property (weak, nonatomic) UIViewController *invitePageViewController;
-
 - (IBAction)presentInvitePageAsModal:(id)sender;
 
 @end
