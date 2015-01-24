@@ -12,19 +12,31 @@
 #import "MAVEConstants.h"
 #import "MAVECompressionUtils.h"
 #import "MAVEAPIInterface.h"
+#import "MaveSDK.h"
 
 @implementation MAVEABSyncManager
 
-- (instancetype)initWithAddressBookData:(NSArray *)personsArray {
+- (instancetype)initWithAddressBookData:(NSArray *)addressBook {
     if (self = [super init]) {
-        self.addressBook = [personsArray sortedArrayUsingSelector:@selector(compareRecordIDs:)];
+        self.addressBook = addressBook;
     }
     return self;
 }
 
 - (NSData *)serializeAndCompressAddressBook {
+    NSMutableArray *dictPeople = [[NSMutableArray alloc] initWithCapacity:[self.addressBook count]];
+    MAVEABPerson *person; NSDictionary *dictPerson;
+
+    NSArray *sortedPeople = [self.addressBook sortedArrayUsingSelector:@selector(compareRecordIDs:)];
+    for (person in sortedPeople) {
+        dictPerson = [person toJSONDictionary];
+        if (dictPerson) {
+            [dictPeople addObject:dictPerson];
+        }
+    }
+
     NSError *err;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:self.addressBook
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dictPeople
                                                    options:0
                                                      error:&err];
     if (err) {
@@ -35,7 +47,8 @@
 }
 
 - (void)sendContactsToServer {
-
+    NSData *data = [self serializeAndCompressAddressBook];
+    [[MaveSDK sharedInstance].APIInterface sendIdentifiedDataWithRoute:@"/address_book_upload" methodName:@"PUT" data:data];
 }
 
 

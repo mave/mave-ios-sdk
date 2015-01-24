@@ -16,4 +16,11 @@
 // addressBook is an array of MAVEABPerson records
 - (instancetype)initWithAddressBookData:(NSArray *)addressBook;
 
+// Serialize the address book and send to server
+- (void)sendContactsToServer;
+
+// Helper to serialize the address book and gzip compress
+- (NSData *)serializeAndCompressAddressBook;
+
+
 @end
