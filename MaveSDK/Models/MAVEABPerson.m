@@ -32,6 +32,17 @@
     return self;
 }
 
+- (NSDictionary *)toJSONDictionary {
+    return @{
+        @"record_id": [[NSNumber alloc]initWithInteger:self.recordID],
+        @"first_name": self.firstName ? self.firstName : [NSNull null],
+        @"last_name": self.lastName ? self.lastName : [NSNull null],
+        @"phone_numbers": [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[],
+        @"phone_number_labels": [self.phoneNumberLabels count] > 0 ? self.phoneNumberLabels : @[],
+        @"email_addresses": [self.emailAddresses count] > 0 ? self.emailAddresses : @[],
+    };
+}
+
 - (void)setPhoneNumbersFromABRecordRef:(ABRecordRef) record{
     ABMultiValueRef phoneMultiValue = ABRecordCopyValue(record, kABPersonPhoneProperty);
     NSUInteger numPhones = ABMultiValueGetCount(phoneMultiValue);

@@ -28,6 +28,9 @@
 //   - all other fields are optional
 - (id)initFromABRecordRef:(ABRecordRef)record;
 
+// Export fields to an NSDictionary, using only basic types so it can be JSON encoded
+- (NSDictionary *)toJSONDictionary;
+
 // Returns a comparison result, used to sort people by name. Sorts by last name first
 // if it exists, otherwise first name
 - (NSComparisonResult)compareNames:(MAVEABPerson *)otherPerson;

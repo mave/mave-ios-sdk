@@ -242,6 +242,21 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self.httpStack sendPreparedRequest:request completionBlock:completionBlock];
 }
 
+- (void)sendIdentifiedDataWithRoute:(NSString *)relativeURL
+                         methodName:(NSString *)methodName
+                               data:(NSData *)data {
+
+    NSURL *url = [NSURL URLWithString: [self.httpStack.baseURL stringByAppendingString:relativeURL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:url];
+    [request setHTTPMethod:methodName];
+    [request setHTTPBody:data];
+    [request setValue:@"application/gzip" forHTTPHeaderField:@"Content-Type"];
+    [self addCustomUserHeadersToRequest:request];
+
+    [self.httpStack sendPreparedRequest:request completionBlock:nil];
+}
+
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute
                       additionalParams:(NSDictionary *)params {
     NSMutableDictionary *fullParams = [[NSMutableDictionary alloc] init];

@@ -61,6 +61,36 @@
     XCTAssertEqual(p.selected, NO);
 }
 
+- (void)testToJSONDictionary {
+    // With every value full
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = 1; p1.firstName = @"2"; p1.lastName = @"3";
+    p1.phoneNumbers = @[@"18085551234"]; p1.phoneNumberLabels = @[@"_$!<Mobile>!$_"];
+    p1.emailAddresses = @[@"foo@example.com"];
+
+    NSDictionary *p1JSON = [p1 toJSONDictionary];
+    XCTAssertEqualObjects([p1JSON objectForKey:@"record_id"], [NSNumber numberWithInteger:1]);
+    XCTAssertEqualObjects([p1JSON objectForKey:@"first_name"], @"2");
+    XCTAssertEqualObjects([p1JSON objectForKey:@"last_name"], @"3");
+    XCTAssertEqualObjects([p1JSON objectForKey:@"phone_numbers"], @[@"18085551234"]);
+    XCTAssertEqualObjects([p1JSON objectForKey:@"phone_number_labels"], @[@"_$!<Mobile>!$_"]);
+    XCTAssertEqualObjects([p1JSON objectForKey:@"email_addresses"], @[@"foo@example.com"]);
+    NSData *p1Data = [NSJSONSerialization dataWithJSONObject:p1JSON options:0 error:nil];
+    XCTAssertNotNil(p1Data);  // check that json serialization doesn't fail
+
+    // with every value empty
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    NSDictionary *p2JSON = [p2 toJSONDictionary];
+    XCTAssertEqualObjects([p2JSON objectForKey:@"record_id"], [NSNumber numberWithInteger:0]);
+    XCTAssertEqualObjects([p2JSON objectForKey:@"first_name"], [NSNull null]);
+    XCTAssertEqualObjects([p2JSON objectForKey:@"last_name"], [NSNull null]);
+    XCTAssertEqualObjects([p2JSON objectForKey:@"phone_numbers"], @[]);
+    XCTAssertEqualObjects([p2JSON objectForKey:@"phone_number_labels"], @[]);
+    XCTAssertEqualObjects([p2JSON objectForKey:@"email_addresses"], @[]);
+    NSData *p2Data = [NSJSONSerialization dataWithJSONObject:p2JSON options:0 error:nil];
+    XCTAssertNotNil(p2Data);  // check that json serialization doesn't fail
+}
+
 - (void)testPhoneNumbersFromABRecordRef {
     ABRecordRef rec = ABPersonCreate();
     ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);

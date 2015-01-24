@@ -10,8 +10,10 @@
 
 @interface MAVEABSyncManager : NSObject
 
-@property (nonatomic, strong) NSArray *personsArray;
+// addressBook is an array of MAVEABPerson records
+@property (nonatomic, strong) NSArray *addressBook;
 
-- (instancetype)initWithAddressBookData:(NSArray *)personsArray;
+// addressBook is an array of MAVEABPerson records
+- (instancetype)initWithAddressBookData:(NSArray *)addressBook;
 
 @end

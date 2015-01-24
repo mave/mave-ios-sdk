@@ -382,6 +382,31 @@
     XCTAssertNil(returnedData);
 }
 
+- (void)testSendIdentifiedData {
+    id httpStackMock = OCMPartialMock(self.testAPIInterface.httpStack);
+    id httpInterfaceMock = OCMPartialMock(self.testAPIInterface);
+
+    NSString *route = @"/blah/boo";
+    NSString *methodName = @"PUT";
+    NSData *data = [@"foo123" dataUsingEncoding:NSUTF8StringEncoding];
+
+    OCMExpect([httpStackMock sendPreparedRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+        NSURLRequest *request = (NSURLRequest *)obj;
+        XCTAssertEqualObjects([request.URL absoluteString],
+                              [self.testAPIInterface.httpStack.baseURL stringByAppendingString:route]);
+        XCTAssertEqualObjects(request.HTTPMethod, @"PUT");
+        XCTAssertEqualObjects(request.HTTPBody, data);
+        return YES;
+    }] completionBlock:nil]);
+    OCMExpect([httpInterfaceMock addCustomUserHeadersToRequest:[OCMArg any]]);
+
+    [self.testAPIInterface sendIdentifiedDataWithRoute:route
+                                            methodName:methodName
+                                                  data:data];
+    OCMVerifyAll(httpStackMock);
+    OCMVerifyAll(httpInterfaceMock);
+}
+
 - (void)testTrackGenericUserEvent {
     NSString *fakeRoute = @"/foo/bar/afsdfasdf";
     NSDictionary *additionalParams = @{@"blah": @"ok"};

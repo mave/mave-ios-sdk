@@ -87,6 +87,12 @@ extern NSString * const MAVEAPIParamShareAudience;
                                     params:(NSDictionary *)params
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
+// Similar method but allows passing in a raw body to be used as the request body
+// (so POST and PUT requests only)
+- (void)sendIdentifiedDataWithRoute:(NSString *)relativeURL
+                         methodName:(NSString *)methodName
+                               data:(NSData *)data;
+
 // Send a POST request to the given event url to track the event, ignoring response.
 // If userData is not null, the user id will be included in the request data, plus any
 // additional params passed in.
