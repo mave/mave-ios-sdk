@@ -10,6 +10,8 @@
 
 @interface MAVEHashingUtils : NSObject
 
-+ (NSString *)md5HashHexStringValue:(NSData *)data;
++ (NSString *)hexStringValue:(NSData *)data;
+
++ (NSData *)md5Hash:(NSData *)data;
 
 @end
