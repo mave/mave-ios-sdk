@@ -21,6 +21,10 @@
 @property (nonatomic, strong) NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
 @property (nonatomic, strong) NSArray *emailAddresses; // Array of NSStrings
 
+// hash of recordID (will be uniformly distributed which recordID
+// has no guarentees of being)
+- (uint32_t)hashedRecordID;
+
 @property BOOL selected;
 
 // initFromABRecordRef factory creates and does some validation
@@ -31,12 +35,19 @@
 // Export fields to an NSDictionary, using only basic types so it can be JSON encoded
 - (NSDictionary *)toJSONDictionary;
 
+// This is a hashable format that can be encoded in json, instead of encoding the properties
+// as a key-value dictionary (which is unordered) we encode them as an array of (key, value)
+// consistently ordered tuples (using an NSArray of length 2 as the tuple).
+// This makes the serialized JSON representation hashable.
+- (NSArray *)toJSONTupleArray;
+
 // Returns a comparison result, used to sort people by name. Sorts by last name first
 // if it exists, otherwise first name
 - (NSComparisonResult)compareNames:(MAVEABPerson *)otherPerson;
 
 // Compare people by record ID's
 - (NSComparisonResult)compareRecordIDs:(MAVEABPerson *)otherPerson;
+- (NSComparisonResult)compareHashedRecordIDs:(MAVEABPerson *)otherPerson;
 
 // Returns the first letter, capitalized, of the name being used for sorting
 // (last name if it exists, otherwise first name)

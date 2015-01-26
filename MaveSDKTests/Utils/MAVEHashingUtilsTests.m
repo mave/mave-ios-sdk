@@ -62,4 +62,17 @@
     XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:md53], @"7016fb20cebc07b93c8a289da7a0deaa");
 }
 
+- (void)testRandomizeInt32 {
+    int32_t int1 = 1;
+    uint32_t hash1 = 4047831814;
+    int32_t int2 = -1;
+    uint32_t hash2 = 2773418049;
+    int32_t int3 = 2147483647;
+    uint32_t hash3 = 927562454;
+
+    XCTAssertEqual([MAVEHashingUtils randomizeInt32WithMD5hash:int1], hash1);
+    XCTAssertEqual([MAVEHashingUtils randomizeInt32WithMD5hash:int2], hash2);
+    XCTAssertEqual([MAVEHashingUtils randomizeInt32WithMD5hash:int3], hash3);
+}
+
 @end

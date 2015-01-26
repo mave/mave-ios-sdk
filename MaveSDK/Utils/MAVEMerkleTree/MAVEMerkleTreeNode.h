@@ -12,27 +12,52 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MAVEMerkleTreeNode : NSObject
+extern NSString * const MAVEMerkleTreeKeyVal;
+extern NSString * const MAVEMerkleTreeLeftChildVal;
+extern NSString * const MAVEMerkleTreeRightChildVal;
+extern NSString * const MAVEMerkleTreeDataVal;
 
-@property (nonatomic, copy) NSString *key;
 
+@protocol MAVEMerkleTreeNode <NSObject>
 
+// The hash value in a merkle tree is the hash of the subtree.
+// Should be cached forever after being computed, but this is ok
+// because merkle tree is immutable
+- (NSData *)hashValue;
+
+// The simple serialization format for a merkle tree node is the dict:
+// { @"k": <hash value hex string>,
+//   @"l": <serialized left child>,
+//   @"r": <serialized right child>,
+//   @"d": <base64-encoded data>
+// }
+// Only leaf nodes will have data (and leaf nodes don't have children)
+- (NSDictionary *)serializeToJSONObject;
+
+@end
+
+@interface MAVEMerkleTreeInnerNode : NSObject<MAVEMerkleTreeNode>
+
+@property (nonatomic, copy) NSData *hashValue;
+@property (nonatomic, strong) id<MAVEMerkleTreeNode> leftChild;
+@property (nonatomic, strong) id<MAVEMerkleTreeNode> rightChild;
+
+- (instancetype)initWithLeftChild:(id<MAVEMerkleTreeNode>)leftChild
+                       rightChild:(id<MAVEMerkleTreeNode>)rightChild;
 
 @end
 
 
 
-@interface MAVEMerkleTreeInnerNode : MAVEMerkleTreeNode
+@interface MAVEMerkleTreeLeafNode : NSObject<MAVEMerkleTreeNode>
 
-@property (nonatomic, strong) MAVEMerkleTreeNode *leftChild;
-@property (nonatomic, strong) MAVEMerkleTreeNode *rightChild;
-
-@end
-
-
-
-@interface MAVEMerkleTreeLeafNode : MAVEMerkleTreeNode
-
+@property (nonatomic, copy) NSData *hashValue;
 @property (nonatomic, copy) NSData *data;
 
+- (instancetype)initWithData:(NSData *)data;
+
 @end
+
+
+
+

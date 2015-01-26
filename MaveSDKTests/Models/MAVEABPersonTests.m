@@ -48,6 +48,7 @@
     // record ID when not actually inserted in an address book is -1
     MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:pref];
     XCTAssertEqual(p.recordID, -1);
+    XCTAssertEqual(p.hashedRecordID, 2773418049);
     XCTAssertEqualObjects(p.firstName, @"John");
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
@@ -87,6 +88,49 @@
     XCTAssertEqualObjects([p2JSON objectForKey:@"phone_numbers"], @[]);
     XCTAssertEqualObjects([p2JSON objectForKey:@"phone_number_labels"], @[]);
     XCTAssertEqualObjects([p2JSON objectForKey:@"email_addresses"], @[]);
+    NSData *p2Data = [NSJSONSerialization dataWithJSONObject:p2JSON options:0 error:nil];
+    XCTAssertNotNil(p2Data);  // check that json serialization doesn't fail
+}
+
+- (void)testToJSONTupleArray {
+    // With every value full
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = 1; p1.firstName = @"2"; p1.lastName = @"3";
+    p1.phoneNumbers = @[@"18085551234", @"18085554567"]; p1.phoneNumberLabels = @[@"_$!<Mobile>!$_", @"_$!<Main>!$_"];
+    p1.emailAddresses = @[@"foo@example.com"];
+
+    NSArray *p1JSON = [p1 toJSONTupleArray];
+    NSArray *expected;
+    expected = @[@"record_id", [NSNumber numberWithInteger:1]];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:0], expected);
+    expected = @[@"first_name", @"2"];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:1], expected);
+    expected = @[@"last_name", @"3"];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:2], expected);
+    expected = @[@"phone_numbers", @[@"18085551234", @"18085554567"]];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:3], expected);
+    expected = @[@"phone_number_labels", @[@"_$!<Mobile>!$_", @"_$!<Main>!$_"]];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:4], expected);
+    expected = @[@"email_addresses", @[@"foo@example.com"]];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:5], expected);
+    NSData *p1Data = [NSJSONSerialization dataWithJSONObject:p1JSON options:0 error:nil];
+    XCTAssertNotNil(p1Data);  // check that json serialization doesn't fail
+
+    // with every value empty
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    NSArray *p2JSON = [p2 toJSONTupleArray];
+    expected = @[@"record_id", [NSNumber numberWithInteger:0]];
+    XCTAssertEqualObjects([p2JSON objectAtIndex:0], expected);
+    expected = @[@"first_name", [NSNull null]];
+    XCTAssertEqualObjects([p2JSON objectAtIndex:1], expected);
+    expected = @[@"last_name", [NSNull null]];
+    XCTAssertEqualObjects([p2JSON objectAtIndex:2], expected);
+    expected = @[@"phone_numbers", @[]];
+    XCTAssertEqualObjects([p2JSON objectAtIndex:3], expected);
+    expected = @[@"phone_number_labels", @[]];
+    XCTAssertEqualObjects([p2JSON objectAtIndex:4], expected);
+    expected = @[@"email_addresses", @[]];
+    XCTAssertEqualObjects([p2JSON objectAtIndex:5], expected);
     NSData *p2Data = [NSJSONSerialization dataWithJSONObject:p2JSON options:0 error:nil];
     XCTAssertNotNil(p2Data);  // check that json serialization doesn't fail
 }
@@ -366,6 +410,28 @@
     // Sorting them should work as expected, and be stable sort
     NSArray *people = @[p3, p2, p1];
     NSArray *sortedPeople = [people sortedArrayUsingSelector:@selector(compareRecordIDs:)];
+    NSArray *expected = @[p1, p3, p2];
+    XCTAssertEqualObjects(sortedPeople, expected);
+}
+
+- (void)testCompareHashedRecordIDs {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = 1;
+    XCTAssertEqual(p1.hashedRecordID, 4047831814);
+    MAVEABPerson *p2 =  [[MAVEABPerson alloc] init];
+    p2.recordID = 0;
+    XCTAssertEqual(p2.hashedRecordID, 4057202564);
+    XCTAssertEqual([p1 compareHashedRecordIDs:p2], NSOrderedAscending);
+    XCTAssertEqual([p2 compareHashedRecordIDs:p1], NSOrderedDescending);
+
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.recordID = 0;
+    XCTAssertEqual([p2 compareHashedRecordIDs:p3], NSOrderedSame);
+    XCTAssertEqual([p3 compareHashedRecordIDs:p2], NSOrderedSame);
+
+    // Sorting them should work as expected, and be stable sort
+    NSArray *people = @[p3, p2, p1];
+    NSArray *sortedPeople = [people sortedArrayUsingSelector:@selector(compareHashedRecordIDs:)];
     NSArray *expected = @[p1, p3, p2];
     XCTAssertEqualObjects(sortedPeople, expected);
 }

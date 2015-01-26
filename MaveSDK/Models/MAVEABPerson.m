@@ -7,6 +7,7 @@
 //
 
 #import "MAVEABPerson.h"
+#import "MAVEHashingUtils.h"
 
 @implementation MAVEABPerson
 
@@ -41,6 +42,17 @@
         @"phone_number_labels": [self.phoneNumberLabels count] > 0 ? self.phoneNumberLabels : @[],
         @"email_addresses": [self.emailAddresses count] > 0 ? self.emailAddresses : @[],
     };
+}
+
+- (NSArray *)toJSONTupleArray {
+    return @[
+        @[@"record_id", [[NSNumber alloc]initWithInteger:self.recordID]],
+        @[@"first_name", self.firstName ? self.firstName : [NSNull null]],
+        @[@"last_name", self.lastName ? self.lastName : [NSNull null]],
+        @[@"phone_numbers", [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[]],
+        @[@"phone_number_labels", [self.phoneNumberLabels count] > 0 ? self.phoneNumberLabels : @[]],
+        @[@"email_addresses", [self.emailAddresses count] > 0 ? self.emailAddresses : @[]],
+    ];
 }
 
 - (void)setPhoneNumbersFromABRecordRef:(ABRecordRef) record{
@@ -80,6 +92,10 @@
     }
     if (emailMultiValue != NULL) CFRelease(emailMultiValue);
     return (NSArray *)emailAddresses;
+}
+
+- (uint32_t)hashedRecordID {
+    return [MAVEHashingUtils randomizeInt32WithMD5hash:(int32_t)self.recordID];
 }
 
 - (NSString *)firstLetter {
@@ -172,6 +188,18 @@
         return NSOrderedSame;
     } else {
         return NSOrderedAscending;
+    }
+}
+
+- (NSComparisonResult)compareHashedRecordIDs:(MAVEABPerson *)otherPerson {
+    NSUInteger hashedID = self.hashedRecordID;
+    NSUInteger otherHashedID = otherPerson.hashedRecordID;
+    if (hashedID > otherHashedID) {
+        return NSOrderedDescending;
+    } else if (hashedID < otherHashedID) {
+        return NSOrderedAscending;
+    } else {
+        return NSOrderedSame;
     }
 }
 
