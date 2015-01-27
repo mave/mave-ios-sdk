@@ -14,7 +14,9 @@
 - (id)initFromABRecordRef:(ABRecordRef)record {
     if (self = [self init]) {
         @try {
-            self.recordID = ABRecordGetRecordID(record);
+            int32_t rid = ABRecordGetRecordID(record);
+            self.recordID = rid;
+            self.hashedRecordID = [MAVEHashingUtils randomizeInt32WithMD5hash:rid];
             self.firstName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonFirstNameProperty);
             self.lastName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonLastNameProperty);
             if (self.firstName == nil && self.lastName ==nil) {
@@ -33,9 +35,13 @@
     return self;
 }
 
+
+///
+/// Serialization methods for sending over wire
+///
 - (NSDictionary *)toJSONDictionary {
     return @{
-        @"record_id": [[NSNumber alloc]initWithInteger:self.recordID],
+        @"record_id": [[NSNumber alloc]initWithUnsignedInteger:self.recordID],
         @"first_name": self.firstName ? self.firstName : [NSNull null],
         @"last_name": self.lastName ? self.lastName : [NSNull null],
         @"phone_numbers": [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[],
@@ -47,12 +53,21 @@
 - (NSArray *)toJSONTupleArray {
     return @[
         @[@"record_id", [[NSNumber alloc]initWithInteger:self.recordID]],
+        @[@"hashed_record_id", [NSNumber numberWithUnsignedInteger:self.hashedRecordID]],
         @[@"first_name", self.firstName ? self.firstName : [NSNull null]],
         @[@"last_name", self.lastName ? self.lastName : [NSNull null]],
         @[@"phone_numbers", [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[]],
         @[@"phone_number_labels", [self.phoneNumberLabels count] > 0 ? self.phoneNumberLabels : @[]],
         @[@"email_addresses", [self.emailAddresses count] > 0 ? self.emailAddresses : @[]],
     ];
+}
+
+- (NSUInteger)merkleTreeDataKey {
+    return self.hashedRecordID;
+}
+
+- (id)merkleTreeSerializableData {
+    return [self toJSONTupleArray];
 }
 
 - (void)setPhoneNumbersFromABRecordRef:(ABRecordRef) record{
@@ -92,10 +107,6 @@
     }
     if (emailMultiValue != NULL) CFRelease(emailMultiValue);
     return (NSArray *)emailAddresses;
-}
-
-- (uint32_t)hashedRecordID {
-    return [MAVEHashingUtils randomizeInt32WithMD5hash:(int32_t)self.recordID];
 }
 
 - (NSString *)firstLetter {

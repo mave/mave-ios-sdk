@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "MAVEMerkleTreeDataEnumerator.h"
+#import "MAVEMerkleTreeDataDemo.h"
 
 @interface MAVEMerkleTreeDataEnumeratorTests : XCTestCase
 
@@ -27,59 +28,49 @@
 }
 
 - (void)testInitAndIterate {
-    NSDictionary *d1 = @{@"k": @1, @"v": @"foo1"};
-    NSDictionary *d2 = @{@"k": @2, @"v": @"foo2"};
-    NSDictionary *d3 = @{@"k": @3, @"v": @"foo3"};
+    MAVEMerkleTreeDataDemo *d1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:1];
+    MAVEMerkleTreeDataDemo *d2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
+    MAVEMerkleTreeDataDemo *d3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
     NSArray *data = @[d1, d2, d3];
-    NSUInteger (^blockToReturnKey)(id object) = ^NSUInteger (id object) {
-        NSDictionary *dictObject = object;
-        return [[dictObject objectForKey:@"k"] unsignedIntValue];
-    };
 
-    MAVEMerkleTreeDataEnumerator *iter = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockThatReturnsHashKey:blockToReturnKey];
-    XCTAssertEqual(iter.blockThatReturnsHashKey, blockToReturnKey);
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockToSerializeDataBucket:nil];
 
-    XCTAssertEqualObjects([iter nextObject], d1);
-    XCTAssertEqualObjects([iter nextObject], d2);
-    XCTAssertEqualObjects([iter nextObject], d3);
-    XCTAssertEqualObjects([iter nextObject], nil);
+    XCTAssertEqualObjects([enumer nextObject], d1);
+    XCTAssertEqualObjects([enumer nextObject], d2);
+    XCTAssertEqualObjects([enumer nextObject], d3);
+    XCTAssertEqualObjects([enumer nextObject], nil);
 }
 
-- (void)testPeak {
-    NSDictionary *d1 = @{@"k": @1, @"v": @"foo1"};
-    NSDictionary *d2 = @{@"k": @2, @"v": @"foo2"};
-    NSDictionary *d3 = @{@"k": @3, @"v": @"foo3"};
+- (void)testPeek {
+    MAVEMerkleTreeDataDemo *d1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:1];
+    MAVEMerkleTreeDataDemo *d2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
+    MAVEMerkleTreeDataDemo *d3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
     NSArray *data = @[d1, d2, d3];
-    NSUInteger (^blockToReturnKey)(id object) = ^NSUInteger (id object) {
-        NSDictionary *dictObject = object;
-        return [[dictObject objectForKey:@"k"] unsignedIntValue];
-    };
 
-    MAVEMerkleTreeDataEnumerator *iter = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockThatReturnsHashKey:blockToReturnKey];
-    XCTAssertEqual(iter.blockThatReturnsHashKey, blockToReturnKey);
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockToSerializeDataBucket:nil];
 
-    XCTAssertEqualObjects([iter peekAtNextObject], d1);
-    // can call multiple times
-    XCTAssertEqualObjects([iter peekAtNextObject], d1);
-    [iter nextObject];
-    XCTAssertEqualObjects([iter peekAtNextObject], d2);
-    [iter nextObject];
-    XCTAssertEqualObjects([iter peekAtNextObject], d3);
-    [iter nextObject];
-    XCTAssertEqualObjects([iter peekAtNextObject], nil);
+    // can peak multiple times
+    XCTAssertEqualObjects([enumer peekAtNextObject], d1);
+    XCTAssertEqualObjects([enumer peekAtNextObject], d1);
+    XCTAssertEqualObjects([enumer peekAtNextObject], d1);
+    [enumer nextObject];
+    XCTAssertEqualObjects([enumer peekAtNextObject], d2);
+    [enumer nextObject];
+    XCTAssertEqualObjects([enumer peekAtNextObject], d3);
+    [enumer nextObject];
+    XCTAssertEqualObjects([enumer peekAtNextObject], nil);
 }
 
 - (void)testKeyForNextObject {
-    NSDictionary *d1 = @{@"k": @1, @"v": @"foo1"};
-    NSArray *data = @[d1];
-    NSUInteger (^blockToReturnKey)(id object) = ^NSUInteger (id object) {
-        NSDictionary *dictObject = object;
-        return [[dictObject objectForKey:@"k"] unsignedIntValue];
-    };
-    MAVEMerkleTreeDataEnumerator *iter = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockThatReturnsHashKey:blockToReturnKey];
+    MAVEMerkleTreeDataDemo *d1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:1];
+    MAVEMerkleTreeDataDemo *d2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
+    MAVEMerkleTreeDataDemo *d3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
+    NSArray *data = @[d1, d2, d3];
 
-    XCTAssertEqual([iter keyForNextObject], 1);
-    XCTAssertEqualObjects([iter nextObject], d1);
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockToSerializeDataBucket:nil];
+
+    XCTAssertEqual([enumer keyForNextObject], 1);
+    XCTAssertEqualObjects([enumer nextObject], d1);
 }
 
 @end

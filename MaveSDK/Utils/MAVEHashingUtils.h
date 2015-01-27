@@ -19,6 +19,6 @@
 // one we know is uniformly distributed.
 //
 // Uses big endian byte order
-+ (uint32_t)randomizeInt32WithMD5hash:(int32_t)number;
++ (NSUInteger)randomizeInt32WithMD5hash:(int32_t)number;
 
 @end

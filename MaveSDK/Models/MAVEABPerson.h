@@ -8,22 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
+#import "MAVEMerkleTree.h"
 
-@interface MAVEABPerson : NSObject
+@interface MAVEABPerson : NSObject<MAVEMerkleTreeContainable>
 
 // A Person object that is much simpler than an ABRecordRef - has just the fields we care about
 // and is an NSObject with helper methods to access fields we want.
 
 @property (nonatomic, assign) NSInteger recordID;
+@property (nonatomic, assign) NSUInteger hashedRecordID;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSArray *phoneNumbers;   // Array of NSStrings
 @property (nonatomic, strong) NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
 @property (nonatomic, strong) NSArray *emailAddresses; // Array of NSStrings
-
-// hash of recordID (will be uniformly distributed which recordID
-// has no guarentees of being)
-- (uint32_t)hashedRecordID;
 
 @property BOOL selected;
 

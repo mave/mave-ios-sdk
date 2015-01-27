@@ -36,12 +36,12 @@
     return [NSData dataWithBytes:md5Chars length:sizeof(md5Chars)];
 }
 
-+ (uint32_t)randomizeInt32WithMD5hash:(int32_t)number {
++ (NSUInteger)randomizeInt32WithMD5hash:(int32_t)number {
     number = CFSwapInt32HostToBig(number);
     NSData *data = [NSData dataWithBytes:&number
-                                  length:sizeof(int32_t)];
+                                  length:sizeof(number)];
     NSData *hashedData = [self md5Hash:data];
-    return CFSwapInt32BigToHost(*(int*)([hashedData bytes]));
+    return CFSwapInt64BigToHost(*(NSInteger*)([hashedData bytes]));
 }
 
 @end

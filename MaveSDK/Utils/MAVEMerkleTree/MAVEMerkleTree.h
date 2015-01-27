@@ -19,21 +19,6 @@
 #import "MAVEMerkleTreeNodeProtocol.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 
-@protocol MAVEMerkleTreeContainable <NSObject>
-
-// This key is for grouping data for the merkle tree, it should be uniformly
-// distributed for all data.
-- (NSUInteger)merkleTreeDataKey;
-
-// Representation of the object in a format such that the collection containing
-// these data blobs can be serialized *deterministically*
-// NB: this means avoiding NSDictionary objects with count > 1 for JSON
-//   serialization because JSON objects are unordered. Instead, prefer e.g. a
-//   sorted array of 2-tuples to represent the key/value pairs of an object.
-- (id)merkleTreeSerializableData;
-
-@end
-
 // Keys for json serialization of merkle tree itself
 extern NSString * const MAVEMerkleTreeKeyVal;
 extern NSString * const MAVEMerkleTreeLeftChildVal;

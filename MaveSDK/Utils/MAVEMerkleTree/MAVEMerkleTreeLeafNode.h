@@ -16,7 +16,8 @@
 @property (nonatomic, copy) NSData *(^blockToSerializeDataBucket)(NSArray *dataBucket);
 
 - (instancetype)initWithRange:(NSRange)range
-               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
-   blockToSerializeDataBucket:(NSData *(^)(NSArray *dataBucket))block;
+               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
+
+- (NSData *)serializeData;
 
 @end

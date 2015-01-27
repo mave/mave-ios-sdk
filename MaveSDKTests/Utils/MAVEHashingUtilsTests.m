@@ -64,11 +64,11 @@
 
 - (void)testRandomizeInt32 {
     int32_t int1 = 1;
-    uint32_t hash1 = 4047831814;
+    NSUInteger hash1 = 0xf1450306517624a5;
     int32_t int2 = -1;
-    uint32_t hash2 = 2773418049;
-    int32_t int3 = 2147483647;
-    uint32_t hash3 = 927562454;
+    NSUInteger hash2 = 0xa54f0041a9e15b05;
+    int32_t int3 = 2147483647;  // 2^31 - 1, max signed int
+    NSUInteger hash3 = 0x37497ad6a0c4f123;
 
     XCTAssertEqual([MAVEHashingUtils randomizeInt32WithMD5hash:int1], hash1);
     XCTAssertEqual([MAVEHashingUtils randomizeInt32WithMD5hash:int2], hash2);

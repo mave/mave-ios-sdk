@@ -11,6 +11,7 @@
 #import "MAVEMerkleTree.h"
 #import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
+#import "MAVEMerkleTreeDataDemo.h"
 
 @interface MAVEMerkleTreeTests : XCTestCase
 
@@ -90,10 +91,14 @@
 
 - (void)testBuildMerkleTreeWithInnerAndRoot {
     NSRange range = NSMakeRange(0, 8);
-    NSArray *array = @[@0, @1, @2, @4, @6];
-    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[array objectEnumerator] blockThatReturnsHashKey:^NSUInteger(id object) {
-        return [((NSNumber *)object) unsignedIntValue];
-    }];
+    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
+    MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:1];
+    MAVEMerkleTreeDataDemo *o3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
+    MAVEMerkleTreeDataDemo *o4 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:4];
+    MAVEMerkleTreeDataDemo *o5 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:6];
+    NSArray *array = @[o1, o2, o3, o4, o5];
+
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[array objectEnumerator] blockToSerializeDataBucket:nil];
 
     MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:3 withKeyRange:range dataEnumerator:enumer];
     XCTAssertEqual(root.treeHeight, 3);
@@ -107,32 +112,32 @@
 
     XCTAssertEqual(first.dataKeyRange.location, 0);
     XCTAssertEqual(first.dataKeyRange.length, 2);
-    expected = @[@0, @1];
+    expected = @[o1, o2];
     XCTAssertEqualObjects(first.dataBucket, expected);
 
     XCTAssertEqual(second.dataKeyRange.location, 2);
     XCTAssertEqual(second.dataKeyRange.length, 2);
-    expected = @[@2];
+    expected = @[o3];
     XCTAssertEqualObjects(second.dataBucket, expected);
 
     XCTAssertEqual(third.dataKeyRange.location, 4);
     XCTAssertEqual(third.dataKeyRange.length, 2);
-    expected = @[@4];
+    expected = @[o4];
     XCTAssertEqualObjects(third.dataBucket, expected);
 
     XCTAssertEqual(fourth.dataKeyRange.location, 6);
     XCTAssertEqual(fourth.dataKeyRange.length, 2);
-    expected = @[@6];
+    expected = @[o5];
     XCTAssertEqualObjects(fourth.dataBucket, expected);
 }
 
 - (void)testBuildBigTreeWithMaxRange {
     NSRange range = NSMakeRange(0, UINT64_MAX);
-    NSArray *array = @[@0, @(UINT64_MAX)];
+    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
+    MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:UINT64_MAX];
+    NSArray *array = @[o1, o2];
 
-    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[array objectEnumerator] blockThatReturnsHashKey:^NSUInteger(id object) {
-        return [((NSNumber *)object) unsignedIntegerValue];
-    }];
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[array objectEnumerator] blockToSerializeDataBucket:nil];
 
     MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:11 withKeyRange:range dataEnumerator:enumer];
     XCTAssertEqual(root.treeHeight, 11);
@@ -146,17 +151,17 @@
     MAVEMerkleTreeLeafNode *leftLeaf = node.leftChild;
     XCTAssertEqual(leftLeaf.dataKeyRange.location, 0);
     XCTAssertEqual(leftLeaf.dataKeyRange.length, expectedRangeSize);
-    XCTAssertEqualObjects(leftLeaf.dataBucket, @[@0]);
+    XCTAssertEqualObjects(leftLeaf.dataBucket, @[o1]);
 
     // check rightmost node
     node = root;
     for (NSInteger i = 1; i < 11 - 1; ++i) {
-        node = node.leftChild;
+        node = node.rightChild;
     }
-    MAVEMerkleTreeLeafNode *rightLeaf = node.leftChild;
-    XCTAssertEqual(rightLeaf.dataKeyRange.location, 0);
+    MAVEMerkleTreeLeafNode *rightLeaf = node.rightChild;
+    XCTAssertEqual(rightLeaf.dataKeyRange.location, UINT64_MAX - expectedRangeSize + 1);
     XCTAssertEqual(rightLeaf.dataKeyRange.length, expectedRangeSize);
-    XCTAssertEqualObjects(rightLeaf.dataBucket, @[@0]);
+    XCTAssertEqualObjects(rightLeaf.dataBucket, @[o2]);
 }
 
 @end

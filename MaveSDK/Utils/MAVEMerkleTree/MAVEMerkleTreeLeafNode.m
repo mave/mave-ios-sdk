@@ -13,12 +13,11 @@
 }
 
 - (instancetype)initWithRange:(NSRange)range
-               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
-   blockToSerializeDataBucket:(NSData *(^)(NSArray *))block {
+               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator {
     if (self = [super init]) {
         self.dataKeyRange = range;
         [self loadDataIntoBucket:enumerator];
-        self.blockToSerializeDataBucket = block;
+        self.blockToSerializeDataBucket = enumerator.blockToSerializeDataBucket;
     }
     return self;
 }
@@ -43,6 +42,25 @@
 - (NSUInteger)treeHeight {
     // Just a leaf has a tree height of 1
     return 1;
+}
+
+- (NSData *)serializeData {
+    NSMutableArray *tmp = [[NSMutableArray alloc]initWithCapacity:[self.dataBucket count]];
+    id<MAVEMerkleTreeContainable>item;
+    for (item in self.dataBucket) {
+        [tmp addObject:[item merkleTreeSerializableData]];
+    }
+    NSError *err;
+    NSArray *tmp2 = [NSArray arrayWithArray:tmp];
+    NSData *output = [NSJSONSerialization dataWithJSONObject:tmp2 options:0 error:&err];
+    if (err) {
+#ifdef DEBUG
+        NSLog(@"MAVEMerkleTree - error %@ serializing data bucket",
+              err);
+#endif
+        return nil;
+    }
+    return output;
 }
 
 @end

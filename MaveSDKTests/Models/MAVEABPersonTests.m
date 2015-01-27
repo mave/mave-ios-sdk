@@ -8,9 +8,11 @@
 
 #import <XCTest/XCTest.h>
 #import <objc/runtime.h>
+#import <OCMock/OCMock.h>
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
 #import "MAVEABTestDataFactory.h"
+#import "MAVEHashingUtils.h"
 
 @interface MAVEABPersonTests : XCTestCase
 
@@ -48,7 +50,7 @@
     // record ID when not actually inserted in an address book is -1
     MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:pref];
     XCTAssertEqual(p.recordID, -1);
-    XCTAssertEqual(p.hashedRecordID, 2773418049);
+    XCTAssertEqual(p.hashedRecordID, 0xa54f0041a9e15b05);
     XCTAssertEqualObjects(p.firstName, @"John");
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
@@ -94,8 +96,11 @@
 
 - (void)testToJSONTupleArray {
     // With every value full
+    NSUInteger hashedZero = [MAVEHashingUtils randomizeInt32WithMD5hash:0];
+    NSUInteger hashedOne = [MAVEHashingUtils randomizeInt32WithMD5hash:1];
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.recordID = 1; p1.firstName = @"2"; p1.lastName = @"3";
+    p1.recordID = 1; p1.hashedRecordID = hashedOne;
+    p1.firstName = @"2"; p1.lastName = @"3";
     p1.phoneNumbers = @[@"18085551234", @"18085554567"]; p1.phoneNumberLabels = @[@"_$!<Mobile>!$_", @"_$!<Main>!$_"];
     p1.emailAddresses = @[@"foo@example.com"];
 
@@ -103,36 +108,52 @@
     NSArray *expected;
     expected = @[@"record_id", [NSNumber numberWithInteger:1]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:0], expected);
-    expected = @[@"first_name", @"2"];
+    expected = @[@"hashed_record_id", [NSNumber numberWithUnsignedInteger:hashedOne]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:1], expected);
-    expected = @[@"last_name", @"3"];
+    expected = @[@"first_name", @"2"];
     XCTAssertEqualObjects([p1JSON objectAtIndex:2], expected);
-    expected = @[@"phone_numbers", @[@"18085551234", @"18085554567"]];
+    expected = @[@"last_name", @"3"];
     XCTAssertEqualObjects([p1JSON objectAtIndex:3], expected);
-    expected = @[@"phone_number_labels", @[@"_$!<Mobile>!$_", @"_$!<Main>!$_"]];
+    expected = @[@"phone_numbers", @[@"18085551234", @"18085554567"]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:4], expected);
-    expected = @[@"email_addresses", @[@"foo@example.com"]];
+    expected = @[@"phone_number_labels", @[@"_$!<Mobile>!$_", @"_$!<Main>!$_"]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:5], expected);
+    expected = @[@"email_addresses", @[@"foo@example.com"]];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:6], expected);
     NSData *p1Data = [NSJSONSerialization dataWithJSONObject:p1JSON options:0 error:nil];
     XCTAssertNotNil(p1Data);  // check that json serialization doesn't fail
 
     // with every value empty
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.hashedRecordID = hashedZero;
     NSArray *p2JSON = [p2 toJSONTupleArray];
     expected = @[@"record_id", [NSNumber numberWithInteger:0]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:0], expected);
-    expected = @[@"first_name", [NSNull null]];
+    expected = @[@"hashed_record_id", [NSNumber numberWithUnsignedInteger:hashedZero]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:1], expected);
-    expected = @[@"last_name", [NSNull null]];
+    expected = @[@"first_name", [NSNull null]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:2], expected);
-    expected = @[@"phone_numbers", @[]];
+    expected = @[@"last_name", [NSNull null]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:3], expected);
-    expected = @[@"phone_number_labels", @[]];
+    expected = @[@"phone_numbers", @[]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:4], expected);
-    expected = @[@"email_addresses", @[]];
+    expected = @[@"phone_number_labels", @[]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:5], expected);
+    expected = @[@"email_addresses", @[]];
+    XCTAssertEqualObjects([p2JSON objectAtIndex:6], expected);
     NSData *p2Data = [NSJSONSerialization dataWithJSONObject:p2JSON options:0 error:nil];
     XCTAssertNotNil(p2Data);  // check that json serialization doesn't fail
+}
+
+- (void)testMerkleTreeSerializableFormIsTupleArray {
+    MAVEABPerson *p = [[MAVEABPerson alloc] init];
+    id mock = OCMPartialMock(p);
+    id fakeObj = @[@4];
+    OCMExpect([mock toJSONTupleArray]).andReturn(fakeObj);
+
+    id output = [p merkleTreeSerializableData];
+    XCTAssertEqualObjects(output, fakeObj);
+    OCMVerifyAll(mock);
 }
 
 - (void)testPhoneNumbersFromABRecordRef {
@@ -416,16 +437,14 @@
 
 - (void)testCompareHashedRecordIDs {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.recordID = 1;
-    XCTAssertEqual(p1.hashedRecordID, 4047831814);
+    p1.hashedRecordID = 0;
     MAVEABPerson *p2 =  [[MAVEABPerson alloc] init];
-    p2.recordID = 0;
-    XCTAssertEqual(p2.hashedRecordID, 4057202564);
+    p2.hashedRecordID = UINT64_MAX;
     XCTAssertEqual([p1 compareHashedRecordIDs:p2], NSOrderedAscending);
     XCTAssertEqual([p2 compareHashedRecordIDs:p1], NSOrderedDescending);
 
     MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
-    p3.recordID = 0;
+    p3.hashedRecordID = UINT64_MAX;
     XCTAssertEqual([p2 compareHashedRecordIDs:p3], NSOrderedSame);
     XCTAssertEqual([p3 compareHashedRecordIDs:p2], NSOrderedSame);
 

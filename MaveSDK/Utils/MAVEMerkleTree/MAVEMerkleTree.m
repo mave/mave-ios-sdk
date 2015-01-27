@@ -35,8 +35,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint32_t);
     } else {
         return [[MAVEMerkleTreeLeafNode alloc]
                 initWithRange:range
-                dataEnumerator:enumerator
-                blockToSerializeDataBucket:nil];
+                dataEnumerator:enumerator];
     }
 }
 
