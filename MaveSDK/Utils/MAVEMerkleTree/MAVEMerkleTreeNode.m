@@ -15,7 +15,9 @@ NSString * const MAVEMerkleTreeRightChildVal = @"r";
 NSString * const MAVEMerkleTreeDataVal = @"d";
 
 
-@implementation MAVEMerkleTreeInnerNode
+@implementation MAVEMerkleTreeInnerNode {
+    NSData *_hashValue;
+}
 
 - (instancetype)initWithLeftChild:(id<MAVEMerkleTreeNode>)leftChild rightChild:(id<MAVEMerkleTreeNode>)rightChild {
     if (self = [super init]) {
@@ -23,6 +25,11 @@ NSString * const MAVEMerkleTreeDataVal = @"d";
         self.rightChild = rightChild;
     }
     return self;
+}
+
+- (NSUInteger)treeHeight {
+    // since tree is always fixed size and full/balanced, we can take left height and that's tree height
+    return [self.leftChild treeHeight] + 1 ;
 }
 
 - (NSData *)hashValue {
@@ -44,37 +51,5 @@ NSString * const MAVEMerkleTreeDataVal = @"d";
              MAVEMerkleTreeRightChildVal: rightSerialized,
              };
 }
-
-@end
-
-
-
-@implementation MAVEMerkleTreeLeafNode
-
-- (instancetype)initWithData:(NSData *)data {
-    if (self = [super init]) {
-        self.data = data;
-    }
-    return self;
-}
-
-- (NSData *)hashValue {
-    if (!_hashValue) {
-        NSData *data = self.data;
-        _hashValue = [MAVEHashingUtils md5Hash:data];
-    }
-    return _hashValue;
-}
-
-- (NSDictionary *)serializeToJSONObject {
-    NSString *hashString = [MAVEHashingUtils hexStringValue:self.hashValue];
-    NSString *base64DataString =
-        [[NSString alloc] initWithData:[self.data base64EncodedDataWithOptions:0]
-                              encoding:NSASCIIStringEncoding];
-    return @{MAVEMerkleTreeKeyVal: hashString,
-             MAVEMerkleTreeDataVal: base64DataString,
-    };
-}
-
 
 @end
