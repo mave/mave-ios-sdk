@@ -7,6 +7,7 @@
 //
 
 #import "MAVEMerkleTreeLeafNode.h"
+#import "MAVEMerkleTreeUtils.h"
 #import "MAVEHashingUtils.h"
 
 @implementation MAVEMerkleTreeLeafNode
@@ -16,7 +17,6 @@
     if (self = [super init]) {
         self.dataKeyRange = range;
         [self loadDataIntoBucket:enumerator];
-        self.blockToSerializeDataBucket = enumerator.blockToSerializeDataBucket;
     }
     return self;
 }
@@ -54,23 +54,17 @@
 
 // Serialize the data bucket to NSData so it can be hashed,
 // using the block set from the enumerator.
-- (NSData *)serializeData {
+- (NSArray *)serializeableData {
     NSMutableArray *tmp = [[NSMutableArray alloc]initWithCapacity:[self.dataBucket count]];
     id<MAVEMerkleTreeDataItem>item;
     for (item in self.dataBucket) {
         [tmp addObject:[item merkleTreeSerializableData]];
     }
-    NSError *err;
-    NSArray *tmp2 = [NSArray arrayWithArray:tmp];
-    NSData *output = [NSJSONSerialization dataWithJSONObject:tmp2 options:0 error:&err];
-    if (err) {
-#ifdef DEBUG
-        NSLog(@"MAVEMerkleTree - error %@ serializing data bucket",
-              err);
-#endif
-        return nil;
-    }
-    return output;
+    return [NSArray arrayWithArray:tmp];
+}
+
+- (NSData *)serializeData {
+    return [MAVEMerkleTreeUtils JSONSerialize:[self serializeableData]];
 }
 
 @end

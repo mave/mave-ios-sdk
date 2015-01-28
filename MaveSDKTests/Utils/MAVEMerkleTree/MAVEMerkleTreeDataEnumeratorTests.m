@@ -33,7 +33,7 @@
     MAVEMerkleTreeDataDemo *d3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
     NSArray *data = @[d1, d2, d3];
 
-    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockToSerializeDataBucket:nil];
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator]];
 
     XCTAssertEqualObjects([enumer nextObject], d1);
     XCTAssertEqualObjects([enumer nextObject], d2);
@@ -47,7 +47,7 @@
     MAVEMerkleTreeDataDemo *d3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
     NSArray *data = @[d1, d2, d3];
 
-    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockToSerializeDataBucket:nil];
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator]];
 
     // can peak multiple times
     XCTAssertEqualObjects([enumer peekAtNextObject], d1);
@@ -67,7 +67,7 @@
     MAVEMerkleTreeDataDemo *d3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
     NSArray *data = @[d1, d2, d3];
 
-    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockToSerializeDataBucket:nil];
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator]];
 
     XCTAssertEqual([enumer keyForNextObject], 1);
     XCTAssertEqualObjects([enumer nextObject], d1);

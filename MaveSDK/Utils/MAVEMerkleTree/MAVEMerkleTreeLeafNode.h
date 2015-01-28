@@ -7,17 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVEMerkleTreeNode.h"
+#import "MAVEMerkleTreeProtocols.h"
+#import "MAVEMerkleTreeDataEnumerator.h"
 
 @interface MAVEMerkleTreeLeafNode : NSObject<MAVEMerkleTreeNode>
 
 @property (nonatomic, strong) NSArray *dataBucket;
 @property (nonatomic, assign) NSRange dataKeyRange;
-@property (nonatomic, copy) NSData *(^blockToSerializeDataBucket)(NSArray *dataBucket);
 
 - (instancetype)initWithRange:(NSRange)range
                dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
 
+// Returns data collection in a format that can be JSON serialized
+- (NSArray *)serializeableData;
+
+// Returns the NSData by calling MAVEMerkleTree's serialization method
 - (NSData *)serializeData;
 
 @end

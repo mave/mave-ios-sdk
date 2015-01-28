@@ -1,18 +1,13 @@
 //
-//  MAVEMerkleTreeNode.m
+//  MAVEMerkleTreeInnerNode.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 1/25/15.
 //
 //
 
-#import "MAVEMerkleTreeNode.h"
+#import "MAVEMerkleTreeInnerNode.h"
 #import "MAVEHashingUtils.h"
-
-NSString * const MAVEMerkleTreeKeyVal = @"k";
-NSString * const MAVEMerkleTreeLeftChildVal = @"l";
-NSString * const MAVEMerkleTreeRightChildVal = @"r";
-NSString * const MAVEMerkleTreeDataVal = @"d";
 
 
 @implementation MAVEMerkleTreeInnerNode {

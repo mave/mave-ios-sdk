@@ -7,13 +7,15 @@
 //
 
 #import "MAVEMerkleTree.h"
-#import "MAVEMerkleTreeNode.h"
+#import "MAVEMerkleTreeInnerNode.h"
 #import "MAVEMerkleTreeLeafNode.h"
+#import "MAVEHashingUtils.h"
 
 const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint32_t);
 
 @implementation MAVEMerkleTree
 
+// Constructor methods for the tree
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
                                      withKeyRange:(NSRange)range
                                    dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator {
@@ -38,6 +40,41 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint32_t);
                 dataEnumerator:enumerator];
     }
 }
+
++ (NSArray *)differencesToMakeTree:(id<MAVEMerkleTreeNode>)otherTree
+                         matchTree:(id<MAVEMerkleTreeNode>)referenceTree
+                 currentPathToNode:(MAVEMerkleTreePath)currentPath {
+    NSData *refHash = [referenceTree hashValue];
+    if ([refHash isEqualToData:[otherTree hashValue]]) {
+        return @[];
+    }
+
+    if ([referenceTree treeHeight] == 1) {
+        MAVEMerkleTreeLeafNode *referenceLeaf = referenceTree;
+        return @[@[@(currentPath), [MAVEHashingUtils hexStringValue:refHash], [referenceLeaf serializeableData]]];
+    }
+    MAVEMerkleTreeInnerNode *referenceNode = referenceTree;
+    MAVEMerkleTreeInnerNode *otherNode = otherTree;
+
+    MAVEMerkleTreePath leftPath = currentPath << 1;
+    MAVEMerkleTreePath rightPath = (currentPath << 1) | 1;
+
+    NSArray *leftBranchDiffs = [self differencesToMakeTree:otherNode.leftChild matchTree:referenceNode.leftChild currentPathToNode:leftPath];
+    NSArray *rightBranchDiffs = [self differencesToMakeTree:otherNode.rightChild matchTree:referenceNode.rightChild currentPathToNode:rightPath];
+
+    NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[leftBranchDiffs count] + [rightBranchDiffs count]];
+    NSUInteger i = 0; id item;
+    for (item in leftBranchDiffs) {
+        [tmp addObject:item];
+        ++i;
+    }
+    for (item in rightBranchDiffs) {
+        [tmp addObject:item];
+        ++i;
+    }
+    return [NSArray arrayWithArray:tmp];
+}
+
 
 + (BOOL)splitRange:(NSRange)range
          lowerHalf:(NSRange *)lowerRange

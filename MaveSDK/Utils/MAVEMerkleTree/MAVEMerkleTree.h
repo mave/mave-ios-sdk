@@ -16,16 +16,32 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVEMerkleTreeNodeProtocol.h"
+#import "MAVEMerkleTreeProtocols.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 
+typedef NSUInteger MAVEMerkleTreePath;
 
-@interface MAVEMerkleTree : NSObject<MAVEMerkleTreeNode>
+@interface MAVEMerkleTree : NSObject
 
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
                                      withKeyRange:(NSRange)range
                                    dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
-// Helpers to split range for lower nodes of the tree
+
+// Method to determine how to update a given merkle tree to match another.
+// The `referenceTree` argument needs to contain the data values but `otherTree`
+// does not (it will likely be just the hash tree from a remote source).
+//
+// Format of data returned is an array of tuples (NSArrays) with each tuple like:
+//   [<path to differing leaf node>, <reference tree hash value>, <data from reference tree>]
+//   - path: has format NSUInteger where each bit represents 0 for traversing to left child
+//           next or 1 for right child, starting with the least significant bit at the root
+//   - hash value: as hex-encoded string
+//   - data: the data bucket in a format where it can be serialized
++ (NSArray *)differencesToMakeTree:(id<MAVEMerkleTreeNode>)otherTree
+                         matchTree:(id<MAVEMerkleTreeNode>)referenceTree
+                 currentPathToNode:(MAVEMerkleTreePath)currentPath;
+
+// Helper for the above methods
 + (BOOL)splitRange:(NSRange)range
          lowerHalf:(NSRange *)lowerRange
          upperHalf:(NSRange *)upperRange;

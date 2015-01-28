@@ -11,12 +11,10 @@
 
 @implementation MAVEMerkleTreeDataEnumerator
 
-- (instancetype)initWithEnumerator:(NSEnumerator *)enumerator
-        blockToSerializeDataBucket:(NSData *(^)(NSArray *))block {
+- (instancetype)initWithEnumerator:(NSEnumerator *)enumerator {
     if (self = [super init]) {
         self.enumerator = enumerator;
         self._nextObject = [enumerator nextObject];
-        self.blockToSerializeDataBucket = block;
     }
     return self;
 }

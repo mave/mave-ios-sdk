@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVEMerkleTreeNodeProtocol.h"
+#import "MAVEMerkleTreeProtocols.h"
 
 // This is a demo class to show how to implement
 // MAVEMerkleTreeDataItem

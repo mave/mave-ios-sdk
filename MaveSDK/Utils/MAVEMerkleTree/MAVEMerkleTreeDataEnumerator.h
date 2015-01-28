@@ -11,16 +11,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVEMerkleTreeNodeProtocol.h"
+#import "MAVEMerkleTreeProtocols.h"
 
 @interface MAVEMerkleTreeDataEnumerator : NSEnumerator
 
 @property (nonatomic, strong) NSEnumerator *enumerator;
 @property (nonatomic, strong) id _nextObject;
-@property (nonatomic, copy) NSData *(^blockToSerializeDataBucket)(NSArray *array);
 
-- (instancetype)initWithEnumerator:(NSEnumerator *)enumerator
-        blockToSerializeDataBucket:(NSData *(^)(NSArray *array))block;
+- (instancetype)initWithEnumerator:(NSEnumerator *)enumerator;
 
 - (id<MAVEMerkleTreeDataItem>)peekAtNextObject;
 

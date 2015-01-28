@@ -1,0 +1,15 @@
+//
+//  MAVEMerkleTreeUtils.h
+//  MaveSDK
+//
+//  Created by Danny Cosson on 1/28/15.
+//
+//
+
+#import <Foundation/Foundation.h>
+
+@interface MAVEMerkleTreeUtils : NSObject
+
++ (NSData *)JSONSerialize:(id)object;
+
+@end

@@ -51,6 +51,14 @@
     OCMVerifyAll(mock);
 }
 
+- (void)testHashValueOfEmptyData {
+    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
+    node.dataBucket = @[];
+    // ensure it's equal to hard-coded hash of "[]"
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:[node hashValue]],
+                          @"d751713988987e9331980363e24189ce");
+}
+
 - (void)testInitAndLoadData {
     MAVEMerkleTreeDataDemo *d1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
     MAVEMerkleTreeDataDemo *d2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
@@ -58,59 +66,49 @@
     MAVEMerkleTreeDataDemo *d4 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:6];
 
     NSArray *data = @[d1, d2, d3, d4];
-    NSData *(^serializeBlock)(NSArray *array) = ^NSData *(NSArray *array) {
-        return [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
-    };
-    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator] blockToSerializeDataBucket:serializeBlock];
+    MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator]];
 
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] initWithRange:NSMakeRange(2, 3+1) dataEnumerator:enumer];
-
-    XCTAssertEqual(node.blockToSerializeDataBucket, serializeBlock);
     NSArray *expectedData = @[d1, d2, d3];
     XCTAssertEqualObjects(node.dataBucket, expectedData);
 }
 
-- (void)testSerializeData {
+// Should call the protocol method to make data items serializable
+// and return an array of those
+- (void)testSerializableAndSerialzeData {
     // Setup the data and init object
     MAVEMerkleTreeDataDemo *d1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     MAVEMerkleTreeDataDemo *d2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
-    NSData *(^serializeBlock)(NSArray *array) = ^NSData *(NSArray *array) {
-        return [NSJSONSerialization dataWithJSONObject:array options:0 error:nil];
-    };
 
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
     id d1Mock = OCMPartialMock(d1);
     OCMStub([d1Mock merkleTreeSerializableData]).andReturn(@"foo");
     node.dataBucket = @[d1, d2];
-    node.blockToSerializeDataBucket = serializeBlock;
 
     // Serialize the data & check it
-    NSArray *expectedObj = @[@"foo", @2];
-    NSData *expected = [NSJSONSerialization dataWithJSONObject:expectedObj options:0 error:nil];
-    XCTAssertNotNil(expected);
-    NSData *output = [node serializeData];
+    NSArray *expected = @[@"foo", @2];
+    NSData *expectedData = [NSJSONSerialization dataWithJSONObject:expected options:0 error:nil];
+    XCTAssertNotNil(expectedData);
+    NSArray *output = [node serializeableData];
     XCTAssertEqualObjects(output, expected);
 
-    NSArray *unpacked = [NSJSONSerialization JSONObjectWithData:output options:0 error:nil];
-    XCTAssertEqualObjects(unpacked, expectedObj);
+    NSData *outputData = [node serializeData];
+    XCTAssertEqualObjects(outputData, expectedData);
 }
 
 - (void)testSerializeEmptyData {
-    NSData *(^serializeBlock)(NSArray *array) = ^NSData *(NSArray *array) {
-        return [NSJSONSerialization dataWithJSONObject:array options:0 error:nil];
-    };
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
     node.dataBucket = @[];
-    node.blockToSerializeDataBucket = serializeBlock;
 
     // Serialize the data & check it
-    NSData *expected = [NSJSONSerialization dataWithJSONObject:@[] options:0 error:nil];
-    XCTAssertNotNil(expected);
-    NSData *output = [node serializeData];
+    NSArray *expected = @[];
+    NSData *expectedData= [NSJSONSerialization dataWithJSONObject:@[] options:0 error:nil];
+    XCTAssertNotNil(expectedData);
+    NSArray *output = [node serializeableData];
     XCTAssertEqualObjects(output, expected);
 
-    NSArray *unpacked = [NSJSONSerialization JSONObjectWithData:output options:0 error:nil];
-    XCTAssertEqualObjects(unpacked, @[]);
+    NSData *outputData = [node serializeData];
+    XCTAssertEqualObjects(outputData, expectedData);
 }
 
 @end

@@ -1,5 +1,5 @@
 //
-//  MAVEMerkleTreeNode.h
+//  MAVEMerkleTreeInnerNode.h
 //  MaveSDK
 //
 //  A merkle tree is a full binary tree of fixed height where each leaf node
@@ -11,7 +11,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MAVEMerkleTreeNodeProtocol.h"
+#import "MAVEMerkleTreeProtocols.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 
 

@@ -6,8 +6,6 @@
 //
 //
 
-#ifndef MaveSDK_MAVEMerkleTreeNodeProtocol_h
-#define MaveSDK_MAVEMerkleTreeNodeProtocol_h
 
 ///
 /// Public protocol for data item, a collection of which can build a
@@ -49,5 +47,3 @@
 - (NSUInteger)treeHeight;
 
 @end
-
-#endif
