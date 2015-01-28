@@ -26,6 +26,6 @@
 - (NSArray *)serializeableData;
 
 // Returns the NSData by calling MAVEMerkleTree's serialization method
-- (NSData *)serializeData;
+- (NSData *)serializedData;
 
 @end

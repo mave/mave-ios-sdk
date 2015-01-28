@@ -12,17 +12,29 @@
 #import "MAVEHashingUtils.h"
 #import "MAVEMerkleTreeUtils.h"
 
-const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
+const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 
 @implementation MAVEMerkleTree
 
 - (instancetype)initWithHeight:(NSUInteger)height
                      arrayData:(NSArray *)data {
     if (self = [super init]) {
-        MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator]];
+        NSArray *sortedData = [data sortedArrayUsingComparator:^NSComparisonResult(id<MAVEMerkleTreeDataItem> obj1, id<MAVEMerkleTreeDataItem> obj2) {
+            NSUInteger key1 = [obj1 merkleTreeDataKey];
+            NSUInteger key2 = [obj2 merkleTreeDataKey];
+            if (key1 > key2) {
+                return NSOrderedDescending;
+            } else if (key1 == key2) {
+                return NSOrderedSame;
+            } else {
+                return NSOrderedAscending;
+            }
+        }];
+        MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc]
+                                                initWithEnumerator:[sortedData objectEnumerator]];
 
         self.root = [[self class] buildMerkleTreeOfHeight:height
-                                             withKeyRange:NSMakeRange(0, UINT64_MAX)
+                                             withKeyRange:NSMakeRange(0, NSUIntegerMax)
                                            dataEnumerator:enumer];
     }
     return self;
@@ -48,9 +60,8 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
 #endif
         return nil;
     }
-    return [MAVEMerkleTreeUtils JSONSerialize:treeObject];
+    return [MAVEMerkleTreeUtils JSONSerialize:treeObject prettyPrinted:YES];
 }
-
 
 // Constructor methods for the tree
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
@@ -79,15 +90,23 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
 }
 
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeFromJSONObject:(NSDictionary *)jsonObject {
+    // if no key, replace with a zero value node
+    NSDictionary *object = [[NSDictionary alloc] initWithDictionary:jsonObject];
+    if (![jsonObject objectForKey:@"k"]) {
+        uint64_t zero = 0;
+        NSString *key = [MAVEHashingUtils hexStringFromData:[NSData dataWithBytes:&zero length:8]];
+        object = @{@"k": key};
+    }
+
     // tree is balanced so check one child to see if this node is the leaf
-    BOOL isLeaf = ![jsonObject objectForKey:@"l"];
+    BOOL isLeaf = ![object objectForKey:@"l"];
 
     if (isLeaf) {
-        NSData *hashValue = [MAVEHashingUtils dataFromHexString:[jsonObject objectForKey:@"k"]];
+        NSData *hashValue = [MAVEHashingUtils dataFromHexString:[object objectForKey:@"k"]];
         return [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:hashValue];
     } else {
-        NSDictionary *leftChildJSON = [jsonObject objectForKey:@"l"];
-        NSDictionary *rightChildJSON = [jsonObject objectForKey:@"r"];
+        NSDictionary *leftChildJSON = [object objectForKey:@"l"];
+        NSDictionary *rightChildJSON = [object objectForKey:@"r"];
         id<MAVEMerkleTreeNode>left = [self buildMerkleTreeFromJSONObject:leftChildJSON];
         id<MAVEMerkleTreeNode>right = [self buildMerkleTreeFromJSONObject:rightChildJSON];
         return [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:right];
@@ -112,8 +131,20 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
     MAVEMerkleTreePath leftPath = currentPath << 1;
     MAVEMerkleTreePath rightPath = (currentPath << 1) | 1;
 
-    NSArray *leftBranchDiffs = [self changesetReferenceSubtree:referenceNode.leftChild matchedByOtherSubtree:otherNode.leftChild currentPathToNode:leftPath];
-    NSArray *rightBranchDiffs = [self changesetReferenceSubtree:referenceNode.rightChild matchedByOtherSubtree:otherNode.rightChild currentPathToNode:rightPath];
+    // if other tree is shorter than ours, don't traverse it further
+    // use a dummy node instead
+    id<MAVEMerkleTreeNode> otherLeft;
+    id<MAVEMerkleTreeNode> otherRight;
+    if ([otherNode treeHeight] == 1) {
+        otherLeft = [[MAVEMerkleTreeLeafNode alloc] init];
+        otherRight = [[MAVEMerkleTreeLeafNode alloc] init];
+    } else {
+        otherLeft = otherNode.leftChild;
+        otherRight = otherNode.rightChild;
+    }
+
+    NSArray *leftBranchDiffs = [self changesetReferenceSubtree:referenceNode.leftChild matchedByOtherSubtree:otherLeft currentPathToNode:leftPath];
+    NSArray *rightBranchDiffs = [self changesetReferenceSubtree:referenceNode.rightChild matchedByOtherSubtree:otherRight currentPathToNode:rightPath];
 
     NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[leftBranchDiffs count] + [rightBranchDiffs count]];
     NSUInteger i = 0; id item;

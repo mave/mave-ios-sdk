@@ -50,7 +50,7 @@
 - (void)testHashValue {
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
     id mock = OCMPartialMock(node);
-    OCMExpect([mock serializeData]).andReturn([@"blah" dataUsingEncoding:NSUTF8StringEncoding]);
+    OCMExpect([mock serializedData]).andReturn([@"blah" dataUsingEncoding:NSUTF8StringEncoding]);
 
     XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[node hashValue]],
                           @"6f1ed002ab5595859014ebf0951522d9");
@@ -98,7 +98,7 @@
     NSArray *output = [node serializeableData];
     XCTAssertEqualObjects(output, expected);
 
-    NSData *outputData = [node serializeData];
+    NSData *outputData = [node serializedData];
     XCTAssertEqualObjects(outputData, expectedData);
 }
 
@@ -113,7 +113,7 @@
     NSArray *output = [node serializeableData];
     XCTAssertEqualObjects(output, expected);
 
-    NSData *outputData = [node serializeData];
+    NSData *outputData = [node serializedData];
     XCTAssertEqualObjects(outputData, expectedData);
 }
 
