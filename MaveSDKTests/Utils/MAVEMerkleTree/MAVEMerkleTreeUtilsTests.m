@@ -34,4 +34,13 @@
     XCTAssertEqualObjects(data, expected);
 }
 
+- (void)testJSONSerializePrettyPrinted {
+    NSArray *obj = @[@"foo", @1];
+    NSData *data = [MAVEMerkleTreeUtils JSONSerialize:obj prettyPrinted:YES];
+
+    NSString *expectedSt = @"[\n  \"foo\",\n  1\n]";
+    NSString *dataSt = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    XCTAssertEqualObjects(dataSt, expectedSt);
+}
+
 @end

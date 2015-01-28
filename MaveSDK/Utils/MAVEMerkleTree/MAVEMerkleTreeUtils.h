@@ -11,5 +11,6 @@
 @interface MAVEMerkleTreeUtils : NSObject
 
 + (NSData *)JSONSerialize:(id)object;
++ (NSData *)JSONSerialize:(id)object prettyPrinted:(BOOL)pretty;
 
 @end

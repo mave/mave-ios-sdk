@@ -44,7 +44,10 @@ typedef NSUInteger MAVEMerkleTreePath;
 //           next or 1 for right child, starting with the least significant bit at the root
 //   - hash value: as hex-encoded string
 //   - data: the data bucket in a format where it can be serialized
-- (NSArray *)changesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree;
+- (NSData *)serializedChangesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree;
+
+// Returns the tree it in a JSON serializable representation
+- (NSData *)serialized;
 
 
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
@@ -52,9 +55,9 @@ typedef NSUInteger MAVEMerkleTreePath;
                                    dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeFromJSONObject:(NSDictionary *)jsonObject;
 
-+ (NSArray *)differencesToMakeTree:(id<MAVEMerkleTreeNode>)otherTree
-                         matchTree:(id<MAVEMerkleTreeNode>)referenceTree
-                 currentPathToNode:(MAVEMerkleTreePath)currentPath;
++ (NSArray *)changesetReferenceSubtree:(id<MAVEMerkleTreeNode>)referenceTree
+                 matchedByOtherSubtree:(id<MAVEMerkleTreeNode>)otherTree
+                     currentPathToNode:(MAVEMerkleTreePath)currentPath;
 
 // Helper for the above methods
 + (BOOL)splitRange:(NSRange)range

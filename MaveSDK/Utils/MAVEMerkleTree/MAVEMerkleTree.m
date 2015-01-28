@@ -10,6 +10,7 @@
 #import "MAVEMerkleTreeInnerNode.h"
 #import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeUtils.h"
 
 const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
 
@@ -34,8 +35,20 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
     return self;
 }
 
-- (NSArray *)changesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree {
-    return [[self class] differencesToMakeTree:otherTree.root matchTree:self.root currentPathToNode:0];
+- (NSData *)serializedChangesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree {
+    NSArray *changeset = [[self class] changesetReferenceSubtree:self.root matchedByOtherSubtree:otherTree.root currentPathToNode:0];
+    return [MAVEMerkleTreeUtils JSONSerialize:changeset];
+}
+
+- (NSData *)serialized {
+    NSDictionary *treeObject = [self.root serializeToJSONObject];
+    if (!treeObject) {
+#ifdef DEBUG
+        NSLog(@"MAVEMerkleTree - could not JSON serialize tree");
+#endif
+        return nil;
+    }
+    return [MAVEMerkleTreeUtils JSONSerialize:treeObject];
 }
 
 
@@ -81,9 +94,9 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
     }
 }
 
-+ (NSArray *)differencesToMakeTree:(id<MAVEMerkleTreeNode>)otherTree
-                         matchTree:(id<MAVEMerkleTreeNode>)referenceTree
-                 currentPathToNode:(MAVEMerkleTreePath)currentPath {
++ (NSArray *)changesetReferenceSubtree:(id<MAVEMerkleTreeNode>)referenceTree
+                 matchedByOtherSubtree:(id<MAVEMerkleTreeNode>)otherTree
+                     currentPathToNode:(MAVEMerkleTreePath)currentPath {
     NSData *refHash = [referenceTree hashValue];
     if ([refHash isEqualToData:[otherTree hashValue]]) {
         return @[];
@@ -99,8 +112,8 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(uint64_t);
     MAVEMerkleTreePath leftPath = currentPath << 1;
     MAVEMerkleTreePath rightPath = (currentPath << 1) | 1;
 
-    NSArray *leftBranchDiffs = [self differencesToMakeTree:otherNode.leftChild matchTree:referenceNode.leftChild currentPathToNode:leftPath];
-    NSArray *rightBranchDiffs = [self differencesToMakeTree:otherNode.rightChild matchTree:referenceNode.rightChild currentPathToNode:rightPath];
+    NSArray *leftBranchDiffs = [self changesetReferenceSubtree:referenceNode.leftChild matchedByOtherSubtree:otherNode.leftChild currentPathToNode:leftPath];
+    NSArray *rightBranchDiffs = [self changesetReferenceSubtree:referenceNode.rightChild matchedByOtherSubtree:otherNode.rightChild currentPathToNode:rightPath];
 
     NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[leftBranchDiffs count] + [rightBranchDiffs count]];
     NSUInteger i = 0; id item;
