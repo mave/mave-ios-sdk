@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MAVEHashingUtils.h"
 #import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 #import "MAVEMerkleTreeDataDemo.h"
@@ -27,6 +28,27 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+}
+
+- (void)testSerializeToJSONObject {
+    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
+    id mock = OCMPartialMock(node);
+    OCMExpect([mock hashValue]).andReturn([@"blah" dataUsingEncoding:NSUTF8StringEncoding]);
+
+    NSDictionary *json = [node serializeToJSONObject];
+    NSDictionary *expected = @{@"k": @"626c6168"};  // hexcode of "blah"
+    XCTAssertEqualObjects(json, expected);
+    OCMVerifyAll(mock);
+}
+
+- (void)testHashValue {
+    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
+    id mock = OCMPartialMock(node);
+    OCMExpect([mock serializeData]).andReturn([@"blah" dataUsingEncoding:NSUTF8StringEncoding]);
+
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:[node hashValue]],
+                          @"6f1ed002ab5595859014ebf0951522d9");
+    OCMVerifyAll(mock);
 }
 
 - (void)testInitAndLoadData {

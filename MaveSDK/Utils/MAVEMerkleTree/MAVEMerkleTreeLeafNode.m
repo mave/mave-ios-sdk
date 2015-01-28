@@ -7,10 +7,9 @@
 //
 
 #import "MAVEMerkleTreeLeafNode.h"
+#import "MAVEHashingUtils.h"
 
-@implementation MAVEMerkleTreeLeafNode {
-    NSData *_hashValue;
-}
+@implementation MAVEMerkleTreeLeafNode
 
 - (instancetype)initWithRange:(NSRange)range
                dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator {
@@ -43,6 +42,18 @@
     return 1;  // since it's the leaf of the tree
 }
 
+- (NSData *)hashValue {
+    return [MAVEHashingUtils md5Hash:[self serializeData]];
+}
+
+// Serialize the merkle tree node (doesn't include data)
+- (NSDictionary *)serializeToJSONObject {
+    return @{@"k": [MAVEHashingUtils hexStringValue:self.hashValue],
+    };
+}
+
+// Serialize the data bucket to NSData so it can be hashed,
+// using the block set from the enumerator.
 - (NSData *)serializeData {
     NSMutableArray *tmp = [[NSMutableArray alloc]initWithCapacity:[self.dataBucket count]];
     id<MAVEMerkleTreeDataItem>item;

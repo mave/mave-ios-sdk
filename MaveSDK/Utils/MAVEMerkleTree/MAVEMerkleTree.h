@@ -19,12 +19,6 @@
 #import "MAVEMerkleTreeNodeProtocol.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 
-// Keys for json serialization of merkle tree itself
-extern NSString * const MAVEMerkleTreeKeyVal;
-extern NSString * const MAVEMerkleTreeLeftChildVal;
-extern NSString * const MAVEMerkleTreeRightChildVal;
-extern NSString * const MAVEMerkleTreeDataVal;
-
 
 @interface MAVEMerkleTree : NSObject<MAVEMerkleTreeNode>
 

@@ -35,21 +35,17 @@
 @protocol MAVEMerkleTreeNode <NSObject>
 
 // The hash value in a merkle tree is the hash of the subtree.
-// Should be cached forever after being computed, but this is ok
-// because merkle tree is immutable
 - (NSData *)hashValue;
 
 // The simple serialization format for a merkle tree node is the dict:
 // { @"k": <hash value hex string>,
 //   @"l": <serialized left child>,
 //   @"r": <serialized right child>,
-//   @"d": <base64-encoded data>
 // }
-// Only leaf nodes will have data, and only inner nodes will have l and r
-// children
+// Leaf node
 - (NSDictionary *)serializeToJSONObject;
 
-// Traverses subtree downward to find height
+// Height of subtree
 - (NSUInteger)treeHeight;
 
 @end

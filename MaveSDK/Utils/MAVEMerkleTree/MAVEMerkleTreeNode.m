@@ -41,15 +41,11 @@ NSString * const MAVEMerkleTreeDataVal = @"d";
     return _hashValue;
 }
 
-
 - (NSDictionary *)serializeToJSONObject {
-    NSString *hashString = [MAVEHashingUtils hexStringValue:self.hashValue];
-    NSDictionary *leftSerialized = [self.leftChild serializeToJSONObject];
-    NSDictionary *rightSerialized = [self.rightChild serializeToJSONObject];
-    return @{MAVEMerkleTreeKeyVal: hashString,
-             MAVEMerkleTreeLeftChildVal: leftSerialized,
-             MAVEMerkleTreeRightChildVal: rightSerialized,
-             };
+    return @{@"k": [MAVEHashingUtils hexStringValue:self.hashValue],
+             @"l": [self.leftChild serializeToJSONObject],
+             @"r": [self.rightChild serializeToJSONObject],
+    };
 }
 
 @end
