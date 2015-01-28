@@ -21,7 +21,7 @@ NSString * const MAVESDKVersion = @"0.3.0";
     NSString * const MAVEShortLinkBaseURL = @"http://dev.appjoin.us/";
     #endif
 #else
-NSString * const MAVEAPIBaseURL = @"http://api.mave.io/";
+NSString * const MAVEAPIBaseURL = @"https://api.mave.io/";
 NSString * const MAVEShortLinkBaseURL = @"http://appjoin.us/";
 #endif
 
