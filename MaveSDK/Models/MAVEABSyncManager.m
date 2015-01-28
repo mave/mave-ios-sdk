@@ -13,6 +13,7 @@
 #import "MAVECompressionUtils.h"
 #import "MAVEAPIInterface.h"
 #import "MaveSDK.h"
+#import "MAVEMerkleTree.h"
 
 @implementation MAVEABSyncManager
 
@@ -50,6 +51,10 @@
 - (void)sendContactsToServer {
     NSData *data = [self serializeAndCompressAddressBook];
     [[MaveSDK sharedInstance].APIInterface sendIdentifiedDataWithRoute:@"/address_book_upload" methodName:@"PUT" data:data];
+}
+
+- (void)merkleTree {
+    NSArray *sortedPeople = [self.addressBook sortedArrayUsingSelector:@selector(compareHashedRecordIDs:)];
 }
 
 

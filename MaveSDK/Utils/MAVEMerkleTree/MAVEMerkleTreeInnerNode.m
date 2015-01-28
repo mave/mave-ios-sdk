@@ -22,6 +22,13 @@
     return self;
 }
 
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
+    if (self = [super init]) {
+
+    }
+    return self;
+}
+
 - (NSUInteger)treeHeight {
     // since tree is always fixed size and full/balanced, we can take left height and that's tree height
     return [self.leftChild treeHeight] + 1 ;
@@ -37,7 +44,7 @@
 }
 
 - (NSDictionary *)serializeToJSONObject {
-    return @{@"k": [MAVEHashingUtils hexStringValue:self.hashValue],
+    return @{@"k": [MAVEHashingUtils hexStringFromData:self.hashValue],
              @"l": [self.leftChild serializeToJSONObject],
              @"r": [self.rightChild serializeToJSONObject],
     };

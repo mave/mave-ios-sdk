@@ -23,20 +23,35 @@ typedef NSUInteger MAVEMerkleTreePath;
 
 @interface MAVEMerkleTree : NSObject
 
-+ (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
-                                     withKeyRange:(NSRange)range
-                                   dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
+@property (nonatomic, strong) id<MAVEMerkleTreeNode>root;
 
-// Method to determine how to update a given merkle tree to match another.
-// The `referenceTree` argument needs to contain the data values but `otherTree`
-// does not (it will likely be just the hash tree from a remote source).
+- (instancetype)initWithHeight:(NSUInteger)height
+                     arrayData:(NSArray *)data;
+
+- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
+
+// Method to determine how to update the given other merkle tree to match self
 //
-// Format of data returned is an array of tuples (NSArrays) with each tuple like:
-//   [<path to differing leaf node>, <reference tree hash value>, <data from reference tree>]
+// This object needs valid data to build the changeset, but the other tree
+//    argument does not (it will typically be just the hash tree returned over
+//    the network representing a remote object).
+//
+// Format of return value is array of tuples (NSArrays) with each tuple like:
+//   [ <path to differing leaf node>,
+//     <reference tree hash value>,
+//     <data from reference tree> ]
 //   - path: has format NSUInteger where each bit represents 0 for traversing to left child
 //           next or 1 for right child, starting with the least significant bit at the root
 //   - hash value: as hex-encoded string
 //   - data: the data bucket in a format where it can be serialized
+- (NSArray *)changesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree;
+
+
++ (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
+                                     withKeyRange:(NSRange)range
+                                   dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
++ (id<MAVEMerkleTreeNode>)buildMerkleTreeFromJSONObject:(NSDictionary *)jsonObject;
+
 + (NSArray *)differencesToMakeTree:(id<MAVEMerkleTreeNode>)otherTree
                          matchTree:(id<MAVEMerkleTreeNode>)referenceTree
                  currentPathToNode:(MAVEMerkleTreePath)currentPath;

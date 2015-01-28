@@ -40,7 +40,8 @@
 //   @"l": <serialized left child>,
 //   @"r": <serialized right child>,
 // }
-// Leaf node
+// Leaf nodes have no l & r children but still have key,
+// inner nodes have all three values
 - (NSDictionary *)serializeToJSONObject;
 
 // Height of subtree

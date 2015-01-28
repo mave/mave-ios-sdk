@@ -37,15 +37,40 @@
     u_long d7i = ULLONG_MAX; NSData *d7 = [NSData dataWithBytes:&d7i length:8];
 
     // Test zero values
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:d1], nil);
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:d2], @"");
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:d3], @"00");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:d1], nil);
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:d2], @"");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:d3], @"00");
     // ARM is little endian, so reverse bytes for in between values
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:d4], @"01000000");
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:d5], @"d98c1dd4");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:d4], @"01000000");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:d5], @"d98c1dd4");
     // Test maximums
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:d6], @"ffffffff");
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:d7], @"ffffffffffffffff");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:d6], @"ffffffff");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:d7], @"ffffffffffffffff");
+}
+
+- (void)testDataFromHexString {
+    uint d1i = CFSwapInt32BigToHost(0x0088ff00); NSData *d1 = [NSData dataWithBytes:&d1i length:3];
+    NSString *hexString = @"0088ff";
+    NSData *outputData = [MAVEHashingUtils dataFromHexString:hexString];
+    XCTAssertEqual([outputData length], 3);
+    XCTAssertEqualObjects(outputData, d1);
+
+    // convert back to string
+    NSString *outputString = [MAVEHashingUtils hexStringFromData:outputData];
+    XCTAssertEqualObjects(outputString, hexString);
+}
+
+- (void)testHexStringToDataAndBack {
+    // Try another string
+    NSString *hexString2 = @"0003";
+    NSData *dataVersion = [MAVEHashingUtils dataFromHexString:hexString2];
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:dataVersion], hexString2);
+}
+
+- (void)testDataFromEmptyHexString {
+    NSData *empty = [[NSData alloc] init];
+    XCTAssertEqualObjects([MAVEHashingUtils dataFromHexString:@""], empty);
+    XCTAssertNil([MAVEHashingUtils dataFromHexString:nil]);
 }
 
 - (void)testHashStringValue {
@@ -57,9 +82,9 @@
     NSData *md52 = [MAVEHashingUtils md5Hash:[s2 dataUsingEncoding:NSUTF8StringEncoding]];
     NSData *md53 = [MAVEHashingUtils md5Hash:[s3 dataUsingEncoding:NSUTF8StringEncoding]];
 
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:md51], @"d41d8cd98f00b204e9800998ecf8427e");
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:md52], @"acbd18db4cc2f85cedef654fccc4a4d8");
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:md53], @"7016fb20cebc07b93c8a289da7a0deaa");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:md51], @"d41d8cd98f00b204e9800998ecf8427e");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:md52], @"acbd18db4cc2f85cedef654fccc4a4d8");
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:md53], @"7016fb20cebc07b93c8a289da7a0deaa");
 }
 
 - (void)testRandomizeInt32 {

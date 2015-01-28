@@ -12,11 +12,11 @@
 #import "MAVEMerkleTreeInnerNode.h"
 #import "MAVEHashingUtils.h"
 
-@interface MAVEMerkleTreeNodeTests : XCTestCase
+@interface MAVEMerkleTreeInnerNodeTests : XCTestCase
 
 @end
 
-@implementation MAVEMerkleTreeNodeTests
+@implementation MAVEMerkleTreeInnerNodeTests
 
 - (void)setUp {
     [super setUp];
@@ -27,9 +27,6 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
-
-#pragma mark - Merkle Tree
-
 
 # pragma mark - Merkle Tree Nodes
 - (void)testInnerNodeHashValue {
@@ -46,7 +43,7 @@
     NSData *hash = [node hashValue];
 
     // test against the hard-coded hash of string "ab"
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:hash],
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:hash],
                           @"187ef4436122d1cc2f40dc2b92f0eba0");
     OCMVerifyAll(left);
     OCMVerifyAll(right);

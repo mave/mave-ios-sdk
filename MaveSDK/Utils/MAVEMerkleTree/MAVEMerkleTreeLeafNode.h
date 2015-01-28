@@ -18,6 +18,10 @@
 - (instancetype)initWithRange:(NSRange)range
                dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
 
+// This is when initializing from a remote source, we'll have the hash value
+// directly but we won't have the data
+- (instancetype)initWithHashValue:(NSData *)hashValue;
+
 // Returns data collection in a format that can be JSON serialized
 - (NSArray *)serializeableData;
 

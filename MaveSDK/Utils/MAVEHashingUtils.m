@@ -11,7 +11,7 @@
 
 @implementation MAVEHashingUtils
 
-+ (NSString *)hexStringValue:(NSData *)data {
++ (NSString *)hexStringFromData:(NSData *)data {
     if (!data) {
         return nil;
     }
@@ -24,6 +24,25 @@
         [outputMutable appendFormat:@"%02x", dataBuffer[i]];
     }
     return [NSString stringWithString:outputMutable];
+}
+
++ (NSData *)dataFromHexString:(NSString *)string {
+    if (!string) {
+        return nil;
+    }
+    NSInteger stringLength = [string length];
+    NSMutableData *output = [[NSMutableData alloc]initWithCapacity:stringLength/2];
+
+    long byte;
+    const char *byteAsString;
+    for (NSInteger i = 0; i < stringLength; i+=2) {
+        byteAsString = [[string substringWithRange:NSMakeRange(i, 2)]
+                        cStringUsingEncoding:NSASCIIStringEncoding];
+        byte = strtol(byteAsString, NULL, 16);
+        byte = CFSwapInt64HostToLittle(byte);
+        [output appendBytes:&byte length:1];
+    }
+    return [[NSData alloc] initWithData:output];
 }
 
 + (NSData *)md5Hash:(NSData *)data {

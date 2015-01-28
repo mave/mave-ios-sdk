@@ -30,6 +30,12 @@
     [super tearDown];
 }
 
+- (void)testInitWithHashValue {
+    NSData *hashValue = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
+    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:hashValue];
+    XCTAssertEqualObjects(node.hashValue, hashValue);
+}
+
 - (void)testSerializeToJSONObject {
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
     id mock = OCMPartialMock(node);
@@ -46,7 +52,7 @@
     id mock = OCMPartialMock(node);
     OCMExpect([mock serializeData]).andReturn([@"blah" dataUsingEncoding:NSUTF8StringEncoding]);
 
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:[node hashValue]],
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[node hashValue]],
                           @"6f1ed002ab5595859014ebf0951522d9");
     OCMVerifyAll(mock);
 }
@@ -55,7 +61,7 @@
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
     node.dataBucket = @[];
     // ensure it's equal to hard-coded hash of "[]"
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringValue:[node hashValue]],
+    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[node hashValue]],
                           @"d751713988987e9331980363e24189ce");
 }
 
