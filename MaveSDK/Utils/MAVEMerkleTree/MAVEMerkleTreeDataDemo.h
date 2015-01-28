@@ -10,9 +10,9 @@
 #import "MAVEMerkleTreeNodeProtocol.h"
 
 // This is a demo class to show how to implement
-// MAVEMerkleTreeContainable.
+// MAVEMerkleTreeDataItem
 // It's just an object wrapper around an NSUInteger
-@interface MAVEMerkleTreeDataDemo : NSObject<MAVEMerkleTreeContainable>
+@interface MAVEMerkleTreeDataDemo : NSObject<MAVEMerkleTreeDataItem>
 
 @property (nonatomic, assign) NSUInteger value;
 

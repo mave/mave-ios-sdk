@@ -21,13 +21,13 @@
     return self;
 }
 
-- (id<MAVEMerkleTreeContainable>)nextObject {
+- (id<MAVEMerkleTreeDataItem>)nextObject {
     id output = self._nextObject;
     self._nextObject = [self.enumerator nextObject];
     return output;
 }
 
-- (id<MAVEMerkleTreeContainable>)peekAtNextObject {
+- (id<MAVEMerkleTreeDataItem>)peekAtNextObject {
     return self._nextObject;
 }
 

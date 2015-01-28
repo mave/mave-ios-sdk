@@ -40,13 +40,12 @@
 }
 
 - (NSUInteger)treeHeight {
-    // Just a leaf has a tree height of 1
-    return 1;
+    return 1;  // since it's the leaf of the tree
 }
 
 - (NSData *)serializeData {
     NSMutableArray *tmp = [[NSMutableArray alloc]initWithCapacity:[self.dataBucket count]];
-    id<MAVEMerkleTreeContainable>item;
+    id<MAVEMerkleTreeDataItem>item;
     for (item in self.dataBucket) {
         [tmp addObject:[item merkleTreeSerializableData]];
     }

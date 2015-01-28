@@ -10,7 +10,7 @@
 #import <AddressBook/AddressBook.h>
 #import "MAVEMerkleTree.h"
 
-@interface MAVEABPerson : NSObject<MAVEMerkleTreeContainable>
+@interface MAVEABPerson : NSObject<MAVEMerkleTreeDataItem>
 
 // A Person object that is much simpler than an ABRecordRef - has just the fields we care about
 // and is an NSObject with helper methods to access fields we want.

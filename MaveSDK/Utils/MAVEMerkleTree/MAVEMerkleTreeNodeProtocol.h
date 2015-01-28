@@ -13,7 +13,7 @@
 /// Public protocol for data item, a collection of which can build a
 ///   merkle tree
 ///
-@protocol MAVEMerkleTreeContainable <NSObject>
+@protocol MAVEMerkleTreeDataItem <NSObject>
 
 // This key is for grouping data for the merkle tree, it should be uniformly
 // distributed for all data.
