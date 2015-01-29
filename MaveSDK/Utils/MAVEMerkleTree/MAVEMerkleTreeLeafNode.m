@@ -45,11 +45,6 @@
         [dataBucketTmp addObject:[enumerator nextObject]];
     }
     self.dataBucket = [[NSArray alloc] initWithArray:dataBucketTmp];
-
-#ifdef DEBUG
-    NSUInteger bucketNum =  self.dataKeyRange.location / self.dataKeyRange.length;
-    NSLog(@"MerkleTree data bucket %lu - %lu items", bucketNum, [self.dataBucket count]);
-#endif
 }
 
 - (NSUInteger)treeHeight {

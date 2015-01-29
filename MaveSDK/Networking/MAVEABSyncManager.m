@@ -34,7 +34,7 @@ static dispatch_once_t syncOnceToken;
 
 - (void)doSyncContacts:(NSArray *)contacts {
     @try {
-        MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
+        MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
         MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
                                                                  arrayData:contacts];
 
@@ -73,11 +73,16 @@ static dispatch_once_t syncOnceToken;
     dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 30*NSEC_PER_SEC));
     // server response was invalid or timed out
     if ([remoteHashString length] == 0) {
+        MAVEDebugLog(@"Skipping contacts sync because first request to server timed out");
         return YES;
     }
 
     NSString *localHashString = [MAVEHashingUtils hexStringFromData:[merkleTree.root hashValue]];
-    return ([remoteHashString isEqualToString: localHashString]);
+    BOOL output = ([remoteHashString isEqualToString: localHashString]);
+    if (output) {
+        MAVEDebugLog(@"Skipping contacts sync because tree roots matched");
+    }
+    return output;
 }
 
 
