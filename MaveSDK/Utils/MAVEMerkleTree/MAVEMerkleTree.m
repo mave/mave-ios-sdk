@@ -47,12 +47,13 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     return self;
 }
 
-- (NSData *)serializedChangesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree {
+
+- (NSArray *)changesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree {
     NSArray *changeset = [[self class] changesetReferenceSubtree:self.root matchedByOtherSubtree:otherTree.root currentPathToNode:0];
-    return [MAVEMerkleTreeUtils JSONSerialize:changeset];
+    return  changeset;
 }
 
-- (NSData *)serialized {
+- (NSDictionary *)serializable {
     NSDictionary *treeObject = [self.root serializeToJSONObject];
     if (!treeObject) {
 #ifdef DEBUG
@@ -60,7 +61,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 #endif
         return nil;
     }
-    return [MAVEMerkleTreeUtils JSONSerialize:treeObject prettyPrinted:YES];
+    return treeObject;
 }
 
 // Constructor methods for the tree

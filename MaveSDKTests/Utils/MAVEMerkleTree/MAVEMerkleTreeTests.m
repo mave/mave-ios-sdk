@@ -97,34 +97,17 @@
 }
 
 #pragma mark - Serialization methods
-- (void)testSerializedTree {
-    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] init];
-    MAVEMerkleTreeInnerNode *node = [[MAVEMerkleTreeInnerNode alloc] init];
-    tree.root = node;
-    id mock = OCMPartialMock(node);
-    NSDictionary *returned = @{@"foo": @1};
-    OCMExpect([mock serializeToJSONObject]).andReturn(returned);
-
-    NSData *value = [tree serialized];
-    NSString *strVal = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
-    NSString *expectedStr = @"{\"foo\":1}";
-    XCTAssertEqualObjects(strVal, expectedStr);
-    OCMVerifyAll(mock);
-}
-
-- (void)testSerializedChangeset {
+- (void)testSerializableSelf {
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] init];
     NSData *fooHash = [MAVEHashingUtils md5Hash:[@"foo" dataUsingEncoding:NSUTF8StringEncoding]];
     tree.root = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:fooHash];
 
-    NSData *value = [tree serialized];
+    NSDictionary *value = [tree serializable];
     NSDictionary *expected = @{@"k": [MAVEHashingUtils hexStringFromData:fooHash]};
-    NSData *expectedData = [NSJSONSerialization dataWithJSONObject:expected options:0 error:nil];
-    XCTAssertEqualObjects(value, expectedData);
+    XCTAssertEqualObjects(value, expected);
 }
 
-
-- (void)testDifferencesHeight1Tree {
+- (void)testChangesetHeight1Tree {
     MAVEMerkleTreeDataDemo *obj1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:10];
     MAVEMerkleTreeDataDemo *obj2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:20];
     MAVEMerkleTreeLeafNode *node1 = [[MAVEMerkleTreeLeafNode alloc] init];
@@ -176,6 +159,17 @@
     diff2 = [MAVEMerkleTree changesetReferenceSubtree:node2 matchedByOtherSubtree:node1 currentPathToNode:0];
     expected2 = @[@[@(1), obj1HashHex, @[@10]]];
     XCTAssertEqualObjects(diff2, expected2);
+    // Test the tree instance method
+    MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] init];
+    MAVEMerkleTree *tree2 = [[MAVEMerkleTree alloc] init];
+    tree1.root = node1; tree2.root = node2;
+    diff2 = [tree1 changesetForOtherTreeToMatchSelf:tree2];
+    expected2 = @[@[@(1), obj2HashHex, @[@20]]];
+    XCTAssertEqualObjects(diff2, expected2);
+    // reverse
+    diff2 = [tree2 changesetForOtherTreeToMatchSelf:tree1];
+    expected2 = @[@[@(1), obj1HashHex, @[@10]]];
+    XCTAssertEqualObjects(diff2, expected2);
 
     // Left child different
     NSArray *diff3 = [MAVEMerkleTree changesetReferenceSubtree:node1 matchedByOtherSubtree:node3 currentPathToNode:0];
@@ -186,7 +180,7 @@
     expected3 = @[@[@(0), obj2HashHex, @[@20]]];
     XCTAssertEqualObjects(diff3, expected3);
 
-    // Test the underlying method for different starting path height
+    // Test for different starting path height
     NSArray *diff4 = [MAVEMerkleTree changesetReferenceSubtree:node1 matchedByOtherSubtree:node2 currentPathToNode:8];
     // New path is 8 bitshifted and OR'd with 1
     XCTAssertEqualObjects([[diff4 objectAtIndex:0] objectAtIndex:0], @17);
