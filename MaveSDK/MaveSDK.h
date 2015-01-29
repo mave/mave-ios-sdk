@@ -14,12 +14,14 @@
 #import "MAVEAPIInterface.h"
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVECustomSharePageViewController.h"
+#import "MAVEABSyncManager.h"
 
 @interface MaveSDK : NSObject
 
 @property (nonatomic, strong) MAVEDisplayOptions *displayOptions;
 @property (nonatomic, copy) NSString *defaultSMSMessageText;
 @property (nonatomic, strong) MAVEAPIInterface *APIInterface;
+@property (nonatomic, strong) MAVEABSyncManager *addressBookSyncManager;
 @property (nonatomic, strong) MAVEInvitePageChooser *invitePageChooser;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *remoteConfigurationBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *shareTokenBuilder;

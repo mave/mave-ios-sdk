@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 #import "MAVEHTTPStack.h"
 #import "MAVEUserData.h"
+#import "MAVEMerkleTree.h"
 
 
 extern NSString * const MAVERouteTrackSignup;
@@ -67,6 +68,8 @@ extern NSString * const MAVEAPIParamShareAudience;
                         userId:(NSString *)userId
       inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+- (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree
+                     changeset:(NSArray *)changeset;
 
 ///
 /// GET requests
@@ -74,6 +77,8 @@ extern NSString * const MAVEAPIParamShareAudience;
 - (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 - (void)getNewShareTokenWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
+- (void)getRemoteContactsMerkleTreeRootWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
+- (void)getRemoteContactsFullMerkleTreeWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 
 ///
 /// Request Sending Helpers
@@ -86,12 +91,6 @@ extern NSString * const MAVEAPIParamShareAudience;
                                 methodName:(NSString *)methodName
                                     params:(NSDictionary *)params
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
-
-// Similar method but allows passing in a raw body to be used as the request body
-// (so POST and PUT requests only)
-- (void)sendIdentifiedDataWithRoute:(NSString *)relativeURL
-                         methodName:(NSString *)methodName
-                               data:(NSData *)data;
 
 // Send a POST request to the given event url to track the event, ignoring response.
 // If userData is not null, the user id will be included in the request data, plus any

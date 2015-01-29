@@ -33,6 +33,7 @@
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
         _APIInterface = [[MAVEAPIInterface alloc] init];
+        _addressBookSyncManager = [[MAVEABSyncManager alloc] init];
     }
     return self;
 }

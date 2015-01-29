@@ -14,6 +14,7 @@
 #import "MAVECompressionUtils.h"
 #import "MaveSDK.h"
 #import "MAVEAPIInterface.h"
+#import "MAVEHashingUtils.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -35,6 +36,103 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
+
+- (void)testDoSyncContactsShouldSkip {
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id mock = OCMPartialMock(syncer);
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([mock shouldSkipSyncCompareRemoteTreeRootToTree:[OCMArg any]]).andReturn(YES);
+    [[mock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
+    [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any] changeset:[OCMArg any]];
+
+    [syncer doSyncContactsInCurrentThread:@[]];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testDoSyncContactsSkipBecauseChangesetEmpty {
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id mock = OCMPartialMock(syncer);
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([mock shouldSkipSyncCompareRemoteTreeRootToTree:[OCMArg any]]).andReturn(NO);
+    NSArray *fakeChangeset = @[];
+    OCMExpect([mock changesetComparingFullRemoteTreeToTree:[OCMArg any]]).andReturn(fakeChangeset);
+    [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any] changeset:fakeChangeset];
+
+    [syncer doSyncContactsInCurrentThread:@[]];
+
+    OCMVerifyAll(mock);
+}
+
+- (void)testDoSyncContactsNoSkip {
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id mock = OCMPartialMock(syncer);
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([mock shouldSkipSyncCompareRemoteTreeRootToTree:[OCMArg any]]).andReturn(NO);
+    NSArray *fakeChangeset = @[@"foo"];
+    OCMExpect([mock changesetComparingFullRemoteTreeToTree:[OCMArg any]]).andReturn(fakeChangeset);
+    OCMExpect([apiInterfaceMock sendContactsMerkleTree:[OCMArg any] changeset:fakeChangeset]);
+
+    [syncer doSyncContactsInCurrentThread:@[]];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testShouldSkipSyncCompareRoots {
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    NSDictionary *responseDict = @{@"data": @"000001"};
+    OCMExpect([apiInterfaceMock getRemoteContactsMerkleTreeRootWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        completionBlock(nil, responseDict);
+        return YES;
+    }]]);
+
+    // When data is the same we're done
+    MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] initWithJSONObject:@{@"k": @"000001"}];
+    BOOL done = [syncer shouldSkipSyncCompareRemoteTreeRootToTree:tree1];
+    XCTAssertTrue(done);
+    [apiInterfaceMock stopMocking];
+
+    // When data is different we're not done
+    apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock getRemoteContactsMerkleTreeRootWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        completionBlock(nil, responseDict);
+        return YES;
+    }]]);
+    MAVEMerkleTree *tree2 = [[MAVEMerkleTree alloc] initWithJSONObject:@{@"k": @"aaaaffff"}];
+    BOOL done2 = [syncer shouldSkipSyncCompareRemoteTreeRootToTree:tree2];
+    XCTAssertFalse(done2);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testChangesetComparingFullTrees {
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    NSDictionary *responseDict = @{@"data": @{@"k": @"000001"}};
+    OCMExpect([apiInterfaceMock getRemoteContactsFullMerkleTreeWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        completionBlock(nil, responseDict);
+        return YES;
+    }]]);
+
+    id treeMock = OCMClassMock([MAVEMerkleTree class]);
+    NSArray *fakeChangeset = @[@"foo"];
+    OCMExpect([treeMock changesetForOtherTreeToMatchSelf:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEMerkleTree *remoteTree = obj;
+        return [[MAVEHashingUtils hexStringFromData:[remoteTree.root hashValue]] isEqualToString:@"000001"];
+    }]]).andReturn(fakeChangeset);
+
+    NSArray *returnedChangeset = [syncer changesetComparingFullRemoteTreeToTree:treeMock];
+    XCTAssertEqualObjects(returnedChangeset, fakeChangeset);
+
+    OCMVerifyAll(treeMock);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
 
 - (void)testSerializeAndCompress {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
@@ -60,21 +158,6 @@
     XCTAssertEqual(((NSNumber *)[obj2 objectForKey:@"record_id"]).integerValue, 2);
     XCTAssertEqualObjects([obj2 objectForKey:@"first_name"], @"Foo");
     XCTAssertEqualObjects([obj2 objectForKey:@"last_name"], @"Bar");
-}
-
-- (void)testSendContactsToServer {
-    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
-    id syncerMock = OCMPartialMock(syncer);
-    id apiMock = OCMClassMock([MAVEAPIInterface class]);
-    [MaveSDK sharedInstance].APIInterface = apiMock;
-
-    OCMExpect([syncerMock serializeAndCompressAddressBook]);
-    OCMExpect([apiMock sendIdentifiedDataWithRoute:@"/address_book_upload" methodName:@"PUT" data:[OCMArg any]]);
-
-    [syncer sendContactsToServer];
-
-    OCMVerifyAll(syncerMock);
-    OCMVerifyAll(apiMock);
 }
 
 @end

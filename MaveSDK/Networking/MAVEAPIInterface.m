@@ -11,6 +11,7 @@
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVECompressionUtils.h"
 
 
 NSString * const MAVERouteTrackSignup = @"/events/signup";
@@ -149,6 +150,32 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              completionBlock:nil];
 }
 
+- (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree changeset:(NSArray *)changeset {
+    NSString *route = @"/address_book/changeset_with_new_merkle_tree";
+    NSDictionary *tree = [merkleTree serializable];
+    if (!tree) {
+        MAVEErrorLog(@"Error serializing merkle tree, not sending contacts to server");
+        return;
+    }
+    NSDictionary *params = @{@"merkle_tree": tree, @"changeset": changeset};
+    NSError *serErr;
+    NSData *dataParams = [NSJSONSerialization dataWithJSONObject:params options:0 error:&serErr];
+    if (serErr) {
+        MAVEErrorLog(@"Error serializing merkle tree and changeset request, not sending contacts to server");
+    }
+    NSData *data = [MAVECompressionUtils gzipCompressData:dataParams];
+
+    NSURL *url = [NSURL URLWithString: [self.httpStack.baseURL stringByAppendingString:route]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:url];
+    [request setHTTPMethod:@"PUT"];
+    [request setHTTPBody:data];
+    [request setValue:@"application/gzip" forHTTPHeaderField:@"Content-Type"];
+    [self addCustomUserHeadersToRequest:request];
+
+    [self.httpStack sendPreparedRequest:request completionBlock:nil];
+}
+
 
 //
 // GET Requests
@@ -181,6 +208,22 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 
 - (void)getNewShareTokenWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
     NSString *route = @"/remote_configuration/universal/share_token";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"GET"
+                                      params:nil
+                             completionBlock:block];
+}
+
+- (void)getRemoteContactsMerkleTreeRootWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
+    NSString *route = @"/address_book/merkle_tree/root";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"GET"
+                                      params:nil
+                             completionBlock:block];
+}
+
+- (void)getRemoteContactsFullMerkleTreeWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
+    NSString *route = @"/address_book/merkle_tree/full";
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
@@ -224,21 +267,6 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self addCustomUserHeadersToRequest:request];
     
     [self.httpStack sendPreparedRequest:request completionBlock:completionBlock];
-}
-
-- (void)sendIdentifiedDataWithRoute:(NSString *)relativeURL
-                         methodName:(NSString *)methodName
-                               data:(NSData *)data {
-
-    NSURL *url = [NSURL URLWithString: [self.httpStack.baseURL stringByAppendingString:relativeURL]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:url];
-    [request setHTTPMethod:methodName];
-    [request setHTTPBody:data];
-    [request setValue:@"application/gzip" forHTTPHeaderField:@"Content-Type"];
-    [self addCustomUserHeadersToRequest:request];
-
-    [self.httpStack sendPreparedRequest:request completionBlock:nil];
 }
 
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute

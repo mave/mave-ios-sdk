@@ -46,7 +46,7 @@ typedef NSUInteger MAVEMerkleTreePath;
 //   - data: the data bucket in a format where it can be serialized
 - (NSArray *)changesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree;
 
-// Returns the tree it in a JSON serializable representation
+// Returns the tree in a JSON serializable representation
 - (NSDictionary *)serializable;
 
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height

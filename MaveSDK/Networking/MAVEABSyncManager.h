@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MAVEMerkleTree.h"
 
 @interface MAVEABSyncManager : NSObject
 
@@ -16,8 +17,12 @@
 // addressBook is an array of MAVEABPerson records
 - (instancetype)initWithAddressBookData:(NSArray *)addressBook;
 
-// Serialize the address book and send to server
-- (void)sendContactsToServer;
+// pass it an array of MAVEABPerson objects, it will do the full process
+//   of syncing the contacts to the server
+- (void)syncContacts:(NSArray *)contacts;
+- (void)doSyncContactsInCurrentThread:(NSArray *)contacts;
+- (BOOL)shouldSkipSyncCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree;
+- (NSArray *)changesetComparingFullRemoteTreeToTree:(MAVEMerkleTree *)merkleTree;
 
 // Helper to serialize the address book and gzip compress
 - (NSData *)serializeAndCompressAddressBook;

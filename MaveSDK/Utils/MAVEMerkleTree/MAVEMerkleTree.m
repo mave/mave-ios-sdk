@@ -40,6 +40,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     return self;
 }
 
+
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     if (self = [super init]) {
         self.root = [[self class] buildMerkleTreeFromJSONObject:jsonObject];
@@ -53,16 +54,19 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     return  changeset;
 }
 
+
 - (NSDictionary *)serializable {
-    NSDictionary *treeObject = [self.root serializeToJSONObject];
-    if (!treeObject) {
+    NSNumber *height = [NSNumber numberWithInteger:[self.root treeHeight]];
+    NSDictionary *treeDict = [self.root serializeToJSONObject];
+    if (!treeDict) {
 #ifdef DEBUG
         NSLog(@"MAVEMerkleTree - could not JSON serialize tree");
 #endif
         return nil;
     }
-    return treeObject;
+    return @{@"height": height, @"data": treeDict};
 }
+
 
 // Constructor methods for the tree
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height

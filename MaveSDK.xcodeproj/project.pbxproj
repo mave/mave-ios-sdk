@@ -56,6 +56,7 @@
 		0C29BC671A5EC96600C27DA5 /* MAVECustomSharePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC661A5EC96600C27DA5 /* MAVECustomSharePageViewController.m */; };
 		0C2D73181A1FCB640059CA54 /* MAVEIDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */; };
 		0C2D731B1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D731A1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m */; };
+		0C2FF1BB1A796EEF003058F7 /* MAVEMerkleTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92BD1A759E7200B65B82 /* MAVEMerkleTree.m */; };
 		0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */; };
 		0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */; };
 		0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */; };
@@ -704,6 +705,8 @@
 			children = (
 				0C29BC2C1A56FF6D00C27DA5 /* MAVEAPIInterface.h */,
 				0C29BC2D1A56FF6D00C27DA5 /* MAVEAPIInterface.m */,
+				0CF0E3C91A72B370008BBFB3 /* MAVEABSyncManager.h */,
+				0CF0E3CA1A72B370008BBFB3 /* MAVEABSyncManager.m */,
 				0C29BC2F1A56FFA900C27DA5 /* MAVEHTTPStack.h */,
 				0C29BC301A56FFA900C27DA5 /* MAVEHTTPStack.m */,
 			);
@@ -743,8 +746,6 @@
 				0CCC92CD1A60807B008CB888 /* RemoteConfiguration */,
 				C029280019E82D0F006AEE43 /* MAVEABPerson.h */,
 				C029280119E82D0F006AEE43 /* MAVEABPerson.m */,
-				0CF0E3C91A72B370008BBFB3 /* MAVEABSyncManager.h */,
-				0CF0E3CA1A72B370008BBFB3 /* MAVEABSyncManager.m */,
 				0C141D2E1A0BC1A80036202A /* MAVEUserData.h */,
 				0C141D2F1A0BC1A80036202A /* MAVEUserData.m */,
 				0CFDBE241A1A827C00DD2AAF /* MAVEReferralData.h */,
@@ -985,6 +986,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C2FF1BB1A796EEF003058F7 /* MAVEMerkleTree.m in Sources */,
 				C0425B9319EF2E5C006641AB /* MAVEConstants.m in Sources */,
 				0CF0E3CB1A72B370008BBFB3 /* MAVEABSyncManager.m in Sources */,
 				0C0996F31A793A50003B82AA /* MAVEMerkleTreeUtils.m in Sources */,
