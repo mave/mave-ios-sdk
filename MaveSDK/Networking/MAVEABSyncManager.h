@@ -11,20 +11,17 @@
 
 @interface MAVEABSyncManager : NSObject
 
-// addressBook is an array of MAVEABPerson records
-@property (nonatomic, strong) NSArray *addressBook;
-
-// addressBook is an array of MAVEABPerson records
-- (instancetype)initWithAddressBookData:(NSArray *)addressBook;
-
 // pass it an array of MAVEABPerson objects, it will do the full process
 //   of syncing the contacts to the server
-- (void)syncContacts:(NSArray *)contacts;
-- (void)doSyncContactsInCurrentThread:(NSArray *)contacts;
+- (void)syncContactsInBackground:(NSArray *)contacts;
+- (void)doSyncContacts:(NSArray *)contacts;
 - (BOOL)shouldSkipSyncCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree;
 - (NSArray *)changesetComparingFullRemoteTreeToTree:(MAVEMerkleTree *)merkleTree;
 
+// OLD METHOD - now we should send the merkle tree & changesets, even if user
+// has never synced address book before
 // Helper to serialize the address book and gzip compress
-- (NSData *)serializeAndCompressAddressBook;
+// addressBook is an array of MAVEABPerson records
+- (NSData *)serializeAndCompressAddressBook:(NSArray *)addressBook;
 
 @end

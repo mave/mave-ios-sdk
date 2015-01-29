@@ -45,7 +45,7 @@
     [[mock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
     [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any] changeset:[OCMArg any]];
 
-    [syncer doSyncContactsInCurrentThread:@[]];
+    [syncer doSyncContacts:@[]];
 
     OCMVerifyAll(mock);
     OCMVerifyAll(apiInterfaceMock);
@@ -60,7 +60,7 @@
     OCMExpect([mock changesetComparingFullRemoteTreeToTree:[OCMArg any]]).andReturn(fakeChangeset);
     [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any] changeset:fakeChangeset];
 
-    [syncer doSyncContactsInCurrentThread:@[]];
+    [syncer doSyncContacts:@[]];
 
     OCMVerifyAll(mock);
 }
@@ -74,7 +74,7 @@
     OCMExpect([mock changesetComparingFullRemoteTreeToTree:[OCMArg any]]).andReturn(fakeChangeset);
     OCMExpect([apiInterfaceMock sendContactsMerkleTree:[OCMArg any] changeset:fakeChangeset]);
 
-    [syncer doSyncContactsInCurrentThread:@[]];
+    [syncer doSyncContacts:@[]];
 
     OCMVerifyAll(mock);
     OCMVerifyAll(apiInterfaceMock);
@@ -140,10 +140,10 @@
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
     p2.recordID = 2; p2.firstName = @"Foo"; p2.lastName = @"Bar";
     NSArray *addressBook = @[p2, p1];
-    MAVEABSyncManager *manager = [[MAVEABSyncManager alloc] initWithAddressBookData:addressBook];
+    MAVEABSyncManager *manager = [[MAVEABSyncManager alloc] init];
     NSArray *expectedAB = @[p2, p1];  // won't be sorted yet on init
-    XCTAssertEqualObjects(manager.addressBook, expectedAB);
-    NSData *output = [manager serializeAndCompressAddressBook];
+    XCTAssertEqualObjects(addressBook, expectedAB);
+    NSData *output = [manager serializeAndCompressAddressBook:addressBook];
     XCTAssertNotNil(output);
 
     // now decode and make sure it's the same array we expect

@@ -19,50 +19,43 @@ NSUInteger const MAVEABSyncMerkleTreeHeight = 11;
 
 @implementation MAVEABSyncManager
 
-- (instancetype)initWithAddressBookData:(NSArray *)addressBook {
-    if (self = [super init]) {
-        self.addressBook = addressBook;
-    }
-    return self;
-}
-
 // Use dispatch_once to make sure we only call syncContacts once per session. This
 // way we don't need any logic to decide where to call it, we can just hook into
 // wherever we access the contacts and call it there.
 static dispatch_once_t syncOnceToken;
 
-- (void)syncContacts:(NSArray *)contacts {
+- (void)syncContactsInBackground:(NSArray *)contacts {
     dispatch_once(&syncOnceToken, ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            @try {
-                [self doSyncContactsInCurrentThread:contacts];
-            }
-            @catch (NSException *exception) {
-                MAVEErrorLog(@"Caught exception %@ running contacts sync", exception);
-            }
+            [self doSyncContacts:contacts];
         });
     });
 }
 
+- (void)doSyncContacts:(NSArray *)contacts {
+    @try {
+        MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
+        MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
+                                                                 arrayData:contacts];
 
-- (void)doSyncContactsInCurrentThread:(NSArray *)contacts {
-    MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight arrayData:contacts];
+        BOOL done = [self shouldSkipSyncCompareRemoteTreeRootToTree:merkleTree];
+        if (done) {
+            return;
+        }
 
-    BOOL done = [self shouldSkipSyncCompareRemoteTreeRootToTree:merkleTree];
-    if (done) {
-        return;
+        NSArray *changeset = [self changesetComparingFullRemoteTreeToTree:merkleTree];
+        // If roots were different changeset should not be empty, but if something got
+        // out of sync or timed out we'll get here
+        if ([changeset count] == 0) {
+            MAVEErrorLog(@"Contact sync changeset unexpectedly zero");
+            return;
+        }
+
+        [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:merkleTree
+                                                            changeset:changeset];
+    } @catch (NSException *exception) {
+        MAVEErrorLog(@"Caught exception %@ doing contacts sync", exception);
     }
-
-    NSArray *changeset = [self changesetComparingFullRemoteTreeToTree:merkleTree];
-    // If roots were different changeset should not be empty, but if something got out of sync or
-    // timed out we'll get here
-    if ([changeset count] == 0) {
-        MAVEErrorLog(@"Contact sync changeset unexpectedly zero");
-        return;
-    }
-
-    [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:merkleTree
-                                                        changeset:changeset];
 }
 
 
@@ -121,11 +114,11 @@ static dispatch_once_t syncOnceToken;
 
 
 
-- (NSData *)serializeAndCompressAddressBook {
-    NSMutableArray *dictPeople = [[NSMutableArray alloc] initWithCapacity:[self.addressBook count]];
+- (NSData *)serializeAndCompressAddressBook:(NSArray *)addressBook {
+    NSMutableArray *dictPeople = [[NSMutableArray alloc] initWithCapacity:[addressBook count]];
     MAVEABPerson *person; NSDictionary *dictPerson;
 
-    NSArray *sortedAddressBook = [self.addressBook sortedArrayUsingSelector:@selector(compareRecordIDs:)];
+    NSArray *sortedAddressBook = [addressBook sortedArrayUsingSelector:@selector(compareRecordIDs:)];
 
     for (person in sortedAddressBook) {
         dictPerson = [person toJSONDictionary];

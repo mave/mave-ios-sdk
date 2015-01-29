@@ -113,6 +113,7 @@
     }
     NSDictionary *indexedPersons = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:MAVEABPersonsArray];
     self.completionBlock(indexedPersons);
+    // Do contacts sync in the background
     self.retainSelf = nil; // let self get GC'd after completion block called
 }
 
