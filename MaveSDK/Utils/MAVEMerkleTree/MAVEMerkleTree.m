@@ -128,7 +128,9 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 
     if ([referenceTree treeHeight] == 1) {
         MAVEMerkleTreeLeafNode *referenceLeaf = referenceTree;
-        return @[@[@(currentPath), [MAVEHashingUtils hexStringFromData:refHash], [referenceLeaf serializeableData]]];
+        NSArray *rangeLowHigh = @[@(referenceLeaf.dataKeyRange.location),
+                                  @(referenceLeaf.dataKeyRange.location + referenceLeaf.dataKeyRange.length)];
+        return @[@[@(currentPath), rangeLowHigh, [MAVEHashingUtils hexStringFromData:refHash], [referenceLeaf serializeableData]]];
     }
     MAVEMerkleTreeInnerNode *referenceNode = referenceTree;
     MAVEMerkleTreeInnerNode *otherNode = otherTree;
@@ -152,14 +154,11 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     NSArray *rightBranchDiffs = [self changesetReferenceSubtree:referenceNode.rightChild matchedByOtherSubtree:otherRight currentPathToNode:rightPath];
 
     NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[leftBranchDiffs count] + [rightBranchDiffs count]];
-    NSUInteger i = 0; id item;
-    for (item in leftBranchDiffs) {
+    for (id item in leftBranchDiffs) {
         [tmp addObject:item];
-        ++i;
     }
-    for (item in rightBranchDiffs) {
+    for (id item in rightBranchDiffs) {
         [tmp addObject:item];
-        ++i;
     }
     return [NSArray arrayWithArray:tmp];
 }

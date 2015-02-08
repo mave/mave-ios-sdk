@@ -25,6 +25,17 @@ NSUInteger const MAVEABSyncMerkleTreeHeight = 11;
 static dispatch_once_t syncOnceToken;
 
 - (void)syncContactsInBackground:(NSArray *)contacts {
+
+    // tmp, log the changeset of all contacts
+    MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
+                                                             arrayData:contacts];
+    MAVEMerkleTree *emptyMT = [[MAVEMerkleTree alloc] initWithHeight:1 arrayData:@[]];
+
+    NSArray *changeset = [merkleTree changesetForOtherTreeToMatchSelf:emptyMT];
+    MAVEDebugLog(@"Changeset: %@", changeset);
+
+
+
     dispatch_once(&syncOnceToken, ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
             [self doSyncContacts:contacts];
