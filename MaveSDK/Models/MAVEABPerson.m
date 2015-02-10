@@ -13,12 +13,18 @@ const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
 
 @implementation MAVEABPerson
 
+- (instancetype) init {
+    if (self = [super init]) {
+        self.hashedRecordID = [[self class] computeHashedRecordID:0];
+    }
+    return self;
+}
+
 - (id)initFromABRecordRef:(ABRecordRef)record {
     if (self = [self init]) {
         @try {
             int32_t rid = ABRecordGetRecordID(record);
             self.recordID = rid;
-            self.hashedRecordID = [[self class] computeHashedRecordID:rid];
             self.firstName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonFirstNameProperty);
             self.lastName = (__bridge_transfer NSString *)ABRecordCopyValue(record, kABPersonLastNameProperty);
             if (self.firstName == nil && self.lastName ==nil) {
@@ -37,13 +43,20 @@ const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
     return self;
 }
 
+- (void)setRecordID:(NSInteger)recordID {
+    // record ID is actually a 32 bit integer
+    _recordID = recordID;
+    self.hashedRecordID = [[self class] computeHashedRecordID:(int32_t)recordID];
+}
+
 
 ///
 /// Serialization methods for sending over wire
 ///
 - (NSDictionary *)toJSONDictionary {
     return @{
-        @"record_id": [[NSNumber alloc]initWithUnsignedInteger:self.recordID],
+        @"record_id": [[NSNumber alloc]initWithInteger:self.recordID],
+        @"hashed_record_id": self.hashedRecordID,
         @"first_name": self.firstName ? self.firstName : [NSNull null],
         @"last_name": self.lastName ? self.lastName : [NSNull null],
         @"phone_numbers": [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[],

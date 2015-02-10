@@ -64,6 +64,16 @@
     XCTAssertEqual(p.selected, NO);
 }
 
+- (void)testSettingRecordIDSetsHashedRecordID {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    // should default to hash of 0
+    XCTAssertEqualObjects(p1.hashedRecordID, @"f1d3ff844329");
+
+    p1.recordID = 1;
+    // now it should equal the hash of 1
+    XCTAssertEqualObjects(p1.hashedRecordID, @"f14503065176");
+}
+
 - (void)testToJSONDictionary {
     // With every value full
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
@@ -73,6 +83,7 @@
 
     NSDictionary *p1JSON = [p1 toJSONDictionary];
     XCTAssertEqualObjects([p1JSON objectForKey:@"record_id"], [NSNumber numberWithInteger:1]);
+    XCTAssertEqualObjects([p1JSON objectForKey:@"hashed_record_id"], @"f14503065176");
     XCTAssertEqualObjects([p1JSON objectForKey:@"first_name"], @"2");
     XCTAssertEqualObjects([p1JSON objectForKey:@"last_name"], @"3");
     XCTAssertEqualObjects([p1JSON objectForKey:@"phone_numbers"], @[@"18085551234"]);
