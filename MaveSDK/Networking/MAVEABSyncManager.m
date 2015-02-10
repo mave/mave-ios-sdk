@@ -27,13 +27,14 @@ static dispatch_once_t syncOnceToken;
 - (void)syncContactsInBackground:(NSArray *)contacts {
 
     // tmp, log the changeset of all contacts
+    NSRange merkleTreeRange = NSMakeRange(0, MAVEABPersonHashedRecordIDNumBytes);
     MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
                                                              arrayData:contacts
-                                                          dataKeyRange:NSMakeRange(0, UINT64_MAX)
+                                                          dataKeyRange:merkleTreeRange
                                                      hashValueNumBytes:4];
     MAVEMerkleTree *emptyMT = [[MAVEMerkleTree alloc] initWithHeight:1
                                                            arrayData:@[]
-                                                        dataKeyRange:NSMakeRange(0, UINT64_MAX)
+                                                        dataKeyRange:merkleTreeRange
                                                    hashValueNumBytes:4];
 
     NSArray *changeset = [merkleTree changesetForOtherTreeToMatchSelf:emptyMT];
@@ -53,7 +54,6 @@ static dispatch_once_t syncOnceToken;
         MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
         NSRange dataKeyRange = NSMakeRange(0, exp2(48));
         MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
-
                                                                  arrayData:contacts
                                                               dataKeyRange:dataKeyRange hashValueNumBytes:4];
 

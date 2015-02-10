@@ -9,6 +9,8 @@
 #import "MAVEABPerson.h"
 #import "MAVEMerkleTreeHashUtils.h"
 
+const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
+
 @implementation MAVEABPerson
 
 - (id)initFromABRecordRef:(ABRecordRef)record {
@@ -111,7 +113,8 @@
 
 + (NSString *)computeHashedRecordID:(uint32_t)recordID {
     NSData *recIDData = [MAVEMerkleTreeHashUtils dataFromInt32:recordID];
-    NSData *hashedTruncatedData = [MAVEMerkleTreeHashUtils md5Hash:recIDData truncatedToBytes:6];
+    NSData *hashedTruncatedData = [MAVEMerkleTreeHashUtils md5Hash:recIDData
+                                                  truncatedToBytes:MAVEABPersonHashedRecordIDNumBytes];
     return [MAVEMerkleTreeHashUtils hexStringFromData:hashedTruncatedData];
 }
 
