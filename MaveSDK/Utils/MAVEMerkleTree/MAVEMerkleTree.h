@@ -27,12 +27,9 @@ typedef NSUInteger MAVEMerkleTreePath;
 
 
 - (instancetype)initWithHeight:(NSUInteger)height
-                     arrayData:(NSArray *)data;
-
-- (instancetype)initWithHeight:(NSUInteger)height
                      arrayData:(NSArray *)data
-             hashValueNumBytes:(NSInteger)hashValueNumBytes
-                  dataKeyRange:(NSRange)keyRange;
+                  dataKeyRange:(NSRange)keyRange
+             hashValueNumBytes:(NSInteger)hashValueNumBytes;
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
 
@@ -57,7 +54,9 @@ typedef NSUInteger MAVEMerkleTreePath;
 
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
                                      withKeyRange:(NSRange)range
-                                   dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
+                                   dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
+                                hashValueNumBytes:(NSUInteger)hashValueNumBytes;
+
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeFromJSONObject:(NSDictionary *)jsonObject;
 
 + (NSArray *)changesetReferenceSubtree:(id<MAVEMerkleTreeNode>)referenceTree

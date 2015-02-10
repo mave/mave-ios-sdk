@@ -33,23 +33,34 @@
 }
 
 // Test the public initializer functions
-- (void)testMerkleTreeInitWithHeight {
+- (void)testMerkleTreeInitWithArgs {
     NSArray *data = @[];
-    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:3 arrayData:data];
+    NSRange range = NSMakeRange(1, 8);
+    NSUInteger hashValueNumBytes = 7;
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:3
+                                                        arrayData:data
+                                                     dataKeyRange:range
+                                                hashValueNumBytes:hashValueNumBytes];
+
     MAVEMerkleTreeInnerNode *node = tree.root;
     XCTAssertNotNil(node);
     XCTAssertEqual(node.treeHeight, 3);
     MAVEMerkleTreeLeafNode *one = ((MAVEMerkleTreeInnerNode *)node.leftChild).leftChild;
     XCTAssertEqualObjects(one.dataBucket, @[]);
-    XCTAssertEqual(one.dataKeyRange.location, 0);
-    XCTAssertEqual(one.dataKeyRange.length, pow(2, 64-2));
+    XCTAssertEqual(one.hashValueNumBytes, hashValueNumBytes);
+    // we've traversed two levels, so leftmost leaf's range length is divided by 2^4
+    XCTAssertEqual(one.dataKeyRange.location, 1);
+    XCTAssertEqual(one.dataKeyRange.length, 2);
 }
 
 - (void)testInitWithArrayDataSortsIt {
+    // test initializing with max data range, and that data gets sorted
     MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:NSUIntegerMax];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     NSArray *data = @[o1, o2];
-    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:data];
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:data
+                                                     dataKeyRange:NSMakeRange(0, UINT64_MAX)
+                                                hashValueNumBytes:16];
     MAVEMerkleTreeLeafNode *left = ((MAVEMerkleTreeInnerNode *)tree.root).leftChild;
     MAVEMerkleTreeLeafNode *right = ((MAVEMerkleTreeInnerNode *)tree.root).rightChild;
 
@@ -59,7 +70,7 @@
 }
 
 // Test init with JSON object
-- (void)testMerkleTreeInitWIthJSONobjectHeight2 {
+- (void)testMerkleTreeInitWithJSONobjectHeight2 {
     NSDictionary *obj = @{
       @"k": @"0001",
       @"l": @{
@@ -69,7 +80,7 @@
         @"k":@"0003",
       },
     };
-    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc]initWithJSONObject:obj];
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithJSONObject:obj];
     XCTAssertEqual([tree.root treeHeight], 2);
     MAVEMerkleTreeInnerNode *root = tree.root;
     MAVEMerkleTreeLeafNode *left = root.leftChild;
@@ -80,19 +91,39 @@
     XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[right hashValue]], @"0003");
 }
 
-- (void)testMerkleTreeInitWithEmptyJSON {
-    // So we don't have to check for nil values everywhere, make initializing
-    // a node with an object without a key equivalent to using an object with
-    // a zero-value hash key
-    uint64_t zero = 0;
-    NSData *zeroData = [NSData dataWithBytes:&zero length:8];
-    NSString *zeroString = [MAVEMerkleTreeHashUtils hexStringFromData:zeroData];
-    XCTAssertEqualObjects(zeroString, @"0000000000000000");
+- (void)testMerkleTreeInitWithJSONObjectHeight2InnerNodeMissingKey {
+    // If any of the inner nodes don't come with a key in the json data,
+    // just recompute it the normal way from the leaf nodes
+    NSDictionary *obj = @{
+      @"l": @{
+        @"k": @"0002",
+      },
+      @"r": @{
+        @"k":@"0003",
+      },
+    };
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithJSONObject:obj];
+    // now root key should be hash of the other two keys
+    // (will truncate to the length of its children keys)
+    // check against hard-coded value
+    XCTAssertEqual([tree.root treeHeight], 2);
+    MAVEMerkleTreeInnerNode *root = tree.root;
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[root hashValue]], @"1bbd");
+}
 
-    MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] initWithJSONObject:@{}];
-    XCTAssertEqualObjects([tree1.root hashValue], zeroData);
-    MAVEMerkleTree *tree2 = [[MAVEMerkleTree alloc] initWithJSONObject:nil];
-    XCTAssertEqualObjects([tree2.root hashValue], zeroData);
+- (void)testMerkleTreeInitWithJSONObjectHeight1 {
+    NSDictionary *obj = @{@"k": @"0001"};
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithJSONObject:obj];
+    XCTAssertEqual([tree.root treeHeight], 1);
+    MAVEMerkleTreeLeafNode *leaf = tree.root;
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[leaf hashValue]], @"0001");
+}
+
+- (void)testMerkleTreeInitWithJSONObjectHeight1NoKey {
+    // degenerate case, will just have empty data as the hash value
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithJSONObject:@{}];
+    MAVEMerkleTreeLeafNode *leaf = tree.root;
+    XCTAssertEqualObjects([leaf hashValue], [@"" dataUsingEncoding:NSUTF8StringEncoding]);
 }
 
 #pragma mark - Serialization methods
@@ -295,7 +326,7 @@
 
     MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[array objectEnumerator]];
 
-    MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:3 withKeyRange:range dataEnumerator:enumer];
+    MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:3 withKeyRange:range dataEnumerator:enumer hashValueNumBytes:16];
 
     XCTAssertEqual(root.treeHeight, 3);
     MAVEMerkleTreeInnerNode *left = root.leftChild;
@@ -335,7 +366,7 @@
 
     MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[array objectEnumerator]];
 
-    MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:11 withKeyRange:range dataEnumerator:enumer];
+    MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:11 withKeyRange:range   dataEnumerator:enumer hashValueNumBytes:16];
     XCTAssertEqual(root.treeHeight, 11);
     NSUInteger expectedRangeSize = pow(2, 64 - (11-1));
 

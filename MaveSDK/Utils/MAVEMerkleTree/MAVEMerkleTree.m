@@ -16,8 +16,16 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 
 @implementation MAVEMerkleTree
 
+- (instancetype)initWithHeight:(NSUInteger)height arrayData:(NSArray *)data {
+    if (self = [super init]) {
+    }
+    return self;
+}
+
 - (instancetype)initWithHeight:(NSUInteger)height
-                     arrayData:(NSArray *)data {
+                     arrayData:(NSArray *)data
+                  dataKeyRange:(NSRange)dataKeyRange
+             hashValueNumBytes:(NSInteger)hashValueNumBytes {
     if (self = [super init]) {
         NSArray *sortedData = [data sortedArrayUsingComparator:^NSComparisonResult(id<MAVEMerkleTreeDataItem> obj1, id<MAVEMerkleTreeDataItem> obj2) {
             NSUInteger key1 = [obj1 merkleTreeDataKey];
@@ -34,8 +42,9 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
                                                 initWithEnumerator:[sortedData objectEnumerator]];
 
         self.root = [[self class] buildMerkleTreeOfHeight:height
-                                             withKeyRange:NSMakeRange(0, NSUIntegerMax)
-                                           dataEnumerator:enumer];
+                                             withKeyRange:dataKeyRange
+                                           dataEnumerator:enumer
+                                        hashValueNumBytes:hashValueNumBytes];
     }
     return self;
 }
@@ -71,7 +80,8 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 // Constructor methods for the tree
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
                                      withKeyRange:(NSRange)range
-                                   dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator {
+                                   dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
+                                hashValueNumBytes:(NSUInteger)hashValueNumBytes {
     if (height > 1) {
         NSRange lowerHalfRange, upperHalfRange;
         BOOL rangeOK = [self splitRange:range
@@ -83,41 +93,47 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
         return [[MAVEMerkleTreeInnerNode alloc]
                 initWithLeftChild:[self buildMerkleTreeOfHeight:height - 1
                                                    withKeyRange:lowerHalfRange
-                                                 dataEnumerator:enumerator]
+                                                 dataEnumerator:enumerator
+                                              hashValueNumBytes:hashValueNumBytes]
                 rightChild:[self buildMerkleTreeOfHeight:height - 1
                                             withKeyRange:upperHalfRange
-                                          dataEnumerator:enumerator]];
+                                          dataEnumerator:enumerator
+                                       hashValueNumBytes:hashValueNumBytes]];
     } else {
         return [[MAVEMerkleTreeLeafNode alloc]
                 initWithRange:range
                 dataEnumerator:enumerator
-                hashValueNumBytes:16];
+                hashValueNumBytes:hashValueNumBytes];
     }
 }
 
+//+ (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
+//                                     withKeyRange:(NSRange)range
+//                                   dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator {
+//    return nil;
+//}
+
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeFromJSONObject:(NSDictionary *)jsonObject {
-    // if no key, replace with a zero value node
-    NSDictionary *object = [[NSDictionary alloc] initWithDictionary:jsonObject];
-    if (![jsonObject objectForKey:@"k"]) {
-        uint64_t zero = 0;
-        NSString *key = [MAVEMerkleTreeHashUtils hexStringFromData:[NSData dataWithBytes:&zero length:8]];
-        object = @{@"k": key};
-    }
     NSString *currentKeyHexString = [jsonObject objectForKey:@"k"];
 
     // tree is balanced so check one child to see if this node is the leaf
-    BOOL isLeaf = ![object objectForKey:@"l"];
+    BOOL isLeaf = ![jsonObject objectForKey:@"l"];
 
     if (isLeaf) {
-        NSData *hashValue = [MAVEMerkleTreeHashUtils dataFromHexString:[object objectForKey:@"k"]];
-        return [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:hashValue];
+        NSData *hashValue = [MAVEMerkleTreeHashUtils dataFromHexString:currentKeyHexString];
+        MAVEMerkleTreeLeafNode *outNode = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:hashValue];
+        hashValue = [outNode hashValue];
+        return outNode;
     } else {
-        NSDictionary *leftChildJSON = [object objectForKey:@"l"];
-        NSDictionary *rightChildJSON = [object objectForKey:@"r"];
+        NSDictionary *leftChildJSON = [jsonObject objectForKey:@"l"];
+        NSDictionary *rightChildJSON = [jsonObject objectForKey:@"r"];
         id<MAVEMerkleTreeNode>left = [self buildMerkleTreeFromJSONObject:leftChildJSON];
         id<MAVEMerkleTreeNode>right = [self buildMerkleTreeFromJSONObject:rightChildJSON];
         MAVEMerkleTreeInnerNode *outNode = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:right];
-        [outNode setHashValueWhenBuildingFromJSON:[MAVEMerkleTreeHashUtils dataFromHexString:currentKeyHexString]];
+        if (currentKeyHexString) {
+            [outNode setHashValueWhenBuildingFromJSON:
+             [MAVEMerkleTreeHashUtils dataFromHexString:currentKeyHexString]];
+        }
         return outNode;
     }
 }

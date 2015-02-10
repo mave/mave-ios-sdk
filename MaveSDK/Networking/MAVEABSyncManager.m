@@ -28,8 +28,13 @@ static dispatch_once_t syncOnceToken;
 
     // tmp, log the changeset of all contacts
     MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
-                                                             arrayData:contacts];
-    MAVEMerkleTree *emptyMT = [[MAVEMerkleTree alloc] initWithHeight:1 arrayData:@[]];
+                                                             arrayData:contacts
+                                                          dataKeyRange:NSMakeRange(0, UINT64_MAX)
+                                                     hashValueNumBytes:4];
+    MAVEMerkleTree *emptyMT = [[MAVEMerkleTree alloc] initWithHeight:1
+                                                           arrayData:@[]
+                                                        dataKeyRange:NSMakeRange(0, UINT64_MAX)
+                                                   hashValueNumBytes:4];
 
     NSArray *changeset = [merkleTree changesetForOtherTreeToMatchSelf:emptyMT];
     MAVEDebugLog(@"Changeset: %@", changeset);
@@ -46,8 +51,11 @@ static dispatch_once_t syncOnceToken;
 - (void)doSyncContacts:(NSArray *)contacts {
     @try {
         MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
+        NSRange dataKeyRange = NSMakeRange(0, exp2(48));
         MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
-                                                                 arrayData:contacts];
+
+                                                                 arrayData:contacts
+                                                              dataKeyRange:dataKeyRange hashValueNumBytes:4];
 
         BOOL done = [self shouldSkipSyncCompareRemoteTreeRootToTree:merkleTree];
         if (done) {
