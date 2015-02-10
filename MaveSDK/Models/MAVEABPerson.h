@@ -22,7 +22,7 @@ extern NSUInteger const MAVEABPersonHashedRecordIDNumBytes;
 // and is an NSObject with helper methods to access fields we want.
 
 @property (nonatomic, assign) NSInteger recordID;
-@property (nonatomic, assign) NSString *hashedRecordID;
+@property (nonatomic, strong) NSString *hashedRecordID;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSArray *phoneNumbers;   // Array of NSStrings
