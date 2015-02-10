@@ -16,12 +16,6 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 
 @implementation MAVEMerkleTree
 
-- (instancetype)initWithHeight:(NSUInteger)height arrayData:(NSArray *)data {
-    if (self = [super init]) {
-    }
-    return self;
-}
-
 - (instancetype)initWithHeight:(NSUInteger)height
                      arrayData:(NSArray *)data
                   dataKeyRange:(NSRange)dataKeyRange
@@ -49,6 +43,10 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     return self;
 }
 
++ (instancetype)emptyTreeWithHashValueNumBytes:(NSInteger)hashValueNumBytes {
+    return [[self alloc] initWithHeight:1 arrayData:@[] dataKeyRange:NSMakeRange(0, 0) hashValueNumBytes:hashValueNumBytes];
+}
+
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
     if (self = [super init]) {
@@ -61,6 +59,12 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 - (NSArray *)changesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree {
     NSArray *changeset = [[self class] changesetReferenceSubtree:self.root matchedByOtherSubtree:otherTree.root currentPathToNode:0];
     return  changeset;
+}
+
+- (NSArray *)changesetForEmptyTreeToMatchSelf {
+    NSUInteger hashNumBytes = [self.root.hashValue length];
+    MAVEMerkleTree *emptyTree = [[self class] emptyTreeWithHashValueNumBytes:hashNumBytes];
+    return [self changesetForOtherTreeToMatchSelf:emptyTree];
 }
 
 
@@ -165,9 +169,14 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     // use a dummy node instead
     id<MAVEMerkleTreeNode> otherLeft;
     id<MAVEMerkleTreeNode> otherRight;
+    MAVEMerkleTreeLeafNode *tmpLeaf;
     if ([otherNode treeHeight] == 1) {
-        otherLeft = [[MAVEMerkleTreeLeafNode alloc] init];
-        otherRight = [[MAVEMerkleTreeLeafNode alloc] init];
+        tmpLeaf = [[MAVEMerkleTreeLeafNode alloc] init];
+        tmpLeaf.hashValueNumBytes = [refHash length];
+        otherLeft = tmpLeaf;
+        tmpLeaf = [[MAVEMerkleTreeLeafNode alloc] init];
+        tmpLeaf.hashValueNumBytes = [refHash length];
+        otherRight = tmpLeaf;
     } else {
         otherLeft = otherNode.leftChild;
         otherRight = otherNode.rightChild;

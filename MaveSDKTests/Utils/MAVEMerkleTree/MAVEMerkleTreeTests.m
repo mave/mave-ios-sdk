@@ -36,7 +36,7 @@
 - (void)testMerkleTreeInitWithArgs {
     NSArray *data = @[];
     NSRange range = NSMakeRange(1, 8);
-    NSUInteger hashValueNumBytes = 7;
+    NSUInteger hashValueNumBytes = 4;
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:3
                                                         arrayData:data
                                                      dataKeyRange:range
@@ -47,6 +47,8 @@
     XCTAssertEqual(node.treeHeight, 3);
     MAVEMerkleTreeLeafNode *one = ((MAVEMerkleTreeInnerNode *)node.leftChild).leftChild;
     XCTAssertEqualObjects(one.dataBucket, @[]);
+    // 4 bytes of hash of empty list
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:one.hashValue], @"d7517139");
     XCTAssertEqual(one.hashValueNumBytes, hashValueNumBytes);
     // we've traversed two levels, so leftmost leaf's range length is divided by 2^4
     XCTAssertEqual(one.dataKeyRange.location, 1);
@@ -253,6 +255,54 @@
     NSArray *diff2 = [MAVEMerkleTree changesetReferenceSubtree:shortTree matchedByOtherSubtree:tree1 currentPathToNode:0];
     NSArray *expectedDiff2 = @[@[@(0), @[@0, @3], node3HashHex, @[@30]]];
     XCTAssertEqualObjects(diff2, expectedDiff2);
+}
+
+- (void)testChangesetAgainstEmptyTree {
+    // start with a tree with 2 leaves, one has data and one empty. The one that's empty should not
+    // appear in the changeset against the completely empty tree
+    MAVEMerkleTreeDataDemo *obj1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
+    NSRange range = NSMakeRange(0, 8);
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:@[obj1] dataKeyRange:range hashValueNumBytes:4];
+    // double check tree got set up correctly
+    MAVEMerkleTreeLeafNode *leftChild = ((MAVEMerkleTreeInnerNode *)tree.root).leftChild;
+    MAVEMerkleTreeLeafNode *rightChild = ((MAVEMerkleTreeInnerNode *)tree.root).rightChild;
+    XCTAssertEqualObjects(leftChild.dataBucket, @[obj1]);
+    XCTAssertEqualObjects(rightChild.dataBucket, @[]);
+
+    // with explicitly build empty tree
+    MAVEMerkleTree *emptyTree = [[MAVEMerkleTree alloc]initWithHeight:2 arrayData:@[] dataKeyRange:range hashValueNumBytes:4];
+
+    // add item to make empty tree match tree
+    NSArray *diff1 = [tree changesetForOtherTreeToMatchSelf:emptyTree];
+    NSArray *expected1 = @[@[@0, @[@0, @3], @"f2577a6f", @[@3]]];
+    XCTAssertEqualObjects(diff1, expected1);
+
+    // remove left child items and add none to make tree match empty tree
+    NSArray *diff2 = [emptyTree changesetForOtherTreeToMatchSelf:tree];
+    NSArray *expected2 = @[@[@0, @[@0, @3], @"d7517139", @[]]];
+    XCTAssertEqualObjects(diff2, expected2);
+
+    // also test with helper method for diffing against an empty tree
+    XCTAssertEqualObjects([tree changesetForEmptyTreeToMatchSelf], expected1);
+}
+
+- (void)testChangesetEmptyTreeAgainstShorterEmptyTree {
+    // changeset should be empty, short empty tree getting compared against a tree should look like an
+    // empty tree of the appropriate height
+    NSRange range = NSMakeRange(0, 8);
+    MAVEMerkleTree *emptyTree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:@[] dataKeyRange:range hashValueNumBytes:4];
+
+    // Use our helper for creating a standin empty tree that can be compared against
+    MAVEMerkleTree *shortEmptyTree = [MAVEMerkleTree emptyTreeWithHashValueNumBytes:4];
+    XCTAssertEqual([shortEmptyTree.root treeHeight], 1);
+    MAVEMerkleTreeLeafNode *leaf = shortEmptyTree.root;
+    XCTAssertEqual(leaf.hashValueNumBytes, 4);
+    XCTAssertEqualObjects(leaf.dataBucket, @[]);
+
+    XCTAssertEqualObjects([emptyTree changesetForOtherTreeToMatchSelf:shortEmptyTree], @[]);
+
+    // Also test the even shorter helper method
+    XCTAssertEqualObjects([emptyTree changesetForEmptyTreeToMatchSelf], @[]);
 }
 
 // split a range that's a power of 2

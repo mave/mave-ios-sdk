@@ -27,17 +27,14 @@ static dispatch_once_t syncOnceToken;
 - (void)syncContactsInBackground:(NSArray *)contacts {
 
     // tmp, log the changeset of all contacts
-    NSRange merkleTreeRange = NSMakeRange(0, MAVEABPersonHashedRecordIDNumBytes);
+    NSUInteger merkleTreeRangeTop = (NSUInteger)exp2(8 * MAVEABPersonHashedRecordIDNumBytes);
+    NSRange merkleTreeRange = NSMakeRange(0, merkleTreeRangeTop);
     MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
                                                              arrayData:contacts
                                                           dataKeyRange:merkleTreeRange
                                                      hashValueNumBytes:4];
-    MAVEMerkleTree *emptyMT = [[MAVEMerkleTree alloc] initWithHeight:1
-                                                           arrayData:@[]
-                                                        dataKeyRange:merkleTreeRange
-                                                   hashValueNumBytes:4];
 
-    NSArray *changeset = [merkleTree changesetForOtherTreeToMatchSelf:emptyMT];
+    NSArray *changeset = [merkleTree changesetForEmptyTreeToMatchSelf];
     MAVEDebugLog(@"Changeset: %@", changeset);
 
 

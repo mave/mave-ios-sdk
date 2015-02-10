@@ -31,6 +31,8 @@ typedef NSUInteger MAVEMerkleTreePath;
                   dataKeyRange:(NSRange)keyRange
              hashValueNumBytes:(NSInteger)hashValueNumBytes;
 
++ (instancetype)emptyTreeWithHashValueNumBytes:(NSInteger)hashValueNumBytes;
+
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
 
 // Method to determine how to update the given other merkle tree to match self
@@ -48,6 +50,7 @@ typedef NSUInteger MAVEMerkleTreePath;
 //   - hash value: as hex-encoded string
 //   - data: the data bucket in a format where it can be serialized
 - (NSArray *)changesetForOtherTreeToMatchSelf:(MAVEMerkleTree *)otherTree;
+- (NSArray *)changesetForEmptyTreeToMatchSelf;
 
 // Returns the tree in a JSON serializable representation
 - (NSDictionary *)serializable;
