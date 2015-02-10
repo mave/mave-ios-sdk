@@ -12,7 +12,7 @@
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
 #import "MAVEABTestDataFactory.h"
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 
 @interface MAVEABPersonTests : XCTestCase
 
@@ -50,7 +50,7 @@
     // record ID when not actually inserted in an address book is -1
     MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:pref];
     XCTAssertEqual(p.recordID, -1);
-    XCTAssertEqual(p.hashedRecordID, 0xa54f0041a9e15b05);
+    XCTAssertEqualObjects(p.hashedRecordID, @"a54f0041a9e1");
     XCTAssertEqualObjects(p.firstName, @"John");
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
@@ -96,8 +96,8 @@
 
 - (void)testToJSONTupleArray {
     // With every value full
-    NSUInteger hashedZero = [MAVEHashingUtils randomizeInt32WithMD5hash:0];
-    NSUInteger hashedOne = [MAVEHashingUtils randomizeInt32WithMD5hash:1];
+    NSString *hashedZero = @"00aa"; // TODO fix
+    NSString *hashedOne = @"00aa";  // TODO fix
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.recordID = 1; p1.hashedRecordID = hashedOne;
     p1.firstName = @"2"; p1.lastName = @"3";
@@ -108,7 +108,7 @@
     NSArray *expected;
     expected = @[@"record_id", [NSNumber numberWithInteger:1]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:0], expected);
-    expected = @[@"hashed_record_id", [NSNumber numberWithUnsignedInteger:hashedOne]];
+    expected = @[@"hashed_record_id", hashedOne];
     XCTAssertEqualObjects([p1JSON objectAtIndex:1], expected);
     expected = @[@"first_name", @"2"];
     XCTAssertEqualObjects([p1JSON objectAtIndex:2], expected);
@@ -129,7 +129,7 @@
     NSArray *p2JSON = [p2 toJSONTupleArray];
     expected = @[@"record_id", [NSNumber numberWithInteger:0]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:0], expected);
-    expected = @[@"hashed_record_id", [NSNumber numberWithUnsignedInteger:hashedZero]];
+    expected = @[@"hashed_record_id", hashedZero];
     XCTAssertEqualObjects([p2JSON objectAtIndex:1], expected);
     expected = @[@"first_name", [NSNull null]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:2], expected);
@@ -368,6 +368,22 @@
                           @"(808)\u00a0555-1234");
 }
 
+- (void)testMerkleTreeDataKey {
+    MAVEABPerson *p = [[MAVEABPerson alloc] init];
+    p.hashedRecordID = @"000000000000";
+    XCTAssertEqual([p merkleTreeDataKey], 0);
+    p.hashedRecordID = @"000000000001";
+    XCTAssertEqual([p merkleTreeDataKey], 1);
+    p.hashedRecordID = @"ffffffffffff";
+    NSUInteger expected = (NSUInteger)(exp2(6*8) - 1);
+    XCTAssertEqual([p merkleTreeDataKey], expected);
+}
+
+- (void)testComputeHashedRecordID {
+    // Try a random number
+    int32_t recordID = 123;
+    XCTAssertEqualObjects([MAVEABPerson computeHashedRecordID:recordID], @"a7e0b18d0d45");
+}
 
 //
 //Comparison methods
@@ -437,14 +453,14 @@
 
 - (void)testCompareHashedRecordIDs {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.hashedRecordID = 0;
+    p1.hashedRecordID = @"000000000000";
     MAVEABPerson *p2 =  [[MAVEABPerson alloc] init];
-    p2.hashedRecordID = UINT64_MAX;
+    p2.hashedRecordID = @"ffffffffffff";
     XCTAssertEqual([p1 compareHashedRecordIDs:p2], NSOrderedAscending);
     XCTAssertEqual([p2 compareHashedRecordIDs:p1], NSOrderedDescending);
 
     MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
-    p3.hashedRecordID = UINT64_MAX;
+    p3.hashedRecordID = @"ffffffffffff";
     XCTAssertEqual([p2 compareHashedRecordIDs:p3], NSOrderedSame);
     XCTAssertEqual([p3 compareHashedRecordIDs:p2], NSOrderedSame);
 

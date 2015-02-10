@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 #import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 #import "MAVEMerkleTreeDataDemo.h"
@@ -32,8 +32,10 @@
 
 - (void)testInitWithHashValue {
     NSData *hashValue = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
+    XCTAssertEqual([hashValue length], 3);
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:hashValue];
     XCTAssertEqualObjects(node.hashValue, hashValue);
+    XCTAssertEqual(node.hashValueNumBytes, 3);
 }
 
 - (void)testSerializeToJSONObject {
@@ -47,22 +49,35 @@
     OCMVerifyAll(mock);
 }
 
-- (void)testHashValue {
+- (void)testHashValue16Bytes {
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
+    node.hashValueNumBytes = 16;
     id mock = OCMPartialMock(node);
     OCMExpect([mock serializedData]).andReturn([@"blah" dataUsingEncoding:NSUTF8StringEncoding]);
 
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[node hashValue]],
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[node hashValue]],
                           @"6f1ed002ab5595859014ebf0951522d9");
+    OCMVerifyAll(mock);
+}
+
+- (void)testHashValue1Byte {
+    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
+    node.hashValueNumBytes = 1;
+    id mock = OCMPartialMock(node);
+    OCMExpect([mock serializedData]).andReturn([@"blah" dataUsingEncoding:NSUTF8StringEncoding]);
+
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[node hashValue]],
+                          @"6f");
     OCMVerifyAll(mock);
 }
 
 - (void)testHashValueOfEmptyData {
     MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] init];
+    node.hashValueNumBytes = 8;
     node.dataBucket = @[];
     // ensure it's equal to hard-coded hash of "[]"
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[node hashValue]],
-                          @"d751713988987e9331980363e24189ce");
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[node hashValue]],
+                          @"d751713988987e93");
 }
 
 - (void)testInitAndLoadData {
@@ -74,9 +89,10 @@
     NSArray *data = @[d1, d2, d3, d4];
     MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator]];
 
-    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] initWithRange:NSMakeRange(2, 3+1) dataEnumerator:enumer];
+    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] initWithRange:NSMakeRange(2, 3+1) dataEnumerator:enumer hashValueNumBytes:13];
     NSArray *expectedData = @[d1, d2, d3];
     XCTAssertEqualObjects(node.dataBucket, expectedData);
+    XCTAssertEqual(node.hashValueNumBytes, 13);
 }
 
 // Should call the protocol method to make data items serializable

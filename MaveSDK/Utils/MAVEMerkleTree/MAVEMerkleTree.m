@@ -9,7 +9,7 @@
 #import "MAVEMerkleTree.h"
 #import "MAVEMerkleTreeInnerNode.h"
 #import "MAVEMerkleTreeLeafNode.h"
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 #import "MAVEMerkleTreeUtils.h"
 
 const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
@@ -90,7 +90,8 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     } else {
         return [[MAVEMerkleTreeLeafNode alloc]
                 initWithRange:range
-                dataEnumerator:enumerator];
+                dataEnumerator:enumerator
+                hashValueNumBytes:16];
     }
 }
 
@@ -99,22 +100,25 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     NSDictionary *object = [[NSDictionary alloc] initWithDictionary:jsonObject];
     if (![jsonObject objectForKey:@"k"]) {
         uint64_t zero = 0;
-        NSString *key = [MAVEHashingUtils hexStringFromData:[NSData dataWithBytes:&zero length:8]];
+        NSString *key = [MAVEMerkleTreeHashUtils hexStringFromData:[NSData dataWithBytes:&zero length:8]];
         object = @{@"k": key};
     }
+    NSString *currentKeyHexString = [jsonObject objectForKey:@"k"];
 
     // tree is balanced so check one child to see if this node is the leaf
     BOOL isLeaf = ![object objectForKey:@"l"];
 
     if (isLeaf) {
-        NSData *hashValue = [MAVEHashingUtils dataFromHexString:[object objectForKey:@"k"]];
+        NSData *hashValue = [MAVEMerkleTreeHashUtils dataFromHexString:[object objectForKey:@"k"]];
         return [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:hashValue];
     } else {
         NSDictionary *leftChildJSON = [object objectForKey:@"l"];
         NSDictionary *rightChildJSON = [object objectForKey:@"r"];
         id<MAVEMerkleTreeNode>left = [self buildMerkleTreeFromJSONObject:leftChildJSON];
         id<MAVEMerkleTreeNode>right = [self buildMerkleTreeFromJSONObject:rightChildJSON];
-        return [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:right];
+        MAVEMerkleTreeInnerNode *outNode = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:right];
+        [outNode setHashValueWhenBuildingFromJSON:[MAVEMerkleTreeHashUtils dataFromHexString:currentKeyHexString]];
+        return outNode;
     }
 }
 
@@ -126,12 +130,15 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
         return @[];
     }
 
+    // If we're at the leaf node, build the changeset tuple
     if ([referenceTree treeHeight] == 1) {
         MAVEMerkleTreeLeafNode *referenceLeaf = referenceTree;
         NSArray *rangeLowHigh = @[@(referenceLeaf.dataKeyRange.location),
-                                  @(referenceLeaf.dataKeyRange.location + referenceLeaf.dataKeyRange.length)];
-        return @[@[@(currentPath), rangeLowHigh, [MAVEHashingUtils hexStringFromData:refHash], [referenceLeaf serializeableData]]];
+                                  @(referenceLeaf.dataKeyRange.location - 1 + referenceLeaf.dataKeyRange.length)];
+        return @[@[@(currentPath), rangeLowHigh, [MAVEMerkleTreeHashUtils hexStringFromData:refHash], [referenceLeaf serializeableData]]];
     }
+
+    // Otherwise, progress further down the tree to the left and right
     MAVEMerkleTreeInnerNode *referenceNode = referenceTree;
     MAVEMerkleTreeInnerNode *otherNode = otherTree;
 
@@ -153,6 +160,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     NSArray *leftBranchDiffs = [self changesetReferenceSubtree:referenceNode.leftChild matchedByOtherSubtree:otherLeft currentPathToNode:leftPath];
     NSArray *rightBranchDiffs = [self changesetReferenceSubtree:referenceNode.rightChild matchedByOtherSubtree:otherRight currentPathToNode:rightPath];
 
+    // Then concat the the subtrees' changesets to form this node (an inner node) changeset
     NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[leftBranchDiffs count] + [rightBranchDiffs count]];
     for (id item in leftBranchDiffs) {
         [tmp addObject:item];

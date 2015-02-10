@@ -1,15 +1,15 @@
 //
-//  MAVEHashingUtils.m
+//  MAVEMerkleTreeHashUtils.m
 //  MaveSDK
 //
-//  Created by Danny Cosson on 1/25/15.
+//  Created by Danny Cosson on 2/9/15.
 //
 //
 
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation MAVEHashingUtils
+@implementation MAVEMerkleTreeHashUtils
 
 + (NSString *)hexStringFromData:(NSData *)data {
     if (!data) {
@@ -45,6 +45,29 @@
     return [[NSData alloc] initWithData:output];
 }
 
++ (uint64_t)UInt64FromData:(NSData *)data {
+    NSData *data8Byte;
+    //uint64 is bytes
+    if ([data length] < 8) {
+        uint64_t zero = 0;
+        NSMutableData *tmp = [[NSMutableData alloc] initWithBytes:&zero length:8];
+        NSRange replaceRange = NSMakeRange(8-[data length], [data length]);
+        [tmp replaceBytesInRange:replaceRange withBytes:[data bytes]];
+        data8Byte = [tmp copy];
+    } else if ([data length] == 8) {
+        data8Byte = data;
+    } else {
+        data8Byte = [data subdataWithRange:NSMakeRange(0, 8)];
+    }
+    return CFSwapInt64HostToBig(*(uint64_t *)[data8Byte bytes]);
+}
+
++ (NSData *)dataFromInt32:(int32_t)number {
+    int32_t swappedNumber = CFSwapInt32HostToBig(number);
+    return [NSData dataWithBytes:&swappedNumber length:4];
+}
+
+
 + (NSData *)md5Hash:(NSData *)data {
     if (data.length > UINT_MAX) {
         return nil;
@@ -55,12 +78,9 @@
     return [NSData dataWithBytes:md5Chars length:sizeof(md5Chars)];
 }
 
-+ (NSUInteger)randomizeInt32WithMD5hash:(int32_t)number {
-    number = CFSwapInt32HostToBig(number);
-    NSData *data = [NSData dataWithBytes:&number
-                                  length:sizeof(number)];
++ (NSData *)md5Hash:(NSData *)data truncatedToBytes:(NSUInteger)numBytes {
     NSData *hashedData = [self md5Hash:data];
-    return CFSwapInt64BigToHost(*(NSInteger*)([hashedData bytes]));
+    return [hashedData subdataWithRange:NSMakeRange(0, numBytes)];
 }
 
 @end

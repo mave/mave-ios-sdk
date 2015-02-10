@@ -14,7 +14,7 @@
 #import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 #import "MAVEMerkleTreeDataDemo.h"
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 
 @interface MAVEMerkleTreeTests : XCTestCase
 
@@ -75,10 +75,9 @@
     MAVEMerkleTreeLeafNode *left = root.leftChild;
     MAVEMerkleTreeLeafNode *right = root.rightChild;
     // hard-coded hash of string "00020003"
-    NSString *expectedRootHash = @"1bbddfac44ce3c01b00194f73ea061f2";
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[root hashValue]], expectedRootHash);
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[left hashValue]], @"0002");
-    XCTAssertEqualObjects([MAVEHashingUtils hexStringFromData:[right hashValue]], @"0003");
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[root hashValue]], @"0001");
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[left hashValue]], @"0002");
+    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:[right hashValue]], @"0003");
 }
 
 - (void)testMerkleTreeInitWithEmptyJSON {
@@ -87,7 +86,7 @@
     // a zero-value hash key
     uint64_t zero = 0;
     NSData *zeroData = [NSData dataWithBytes:&zero length:8];
-    NSString *zeroString = [MAVEHashingUtils hexStringFromData:zeroData];
+    NSString *zeroString = [MAVEMerkleTreeHashUtils hexStringFromData:zeroData];
     XCTAssertEqualObjects(zeroString, @"0000000000000000");
 
     MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] initWithJSONObject:@{}];
@@ -99,24 +98,26 @@
 #pragma mark - Serialization methods
 - (void)testSerializableSelf {
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] init];
-    NSData *fooHash = [MAVEHashingUtils md5Hash:[@"foo" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *fooHash = [MAVEMerkleTreeHashUtils md5Hash:[@"foo" dataUsingEncoding:NSUTF8StringEncoding]];
     tree.root = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:fooHash];
 
     NSDictionary *value = [tree serializable];
     NSDictionary *expected = @{@"height": @1, @"data":
-                                   @{@"k": [MAVEHashingUtils hexStringFromData:fooHash]}};
+                                   @{@"k": [MAVEMerkleTreeHashUtils hexStringFromData:fooHash]}};
     XCTAssertEqualObjects(value, expected);
 }
 
-- (void)testChangesetHeight1Tree {
+- (void)testChangesetBaseCaseHeight1Tree {
     MAVEMerkleTreeDataDemo *obj1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:10];
     MAVEMerkleTreeDataDemo *obj2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:20];
     MAVEMerkleTreeLeafNode *node1 = [[MAVEMerkleTreeLeafNode alloc] init];
     MAVEMerkleTreeLeafNode *node2 = [[MAVEMerkleTreeLeafNode alloc] init];
     node1.dataBucket = @[obj1];
+    node1.dataKeyRange = NSMakeRange(0, 4);
     node2.dataBucket = @[obj2];
-    NSString *node1HashHex = [MAVEHashingUtils hexStringFromData:[node1 hashValue]];
-    NSString *node2HashHex = [MAVEHashingUtils hexStringFromData:[node2 hashValue]];
+    node2.dataKeyRange = NSMakeRange(4, 4);
+    NSString *node1HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node1 hashValue]];
+    NSString *node2HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node2 hashValue]];
 
     // When they're the same
     NSArray *diff1 = [MAVEMerkleTree changesetReferenceSubtree:node1 matchedByOtherSubtree:node1 currentPathToNode:100];
@@ -124,11 +125,11 @@
 
     // When different
     NSArray *diff2 = [MAVEMerkleTree changesetReferenceSubtree:node1 matchedByOtherSubtree:node2 currentPathToNode:100];
-    NSArray *expected2 = @[@[@(100), node1HashHex, [node1 serializeableData]]];
+    NSArray *expected2 = @[@[@(100), @[@0, @3], node1HashHex, [node1 serializeableData]]];
     XCTAssertEqualObjects(diff2, expected2);
     // reverse order
     diff2 = [MAVEMerkleTree changesetReferenceSubtree:node2 matchedByOtherSubtree:node1 currentPathToNode:100];
-    expected2 = @[@[@(100), node2HashHex, [node2 serializeableData]]];
+    expected2 = @[@[@(100), @[@4, @7], node2HashHex, [node2 serializeableData]]];
     XCTAssertEqualObjects(diff2, expected2);
 }
 
@@ -140,9 +141,10 @@
 
     MAVEMerkleTreeLeafNode *left = [[MAVEMerkleTreeLeafNode alloc] init];
     left.dataBucket = @[obj1];
+    left.dataKeyRange = NSMakeRange(0, 1);
     MAVEMerkleTreeLeafNode *right = [[MAVEMerkleTreeLeafNode alloc] init];
     right.dataBucket = @[obj2];
-
+    right.dataKeyRange = NSMakeRange(1, 1);
 
     MAVEMerkleTreeInnerNode *node1 = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:right];
     MAVEMerkleTreeInnerNode *node2 = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:left];
@@ -154,31 +156,31 @@
 
     // Right child different
     NSArray *diff2 = [MAVEMerkleTree changesetReferenceSubtree:node1 matchedByOtherSubtree:node2 currentPathToNode:0];
-    NSArray *expected2 = @[@[@(1), obj2HashHex, @[@20]]];
+    NSArray *expected2 = @[@[@(1), @[@1, @1], obj2HashHex, @[@20]]];
     XCTAssertEqualObjects(diff2, expected2);
     // reverse order
     diff2 = [MAVEMerkleTree changesetReferenceSubtree:node2 matchedByOtherSubtree:node1 currentPathToNode:0];
-    expected2 = @[@[@(1), obj1HashHex, @[@10]]];
+    expected2 = @[@[@(1), @[@0, @0], obj1HashHex, @[@10]]];
     XCTAssertEqualObjects(diff2, expected2);
     // Test the tree instance method
     MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] init];
     MAVEMerkleTree *tree2 = [[MAVEMerkleTree alloc] init];
     tree1.root = node1; tree2.root = node2;
     diff2 = [tree1 changesetForOtherTreeToMatchSelf:tree2];
-    expected2 = @[@[@(1), obj2HashHex, @[@20]]];
+    expected2 = @[@[@(1), @[@1, @1], obj2HashHex, @[@20]]];
     XCTAssertEqualObjects(diff2, expected2);
     // reverse
     diff2 = [tree2 changesetForOtherTreeToMatchSelf:tree1];
-    expected2 = @[@[@(1), obj1HashHex, @[@10]]];
+    expected2 = @[@[@(1), @[@0, @0], obj1HashHex, @[@10]]];
     XCTAssertEqualObjects(diff2, expected2);
 
     // Left child different
     NSArray *diff3 = [MAVEMerkleTree changesetReferenceSubtree:node1 matchedByOtherSubtree:node3 currentPathToNode:0];
-    NSArray *expected3 = @[@[@(0), obj1HashHex, @[@10]]];
+    NSArray *expected3 = @[@[@(0), @[@0, @0], obj1HashHex, @[@10]]];
     XCTAssertEqualObjects(diff3, expected3);
     // reverse order
     diff3 = [MAVEMerkleTree changesetReferenceSubtree:node3 matchedByOtherSubtree:node1 currentPathToNode:0];
-    expected3 = @[@[@(0), obj2HashHex, @[@20]]];
+    expected3 = @[@[@(0), @[@1, @1], obj2HashHex, @[@20]]];
     XCTAssertEqualObjects(diff3, expected3);
 
     // Test for different starting path height
@@ -196,26 +198,29 @@
     MAVEMerkleTreeLeafNode *node1 = [[MAVEMerkleTreeLeafNode alloc] init];
     MAVEMerkleTreeLeafNode *node2 = [[MAVEMerkleTreeLeafNode alloc] init];
     node1.dataBucket = @[obj1];
+    node1.dataKeyRange = NSMakeRange(0, 1);
     node2.dataBucket = @[obj2];
-    NSString *node1HashHex = [MAVEHashingUtils hexStringFromData:[node1 hashValue]];
-    NSString *node2HashHex = [MAVEHashingUtils hexStringFromData:[node2 hashValue]];
+    node2.dataKeyRange = NSMakeRange(1, 1);
+    NSString *node1HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node1 hashValue]];
+    NSString *node2HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node2 hashValue]];
     MAVEMerkleTreeInnerNode *tree1 = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:node1 rightChild:node2];
 
     MAVEMerkleTreeLeafNode *shortTree = [[MAVEMerkleTreeLeafNode alloc] init];
     shortTree.dataBucket = @[obj3];
-    NSString *node3HashHex = [MAVEHashingUtils hexStringFromData:[shortTree hashValue]];
+    shortTree.dataKeyRange = NSMakeRange(0, 4);
+    NSString *node3HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[shortTree hashValue]];
 
     // Try it where other node is shorter than reference node
     NSArray *diff = [MAVEMerkleTree changesetReferenceSubtree:tree1 matchedByOtherSubtree:shortTree currentPathToNode:0];
     NSArray *expectedDiff = @[
-                              @[@(0), node1HashHex, @[@10]],
-                              @[@(1), node2HashHex, @[@20]],
+                              @[@(0), @[@0, @0], node1HashHex, @[@10]],
+                              @[@(1), @[@1, @1], node2HashHex, @[@20]],
     ];
     XCTAssertEqualObjects(diff, expectedDiff);
 
     // Also try where reference node is shorter than other
     NSArray *diff2 = [MAVEMerkleTree changesetReferenceSubtree:shortTree matchedByOtherSubtree:tree1 currentPathToNode:0];
-    NSArray *expectedDiff2 = @[@[@(0), node3HashHex, @[@30]]];
+    NSArray *expectedDiff2 = @[@[@(0), @[@0, @3], node3HashHex, @[@30]]];
     XCTAssertEqualObjects(diff2, expectedDiff2);
 }
 

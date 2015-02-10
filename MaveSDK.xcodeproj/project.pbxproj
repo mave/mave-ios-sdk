@@ -80,8 +80,6 @@
 		0C6D92AA1A72BA0F00B65B82 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C6D92A91A72BA0F00B65B82 /* libz.1.1.3.dylib */; };
 		0C6D92AD1A72BE4A00B65B82 /* MAVECompressionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92AC1A72BE4A00B65B82 /* MAVECompressionUtils.m */; };
 		0C6D92AF1A72E3E000B65B82 /* MAVECompressionUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92AE1A72E3E000B65B82 /* MAVECompressionUtilsTests.m */; };
-		0C6D92B21A755B2100B65B82 /* MAVEHashingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92B11A755B2100B65B82 /* MAVEHashingUtils.m */; };
-		0C6D92B41A7561FF00B65B82 /* MAVEHashingUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92B31A7561FF00B65B82 /* MAVEHashingUtilsTests.m */; };
 		0C6D92B81A75653400B65B82 /* MAVEMerkleTreeInnerNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92B71A75653400B65B82 /* MAVEMerkleTreeInnerNode.m */; };
 		0C6D92BB1A75890500B65B82 /* MAVEMerkleTreeInnerNodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92BA1A75890500B65B82 /* MAVEMerkleTreeInnerNodeTests.m */; };
 		0C6D92BE1A759E7200B65B82 /* MAVEMerkleTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92BD1A759E7200B65B82 /* MAVEMerkleTree.m */; };
@@ -102,6 +100,8 @@
 		0CCC92C61A603996008CB888 /* MAVERemoteObjectBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92C51A603996008CB888 /* MAVERemoteObjectBuilder.m */; };
 		0CCC92C91A603DFD008CB888 /* MAVERemoteObjectBuilderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92C81A603DFD008CB888 /* MAVERemoteObjectBuilderTests.m */; };
 		0CCC92CB1A603FDF008CB888 /* MAVEPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92CA1A603FDF008CB888 /* MAVEPromiseTests.m */; };
+		0CD2743B1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD2743A1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m */; };
+		0CD2743D1A891F5D00EE5B33 /* MAVEMerkleTreeHashUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD2743C1A891F5D00EE5B33 /* MAVEMerkleTreeHashUtilsTests.m */; };
 		0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */; };
 		0CF0E3CB1A72B370008BBFB3 /* MAVEABSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0E3CA1A72B370008BBFB3 /* MAVEABSyncManager.m */; };
 		0CFDBE261A1A827C00DD2AAF /* MAVEReferralData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE251A1A827C00DD2AAF /* MAVEReferralData.m */; };
@@ -258,9 +258,6 @@
 		0C6D92AB1A72BE4A00B65B82 /* MAVECompressionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVECompressionUtils.h; sourceTree = "<group>"; };
 		0C6D92AC1A72BE4A00B65B82 /* MAVECompressionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECompressionUtils.m; sourceTree = "<group>"; };
 		0C6D92AE1A72E3E000B65B82 /* MAVECompressionUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECompressionUtilsTests.m; sourceTree = "<group>"; };
-		0C6D92B01A755B2100B65B82 /* MAVEHashingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEHashingUtils.h; sourceTree = "<group>"; };
-		0C6D92B11A755B2100B65B82 /* MAVEHashingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEHashingUtils.m; sourceTree = "<group>"; };
-		0C6D92B31A7561FF00B65B82 /* MAVEHashingUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEHashingUtilsTests.m; sourceTree = "<group>"; };
 		0C6D92B61A75653400B65B82 /* MAVEMerkleTreeInnerNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEMerkleTreeInnerNode.h; sourceTree = "<group>"; };
 		0C6D92B71A75653400B65B82 /* MAVEMerkleTreeInnerNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEMerkleTreeInnerNode.m; sourceTree = "<group>"; };
 		0C6D92BA1A75890500B65B82 /* MAVEMerkleTreeInnerNodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEMerkleTreeInnerNodeTests.m; sourceTree = "<group>"; };
@@ -292,6 +289,9 @@
 		0CCC92C81A603DFD008CB888 /* MAVERemoteObjectBuilderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteObjectBuilderTests.m; sourceTree = "<group>"; };
 		0CCC92CA1A603FDF008CB888 /* MAVEPromiseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEPromiseTests.m; sourceTree = "<group>"; };
 		0CCC92CC1A604082008CB888 /* MAVEPromise_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MAVEPromise_Internal.h; sourceTree = "<group>"; };
+		0CD274391A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEMerkleTreeHashUtils.h; sourceTree = "<group>"; };
+		0CD2743A1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEMerkleTreeHashUtils.m; sourceTree = "<group>"; };
+		0CD2743C1A891F5D00EE5B33 /* MAVEMerkleTreeHashUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEMerkleTreeHashUtilsTests.m; sourceTree = "<group>"; };
 		0CEEDE951A6C4FCB00A81804 /* MAVESearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESearchBar.h; sourceTree = "<group>"; };
 		0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESearchBar.m; sourceTree = "<group>"; };
 		0CF0E3C91A72B370008BBFB3 /* MAVEABSyncManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABSyncManager.h; sourceTree = "<group>"; };
@@ -426,8 +426,6 @@
 				0C1A8FD91A644D7900518D9A /* MAVENameParsingUtils.m */,
 				0C6D92AB1A72BE4A00B65B82 /* MAVECompressionUtils.h */,
 				0C6D92AC1A72BE4A00B65B82 /* MAVECompressionUtils.m */,
-				0C6D92B01A755B2100B65B82 /* MAVEHashingUtils.h */,
-				0C6D92B11A755B2100B65B82 /* MAVEHashingUtils.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -441,7 +439,6 @@
 				0C1F1A1B1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m */,
 				0C1A8FDB1A644E5C00518D9A /* MAVENameParsingUtilsTests.m */,
 				0C6D92AE1A72E3E000B65B82 /* MAVECompressionUtilsTests.m */,
-				0C6D92B31A7561FF00B65B82 /* MAVEHashingUtilsTests.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -492,6 +489,8 @@
 				0C0996EF1A78527F003B82AA /* MAVEMerkleTreeDataDemo.m */,
 				0C0996F11A793A50003B82AA /* MAVEMerkleTreeUtils.h */,
 				0C0996F21A793A50003B82AA /* MAVEMerkleTreeUtils.m */,
+				0CD274391A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.h */,
+				0CD2743A1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m */,
 			);
 			path = MAVEMerkleTree;
 			sourceTree = "<group>";
@@ -504,6 +503,7 @@
 				0C0996EB1A7725F3003B82AA /* MAVEMerkleTreeLeafNodeTests.m */,
 				0C0996E61A76F302003B82AA /* MAVEMerkleTreeDataEnumeratorTests.m */,
 				0C0996F71A793B4F003B82AA /* MAVEMerkleTreeUtilsTests.m */,
+				0CD2743C1A891F5D00EE5B33 /* MAVEMerkleTreeHashUtilsTests.m */,
 			);
 			path = MAVEMerkleTree;
 			sourceTree = "<group>";
@@ -1020,13 +1020,13 @@
 				0CCC92C61A603996008CB888 /* MAVERemoteObjectBuilder.m in Sources */,
 				0C6D92B81A75653400B65B82 /* MAVEMerkleTreeInnerNode.m in Sources */,
 				0C1A8FB91A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m in Sources */,
+				0CD2743B1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m in Sources */,
 				C029280619E82D0F006AEE43 /* MAVEDisplayOptions.m in Sources */,
 				0C1134D11A12C42200631797 /* MAVENoAddressBookPermissionView.m in Sources */,
 				0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */,
 				C029280C19E82D18006AEE43 /* MAVEInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* MAVEABPerson.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
-				0C6D92B21A755B2100B65B82 /* MAVEHashingUtils.m in Sources */,
 				0C0996EA1A7725A6003B82AA /* MAVEMerkleTreeLeafNode.m in Sources */,
 				0C1A8FDA1A644D7900518D9A /* MAVENameParsingUtils.m in Sources */,
 				0C1F1A1A1A53012000B2D482 /* MAVEClientPropertyUtils.m in Sources */,
@@ -1092,12 +1092,12 @@
 				0C1A8FDC1A644E5C00518D9A /* MAVENameParsingUtilsTests.m in Sources */,
 				0C0996EC1A7725F3003B82AA /* MAVEMerkleTreeLeafNodeTests.m in Sources */,
 				0C29BC441A5D88C200C27DA5 /* MAVERemoteConfiguratorDataPersistorTests.m in Sources */,
+				0CD2743D1A891F5D00EE5B33 /* MAVEMerkleTreeHashUtilsTests.m in Sources */,
 				0C29BC281A544EF000C27DA5 /* MAVEABPermissionPromptHandlerTest.m in Sources */,
 				0C141D321A0BCFB50036202A /* MAVEUserDataTests.m in Sources */,
 				0C29BC351A572CEA00C27DA5 /* MAVEAPIInterfaceTests.m in Sources */,
 				0C0996F81A793B4F003B82AA /* MAVEMerkleTreeUtilsTests.m in Sources */,
 				0C0996E71A76F302003B82AA /* MAVEMerkleTreeDataEnumeratorTests.m in Sources */,
-				0C6D92B41A7561FF00B65B82 /* MAVEHashingUtilsTests.m in Sources */,
 				0C7200741A19A87900E12B91 /* MAVEInviteMessageContainerViewTests.m in Sources */,
 				C0834F3A19F57F0000E52CA1 /* MAVEABTableViewTests.m in Sources */,
 				0C1A8FCB1A632E2100518D9A /* MAVERemoteConfigurationFacebookShareTests.m in Sources */,

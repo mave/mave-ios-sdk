@@ -25,8 +25,14 @@ typedef NSUInteger MAVEMerkleTreePath;
 
 @property (nonatomic, strong) id<MAVEMerkleTreeNode>root;
 
+
 - (instancetype)initWithHeight:(NSUInteger)height
                      arrayData:(NSArray *)data;
+
+- (instancetype)initWithHeight:(NSUInteger)height
+                     arrayData:(NSArray *)data
+             hashValueNumBytes:(NSInteger)hashValueNumBytes
+                  dataKeyRange:(NSRange)keyRange;
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
 

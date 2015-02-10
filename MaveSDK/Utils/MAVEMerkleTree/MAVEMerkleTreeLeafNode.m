@@ -8,16 +8,27 @@
 
 #import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEMerkleTreeUtils.h"
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 
 @implementation MAVEMerkleTreeLeafNode {
     NSData *_hashValue;
 }
 
+- (instancetype)init {
+    if (self = [super init]) {
+        // use full 16 bytes of md5 by default
+        self.hashValueNumBytes = 16;
+    }
+    return self;
+}
+
 - (instancetype)initWithRange:(NSRange)range
-               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator {
+               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
+            hashValueNumBytes:(NSInteger)hashValueNumBytes
+{
     if (self = [super init]) {
         self.dataKeyRange = range;
+        self.hashValueNumBytes = hashValueNumBytes;
         [self loadDataIntoBucket:enumerator];
     }
     return self;
@@ -26,6 +37,7 @@
 - (instancetype)initWithHashValue:(NSData *)hashValue {
     if (self = [super init]) {
         _hashValue = hashValue;
+        self.hashValueNumBytes = self.hashValue.length;
     }
     return self;
 }
@@ -53,14 +65,15 @@
 
 - (NSData *)hashValue {
     if (!_hashValue) {
-        _hashValue = [MAVEHashingUtils md5Hash:[self serializedData]];
+        NSData *fullHashValue = [MAVEMerkleTreeHashUtils md5Hash:[self serializedData]];
+        _hashValue = [fullHashValue subdataWithRange:NSMakeRange(0, self.hashValueNumBytes)];
     }
     return _hashValue;
 }
 
 // Serialize the merkle tree node (doesn't include data)
 - (NSDictionary *)serializeToJSONObject {
-    return @{@"k": [MAVEHashingUtils hexStringFromData:self.hashValue],
+    return @{@"k": [MAVEMerkleTreeHashUtils hexStringFromData:self.hashValue],
     };
 }
 

@@ -12,7 +12,7 @@
 #import "MAVEConstants.h"
 #import "MAVECompressionUtils.h"
 #import "MAVEAPIInterface.h"
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 #import "MaveSDK.h"
 
 NSUInteger const MAVEABSyncMerkleTreeHeight = 11;
@@ -88,7 +88,7 @@ static dispatch_once_t syncOnceToken;
         return YES;
     }
 
-    NSString *localHashString = [MAVEHashingUtils hexStringFromData:[merkleTree.root hashValue]];
+    NSString *localHashString = [MAVEMerkleTreeHashUtils hexStringFromData:[merkleTree.root hashValue]];
     BOOL output = ([remoteHashString isEqualToString: localHashString]);
     if (output) {
         MAVEDebugLog(@"Skipping contacts sync because tree roots matched");

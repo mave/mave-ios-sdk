@@ -16,7 +16,7 @@
 // and is an NSObject with helper methods to access fields we want.
 
 @property (nonatomic, assign) NSInteger recordID;
-@property (nonatomic, assign) NSUInteger hashedRecordID;
+@property (nonatomic, assign) NSString *hashedRecordID;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSArray *phoneNumbers;   // Array of NSStrings
@@ -47,10 +47,13 @@
 - (NSComparisonResult)compareRecordIDs:(MAVEABPerson *)otherPerson;
 - (NSComparisonResult)compareHashedRecordIDs:(MAVEABPerson *)otherPerson;
 
+// Helper to correctly format the hashed record ID for format we store, which is
+// first 6 bytes of md5 of big-endian representation of record id, encoded as a hex string.
++ (NSString *)computeHashedRecordID:(uint32_t)recordID;
+
 // Returns the first letter, capitalized, of the name being used for sorting
 // (last name if it exists, otherwise first name)
 - (NSString *)firstLetter;
-
 - (NSString *)fullName;
 
 // Returns the mobile or main phone or the first one in the list if there are phones, otherwise nil

@@ -14,9 +14,11 @@
 
 @property (nonatomic, strong) NSArray *dataBucket;
 @property (nonatomic, assign) NSRange dataKeyRange;
+@property (nonatomic, assign) NSInteger hashValueNumBytes;
 
 - (instancetype)initWithRange:(NSRange)range
-               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator;
+               dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
+            hashValueNumBytes:(NSInteger)hashValueNumBytes;
 
 // This is when initializing from a remote source, we'll have the hash value
 // directly but we won't have the data

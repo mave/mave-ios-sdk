@@ -14,7 +14,7 @@
 #import "MAVECompressionUtils.h"
 #import "MaveSDK.h"
 #import "MAVEAPIInterface.h"
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -123,7 +123,7 @@
     NSArray *fakeChangeset = @[@"foo"];
     OCMExpect([treeMock changesetForOtherTreeToMatchSelf:[OCMArg checkWithBlock:^BOOL(id obj) {
         MAVEMerkleTree *remoteTree = obj;
-        return [[MAVEHashingUtils hexStringFromData:[remoteTree.root hashValue]] isEqualToString:@"000001"];
+        return [[MAVEMerkleTreeHashUtils hexStringFromData:[remoteTree.root hashValue]] isEqualToString:@"000001"];
     }]]).andReturn(fakeChangeset);
 
     NSArray *returnedChangeset = [syncer changesetComparingFullRemoteTreeToTree:treeMock];

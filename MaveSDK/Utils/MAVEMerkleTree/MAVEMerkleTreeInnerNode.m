@@ -7,7 +7,7 @@
 //
 
 #import "MAVEMerkleTreeInnerNode.h"
-#import "MAVEHashingUtils.h"
+#import "MAVEMerkleTreeHashUtils.h"
 
 
 @implementation MAVEMerkleTreeInnerNode {
@@ -22,11 +22,8 @@
     return self;
 }
 
-- (instancetype)initWithJSONObject:(NSDictionary *)jsonObject {
-    if (self = [super init]) {
-
-    }
-    return self;
+- (void)setHashValueWhenBuildingFromJSON:(NSData *)hashValue {
+    _hashValue = hashValue;
 }
 
 - (NSUInteger)treeHeight {
@@ -36,15 +33,21 @@
 
 - (NSData *)hashValue {
     if (!_hashValue) {
-        NSMutableData *data = [[self.leftChild hashValue] mutableCopy];
+        // determine number of bytes of the hash to return based on length of the left child node's hash value
+        NSData *leftHashValue = [self.leftChild hashValue];
+        NSUInteger hashLengthBytes = [leftHashValue length];
+
+        NSMutableData *data = [leftHashValue mutableCopy];
         [data appendData:[self.rightChild hashValue]];
-        _hashValue = [MAVEHashingUtils md5Hash:data];
+        NSData *fullHashData = [MAVEMerkleTreeHashUtils md5Hash:data];
+
+        _hashValue = [fullHashData subdataWithRange:NSMakeRange(0, hashLengthBytes)];
     }
     return _hashValue;
 }
 
 - (NSDictionary *)serializeToJSONObject {
-    return @{@"k": [MAVEHashingUtils hexStringFromData:self.hashValue],
+    return @{@"k": [MAVEMerkleTreeHashUtils hexStringFromData:self.hashValue],
              @"l": [self.leftChild serializeToJSONObject],
              @"r": [self.rightChild serializeToJSONObject],
     };

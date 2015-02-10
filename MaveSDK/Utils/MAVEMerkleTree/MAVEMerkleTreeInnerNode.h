@@ -23,6 +23,8 @@
 - (instancetype)initWithLeftChild:(id<MAVEMerkleTreeNode>)leftChild
                        rightChild:(id<MAVEMerkleTreeNode>)rightChild;
 
+- (void)setHashValueWhenBuildingFromJSON:(NSData *)hashValue;
+
 @end
 
 
