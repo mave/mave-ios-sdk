@@ -325,7 +325,7 @@
     MAVEHTTPCompletionBlock myBlock = ^(NSError *error, NSDictionary *data){};
 
     id mock = OCMPartialMock(self.testAPIInterface);
-    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/address_book/merkle_tree/root"
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/root"
                                             methodName:@"GET"
                                                 params:nil
                                        completionBlock:myBlock]);
@@ -337,7 +337,7 @@
     MAVEHTTPCompletionBlock myBlock = ^(NSError *error, NSDictionary *data){};
 
     id mock = OCMPartialMock(self.testAPIInterface);
-    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/address_book/merkle_tree/full"
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/full"
                                             methodName:@"GET"
                                                 params:nil
                                        completionBlock:myBlock];

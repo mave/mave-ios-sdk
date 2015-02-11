@@ -215,7 +215,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 }
 
 - (void)getRemoteContactsMerkleTreeRootWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
-    NSString *route = @"/address_book/merkle_tree/root";
+    NSString *route = @"/me/contacts/merkle_tree/root";
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
@@ -223,7 +223,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 }
 
 - (void)getRemoteContactsFullMerkleTreeWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
-    NSString *route = @"/address_book/merkle_tree/full";
+    NSString *route = @"/me/contacts/merkle_tree/full";
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil

@@ -300,7 +300,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
         returnedData = responseData;
     }];
     XCTAssertEqualObjects(returnedData, nil);
-    XCTAssertEqual([returnedError code], MAVEHTTPErrorResponse400LevelCode);
+    XCTAssertEqual([returnedError code], 401);
 }
 
 - (void)testHandle500LevelResponse {
@@ -317,7 +317,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
         returnedData = responseData;
     }];
     XCTAssertEqualObjects(returnedData, nil);
-    XCTAssertEqual([returnedError code], MAVEHTTPErrorResponse500LevelCode);
+    XCTAssertEqual([returnedError code], 504);
 }
 
 - (void)testHandleNilResponse {

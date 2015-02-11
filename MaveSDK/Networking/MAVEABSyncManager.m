@@ -37,8 +37,6 @@ static dispatch_once_t syncOnceToken;
     NSArray *changeset = [merkleTree changesetForEmptyTreeToMatchSelf];
     MAVEDebugLog(@"Changeset: %@", changeset);
 
-
-
     dispatch_once(&syncOnceToken, ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
             [self doSyncContacts:contacts];
@@ -46,6 +44,8 @@ static dispatch_once_t syncOnceToken;
     });
 }
 
+// This method is blocking (uses semaphores to wait for responses because it may need
+// to do several steps in serial. Make sure to run in a background thread
 - (void)doSyncContacts:(NSArray *)contacts {
     @try {
         MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
@@ -80,6 +80,7 @@ static dispatch_once_t syncOnceToken;
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     __block NSString *remoteHashString;
     [[MaveSDK sharedInstance].APIInterface getRemoteContactsMerkleTreeRootWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
+        
         remoteHashString = [responseData objectForKey:@"data"];
         if (remoteHashString == (id)[NSNull null]) {
             remoteHashString = nil;

@@ -705,10 +705,10 @@
 			children = (
 				0C29BC2C1A56FF6D00C27DA5 /* MAVEAPIInterface.h */,
 				0C29BC2D1A56FF6D00C27DA5 /* MAVEAPIInterface.m */,
-				0CF0E3C91A72B370008BBFB3 /* MAVEABSyncManager.h */,
-				0CF0E3CA1A72B370008BBFB3 /* MAVEABSyncManager.m */,
 				0C29BC2F1A56FFA900C27DA5 /* MAVEHTTPStack.h */,
 				0C29BC301A56FFA900C27DA5 /* MAVEHTTPStack.m */,
+				0CF0E3C91A72B370008BBFB3 /* MAVEABSyncManager.h */,
+				0CF0E3CA1A72B370008BBFB3 /* MAVEABSyncManager.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";

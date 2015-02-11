@@ -94,18 +94,12 @@
     // Handle error codes
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSInteger statusCode = [httpResponse statusCode];
-    if (statusCode / 100 == 4) {
+    // handle 4xx or 5xx level status codes
+    if (statusCode / 100 == 4 || statusCode / 100 == 5) {
         NSError *statusCodeError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
-                                                              code:MAVEHTTPErrorResponse400LevelCode
+                                                              code:statusCode
                                                           userInfo:@{}];
         return completionBlock(statusCodeError, nil);
-    }
-    if (statusCode / 100 == 5) {
-        NSError *statusCodeError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
-                                                              code:MAVEHTTPErrorResponse500LevelCode
-                                                          userInfo:@{}];
-        return completionBlock(statusCodeError, nil);
-        
     }
     
     // Handle formatting & displaying response
