@@ -62,6 +62,11 @@
     return CFSwapInt64HostToBig(*(uint64_t *)[data8Byte bytes]);
 }
 
++ (NSData *)dataFromUInt64:(uint64_t)number {
+    int64_t swappedNumber = CFSwapInt64HostToBig(number);
+    return [NSData dataWithBytes:&swappedNumber length:8];
+}
+
 + (NSData *)dataFromInt32:(int32_t)number {
     int32_t swappedNumber = CFSwapInt32HostToBig(number);
     return [NSData dataWithBytes:&swappedNumber length:4];
@@ -81,6 +86,18 @@
 + (NSData *)md5Hash:(NSData *)data truncatedToBytes:(NSUInteger)numBytes {
     NSData *hashedData = [self md5Hash:data];
     return [hashedData subdataWithRange:NSMakeRange(0, numBytes)];
+}
+
++ (NSArray *)hexEncodedIntervalFromRange:(NSRange)range usingNumBytes:(NSUInteger)numBytes {
+    NSUInteger low = range.location;
+    NSUInteger high = range.location + range.length - 1;
+    NSData *lowData = [[self dataFromUInt64:low]
+                       subdataWithRange:NSMakeRange(sizeof(NSUInteger) - numBytes, numBytes)];
+    NSData *highData = [[self dataFromUInt64:high]
+                        subdataWithRange:NSMakeRange(sizeof(NSUInteger) - numBytes, numBytes)];
+    NSString *lowHex = [self hexStringFromData:lowData];
+    NSString *highHex = [self hexStringFromData:highData];
+    return @[lowHex, highHex];
 }
 
 @end

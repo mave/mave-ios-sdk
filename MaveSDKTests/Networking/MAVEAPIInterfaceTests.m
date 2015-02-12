@@ -243,13 +243,9 @@
     NSUInteger fakeHeight = 25;
     OCMStub([merkleTreeMock serializable]).andReturn(fakeJSON);
     OCMStub([merkleTreeMock height]).andReturn(fakeHeight);
-    NSDictionary *expectedParams = @{@"full_tree": fakeJSON,
-                                     @"height": @(fakeHeight),
-                                     @"number_of_records": @0,
-                                     };
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/full"
                                               methodName:@"PUT"
-                                                  params:expectedParams
+                                                  params:fakeJSON
                                         gzipCompressBody:YES
                                          completionBlock:nil]);
     [self.testAPIInterface sendContactsMerkleTree:merkleTreeMock];

@@ -27,9 +27,9 @@ static dispatch_once_t syncContactsOnceToken;
 - (void)syncContactsInBackground:(NSArray *)contacts {
 
     // tmp, log the changeset of all contacts
-    MAVEMerkleTree *tmpMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
-    NSArray *changeset = [tmpMerkleTree changesetForEmptyTreeToMatchSelf];
-    MAVEDebugLog(@"Changeset: %@", changeset);
+//    MAVEMerkleTree *tmpMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
+//    NSArray *changeset = [tmpMerkleTree changesetForEmptyTreeToMatchSelf];
+//    MAVEDebugLog(@"Changeset: %@", changeset);
 
     dispatch_once(&syncContactsOnceToken, ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -77,6 +77,7 @@ static dispatch_once_t syncContactsOnceToken;
             }
         }
 
+        MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
         [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset completionBlock:nil];
         [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree];
 

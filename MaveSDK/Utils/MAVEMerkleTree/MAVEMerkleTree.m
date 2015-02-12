@@ -81,7 +81,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 #endif
         return nil;
     }
-    return @{@"height": height, @"data": treeDict};
+    return @{@"height": height, @"full_tree": treeDict, @"number_of_records": @0};
 }
 
 

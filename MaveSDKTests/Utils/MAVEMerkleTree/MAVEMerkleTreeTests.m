@@ -136,8 +136,11 @@
     tree.root = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:fooHash];
 
     NSDictionary *value = [tree serializable];
-    NSDictionary *expected = @{@"height": @1, @"data":
-                                   @{@"k": [MAVEMerkleTreeHashUtils hexStringFromData:fooHash]}};
+    NSDictionary *expected = @{@"height": @1,
+                               @"full_tree":
+                                   @{@"k": [MAVEMerkleTreeHashUtils hexStringFromData:fooHash]},
+                               @"number_of_records": @0,
+                               };
     XCTAssertEqualObjects(value, expected);
 }
 

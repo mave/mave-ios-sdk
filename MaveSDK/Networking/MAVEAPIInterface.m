@@ -154,16 +154,11 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree {
     NSString *route = @"/me/contacts/merkle_tree/full";
-    NSDictionary *treeDict = [merkleTree serializable];
-    if (!treeDict) {
+    NSDictionary *params = [merkleTree serializable];
+    if (!params) {
         MAVEErrorLog(@"Error serializing merkle tree, not sending contacts to server");
         return;
     }
-    NSDictionary *params = @{
-        @"full_tree": treeDict,
-        @"height": @(merkleTree.height),
-        @"number_of_records": @0,
-    };
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"PUT"
                                       params:params
