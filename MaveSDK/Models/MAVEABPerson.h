@@ -10,11 +10,6 @@
 #import <AddressBook/AddressBook.h>
 #import "MAVEMerkleTree.h"
 
-// This constant is the number of bytes of the md5 hash of record id to save and use as the
-// hashed record id. Determines how much space is used for each hashed record id and also
-// determines the top of the range used when splitting a collection of address book records
-// into buckets.
-extern NSUInteger const MAVEABPersonHashedRecordIDNumBytes;
 
 @interface MAVEABPerson : NSObject<MAVEMerkleTreeDataItem>
 

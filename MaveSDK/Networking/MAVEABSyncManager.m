@@ -42,11 +42,9 @@ static dispatch_once_t syncContactsOnceToken;
 }
 
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts {
-    NSUInteger dataKeyRangeTop = (NSUInteger)exp2(8 * MAVEABPersonHashedRecordIDNumBytes);
-    NSRange dataKeyRange = NSMakeRange(0, dataKeyRangeTop);
     MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
                                                              arrayData:contacts
-                                                          dataKeyRange:dataKeyRange
+                                                          dataKeyRange:NSMakeRange(0, NSUIntegerMax)
                                                      hashValueNumBytes:4];
     return merkleTree;
 }

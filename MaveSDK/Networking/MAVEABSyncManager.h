@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "MAVEMerkleTree.h"
 
-extern NSUInteger const MAVEABSyncMerkleTreeHeight;
-
 typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
     MAVEContactSyncTypeNone,
     MAVEContactSyncTypeInitial,

@@ -9,8 +9,6 @@
 #import "MAVEABPerson.h"
 #import "MAVEMerkleTreeHashUtils.h"
 
-const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
-
 @implementation MAVEABPerson
 
 - (instancetype) init {

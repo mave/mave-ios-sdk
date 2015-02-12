@@ -470,14 +470,14 @@
 
 - (void)testCompareHashedRecordIDs {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.hashedRecordID = @"000000000000";
+    p1.hashedRecordID = 0;
     MAVEABPerson *p2 =  [[MAVEABPerson alloc] init];
-    p2.hashedRecordID = @"ffffffffffff";
+    p2.hashedRecordID = NSUIntegerMax;
     XCTAssertEqual([p1 compareHashedRecordIDs:p2], NSOrderedAscending);
     XCTAssertEqual([p2 compareHashedRecordIDs:p1], NSOrderedDescending);
 
     MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
-    p3.hashedRecordID = @"ffffffffffff";
+    p3.hashedRecordID = NSUIntegerMax;
     XCTAssertEqual([p2 compareHashedRecordIDs:p3], NSOrderedSame);
     XCTAssertEqual([p3 compareHashedRecordIDs:p2], NSOrderedSame);
 
