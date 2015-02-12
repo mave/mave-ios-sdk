@@ -43,6 +43,10 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     return self;
 }
 
+- (NSUInteger) height {
+    return [self.root treeHeight];
+}
+
 + (instancetype)emptyTreeWithHashValueNumBytes:(NSInteger)hashValueNumBytes {
     return [[self alloc] initWithHeight:1 arrayData:@[] dataKeyRange:NSMakeRange(0, 0) hashValueNumBytes:hashValueNumBytes];
 }

@@ -41,6 +41,7 @@
                                                         arrayData:data
                                                      dataKeyRange:range
                                                 hashValueNumBytes:hashValueNumBytes];
+    XCTAssertEqual(tree.height, 3);
 
     MAVEMerkleTreeInnerNode *node = tree.root;
     XCTAssertNotNil(node);

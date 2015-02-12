@@ -237,28 +237,42 @@
 }
 
 - (void)testSendContactsMerkleTree {
-    id mockedStack = OCMPartialMock(self.testAPIInterface.httpStack);
-    __block NSURLRequest *request;
-    OCMExpect([mockedStack sendPreparedRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
-        request = obj;
-        return YES;
-    }] completionBlock:nil]);
+    id mocked = OCMPartialMock(self.testAPIInterface);
+    id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
+    NSDictionary *fakeJSON = @{@"foobarjson": @1};
+    NSUInteger fakeHeight = 25;
+    OCMStub([merkleTreeMock serializable]).andReturn(fakeJSON);
+    OCMStub([merkleTreeMock height]).andReturn(fakeHeight);
+    NSDictionary *expectedParams = @{@"full_tree": fakeJSON,
+                                     @"height": @(fakeHeight),
+                                     @"number_of_records": @0,
+                                     };
+    OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/full"
+                                              methodName:@"PUT"
+                                                  params:expectedParams
+                                        gzipCompressBody:YES
+                                         completionBlock:nil]);
+    [self.testAPIInterface sendContactsMerkleTree:merkleTreeMock];
 
-    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithJSONObject:@{@"k": @"ff"}];
-    NSArray *changeset = @[@"foo"];
-
-    [self.testAPIInterface sendContactsMerkleTree:tree changeset:changeset];
-
-    NSData *unzipped = [MAVECompressionUtils gzipUncompressData:request.HTTPBody];
-    NSDictionary *jsonSent = [NSJSONSerialization JSONObjectWithData:unzipped options:0 error:nil];
-    NSDictionary *expectedJSON = @{@"merkle_tree": @{@"data": @{@"k": @"ff"}, @"height": @1},
-                                   @"changeset": @[@"foo"]};
-    XCTAssertEqualObjects(jsonSent, expectedJSON);
-
-    XCTAssertEqualObjects(request.HTTPMethod, @"PUT");
-    NSString *expectedRoute = [self.testAPIInterface.httpStack.baseURL stringByAppendingString:@"/address_book/changeset_with_new_merkle_tree"];
-    XCTAssertEqualObjects([request.URL absoluteString], expectedRoute);
+    OCMVerifyAll(mocked);
+    OCMVerifyAll(merkleTreeMock);
 }
+
+- (void)testSendContactsChangeset {
+    id mocked = OCMPartialMock(self.testAPIInterface);
+    NSArray *fakeJSON = @[@"some changset"];
+    MAVEHTTPCompletionBlock fakeBlock = ^(NSError *error, NSDictionary *data){};
+    OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
+                                              methodName:@"POST"
+                                                  params:fakeJSON
+                                        gzipCompressBody:YES
+                                         completionBlock:fakeBlock]);
+    [self.testAPIInterface sendContactsChangeset:fakeJSON completionBlock:fakeBlock];
+
+    OCMVerifyAll(mocked);
+}
+
+
 
 - (void)testGetReferringUser {
     id mocked = OCMPartialMock(self.testAPIInterface);

@@ -75,7 +75,8 @@
     OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
         .andReturn(MAVEContactSyncTypeNone);
     [[mock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
-    [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any] changeset:[OCMArg any]];
+    [[apiInterfaceMock reject] sendContactsChangeset:[OCMArg any] completionBlock:[OCMArg any]];
+    [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any]];
 
     [syncer doSyncContacts:merkleTreeMock];
 
@@ -101,7 +102,8 @@
     NSArray *fakeChangeset = @[@"foo", @"bar"];
     OCMExpect([merkleTreeMock changesetForEmptyTreeToMatchSelf]).andReturn(fakeChangeset);
     // And then send resulting changeset to the server
-    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock changeset:fakeChangeset]);
+    OCMExpect([apiInterfaceMock sendContactsChangeset:fakeChangeset completionBlock:nil]);
+    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock]);
 
     [syncer doSyncContacts:merkleTreeMock];
 
@@ -121,7 +123,8 @@
 
     NSArray *fakeChangeset = @[@"foo"];
     OCMExpect([mock changesetComparingFullRemoteTreeToTree:merkleTreeMock]).andReturn(fakeChangeset);
-    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock changeset:fakeChangeset]);
+    OCMExpect([apiInterfaceMock sendContactsChangeset:fakeChangeset completionBlock:nil]);
+    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock]);
 
     [syncer doSyncContacts:merkleTreeMock];
 

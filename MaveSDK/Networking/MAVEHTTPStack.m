@@ -32,7 +32,7 @@
 ///
 - (NSMutableURLRequest *)prepareJSONRequestWithRoute:(NSString *)relativeURL
                                           methodName:(NSString *)methodName
-                                              params:(NSDictionary *)params
+                                              params:(id)params
                                      contentEncoding:(MAVEHTTPRequestContentEncoding)contentEncoding
                                     preparationError:(NSError **)preparationError {
     NSData *bodyData;

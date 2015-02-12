@@ -77,8 +77,9 @@ static dispatch_once_t syncContactsOnceToken;
             }
         }
 
-        [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree
-                                                            changeset:changeset];
+        [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset completionBlock:nil];
+        [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree];
+
     } @catch (NSException *exception) {
         MAVEErrorLog(@"Caught exception %@ doing contacts sync", exception);
     }

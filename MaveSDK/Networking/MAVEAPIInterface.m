@@ -152,32 +152,6 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              completionBlock:nil];
 }
 
-- (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree changeset:(NSArray *)changeset {
-    NSString *route = @"/address_book/changeset_with_new_merkle_tree";
-    NSDictionary *tree = [merkleTree serializable];
-    if (!tree) {
-        MAVEErrorLog(@"Error serializing merkle tree, not sending contacts to server");
-        return;
-    }
-    NSDictionary *params = @{@"merkle_tree": tree, @"changeset": changeset};
-    NSError *serErr;
-    NSData *dataParams = [NSJSONSerialization dataWithJSONObject:params options:0 error:&serErr];
-    if (serErr) {
-        MAVEErrorLog(@"Error serializing merkle tree and changeset request, not sending contacts to server");
-    }
-    NSData *data = [MAVECompressionUtils gzipCompressData:dataParams];
-
-    NSURL *url = [NSURL URLWithString: [self.httpStack.baseURL stringByAppendingString:route]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:url];
-    [request setHTTPMethod:@"PUT"];
-    [request setHTTPBody:data];
-    [request setValue:@"application/gzip" forHTTPHeaderField:@"Content-Type"];
-    [self addCustomUserHeadersToRequest:request];
-
-    [self.httpStack sendPreparedRequest:request completionBlock:nil];
-}
-
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree {
     NSString *route = @"/me/contacts/merkle_tree/full";
     NSDictionary *treeDict = [merkleTree serializable];
@@ -187,15 +161,22 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     NSDictionary *params = @{
         @"full_tree": treeDict,
-        @"height": @([merkleTree.root treeHeight]),
+        @"height": @(merkleTree.height),
         @"number_of_records": @0,
     };
-    NSError *serErr;
-    NSData *dataParams = [NSJSONSerialization dataWithJSONObject:params options:0 error:&serErr];
-    if (serErr) {
-        MAVEErrorLog(@"Error serializing merkle tree and changeset request, not sending contacts to server");
-        return;
-    }
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"PUT"
+                                      params:params
+                            gzipCompressBody:YES
+                             completionBlock:nil];
+}
+
+- (void)sendContactsChangeset:(NSArray *)changeset completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+    NSString *route = @"/me/contacts/sync_changesets";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"POST" params:changeset
+                            gzipCompressBody:YES
+                             completionBlock:completionBlock];
 }
 
 
@@ -280,7 +261,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodName:(NSString *)methodName
-                                    params:(NSDictionary *)params
+                                    params:(id)params
                           gzipCompressBody:(BOOL)gzipCompressBody
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     MAVEHTTPRequestContentEncoding contentEncoding = gzipCompressBody ? MAVEHTTPRequestContentEncodingGzip : MAVEHTTPRequestContentEncodingDefault;

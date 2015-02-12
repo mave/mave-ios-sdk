@@ -68,8 +68,6 @@ extern NSString * const MAVEAPIParamShareAudience;
                         userId:(NSString *)userId
       inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
-- (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree
-                     changeset:(NSArray *)changeset;
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
 - (void)sendContactsChangeset:(NSArray *)changeset
               completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
@@ -92,7 +90,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 // Main request method we use against our API
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodName:(NSString *)methodName
-                                    params:(NSDictionary *)params
+                                    params:(id)params
                           gzipCompressBody:(BOOL)gzipCompressBody
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 

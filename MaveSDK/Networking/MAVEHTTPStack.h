@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, MAVEHTTPRequestContentEncoding) {
 
 - (NSMutableURLRequest *)prepareJSONRequestWithRoute:(NSString *)relativeURL
                                           methodName:(NSString *)methodName
-                                              params:(NSDictionary *)params
+                                              params:(id)params
                                      contentEncoding:(MAVEHTTPRequestContentEncoding)contentEncoding
                                     preparationError:(NSError **)preparationError;
 - (void)sendPreparedRequest:(NSURLRequest *)request

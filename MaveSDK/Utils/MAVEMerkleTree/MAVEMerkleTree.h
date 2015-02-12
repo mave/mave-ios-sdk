@@ -35,6 +35,9 @@ typedef NSUInteger MAVEMerkleTreePath;
 
 - (instancetype)initWithJSONObject:(NSDictionary *)jsonObject;
 
+// Helper to get height of tree
+- (NSUInteger)height;
+
 // Method to determine how to update the given other merkle tree to match self
 //
 // This object needs valid data to build the changeset, but the other tree
