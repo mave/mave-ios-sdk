@@ -88,16 +88,4 @@
     return [hashedData subdataWithRange:NSMakeRange(0, numBytes)];
 }
 
-+ (NSArray *)hexEncodedIntervalFromRange:(NSRange)range usingNumBytes:(NSUInteger)numBytes {
-    NSUInteger low = range.location;
-    NSUInteger high = range.location + range.length - 1;
-    NSData *lowData = [[self dataFromUInt64:low]
-                       subdataWithRange:NSMakeRange(sizeof(NSUInteger) - numBytes, numBytes)];
-    NSData *highData = [[self dataFromUInt64:high]
-                        subdataWithRange:NSMakeRange(sizeof(NSUInteger) - numBytes, numBytes)];
-    NSString *lowHex = [self hexStringFromData:lowData];
-    NSString *highHex = [self hexStringFromData:highData];
-    return @[lowHex, highHex];
-}
-
 @end

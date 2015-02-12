@@ -56,7 +56,7 @@ const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
 - (NSDictionary *)toJSONDictionary {
     return @{
         @"record_id": [[NSNumber alloc]initWithInteger:self.recordID],
-        @"hashed_record_id": self.hashedRecordID,
+        @"hashed_record_id": @(self.hashedRecordID),
         @"first_name": self.firstName ? self.firstName : [NSNull null],
         @"last_name": self.lastName ? self.lastName : [NSNull null],
         @"phone_numbers": [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[],
@@ -68,7 +68,7 @@ const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
 - (NSArray *)toJSONTupleArray {
     return @[
         @[@"record_id", [[NSNumber alloc]initWithInteger:self.recordID]],
-        @[@"hashed_record_id", self.hashedRecordID],
+        @[@"hashed_record_id", @(self.hashedRecordID)],
         @[@"first_name", self.firstName ? self.firstName : [NSNull null]],
         @[@"last_name", self.lastName ? self.lastName : [NSNull null]],
         @[@"phone_numbers", [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[]],
@@ -78,7 +78,7 @@ const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
 }
 
 - (NSUInteger)merkleTreeDataKey {
-    return [MAVEMerkleTreeHashUtils UInt64FromData:[MAVEMerkleTreeHashUtils dataFromHexString:self.hashedRecordID]];
+    return self.hashedRecordID;
 }
 
 - (id)merkleTreeSerializableData {
@@ -124,11 +124,11 @@ const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
     return (NSArray *)emailAddresses;
 }
 
-+ (NSString *)computeHashedRecordID:(uint32_t)recordID {
++ (NSUInteger)computeHashedRecordID:(uint32_t)recordID {
     NSData *recIDData = [MAVEMerkleTreeHashUtils dataFromInt32:recordID];
     NSData *hashedTruncatedData = [MAVEMerkleTreeHashUtils md5Hash:recIDData
-                                                  truncatedToBytes:MAVEABPersonHashedRecordIDNumBytes];
-    return [MAVEMerkleTreeHashUtils hexStringFromData:hashedTruncatedData];
+                                                  truncatedToBytes:sizeof(NSUInteger)];
+    return [MAVEMerkleTreeHashUtils UInt64FromData:hashedTruncatedData];
 }
 
 - (NSString *)firstLetter {
@@ -225,7 +225,7 @@ const NSUInteger MAVEABPersonHashedRecordIDNumBytes = 6;
 }
 
 - (NSComparisonResult)compareHashedRecordIDs:(MAVEABPerson *)otherPerson {
-    return [self.hashedRecordID compare:otherPerson.hashedRecordID];
+    return [@(self.hashedRecordID) compare:@(otherPerson.hashedRecordID)];
 }
 
 @end

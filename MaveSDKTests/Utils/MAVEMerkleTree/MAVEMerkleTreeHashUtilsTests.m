@@ -148,22 +148,4 @@
     XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:md52], @"acbd");
 }
 
-- (void)testHexEncodedIntervalFromRange {
-    NSRange range1 = NSMakeRange(10, 1);
-    NSRange range2 = NSMakeRange(10, 2);
-    NSRange range3 = NSMakeRange(0, exp2(4*8));
-    NSRange range4 = NSMakeRange(0, exp2(4*8)+1); // range 4 wraps around and looks like 0 if only using 4 bytes
-    NSArray *expectedRange1 = @[@"0000000a", @"0000000a"];
-    NSArray *expectedRange2 = @[@"0000000a", @"0000000b"];
-    NSArray *expectedRange3 = @[@"00000000", @"ffffffff"];
-    NSArray *expectedRange4 = @[@"00000000", @"00000000"];
-    NSArray *expectedRange4Bytes5 = @[@"0000000000", @"0100000000"];
-    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexEncodedIntervalFromRange:range1 usingNumBytes:4], expectedRange1);
-    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexEncodedIntervalFromRange:range2 usingNumBytes:4], expectedRange2);
-    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexEncodedIntervalFromRange:range3 usingNumBytes:4], expectedRange3);
-    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexEncodedIntervalFromRange:range4 usingNumBytes:4], expectedRange4);
-    XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexEncodedIntervalFromRange:range4 usingNumBytes:5],
-                          expectedRange4Bytes5);
-}
-
 @end

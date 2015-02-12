@@ -23,9 +23,12 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 //   of syncing the contacts to the server
 - (void)syncContactsInBackground:(NSArray *)contacts;
 - (void)doSyncContacts:(MAVEMerkleTree *)localContactsMerkleTree;
+
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts;
 - (MAVEContactSyncType)decideNeededSyncTypeCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree;
+
 - (NSArray *)changesetComparingFullRemoteTreeToTree:(MAVEMerkleTree *)merkleTree;
+
 
 // OLD METHOD - now we should send the merkle tree & changesets, even if user
 // has never synced address book before

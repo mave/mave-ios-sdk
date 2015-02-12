@@ -22,7 +22,7 @@ extern NSUInteger const MAVEABPersonHashedRecordIDNumBytes;
 // and is an NSObject with helper methods to access fields we want.
 
 @property (nonatomic, assign) NSInteger recordID;
-@property (nonatomic, strong) NSString *hashedRecordID;
+@property (nonatomic, assign) NSUInteger hashedRecordID;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSArray *phoneNumbers;   // Array of NSStrings
@@ -55,7 +55,7 @@ extern NSUInteger const MAVEABPersonHashedRecordIDNumBytes;
 
 // Helper to correctly format the hashed record ID for format we store, which is
 // first 6 bytes of md5 of big-endian representation of record id, encoded as a hex string.
-+ (NSString *)computeHashedRecordID:(uint32_t)recordID;
++ (NSUInteger)computeHashedRecordID:(uint32_t)recordID;
 
 // Returns the first letter, capitalized, of the name being used for sorting
 // (last name if it exists, otherwise first name)

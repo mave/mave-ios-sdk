@@ -50,7 +50,7 @@
     // record ID when not actually inserted in an address book is -1
     MAVEABPerson *p = [[MAVEABPerson alloc] initFromABRecordRef:pref];
     XCTAssertEqual(p.recordID, -1);
-    XCTAssertEqualObjects(p.hashedRecordID, @"a54f0041a9e1");
+    XCTAssertEqual(p.hashedRecordID, 11911739821441243909.0);
     XCTAssertEqualObjects(p.firstName, @"John");
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
@@ -67,11 +67,11 @@
 - (void)testSettingRecordIDSetsHashedRecordID {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     // should default to hash of 0
-    XCTAssertEqualObjects(p1.hashedRecordID, @"f1d3ff844329");
+    XCTAssertEqual(p1.hashedRecordID, 17425552326754137906.0);
 
     p1.recordID = 1;
     // now it should equal the hash of 1
-    XCTAssertEqualObjects(p1.hashedRecordID, @"f14503065176");
+    XCTAssertEqual(p1.hashedRecordID, 17385305262205052069.0);
 }
 
 - (void)testToJSONDictionary {
@@ -83,7 +83,11 @@
 
     NSDictionary *p1JSON = [p1 toJSONDictionary];
     XCTAssertEqualObjects([p1JSON objectForKey:@"record_id"], [NSNumber numberWithInteger:1]);
-    XCTAssertEqualObjects([p1JSON objectForKey:@"hashed_record_id"], @"f14503065176");
+    // weird gymnasics to avoid the "constant is larger than largest signed int" compiler warnings
+    // which occur even though I'm assigning to an unsigned 64-bit integer
+    NSUInteger expectedHashedRecordID = 1738530526220505206 * 10 + 9;
+    XCTAssertEqualObjects([p1JSON objectForKey:@"hashed_record_id"],
+                          @(expectedHashedRecordID));
     XCTAssertEqualObjects([p1JSON objectForKey:@"first_name"], @"2");
     XCTAssertEqualObjects([p1JSON objectForKey:@"last_name"], @"3");
     XCTAssertEqualObjects([p1JSON objectForKey:@"phone_numbers"], @[@"18085551234"]);
@@ -107,8 +111,8 @@
 
 - (void)testToJSONTupleArray {
     // With every value full
-    NSString *hashedZero = @"00aa"; // TODO fix
-    NSString *hashedOne = @"00aa";  // TODO fix
+    NSUInteger hashedOne = 1738530526220505206 * 10 + 9;
+    NSUInteger hashedZero = 1742555232675413790 * 10 + 6;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.recordID = 1; p1.hashedRecordID = hashedOne;
     p1.firstName = @"2"; p1.lastName = @"3";
@@ -119,7 +123,7 @@
     NSArray *expected;
     expected = @[@"record_id", [NSNumber numberWithInteger:1]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:0], expected);
-    expected = @[@"hashed_record_id", hashedOne];
+    expected = @[@"hashed_record_id", @(hashedOne)];
     XCTAssertEqualObjects([p1JSON objectAtIndex:1], expected);
     expected = @[@"first_name", @"2"];
     XCTAssertEqualObjects([p1JSON objectAtIndex:2], expected);
@@ -140,7 +144,7 @@
     NSArray *p2JSON = [p2 toJSONTupleArray];
     expected = @[@"record_id", [NSNumber numberWithInteger:0]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:0], expected);
-    expected = @[@"hashed_record_id", hashedZero];
+    expected = @[@"hashed_record_id", @(hashedZero)];
     XCTAssertEqualObjects([p2JSON objectAtIndex:1], expected);
     expected = @[@"first_name", [NSNull null]];
     XCTAssertEqualObjects([p2JSON objectAtIndex:2], expected);
@@ -381,19 +385,21 @@
 
 - (void)testMerkleTreeDataKey {
     MAVEABPerson *p = [[MAVEABPerson alloc] init];
-    p.hashedRecordID = @"000000000000";
+    p.hashedRecordID = 0;
     XCTAssertEqual([p merkleTreeDataKey], 0);
-    p.hashedRecordID = @"000000000001";
+    p.hashedRecordID = 1;
     XCTAssertEqual([p merkleTreeDataKey], 1);
-    p.hashedRecordID = @"ffffffffffff";
-    NSUInteger expected = (NSUInteger)(exp2(6*8) - 1);
-    XCTAssertEqual([p merkleTreeDataKey], expected);
+    p.hashedRecordID = NSUIntegerMax;
+    XCTAssertEqual([p merkleTreeDataKey], NSUIntegerMax);
 }
 
 - (void)testComputeHashedRecordID {
     // Try a random number
-    int32_t recordID = 123;
-    XCTAssertEqualObjects([MAVEABPerson computeHashedRecordID:recordID], @"a7e0b18d0d45");
+    XCTAssertEqual([MAVEABPerson computeHashedRecordID:123], 12096863818488289003.0);
+    // Try min and max values
+    XCTAssertEqual([MAVEABPerson computeHashedRecordID:0], 17425552326754137906.0);
+    uint32_t maxPositiveInt32 = (uint32_t)(exp2(31)-1);
+    XCTAssertEqual([MAVEABPerson computeHashedRecordID:maxPositiveInt32], 3983850407624765731.0);
 }
 
 //

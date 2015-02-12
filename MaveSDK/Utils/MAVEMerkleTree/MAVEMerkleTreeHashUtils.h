@@ -23,8 +23,4 @@
 + (NSData *)md5Hash:(NSData *)data;
 + (NSData *)md5Hash:(NSData *)data truncatedToBytes:(NSUInteger)numBytes;
 
-// Return the inclusive interval [low, high] from an nsrange object,
-// and convert the NSUIntegers to hex encoded data values
-+ (NSArray *)hexEncodedIntervalFromRange:(NSRange)range usingNumBytes:(NSUInteger)numBytes;
-
 @end
