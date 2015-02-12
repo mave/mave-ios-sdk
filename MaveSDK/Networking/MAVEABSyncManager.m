@@ -22,52 +22,62 @@ NSUInteger const MAVEABSyncMerkleTreeHeight = 11;
 // Use dispatch_once to make sure we only call syncContacts once per session. This
 // way we don't need any logic to decide where to call it, we can just hook into
 // wherever we access the contacts and call it there.
-static dispatch_once_t syncOnceToken;
+static dispatch_once_t syncContactsOnceToken;
 
 - (void)syncContactsInBackground:(NSArray *)contacts {
 
     // tmp, log the changeset of all contacts
-    NSUInteger merkleTreeRangeTop = (NSUInteger)exp2(8 * MAVEABPersonHashedRecordIDNumBytes);
-    NSRange merkleTreeRange = NSMakeRange(0, merkleTreeRangeTop);
-    MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
-                                                             arrayData:contacts
-                                                          dataKeyRange:merkleTreeRange
-                                                     hashValueNumBytes:4];
-
-    NSArray *changeset = [merkleTree changesetForEmptyTreeToMatchSelf];
+    MAVEMerkleTree *tmpMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
+    NSArray *changeset = [tmpMerkleTree changesetForEmptyTreeToMatchSelf];
     MAVEDebugLog(@"Changeset: %@", changeset);
 
-    dispatch_once(&syncOnceToken, ^{
+    dispatch_once(&syncContactsOnceToken, ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            [self doSyncContacts:contacts];
+            MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
+            MAVEMerkleTree *localMerkleTree =
+                [self buildLocalContactsMerkleTreeFromContacts:contacts];
+            [self doSyncContacts:localMerkleTree];
         });
     });
 }
 
+- (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts {
+    NSUInteger dataKeyRangeTop = (NSUInteger)exp2(8 * MAVEABPersonHashedRecordIDNumBytes);
+    NSRange dataKeyRange = NSMakeRange(0, dataKeyRangeTop);
+    MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
+                                                             arrayData:contacts
+                                                          dataKeyRange:dataKeyRange
+                                                     hashValueNumBytes:4];
+    return merkleTree;
+}
+
 // This method is blocking (uses semaphores to wait for responses because it may need
 // to do several steps in serial. Make sure to run in a background thread
-- (void)doSyncContacts:(NSArray *)contacts {
+- (void)doSyncContacts:(MAVEMerkleTree *)localContactsMerkleTree {
     @try {
-        MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
-        NSRange dataKeyRange = NSMakeRange(0, exp2(48));
-        MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
-                                                                 arrayData:contacts
-                                                              dataKeyRange:dataKeyRange hashValueNumBytes:4];
+        NSArray *changeset;
+        switch ([self decideNeededSyncTypeCompareRemoteTreeRootToTree:localContactsMerkleTree]) {
+            // Here the remote tree is in sync with current state so exit
+            case MAVEContactSyncTypeNone: {
+                return;
+            }
 
-        BOOL done = [self shouldSkipSyncCompareRemoteTreeRootToTree:merkleTree];
-        if (done) {
-            return;
+            // Here the remote tree is different than current tree so we need to send
+            // and update
+            case MAVEContactSyncTypeUpdate: {
+                changeset = [self changesetComparingFullRemoteTreeToTree:localContactsMerkleTree];
+
+                break;
+            }
+
+            // Here the remote tree did not exist yet, so it's an initial sync
+            case MAVEContactSyncTypeInitial: {
+                changeset = [localContactsMerkleTree changesetForEmptyTreeToMatchSelf];
+                break;
+            }
         }
 
-        NSArray *changeset = [self changesetComparingFullRemoteTreeToTree:merkleTree];
-        // If roots were different changeset should not be empty, but if something got
-        // out of sync or timed out we'll get here
-        if ([changeset count] == 0) {
-            MAVEErrorLog(@"Contact sync changeset unexpectedly zero");
-            return;
-        }
-
-        [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:merkleTree
+        [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree
                                                             changeset:changeset];
     } @catch (NSException *exception) {
         MAVEErrorLog(@"Caught exception %@ doing contacts sync", exception);
@@ -75,31 +85,41 @@ static dispatch_once_t syncOnceToken;
 }
 
 
-- (BOOL)shouldSkipSyncCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree {
+- (MAVEContactSyncType)decideNeededSyncTypeCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree {
     // Fetch the merkle tree root from the server
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    __block BOOL isInitialSync = NO;
     __block NSString *remoteHashString;
     [[MaveSDK sharedInstance].APIInterface getRemoteContactsMerkleTreeRootWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
-        
-        remoteHashString = [responseData objectForKey:@"data"];
-        if (remoteHashString == (id)[NSNull null]) {
-            remoteHashString = nil;
+        if (error && [error.domain isEqualToString:MAVE_HTTP_ERROR_DOMAIN] && error.code == 404) {
+            // 404 means this is the initial sync for this app device id
+            isInitialSync = YES;
+        } else {
+            remoteHashString = [responseData objectForKey:@"data"];
+            if (remoteHashString == (id)[NSNull null]) {
+                remoteHashString = nil;
+            }
         }
         dispatch_semaphore_signal(sema);
     }];
     dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 30*NSEC_PER_SEC));
+    if (isInitialSync) {
+        return MAVEContactSyncTypeInitial;
+    }
+
     // server response was invalid or timed out
     if ([remoteHashString length] == 0) {
         MAVEDebugLog(@"Skipping contacts sync because first request to server timed out");
-        return YES;
+        return MAVEContactSyncTypeNone;
     }
 
     NSString *localHashString = [MAVEMerkleTreeHashUtils hexStringFromData:[merkleTree.root hashValue]];
-    BOOL output = ([remoteHashString isEqualToString: localHashString]);
-    if (output) {
-        MAVEDebugLog(@"Skipping contacts sync because tree roots matched");
+    if ([remoteHashString isEqualToString: localHashString]) {
+        MAVEDebugLog(@"Skipping contacts sync because merkle tree roots matched");
+        return MAVEContactSyncTypeNone;
+    } else {
+        return MAVEContactSyncTypeUpdate;
     }
-    return output;
 }
 
 

@@ -10,10 +10,14 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MAVEABSyncManager.h"
-#import "MAVEABPErson.h"
+#import "MAVEABPerson.h"
+#import "MAVEConstants.h"
 #import "MAVECompressionUtils.h"
 #import "MaveSDK.h"
 #import "MAVEAPIInterface.h"
+#import "MAVEMerkleTree.h"
+#import "MAVEMerkleTreeInnerNode.h"
+#import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEMerkleTreeHashUtils.h"
 
 @interface MaveSDK(Testing)
@@ -37,50 +41,95 @@
     [super tearDown];
 }
 
+- (void)testBuildLocalContactsMerkleTree {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = 1; p1.firstName = @"2"; p1.lastName = @"3";
+    NSArray *contacts = @[p1];
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+
+    MAVEMerkleTree *tree = [syncer buildLocalContactsMerkleTreeFromContacts:contacts];
+
+    // Should build a tree with height 11, 4 bytes used in hash values, and data key range
+    // that matches the hashed record ID size of MAVEABPerson record id's
+    XCTAssertEqual([tree.root treeHeight], 11);
+    XCTAssertEqual([[tree.root hashValue] length], 4);
+    // Traverse to leftmost child and check that range is what we expect
+    MAVEMerkleTreeInnerNode *node = tree.root;
+    for (int i = 0; i < 9; ++i) {
+        node = node.leftChild;
+    }
+    MAVEMerkleTreeLeafNode *leaf = node.leftChild;
+    XCTAssertEqual(leaf.dataKeyRange.location, 0);
+    XCTAssertEqual(leaf.dataKeyRange.length, exp2(48 - (11-1)));
+
+    // Since there's 1 item in our tree, diffing against empty should give a changeset of length 1
+    NSArray *changeset = [tree changesetForEmptyTreeToMatchSelf];
+    XCTAssertEqual([changeset count], 1);
+}
+
 - (void)testDoSyncContactsShouldSkip {
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id mock = OCMPartialMock(syncer);
+    id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([mock shouldSkipSyncCompareRemoteTreeRootToTree:[OCMArg any]]).andReturn(YES);
+    OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
+        .andReturn(MAVEContactSyncTypeNone);
     [[mock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
     [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any] changeset:[OCMArg any]];
 
-    [syncer doSyncContacts:@[]];
+    [syncer doSyncContacts:merkleTreeMock];
 
     OCMVerifyAll(mock);
     OCMVerifyAll(apiInterfaceMock);
 }
 
-- (void)testDoSyncContactsSkipBecauseChangesetEmpty {
+- (void)testDoSyncContactsInitialSync {
+    // If server indicates that it's the initial sync, don't even fetch the full merkle tree
+    // to compare it, just diff against an empty tree to return everything
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id mock = OCMPartialMock(syncer);
+    id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([mock shouldSkipSyncCompareRemoteTreeRootToTree:[OCMArg any]]).andReturn(NO);
-    NSArray *fakeChangeset = @[];
-    OCMExpect([mock changesetComparingFullRemoteTreeToTree:[OCMArg any]]).andReturn(fakeChangeset);
-    [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any] changeset:fakeChangeset];
 
-    [syncer doSyncContacts:@[]];
+    // Mock to force the initial sync state
+    OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
+        .andReturn(MAVEContactSyncTypeInitial);
+
+    // Make sure we don't compare to the full remote tree, instead we should compare to an empty
+    // tree since we know it's the first sync
+    [[mock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
+    NSArray *fakeChangeset = @[@"foo", @"bar"];
+    OCMExpect([merkleTreeMock changesetForEmptyTreeToMatchSelf]).andReturn(fakeChangeset);
+    // And then send resulting changeset to the server
+    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock changeset:fakeChangeset]);
+
+    [syncer doSyncContacts:merkleTreeMock];
 
     OCMVerifyAll(mock);
+    OCMVerifyAll(merkleTreeMock);
+    OCMVerifyAll(apiInterfaceMock);
 }
 
-- (void)testDoSyncContactsNoSkip {
+// When an update needs to be done, compare full tree to get the diff and then send the difference
+- (void)testDoSyncContactsCompareFullTreeWithRemote {
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id mock = OCMPartialMock(syncer);
+    id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([mock shouldSkipSyncCompareRemoteTreeRootToTree:[OCMArg any]]).andReturn(NO);
+
+    OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock]).andReturn(MAVEContactSyncTypeUpdate);
+
     NSArray *fakeChangeset = @[@"foo"];
-    OCMExpect([mock changesetComparingFullRemoteTreeToTree:[OCMArg any]]).andReturn(fakeChangeset);
-    OCMExpect([apiInterfaceMock sendContactsMerkleTree:[OCMArg any] changeset:fakeChangeset]);
+    OCMExpect([mock changesetComparingFullRemoteTreeToTree:merkleTreeMock]).andReturn(fakeChangeset);
+    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock changeset:fakeChangeset]);
 
-    [syncer doSyncContacts:@[]];
+    [syncer doSyncContacts:merkleTreeMock];
 
     OCMVerifyAll(mock);
     OCMVerifyAll(apiInterfaceMock);
 }
 
-- (void)testShouldSkipSyncCompareRoots {
+- (void)testDecideNeededSyncWhenRemoteMerkleTreeExists {
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     NSDictionary *responseDict = @{@"data": @"000001"};
@@ -92,8 +141,8 @@
 
     // When data is the same we're done
     MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] initWithJSONObject:@{@"k": @"000001"}];
-    BOOL done = [syncer shouldSkipSyncCompareRemoteTreeRootToTree:tree1];
-    XCTAssertTrue(done);
+    MAVEContactSyncType syncType1 = [syncer decideNeededSyncTypeCompareRemoteTreeRootToTree:tree1];
+    XCTAssertEqual(syncType1, MAVEContactSyncTypeNone);
     [apiInterfaceMock stopMocking];
 
     // When data is different we're not done
@@ -104,9 +153,45 @@
         return YES;
     }]]);
     MAVEMerkleTree *tree2 = [[MAVEMerkleTree alloc] initWithJSONObject:@{@"k": @"aaaaffff"}];
-    BOOL done2 = [syncer shouldSkipSyncCompareRemoteTreeRootToTree:tree2];
-    XCTAssertFalse(done2);
+    MAVEContactSyncType syncType2 = [syncer decideNeededSyncTypeCompareRemoteTreeRootToTree:tree2];
+    XCTAssertEqual(syncType2, MAVEContactSyncTypeUpdate);
     OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testDecideNeededSyncWhenRemoteMerkleTreeNotExists {
+    // returns 404 when it doesn't exist
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock getRemoteContactsMerkleTreeRootWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        NSError *returnError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN code:404 userInfo:@{}];
+        completionBlock(returnError, nil);
+        return YES;
+    }]]);
+
+    // This is treated as being in initial sync state
+    MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] initWithJSONObject:@{@"k": @"000001"}];
+    MAVEContactSyncType syncType1 = [syncer decideNeededSyncTypeCompareRemoteTreeRootToTree:tree1];
+    XCTAssertEqual(syncType1, MAVEContactSyncTypeInitial);
+    [apiInterfaceMock stopMocking];
+}
+
+- (void)testDecideNeededSyncWhenRemoteMerkleTreeRequestError {
+    // return a non-404 error meaning the request failed somehow
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock getRemoteContactsMerkleTreeRootWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        NSError *returnError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN code:503 userInfo:@{}];
+        completionBlock(returnError, nil);
+        return YES;
+    }]]);
+
+    // Should not sync in this case, something's wrong on the server
+    MAVEMerkleTree *tree1 = [[MAVEMerkleTree alloc] initWithJSONObject:@{@"k": @"000001"}];
+    MAVEContactSyncType syncType1 = [syncer decideNeededSyncTypeCompareRemoteTreeRootToTree:tree1];
+    XCTAssertEqual(syncType1, MAVEContactSyncTypeNone);
+    [apiInterfaceMock stopMocking];
 }
 
 - (void)testChangesetComparingFullTrees {

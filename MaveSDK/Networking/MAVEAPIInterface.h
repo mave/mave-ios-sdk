@@ -70,6 +70,9 @@ extern NSString * const MAVEAPIParamShareAudience;
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree
                      changeset:(NSArray *)changeset;
+- (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
+- (void)sendContactsChangeset:(NSArray *)changeset
+              completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 ///
 /// GET requests
@@ -90,6 +93,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodName:(NSString *)methodName
                                     params:(NSDictionary *)params
+                          gzipCompressBody:(BOOL)gzipCompressBody
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 // Send a POST request to the given event url to track the event, ignoring response.

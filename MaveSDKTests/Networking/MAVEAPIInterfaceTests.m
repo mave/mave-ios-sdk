@@ -171,6 +171,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/users"
                                             methodName:@"PUT"
                                                 params:expectedParams
+                                      gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface identifyUser];
     OCMVerifyAll(mock);
@@ -185,6 +186,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/users"
                                              methodName:@"PUT"
                                                  params:expectedParams
+                                        gzipCompressBody:NO
                                         completionBlock:nil]);
     [self.testAPIInterface identifyUser];
     OCMVerifyAll(mocked);
@@ -204,6 +206,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodName:@"POST"
                                                  params:expectedParams
+                                        gzipCompressBody:NO
                                         completionBlock:nil]);
     [self.testAPIInterface sendInvitesWithPersons:recipients
                                            message:smsCopy
@@ -223,6 +226,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodName:@"POST"
                                                  params:expectedParams
+                                        gzipCompressBody:NO
                                         completionBlock:nil]);
     [self.testAPIInterface sendInvitesWithPersons:@[]
                                            message:@""
@@ -262,6 +266,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_user"
                                               methodName:@"GET"
                                                   params:nil
+                                        gzipCompressBody:NO
                                          completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         // Call the completion block with data, and then later check that the userData
         // object got populated correctly from it
@@ -283,6 +288,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_user"
                                               methodName:@"GET"
                                                   params:nil
+                                        gzipCompressBody:NO
                                          completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         NSDictionary *fakeResponseData = nil;
         ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
@@ -304,6 +310,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/remote_configuration/ios"
                                             methodName:@"GET"
                                                 params:nil
+                                      gzipCompressBody:NO
                                        completionBlock:myBlock];
     [self.testAPIInterface getRemoteConfigurationWithCompletionBlock:myBlock]);
     OCMVerifyAll(mock);
@@ -316,6 +323,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/remote_configuration/universal/share_token"
                                             methodName:@"GET"
                                                 params:nil
+                                      gzipCompressBody:NO
                                        completionBlock:myBlock];
     [self.testAPIInterface getNewShareTokenWithCompletionBlock:myBlock]);
     OCMVerifyAll(mock);
@@ -328,6 +336,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/root"
                                             methodName:@"GET"
                                                 params:nil
+                                      gzipCompressBody:NO
                                        completionBlock:myBlock]);
     [self.testAPIInterface getRemoteContactsMerkleTreeRootWithCompletionBlock:myBlock];
     OCMVerifyAll(mock);
@@ -340,6 +349,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/full"
                                             methodName:@"GET"
                                                 params:nil
+                                      gzipCompressBody:NO
                                        completionBlock:myBlock];
     [self.testAPIInterface getRemoteContactsFullMerkleTreeWithCompletionBlock:myBlock]);
     OCMVerifyAll(mock);
@@ -383,11 +393,13 @@
     NSString *route = @"/blah/boo";
     NSString *methodName = @"DANNY";
     NSDictionary *params = @{@"foo": @3};
+    BOOL useGzip = NO; // no gzip for this one
     MAVEHTTPCompletionBlock completionBlock = ^void(NSError *error, NSDictionary *responseData) {};
     
     OCMExpect([httpStackMock prepareJSONRequestWithRoute:route
                                               methodName:methodName
                                                   params:params
+                                         contentEncoding:MAVEHTTPRequestContentEncodingDefault
                                         preparationError:[OCMArg setTo:nil]]);
     OCMExpect([httpStackMock sendPreparedRequest:[OCMArg any] completionBlock:completionBlock]);
     OCMExpect([httpInterfaceMock addCustomUserHeadersToRequest:[OCMArg any]]);
@@ -395,6 +407,7 @@
     [self.testAPIInterface sendIdentifiedJSONRequestWithRoute:route
                                                     methodName:methodName
                                                         params:params
+                                             gzipCompressBody:useGzip
                                                completionBlock:completionBlock];
     OCMVerifyAll(httpStackMock);
     OCMVerifyAll(httpInterfaceMock);
@@ -406,11 +419,13 @@
     NSString *route = @"/blah/boo";
     NSString *methodName = @"DANNY";
     NSDictionary *params = @{@"foo": @3};
+    BOOL useGzip = YES; // use gzip for this one so we're testing both cases
     NSError *expectedError = [[NSError alloc] init];
     
     OCMExpect([httpStackMock prepareJSONRequestWithRoute:route
                                               methodName:methodName
                                                   params:params
+                                         contentEncoding:MAVEHTTPRequestContentEncodingGzip
                                         preparationError:[OCMArg setTo:expectedError]]);
 
     // If error arrises, our block should be called with the error
@@ -420,6 +435,7 @@
     [self.testAPIInterface sendIdentifiedJSONRequestWithRoute:route
                                                     methodName:methodName
                                                         params:params
+                                             gzipCompressBody:useGzip
                                                completionBlock:^void(NSError *error, NSDictionary *responseData) {
                                                    called = YES;
                                                    returnedError = error;
@@ -442,6 +458,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:expectedParams
+                                      gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
     OCMVerifyAll(mock);
@@ -453,6 +470,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:additionalParams
+                                      gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
     OCMVerifyAll(mock);
@@ -463,6 +481,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:@{}
+                                      gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil];
     OCMVerifyAll(mock);
