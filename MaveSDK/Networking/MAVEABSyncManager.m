@@ -95,7 +95,7 @@ static dispatch_once_t syncContactsOnceToken;
             // 404 means this is the initial sync for this app device id
             isInitialSync = YES;
         } else {
-            remoteHashString = [responseData objectForKey:@"data"];
+            remoteHashString = [responseData objectForKey:@"value"];
             if (remoteHashString == (id)[NSNull null]) {
                 remoteHashString = nil;
             }
@@ -109,7 +109,7 @@ static dispatch_once_t syncContactsOnceToken;
 
     // server response was invalid or timed out
     if ([remoteHashString length] == 0) {
-        MAVEDebugLog(@"Skipping contacts sync because first request to server timed out");
+        MAVEDebugLog(@"Skipping contacts sync because first request to server failed");
         return MAVEContactSyncTypeNone;
     }
 
@@ -128,12 +128,12 @@ static dispatch_once_t syncContactsOnceToken;
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     NSInteger semaWaitCode;
     __block BOOL ok = YES;
-    __block NSDictionary *returnedData;
+    __block NSDictionary *remoteTreeDict;
     [[MaveSDK sharedInstance].APIInterface getRemoteContactsFullMerkleTreeWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error) {
             ok = NO;
         }
-        returnedData = responseData;
+        remoteTreeDict = responseData;
         dispatch_semaphore_signal(sema);
     }];
     semaWaitCode = dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 30*NSEC_PER_SEC));
@@ -145,7 +145,6 @@ static dispatch_once_t syncContactsOnceToken;
     }
 
     // Build remote tree object & compare to our own tree
-    NSDictionary *remoteTreeDict = [returnedData objectForKey:@"data"];
     MAVEMerkleTree *remoteTree = [[MAVEMerkleTree alloc] initWithJSONObject:remoteTreeDict];
     NSArray *changeset = [merkleTree changesetForOtherTreeToMatchSelf:remoteTree];
     if ([changeset count] == 0) {

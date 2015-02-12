@@ -136,7 +136,7 @@
 - (void)testDecideNeededSyncWhenRemoteMerkleTreeExists {
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    NSDictionary *responseDict = @{@"data": @"000001"};
+    NSDictionary *responseDict = @{@"value": @"000001"};
     OCMExpect([apiInterfaceMock getRemoteContactsMerkleTreeRootWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
         completionBlock(nil, responseDict);
@@ -201,7 +201,7 @@
 - (void)testChangesetComparingFullTrees {
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    NSDictionary *responseDict = @{@"data": @{@"k": @"000001"}};
+    NSDictionary *responseDict = @{@"k": @"000001"};
     OCMExpect([apiInterfaceMock getRemoteContactsFullMerkleTreeWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
         completionBlock(nil, responseDict);
