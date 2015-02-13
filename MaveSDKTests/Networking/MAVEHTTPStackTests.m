@@ -181,6 +181,11 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
 }
 
 - (void)testSendPreparedRequest {
+    // Don't run this test on iOS7. The NSURLSession object can't be mocked on ios7, but
+    // it can be mocked on ios 8+
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0) {
+        return;
+    }
     NSURLRequest *req = [[NSURLRequest alloc] init];
     NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] init];
     NSError *responseError = [[NSError alloc] init];
