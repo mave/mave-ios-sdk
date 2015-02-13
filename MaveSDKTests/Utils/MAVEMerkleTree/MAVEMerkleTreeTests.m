@@ -432,7 +432,7 @@
 
     MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:11 withKeyRange:range   dataEnumerator:enumer hashValueNumBytes:16];
     XCTAssertEqual(root.treeHeight, 11);
-    NSUInteger expectedRangeSize = pow(2, 64 - (11-1));
+    uint64_t expectedRangeSize = pow(2, 64 - (11-1));
 
     // check leftmost node
     MAVEMerkleTreeInnerNode *node = root;

@@ -27,7 +27,7 @@
             hashValueNumBytes:(NSInteger)hashValueNumBytes
 {
     if (self = [super init]) {
-        self.dataKeyRange = MAVEMakeRange64(0, UINT64_MAX);
+        self.dataKeyRange = range;
         self.hashValueNumBytes = hashValueNumBytes;
         [self loadDataIntoBucket:enumerator];
     }

@@ -44,7 +44,7 @@ static dispatch_once_t syncContactsOnceToken;
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts {
     MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
                                                              arrayData:contacts
-                                                          dataKeyRange:MAVEMakeRange64(0, NSUIntegerMax)
+                                                          dataKeyRange:MAVEMakeRange64(0, UINT64_MAX)
                                                      hashValueNumBytes:4];
     return merkleTree;
 }

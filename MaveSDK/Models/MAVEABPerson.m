@@ -125,7 +125,7 @@
 + (uint64_t)computeHashedRecordID:(ABRecordID)recordID {
     NSData *recIDData = [MAVEMerkleTreeHashUtils dataFromInt32:recordID];
     NSData *hashedTruncatedData = [MAVEMerkleTreeHashUtils md5Hash:recIDData
-                                                  truncatedToBytes:sizeof(NSUInteger)];
+                                                  truncatedToBytes:sizeof(uint64_t)];
     return [MAVEMerkleTreeHashUtils UInt64FromData:hashedTruncatedData];
 }
 
