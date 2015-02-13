@@ -35,7 +35,7 @@
 // Test the public initializer functions
 - (void)testMerkleTreeInitWithArgs {
     NSArray *data = @[];
-    NSRange range = NSMakeRange(1, 8);
+    MAVERange64 range = MAVEMakeRange64(1, 8);
     NSUInteger hashValueNumBytes = 4;
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:3
                                                         arrayData:data
@@ -58,11 +58,11 @@
 
 - (void)testInitWithArrayDataSortsIt {
     // test initializing with max data range, and that data gets sorted
-    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:NSUIntegerMax];
+    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:UINT64_MAX];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     NSArray *data = @[o1, o2];
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:data
-                                                     dataKeyRange:NSMakeRange(0, UINT64_MAX)
+                                                     dataKeyRange:MAVEMakeRange64(0, UINT64_MAX)
                                                 hashValueNumBytes:16];
     MAVEMerkleTreeLeafNode *left = ((MAVEMerkleTreeInnerNode *)tree.root).leftChild;
     MAVEMerkleTreeLeafNode *right = ((MAVEMerkleTreeInnerNode *)tree.root).rightChild;
@@ -150,9 +150,9 @@
     MAVEMerkleTreeLeafNode *node1 = [[MAVEMerkleTreeLeafNode alloc] init];
     MAVEMerkleTreeLeafNode *node2 = [[MAVEMerkleTreeLeafNode alloc] init];
     node1.dataBucket = @[obj1];
-    node1.dataKeyRange = NSMakeRange(0, 4);
+    node1.dataKeyRange = MAVEMakeRange64(0, 4);
     node2.dataBucket = @[obj2];
-    node2.dataKeyRange = NSMakeRange(4, 4);
+    node2.dataKeyRange = MAVEMakeRange64(4, 4);
     NSString *node1HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node1 hashValue]];
     NSString *node2HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node2 hashValue]];
 
@@ -178,10 +178,10 @@
 
     MAVEMerkleTreeLeafNode *left = [[MAVEMerkleTreeLeafNode alloc] init];
     left.dataBucket = @[obj1];
-    left.dataKeyRange = NSMakeRange(0, 1);
+    left.dataKeyRange = MAVEMakeRange64(0, 1);
     MAVEMerkleTreeLeafNode *right = [[MAVEMerkleTreeLeafNode alloc] init];
     right.dataBucket = @[obj2];
-    right.dataKeyRange = NSMakeRange(1, 1);
+    right.dataKeyRange = MAVEMakeRange64(1, 1);
 
     MAVEMerkleTreeInnerNode *node1 = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:right];
     MAVEMerkleTreeInnerNode *node2 = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:left rightChild:left];
@@ -235,16 +235,16 @@
     MAVEMerkleTreeLeafNode *node1 = [[MAVEMerkleTreeLeafNode alloc] init];
     MAVEMerkleTreeLeafNode *node2 = [[MAVEMerkleTreeLeafNode alloc] init];
     node1.dataBucket = @[obj1];
-    node1.dataKeyRange = NSMakeRange(0, 1);
+    node1.dataKeyRange = MAVEMakeRange64(0, 1);
     node2.dataBucket = @[obj2];
-    node2.dataKeyRange = NSMakeRange(1, 1);
+    node2.dataKeyRange = MAVEMakeRange64(1, 1);
     NSString *node1HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node1 hashValue]];
     NSString *node2HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[node2 hashValue]];
     MAVEMerkleTreeInnerNode *tree1 = [[MAVEMerkleTreeInnerNode alloc] initWithLeftChild:node1 rightChild:node2];
 
     MAVEMerkleTreeLeafNode *shortTree = [[MAVEMerkleTreeLeafNode alloc] init];
     shortTree.dataBucket = @[obj3];
-    shortTree.dataKeyRange = NSMakeRange(0, 4);
+    shortTree.dataKeyRange = MAVEMakeRange64(0, 4);
     NSString *node3HashHex = [MAVEMerkleTreeHashUtils hexStringFromData:[shortTree hashValue]];
 
     // Try it where other node is shorter than reference node
@@ -265,7 +265,7 @@
     // start with a tree with 2 leaves, one has data and one empty. The one that's empty should not
     // appear in the changeset against the completely empty tree
     MAVEMerkleTreeDataDemo *obj1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
-    NSRange range = NSMakeRange(0, 8);
+    MAVERange64 range = MAVEMakeRange64(0, 8);
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:@[obj1] dataKeyRange:range hashValueNumBytes:4];
     // double check tree got set up correctly
     MAVEMerkleTreeLeafNode *leftChild = ((MAVEMerkleTreeInnerNode *)tree.root).leftChild;
@@ -293,7 +293,7 @@
 - (void)testChangesetEmptyTreeAgainstShorterEmptyTree {
     // changeset should be empty, short empty tree getting compared against a tree should look like an
     // empty tree of the appropriate height
-    NSRange range = NSMakeRange(0, 8);
+    MAVERange64 range = MAVEMakeRange64(0, 8);
     MAVEMerkleTree *emptyTree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:@[] dataKeyRange:range hashValueNumBytes:4];
 
     // Use our helper for creating a standin empty tree that can be compared against
@@ -311,8 +311,8 @@
 
 // split a range that's a power of 2
 - (void)testSplitRangeHelperFunction {
-    NSRange range = NSMakeRange(0, 4);
-    NSRange leftRange, rightRange;
+    MAVERange64 range = MAVEMakeRange64(0, 4);
+    MAVERange64 leftRange, rightRange;
     BOOL ok = [MAVEMerkleTree splitRange:range
                                lowerHalf:&leftRange
                                upperHalf:&rightRange];
@@ -323,7 +323,7 @@
     XCTAssertEqual(rightRange.length, 2);
 
     // Now split one of them again
-    NSRange newLeftRange, newRightRange;
+    MAVERange64 newLeftRange, newRightRange;
     ok = [MAVEMerkleTree splitRange:rightRange
                           lowerHalf:&newLeftRange
                           upperHalf:&newRightRange];
@@ -334,9 +334,10 @@
     XCTAssertEqual(newRightRange.length, 1);
 
     // Split the max range
-    NSRange newLeftRange2, newRightRange2;
-    NSRange newRange = NSMakeRange(0, UINT64_MAX);
-    NSUInteger halfSize = pow(2, 63);
+    MAVERange64 newLeftRange2, newRightRange2;
+    MAVERange64 newRange = MAVEMakeRange64(0, UINT64_MAX);
+    uint64_t halfSize = pow(2, 63);
+    XCTAssertNotEqual(halfSize, 0);
     ok = [MAVEMerkleTree splitRange:newRange
                           lowerHalf:&newLeftRange2
                           upperHalf:&newRightRange2];
@@ -349,19 +350,19 @@
 
 - (void)testSplitRangeInvalidValues {
     // can't split length 0 or 1
-    NSRange range = NSMakeRange(4, 0);
+    MAVERange64 range = MAVEMakeRange64(4, 0);
     BOOL ok = [MAVEMerkleTree splitRange:range
                                lowerHalf:nil
                                upperHalf:nil];
     XCTAssertFalse(ok);
-    range = NSMakeRange(0, 1);
+    range = MAVEMakeRange64(0, 1);
     ok = [MAVEMerkleTree splitRange:range
                           lowerHalf:nil
                           upperHalf:nil];
     XCTAssertFalse(ok);
 
     // won't split a non power of 2 or power of 2 -1 length range
-    range = NSMakeRange(0, 6);
+    range = MAVEMakeRange64(0, 6);
     ok = [MAVEMerkleTree splitRange:range
                           lowerHalf:nil
                           upperHalf:nil];
@@ -370,7 +371,7 @@
 }
 
 - (void)testBuildMerkleTreeWithInnerAndRoot {
-    NSRange range = NSMakeRange(0, 8);
+    MAVERange64 range = MAVEMakeRange64(0, 8);
     MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:1];
     MAVEMerkleTreeDataDemo *o3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
@@ -413,7 +414,7 @@
 }
 
 - (void)testBuildBigTreeWithMaxRange {
-    NSRange range = NSMakeRange(0, UINT64_MAX);
+    MAVERange64 range = MAVEMakeRange64(0, UINT64_MAX);
     MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:UINT64_MAX];
     NSArray *array = @[o1, o2];
@@ -422,7 +423,7 @@
 
     MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:11 withKeyRange:range   dataEnumerator:enumer hashValueNumBytes:16];
     XCTAssertEqual(root.treeHeight, 11);
-    NSUInteger expectedRangeSize = pow(2, 64 - (11-1));
+    uint64_t expectedRangeSize = pow(2, 64 - (11-1));
 
     // check leftmost node
     MAVEMerkleTreeInnerNode *node = root;

@@ -44,7 +44,7 @@
 - (void)setRecordID:(NSInteger)recordID {
     // record ID is actually a 32 bit integer
     _recordID = recordID;
-    self.hashedRecordID = [[self class] computeHashedRecordID:(int32_t)recordID];
+    self.hashedRecordID = [[self class] computeHashedRecordID:(ABRecordID)recordID];
 }
 
 
@@ -75,7 +75,7 @@
     ];
 }
 
-- (NSUInteger)merkleTreeDataKey {
+- (uint64_t)merkleTreeDataKey {
     return self.hashedRecordID;
 }
 
@@ -122,10 +122,10 @@
     return (NSArray *)emailAddresses;
 }
 
-+ (NSUInteger)computeHashedRecordID:(uint32_t)recordID {
++ (uint64_t)computeHashedRecordID:(ABRecordID)recordID {
     NSData *recIDData = [MAVEMerkleTreeHashUtils dataFromInt32:recordID];
     NSData *hashedTruncatedData = [MAVEMerkleTreeHashUtils md5Hash:recIDData
-                                                  truncatedToBytes:sizeof(NSUInteger)];
+                                                  truncatedToBytes:sizeof(uint64_t)];
     return [MAVEMerkleTreeHashUtils UInt64FromData:hashedTruncatedData];
 }
 
@@ -223,7 +223,13 @@
 }
 
 - (NSComparisonResult)compareHashedRecordIDs:(MAVEABPerson *)otherPerson {
-    return [@(self.hashedRecordID) compare:@(otherPerson.hashedRecordID)];
+    if (self.hashedRecordID > otherPerson.hashedRecordID) {
+        return NSOrderedDescending;
+    } else if (self.hashedRecordID == otherPerson.hashedRecordID) {
+        return NSOrderedSame;
+    } else {
+        return NSOrderedAscending;
+    }
 }
 
 @end

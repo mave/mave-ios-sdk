@@ -34,7 +34,7 @@
     uint d4i = 1; NSData *d4 = [NSData dataWithBytes:&d4i length:4];
     uint d5i = 0xd41d8cd9; NSData *d5 = [NSData dataWithBytes:&d5i length:4];
     int d6i = 0xffffffff; NSData *d6 = [NSData dataWithBytes:&d6i length:4];
-    u_long d7i = ULLONG_MAX; NSData *d7 = [NSData dataWithBytes:&d7i length:8];
+    uint64_t d7i = UINT64_MAX; NSData *d7 = [NSData dataWithBytes:&d7i length:8];
 
     // Test zero values
     XCTAssertEqualObjects([MAVEMerkleTreeHashUtils hexStringFromData:d1], nil);

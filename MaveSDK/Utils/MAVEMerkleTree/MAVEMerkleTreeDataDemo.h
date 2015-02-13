@@ -14,8 +14,8 @@
 // It's just an object wrapper around an NSUInteger
 @interface MAVEMerkleTreeDataDemo : NSObject<MAVEMerkleTreeDataItem>
 
-@property (nonatomic, assign) NSUInteger value;
+@property (nonatomic, assign) uint64_t value;
 
-- (instancetype)initWithValue:(NSUInteger)value;
+- (instancetype)initWithValue:(uint64_t)value;
 
 @end

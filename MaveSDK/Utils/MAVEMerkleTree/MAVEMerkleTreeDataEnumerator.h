@@ -22,6 +22,6 @@
 
 - (id<MAVEMerkleTreeDataItem>)peekAtNextObject;
 
-- (NSUInteger)keyForNextObject;
+- (uint64_t)keyForNextObject;
 
 @end

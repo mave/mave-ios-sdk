@@ -61,7 +61,7 @@
     MAVEMerkleTreeLeafNode *leaf = node.leftChild;
     XCTAssertEqual(leaf.dataKeyRange.location, 0);
     // since we're 10 layers below root of the tree, the range length should be the following:
-    NSUInteger expectedKeyLength = exp2(64 - (11 - 1));
+    uint64_t expectedKeyLength = exp2(64 - (11 - 1));
     XCTAssertEqual(leaf.dataKeyRange.length, expectedKeyLength);
     // Since there's 1 item in our tree, diffing against empty should give a changeset of length 1
     NSArray *changeset = [tree changesetForEmptyTreeToMatchSelf];

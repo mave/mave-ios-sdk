@@ -10,7 +10,7 @@
 
 @implementation MAVEMerkleTreeDataDemo
 
-- (instancetype)initWithValue:(NSUInteger)value {
+- (instancetype)initWithValue:(uint64_t)value {
     if (self = [super init]) {
         self.value = value;
     }
@@ -21,7 +21,7 @@
     return @(self.value);
 }
 
-- (NSUInteger)merkleTreeDataKey {
+- (uint64_t)merkleTreeDataKey {
     return self.value;
 }
 

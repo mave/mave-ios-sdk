@@ -33,7 +33,7 @@
     NSInteger stringLength = [string length];
     NSMutableData *output = [[NSMutableData alloc]initWithCapacity:stringLength/2];
 
-    long byte;
+    uint64_t byte;
     const char *byteAsString;
     for (NSInteger i = 0; i < stringLength; i+=2) {
         byteAsString = [[string substringWithRange:NSMakeRange(i, 2)]

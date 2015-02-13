@@ -273,7 +273,7 @@
 
     // check if it's an 8 byte integer by converting to a number then back
     // to string and making sure it's the same number
-    long long idAsNumber = [appID integerValue];
+    int64_t idAsNumber = [appID longLongValue];
     NSString *backToString = [NSString stringWithFormat:@"%lld", idAsNumber];
     BOOL isIDNumber = [backToString isEqualToString:appID];
 
