@@ -163,13 +163,13 @@
 }
 
 - (void)testDecideNeededSyncWhenRemoteMerkleTreeNotExists {
-    // returns 404 when it doesn't exist
+    // The query for the root returns 200 with a json value=null when the tree doesn't exist
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     OCMExpect([apiInterfaceMock getRemoteContactsMerkleTreeRootWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
-        NSError *returnError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN code:404 userInfo:@{}];
-        completionBlock(returnError, nil);
+        NSDictionary *response = @{@"value": [NSNull null]};
+        completionBlock(nil, response);
         return YES;
     }]]);
 

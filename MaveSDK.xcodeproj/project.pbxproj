@@ -255,7 +255,7 @@
 		0C58FE011A66D734007F8F12 /* MAVERemoteConfigurationServerSMS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationServerSMS.h; sourceTree = "<group>"; };
 		0C58FE021A66D734007F8F12 /* MAVERemoteConfigurationServerSMS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationServerSMS.m; sourceTree = "<group>"; };
 		0C58FE041A66D977007F8F12 /* MAVERemoteConfigurationServerSMSTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationServerSMSTests.m; sourceTree = "<group>"; };
-		0C6D92A71A72B78300B65B82 /* MAVEABSyncManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABSyncManagerTests.m; sourceTree = "<group>"; };
+		0C6D92A71A72B78300B65B82 /* MAVEABSyncManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MAVEABSyncManagerTests.m; path = ../Models/MAVEABSyncManagerTests.m; sourceTree = "<group>"; };
 		0C6D92A91A72BA0F00B65B82 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		0C6D92AB1A72BE4A00B65B82 /* MAVECompressionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVECompressionUtils.h; sourceTree = "<group>"; };
 		0C6D92AC1A72BE4A00B65B82 /* MAVECompressionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECompressionUtils.m; sourceTree = "<group>"; };
@@ -585,7 +585,6 @@
 				C022641119EC41010087FF37 /* MAVEABPersonTests.m */,
 				C022641519EC41010087FF37 /* MAVEABTestDataTests.m */,
 				0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */,
-				0C6D92A71A72B78300B65B82 /* MAVEABSyncManagerTests.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -595,6 +594,7 @@
 			children = (
 				0C29BC341A572CEA00C27DA5 /* MAVEAPIInterfaceTests.m */,
 				0C29BC321A5703E100C27DA5 /* MAVEHTTPStackTests.m */,
+				0C6D92A71A72B78300B65B82 /* MAVEABSyncManagerTests.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";

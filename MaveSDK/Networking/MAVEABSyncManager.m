@@ -91,13 +91,14 @@ static dispatch_once_t syncContactsOnceToken;
     __block BOOL isInitialSync = NO;
     __block NSString *remoteHashString;
     [[MaveSDK sharedInstance].APIInterface getRemoteContactsMerkleTreeRootWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
-        if (error && [error.domain isEqualToString:MAVE_HTTP_ERROR_DOMAIN] && error.code == 404) {
-            // 404 means this is the initial sync for this app device id
-            isInitialSync = YES;
+        if (error) {
+            // treat error as no response
+            remoteHashString = nil;
         } else {
+            // if the tree was not found, server will have returned {"value": null} json, check for that case
             remoteHashString = [responseData objectForKey:@"value"];
             if (remoteHashString == (id)[NSNull null]) {
-                remoteHashString = nil;
+                isInitialSync = YES;
             }
         }
         dispatch_semaphore_signal(sema);
