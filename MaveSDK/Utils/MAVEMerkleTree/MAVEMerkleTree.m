@@ -7,6 +7,7 @@
 //
 
 #import "MAVEMerkleTree.h"
+#import "MAVEMerkleTreeProtocols.h"
 #import "MAVEMerkleTreeInnerNode.h"
 #import "MAVEMerkleTreeLeafNode.h"
 #import "MAVEMerkleTreeHashUtils.h"
@@ -18,12 +19,15 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 
 - (instancetype)initWithHeight:(NSUInteger)height
                      arrayData:(NSArray *)data
-                  dataKeyRange:(NSRange)dataKeyRange
+                  dataKeyRange:(MAVERange64)dataKeyRange
              hashValueNumBytes:(NSInteger)hashValueNumBytes {
     if (self = [super init]) {
+        // Can't figure out why, the protocols header is imported but xcode complains that
+        // the following is an undeclared selector. So we sort it the tedious way.
+//        NSArray *sortedData = [data sortedArrayUsingSelector:@(merkleTreeDataKey)];
         NSArray *sortedData = [data sortedArrayUsingComparator:^NSComparisonResult(id<MAVEMerkleTreeDataItem> obj1, id<MAVEMerkleTreeDataItem> obj2) {
-            NSUInteger key1 = [obj1 merkleTreeDataKey];
-            NSUInteger key2 = [obj2 merkleTreeDataKey];
+            uint64_t key1 = [obj1 merkleTreeDataKey];
+            uint64_t key2 = [obj2 merkleTreeDataKey];
             if (key1 > key2) {
                 return NSOrderedDescending;
             } else if (key1 == key2) {
@@ -48,7 +52,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 }
 
 + (instancetype)emptyTreeWithHashValueNumBytes:(NSInteger)hashValueNumBytes {
-    return [[self alloc] initWithHeight:1 arrayData:@[] dataKeyRange:NSMakeRange(0, 0) hashValueNumBytes:hashValueNumBytes];
+    return [[self alloc] initWithHeight:1 arrayData:@[] dataKeyRange:MAVEMakeRange64(0, 0) hashValueNumBytes:hashValueNumBytes];
 }
 
 
@@ -87,11 +91,11 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 
 // Constructor methods for the tree
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
-                                     withKeyRange:(NSRange)range
+                                     withKeyRange:(MAVERange64)range
                                    dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
                                 hashValueNumBytes:(NSUInteger)hashValueNumBytes {
     if (height > 1) {
-        NSRange lowerHalfRange, upperHalfRange;
+        MAVERange64 lowerHalfRange, upperHalfRange;
         BOOL rangeOK = [self splitRange:range
                               lowerHalf:&lowerHalfRange
                               upperHalf:&upperHalfRange];
@@ -201,14 +205,14 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 }
 
 
-+ (BOOL)splitRange:(NSRange)range
-         lowerHalf:(NSRange *)lowerRange
-         upperHalf:(NSRange *)upperRange {
++ (BOOL)splitRange:(MAVERange64)range
+         lowerHalf:(MAVERange64 *)lowerRange
+         upperHalf:(MAVERange64 *)upperRange {
     // make sure length isn't too short to be split
     if (range.length == 0 || range.length == 1) {
 #ifdef DEBUG
-        NSLog(@"MAVEMerkleTree error building tree - range %@ has length %lu",
-              NSStringFromRange(range), (unsigned long)range.length);
+        NSLog(@"MAVEMerkleTree error building tree - range %@ has length %llu",
+              NSStringFromMAVERange64(range), range.length);
 #endif
         return NO;
     }
@@ -220,14 +224,14 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     if (powerOfTwo != floor(powerOfTwo)) {
 #ifdef DEBUG
         NSLog(@"MAVEMerkleTree error building tree - range %@ length not a power of two",
-              NSStringFromRange(range));
+              NSStringFromMAVERange64(range));
 #endif
         return NO;
     }
 
     // Fill in the ranges to return
-    *lowerRange = NSMakeRange(range.location, halfLength);
-    *upperRange = NSMakeRange(range.location + halfLength, halfLength);
+    *lowerRange = MAVEMakeRange64(range.location, halfLength);
+    *upperRange = MAVEMakeRange64(range.location + halfLength, halfLength);
     return YES;
 }
 

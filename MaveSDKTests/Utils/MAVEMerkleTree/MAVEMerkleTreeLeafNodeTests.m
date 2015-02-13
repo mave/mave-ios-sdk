@@ -89,7 +89,7 @@
     NSArray *data = @[d1, d2, d3, d4];
     MAVEMerkleTreeDataEnumerator *enumer = [[MAVEMerkleTreeDataEnumerator alloc] initWithEnumerator:[data objectEnumerator]];
 
-    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] initWithRange:NSMakeRange(2, 3+1) dataEnumerator:enumer hashValueNumBytes:13];
+    MAVEMerkleTreeLeafNode *node = [[MAVEMerkleTreeLeafNode alloc] initWithRange:MAVEMakeRange64(2, 3+1) dataEnumerator:enumer hashValueNumBytes:13];
     NSArray *expectedData = @[d1, d2, d3];
     XCTAssertEqualObjects(node.dataBucket, expectedData);
     XCTAssertEqual(node.hashValueNumBytes, 13);

@@ -22,7 +22,7 @@
     return self;
 }
 
-- (instancetype)initWithRange:(NSRange)range
+- (instancetype)initWithRange:(MAVERange64)range
                dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
             hashValueNumBytes:(NSInteger)hashValueNumBytes
 {
@@ -44,14 +44,14 @@
 
 - (void)loadDataIntoBucket:(MAVEMerkleTreeDataEnumerator *)enumerator {
     NSMutableArray *dataBucketTmp = [[NSMutableArray alloc] init];
-    NSUInteger nextKey;
+    uint64_t nextKey;
     while (true) {
         // At end of enumeration, the object is nil
         if (![enumerator peekAtNextObject]) {
             break;
         }
         nextKey = [enumerator keyForNextObject];
-        if (!NSLocationInRange(nextKey, self.dataKeyRange)) {
+        if (!MAVELocationInRange64(nextKey, self.dataKeyRange)) {
             break;
         }
         [dataBucketTmp addObject:[enumerator nextObject]];

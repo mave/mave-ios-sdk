@@ -15,7 +15,7 @@
 
 // This key is for grouping data for the merkle tree, it should be uniformly
 // distributed for all data.
-- (NSUInteger)merkleTreeDataKey;
+- (uint64_t)merkleTreeDataKey;
 
 // Representation of the object in a format such that the collection containing
 // these data blobs can be serialized *deterministically*

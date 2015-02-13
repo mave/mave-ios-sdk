@@ -29,7 +29,7 @@
     return self._nextObject;
 }
 
-- (NSUInteger)keyForNextObject {
+- (uint64_t)keyForNextObject {
     return [[self peekAtNextObject] merkleTreeDataKey];
 }
 

@@ -8,15 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "MAVEMerkleTreeProtocols.h"
+#import "MAVERange64.h"
 #import "MAVEMerkleTreeDataEnumerator.h"
 
 @interface MAVEMerkleTreeLeafNode : NSObject<MAVEMerkleTreeNode>
 
 @property (nonatomic, strong) NSArray *dataBucket;
-@property (nonatomic, assign) NSRange dataKeyRange;
+@property (nonatomic, assign) MAVERange64 dataKeyRange;
 @property (nonatomic, assign) NSInteger hashValueNumBytes;
 
-- (instancetype)initWithRange:(NSRange)range
+- (instancetype)initWithRange:(MAVERange64)range
                dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
             hashValueNumBytes:(NSInteger)hashValueNumBytes;
 
