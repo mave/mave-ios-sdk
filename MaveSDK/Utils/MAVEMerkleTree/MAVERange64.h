@@ -21,5 +21,5 @@ extern MAVERange64 MAVEMakeRange64(uint64_t loc, uint64_t len);
 
 extern BOOL MAVELocationInRange64(uint64_t loc, MAVERange64 range);
 
-extern NSString *NSStringFromMAVERange64(MAVERange64 range);
+extern NSString *MAVENSStringFromRange64(MAVERange64 range);
 

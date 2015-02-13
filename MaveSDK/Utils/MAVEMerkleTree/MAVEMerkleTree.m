@@ -212,7 +212,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     if (range.length == 0 || range.length == 1) {
 #ifdef DEBUG
         NSLog(@"MAVEMerkleTree error building tree - range %@ has length %llu",
-              NSStringFromMAVERange64(range), range.length);
+              MAVENSStringFromRange64(range), range.length);
 #endif
         return NO;
     }
@@ -224,7 +224,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     if (powerOfTwo != floor(powerOfTwo)) {
 #ifdef DEBUG
         NSLog(@"MAVEMerkleTree error building tree - range %@ length not a power of two",
-              NSStringFromMAVERange64(range));
+              MAVENSStringFromRange64(range));
 #endif
         return NO;
     }
