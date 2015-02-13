@@ -13,13 +13,11 @@
 #import "MAVEMerkleTreeHashUtils.h"
 #import "MAVEMerkleTreeUtils.h"
 
-const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
-
 @implementation MAVEMerkleTree
 
 - (instancetype)initWithHeight:(NSUInteger)height
                      arrayData:(NSArray *)data
-                  dataKeyRange:(MAVERange64)dataKeyRange
+                  dataKeyRange:(MAVERange64*)dataKeyRange
              hashValueNumBytes:(NSInteger)hashValueNumBytes {
     if (self = [super init]) {
         // Can't figure out why, the protocols header is imported but xcode complains that
@@ -91,11 +89,11 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 
 // Constructor methods for the tree
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
-                                     withKeyRange:(MAVERange64)range
+                                     withKeyRange:(MAVERange64*)range
                                    dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
                                 hashValueNumBytes:(NSUInteger)hashValueNumBytes {
     if (height > 1) {
-        MAVERange64 lowerHalfRange, upperHalfRange;
+        MAVERange64 *lowerHalfRange, *upperHalfRange;
         BOOL rangeOK = [self splitRange:range
                               lowerHalf:&lowerHalfRange
                               upperHalf:&upperHalfRange];
@@ -205,9 +203,9 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
 }
 
 
-+ (BOOL)splitRange:(MAVERange64)range
-         lowerHalf:(MAVERange64 *)lowerRange
-         upperHalf:(MAVERange64 *)upperRange {
++ (BOOL)splitRange:(MAVERange64*)range
+         lowerHalf:(MAVERange64 **)lowerRange
+         upperHalf:(MAVERange64 **)upperRange {
     // make sure length isn't too short to be split
     if (range.length == 0 || range.length == 1) {
 #ifdef DEBUG
@@ -219,7 +217,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     // check that half the length is a power of two (handles edge case where
     // if using a range of the max length UINT64_MAX which is 2^64 - 1, we
     // can still split it in half and proceed as if it were 2^64).
-    NSUInteger halfLength = ceil(range.length / 2);
+    uint64_t halfLength = ceil(range.length / 2);
     double powerOfTwo = log2(halfLength);
     if (powerOfTwo != floor(powerOfTwo)) {
 #ifdef DEBUG

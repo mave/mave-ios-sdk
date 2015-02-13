@@ -14,10 +14,10 @@
 @interface MAVEMerkleTreeLeafNode : NSObject<MAVEMerkleTreeNode>
 
 @property (nonatomic, strong) NSArray *dataBucket;
-@property (nonatomic, assign) MAVERange64 dataKeyRange;
+@property (nonatomic, strong) MAVERange64* dataKeyRange;
 @property (nonatomic, assign) NSInteger hashValueNumBytes;
 
-- (instancetype)initWithRange:(MAVERange64)range
+- (instancetype)initWithRange:(MAVERange64*)range
                dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
             hashValueNumBytes:(NSInteger)hashValueNumBytes;
 

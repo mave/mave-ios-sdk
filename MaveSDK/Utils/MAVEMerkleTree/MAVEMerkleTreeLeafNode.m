@@ -22,12 +22,12 @@
     return self;
 }
 
-- (instancetype)initWithRange:(MAVERange64)range
+- (instancetype)initWithRange:(MAVERange64*)range
                dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
             hashValueNumBytes:(NSInteger)hashValueNumBytes
 {
     if (self = [super init]) {
-        self.dataKeyRange = range;
+        self.dataKeyRange = MAVEMakeRange64(0, UINT64_MAX);
         self.hashValueNumBytes = hashValueNumBytes;
         [self loadDataIntoBucket:enumerator];
     }

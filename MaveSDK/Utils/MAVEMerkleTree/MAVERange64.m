@@ -8,17 +8,10 @@
 
 #import "MAVERange64.h"
 
-MAVERange64 MAVEMakeRange64(uint64_t loc, uint64_t len) {
-    MAVERange64 r;
-    r.location = loc;
-    r.length = len;
-    return r;
-}
+@implementation MAVERange64
 
- BOOL MAVELocationInRange64(uint64_t loc, MAVERange64 range) {
-    return (!(loc < range.location) && (loc - range.location) < range.length) ? YES : NO;
-}
+@end
 
-extern NSString *NSStringFromMAVERange64(MAVERange64 range) {
+extern NSString *NSStringFromMAVERange64(MAVERange64 *range) {
     return @"";
 }

@@ -12,14 +12,27 @@
 // to be consistent in all cases (because we'll normally be e.g. syncing to a database) but NSRange
 // uses NSUInteger which is 32-bit on iphone 5 and older. We'll explicitly use 64-bit.
 
-typedef struct _MAVERange64 {
-    uint64_t location;
-    uint64_t length;
-} MAVERange64;
+//typedef struct _MAVERange64 {
+//    uint64_t location;
+//    uint64_t length;
+//} MAVERange64;
 
-extern MAVERange64 MAVEMakeRange64(uint64_t loc, uint64_t len);
+@interface MAVERange64 : NSObject
 
-extern BOOL MAVELocationInRange64(uint64_t loc, MAVERange64 range);
+@property (nonatomic, assign) uint64_t location;
+@property (nonatomic, assign) uint64_t length;
 
-extern NSString *NSStringFromMAVERange64(MAVERange64 range);
+@end
 
+NS_INLINE MAVERange64 *MAVEMakeRange64(uint64_t loc, uint64_t len) {
+    MAVERange64 *r = [[MAVERange64 alloc] init];
+    r.location = loc;
+    r.length = len;
+    return r;
+}
+
+NS_INLINE BOOL MAVELocationInRange64(uint64_t loc, MAVERange64 *range) {
+    return (!(loc < range.location) && (loc - range.location) < range.length) ? YES : NO;
+}
+
+extern NSString *NSStringFromMAVERange64(MAVERange64 *range);

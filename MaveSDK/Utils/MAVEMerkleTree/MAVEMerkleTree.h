@@ -29,7 +29,7 @@ typedef NSUInteger MAVEMerkleTreePath;
 
 - (instancetype)initWithHeight:(NSUInteger)height
                      arrayData:(NSArray *)data
-                  dataKeyRange:(MAVERange64)keyRange
+                  dataKeyRange:(MAVERange64*)keyRange
              hashValueNumBytes:(NSInteger)hashValueNumBytes;
 
 + (instancetype)emptyTreeWithHashValueNumBytes:(NSInteger)hashValueNumBytes;
@@ -60,7 +60,7 @@ typedef NSUInteger MAVEMerkleTreePath;
 - (NSDictionary *)serializable;
 
 + (id<MAVEMerkleTreeNode>)buildMerkleTreeOfHeight:(NSUInteger)height
-                                     withKeyRange:(MAVERange64)range
+                                     withKeyRange:(MAVERange64*)range
                                    dataEnumerator:(MAVEMerkleTreeDataEnumerator *)enumerator
                                 hashValueNumBytes:(NSUInteger)hashValueNumBytes;
 
@@ -71,8 +71,8 @@ typedef NSUInteger MAVEMerkleTreePath;
                      currentPathToNode:(MAVEMerkleTreePath)currentPath;
 
 // Helper for the above methods
-+ (BOOL)splitRange:(MAVERange64)range
-         lowerHalf:(MAVERange64 *)lowerRange
-         upperHalf:(MAVERange64 *)upperRange;
++ (BOOL)splitRange:(MAVERange64*)range
+         lowerHalf:(MAVERange64 **)lowerRange
+         upperHalf:(MAVERange64 **)upperRange;
 
 @end

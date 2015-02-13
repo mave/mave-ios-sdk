@@ -35,7 +35,7 @@
 // Test the public initializer functions
 - (void)testMerkleTreeInitWithArgs {
     NSArray *data = @[];
-    MAVERange64 range = MAVEMakeRange64(1, 8);
+    MAVERange64 *range = MAVEMakeRange64(1, 8);
     NSUInteger hashValueNumBytes = 4;
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:3
                                                         arrayData:data
@@ -58,11 +58,13 @@
 
 - (void)testInitWithArrayDataSortsIt {
     // test initializing with max data range, and that data gets sorted
-    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:NSUIntegerMax];
+    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:UINT64_MAX - 1];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     NSArray *data = @[o1, o2];
-    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:data
-                                                     dataKeyRange:MAVEMakeRange64(0, UINT64_MAX)
+    MAVERange64 *maxrange = MAVEMakeRange64(0, UINT64_MAX);
+    MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2
+                                                        arrayData:data
+                                                     dataKeyRange:maxrange
                                                 hashValueNumBytes:16];
     MAVEMerkleTreeLeafNode *left = ((MAVEMerkleTreeInnerNode *)tree.root).leftChild;
     MAVEMerkleTreeLeafNode *right = ((MAVEMerkleTreeInnerNode *)tree.root).rightChild;
@@ -265,7 +267,7 @@
     // start with a tree with 2 leaves, one has data and one empty. The one that's empty should not
     // appear in the changeset against the completely empty tree
     MAVEMerkleTreeDataDemo *obj1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:3];
-    MAVERange64 range = MAVEMakeRange64(0, 8);
+    MAVERange64 *range = MAVEMakeRange64(0, 8);
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:@[obj1] dataKeyRange:range hashValueNumBytes:4];
     // double check tree got set up correctly
     MAVEMerkleTreeLeafNode *leftChild = ((MAVEMerkleTreeInnerNode *)tree.root).leftChild;
@@ -293,7 +295,7 @@
 - (void)testChangesetEmptyTreeAgainstShorterEmptyTree {
     // changeset should be empty, short empty tree getting compared against a tree should look like an
     // empty tree of the appropriate height
-    MAVERange64 range = MAVEMakeRange64(0, 8);
+    MAVERange64 *range = MAVEMakeRange64(0, 8);
     MAVEMerkleTree *emptyTree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:@[] dataKeyRange:range hashValueNumBytes:4];
 
     // Use our helper for creating a standin empty tree that can be compared against
@@ -311,8 +313,8 @@
 
 // split a range that's a power of 2
 - (void)testSplitRangeHelperFunction {
-    MAVERange64 range = MAVEMakeRange64(0, 4);
-    MAVERange64 leftRange, rightRange;
+    MAVERange64 *range = MAVEMakeRange64(0, 4);
+    MAVERange64 *leftRange, *rightRange;
     BOOL ok = [MAVEMerkleTree splitRange:range
                                lowerHalf:&leftRange
                                upperHalf:&rightRange];
@@ -323,7 +325,7 @@
     XCTAssertEqual(rightRange.length, 2);
 
     // Now split one of them again
-    NSRange newLeftRange, newRightRange;
+    MAVERange64 *newLeftRange, *newRightRange;
     ok = [MAVEMerkleTree splitRange:rightRange
                           lowerHalf:&newLeftRange
                           upperHalf:&newRightRange];
@@ -334,9 +336,10 @@
     XCTAssertEqual(newRightRange.length, 1);
 
     // Split the max range
-    MAVERange64 newLeftRange2, newRightRange2;
-    MAVERange64 newRange = MAVEMakeRange64(0, UINT64_MAX);
-    NSUInteger halfSize = pow(2, 63);
+    MAVERange64 *newLeftRange2, *newRightRange2;
+    MAVERange64 *newRange = MAVEMakeRange64(0, UINT64_MAX);
+    uint64_t halfSize = exp2(63);
+    XCTAssertNotEqual(halfSize, 0);  // double check
     ok = [MAVEMerkleTree splitRange:newRange
                           lowerHalf:&newLeftRange2
                           upperHalf:&newRightRange2];
@@ -349,28 +352,35 @@
 
 - (void)testSplitRangeInvalidValues {
     // can't split length 0 or 1
-    MAVERange64 range = MAVEMakeRange64(4, 0);
+    MAVERange64 *range = MAVEMakeRange64(4, 0);
+    MAVERange64 *lower, *upper;
     BOOL ok = [MAVEMerkleTree splitRange:range
-                               lowerHalf:nil
-                               upperHalf:nil];
+                               lowerHalf:&lower
+                               upperHalf:&upper];
     XCTAssertFalse(ok);
+    XCTAssertNil(lower);
+    XCTAssertNil(upper);
+
     range = MAVEMakeRange64(0, 1);
     ok = [MAVEMerkleTree splitRange:range
-                          lowerHalf:nil
-                          upperHalf:nil];
+                          lowerHalf:&lower
+                          upperHalf:&upper];
     XCTAssertFalse(ok);
+    XCTAssertNil(lower);
+    XCTAssertNil(upper);
 
     // won't split a non power of 2 or power of 2 -1 length range
     range = MAVEMakeRange64(0, 6);
     ok = [MAVEMerkleTree splitRange:range
-                          lowerHalf:nil
-                          upperHalf:nil];
+                          lowerHalf:&lower
+                          upperHalf:&upper];
     XCTAssertFalse(ok);
-
+    XCTAssertNil(lower);
+    XCTAssertNil(upper);
 }
 
 - (void)testBuildMerkleTreeWithInnerAndRoot {
-    MAVERange64 range = MAVEMakeRange64(0, 8);
+    MAVERange64 *range = MAVEMakeRange64(0, 8);
     MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:1];
     MAVEMerkleTreeDataDemo *o3 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:2];
@@ -413,7 +423,7 @@
 }
 
 - (void)testBuildBigTreeWithMaxRange {
-    MAVERange64 range = MAVEMakeRange64(0, UINT64_MAX);
+    MAVERange64 *range = MAVEMakeRange64(0, UINT64_MAX);
     MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:UINT64_MAX];
     NSArray *array = @[o1, o2];

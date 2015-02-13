@@ -85,7 +85,7 @@
     XCTAssertEqualObjects([p1JSON objectForKey:@"record_id"], [NSNumber numberWithInteger:1]);
     // weird gymnasics to avoid the "constant is larger than largest signed int" compiler warnings
     // which occur even though I'm assigning to an unsigned 64-bit integer
-    NSUInteger expectedHashedRecordID = 1738530526220505206 * 10 + 9;
+    uint64_t expectedHashedRecordID = 1738530526220505206 * 10 + 9;
     XCTAssertEqualObjects([p1JSON objectForKey:@"hashed_record_id"],
                           @(expectedHashedRecordID));
     XCTAssertEqualObjects([p1JSON objectForKey:@"first_name"], @"2");
@@ -111,8 +111,8 @@
 
 - (void)testToJSONTupleArray {
     // With every value full
-    NSUInteger hashedOne = 1738530526220505206 * 10 + 9;
-    NSUInteger hashedZero = 1742555232675413790 * 10 + 6;
+    uint64_t hashedOne = 1738530526220505206 * 10 + 9;
+    uint64_t hashedZero = 1742555232675413790 * 10 + 6;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.recordID = 1; p1.hashedRecordID = hashedOne;
     p1.firstName = @"2"; p1.lastName = @"3";

@@ -93,6 +93,8 @@
     NSArray *expectedData = @[d1, d2, d3];
     XCTAssertEqualObjects(node.dataBucket, expectedData);
     XCTAssertEqual(node.hashValueNumBytes, 13);
+    XCTAssertEqual(node.dataKeyRange.location, 2);
+    XCTAssertEqual(node.dataKeyRange.length, 4);
 }
 
 // Should call the protocol method to make data items serializable
