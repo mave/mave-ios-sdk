@@ -13,6 +13,7 @@
 #import <OCMock/OCMock.h>
 #import "MAVEConstants.h"
 #import "MAVEHTTPStack.h"
+#import "MAVECompressionUtils.h"
 
 typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, NSError *error);
 
@@ -62,6 +63,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     NSMutableURLRequest *request = [self.testHTTPStack prepareJSONRequestWithRoute:path
                                                                         methodName:method
                                                                             params:params
+                                                                   contentEncoding:MAVEHTTPRequestContentEncodingDefault
                                                                   preparationError:&error];
     XCTAssertNil(error);
     
@@ -75,8 +77,59 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     XCTAssertEqualObjects(request.allHTTPHeaderFields, expectedHeaders);
 }
 
+- (void)testPrepareJSONRequestGzippedWithBodySuccess {
+    // Non GET & delete requests should have params as request body json formatted
+    NSString *path = @"/foo";
+    NSDictionary *params = @{@"foo": @2, @"bar": @YES, @"baz": @"hello"};
+    NSString *method = @"POST";
+    NSError *error = nil;
+    NSMutableURLRequest *request = [self.testHTTPStack prepareJSONRequestWithRoute:path
+                                                                        methodName:method
+                                                                            params:params
+                                                                   contentEncoding:MAVEHTTPRequestContentEncodingGzip
+                                                                  preparationError:&error];
+    XCTAssertNil(error);
+
+    XCTAssertEqualObjects(request.URL, [[NSURL alloc] initWithString:@"https://foo.example.com/foo"]);
+    XCTAssertEqualObjects(request.HTTPMethod, method);
+    NSData *uncompressed = [MAVECompressionUtils gzipUncompressData:request.HTTPBody];
+    NSDictionary *bodyDict = [NSJSONSerialization JSONObjectWithData:uncompressed options:0 error:nil];
+    XCTAssertEqualObjects(bodyDict, params);
+    NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",
+                                      @"Content-Encoding": @"gzip",
+                                      @"Accept": @"application/json",
+                                      };
+    XCTAssertEqualObjects(request.allHTTPHeaderFields, expectedHeaders);
+}
+
+- (void)testPrepareJSONRequestGzippedEmptyParamsSuccess {
+    // a POST request with no params passed in should still be json formatted (meaning empty dict)
+    // and should still get gzip encoded if that's the encoding specified
+    NSString *path = @"/foo";
+    NSString *method = @"POST";
+    NSError *error = nil;
+    NSMutableURLRequest *request = [self.testHTTPStack prepareJSONRequestWithRoute:path
+                                                                        methodName:method
+                                                                            params:@{}
+                                                                   contentEncoding:MAVEHTTPRequestContentEncodingGzip
+                                                                  preparationError:&error];
+    XCTAssertNil(error);
+
+    XCTAssertEqualObjects(request.URL, [[NSURL alloc] initWithString:@"https://foo.example.com/foo"]);
+    XCTAssertEqualObjects(request.HTTPMethod, method);
+    NSData *uncompressed = [MAVECompressionUtils gzipUncompressData:request.HTTPBody];
+    NSDictionary *bodyDict = [NSJSONSerialization JSONObjectWithData:uncompressed options:0 error:nil];
+    XCTAssertEqualObjects(bodyDict, @{});
+    NSDictionary *expectedHeaders = @{@"Content-Type": @"application/json; charset=utf-8",
+                                      @"Content-Encoding": @"gzip",
+                                      @"Accept": @"application/json",
+                                      };
+    XCTAssertEqualObjects(request.allHTTPHeaderFields, expectedHeaders);
+}
+
 - (void)testPrepareJSONGETBodySuccess {
-    // GET requests should have no body
+    // GET requests should have no body. Gzip encoding doesn't matter b/c it's get request
+    // so body is empty and it shouldn't gzip encode
     NSString *path = @"/foo";
     NSDictionary *params = @{@"foo": @2, @"bar": @YES, @"baz": @"hello"};
     NSString *method = @"GET";
@@ -84,6 +137,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     NSMutableURLRequest *request = [self.testHTTPStack prepareJSONRequestWithRoute:path
                                                                         methodName:method
                                                                             params:params
+                                                                   contentEncoding:MAVEHTTPRequestContentEncodingGzip
                                                                   preparationError:&error];
     XCTAssertNil(error);
 
@@ -172,6 +226,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     NSMutableURLRequest *request = [self.testHTTPStack prepareJSONRequestWithRoute:@"/foo"
                                                                         methodName:@"POST"
                                                                             params:badParams
+                                                                   contentEncoding:MAVEHTTPRequestContentEncodingDefault
                                                                   preparationError:&error];
     XCTAssertNil(request);
     XCTAssertEqual([error code], MAVEHTTPErrorRequestJSONCode);
@@ -187,6 +242,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     NSMutableURLRequest *request =  [self.testHTTPStack prepareJSONRequestWithRoute:@"/foo"
                                                                          methodName:@"POST"
                                                                              params:@{}
+                                                                    contentEncoding:MAVEHTTPRequestContentEncodingDefault
                                                                    preparationError:&error];
     XCTAssertNotNil(error);
     XCTAssertNil(request);
@@ -300,7 +356,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
         returnedData = responseData;
     }];
     XCTAssertEqualObjects(returnedData, nil);
-    XCTAssertEqual([returnedError code], MAVEHTTPErrorResponse400LevelCode);
+    XCTAssertEqual([returnedError code], 401);
 }
 
 - (void)testHandle500LevelResponse {
@@ -317,7 +373,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
         returnedData = responseData;
     }];
     XCTAssertEqualObjects(returnedData, nil);
-    XCTAssertEqual([returnedError code], MAVEHTTPErrorResponse500LevelCode);
+    XCTAssertEqual([returnedError code], 504);
 }
 
 - (void)testHandleNilResponse {

@@ -13,6 +13,13 @@
 
 typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
 
+// Encoding for the request body.
+// GET and DELETE requests don't have a body so it doesn't apply to them
+typedef NS_ENUM(NSInteger, MAVEHTTPRequestContentEncoding) {
+    // Default is regular UTF-8 encoding, which will be the plain json string for json requests
+    MAVEHTTPRequestContentEncodingDefault,
+    MAVEHTTPRequestContentEncodingGzip,
+};
 
 
 @interface MAVEHTTPStack : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate>
@@ -25,7 +32,8 @@ typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseDa
 
 - (NSMutableURLRequest *)prepareJSONRequestWithRoute:(NSString *)relativeURL
                                           methodName:(NSString *)methodName
-                                              params:(NSDictionary *)params
+                                              params:(id)params
+                                     contentEncoding:(MAVEHTTPRequestContentEncoding)contentEncoding
                                     preparationError:(NSError **)preparationError;
 - (void)sendPreparedRequest:(NSURLRequest *)request
             completionBlock:(MAVEHTTPCompletionBlock)completionBlock;

@@ -11,6 +11,7 @@
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVECompressionUtils.h"
 
 
 NSString * const MAVERouteTrackSignup = @"/events/signup";
@@ -137,6 +138,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:invitesRoute
                                   methodName:@"POST"
                                       params:params
+                            gzipCompressBody:NO
                              completionBlock:completionBlock];
 }
 
@@ -146,9 +148,31 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodName:@"PUT"
                                       params:params
+                            gzipCompressBody:NO
                              completionBlock:nil];
 }
 
+- (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree {
+    NSString *route = @"/me/contacts/merkle_tree/full";
+    NSDictionary *params = [merkleTree serializable];
+    if (!params) {
+        MAVEErrorLog(@"Error serializing merkle tree, not sending contacts to server");
+        return;
+    }
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"PUT"
+                                      params:params
+                            gzipCompressBody:YES
+                             completionBlock:nil];
+}
+
+- (void)sendContactsChangeset:(NSArray *)changeset completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+    NSString *route = @"/me/contacts/sync_changesets";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"POST" params:changeset
+                            gzipCompressBody:YES
+                             completionBlock:completionBlock];
+}
 
 
 //
@@ -161,6 +185,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodName:@"GET"
                                       params:nil
+                            gzipCompressBody:NO
                              completionBlock:^(NSError *error, NSDictionary *responseData) {
                                  MAVEUserData *userData;
                                  if (error || [responseData count] == 0) {
@@ -177,6 +202,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
+                            gzipCompressBody:NO
                              completionBlock:block];
 }
 
@@ -185,6 +211,25 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
+                            gzipCompressBody:NO
+                             completionBlock:block];
+}
+
+- (void)getRemoteContactsMerkleTreeRootWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
+    NSString *route = @"/me/contacts/merkle_tree/root";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"GET"
+                                      params:nil
+                            gzipCompressBody:NO
+                             completionBlock:block];
+}
+
+- (void)getRemoteContactsFullMerkleTreeWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
+    NSString *route = @"/me/contacts/merkle_tree/full";
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"GET"
+                                      params:nil
+                            gzipCompressBody:NO
                              completionBlock:block];
 }
 
@@ -211,12 +256,15 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodName:(NSString *)methodName
-                                    params:(NSDictionary *)params
+                                    params:(id)params
+                          gzipCompressBody:(BOOL)gzipCompressBody
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+    MAVEHTTPRequestContentEncoding contentEncoding = gzipCompressBody ? MAVEHTTPRequestContentEncodingGzip : MAVEHTTPRequestContentEncodingDefault;
     NSError *requestCreationError;
     NSMutableURLRequest *request = [self.httpStack prepareJSONRequestWithRoute:relativeURL
                                                                     methodName:methodName
                                                                         params:params
+                                                               contentEncoding:contentEncoding
                                                               preparationError:&requestCreationError];
     if (requestCreationError) {
         completionBlock(requestCreationError, nil);
@@ -241,6 +289,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:relativeRoute
                                   methodName:@"POST"
                                       params:fullParams
+                            gzipCompressBody:NO
                              completionBlock:nil];
 }
 

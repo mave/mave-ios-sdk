@@ -8,6 +8,7 @@
 
 #import "MAVEHTTPStack.h"
 #import "MAVEConstants.h"
+#import "MAVECompressionUtils.h"
 
 @implementation MAVEHTTPStack
 
@@ -31,7 +32,8 @@
 ///
 - (NSMutableURLRequest *)prepareJSONRequestWithRoute:(NSString *)relativeURL
                                           methodName:(NSString *)methodName
-                                              params:(NSDictionary *)params
+                                              params:(id)params
+                                     contentEncoding:(MAVEHTTPRequestContentEncoding)contentEncoding
                                     preparationError:(NSError **)preparationError {
     NSData *bodyData;
     // For GET request, turn params into querystring params
@@ -62,12 +64,21 @@
             return nil;
         }
     }
+
+    BOOL isUsingGzip = ([bodyData length] > 0
+                        && contentEncoding == MAVEHTTPRequestContentEncodingGzip);
     
     NSURL *url = [NSURL URLWithString: [self.baseURL stringByAppendingString:relativeURL]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:url];
     [request setHTTPMethod:methodName];
-    [request setHTTPBody:bodyData];
+    if (isUsingGzip) {
+        NSData *compressedData = [MAVECompressionUtils gzipCompressData:bodyData];
+        [request setHTTPBody:compressedData];
+        [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
+    } else {
+        [request setHTTPBody:bodyData];
+    }
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     return request;
@@ -94,18 +105,12 @@
     // Handle error codes
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSInteger statusCode = [httpResponse statusCode];
-    if (statusCode / 100 == 4) {
+    // handle 4xx or 5xx level status codes
+    if (statusCode / 100 == 4 || statusCode / 100 == 5) {
         NSError *statusCodeError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
-                                                              code:MAVEHTTPErrorResponse400LevelCode
+                                                              code:statusCode
                                                           userInfo:@{}];
         return completionBlock(statusCodeError, nil);
-    }
-    if (statusCode / 100 == 5) {
-        NSError *statusCodeError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
-                                                              code:MAVEHTTPErrorResponse500LevelCode
-                                                          userInfo:@{}];
-        return completionBlock(statusCodeError, nil);
-        
     }
     
     // Handle formatting & displaying response

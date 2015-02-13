@@ -93,7 +93,7 @@
     OCMExpect([permissionPrompterMock alloc]).andReturn(permissionPrompterMock);
     OCMExpect([permissionPrompterMock initCustom]).andReturn(permissionPrompterMock);
 
-    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc]
+    __block MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc]
         initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     XCTAssertTrue(remoteConfig.contactsPrePrompt.enabled);
 
@@ -211,6 +211,10 @@
         returnedData = data;
     };
 
+    // Mock the contact sync background job and ensure it runs when this is called
+    id abSyncerMock = OCMPartialMock([MaveSDK sharedInstance].addressBookSyncManager);
+    OCMExpect([abSyncerMock syncContactsInBackground:fakeContacts]);
+
     // If had status unfulfilled to start with, it should log event
     promptHandler.beganFlowAsStatusUnprompted = YES;
     id mock = OCMPartialMock(promptHandler);
@@ -218,7 +222,9 @@
 
     [promptHandler completeAfterPermissionGranted:fakeContacts];
 
+
     OCMVerifyAll(mock);
+    OCMVerifyAll(abSyncerMock);
     XCTAssertEqualObjects(returnedData, expectedIndexedData);
 }
 

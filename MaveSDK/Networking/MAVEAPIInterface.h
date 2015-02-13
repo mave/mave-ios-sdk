@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 #import "MAVEHTTPStack.h"
 #import "MAVEUserData.h"
+#import "MAVEMerkleTree.h"
 
 
 extern NSString * const MAVERouteTrackSignup;
@@ -67,6 +68,9 @@ extern NSString * const MAVEAPIParamShareAudience;
                         userId:(NSString *)userId
       inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+- (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
+- (void)sendContactsChangeset:(NSArray *)changeset
+              completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 ///
 /// GET requests
@@ -74,6 +78,8 @@ extern NSString * const MAVEAPIParamShareAudience;
 - (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 - (void)getNewShareTokenWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
+- (void)getRemoteContactsMerkleTreeRootWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
+- (void)getRemoteContactsFullMerkleTreeWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 
 ///
 /// Request Sending Helpers
@@ -84,7 +90,8 @@ extern NSString * const MAVEAPIParamShareAudience;
 // Main request method we use against our API
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodName:(NSString *)methodName
-                                    params:(NSDictionary *)params
+                                    params:(id)params
+                          gzipCompressBody:(BOOL)gzipCompressBody
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 // Send a POST request to the given event url to track the event, ignoring response.
