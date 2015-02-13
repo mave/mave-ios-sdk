@@ -148,7 +148,7 @@ static dispatch_once_t syncContactsOnceToken;
     MAVEMerkleTree *remoteTree = [[MAVEMerkleTree alloc] initWithJSONObject:remoteTreeDict];
     NSArray *changeset = [merkleTree changesetForOtherTreeToMatchSelf:remoteTree];
     if ([changeset count] == 0) {
-        MAVEInfoLog(@"Contacts already in sync with remote");
+        MAVEDebugLog(@"Contacts already in sync with remote");
     }
     return changeset;
 }
