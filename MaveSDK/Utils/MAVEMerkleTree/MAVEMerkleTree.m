@@ -219,7 +219,7 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     // check that half the length is a power of two (handles edge case where
     // if using a range of the max length UINT64_MAX which is 2^64 - 1, we
     // can still split it in half and proceed as if it were 2^64).
-    NSUInteger halfLength = ceil(range.length / 2);
+    uint64_t halfLength = ceil(range.length / 2);
     double powerOfTwo = log2(halfLength);
     if (powerOfTwo != floor(powerOfTwo)) {
 #ifdef DEBUG

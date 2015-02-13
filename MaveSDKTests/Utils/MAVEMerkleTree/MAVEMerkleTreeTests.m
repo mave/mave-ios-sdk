@@ -58,7 +58,7 @@
 
 - (void)testInitWithArrayDataSortsIt {
     // test initializing with max data range, and that data gets sorted
-    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:NSUIntegerMax];
+    MAVEMerkleTreeDataDemo *o1 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:UINT64_MAX];
     MAVEMerkleTreeDataDemo *o2 = [[MAVEMerkleTreeDataDemo alloc] initWithValue:0];
     NSArray *data = @[o1, o2];
     MAVEMerkleTree *tree = [[MAVEMerkleTree alloc] initWithHeight:2 arrayData:data
@@ -323,7 +323,7 @@
     XCTAssertEqual(rightRange.length, 2);
 
     // Now split one of them again
-    NSRange newLeftRange, newRightRange;
+    MAVERange64 newLeftRange, newRightRange;
     ok = [MAVEMerkleTree splitRange:rightRange
                           lowerHalf:&newLeftRange
                           upperHalf:&newRightRange];
@@ -336,7 +336,8 @@
     // Split the max range
     MAVERange64 newLeftRange2, newRightRange2;
     MAVERange64 newRange = MAVEMakeRange64(0, UINT64_MAX);
-    NSUInteger halfSize = pow(2, 63);
+    uint64_t halfSize = pow(2, 63);
+    XCTAssertNotEqual(halfSize, 0);
     ok = [MAVEMerkleTree splitRange:newRange
                           lowerHalf:&newLeftRange2
                           upperHalf:&newRightRange2];
@@ -422,7 +423,7 @@
 
     MAVEMerkleTreeInnerNode *root = [MAVEMerkleTree buildMerkleTreeOfHeight:11 withKeyRange:range   dataEnumerator:enumer hashValueNumBytes:16];
     XCTAssertEqual(root.treeHeight, 11);
-    NSUInteger expectedRangeSize = pow(2, 64 - (11-1));
+    uint64_t expectedRangeSize = pow(2, 64 - (11-1));
 
     // check leftmost node
     MAVEMerkleTreeInnerNode *node = root;

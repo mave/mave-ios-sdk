@@ -333,8 +333,8 @@
 
 -(void)testDismissOnCancel {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    id viewMock = OCMClassMock([UIView class]);
     chooser.activeViewController = [[UIViewController alloc] init];
+    id viewMock = OCMClassMock([UIView class]);
     chooser.activeViewController.view = viewMock;
 
     // with no back block, does nothing

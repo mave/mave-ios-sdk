@@ -430,7 +430,7 @@
     NSString *methodName = @"DANNY";
     NSDictionary *params = @{@"foo": @3};
     BOOL useGzip = YES; // use gzip for this one so we're testing both cases
-    NSError *expectedError = [[NSError alloc] init];
+    NSError *expectedError = [[NSError alloc] initWithDomain:@"TEST.foo" code:1 userInfo:@{}];
     
     OCMExpect([httpStackMock prepareJSONRequestWithRoute:route
                                               methodName:methodName
