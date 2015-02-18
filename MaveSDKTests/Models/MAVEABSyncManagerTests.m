@@ -80,8 +80,26 @@
 
     OCMVerifyAllWithDelay(promptHandlerMock, 0.1);
     OCMVerifyAllWithDelay(syncerMock, 0.1);
-
 }
+
+- (void)testSyncContactsInBackgroundDoesntSyncIfRemoteConfigDisabled {
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+
+    // use a remote configuration that disables contact sync
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] init];
+    config.contactsSync.enabled = NO;
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id syncerMock = OCMPartialMock(syncer);
+    [[syncerMock reject] buildLocalContactsMerkleTreeFromContacts:[OCMArg any]];
+
+    [syncer syncContactsInBackground:@[]];
+
+    OCMVerifyAllWithDelay(syncerMock, 0.1);
+    OCMVerifyAllWithDelay(maveMock, 0.1);}
 
 - (void)testBuildLocalContactsMerkleTree {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];

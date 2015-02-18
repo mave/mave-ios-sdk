@@ -52,11 +52,16 @@ static dispatch_once_t syncContactsOnceToken;
         //    MAVEDebugLog(@"Changeset: %@", changeset);
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
-            MAVEMerkleTree *localMerkleTree =
-                [self buildLocalContactsMerkleTreeFromContacts:contacts];
-            if (localMerkleTree) {
-                [self doSyncContacts:localMerkleTree];
+            // Only sync contacts if the current configuration allows it
+            BOOL syncEnabled = [MaveSDK sharedInstance].remoteConfiguration.contactsSync.enabled;
+
+            if (syncEnabled) {
+                MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
+                MAVEMerkleTree *localMerkleTree =
+                    [self buildLocalContactsMerkleTreeFromContacts:contacts];
+                if (localMerkleTree) {
+                    [self doSyncContacts:localMerkleTree];
+                }
             }
         });
     });
