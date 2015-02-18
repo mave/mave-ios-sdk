@@ -20,7 +20,11 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    [self setupMaveSDK];
+    return YES;
+}
+
+- (void)setupMaveSDK {
     [MaveSDK setupSharedInstanceWithApplicationID:MAVEDemoApplicationID];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"1"
                                                         firstName:@"Example"
@@ -112,7 +116,6 @@
     mave.displayOptions.sharePageIconTextColor = gray;
     mave.displayOptions.sharePageExplanationFont = [UIFont systemFontOfSize:16];
     mave.displayOptions.sharePageExplanationTextColor = black;
-    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

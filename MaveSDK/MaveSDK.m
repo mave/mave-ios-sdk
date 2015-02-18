@@ -48,6 +48,13 @@ static dispatch_once_t sharedInstanceonceToken;
 
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
+
+        // sync contacts, but wait a few seconds so it doesn't compete with fetching our
+        // share token or remote configuration.
+        // Don't run this in unit tests because it interferes with stuff.
+#ifndef UNIT_TESTING
+        [sharedInstance.addressBookSyncManager syncContactsInBackgroundIfAlreadyHavePermission];
+#endif
     });
 }
 

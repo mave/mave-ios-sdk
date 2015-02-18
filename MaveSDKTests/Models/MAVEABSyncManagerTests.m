@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MAVEABSyncManager.h"
+#import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABPerson.h"
 #import "MAVEConstants.h"
 #import "MAVECompressionUtils.h"
@@ -22,6 +23,11 @@
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
+@end
+
+@interface MAVEABSyncManager(Testing)
++ (NSInteger)valueOfSyncContactsOnceToken;
++ (void)resetSyncContactsOnceTokenForTesting;
 @end
 
 @interface MAVEABSyncManagerTests : XCTestCase
@@ -39,6 +45,42 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+}
+
+- (void)testSyncContactsInBackgroundIfAlreadyHavePermissionWhenHavePermission {
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id syncerMock = OCMPartialMock(syncer);
+    id promptHandlerMock = OCMClassMock([MAVEABPermissionPromptHandler class]);
+
+    // Have these be the contacts that get pulled (empty list is still contacts
+    NSArray *fakeContacts = @[];
+    OCMExpect([promptHandlerMock loadAddressBookSynchronouslyIfPermissionGranted]).andReturn(fakeContacts);
+
+    OCMExpect([syncerMock syncContactsInBackground:fakeContacts]);
+
+    [syncer syncContactsInBackgroundIfAlreadyHavePermission];
+
+    OCMVerifyAllWithDelay(promptHandlerMock, 1);
+    OCMVerifyAllWithDelay(syncerMock, 1);
+}
+
+- (void)testSyncContactsInBackgroundIfAlreadyHavePermissionWhenNoPermission {
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id syncerMock = OCMPartialMock(syncer);
+    id promptHandlerMock = OCMClassMock([MAVEABPermissionPromptHandler class]);
+
+    // Returning means no permission (or some weird error accessing contacts)
+    OCMExpect([promptHandlerMock loadAddressBookSynchronouslyIfPermissionGranted]).andReturn(nil);
+
+    [[syncerMock reject] syncContactsInBackground:[OCMArg any]];
+
+    [syncer syncContactsInBackgroundIfAlreadyHavePermission];
+
+    OCMVerifyAllWithDelay(promptHandlerMock, 0.1);
+    OCMVerifyAllWithDelay(syncerMock, 0.1);
+
 }
 
 - (void)testBuildLocalContactsMerkleTree {

@@ -8,6 +8,7 @@
 
 #import <zlib.h>
 #import "MAVEABSyncManager.h"
+#import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABPerson.h"
 #import "MAVEConstants.h"
 #import "MAVECompressionUtils.h"
@@ -23,30 +24,57 @@ NSUInteger const MAVEABSyncMerkleTreeHeight = 11;
 // way we don't need any logic to decide where to call it, we can just hook into
 // wherever we access the contacts and call it there.
 static dispatch_once_t syncContactsOnceToken;
++ (NSInteger)valueOfSyncContactsOnceToken {
+    return syncContactsOnceToken;
+}
++ (void)resetSyncContactsOnceTokenForTesting {
+    syncContactsOnceToken = 0;
+}
+
+- (void)syncContactsInBackgroundIfAlreadyHavePermission {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        @try {
+            NSArray *contacts = [MAVEABPermissionPromptHandler loadAddressBookSynchronouslyIfPermissionGranted];
+            if (contacts) {
+                [self syncContactsInBackground:contacts];
+            }
+        } @catch (NSException *exception) {
+            MAVEErrorLog(@"Exception doing sync contacts if background if already have permission %@", exception);
+        }
+    });
+}
 
 - (void)syncContactsInBackground:(NSArray *)contacts {
-
-    // tmp, log the changeset of all contacts
-//    MAVEMerkleTree *tmpMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
-//    NSArray *changeset = [tmpMerkleTree changesetForEmptyTreeToMatchSelf];
-//    MAVEDebugLog(@"Changeset: %@", changeset);
-
     dispatch_once(&syncContactsOnceToken, ^{
+        // tmp, log the changeset of all contacts
+        //    MAVEMerkleTree *tmpMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
+        //    NSArray *changeset = [tmpMerkleTree changesetForEmptyTreeToMatchSelf];
+        //    MAVEDebugLog(@"Changeset: %@", changeset);
+
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
             MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
             MAVEMerkleTree *localMerkleTree =
                 [self buildLocalContactsMerkleTreeFromContacts:contacts];
-            [self doSyncContacts:localMerkleTree];
+            if (localMerkleTree) {
+                [self doSyncContacts:localMerkleTree];
+            }
         });
     });
 }
 
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts {
-    MAVEMerkleTree *merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
-                                                             arrayData:contacts
-                                                          dataKeyRange:MAVEMakeRange64(0, UINT64_MAX)
-                                                     hashValueNumBytes:4];
-    return merkleTree;
+    MAVEMerkleTree *merkleTree = nil;
+    @try {
+        merkleTree = [[MAVEMerkleTree alloc]initWithHeight:MAVEABSyncMerkleTreeHeight
+                                                 arrayData:contacts
+                                              dataKeyRange:MAVEMakeRange64(0, UINT64_MAX)
+                                         hashValueNumBytes:4];
+    } @catch (NSException *exception) {
+        MAVEErrorLog(@"Building local merkle tree raised exception %@, won't continue with sync", exception);
+    }
+    @finally {
+        return merkleTree;
+    }
 }
 
 // This method is blocking (uses semaphores to wait for responses because it may need

@@ -17,9 +17,13 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 
 @interface MAVEABSyncManager : NSObject
 
-// pass it an array of MAVEABPerson objects, it will do the full process
-//   of syncing the contacts to the server
+// These methods do the full process of syncing contacts, the first will pull contacts
+// from the ios contacts api and the second lets you pass in the contacts to avoid pulling
+// them twice when we're already working with them.
+- (void)syncContactsInBackgroundIfAlreadyHavePermission;
 - (void)syncContactsInBackground:(NSArray *)contacts;
+
+
 - (void)doSyncContacts:(MAVEMerkleTree *)localContactsMerkleTree;
 
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts;

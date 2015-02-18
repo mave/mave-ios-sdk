@@ -20,6 +20,11 @@
 + (void)resetSharedInstanceForTesting;
 @end
 
+@interface MAVEABSyncManager(Testing)
++ (NSInteger)valueOfSyncContactsOnceToken;
++ (void)resetSyncContactsOnceTokenForTesting;
+@end
+
 @interface MaveSDKTests : XCTestCase
 
 @end
@@ -39,7 +44,9 @@
 }
 
 - (void)testSetupSharedInstance {
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+
     MaveSDK *mave = [MaveSDK sharedInstance];
     XCTAssertEqualObjects(mave.appId, @"foo123");
     XCTAssertNotNil(mave.displayOptions);
