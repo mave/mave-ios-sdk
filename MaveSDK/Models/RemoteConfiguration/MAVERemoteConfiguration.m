@@ -13,6 +13,7 @@
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 
+NSString * const MAVERemoteConfigKeyContactsSync = @"contacts_sync";
 NSString * const MAVERemoteConfigKeyContactsPrePrompt = @"contacts_pre_permission_prompt";
 NSString * const MAVERemoteConfigKeyContactsInvitePage =
     @"contacts_invite_page";
@@ -29,6 +30,8 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
+        self.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsSync]];
+
         self.contactsPrePrompt = [[MAVERemoteConfigurationContactsPrePrompt alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePrompt]];
 
         self.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsInvitePage]];
@@ -47,7 +50,8 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
         self.clipboardShare = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyClipboardShare]];
 
-        if (!self.contactsPrePrompt
+        if (   !self.contactsSync
+            || !self.contactsPrePrompt
             || !self.contactsInvitePage
             || !self.customSharePage
             || !self.serverSMS
@@ -79,6 +83,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
 + (NSDictionary *)defaultJSONData {
     return @{
+        MAVERemoteConfigKeyContactsSync: [MAVERemoteConfigurationContactsSync defaultJSONData],
         MAVERemoteConfigKeyContactsPrePrompt: [MAVERemoteConfigurationContactsPrePrompt defaultJSONData],
         MAVERemoteConfigKeyContactsInvitePage:[MAVERemoteConfigurationContactsInvitePage defaultJSONData],
         MAVERemoteConfigKeyCustomSharePage: [MAVERemoteConfigurationCustomSharePage defaultJSONData],
