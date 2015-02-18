@@ -25,6 +25,14 @@ typedef void (^MAVEABDataBlock)(NSDictionary *indexedContacts);
 // with the return value here
 + (instancetype)promptForContactsWithCompletionBlock:(MAVEABDataBlock)completionBlock;
 
+// Loads the address book and returns the results immediately (formatted as an array
+// of MAVEABPerson objects, if permission is already granted.
+// If permission is not yet prompted or already denied, just return nil.
+// Run in a background process since it makes an async method synchronous.
+// Meant for when we want to do something with the address book if we already have it,
+// at a point where it wouldn't make sense to prompt the user.
++ (NSArray *)loadAddressBookSynchronouslyIfPermissionGranted;
+
 - (instancetype)initCustom;
 
 // Underlying methods for different scenarios
@@ -37,6 +45,7 @@ typedef void (^MAVEABDataBlock)(NSDictionary *indexedContacts);
 // Loads the address book and calls the completion block with results
 // If permission has not yet been asked for it will prompt user when called
 - (void)loadAddressBookAndComplete;
+
 - (void)completeAfterPermissionGranted:(NSArray *)MAVEABPersonsArray;
 - (void)completeAfterPermissionDenied;
 

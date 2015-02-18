@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
+#import "MAVEConstants.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABTestDataFactory.h"
@@ -298,6 +299,37 @@
     [promptHandler logContactsPromptRelatedEventWithRoute:fakeRoute];
 
     OCMVerifyAll(APIInterfaceMock);
+}
+
+- (void)testLoadAddressBookSynchronouslyIfPermissionGrantedWhenPermissionNotGranted {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMExpect([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
+
+    NSArray *contacts = [MAVEABPermissionPromptHandler loadAddressBookSynchronouslyIfPermissionGranted];
+    XCTAssertNil(contacts);
+    OCMVerifyAll(abUtilsMock);
+}
+
+- (void)testLoadAddressBookSynchronouslyIfPermissionGranted {
+    NSString *status = [MAVEABUtils addressBookPermissionStatus];
+    // TODO: Add suites of tests to run with and without address book permissions, and build scripts that
+    // set the simulator permissions accordingly and run tests in all the states.  For now, don't fail
+    // when no permissions but only run this test when we have permissions
+    if ([status isEqualToString:MAVEABPermissionStatusAllowed]) {
+        MAVEInfoLog(@"Address book permission granted, actually running test testLoadAddressBookSynchronouslyIfPermissionGranted");
+        NSArray *contacts = [MAVEABPermissionPromptHandler loadAddressBookSynchronouslyIfPermissionGranted];
+        XCTAssertNotNil(contacts);
+        XCTAssertGreaterThan([contacts count], 0);
+        // Check for the first person in the default simulator address book, sorted
+        // by first name which is how we sort the address book.
+        // If this fails, probably need to reset all simulator data which will
+        // reset to the default address book
+        MAVEABPerson *person1 = [contacts objectAtIndex:0];
+        XCTAssertEqualObjects(person1.firstName, @"Anna");
+        XCTAssertEqualObjects(person1.lastName, @"Haro");
+    } else {
+        MAVEInfoLog(@"Addres book permission not granted, skipping test testLoadAddressBookSynchronouslyIfPermissionGranted");
+    }
 }
 
 @end

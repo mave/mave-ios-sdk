@@ -74,6 +74,34 @@
     return this;
 }
 
++ (NSArray *)loadAddressBookSynchronouslyIfPermissionGranted {
+    NSString *abStatus = [MAVEABUtils addressBookPermissionStatus];
+    if (![abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
+        return nil;
+    }
+    CFErrorRef accessErrorCF = NULL;
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
+    if (accessErrorCF) {
+        return nil;
+    }
+
+    // Use the dispatch semaphore to make the async method async
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block NSArray *contacts = nil;
+    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+        if (granted && !error) {
+            NSArray *tmpArray = CFBridgingRelease(ABAddressBookCopyArrayOfAllPeople(addressBook));
+            contacts = [MAVEABUtils copyEntireAddressBookToMAVEABPersonArray:tmpArray];
+        }
+        if (addressBook != NULL) CFRelease(addressBook);
+        dispatch_semaphore_signal(semaphore);
+    });
+    NSInteger waitForSeconds = 5;
+    dispatch_semaphore_wait(semaphore,
+        dispatch_time(DISPATCH_TIME_NOW, waitForSeconds * NSEC_PER_SEC));
+    return contacts;
+}
+
 
 - (void)loadAddressBookAndComplete {
     // Loads the address book, prompting user if user has not been prompted yet, and
