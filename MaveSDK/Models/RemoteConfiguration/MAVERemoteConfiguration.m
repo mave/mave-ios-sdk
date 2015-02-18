@@ -60,6 +60,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
             || !self.facebookShare
             || !self.twitterShare
             || !self.clipboardShare) {
+            MAVEErrorLog(@"Remote configuration failed, 1 or more sub-sections was nil");
             return nil;
         }
     }

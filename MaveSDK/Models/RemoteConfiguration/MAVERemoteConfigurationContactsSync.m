@@ -23,8 +23,6 @@ const NSString *MAVERemoteConfigKeyContactsSyncEnabled = @"enabled";
     return self;
 }
 
-
-
 + (NSDictionary *)defaultJSONData {
     return @{
         MAVERemoteConfigKeyContactsSyncEnabled: @NO,
