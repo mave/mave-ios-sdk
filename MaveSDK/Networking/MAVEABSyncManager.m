@@ -52,7 +52,7 @@ static dispatch_once_t syncContactsOnceToken;
         //    MAVEDebugLog(@"Changeset: %@", changeset);
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            MAVEDebugLog(@"Running contacts sync, found %lu contacts", [contacts count]);
+            MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
             MAVEMerkleTree *localMerkleTree =
                 [self buildLocalContactsMerkleTreeFromContacts:contacts];
             if (localMerkleTree) {
