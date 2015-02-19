@@ -35,6 +35,11 @@ extern NSString * const MAVEABPermissionStatusUnprompted;
 // by the server) into a list of records
 + (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons;
 
+// Merge a list of suggested people into the dictionary of data for the address book table
+// (dict mapping each first letter to a list of MAVEABPersons).
++ (NSDictionary *)combineSuggested:(NSArray *)suggestedInvites
+     intoABIndexedForTableSections:(NSDictionary *)indexedPersons;
+
 // Sorter
 + (void)sortMAVEABPersonArray:(NSMutableArray *)input;
 

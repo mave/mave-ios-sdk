@@ -11,6 +11,12 @@
 #import "MAVESearchBar.h"
 #import "MAVEABPerson.h"
 
+// This is the key to use in the table data dict for the suggested invites section.
+// It's set to ! which is the first non-whitespace ascii character so it always gets
+// sorted to the top of the list, and it won't be used as the first letter in a name
+// because all non-letters are mapped to the "#" sections.
+extern NSString * const MAVESuggestedInvitesTableDataKey;
+
 // This view controller can alert an additional delegate when the number of people selected changes
 @protocol MAVEABTableViewAdditionalDelegate <NSObject>
 @required

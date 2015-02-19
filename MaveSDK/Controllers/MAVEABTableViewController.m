@@ -15,6 +15,11 @@
 #import "MAVEABUtils.h"
 #import "MAVEABPersonCell.h"
 
+// This is UTF-8 code point 0021, it should get sorted before any letters in any language
+NSString * const MAVESuggestedInvitesTableDataKey = @"\u2605";
+// This is the last UTF-8 printable character, it should get sorted after any letters in any language
+NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
+
 @implementation MAVEABTableViewController
 
 #pragma mark - Init and Layout
@@ -176,9 +181,9 @@
     return indexPath;
 }
 
-//
-// Sections
-//
+
+# pragma mark - Table Sections
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (tableView == self.tableView) {
         return [self.tableSections count];
@@ -260,9 +265,27 @@
     return numberOfRows;
 }
 
-//
-// Data Source methods
-//
+# pragma mark - Table index values
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    if (tableView == self.tableView) {
+        return self.tableSections;
+    } else {
+        return nil;
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    if (tableView == self.tableView) {
+        return index;
+    } else {
+        return -1;
+    }
+}
+
+
+# pragma mark - Data Source methods
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = MAVEInvitePageABPersonCellID;
     MAVEABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
@@ -316,21 +339,6 @@
     }
 }
 
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    if (tableView == self.tableView) {
-        return self.tableSections;
-    } else {
-        return nil;
-    }
-}
-
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    if (tableView == self.tableView) {
-        return index;
-    } else {
-        return -1;
-    }
-}
 
 #pragma mark - Search Results
 

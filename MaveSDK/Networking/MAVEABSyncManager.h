@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 //
 // Both methods will check the remote configuration flag and if syncing contacts is disabled
 // they do not actually sync.
+// The second method asks the server to return suggested friends 
 - (void)syncContactsInBackgroundIfAlreadyHavePermission;
 - (void)syncContactsInBackground:(NSArray *)contacts;
 

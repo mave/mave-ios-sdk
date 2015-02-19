@@ -101,4 +101,38 @@
     XCTAssertEqualObjects([indexed objectForKey:@2], p3);
 }
 
+- (void)testCombineSuggestedIntoABIndexedForTableSections {
+    // build an indexed addres book
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.firstName = @"Aalbert";
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.firstName = @"Andy";
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.firstName = @"Beverly";
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.firstName = @"Carly";
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init]; p4.firstName = @"Clara";
+    NSDictionary *tableData = @{
+        @"A": @[p0, p1],
+        @"B": @[p2],
+        @"C": @[p3, p4],
+        };
+
+    // Also build a list of suggested people. Note there is some overlap but also one
+    // contact not found in address book (this may be impossible depending on implementation
+    // of suggested but may as well support it from a data model perspective).
+    MAVEABPerson *p5 = [[MAVEABPerson alloc] init]; p5.firstName = @"Suggested 1";
+    NSArray *suggested = @[p5, p0, p1];
+
+    // Define what the expected data should be.
+    // Note we don't take people out of the data just because they are in suggested
+    NSDictionary *expectedTableData = @{
+        @"!": @[p5, p0, p1],
+        @"A": @[p0, p1],
+        @"B": @[p2],
+        @"C": @[p3, p4],
+    };
+
+    NSDictionary *newTableData = [MAVEABUtils combineSuggested:suggested
+                                 intoABIndexedForTableSections:tableData];
+
+    XCTAssertEqualObjects(newTableData, expectedTableData);
+}
+
 @end

@@ -10,6 +10,7 @@
 #import "MAVEABUtils.h"
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
+#import "MAVEABTableViewController.h"
 
 NSString * const MAVEABPermissionStatusAllowed = @"allowed";
 NSString * const MAVEABPermissionStatusDenied = @"denied";
@@ -72,6 +73,19 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
         [output setObject:person forKey:@(person.hashedRecordID)];
     }
     return output;
+}
+
++ (NSDictionary *)combineSuggested:(NSArray *)suggestedInvites intoABIndexedForTableSections:(NSDictionary *)indexedPersons {
+    NSMutableDictionary *newData = [[NSMutableDictionary alloc] initWithCapacity:[indexedPersons count]+1];
+    // Add the suggested invites to the new dictionary
+    [newData setObject:suggestedInvites forKey:MAVESuggestedInvitesTableDataKey];
+
+    // Add the existing invites to the new dictionary
+    for (NSString *key in indexedPersons) {
+        NSArray *listForKey = [indexedPersons objectForKey:key];
+        [newData setObject:listForKey forKey:key];
+    }
+    return [[NSDictionary alloc] initWithDictionary:newData];
 }
 
 @end
