@@ -256,18 +256,20 @@
 
 - (void)testSendContactsChangeset {
     id mocked = OCMPartialMock(self.testAPIInterface);
-    NSArray *fakeJSON = @[@"some changset"];
+    NSArray *fakeChangeset = @[@"some changset"];
+    NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
+                                   @"return_closest_contacts": @NO};
     MAVEHTTPCompletionBlock fakeBlock = ^(NSError *error, NSDictionary *data){};
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
                                               methodName:@"POST"
-                                                  params:fakeJSON
+                                                  params:expectedJSON
                                         gzipCompressBody:YES
                                          completionBlock:fakeBlock]);
-    [self.testAPIInterface sendContactsChangeset:fakeJSON completionBlock:fakeBlock];
-
+    [self.testAPIInterface sendContactsChangeset:fakeChangeset
+                           returnClosestContacts:NO
+                                 completionBlock:fakeBlock];
     OCMVerifyAll(mocked);
 }
-
 
 
 - (void)testGetReferringUser {

@@ -109,7 +109,9 @@ static dispatch_once_t syncContactsOnceToken;
         }
 
         MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
-        [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset completionBlock:nil];
+        [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset
+                                               returnClosestContacts:NO
+                                                     completionBlock:nil];
         [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree];
 
     } @catch (NSException *exception) {

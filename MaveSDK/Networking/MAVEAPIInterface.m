@@ -166,10 +166,15 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              completionBlock:nil];
 }
 
-- (void)sendContactsChangeset:(NSArray *)changeset completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+- (void)sendContactsChangeset:(NSArray *)changeset
+        returnClosestContacts:(BOOL)returnClosestContacts
+              completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSString *route = @"/me/contacts/sync_changesets";
+    NSDictionary *params = @{@"changeset_list": changeset,
+                             @"return_closest_contacts": @(returnClosestContacts)};
     [self sendIdentifiedJSONRequestWithRoute:route
-                                  methodName:@"POST" params:changeset
+                                  methodName:@"POST"
+                                      params:params
                             gzipCompressBody:YES
                              completionBlock:completionBlock];
 }

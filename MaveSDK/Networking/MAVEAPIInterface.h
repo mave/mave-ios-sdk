@@ -70,6 +70,7 @@ extern NSString * const MAVEAPIParamShareAudience;
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
 - (void)sendContactsChangeset:(NSArray *)changeset
+        returnClosestContacts:(BOOL)returnClosestContacts
               completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 ///
