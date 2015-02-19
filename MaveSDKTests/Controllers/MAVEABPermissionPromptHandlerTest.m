@@ -203,7 +203,7 @@
 
 - (void)testCompleteAfterPermissionUnfulfilledToGranted {
     NSArray *fakeContacts = @[[MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Cosson"]];
-    NSDictionary *expectedIndexedData = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:fakeContacts];
+    NSDictionary *expectedIndexedData = [MAVEABUtils indexABPersonArrayForTableSections:fakeContacts];
 
     // generate object under test and its block
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];

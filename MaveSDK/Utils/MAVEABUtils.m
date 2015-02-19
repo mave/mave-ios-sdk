@@ -45,7 +45,7 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     [input sortUsingSelector:@selector(compareNames:)];
 }
 
-+ (NSDictionary *)indexedDictionaryFromMAVEABPersonArray:(NSArray *)persons {
++ (NSDictionary *)indexABPersonArrayForTableSections:(NSArray *)persons {
     if ([persons count] == 0) {
         return nil;
     }
@@ -64,6 +64,14 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
         [[result objectForKey:indexLetter] addObject:person];
     }
     return result;
+}
+
++ (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons {
+    NSMutableDictionary *output = [[NSMutableDictionary alloc] initWithCapacity:[persons count]];
+    for (MAVEABPerson *person in persons) {
+        [output setObject:person forKey:@(person.hashedRecordID)];
+    }
+    return output;
 }
 
 @end

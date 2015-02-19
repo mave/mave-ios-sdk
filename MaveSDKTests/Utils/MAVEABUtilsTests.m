@@ -63,23 +63,42 @@
     // TODO Assert that the sort function was called
 }
 
-- (void)testIndexedDictionaryOfMAVEABPersons {
+- (void)testIndexABPersonArrayForTableSections {
     MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Don" lastName:@"Adams"];
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Deb" lastName:@"Anderson"];
     MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Bernard"];
     NSArray *data = @[p1, p2, p3];
     NSDictionary *expected = @{@"D": @[p1, p2], @"F": @[p3]};
 
-    NSDictionary *indexed = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data];
+    NSDictionary *indexed = [MAVEABUtils indexABPersonArrayForTableSections:data];
     XCTAssertEqualObjects(indexed, expected);
 }
 
-- (void)testIndexedDictionaryOfMAVEABPersonsAcceptsNilAndEmpty {
+- (void)testIndexABPersonArrayForTableSectionsAcceptsNilAndEmpty {
     NSArray *data = nil;
-    XCTAssertNil([MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data]);
+    XCTAssertNil([MAVEABUtils indexABPersonArrayForTableSections:data]);
     
     data = @[];
-    XCTAssertNil([MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data]);
+    XCTAssertNil([MAVEABUtils indexABPersonArrayForTableSections:data]);
+}
+
+- (void)testIndexABPersonArrayByHashedRecordID {
+    // make some people and explicitly overwrite hashed record id so we know it
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    // if there happens to be a hashed record id collision, it simply uses the
+    // last one in the list. This should never happen due to md5 being
+    // evenly distributed and size of uint64_t
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.hashedRecordID = 2;
+    NSArray *contacts = @[p0, p1, p2, p3];
+
+    NSDictionary *indexed = [MAVEABUtils indexABPersonArrayByHashedRecordID:contacts];
+    XCTAssertEqual([indexed count], 3);
+    XCTAssertEqualObjects([indexed objectForKey:@(0)], p0);
+    XCTAssertEqualObjects([indexed objectForKey:@(1)], p1);
+    XCTAssertNotEqualObjects([indexed objectForKey:@(2)], p2);
+    XCTAssertEqualObjects([indexed objectForKey:@2], p3);
 }
 
 @end

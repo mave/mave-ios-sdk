@@ -139,7 +139,7 @@
         MAVEInfoLog(@"User accepted address book permissions");
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted];
     }
-    NSDictionary *indexedPersons = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:MAVEABPersonsArray];
+    NSDictionary *indexedPersons = [MAVEABUtils indexABPersonArrayForTableSections:MAVEABPersonsArray];
     self.completionBlock(indexedPersons);
 
     // Do contacts sync in the background
