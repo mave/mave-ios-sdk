@@ -8,6 +8,7 @@
 
 #import <zlib.h>
 #import "MAVEABSyncManager.h"
+#import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABPerson.h"
 #import "MAVEConstants.h"
@@ -36,7 +37,7 @@ static dispatch_once_t syncContactsOnceToken;
         @try {
             NSArray *contacts = [MAVEABPermissionPromptHandler loadAddressBookSynchronouslyIfPermissionGranted];
             if (contacts) {
-                [self syncContactsInBackground:contacts];
+                [self syncContactsAndPopulateSuggestedInBackground:contacts];
             }
         } @catch (NSException *exception) {
             MAVEErrorLog(@"Exception doing sync contacts if background if already have permission %@", exception);
@@ -44,7 +45,27 @@ static dispatch_once_t syncContactsOnceToken;
     });
 }
 
-- (void)syncContactsInBackground:(NSArray *)contacts {
+// This method is called at app launch, if we already have permission to access contacts we run the contacts sync
+// which will
+- (void)atLaunchSyncContactsAndPopulateSuggestedByPermissions {
+    NSString *contactsPermission = [MAVEABUtils addressBookPermissionStatus];
+
+    if ([contactsPermission isEqualToString:MAVEABPermissionStatusAllowed]) {
+        NSArray *contacts = [MAVEABPermissionPromptHandler loadAddressBookSynchronouslyIfPermissionGranted];
+        [self syncContactsAndPopulateSuggestedInBackground:contacts];
+
+    } else if ([contactsPermission isEqualToString:MAVEABPermissionStatusDenied]) {
+        // If we don't have address book permissions we won't show the contacts invite page anyway so we
+        // don't need suggested invites, just set it now as empty.
+
+    } else {
+        // User has not been prompted for contacts permission yet.
+        // Do nothing, if user does grant permission later we'll sync contacts and fetch suggested then
+
+    }
+}
+
+- (void)syncContactsAndPopulateSuggestedInBackground:(NSArray *)contacts {
     dispatch_once(&syncContactsOnceToken, ^{
         // tmp, log the changeset of all contacts
         //    MAVEMerkleTree *tmpMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
@@ -57,11 +78,7 @@ static dispatch_once_t syncContactsOnceToken;
 
             if (syncEnabled) {
                 MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
-                MAVEMerkleTree *localMerkleTree =
-                    [self buildLocalContactsMerkleTreeFromContacts:contacts];
-                if (localMerkleTree) {
-                    [self doSyncContacts:localMerkleTree];
-                }
+                [self doSyncContacts:contacts returnSuggested:YES];
             }
         });
     });
@@ -84,13 +101,27 @@ static dispatch_once_t syncContactsOnceToken;
 
 // This method is blocking (uses semaphores to wait for responses because it may need
 // to do several steps in serial. Make sure to run in a background thread
-- (void)doSyncContacts:(MAVEMerkleTree *)localContactsMerkleTree {
+- (NSArray *)doSyncContacts:(NSArray *)contacts returnSuggested:(BOOL)returnSuggested {
     @try {
+        MAVEMerkleTree *localContactsMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
+
         NSArray *changeset;
         switch ([self decideNeededSyncTypeCompareRemoteTreeRootToTree:localContactsMerkleTree]) {
-            // Here the remote tree is in sync with current state so exit
+            // Here the remote tree is in sync with current state so no need to sync
+            // We just query for closest contacts instead and return that.
             case MAVEContactSyncTypeNone: {
-                return;
+
+                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+                __block NSArray *closestHashedRecordIDs = @[];
+                [[MaveSDK sharedInstance].APIInterface getClosestContactsHashedRecordIDs:^(NSArray *_closestHashedRecordIDs) {
+                    if ([_closestHashedRecordIDs count] > 0) {
+                        closestHashedRecordIDs = _closestHashedRecordIDs;
+                    }
+                    dispatch_semaphore_signal(semaphore);
+                }];
+                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                return [MAVEABUtils listofABPersonsFromListOfHashedRecordIDs:closestHashedRecordIDs
+                                                              andAllContacts:contacts];
             }
 
             // Here the remote tree is different than current tree so we need to send
@@ -108,11 +139,9 @@ static dispatch_once_t syncContactsOnceToken;
             }
         }
 
-        MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
-        [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset
-                                               returnClosestContacts:NO
-                                                     completionBlock:nil];
-        [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree];
+        return [self sendContactsChangeset:changeset
+                                merkleTree:localContactsMerkleTree
+                           returnSuggested:returnSuggested];
 
     } @catch (NSException *exception) {
         MAVEErrorLog(@"Caught exception %@ doing contacts sync", exception);
@@ -189,6 +218,17 @@ static dispatch_once_t syncContactsOnceToken;
     return changeset;
 }
 
+- (NSArray *)sendContactsChangeset:(NSArray *)changeset
+                        merkleTree:(MAVEMerkleTree *)merkleTree
+                   returnSuggested:(BOOL)returnSuggested {
+//    MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
+//    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+//    [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset
+//                                           returnClosestContacts:NO
+//                                                 completionBlock:nil];
+//    [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree];
+    return nil;
+}
 
 
 - (NSData *)serializeAndCompressAddressBook:(NSArray *)addressBook {

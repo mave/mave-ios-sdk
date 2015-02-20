@@ -136,7 +136,7 @@
 
 - (void)completeAfterPermissionGranted:(NSArray *)MAVEABPersonsArray {
     // Kick off contacts sync in the background
-    [[MaveSDK sharedInstance].addressBookSyncManager syncContactsInBackground:MAVEABPersonsArray];
+    [[MaveSDK sharedInstance].addressBookSyncManager syncContactsAndPopulateSuggestedInBackground:MAVEABPersonsArray];
 
     if (self.beganFlowAsStatusUnprompted) {
         MAVEInfoLog(@"User accepted address book permissions");

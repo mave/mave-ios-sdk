@@ -214,7 +214,7 @@
 
     // Mock the contact sync background job and ensure it runs when this is called
     id abSyncerMock = OCMPartialMock([MaveSDK sharedInstance].addressBookSyncManager);
-    OCMExpect([abSyncerMock syncContactsInBackground:fakeContacts]);
+    OCMExpect([abSyncerMock syncContactsAndPopulateSuggestedInBackground:fakeContacts]);
 
     // If had status unfulfilled to start with, it should log event
     promptHandler.beganFlowAsStatusUnprompted = YES;

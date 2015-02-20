@@ -259,12 +259,18 @@
     NSArray *fakeChangeset = @[@"some changset"];
     NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
                                    @"return_closest_contacts": @NO};
-    MAVEHTTPCompletionBlock fakeBlock = ^(NSError *error, NSDictionary *data){};
+    NSArray *fakeClosestContacts = @[@"foo"];
+    void (^fakeBlock)(NSArray * closestContacts) = ^void(NSArray * closestContacts) {};
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
                                               methodName:@"POST"
                                                   params:expectedJSON
                                         gzipCompressBody:YES
-                                         completionBlock:fakeBlock]);
+                                         completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEHTTPCompletionBlock completionBlock = obj;
+        NSDictionary *returnVal = @{@"suggestions": fakeClosestContacts};
+        completionBlock(nil, returnVal);
+        return YES;
+    }]]);
     [self.testAPIInterface sendContactsChangeset:fakeChangeset
                            returnClosestContacts:NO
                                  completionBlock:fakeBlock];
@@ -292,6 +298,31 @@
     OCMVerifyAll(mocked);
     XCTAssertEqualObjects(userData.userID, @"1");
     XCTAssertEqualObjects(userData.firstName, @"dan");
+}
+
+
+- (void)testGetClosestContactsHashedRecordIDs {
+    NSArray *closestContacts = @[@"foo", @"bar"];
+    NSDictionary *fakeResponseData = @{@"suggestions": closestContacts};
+
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/closest"
+                                            methodName:@"GET"
+                                                params:nil
+                                      gzipCompressBody:NO
+                                       completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        // Call the completion block with data, and then later check the data was returned
+        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
+        return YES;
+    }]]);
+
+    __block NSArray *closestContactsReturned;
+    [self.testAPIInterface getClosestContactsHashedRecordIDs:^(NSArray *_closestContacts) {
+        closestContactsReturned = _closestContacts;
+    }];
+
+    OCMVerifyAll(mock);
+    XCTAssertEqualObjects(closestContactsReturned, closestContacts);
 }
 
 - (void)testGetReferringUserNull {
@@ -362,8 +393,8 @@
                                             methodName:@"GET"
                                                 params:nil
                                       gzipCompressBody:NO
-                                       completionBlock:myBlock];
-    [self.testAPIInterface getRemoteContactsFullMerkleTreeWithCompletionBlock:myBlock]);
+                                       completionBlock:myBlock]);
+    [self.testAPIInterface getRemoteContactsFullMerkleTreeWithCompletionBlock:myBlock];
     OCMVerifyAll(mock);
 }
 

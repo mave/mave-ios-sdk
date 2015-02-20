@@ -82,6 +82,19 @@
     XCTAssertNil([MAVEABUtils indexABPersonArrayForTableSections:data]);
 }
 
+- (void)testListOfABPersonsFromListOfHashedRecordIDs {
+    // make some people and explicitly overwrite hashed record id so we know it
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    NSArray *contacts = @[p0, p1, p2];
+
+    NSArray *hashedRecordIDs = @[@0, @2];
+    NSArray *suggested = [MAVEABUtils listofABPersonsFromListOfHashedRecordIDs:hashedRecordIDs andAllContacts:contacts];
+    NSArray *expectedSuggested = @[p0, p2];
+    XCTAssertEqualObjects(suggested, expectedSuggested);
+}
+
 - (void)testIndexABPersonArrayByHashedRecordID {
     // make some people and explicitly overwrite hashed record id so we know it
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
@@ -123,7 +136,7 @@
     // Define what the expected data should be.
     // Note we don't take people out of the data just because they are in suggested
     NSDictionary *expectedTableData = @{
-        @"!": @[p5, p0, p1],
+        @"\u2605": @[p5, p0, p1],
         @"A": @[p0, p1],
         @"B": @[p2],
         @"C": @[p3, p4],

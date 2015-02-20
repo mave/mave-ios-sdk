@@ -57,7 +57,7 @@
     NSArray *fakeContacts = @[];
     OCMExpect([promptHandlerMock loadAddressBookSynchronouslyIfPermissionGranted]).andReturn(fakeContacts);
 
-    OCMExpect([syncerMock syncContactsInBackground:fakeContacts]);
+    OCMExpect([syncerMock syncContactsAndPopulateSuggestedInBackground:fakeContacts]);
 
     [syncer syncContactsInBackgroundIfAlreadyHavePermission];
 
@@ -74,7 +74,7 @@
     // Returning means no permission (or some weird error accessing contacts)
     OCMExpect([promptHandlerMock loadAddressBookSynchronouslyIfPermissionGranted]).andReturn(nil);
 
-    [[syncerMock reject] syncContactsInBackground:[OCMArg any]];
+    [[syncerMock reject] syncContactsAndPopulateSuggestedInBackground:[OCMArg any]];
 
     [syncer syncContactsInBackgroundIfAlreadyHavePermission];
 
@@ -96,7 +96,7 @@
     id syncerMock = OCMPartialMock(syncer);
     [[syncerMock reject] buildLocalContactsMerkleTreeFromContacts:[OCMArg any]];
 
-    [syncer syncContactsInBackground:@[]];
+    [syncer syncContactsAndPopulateSuggestedInBackground:@[]];
 
     OCMVerifyAllWithDelay(syncerMock, 0.1);
     OCMVerifyAllWithDelay(maveMock, 0.1);}
@@ -128,30 +128,61 @@
     XCTAssertEqual([changeset count], 1);
 }
 
-- (void)testDoSyncContactsShouldSkip {
+///
+/// Thorough, almost integration level tests of the method to sync contacts and return the
+/// suggested invites
+///
+- (void)testDoSyncContactsReturningSuggestedShouldSkip {
+    // set up to return instructions not to sync
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    NSArray *fakeContacts = @[p0, p1, p2];
     id mock = OCMPartialMock(syncer);
     id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+
+    // mock the method that returns the merkle tree
+    OCMExpect([mock buildLocalContactsMerkleTreeFromContacts:fakeContacts]).andReturn(merkleTreeMock);
+
+    // mock the method that determines if we sync or not
     OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
         .andReturn(MAVEContactSyncTypeNone);
+
+    // assert that we don't sync contacts
     [[mock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
     [[apiInterfaceMock reject] sendContactsChangeset:[OCMArg any] returnClosestContacts:NO completionBlock:[OCMArg any]];
     [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any]];
+    // we should fetch suggested separately since we're not syncing
+    NSArray *fakeSuggestedHashedRecordIDs = @[@1, @2];
+    OCMExpect([apiInterfaceMock getClosestContactsHashedRecordIDs:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^contactsBlock)(NSArray *contacts) = obj;
+        contactsBlock(fakeSuggestedHashedRecordIDs);
+        return YES;
+    }]]);
 
-    [syncer doSyncContacts:merkleTreeMock];
-
+    NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
+    NSArray *expectedSuggested = @[p1, p2];
+    XCTAssertEqualObjects(closestContacts, expectedSuggested);
     OCMVerifyAll(mock);
+    OCMVerifyAll(merkleTreeMock);
     OCMVerifyAll(apiInterfaceMock);
 }
 
-- (void)testDoSyncContactsInitialSync {
+- (void)testDoSyncContactsReturningSuggestedInitialSync {
     // If server indicates that it's the initial sync, don't even fetch the full merkle tree
     // to compare it, just diff against an empty tree to return everything
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    NSArray *fakeContacts = @[p0, p1, p2];
     id mock = OCMPartialMock(syncer);
     id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+
+    // mock the method that returns the merkle tree
+    OCMExpect([mock buildLocalContactsMerkleTreeFromContacts:fakeContacts]).andReturn(merkleTreeMock);
 
     // Mock to force the initial sync state
     OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
@@ -163,34 +194,42 @@
     NSArray *fakeChangeset = @[@"foo", @"bar"];
     OCMExpect([merkleTreeMock changesetForEmptyTreeToMatchSelf]).andReturn(fakeChangeset);
     // And then send resulting changeset to the server
-    OCMExpect([apiInterfaceMock sendContactsChangeset:fakeChangeset returnClosestContacts: NO completionBlock:nil]);
-    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock]);
+    NSArray *fakeClosestContacts = @[@"blah", @"blah"];
+    OCMExpect([mock sendContactsChangeset:fakeChangeset merkleTree:merkleTreeMock returnSuggested:YES]).andReturn(fakeClosestContacts);
 
-    [syncer doSyncContacts:merkleTreeMock];
+    NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
 
+    XCTAssertEqualObjects(closestContacts, fakeClosestContacts);
     OCMVerifyAll(mock);
     OCMVerifyAll(merkleTreeMock);
-    OCMVerifyAll(apiInterfaceMock);
 }
 
 // When an update needs to be done, compare full tree to get the diff and then send the difference
-- (void)testDoSyncContactsCompareFullTreeWithRemote {
+- (void)testDoSyncContactsReturningSuggestedCompareFullTreeWithRemote {
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    NSArray *fakeContacts = @[p0, p1, p2];
     id mock = OCMPartialMock(syncer);
     id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
 
+    // mock the method that returns the merkle tree
+    OCMExpect([mock buildLocalContactsMerkleTreeFromContacts:fakeContacts]).andReturn(merkleTreeMock);
+
+    // mock to force the update diff state
     OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock]).andReturn(MAVEContactSyncTypeUpdate);
 
     NSArray *fakeChangeset = @[@"foo"];
     OCMExpect([mock changesetComparingFullRemoteTreeToTree:merkleTreeMock]).andReturn(fakeChangeset);
-    OCMExpect([apiInterfaceMock sendContactsChangeset:fakeChangeset returnClosestContacts:NO completionBlock:nil]);
-    OCMExpect([apiInterfaceMock sendContactsMerkleTree:merkleTreeMock]);
+    NSArray *fakeClosestContacts = @[@"blah", @"blah"];
+    OCMExpect([mock sendContactsChangeset:fakeChangeset merkleTree:merkleTreeMock returnSuggested:YES]).andReturn(fakeClosestContacts);
 
-    [syncer doSyncContacts:merkleTreeMock];
+    NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
 
+    XCTAssertEqualObjects(closestContacts, fakeClosestContacts);
     OCMVerifyAll(mock);
-    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(merkleTreeMock);
 }
 
 - (void)testDecideNeededSyncWhenRemoteMerkleTreeExists {
@@ -280,6 +319,20 @@
 
     OCMVerifyAll(treeMock);
     OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testSendContactsChangesetAndMerkleTreeReturnSuggested {
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+
+    NSArray *fakeChangeset = @[@"fake"];
+    id fakeMerkleTree = @"fake tree";
+    OCMExpect([apiInterfaceMock sendContactsChangeset:fakeChangeset
+                                   returnClosestContacts:YES
+                                         completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        return YES;
+    }]]);
 }
 
 

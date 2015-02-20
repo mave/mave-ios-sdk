@@ -168,15 +168,13 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 
 - (void)sendContactsChangeset:(NSArray *)changeset
         returnClosestContacts:(BOOL)returnClosestContacts
-              completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+              completionBlock:(void (^)(NSArray *closestContacts))closestContactsBlock {
     NSString *route = @"/me/contacts/sync_changesets";
     NSDictionary *params = @{@"changeset_list": changeset,
                              @"return_closest_contacts": @(returnClosestContacts)};
-    [self sendIdentifiedJSONRequestWithRoute:route
-                                  methodName:@"POST"
-                                      params:params
-                            gzipCompressBody:YES
-                             completionBlock:completionBlock];
+    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"POST" params:params gzipCompressBody:YES completionBlock:^(NSError *error, NSDictionary *responseData) {
+
+    }];
 }
 
 
@@ -200,6 +198,22 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                  }
                                  referringUserBlock(userData);
                              }];
+}
+
+- (void)getClosestContactsHashedRecordIDs:(void (^)(NSArray *))closestContactsBlock {
+    NSString *route = @"/me/contacts/closest";
+    NSArray *emptyValue = @[];
+    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"GET" params:nil gzipCompressBody:NO completionBlock:^(NSError *error, NSDictionary *responseData) {
+        if (error) {
+            closestContactsBlock(emptyValue);
+        } else {
+            NSArray *val = [responseData objectForKey:@"suggestions"];
+            if (!val) {
+                val = emptyValue;
+            }
+            closestContactsBlock(val);
+        }
+    }];
 }
 
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block {

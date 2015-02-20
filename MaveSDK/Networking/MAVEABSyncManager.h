@@ -25,13 +25,17 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 // they do not actually sync.
 // The second method asks the server to return suggested friends 
 - (void)syncContactsInBackgroundIfAlreadyHavePermission;
-- (void)syncContactsInBackground:(NSArray *)contacts;
+- (void)atLaunchSyncContactsAndPopulateSuggestedByPermissions;
+- (void)syncContactsAndPopulateSuggestedInBackground:(NSArray *)contacts;
 
+- (NSArray *)doSyncContacts:(NSArray *)contacts returnSuggested:(BOOL)returnSuggested;
 
-- (void)doSyncContacts:(MAVEMerkleTree *)localContactsMerkleTree;
-
+// Synchronous methods to send data to server and process results
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts;
 - (MAVEContactSyncType)decideNeededSyncTypeCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree;
+- (NSArray *)sendContactsChangeset:(NSArray *)changeset
+                        merkleTree:(MAVEMerkleTree *)merkleTree
+                   returnSuggested:(BOOL)returnSuggested;
 
 - (NSArray *)changesetComparingFullRemoteTreeToTree:(MAVEMerkleTree *)merkleTree;
 

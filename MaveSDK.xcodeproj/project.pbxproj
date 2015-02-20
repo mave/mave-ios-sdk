@@ -99,6 +99,7 @@
 		0CC7B3CA1A96B1AF004455A7 /* MAVEWaitingDots6.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3C51A96B1AF004455A7 /* MAVEWaitingDots6.png */; };
 		0CC7B3CD1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3CC1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m */; };
 		0CC7B3CF1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3CE1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m */; };
+		0CC7B3D31A97A89C004455A7 /* MAVESuggestedInvites.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3D21A97A89C004455A7 /* MAVESuggestedInvites.m */; };
 		0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73E819F858A4009C6385 /* RootDrawerController.m */; };
 		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
 		0CCC92B71A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92B61A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m */; };
@@ -295,6 +296,8 @@
 		0CC7B3CB1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteTableSectionHeaderView.h; sourceTree = "<group>"; };
 		0CC7B3CC1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteTableSectionHeaderView.m; sourceTree = "<group>"; };
 		0CC7B3CE1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteTableSectionHeaderViewTests.m; sourceTree = "<group>"; };
+		0CC7B3D11A97A89C004455A7 /* MAVESuggestedInvites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESuggestedInvites.h; sourceTree = "<group>"; };
+		0CC7B3D21A97A89C004455A7 /* MAVESuggestedInvites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESuggestedInvites.m; sourceTree = "<group>"; };
 		0CCC73E719F858A4009C6385 /* RootDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootDrawerController.h; sourceTree = "<group>"; };
 		0CCC73E819F858A4009C6385 /* RootDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootDrawerController.m; sourceTree = "<group>"; };
 		0CCC73ED19F8708E009C6385 /* SideDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerController.h; sourceTree = "<group>"; };
@@ -555,6 +558,15 @@
 			path = WaitingDots;
 			sourceTree = "<group>";
 		};
+		0CC7B3D01A97A87D004455A7 /* RemoteData */ = {
+			isa = PBXGroup;
+			children = (
+				0CC7B3D11A97A89C004455A7 /* MAVESuggestedInvites.h */,
+				0CC7B3D21A97A89C004455A7 /* MAVESuggestedInvites.m */,
+			);
+			path = RemoteData;
+			sourceTree = "<group>";
+		};
 		0CCC92CD1A60807B008CB888 /* RemoteConfiguration */ = {
 			isa = PBXGroup;
 			children = (
@@ -797,6 +809,7 @@
 		C02927ED19E82C4B006AEE43 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0CC7B3D01A97A87D004455A7 /* RemoteData */,
 				0CCC92CD1A60807B008CB888 /* RemoteConfiguration */,
 				C029280019E82D0F006AEE43 /* MAVEABPerson.h */,
 				C029280119E82D0F006AEE43 /* MAVEABPerson.m */,
@@ -1090,6 +1103,7 @@
 				0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */,
 				C029280C19E82D18006AEE43 /* MAVEInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* MAVEABPerson.m in Sources */,
+				0CC7B3D31A97A89C004455A7 /* MAVESuggestedInvites.m in Sources */,
 				C029279719E823E2006AEE43 /* main.m in Sources */,
 				0C0996EA1A7725A6003B82AA /* MAVEMerkleTreeLeafNode.m in Sources */,
 				0C1A8FDA1A644D7900518D9A /* MAVENameParsingUtils.m in Sources */,
