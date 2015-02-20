@@ -14,6 +14,8 @@
 #import "MAVEInviteExplanationView.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPersonCell.h"
+#import "MAVEInviteTableSectionHeaderView.h"
+#import "MAVEWaitingDotsImageView.h"
 
 // This is UTF-8 code point 0021, it should get sorted before any letters in any language
 NSString * const MAVESuggestedInvitesTableDataKey = @"\u2605";
@@ -43,6 +45,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
         [self setupTableHeader];
         [self setupSearchTableView];
+        self.suggestedInvitesSectionHeaderView = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Suggestions" sectionIsWaiting:YES];
     }
     return self;
 }
@@ -127,12 +130,43 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 # pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
+    [self updateTableDataWithoutReloading:data];
+    [self.tableView reloadData];
+}
+
+- (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
+    // Update the table data without telling the table to reload
+    NSMutableDictionary *newData = [NSMutableDictionary dictionaryWithDictionary:self.tableData];
+    if ([suggestedInvites count] == 0) {
+        // no suggested invites, remove the section from data source and reload
+        [newData removeObjectForKey:MAVESuggestedInvitesTableDataKey];
+        [self updateTableData:[NSDictionary dictionaryWithDictionary:newData]];
+        return;
+    } else {
+        // Add the suggested invites to data source before animating them in
+        [newData setObject:suggestedInvites forKey:MAVESuggestedInvitesTableDataKey];
+        [self updateTableDataWithoutReloading:[NSDictionary dictionaryWithDictionary:newData]];
+    }
+
+    // Animate in the new rows
+    NSUInteger indexOfSuggested = [self.tableSections indexOfObject:MAVESuggestedInvitesTableDataKey];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:[suggestedInvites count]];
+    for (NSInteger rowNumber = 0; rowNumber < [suggestedInvites count]; ++rowNumber) {
+        [indexPaths addObject:[NSIndexPath indexPathForRow:rowNumber inSection:indexOfSuggested]];
+    }
+
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView endUpdates];
+    [self.suggestedInvitesSectionHeaderView stopWaiting];
+}
+
+// This is a helper for places we may want to update table data and animate it in rather than reloading
+- (void)updateTableDataWithoutReloading:(NSDictionary *)data {
     self.tableData = data;
     self.tableSections = [[self.tableData allKeys]
                           sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     [self updatePersonToIndexPathIndex];
-
-    [self.tableView reloadData];
 }
 
 - (void)updatePersonToIndexPathIndex {
@@ -194,35 +228,26 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    CGFloat labelMarginY = 0.0;
-    CGFloat labelOffsetX = 14.0;
-    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
-    NSString *labelText = [self tableView:tableView
-                  titleForHeaderInSection:section];
-    UIFont *labelFont = displayOpts.contactSectionHeaderFont;
-    CGSize labelSize = [labelText sizeWithAttributes:@{NSFontAttributeName: labelFont}];
-    CGRect labelFrame = CGRectMake(labelOffsetX,
-                                   labelMarginY,
-                                   labelSize.width,
-                                   labelSize.height);
-    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-    label.text = labelText;
-    label.textColor = displayOpts.contactSectionHeaderTextColor;
-    label.font = labelFont;
 
-    CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
-    // section width gets ignored, always stretches to full width
-    CGFloat sectionWidth = 0.0;
-    CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
-    UIView *view = [[UIView alloc] initWithFrame:viewFrame];
-    view.backgroundColor = displayOpts.contactSectionHeaderBackgroundColor;
-    
-    [view addSubview:label];
+    UIView *view;
+    if (tableView == self.tableView) {
+        NSString *sectionTitleShort = [self.tableSections objectAtIndex:section];
+        if (sectionTitleShort == MAVESuggestedInvitesTableDataKey) {
+            view = self.suggestedInvitesSectionHeaderView;
+        } else {
+            view = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:sectionTitleShort
+                                                              sectionIsWaiting:NO];
+        }
+
+    } else {
+        view = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Search results"
+                                                          sectionIsWaiting:NO];
+    }
 
     if (tableView == self.tableView) {
         // When scrolling up through the table index, when a given header is at the top of the screen (e.g. "M")
         // the header before it (e.g. "L") gets rendered onto the view just above the offset at the very front of
-        // the view stack so it's visible over the text bar.
+        // the view stack so it's visible over the search text bar.
         // As a workaround, whenever we return a view for a header we move the search bar to the front on a
         // very small delay. There may be a flash on the screen but it's a relatively edge case scenario anyway
         // so it's acceptable for now.
@@ -239,14 +264,6 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // this tableView will always be self.tableView
     UIView *header = [self tableView:tableView viewForHeaderInSection:section];
     return header.frame.size.height;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (tableView == self.tableView) {
-        return [self.tableSections objectAtIndex:section];
-    } else {
-        return @"Search results";
-    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

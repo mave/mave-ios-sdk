@@ -90,6 +90,15 @@
 		0C96015E1A71444B004DBA93 /* MAVEInviteTableHeaderViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C96015D1A71444B004DBA93 /* MAVEInviteTableHeaderViewTests.m */; };
 		0CC62BC81A8EA6E800D2AF14 /* MAVERange64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC62BC71A8EA6E800D2AF14 /* MAVERange64Tests.m */; };
 		0CC6463619F9C6190006A1D0 /* MAVEABTableViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6463519F9C6190006A1D0 /* MAVEABTableViewControllerTests.m */; };
+		0CC7B3BD1A96ABA4004455A7 /* MAVEWaitingDots1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3BC1A96ABA4004455A7 /* MAVEWaitingDots1.png */; };
+		0CC7B3C01A96AC62004455A7 /* MAVEWaitingDotsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3BF1A96AC62004455A7 /* MAVEWaitingDotsImageView.m */; };
+		0CC7B3C61A96B1AF004455A7 /* MAVEWaitingDots2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3C11A96B1AE004455A7 /* MAVEWaitingDots2.png */; };
+		0CC7B3C71A96B1AF004455A7 /* MAVEWaitingDots3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3C21A96B1AF004455A7 /* MAVEWaitingDots3.png */; };
+		0CC7B3C81A96B1AF004455A7 /* MAVEWaitingDots4.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3C31A96B1AF004455A7 /* MAVEWaitingDots4.png */; };
+		0CC7B3C91A96B1AF004455A7 /* MAVEWaitingDots5.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3C41A96B1AF004455A7 /* MAVEWaitingDots5.png */; };
+		0CC7B3CA1A96B1AF004455A7 /* MAVEWaitingDots6.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3C51A96B1AF004455A7 /* MAVEWaitingDots6.png */; };
+		0CC7B3CD1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3CC1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m */; };
+		0CC7B3CF1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3CE1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m */; };
 		0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73E819F858A4009C6385 /* RootDrawerController.m */; };
 		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
 		0CCC92B71A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92B61A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m */; };
@@ -275,6 +284,17 @@
 		0C96015D1A71444B004DBA93 /* MAVEInviteTableHeaderViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteTableHeaderViewTests.m; sourceTree = "<group>"; };
 		0CC62BC71A8EA6E800D2AF14 /* MAVERange64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERange64Tests.m; sourceTree = "<group>"; };
 		0CC6463519F9C6190006A1D0 /* MAVEABTableViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABTableViewControllerTests.m; sourceTree = "<group>"; };
+		0CC7B3BC1A96ABA4004455A7 /* MAVEWaitingDots1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots1.png; sourceTree = "<group>"; };
+		0CC7B3BE1A96AC62004455A7 /* MAVEWaitingDotsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEWaitingDotsImageView.h; sourceTree = "<group>"; };
+		0CC7B3BF1A96AC62004455A7 /* MAVEWaitingDotsImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEWaitingDotsImageView.m; sourceTree = "<group>"; };
+		0CC7B3C11A96B1AE004455A7 /* MAVEWaitingDots2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots2.png; sourceTree = "<group>"; };
+		0CC7B3C21A96B1AF004455A7 /* MAVEWaitingDots3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots3.png; sourceTree = "<group>"; };
+		0CC7B3C31A96B1AF004455A7 /* MAVEWaitingDots4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots4.png; sourceTree = "<group>"; };
+		0CC7B3C41A96B1AF004455A7 /* MAVEWaitingDots5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots5.png; sourceTree = "<group>"; };
+		0CC7B3C51A96B1AF004455A7 /* MAVEWaitingDots6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots6.png; sourceTree = "<group>"; };
+		0CC7B3CB1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteTableSectionHeaderView.h; sourceTree = "<group>"; };
+		0CC7B3CC1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteTableSectionHeaderView.m; sourceTree = "<group>"; };
+		0CC7B3CE1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteTableSectionHeaderViewTests.m; sourceTree = "<group>"; };
 		0CCC73E719F858A4009C6385 /* RootDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootDrawerController.h; sourceTree = "<group>"; };
 		0CCC73E819F858A4009C6385 /* RootDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootDrawerController.m; sourceTree = "<group>"; };
 		0CCC73ED19F8708E009C6385 /* SideDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerController.h; sourceTree = "<group>"; };
@@ -464,6 +484,7 @@
 		0C58FDDD1A6494B1007F8F12 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0CC7B3BB1A96ABA4004455A7 /* WaitingDots */,
 				0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */,
 				0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */,
 				0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */,
@@ -519,6 +540,19 @@
 				0CC62BC71A8EA6E800D2AF14 /* MAVERange64Tests.m */,
 			);
 			path = MAVEMerkleTree;
+			sourceTree = "<group>";
+		};
+		0CC7B3BB1A96ABA4004455A7 /* WaitingDots */ = {
+			isa = PBXGroup;
+			children = (
+				0CC7B3BC1A96ABA4004455A7 /* MAVEWaitingDots1.png */,
+				0CC7B3C11A96B1AE004455A7 /* MAVEWaitingDots2.png */,
+				0CC7B3C21A96B1AF004455A7 /* MAVEWaitingDots3.png */,
+				0CC7B3C31A96B1AF004455A7 /* MAVEWaitingDots4.png */,
+				0CC7B3C41A96B1AF004455A7 /* MAVEWaitingDots5.png */,
+				0CC7B3C51A96B1AF004455A7 /* MAVEWaitingDots6.png */,
+			);
+			path = WaitingDots;
 			sourceTree = "<group>";
 		};
 		0CCC92CD1A60807B008CB888 /* RemoteConfiguration */ = {
@@ -740,6 +774,10 @@
 				0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */,
 				9C123D621A48A92200A0E1F5 /* MAVEInviteTableHeaderView.h */,
 				9C123D631A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m */,
+				0CC7B3CB1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.h */,
+				0CC7B3CC1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m */,
+				0CC7B3BE1A96AC62004455A7 /* MAVEWaitingDotsImageView.h */,
+				0CC7B3BF1A96AC62004455A7 /* MAVEWaitingDotsImageView.m */,
 				C029280719E82D18006AEE43 /* MAVEABPersonCell.h */,
 				C029280819E82D18006AEE43 /* MAVEABPersonCell.m */,
 				0C7200701A19414D00E12B91 /* MAVEInviteMessageContainerView.h */,
@@ -788,6 +826,7 @@
 				C0834F3719F54A9500E52CA1 /* MAVEDisplayOptionsTests.m */,
 				0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */,
 				0C96015D1A71444B004DBA93 /* MAVEInviteTableHeaderViewTests.m */,
+				0CC7B3CE1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m */,
 				C0834F3919F57F0000E52CA1 /* MAVEABTableViewTests.m */,
 				C0834F3119F44D7500E52CA1 /* MAVEInviteMessageViewTests.m */,
 				0C7200731A19A87900E12B91 /* MAVEInviteMessageContainerViewTests.m */,
@@ -905,21 +944,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CCC92BE1A5F849F008CB888 /* Default-568h@2x.png in Resources */,
+				0CC7B3C91A96B1AF004455A7 /* MAVEWaitingDots5.png in Resources */,
 				C02927A219E823E2006AEE43 /* Images.xcassets in Resources */,
 				0C58FDF61A649AF4007F8F12 /* MAVEShareIconSMS@1x.png in Resources */,
 				0C58FDF01A649AF4007F8F12 /* MAVEShareIconEmail@1x.png in Resources */,
 				0C58FDF31A649AF4007F8F12 /* MAVEShareIconFacebook@1x.png in Resources */,
+				0CC7B3C71A96B1AF004455A7 /* MAVEWaitingDots3.png in Resources */,
+				0CC7B3BD1A96ABA4004455A7 /* MAVEWaitingDots1.png in Resources */,
 				0C58FDF41A649AF4007F8F12 /* MAVEShareIconFacebook@2x.png in Resources */,
 				0C58FDF51A649AF4007F8F12 /* MAVEShareIconFacebook@3x.png in Resources */,
 				0C58FDF11A649AF4007F8F12 /* MAVEShareIconEmail@2x.png in Resources */,
+				0CC7B3CA1A96B1AF004455A7 /* MAVEWaitingDots6.png in Resources */,
 				0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */,
 				0C58FDF21A649AF4007F8F12 /* MAVEShareIconEmail@3x.png in Resources */,
+				0CC7B3C61A96B1AF004455A7 /* MAVEWaitingDots2.png in Resources */,
 				0C58FDF81A649AF4007F8F12 /* MAVEShareIconSMS@3x.png in Resources */,
 				0C58FDFA1A649AF4007F8F12 /* MAVEShareIconTwitter@2x.png in Resources */,
 				0C58FDF71A649AF4007F8F12 /* MAVEShareIconSMS@2x.png in Resources */,
 				C02927C619E827F9006AEE43 /* Main.storyboard in Resources */,
 				0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */,
 				0C58FDFB1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png in Resources */,
+				0CC7B3C81A96B1AF004455A7 /* MAVEWaitingDots4.png in Resources */,
 				0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */,
 				0C58FDF91A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png in Resources */,
 			);
@@ -1008,6 +1053,7 @@
 				0C0996F31A793A50003B82AA /* MAVEMerkleTreeUtils.m in Sources */,
 				0C1A8FBE1A632A9100518D9A /* MAVERemoteConfigurationClientEmail.m in Sources */,
 				0C1A8FC71A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m in Sources */,
+				0CC7B3CD1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m in Sources */,
 				9C123D641A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m in Sources */,
 				0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */,
 				C029279D19E823E2006AEE43 /* HomeViewController.m in Sources */,
@@ -1051,6 +1097,7 @@
 				0C1F1A021A435EAE00B2D482 /* MAVERemoteConfiguration.m in Sources */,
 				0C58FE031A66D734007F8F12 /* MAVERemoteConfigurationServerSMS.m in Sources */,
 				0C1F1A051A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.m in Sources */,
+				0CC7B3C01A96AC62004455A7 /* MAVEWaitingDotsImageView.m in Sources */,
 				0C1A8FC11A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m in Sources */,
 				0C7200721A19414D00E12B91 /* MAVEInviteMessageContainerView.m in Sources */,
 				0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */,
@@ -1120,6 +1167,7 @@
 				0C0996E71A76F302003B82AA /* MAVEMerkleTreeDataEnumeratorTests.m in Sources */,
 				0C7200741A19A87900E12B91 /* MAVEInviteMessageContainerViewTests.m in Sources */,
 				C0834F3A19F57F0000E52CA1 /* MAVEABTableViewTests.m in Sources */,
+				0CC7B3CF1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m in Sources */,
 				0C1A8FCB1A632E2100518D9A /* MAVERemoteConfigurationFacebookShareTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

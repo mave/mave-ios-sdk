@@ -137,19 +137,17 @@
                     [MAVEABUtils combineSuggested:@[] intoABIndexedForTableSections:indexedContacts];
                 [self.ABTableViewController updateTableData:indexedContactsWithSuggestedSection];
 
-                // Add in some suggested friends later
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    NSLog(@"Running my dispatched to later code");
-                    NSString *someKey1 = [[indexedContacts allKeys] objectAtIndex:0];
-                    NSString *someKey2 = [[indexedContacts allKeys] objectAtIndex:1];
-                    MAVEABPerson *person1 = [[indexedContacts objectForKey:someKey1] objectAtIndex:0];
-                    MAVEABPerson *person2 = [[indexedContacts objectForKey:someKey2] objectAtIndex:0];
-                    NSArray *suggestedInvites = @[person1, person2];
-
-                    NSDictionary *updatedData = [MAVEABUtils combineSuggested:suggestedInvites
-                           intoABIndexedForTableSections:indexedContacts];
-                    [self.ABTableViewController updateTableData:updatedData];
-                });
+//                // Add in some suggested friends later
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    NSLog(@"Running my dispatched to later code");
+//                    NSString *someKey1 = [[indexedContacts allKeys] objectAtIndex:0];
+//                    NSString *someKey2 = [[indexedContacts allKeys] objectAtIndex:1];
+//                    MAVEABPerson *person1 = [[indexedContacts objectForKey:someKey1] objectAtIndex:0];
+//                    MAVEABPerson *person2 = [[indexedContacts objectForKey:someKey2] objectAtIndex:0];
+//                    NSArray *suggestedInvites = @[person1, person2];
+//
+//                    [self.ABTableViewController updateTableDataAnimatedWithSuggestedInvites:suggestedInvites];
+//                });
 
 
 

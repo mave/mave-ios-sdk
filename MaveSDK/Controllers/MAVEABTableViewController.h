@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVEInviteTableHeaderView.h"
+#import "MAVEInviteTableSectionHeaderView.h"
 #import "MAVESearchBar.h"
 #import "MAVEABPerson.h"
 
@@ -29,6 +30,7 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 @property (nonatomic, strong) MAVEInviteTableHeaderView *inviteTableHeaderView;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIView *aboveTableContentView;
+@property (nonatomic, strong) MAVEInviteTableSectionHeaderView *suggestedInvitesSectionHeaderView;
 @property (nonatomic, assign) CGFloat contentInsetTopWithoutSearch;
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
 @property (atomic, strong) NSDictionary *personToIndexPathIndex;
@@ -46,6 +48,8 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
 
+// Helper to create the table section header
+
 // constants for determining layout sizes
 // height of navigation bar currently
 - (CGFloat)navigationBarHeight;
@@ -56,12 +60,13 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 // it's visible, otherwise just the body of the table with the fixed search bar
 // is visible.
 - (CGFloat)showingTableHeaderOffsetThreshold;
-
 - (void)updateTableData:(NSDictionary *)data;
+- (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
 - (void)updatePersonToIndexPathIndex;
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
+
 - (BOOL)isSearchTableVisible;
 
 // add an additional ui text field delegate field, by monitoring an event
