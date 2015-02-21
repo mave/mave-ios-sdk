@@ -221,13 +221,16 @@ static dispatch_once_t syncContactsOnceToken;
 - (NSArray *)sendContactsChangeset:(NSArray *)changeset
                         merkleTree:(MAVEMerkleTree *)merkleTree
                    returnSuggested:(BOOL)returnSuggested {
-//    MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
-//    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-//    [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset
-//                                           returnClosestContacts:NO
-//                                                 completionBlock:nil];
-//    [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:localContactsMerkleTree];
-    return nil;
+    MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block NSArray *returnVal;
+    [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset returnClosestContacts:returnSuggested completionBlock:^(NSArray *closestContacts) {
+        returnVal = closestContacts;
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:merkleTree];
+    return returnVal;
 }
 
 

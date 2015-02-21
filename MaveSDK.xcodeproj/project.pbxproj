@@ -100,6 +100,9 @@
 		0CC7B3CD1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3CC1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m */; };
 		0CC7B3CF1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3CE1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m */; };
 		0CC7B3D31A97A89C004455A7 /* MAVESuggestedInvites.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC7B3D21A97A89C004455A7 /* MAVESuggestedInvites.m */; };
+		0CC7B3D71A990F61004455A7 /* MAVEWaitingDots7.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3D41A990F61004455A7 /* MAVEWaitingDots7.png */; };
+		0CC7B3D81A990F61004455A7 /* MAVEWaitingDots8.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3D51A990F61004455A7 /* MAVEWaitingDots8.png */; };
+		0CC7B3D91A990F61004455A7 /* MAVEWaitingDots9.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CC7B3D61A990F61004455A7 /* MAVEWaitingDots9.png */; };
 		0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73E819F858A4009C6385 /* RootDrawerController.m */; };
 		0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC73EE19F8708E009C6385 /* SideDrawerController.m */; };
 		0CCC92B71A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92B61A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m */; };
@@ -298,6 +301,9 @@
 		0CC7B3CE1A96BF3D004455A7 /* MAVEInviteTableSectionHeaderViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteTableSectionHeaderViewTests.m; sourceTree = "<group>"; };
 		0CC7B3D11A97A89C004455A7 /* MAVESuggestedInvites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESuggestedInvites.h; sourceTree = "<group>"; };
 		0CC7B3D21A97A89C004455A7 /* MAVESuggestedInvites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESuggestedInvites.m; sourceTree = "<group>"; };
+		0CC7B3D41A990F61004455A7 /* MAVEWaitingDots7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots7.png; sourceTree = "<group>"; };
+		0CC7B3D51A990F61004455A7 /* MAVEWaitingDots8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots8.png; sourceTree = "<group>"; };
+		0CC7B3D61A990F61004455A7 /* MAVEWaitingDots9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEWaitingDots9.png; sourceTree = "<group>"; };
 		0CCC73E719F858A4009C6385 /* RootDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootDrawerController.h; sourceTree = "<group>"; };
 		0CCC73E819F858A4009C6385 /* RootDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootDrawerController.m; sourceTree = "<group>"; };
 		0CCC73ED19F8708E009C6385 /* SideDrawerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawerController.h; sourceTree = "<group>"; };
@@ -554,6 +560,9 @@
 				0CC7B3C31A96B1AF004455A7 /* MAVEWaitingDots4.png */,
 				0CC7B3C41A96B1AF004455A7 /* MAVEWaitingDots5.png */,
 				0CC7B3C51A96B1AF004455A7 /* MAVEWaitingDots6.png */,
+				0CC7B3D41A990F61004455A7 /* MAVEWaitingDots7.png */,
+				0CC7B3D51A990F61004455A7 /* MAVEWaitingDots8.png */,
+				0CC7B3D61A990F61004455A7 /* MAVEWaitingDots9.png */,
 			);
 			path = WaitingDots;
 			sourceTree = "<group>";
@@ -957,6 +966,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CCC92BE1A5F849F008CB888 /* Default-568h@2x.png in Resources */,
+				0CC7B3D71A990F61004455A7 /* MAVEWaitingDots7.png in Resources */,
 				0CC7B3C91A96B1AF004455A7 /* MAVEWaitingDots5.png in Resources */,
 				C02927A219E823E2006AEE43 /* Images.xcassets in Resources */,
 				0C58FDF61A649AF4007F8F12 /* MAVEShareIconSMS@1x.png in Resources */,
@@ -968,6 +978,7 @@
 				0C58FDF51A649AF4007F8F12 /* MAVEShareIconFacebook@3x.png in Resources */,
 				0C58FDF11A649AF4007F8F12 /* MAVEShareIconEmail@2x.png in Resources */,
 				0CC7B3CA1A96B1AF004455A7 /* MAVEWaitingDots6.png in Resources */,
+				0CC7B3D81A990F61004455A7 /* MAVEWaitingDots8.png in Resources */,
 				0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */,
 				0C58FDF21A649AF4007F8F12 /* MAVEShareIconEmail@3x.png in Resources */,
 				0CC7B3C61A96B1AF004455A7 /* MAVEWaitingDots2.png in Resources */,
@@ -980,6 +991,7 @@
 				0CC7B3C81A96B1AF004455A7 /* MAVEWaitingDots4.png in Resources */,
 				0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */,
 				0C58FDF91A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png in Resources */,
+				0CC7B3D91A990F61004455A7 /* MAVEWaitingDots9.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

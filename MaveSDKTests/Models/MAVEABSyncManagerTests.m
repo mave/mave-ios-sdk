@@ -327,12 +327,21 @@
 
     NSArray *fakeChangeset = @[@"fake"];
     id fakeMerkleTree = @"fake tree";
+    NSArray *suggestedHashedRecordIDs = @[@"1", @"2"];
     OCMExpect([apiInterfaceMock sendContactsChangeset:fakeChangeset
                                    returnClosestContacts:YES
                                          completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        void (^completionBlock)(NSArray *suggestions) = obj;
+        completionBlock(suggestedHashedRecordIDs);
         return YES;
     }]]);
+    OCMExpect([apiInterfaceMock sendContactsMerkleTree:fakeMerkleTree]);
+
+    // run the code under test
+    NSArray *returnedSuggested = [syncer sendContactsChangeset:fakeChangeset merkleTree:fakeMerkleTree returnSuggested:YES];
+
+    XCTAssertEqualObjects(returnedSuggested, suggestedHashedRecordIDs);
+    OCMVerifyAll(apiInterfaceMock);
 }
 
 

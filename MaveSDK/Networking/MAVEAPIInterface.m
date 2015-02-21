@@ -173,7 +173,16 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     NSDictionary *params = @{@"changeset_list": changeset,
                              @"return_closest_contacts": @(returnClosestContacts)};
     [self sendIdentifiedJSONRequestWithRoute:route methodName:@"POST" params:params gzipCompressBody:YES completionBlock:^(NSError *error, NSDictionary *responseData) {
-
+        NSArray *returnVal;
+        if (returnClosestContacts && !error) {
+            returnVal = [responseData objectForKey:@"closest_contacts"];
+            if (!returnVal || (id)returnVal == [NSNull null]) {
+                returnVal = @[];
+            }
+        } else {
+            returnVal = @[];
+        }
+        closestContactsBlock(returnVal);
     }];
 }
 
@@ -207,7 +216,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
         if (error) {
             closestContactsBlock(emptyValue);
         } else {
-            NSArray *val = [responseData objectForKey:@"suggestions"];
+            NSArray *val = [responseData objectForKey:@"closest_contacts"];
             if (!val) {
                 val = emptyValue;
             }
