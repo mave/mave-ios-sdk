@@ -38,7 +38,7 @@ extern NSString * const MAVEABPermissionStatusUnprompted;
 // Convert an array of hashed record id's into an array of MAVEABPersons by looking up
 // each one in the full address book.
 // The following method is a helper to build an index for this one
-+ (NSArray *)listofABPersonsFromListOfHashedRecordIDs:(NSArray *)hashedRecordIDs
++ (NSArray *)listOfABPersonsFromListOfHashedRecordIDTuples:(NSArray *)hridTuples
                                        andAllContacts:(NSArray *)persons;
 + (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons;
 

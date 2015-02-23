@@ -82,16 +82,33 @@
     XCTAssertNil([MAVEABUtils indexABPersonArrayForTableSections:data]);
 }
 
-- (void)testListOfABPersonsFromListOfHashedRecordIDs {
+- (void)testListOfABPersonsFromListOfHashedRecordIDTuples {
     // make some people and explicitly overwrite hashed record id so we know it
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
     NSArray *contacts = @[p0, p1, p2];
 
-    NSArray *hashedRecordIDs = @[@0, @2];
-    NSArray *suggested = [MAVEABUtils listofABPersonsFromListOfHashedRecordIDs:hashedRecordIDs andAllContacts:contacts];
+    // The tuple format is (hashed record id, number connections).
+    // The second parameter is not used for now but is an integer score of how close the connection is,
+    // higher is better
+    NSArray *hashedRecordIDs = @[@[@0, @10], @[@2, @2]];
+    NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
     NSArray *expectedSuggested = @[p0, p2];
+    XCTAssertEqualObjects(suggested, expectedSuggested);
+}
+
+- (void)testListOfABPersonsFromHashedRecordIDTuplesIgnoresBadInputData {
+    // if one of the list items is not a 2-tuple, should be ignored
+    // make some people and explicitly overwrite hashed record id so we know it
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    NSArray *contacts = @[p0];
+
+    // Data - 0 and 1 are the HRID's there, but only 0 exists so that should be only suggested
+    NSArray *evilNullTuple = (NSArray *)[NSNull null];
+    NSArray *hashedRecordIDs = @[@1, @[@0, @10], @[@1, @5], @[], evilNullTuple];
+    NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
+    NSArray *expectedSuggested = @[p0];
     XCTAssertEqualObjects(suggested, expectedSuggested);
 }
 

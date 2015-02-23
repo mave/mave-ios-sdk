@@ -78,6 +78,7 @@ static dispatch_once_t syncContactsOnceToken;
                     suggestions = [self getSuggestedInvitesExplicitlyWithAllContacts:contacts];
                 }
             }
+            MAVEDebugLog(@"Suggestions returned: %@", suggestions);
             NSDictionary *suggestionsObject = @{@"closest_contacts": suggestions};
             [[MaveSDK sharedInstance].suggestedInvitesBuilder.promise fulfillPromise:(NSValue *)suggestionsObject];
         });
@@ -241,7 +242,7 @@ static dispatch_once_t syncContactsOnceToken;
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    return [MAVEABUtils listofABPersonsFromListOfHashedRecordIDs:returnedHashedRecordIDs andAllContacts:contacts];
+    return [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:returnedHashedRecordIDs andAllContacts:contacts];
 }
 
 - (NSData *)serializeAndCompressAddressBook:(NSArray *)addressBook {

@@ -67,12 +67,20 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     return result;
 }
 
-+ (NSArray *)listofABPersonsFromListOfHashedRecordIDs:(NSArray *)hashedRecordIDs
-                                       andAllContacts:(NSArray *)persons {
++ (NSArray *)listOfABPersonsFromListOfHashedRecordIDTuples:(NSArray *)hridTuples
+                                            andAllContacts:(NSArray *)persons {
     NSDictionary *index = [self indexABPersonArrayByHashedRecordID:persons];
-    NSMutableArray *output = [[NSMutableArray alloc] initWithCapacity:[hashedRecordIDs count]];
-    MAVEABPerson *personTmp;
-    for (NSNumber *hrid in hashedRecordIDs) {
+    NSMutableArray *output = [[NSMutableArray alloc] initWithCapacity:[hridTuples count]];
+    NSArray *tuple; NSNumber *hrid; MAVEABPerson *personTmp;
+    for (id obj in hridTuples) {
+        if (![obj isKindOfClass:[NSArray class]]) {
+            continue;
+        }
+        tuple = obj;
+        if ([tuple count] != 2) {
+            continue;
+        }
+        hrid = [tuple objectAtIndex:0];
         personTmp = [index objectForKey:hrid];
         if (personTmp) {
             [output addObject:personTmp];
