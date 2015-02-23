@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MAVEABUtils.h"
 #import "MAVEABSyncManager.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABPerson.h"
@@ -47,42 +48,104 @@
     [super tearDown];
 }
 
-- (void)testSyncContactsInBackgroundIfAlreadyHavePermissionWhenHavePermission {
+- (void)testAtLaunchSyncContactsAndPopulateSuggestedByPermissionsWhenHavePermission {
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     id promptHandlerMock = OCMClassMock([MAVEABPermissionPromptHandler class]);
 
-    // Have these be the contacts that get pulled (empty list is still contacts
+    // set permissions yes and return fake contacts
+    OCMExpect([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
     NSArray *fakeContacts = @[];
     OCMExpect([promptHandlerMock loadAddressBookSynchronouslyIfPermissionGranted]).andReturn(fakeContacts);
 
     OCMExpect([syncerMock syncContactsAndPopulateSuggestedInBackground:fakeContacts]);
 
-    [syncer syncContactsInBackgroundIfAlreadyHavePermission];
+    [syncer atLaunchSyncContactsAndPopulateSuggestedByPermissions];
 
-    OCMVerifyAllWithDelay(promptHandlerMock, 1);
-    OCMVerifyAllWithDelay(syncerMock, 1);
+    OCMVerifyAllWithDelay(syncerMock, 0.25);
+    OCMVerifyAllWithDelay(abUtilsMock, 0.25);
+    OCMVerifyAllWithDelay(promptHandlerMock, 0.25);
 }
 
-- (void)testSyncContactsInBackgroundIfAlreadyHavePermissionWhenNoPermission {
+- (void)testAtLaunchSyncContactsAndPopulateSuggestedByPermissionsWhenNoPermission {
+    [MaveSDK resetSharedInstanceForTesting];
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
-    id promptHandlerMock = OCMClassMock([MAVEABPermissionPromptHandler class]);
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
 
-    // Returning means no permission (or some weird error accessing contacts)
-    OCMExpect([promptHandlerMock loadAddressBookSynchronouslyIfPermissionGranted]).andReturn(nil);
+    // Return no permissions
+    OCMExpect([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusDenied);
 
     [[syncerMock reject] syncContactsAndPopulateSuggestedInBackground:[OCMArg any]];
+    OCMExpect([promiseMock rejectPromise]);
 
-    [syncer syncContactsInBackgroundIfAlreadyHavePermission];
+    [syncer atLaunchSyncContactsAndPopulateSuggestedByPermissions];
 
-    OCMVerifyAllWithDelay(promptHandlerMock, 0.1);
-    OCMVerifyAllWithDelay(syncerMock, 0.1);
+    OCMVerifyAll(syncerMock);
+    OCMVerifyAll(abUtilsMock);
+    OCMVerifyAll(promiseMock);
 }
 
-- (void)testSyncContactsInBackgroundDoesntSyncIfRemoteConfigDisabled {
+- (void)testAtLaunchSyncContactsAndPopulateSuggestedByPermissionsWhenPermissionUnprompted {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id syncerMock = OCMPartialMock(syncer);
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
+
+    // Return permissions not yet prompted
+    OCMExpect([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
+
+    [[syncerMock reject] syncContactsAndPopulateSuggestedInBackground:[OCMArg any]];
+    [[promiseMock reject] rejectPromise];
+
+    [syncer atLaunchSyncContactsAndPopulateSuggestedByPermissions];
+
+    OCMVerifyAll(syncerMock);
+    OCMVerifyAll(abUtilsMock);
+    OCMVerifyAll(promiseMock);
+}
+
+
+
+- (void)testSyncContactsInBackgroundSyncYesUseSuggestedYes {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+
+    // use a remote configuration that enables contacts sync
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] init];
+    config.contactsSync.enabled = YES;
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id syncerMock = OCMPartialMock(syncer);
+
+    NSArray *fakeAllContacts = @[@"asdf", @"sdfg"];
+    NSArray *suggestedContacts = @[@"foo", @"bar"];
+    OCMExpect([syncerMock doSyncContacts:fakeAllContacts returnSuggested:YES]).andReturn(suggestedContacts);
+
+    id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
+    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedContacts};
+    OCMExpect([promiseMock fulfillPromise:expectedFulfillVal]);
+
+    [syncer syncContactsAndPopulateSuggestedInBackground:fakeAllContacts];
+
+    OCMVerifyAllWithDelay(maveMock, 0.25);
+    OCMVerifyAllWithDelay(maveMock, 0.25);
+    OCMVerifyAllWithDelay(maveMock, 0.25);
+}
+
+- (void)testSyncContactsInBackgroundDoesntSyncNoUseSuggestedYes {
+    [MaveSDK resetSharedInstanceForTesting];
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
 
     // use a remote configuration that disables contact sync
@@ -99,7 +162,10 @@
     [syncer syncContactsAndPopulateSuggestedInBackground:@[]];
 
     OCMVerifyAllWithDelay(syncerMock, 0.1);
-    OCMVerifyAllWithDelay(maveMock, 0.1);}
+    OCMVerifyAllWithDelay(maveMock, 0.1);
+}
+
+
 
 - (void)testBuildLocalContactsMerkleTree {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];

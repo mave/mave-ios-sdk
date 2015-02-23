@@ -15,6 +15,7 @@
 #import "MAVERemoteConfiguration.h"
 #import "MAVEShareToken.h"
 #import "MAVECustomSharePageViewController.h"
+#import "MAVESuggestedInvites.h"
 
 @implementation MaveSDK {
     // Controller
@@ -48,6 +49,7 @@ static dispatch_once_t sharedInstanceonceToken;
 
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
+        sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
 
 #ifndef UNIT_TESTING
         // sync contacts, but wait a few seconds so it doesn't compete with fetching our

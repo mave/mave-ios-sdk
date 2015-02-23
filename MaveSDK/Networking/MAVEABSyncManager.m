@@ -55,13 +55,13 @@ static dispatch_once_t syncContactsOnceToken;
         [self syncContactsAndPopulateSuggestedInBackground:contacts];
 
     } else if ([contactsPermission isEqualToString:MAVEABPermissionStatusDenied]) {
-        // If we don't have address book permissions we won't show the contacts invite page anyway so we
-        // don't need suggested invites, just set it now as empty.
-
+        // Currently the suggested contacts api just returns hashed_record_id values, if we
+        // don't have local access to the address book those are meaningless and we can't
+        // display suggested friends even if there were any. So mark those as empty now.
+        [[MaveSDK sharedInstance].suggestedInvitesBuilder.promise rejectPromise];
     } else {
-        // User has not been prompted for contacts permission yet.
-        // Do nothing, if user does grant permission later we'll sync contacts and fetch suggested then
-
+        // If status is still unprompted, don't fulfill or reject suggested invites now
+        // because they'll get decided on later if we get contacts permission
     }
 }
 
@@ -78,7 +78,13 @@ static dispatch_once_t syncContactsOnceToken;
 
             if (syncEnabled) {
                 MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
-                [self doSyncContacts:contacts returnSuggested:YES];
+                NSArray *suggestions = [self doSyncContacts:contacts returnSuggested:YES];
+                if (!suggestions || (id)suggestions == [NSNull null]) {
+                    suggestions = @[];
+                }
+                MAVEDebugLog(@"Retrieved suggested invites: %@", suggestions);
+                NSDictionary *suggestionsObject = @{@"closest_contacts": suggestions};
+                [[MaveSDK sharedInstance].suggestedInvitesBuilder.promise fulfillPromise:(NSValue *)suggestionsObject];
             }
         });
     });
@@ -100,7 +106,12 @@ static dispatch_once_t syncContactsOnceToken;
 }
 
 // This method is blocking (uses semaphores to wait for responses because it may need
-// to do several steps in serial. Make sure to run in a background thread
+// to do several steps in serial. Make sure to run in a background thread.
+//
+// It abstracts doing a contact sync if needed and returning suggested contacts. For efficiency
+// and correctness of results, it will do different things in different states. For instance, if
+// it needs to sync contacts it will call the server method that includes the newly added contacts
+//
 - (NSArray *)doSyncContacts:(NSArray *)contacts returnSuggested:(BOOL)returnSuggested {
     @try {
         MAVEMerkleTree *localContactsMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];

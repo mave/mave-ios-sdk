@@ -55,6 +55,7 @@
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
     XCTAssertNotNil(mave.shareTokenBuilder);
     XCTAssertNotNil(mave.addressBookSyncManager);
+    XCTAssertNotNil(mave.suggestedInvitesBuilder);
 }
 
 

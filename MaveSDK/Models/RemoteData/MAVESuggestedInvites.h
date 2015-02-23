@@ -14,5 +14,6 @@
 @property (nonatomic, strong) NSArray *suggestions;
 
 + (MAVERemoteObjectBuilder *)remoteBuilder;
++ (NSDictionary *)defaultData;
 
 @end

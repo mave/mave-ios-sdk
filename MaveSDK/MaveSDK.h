@@ -25,6 +25,7 @@
 @property (nonatomic, strong) MAVEInvitePageChooser *invitePageChooser;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *remoteConfigurationBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *shareTokenBuilder;
+@property (nonatomic, strong) MAVERemoteObjectBuilder *suggestedInvitesBuilder;
 
 
 @property (nonatomic, copy) NSString *appId;
