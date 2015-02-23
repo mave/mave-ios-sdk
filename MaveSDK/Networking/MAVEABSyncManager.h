@@ -36,7 +36,8 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 - (NSArray *)sendContactsChangeset:(NSArray *)changeset
                         merkleTree:(MAVEMerkleTree *)merkleTree
                  isFullInitialSync:(BOOL)isFullInitialSync
-                   returnSuggested:(BOOL)returnSuggested;
+                   returnSuggested:(BOOL)returnSuggested
+                       allContacts:(NSArray *)contacts;
 // Helper to get suggested invites explicitly (as opposed to having them returned by the
 // send changeset request) and map the returned hashed record IDs to MAVEABPerson objects
 - (NSArray *)getSuggestedInvitesExplicitlyWithAllContacts:(NSArray *)contacts;
