@@ -258,6 +258,7 @@
     id mocked = OCMPartialMock(self.testAPIInterface);
     NSArray *fakeChangeset = @[@"some changset"];
     NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
+                                   @"is_full_initial_sync": @YES,
                                    @"return_closest_contacts": @NO};
 
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
@@ -266,6 +267,8 @@
                                         gzipCompressBody:YES
                                          completionBlock:[OCMArg any]]);
     [self.testAPIInterface sendContactsChangeset:fakeChangeset
+
+                                   isFullInitialSync:YES
                            returnClosestContacts:NO
                                  completionBlock:nil];
     OCMVerifyAll(mocked);
@@ -276,6 +279,7 @@
     id mocked = OCMPartialMock(self.testAPIInterface);
     NSArray *fakeChangeset = @[@"some changset"];
     NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
+                                   @"is_full_initial_sync": @NO,
                                    @"return_closest_contacts": @YES};
 
     // set up expected response behavior
@@ -297,6 +301,7 @@
 
     // Run code under test
     [self.testAPIInterface sendContactsChangeset:fakeChangeset
+                                   isFullInitialSync:NO
                            returnClosestContacts:YES
                                  completionBlock:returnBlock];
     OCMVerifyAll(mocked);

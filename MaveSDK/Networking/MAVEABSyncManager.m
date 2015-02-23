@@ -111,6 +111,7 @@ static dispatch_once_t syncContactsOnceToken;
         MAVEMerkleTree *localContactsMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
 
         NSArray *changeset;
+        BOOL isInitialSync;
         switch ([self decideNeededSyncTypeCompareRemoteTreeRootToTree:localContactsMerkleTree]) {
             // Here the remote tree is in sync with current state so no need to sync
             // We just query for closest contacts instead and return that.
@@ -122,19 +123,21 @@ static dispatch_once_t syncContactsOnceToken;
             // and update
             case MAVEContactSyncTypeUpdate: {
                 changeset = [self changesetComparingFullRemoteTreeToTree:localContactsMerkleTree];
-
+                isInitialSync = NO;
                 break;
             }
 
             // Here the remote tree did not exist yet, so it's an initial sync
             case MAVEContactSyncTypeInitial: {
                 changeset = [localContactsMerkleTree changesetForEmptyTreeToMatchSelf];
+                isInitialSync = YES;
                 break;
             }
         }
 
         return [self sendContactsChangeset:changeset
                                 merkleTree:localContactsMerkleTree
+                         isFullInitialSync:isInitialSync
                            returnSuggested:returnSuggested];
 
     } @catch (NSException *exception) {
@@ -214,11 +217,12 @@ static dispatch_once_t syncContactsOnceToken;
 
 - (NSArray *)sendContactsChangeset:(NSArray *)changeset
                         merkleTree:(MAVEMerkleTree *)merkleTree
+                 isFullInitialSync:(BOOL)isFullInitialSync
                    returnSuggested:(BOOL)returnSuggested {
     MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSArray *returnVal;
-    [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset returnClosestContacts:returnSuggested completionBlock:^(NSArray *closestContacts) {
+    [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset isFullInitialSync:isFullInitialSync returnClosestContacts:returnSuggested completionBlock:^(NSArray *closestContacts) {
         returnVal = closestContacts;
         dispatch_semaphore_signal(semaphore);
     }];

@@ -167,10 +167,12 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 }
 
 - (void)sendContactsChangeset:(NSArray *)changeset
+                isFullInitialSync:(BOOL)isFullInitialSync
         returnClosestContacts:(BOOL)returnClosestContacts
               completionBlock:(void (^)(NSArray *closestContacts))closestContactsBlock {
     NSString *route = @"/me/contacts/sync_changesets";
     NSDictionary *params = @{@"changeset_list": changeset,
+                             @"is_full_initial_sync": @(isFullInitialSync),
                              @"return_closest_contacts": @(returnClosestContacts)};
     [self sendIdentifiedJSONRequestWithRoute:route methodName:@"POST" params:params gzipCompressBody:YES completionBlock:^(NSError *error, NSDictionary *responseData) {
         NSArray *returnVal;
