@@ -16,6 +16,8 @@ typedef NS_ENUM(NSInteger, MAVEPromiseStatus) {
 
 @interface MAVEPromise : NSObject
 
+@property (nonatomic) MAVEPromiseStatus status;
+
 // Create promise and start running the block
 // The block is responsible for fulfilling or rejecting the promise it
 // gets passed

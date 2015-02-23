@@ -32,19 +32,6 @@ static dispatch_once_t syncContactsOnceToken;
     syncContactsOnceToken = 0;
 }
 
-- (void)syncContactsInBackgroundIfAlreadyHavePermission {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        @try {
-            NSArray *contacts = [MAVEABPermissionPromptHandler loadAddressBookSynchronouslyIfPermissionGranted];
-            if (contacts) {
-                [self syncContactsAndPopulateSuggestedInBackground:contacts];
-            }
-        } @catch (NSException *exception) {
-            MAVEErrorLog(@"Exception doing sync contacts if background if already have permission %@", exception);
-        }
-    });
-}
-
 // This method is called at app launch, if we already have permission to access contacts we run the contacts sync
 // which will
 - (void)atLaunchSyncContactsAndPopulateSuggestedByPermissions {

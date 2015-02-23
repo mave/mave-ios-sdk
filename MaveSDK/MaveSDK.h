@@ -38,6 +38,7 @@
 
 // Internal, method to access the remote configuration
 - (MAVERemoteConfiguration *)remoteConfiguration;
+- (NSArray *)suggestedInvitesWithDelay:(CGFloat)seconds;
 
 - (BOOL)isSetupOK;
 

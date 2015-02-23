@@ -119,6 +119,14 @@
 // Load the correct view(s) with data
 //
 
+
+- (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
+          addSuggestedOnDelayWhenReady:(BOOL *)addSuggestedLaterReturnVal
+               fromIndexedContactsDict:(NSDictionary *)indexedContacts {
+
+}
+
+
 // TODO: unit test this method
 - (void)determineAndSetViewBasedOnABPermissions {
     [MAVEABPermissionPromptHandler
@@ -131,25 +139,39 @@
             });
         // Permission granted
         } else {
+            NSDictionary *indexedContactsToRenderNow;
+            BOOL suggestedInvitesAvailableNow =
+                [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status != MAVEPromiseStatusUnfulfilled;
+
+            if (suggestedInvitesAvailableNow) {
+                MAVEDebugLog(@"Suggested contacts available when rendering contacts invite page");
+                NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:5];
+                if ([suggestions count] == 0) {
+                    indexedContactsToRenderNow = indexedContacts;
+                } else {
+                    indexedContactsToRenderNow = [MAVEABUtils combineSuggested:suggestions
+                                                 intoABIndexedForTableSections:indexedContacts];
+                }
+            } else {
+                MAVEDebugLog(@"Suggested contacts not yet available when rendering contacts invite page");
+                // add the suggestions header to the indexed contacts by using empty list of suggestions
+                indexedContactsToRenderNow = [MAVEABUtils combineSuggested:@[]
+                                             intoABIndexedForTableSections:indexedContacts];
+
+                // wait on the
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:5];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.ABTableViewController updateTableDataAnimatedWithSuggestedInvites:suggestions];
+
+                    });
+                });
+            }
+
+            // Render the contacts we have now regardless
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self layoutInvitePageViewAndSubviews];
-                NSDictionary *indexedContactsWithSuggestedSection =
-                    [MAVEABUtils combineSuggested:@[] intoABIndexedForTableSections:indexedContacts];
-                [self.ABTableViewController updateTableData:indexedContactsWithSuggestedSection];
-
-//                // Add in some suggested friends later
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    NSLog(@"Running my dispatched to later code");
-//                    NSString *someKey1 = [[indexedContacts allKeys] objectAtIndex:0];
-//                    NSString *someKey2 = [[indexedContacts allKeys] objectAtIndex:1];
-//                    MAVEABPerson *person1 = [[indexedContacts objectForKey:someKey1] objectAtIndex:0];
-//                    MAVEABPerson *person2 = [[indexedContacts objectForKey:someKey2] objectAtIndex:0];
-//                    NSArray *suggestedInvites = @[person1, person2];
-//
-//                    [self.ABTableViewController updateTableDataAnimatedWithSuggestedInvites:suggestedInvites];
-//                });
-
-
+                [self.ABTableViewController updateTableData:indexedContactsToRenderNow];
 
                 // Only if permission was granted should we log that we displayed
                 // the invite page with an address book list

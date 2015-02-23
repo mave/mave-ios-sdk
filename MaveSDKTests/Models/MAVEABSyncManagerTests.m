@@ -115,7 +115,7 @@
 
 
 
-- (void)testSyncContactsInBackgroundSyncYesUseSuggestedYes {
+- (void)testSyncContactsAndPopulateInBackgroundWhenSyncYesUseSuggestedYes {
     [MaveSDK resetSharedInstanceForTesting];
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
 
@@ -144,7 +144,7 @@
     OCMVerifyAllWithDelay(maveMock, 0.25);
 }
 
-- (void)testSyncContactsInBackgroundDoesntSyncNoUseSuggestedYes {
+- (void)testSyncContactsAndPopulateInBackgroundWhenSyncNoUseSuggestedYes {
     [MaveSDK resetSharedInstanceForTesting];
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
 
@@ -165,6 +165,13 @@
     OCMVerifyAllWithDelay(maveMock, 0.1);
 }
 
+- (void)testSyncContactsAndPopulateInBackgroundWhenSyncYesUseSuggestedNO {
+    XCTAssertFalse(YES);
+}
+
+- (void)testSyncContactsAndPopulateInBackgroundWhenSyncNoUseSuggestedNo {
+    XCTAssertFalse(YES);
+}
 
 
 - (void)testBuildLocalContactsMerkleTree {

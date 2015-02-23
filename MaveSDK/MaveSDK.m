@@ -56,7 +56,7 @@ static dispatch_once_t sharedInstanceonceToken;
         // share token or remote configuration.
         // Don't run this in unit tests because it interferes with the other tests.
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [sharedInstance.addressBookSyncManager syncContactsInBackgroundIfAlreadyHavePermission];
+            [sharedInstance.addressBookSyncManager atLaunchSyncContactsAndPopulateSuggestedByPermissions];
         });
 #endif
     });
@@ -113,6 +113,11 @@ static dispatch_once_t sharedInstanceonceToken;
 - (MAVERemoteConfiguration *)remoteConfiguration {
     id obj = [self.remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
     return (MAVERemoteConfiguration *)obj;
+}
+
+- (NSArray *)suggestedInvitesWithDelay:(CGFloat)seconds {
+    MAVESuggestedInvites *suggestedInvites = (MAVESuggestedInvites *)[self.suggestedInvitesBuilder createObjectSynchronousWithTimeout:seconds];
+    return suggestedInvites.suggestions;
 }
 
 - (NSString *)defaultSMSMessageText {

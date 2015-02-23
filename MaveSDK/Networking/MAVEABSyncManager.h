@@ -21,10 +21,9 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 // from the ios contacts api and the second lets you pass in the contacts to avoid pulling
 // them twice when we're already working with them.
 //
-// Both methods will check the remote configuration flag and if syncing contacts is disabled
-// they do not actually sync.
-// The second method asks the server to return suggested friends 
-- (void)syncContactsInBackgroundIfAlreadyHavePermission;
+// Both methods will check the remote configuration flags for whether to sync contacts and
+// whether to return suggested and do the right thing based on that configuration.
+// The second method asks the server to return suggested friends
 - (void)atLaunchSyncContactsAndPopulateSuggestedByPermissions;
 - (void)syncContactsAndPopulateSuggestedInBackground:(NSArray *)contacts;
 

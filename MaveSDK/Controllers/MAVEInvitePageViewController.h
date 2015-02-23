@@ -27,7 +27,17 @@
 - (BOOL)shouldDisplayInviteMessageView;
 - (void)presentShareSheet;
 - (void)layoutInvitePageViewAndSubviews;
+
 - (void)determineAndSetViewBasedOnABPermissions;
+
+// Helper to manipulate contacts to also show suggested invites.
+// Based on the current state, we might
+//   - already have suggestions to display
+//   - already know we don't have suggestions to display
+//   - still be waiting for api response to return 0 or more suggestions
+- (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
+          addSuggestedOnDelayWhenReady:(BOOL *)addSuggestedLaterReturnVal
+               fromIndexedContactsDict:(NSDictionary *)indexedContacts;
 
 // Invite Sending
 - (void)sendInvites;

@@ -217,4 +217,23 @@
     [mockABUtils stopMocking];
     [mockPrompter stopMocking];
 }
+
+// Tests for the helper for displaying suggested invites
+- (void)testBuildContactsToUseAtPageRenderWhenShowSuggestedFlaggedOff {
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    XCTAssertFalse(YES);
+}
+
+- (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndContactsAlreadyReturned {
+    XCTAssertFalse(YES);
+}
+
+- (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndWaitingOnContactsToBeReturned {
+    [MaveSDK resetSharedInstanceForTesting];
+    XCTAssertEqual([MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status,
+                   MAVEPromiseStatusUnfulfilled);
+    XCTAssertFalse(YES);
+}
+
 @end
