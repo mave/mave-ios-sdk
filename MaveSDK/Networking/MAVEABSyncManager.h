@@ -32,9 +32,13 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 // Synchronous methods to send data to server and process results
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts;
 - (MAVEContactSyncType)decideNeededSyncTypeCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree;
+// Helper to send the changeset, telling the server to return suggested if specified
 - (NSArray *)sendContactsChangeset:(NSArray *)changeset
                         merkleTree:(MAVEMerkleTree *)merkleTree
                    returnSuggested:(BOOL)returnSuggested;
+// Helper to get suggested invites explicitly (as opposed to having them returned by the
+// send changeset request) and map the returned hashed record IDs to MAVEABPerson objects
+- (NSArray *)getSuggestedInvitesExplicitlyWithAllContacts:(NSArray *)contacts;
 
 - (NSArray *)changesetComparingFullRemoteTreeToTree:(MAVEMerkleTree *)merkleTree;
 

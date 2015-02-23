@@ -124,11 +124,12 @@
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
     config.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] init];
     config.contactsSync.enabled = YES;
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = YES;
     OCMExpect([maveMock remoteConfiguration]).andReturn(config);
 
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
-
     NSArray *fakeAllContacts = @[@"asdf", @"sdfg"];
     NSArray *suggestedContacts = @[@"foo", @"bar"];
     OCMExpect([syncerMock doSyncContacts:fakeAllContacts returnSuggested:YES]).andReturn(suggestedContacts);
@@ -140,37 +141,98 @@
     [syncer syncContactsAndPopulateSuggestedInBackground:fakeAllContacts];
 
     OCMVerifyAllWithDelay(maveMock, 0.25);
-    OCMVerifyAllWithDelay(maveMock, 0.25);
-    OCMVerifyAllWithDelay(maveMock, 0.25);
+    OCMVerifyAllWithDelay(syncerMock, 0.25);
+    OCMVerifyAllWithDelay(promiseMock, 0.25);
 }
 
 - (void)testSyncContactsAndPopulateInBackgroundWhenSyncNoUseSuggestedYes {
     [MaveSDK resetSharedInstanceForTesting];
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
 
-    // use a remote configuration that disables contact sync
+    // use a remote configuration that enables contacts sync
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
     config.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] init];
     config.contactsSync.enabled = NO;
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = YES;
     OCMExpect([maveMock remoteConfiguration]).andReturn(config);
 
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
-    [[syncerMock reject] buildLocalContactsMerkleTreeFromContacts:[OCMArg any]];
+    NSArray *fakeAllContacts = @[@"asdf", @"sdfg"];
+    NSArray *suggestedContacts = @[@"foo", @"bar"];
+    [[syncerMock reject] doSyncContacts:fakeAllContacts returnSuggested:YES];
+    OCMExpect([syncerMock getSuggestedInvitesExplicitlyWithAllContacts:fakeAllContacts]).andReturn(suggestedContacts);
+
+    id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
+    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedContacts};
+    OCMExpect([promiseMock fulfillPromise:expectedFulfillVal]);
+
+    [syncer syncContactsAndPopulateSuggestedInBackground:fakeAllContacts];
+
+    OCMVerifyAllWithDelay(maveMock, 0.25);
+    OCMVerifyAllWithDelay(syncerMock, 0.25);
+    OCMVerifyAllWithDelay(promiseMock, 0.25);
+}
+
+- (void)testSyncContactsAndPopulateInBackgroundWhenSyncYesUseSuggestedNo {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+
+    // use a remote configuration that enables contact sync
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] init];
+    config.contactsSync.enabled = YES;
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = NO;
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    id promiseMock = OCMClassMock([MAVEPromise class]);
+    NSDictionary *expectedFulfillPromiseObject = @{@"closest_contacts": @[]};
+    OCMExpect([promiseMock fulfillPromise:(NSValue *)expectedFulfillPromiseObject]);
+    [MaveSDK sharedInstance].suggestedInvitesBuilder.promise = promiseMock;
+
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id syncerMock = OCMPartialMock(syncer);
+    OCMExpect([syncer doSyncContacts:[OCMArg any] returnSuggested:NO]);
 
     [syncer syncContactsAndPopulateSuggestedInBackground:@[]];
 
     OCMVerifyAllWithDelay(syncerMock, 0.1);
     OCMVerifyAllWithDelay(maveMock, 0.1);
-}
-
-- (void)testSyncContactsAndPopulateInBackgroundWhenSyncYesUseSuggestedNO {
-    XCTAssertFalse(YES);
+    OCMVerifyAllWithDelay(promiseMock, 0.1);
 }
 
 - (void)testSyncContactsAndPopulateInBackgroundWhenSyncNoUseSuggestedNo {
-    XCTAssertFalse(YES);
+    [MaveSDK resetSharedInstanceForTesting];
+    [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
+
+    // use a remote configuration that enables contact sync
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] init];
+    config.contactsSync.enabled = NO;
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = NO;
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    id promiseMock = OCMClassMock([MAVEPromise class]);
+    NSDictionary *expectedFulfillPromiseObject = @{@"closest_contacts": @[]};
+    OCMExpect([promiseMock fulfillPromise:(NSValue *)expectedFulfillPromiseObject]);
+    [MaveSDK sharedInstance].suggestedInvitesBuilder.promise = promiseMock;
+
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    id syncerMock = OCMPartialMock(syncer);
+    [[syncerMock reject] getSuggestedInvitesExplicitlyWithAllContacts:[OCMArg any]];
+    [[[syncerMock reject] ignoringNonObjectArgs] doSyncContacts:[OCMArg any] returnSuggested:NO];
+
+    [syncer syncContactsAndPopulateSuggestedInBackground:@[]];
+
+    OCMVerifyAllWithDelay(syncerMock, 0.1);
+    OCMVerifyAllWithDelay(maveMock, 0.1);
+    OCMVerifyAllWithDelay(promiseMock, 0.1);
 }
 
 
@@ -212,33 +274,29 @@
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
     NSArray *fakeContacts = @[p0, p1, p2];
-    id mock = OCMPartialMock(syncer);
+    NSArray *expectedSuggested = @[p1, p2];
+    id syncerMock = OCMPartialMock(syncer);
     id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
 
     // mock the method that returns the merkle tree
-    OCMExpect([mock buildLocalContactsMerkleTreeFromContacts:fakeContacts]).andReturn(merkleTreeMock);
+    OCMExpect([syncerMock buildLocalContactsMerkleTreeFromContacts:fakeContacts]).andReturn(merkleTreeMock);
 
     // mock the method that determines if we sync or not
-    OCMExpect([mock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
+    OCMExpect([syncerMock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
         .andReturn(MAVEContactSyncTypeNone);
 
     // assert that we don't sync contacts
-    [[mock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
+    [[syncerMock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
     [[apiInterfaceMock reject] sendContactsChangeset:[OCMArg any] returnClosestContacts:NO completionBlock:[OCMArg any]];
     [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any]];
+
     // we should fetch suggested separately since we're not syncing
-    NSArray *fakeSuggestedHashedRecordIDs = @[@1, @2];
-    OCMExpect([apiInterfaceMock getClosestContactsHashedRecordIDs:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^contactsBlock)(NSArray *contacts) = obj;
-        contactsBlock(fakeSuggestedHashedRecordIDs);
-        return YES;
-    }]]);
+    OCMExpect([syncerMock getSuggestedInvitesExplicitlyWithAllContacts:fakeContacts]).andReturn(expectedSuggested);
 
     NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
-    NSArray *expectedSuggested = @[p1, p2];
     XCTAssertEqualObjects(closestContacts, expectedSuggested);
-    OCMVerifyAll(mock);
+    OCMVerifyAll(syncerMock);
     OCMVerifyAll(merkleTreeMock);
     OCMVerifyAll(apiInterfaceMock);
 }
@@ -414,6 +472,29 @@
     NSArray *returnedSuggested = [syncer sendContactsChangeset:fakeChangeset merkleTree:fakeMerkleTree returnSuggested:YES];
 
     XCTAssertEqualObjects(returnedSuggested, suggestedHashedRecordIDs);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testGetSuggestedInvitesExplicitlyWithAllContacts {
+    // set up some abperson object contacts
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    NSArray *allContacts = @[p0, p1, p2];
+    NSArray *expectedSuggested = @[p1, p2];
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    NSArray *fakeSuggestedHashedRecordIDs = @[@1, @2];
+    OCMExpect([apiInterfaceMock getClosestContactsHashedRecordIDs:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^contactsBlock)(NSArray *contacts) = obj;
+        contactsBlock(fakeSuggestedHashedRecordIDs);
+        return YES;
+    }]]);
+
+    MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
+    NSArray *returnedSuggested = [syncer getSuggestedInvitesExplicitlyWithAllContacts:allContacts];
+
+    XCTAssertEqualObjects(returnedSuggested, expectedSuggested);
     OCMVerifyAll(apiInterfaceMock);
 }
 

@@ -131,6 +131,15 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 # pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
     [self updateTableDataWithoutReloading:data];
+
+    // if there are definitely no suggestions, the section won't exist in table data.
+    // if section does exist and is empty, it should be pending (which is the default
+    // state of the suggestions section header view).
+    // if it's not empty, stop the pending dots
+    NSArray *suggestions = [data objectForKey:MAVESuggestedInvitesTableDataKey];
+    if (suggestions && [suggestions count] != 0) {
+        [self.suggestedInvitesSectionHeaderView stopWaiting];
+    }
     [self.tableView reloadData];
 }
 
