@@ -33,7 +33,7 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 @property (nonatomic, strong) MAVEInviteTableSectionHeaderView *suggestedInvitesSectionHeaderView;
 @property (nonatomic, assign) CGFloat contentInsetTopWithoutSearch;
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
-@property (atomic, strong) NSDictionary *personToIndexPathIndex;
+@property (atomic, strong) NSDictionary *personToIndexPathsIndex;
 
 // Different forms of table data
 @property (nonatomic, strong) NSDictionary *tableData;
@@ -62,9 +62,9 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 - (CGFloat)showingTableHeaderOffsetThreshold;
 - (void)updateTableData:(NSDictionary *)data;
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
-- (void)updatePersonToIndexPathIndex;
+- (void)updatePersonToIndexPathsIndex;
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
-- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
+- (NSArray *)indexPathsOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
 
 - (BOOL)isSearchTableVisible;

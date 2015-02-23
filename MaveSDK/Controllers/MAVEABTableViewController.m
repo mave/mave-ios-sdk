@@ -175,25 +175,31 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     self.tableData = data;
     self.tableSections = [[self.tableData allKeys]
                           sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    [self updatePersonToIndexPathIndex];
+    [self updatePersonToIndexPathsIndex];
 }
 
-- (void)updatePersonToIndexPathIndex {
-    NSInteger sectionIdx = 0, rowIdx = 0;
+// Build a reverse index from people to the index paths they're found at in the table
+// The data structure is is an dictionary mapping an NSNumber (person recordID) to an NSArray of
+// NSIndexPaths.
+// NB: a person can be found at multiple rows in a table which is why we map to an array of index paths
+- (void)updatePersonToIndexPathsIndex {
+    NSNumber *personKey;
+    NSIndexPath *idxPath; NSInteger sectionIdx = 0, rowIdx = 0;
     NSMutableDictionary *index = [[NSMutableDictionary alloc] init];
-    for (NSString *key in self.tableSections) {
+    for (NSString *sectionKey in self.tableSections) {
         rowIdx = 0;
-        for (MAVEABPerson *person in [self.tableData objectForKey:key]) {
-            if ([index objectForKey:[NSNumber numberWithInteger:person.recordID]]) {
-                
+        for (MAVEABPerson *person in [self.tableData objectForKey:sectionKey]) {
+            personKey = [NSNumber numberWithInteger:person.recordID];
+            idxPath = [NSIndexPath indexPathForRow:rowIdx inSection:sectionIdx];
+            if (![index objectForKey:personKey]) {
+                [index setObject:[[NSMutableArray alloc] init] forKey:personKey];
             }
-            [index setObject:[NSIndexPath indexPathForRow:rowIdx inSection:sectionIdx]
-                      forKey:[NSNumber numberWithInteger:person.recordID]];
+            [[index objectForKey:personKey] addObject:idxPath];
             rowIdx++;
         }
         sectionIdx++;
     }
-    self.personToIndexPathIndex = index;
+    self.personToIndexPathsIndex = index;
 }
 
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
@@ -212,16 +218,19 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     }
 }
 
-- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person {
-    NSIndexPath *indexPath;
+// Returns an array of nsindexpaths, guarenteed to have at least one item in the array.
+// If person is not in the table it returns an array with the index path of the top
+// of the table
+- (NSArray *)indexPathsOnMainTableViewForPerson:(MAVEABPerson *)person {
+    NSArray *indexPaths;
     if (person.recordID > 0) {
         NSNumber *recordID = [NSNumber numberWithInteger:person.recordID];
-        indexPath = [self.personToIndexPathIndex objectForKey:recordID];
+        indexPaths = [self.personToIndexPathsIndex objectForKey:recordID];
     }
-    if (!indexPath) {
-        indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    if (!indexPaths || [indexPaths count] == 0) {
+        indexPaths = @[[NSIndexPath indexPathForRow:0 inSection:0]];
     }
-    return indexPath;
+    return indexPaths;
 }
 
 
@@ -330,6 +339,10 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // choose person clicked on
     MAVEABPerson *person = [self personOnTableView:tableView atIndexPath:indexPath];
 
+    // person might appear in the main table more than once, lookup an array of all index paths
+    // for this person
+    NSArray *mainTableIndexPaths = [self indexPathsOnMainTableViewForPerson:person];
+
     // deal with selected state of person
     person.selected = !person.selected;
     if (person.selected) {
@@ -347,22 +360,19 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         [apiInterface trackInvitePageSelectedContactFromList:@"contacts"];
     }
 
-    // if selected/un-selected on search table view, switch back to main table view with same person
-    // selected, reload row, and clear search bar
+    // if selected/un-selected on search table view, switch back to main table view and scroll to the
+    // first instance of that person selected, reload row, and clear search bar
     if (tableView == self.searchTableView) {
-        NSIndexPath *mainTableIndex = [self indexPathOnMainTableViewForPerson:person];
+        NSIndexPath *scrollTo = [mainTableIndexPaths objectAtIndex:0];
         [self removeSearchTableView];
-        [self.tableView scrollToRowAtIndexPath:mainTableIndex
+        [self.tableView scrollToRowAtIndexPath:scrollTo
                               atScrollPosition:UITableViewScrollPositionTop
                                       animated:NO];
-        [self.tableView reloadRowsAtIndexPaths:@[mainTableIndex]
-                              withRowAnimation:UITableViewRowAnimationNone];
         self.searchBar.text = @"";
 
-    } else {
-        [tableView reloadRowsAtIndexPaths:@[indexPath]
-                         withRowAnimation:UITableViewRowAnimationNone];
     }
+    [self.tableView reloadRowsAtIndexPaths:mainTableIndexPaths
+                          withRowAnimation:UITableViewRowAnimationNone];
 }
 
 
