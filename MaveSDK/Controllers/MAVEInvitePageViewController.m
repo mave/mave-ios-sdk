@@ -121,9 +121,28 @@
 
 
 - (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
-          addSuggestedOnDelayWhenReady:(BOOL *)addSuggestedLaterReturnVal
+            addSuggestedLaterWhenReady:(BOOL *)addSuggestedLaterReturnVal
                fromIndexedContactsDict:(NSDictionary *)indexedContacts {
+    BOOL suggestionsEnabled = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.suggestedInvitesEnabled;
+    if (!suggestionsEnabled) {
+        *suggestedContactsReturnVal = indexedContacts;
+        *addSuggestedLaterReturnVal = NO;
+        return;
+    }
+    BOOL suggestionsReady = [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status != MAVEPromiseStatusUnfulfilled;
+    if (!suggestionsReady) {
+        *suggestedContactsReturnVal = [MAVEABUtils combineSuggested:@[] intoABIndexedForTableSections:indexedContacts];
+        *addSuggestedLaterReturnVal = YES;
+        return;
+    }
 
+    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:0];
+    if ([suggestions count] > 0) {
+        *suggestedContactsReturnVal = [MAVEABUtils combineSuggested:suggestions intoABIndexedForTableSections:indexedContacts];
+    } else {
+        *suggestedContactsReturnVal = indexedContacts;
+    }
+    *addSuggestedLaterReturnVal = NO;
 }
 
 
@@ -140,27 +159,13 @@
         // Permission granted
         } else {
             NSDictionary *indexedContactsToRenderNow;
-            BOOL suggestedInvitesAvailableNow =
-                [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status != MAVEPromiseStatusUnfulfilled;
-
-            if (suggestedInvitesAvailableNow) {
-                MAVEDebugLog(@"Suggested contacts available when rendering contacts invite page");
-                NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:5];
-                if ([suggestions count] == 0) {
-                    indexedContactsToRenderNow = indexedContacts;
-                } else {
-                    indexedContactsToRenderNow = [MAVEABUtils combineSuggested:suggestions
-                                                 intoABIndexedForTableSections:indexedContacts];
-                }
-            } else {
-                MAVEDebugLog(@"Suggested contacts not yet available when rendering contacts invite page");
-                // add the suggestions header to the indexed contacts by using empty list of suggestions
-                indexedContactsToRenderNow = [MAVEABUtils combineSuggested:@[]
-                                             intoABIndexedForTableSections:indexedContacts];
-
-                // wait on the
+            BOOL updateSuggestionsWhenReady = NO;
+            [self buildContactsToUseAtPageRender:&indexedContactsToRenderNow
+                      addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
+                         fromIndexedContactsDict:indexedContacts];
+            if (updateSuggestionsWhenReady) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:5];
+                    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:10];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.ABTableViewController updateTableDataAnimatedWithSuggestedInvites:suggestions];
 

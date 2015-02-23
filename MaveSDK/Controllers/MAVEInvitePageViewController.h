@@ -36,7 +36,7 @@
 //   - already know we don't have suggestions to display
 //   - still be waiting for api response to return 0 or more suggestions
 - (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
-          addSuggestedOnDelayWhenReady:(BOOL *)addSuggestedLaterReturnVal
+            addSuggestedLaterWhenReady:(BOOL *)addSuggestedLaterReturnVal
                fromIndexedContactsDict:(NSDictionary *)indexedContacts;
 
 // Invite Sending
