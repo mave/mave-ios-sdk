@@ -276,17 +276,22 @@
         void(^completionBlock)(NSValue *value) = obj;
         completionBlock((NSValue *)someData);
         return YES;
-    }] withTimeout:4.5]);
+    }] withTimeout:0.5]);
     OCMExpect([builderMock buildWithPrimaryThenFallBackToDefaultsWithData:someData])
         .andReturn(demoObject);
 
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"returned object should be the same as demo object"];
     __block MAVERemoteObjectDemo *returnedObject;
-    [builder createObjectWithTimeout:4.5
+    [builder createObjectWithTimeout:0.5
                      completionBlock:^(id object) {
                          returnedObject = object;
-                         XCTAssertEqualObjects(returnedObject, demoObject);
+                         if ([returnedObject isEqual:demoObject]) {
+                             [expectation fulfill];
+                         }
                      }];
 
+    [self waitForExpectationsWithTimeout:0.75 handler:nil];
     OCMVerifyAll(builderMock);
     OCMVerifyAll(promiseMock);
 }

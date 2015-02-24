@@ -36,4 +36,7 @@ Pod::Spec.new do |s|
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'AddressBook', 'UIKit'
   s.libraries = 'z'
+
+  # 3rd party cocoapod dependencies
+  s.dependency 'libPhoneNumber-iOS', '~> 0.8.3'
 end

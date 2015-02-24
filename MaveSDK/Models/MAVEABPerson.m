@@ -7,7 +7,11 @@
 //
 
 #import "MAVEABPerson.h"
+#import "MaveConstants.h"
+#import "MAVEClientPropertyUtils.h"
 #import "MAVEMerkleTreeHashUtils.h"
+#import "NBPhoneNumber.h"
+#import "NBPhoneNumberUtil.h"
 
 @implementation MAVEABPerson
 
@@ -148,21 +152,53 @@
     return name;
 }
 
+// Use the libPhoneNumber-iOS library to normalize phone numbers based on the
+// device's current country code.
+//
+// Also apply some filters to require area codes in various countries
 + (NSString *)normalizePhoneNumber:(NSString *)phoneNumber {
-    NSString * numOnly = [phoneNumber
-                          stringByReplacingOccurrencesOfString:@"[^0-9]"
-                          withString:@""
-                          options:NSRegularExpressionSearch
-                          range:NSMakeRange(0, [phoneNumber length])];
-    if ([numOnly length] == 10) {
-        numOnly = [@"1" stringByAppendingString:numOnly];
+    NBPhoneNumberUtil *phoneNumberUtil = [[NBPhoneNumberUtil alloc] init];
+
+    // Find current country code for device
+    NSString *countryCode = [MAVEClientPropertyUtils countryCode];
+    if ((id)countryCode == [NSNull null] || [countryCode length] == 0) {
+        countryCode = @"US";
     }
-    // the character "1"s unichar value is 49
-    if (! ([numOnly length] == 11 && [numOnly characterAtIndex:0] == 49) ) {
-        numOnly = nil;
+
+    // Parse the phone numbers
+    NSError *parseError = nil;
+    NBPhoneNumber *pnObject = [phoneNumberUtil parse:phoneNumber
+                                       defaultRegion:countryCode
+                                               error:&parseError];
+    if (parseError) {
+        MAVEDebugLog(@"Error %@ parsing phone number %@", parseError, phoneNumber);
+        return nil;
     }
-    return numOnly;
+
+    // Filter ones we don't want to use. In the US, this is any 7 digit numbers because
+    // those don't have an area code
+    NSDictionary *nationalNumberMinLengths = @{
+        @1: @8,
+    };
+    NSString *nationalNumber = [phoneNumberUtil getNationalSignificantNumber:pnObject];
+    id minNationalNumberLengthObj = [nationalNumberMinLengths objectForKey:pnObject.countryCode];
+    NSUInteger minNationalNumberLength = minNationalNumberLengthObj ? [minNationalNumberLengthObj unsignedIntegerValue] : 0;
+    if ([nationalNumber length] < minNationalNumberLength) {
+        return nil;
+    }
+    MAVEDebugLog(phoneNumber);
+
+    NSError *formatError = nil;
+    NSString *parsed = [phoneNumberUtil format:pnObject
+                                  numberFormat:NBEPhoneNumberFormatE164
+                                         error:&formatError];
+    if (formatError) {
+        MAVEDebugLog(@"Error %@ formatting phone number %@", formatError, phoneNumber);
+        return nil;
+    }
+    return parsed;
 }
+
 
 // For now, phone is required so this will always return exactly one phone
 // number that we should send the invite to
@@ -193,11 +229,33 @@
     return val;
 }
 
+// Phone number here should already have been parsed so it should be in E.164 format
+//
+// To display it, we use the "National" format (has no country code) if the number is
+// in the same country as the device's current setting, otherwise we use the
+// "International" format which does have the country code.
+// Finally, we also replace any plain spaces with non line breaking spaces, which is
+// what e.g. iOS uses when it formats a number as you type it in.
 + (NSString *)displayPhoneNumber:(NSString *)phoneNumber {
-    NSString *areaCode = [phoneNumber substringWithRange:NSMakeRange(1, 3)];
-    NSString *first3 = [phoneNumber substringWithRange:NSMakeRange(4, 3)];
-    NSString *last4 = [phoneNumber substringWithRange:NSMakeRange(7, 4)];
-    return [NSString stringWithFormat:@"(%@)\u00a0%@-%@", areaCode, first3, last4];
+    NBPhoneNumberUtil *phoneNumberUtil = [[NBPhoneNumberUtil alloc] init];
+    NBPhoneNumber *pnObject = [phoneNumberUtil parseWithPhoneCarrierRegion:phoneNumber error:nil];
+    NSString *isoCountryCode = [phoneNumberUtil getRegionCodeForCountryCode:pnObject.countryCode];
+    NBEPhoneNumberFormat formatAs;
+    if ([isoCountryCode isEqualToString:[MAVEClientPropertyUtils countryCode]]) {
+        formatAs = NBEPhoneNumberFormatNATIONAL;
+    } else {
+        formatAs = NBEPhoneNumberFormatINTERNATIONAL;
+    }
+    // change regular spaces to non line breaking whitespace (that's what iOS uses when it
+    // formats a number as you type it in)
+    NSError *formatError = nil;
+    NSString *stringWithNormalSpaces = [phoneNumberUtil format:pnObject
+                                                  numberFormat:formatAs
+                                                         error:&formatError];
+    if (formatError) {
+        return phoneNumber;
+    }
+    return [stringWithNormalSpaces stringByReplacingOccurrencesOfString:@" " withString:@"\u00a0"];
 }
 
 - (NSComparisonResult)compareNames:(MAVEABPerson *)otherPerson {

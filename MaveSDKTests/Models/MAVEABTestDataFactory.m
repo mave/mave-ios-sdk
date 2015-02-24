@@ -32,9 +32,10 @@
     ABRecordRef rec = ABPersonCreate();
     ABRecordSetValue(rec, kABPersonFirstNameProperty, CFBridgingRetain([GZNames firstName]), nil);
     ABRecordSetValue(rec, kABPersonLastNameProperty, CFBridgingRetain(lastName), nil);
-    
+
     ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
-    ABMultiValueAddValueAndLabel(pnmv, CFBridgingRetain([GZPhoneNumbers phoneNumber]), kABPersonPhoneMobileLabel, NULL);
+    NSString *phoneNumber = [GZPhoneNumbers phoneNumber];
+    ABMultiValueAddValueAndLabel(pnmv, CFBridgingRetain(phoneNumber), kABPersonPhoneMobileLabel, NULL);
     ABRecordSetValue(rec, kABPersonPhoneProperty, pnmv, nil);
     
     ABMutableMultiValueRef emv = ABMultiValueCreateMutable(kABPersonEmailProperty);
