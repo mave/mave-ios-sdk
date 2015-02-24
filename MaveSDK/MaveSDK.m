@@ -242,6 +242,8 @@ static dispatch_once_t sharedInstanceonceToken;
                                   if (error) {
                                       NSError *returnError = [[NSError alloc] initWithDomain:error.domain code:error.code userInfo:@{@"message": @"Error making request to send SMS invites"}];
                                       errorBlock(returnError);
+                                  } else {
+                                      MAVEInfoLog(@"Sent %lu SMS invites", [recipientPhoneNumbers count]);
                                   }
                               }];
 }
