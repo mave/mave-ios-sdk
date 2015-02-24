@@ -11,8 +11,11 @@
 #import <OCMock/OCMock.h>
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
+#import "MAVEClientPropertyUtils.h"
 #import "MAVEABTestDataFactory.h"
 #import "MAVEMerkleTreeHashUtils.h"
+#import "Gizou.h"
+
 
 @interface MAVEABPersonTests : XCTestCase
 
@@ -55,7 +58,7 @@
     XCTAssertEqualObjects(p.lastName, @"Smith");
     XCTAssertEqual([p.phoneNumbers count], 1);
     // Should have converted number to default format
-    XCTAssertEqualObjects(p.phoneNumbers[0], @"18085551234");
+    XCTAssertEqualObjects(p.phoneNumbers[0], @"+18085551234");
     XCTAssertEqual([p.phoneNumberLabels count], 1);
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<Mobile>!$_");
     
@@ -182,9 +185,9 @@
     [p setPhoneNumbersFromABRecordRef:rec];
     XCTAssertEqual([p.phoneNumbers count], 2);
     XCTAssertEqual([p.phoneNumberLabels count], 2);
-    XCTAssertEqualObjects(p.phoneNumbers[0], @"18085551234");
+    XCTAssertEqualObjects(p.phoneNumbers[0], @"+18085551234");
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<Mobile>!$_");
-    XCTAssertEqualObjects(p.phoneNumbers[1], @"18085555678");
+    XCTAssertEqualObjects(p.phoneNumbers[1], @"+18085555678");
     XCTAssertEqualObjects(p.phoneNumberLabels[1], @"_$!<Main>!$_");
 }
 
@@ -215,7 +218,7 @@
     [p setPhoneNumbersFromABRecordRef:rec];
     XCTAssertEqual([p.phoneNumbers count], 1);
     XCTAssertEqual([p.phoneNumberLabels count], 1);
-    XCTAssertEqualObjects(p.phoneNumbers[0], @"18085551234");
+    XCTAssertEqualObjects(p.phoneNumbers[0], @"+18085551234");
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<OtherFAX>!$_");
 }
 
@@ -237,7 +240,7 @@
     [p setPhoneNumbersFromABRecordRef:rec];
     XCTAssertEqual([p.phoneNumbers count], 1);
     XCTAssertEqual([p.phoneNumberLabels count], 1);
-    XCTAssertEqualObjects(p.phoneNumbers[0], @"18085551234");
+    XCTAssertEqualObjects(p.phoneNumbers[0], @"+18085551234");
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<Main>!$_");
 }
 
@@ -335,7 +338,7 @@
     
     MAVEABPerson *p = [[MAVEABPerson alloc] init];
     [p setPhoneNumbersFromABRecordRef:rec];
-    XCTAssertEqualObjects([p bestPhone], @"18085551234");
+    XCTAssertEqualObjects([p bestPhone], @"+18085551234");
 }
 
 - (void)testBestPhonePreferMainIfNoMobile {
@@ -347,40 +350,107 @@
     
     MAVEABPerson *p = [[MAVEABPerson alloc] init];
     [p setPhoneNumbersFromABRecordRef:rec];
-    XCTAssertEqualObjects([p bestPhone], @"18085551234");
+    XCTAssertEqualObjects([p bestPhone], @"+18085551234");
 }
 
+#pragma mark - Normalize Phone Numbers
 
 - (void)testNormalizePhoneBasicFormats {
+    // These tests assume the device region is US
+    XCTAssertEqualObjects([MAVEClientPropertyUtils countryCode], @"US");
     NSString *p1 = @"(808) 555-1234";
     NSString *p2 = @"808.555.1234";
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"18085551234");
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"18085551234");
+    NSString *p3 = @"808-555-1234";
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+18085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"+18085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+18085551234");
+    // try some from the GZ library
+    NSString *p, *pNormalized;
+    for (int i = 0; i < 10; ++i) {
+        p = [GZPhoneNumbers phoneNumber];
+        pNormalized = [MAVEABPerson normalizePhoneNumber:p];
+        XCTAssertNotNil(pNormalized);
+    }
 }
 
 - (void) testNormalizePhoneIfAlreadyContains1 {
     NSString *p1 = @"+1 (808) 555-1234";
     NSString *p2 = @"+1.808.555.1234";
     NSString *p3 = @"1.808.555.1234";
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"18085551234");
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"18085551234");
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"18085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+18085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"+18085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+18085551234");
+}
+
+- (void)testFilterUSPhoneNumbersWithBadAreaCodes {
+    // We still accept US numbers that aren't 10 digits, but we don't accept 7 digits or shorter.
+    // The library has weird behavior by sometimes stripping a leading 0, so we test for that too
+    NSString *p1 = @"2.808.555.1234";
+    NSString *p2 = @"08.555.1234";
+    NSString *p3 = @"008-555-1234";
+    NSString *p4 = @"867-5309";
+    NSString *p5 = @"100";
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+128085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"+1085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+1085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p4], nil);
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p5], nil);
 }
 
 - (void)testNormalizeInvalidPhonesReturnNil {
-    // Only US phone numbers (10 digit, optionally starting with 1) are valid currently
-    NSString *p1 = @"2.808.555.1234";
-    NSString *p2 = @"08.555.1234";
-    NSString *p3 = @"notanumber";
+    // non digit or too short numbers return nil
+    NSString *p1 = @"notanumber";
+    NSString *p2 = nil;
+    NSString *p3 = @"10";
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], nil);
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], nil);
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], nil);
 }
 
-- (void)testDisplayPhonesWorks {
-    NSString *p1 = @"18085551234";
+- (void)testNormalizeNonUSPhoneNumbers {
+    // try a barcelona phone number
+    id clientPropertiesMock = OCMClassMock([MAVEClientPropertyUtils class]);
+    OCMStub([clientPropertiesMock countryCode]).andReturn(@"ES");
+    NSString *p1 = @"93 4027000";
+    NSString *p2 = @"+34 93 4027000";
+    // This one is really short, but we're not specifying a minimum area code
+    NSString *p3 = @"1234";
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+34934027000");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"+34934027000");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+341234");
+}
+
+- (void)testFallbackCountryCodeIsUS {
+    id clientPropertiesMock = OCMClassMock([MAVEClientPropertyUtils class]);
+    OCMExpect([clientPropertiesMock countryCode]).andReturn(nil);
+    NSString *p1 = @"8085551234";
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+18085551234");
+    OCMVerifyAll(clientPropertiesMock);
+}
+
+- (void)testDisplayPhoneNumberSuccess {
+    NSString *p1 = @"+18085551234";
     XCTAssertEqualObjects([MAVEABPerson displayPhoneNumber:p1],
                           @"(808)\u00a0555-1234");
+    // Barcelona phone number
+    NSString *p2 = @"+34934027000";
+    XCTAssertEqualObjects([MAVEABPerson displayPhoneNumber:p2],
+                          @"+34\u00a0934\u00a002\u00a070\u00a000");
+    // if an invalid phone number somehow snuck in, just return it
+    NSString *p3 = @"234";
+    XCTAssertEqualObjects([MAVEABPerson displayPhoneNumber:p3], @"234");
+}
+
+- (void)testDisplayPhoneNumberWhenPhoneInternational {
+    id clientPropertiesMock = OCMClassMock([MAVEClientPropertyUtils class]);
+    OCMStub([clientPropertiesMock countryCode]).andReturn(@"ES");
+    NSString *p1 = @"+18085551234";
+    XCTAssertEqualObjects([MAVEABPerson displayPhoneNumber:p1],
+                          @"+1\u00a0808-555-1234");
+
+    NSString *p2 = @"+34934027000";
+    XCTAssertEqualObjects([MAVEABPerson displayPhoneNumber:p2],
+                          @"934\u00a002\u00a070\u00a000");
 }
 
 - (void)testMerkleTreeDataKey {
