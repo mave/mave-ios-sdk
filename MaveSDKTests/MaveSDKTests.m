@@ -363,4 +363,148 @@
     OCMVerifyAll(mockAPIInterface);
 }
 
+
+# pragma mark - Send SMS programatically Tests
+
+- (void)testSendSMSInviteMessageProgramaticallySuccessWithOptions {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+
+    // setup the user to send sms from
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.userID = @"1"; user.firstName = @"Dan";
+    [[MaveSDK sharedInstance] identifyUser:user];
+
+    // mock the underlying method
+    NSString *message = @"hello this is an invite";
+    NSArray *recipients = @[@"8085551234", @"wontgetvalidatedclientsideanyway"];
+    NSString *linkDestinationURL = @"http://example.com/signup";
+    NSString *context = @"blahcontext";
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock sendInvitesWithPersons:recipients
+                                                  message:message
+                                                   userId:user.userID
+                                 inviteLinkDestinationURL:linkDestinationURL
+                                          completionBlock:[OCMArg any]]);
+
+    NSDictionary *additionalOptions = @{
+        @"invite_context": context,
+        @"link_destination_url": linkDestinationURL,
+        };
+    __block NSError *returnedError = nil;
+    [[MaveSDK sharedInstance] sendSMSInviteMessage:message
+                                      toRecipients:recipients
+                                 additionalOptions:additionalOptions
+                                        errorBlock:^(NSError *error) {
+                                            returnedError = error;
+                                        }];
+
+    XCTAssertNil(returnedError);
+    OCMVerifyAll(apiInterfaceMock);
+    // should have set the global invite context before sending
+    XCTAssertEqualObjects([MaveSDK sharedInstance].inviteContext, context);
+}
+
+- (void)testSendSMSInviteMessageProgramaticallySuccessWithNoOptions {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+
+    // setup the user to send sms from
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.userID = @"1"; user.firstName = @"Dan";
+    [[MaveSDK sharedInstance] identifyUser:user];
+
+    // mock the underlying method
+    NSString *message = @"hello this is an invite";
+    NSArray *recipients = @[@"8085551234", @"wontgetvalidatedclientsideanyway"];
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock sendInvitesWithPersons:recipients
+                                               message:message
+                                                userId:user.userID
+                              inviteLinkDestinationURL:nil
+                                       completionBlock:[OCMArg any]]);
+
+    __block NSError *returnedError = nil;
+    [[MaveSDK sharedInstance] sendSMSInviteMessage:message
+                                      toRecipients:recipients
+                                 additionalOptions:nil
+                                        errorBlock:^(NSError *error) {
+                                            returnedError = error;
+                                        }];
+
+    XCTAssertNil(returnedError);
+    OCMVerifyAll(apiInterfaceMock);
+    // should have set the global invite context before sending
+    XCTAssertEqualObjects([MaveSDK sharedInstance].inviteContext, @"programatic invite");
+}
+
+- (void)testSendSMSInviteMessageProgramaticallyFailsWithBadUserData {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+
+    // setup the user to send sms from
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.userID = @"1"; // user has no name
+    [[MaveSDK sharedInstance] identifyUser:user];
+
+    // mock the underlying method
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] sendInvitesWithPersons:[OCMArg any]
+                                               message:[OCMArg any]
+                                                userId:user.userID
+                              inviteLinkDestinationURL:nil
+                                       completionBlock:[OCMArg any]];
+
+    __block NSError *returnedError = nil;
+    [[MaveSDK sharedInstance] sendSMSInviteMessage:@"2"
+                                      toRecipients:@[@"vasd"]
+                                 additionalOptions:nil
+                                        errorBlock:^(NSError *error) {
+                                            returnedError = error;
+                                        }];
+
+    XCTAssertNotNil(returnedError);
+    XCTAssertEqualObjects([returnedError.userInfo objectForKey:@"message"], @"user firstName set to nil");
+    OCMVerifyAll(apiInterfaceMock);
+    // should have set the global invite context before sending
+    XCTAssertNil([MaveSDK sharedInstance].inviteContext);
+}
+
+- (void)testSendSMSInviteMessageProgramaticallyFailsIfNetworkRequestFails {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+
+    // setup the user to send sms from
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.userID = @"1"; user.firstName = @"Dan";
+    [[MaveSDK sharedInstance] identifyUser:user];
+
+    // mock the underlying method
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock sendInvitesWithPersons:[OCMArg any]
+                                               message:[OCMArg any]
+                                                userId:user.userID
+                              inviteLinkDestinationURL:nil
+                                       completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEHTTPCompletionBlock completionBlock = obj;
+        NSError *requestError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN code:400 userInfo:@{}];
+        completionBlock(requestError, nil);
+        return YES;
+    }]]);
+
+    __block NSError *returnedError = nil;
+    [[MaveSDK sharedInstance] sendSMSInviteMessage:@"2"
+                                      toRecipients:@[@"vasd"]
+                                 additionalOptions:nil
+                                        errorBlock:^(NSError *error) {
+                                            returnedError = error;
+                                        }];
+
+    XCTAssertNotNil(returnedError);
+    XCTAssertEqualObjects([returnedError.userInfo objectForKey:@"message"],
+                          @"Error making request to send SMS invites");
+    OCMVerifyAll(apiInterfaceMock);
+    // should have set the global invite context before sending
+    XCTAssertEqualObjects([MaveSDK sharedInstance].inviteContext, @"programatic invite");
+
+}
+
+
+
 @end

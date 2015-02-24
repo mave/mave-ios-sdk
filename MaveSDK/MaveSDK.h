@@ -69,4 +69,38 @@
                              forwardBlock:(MAVEInvitePageDismissBlock)forwardBlock
                              backBlock:(MAVEInvitePageDismissBlock)backBlock
                          inviteContext:(NSString *)inviteContext;
+
+// Send SMS messages programatically
+//
+// The messge sent will be in the format:
+//   <sender first name>[ <last name>]: <message> <invite link>
+//
+// Sender first name & last name come from the user data, which you set with the
+// `identifyUser` call. Message is the message passed in here, and invite link
+// will be a Mave wrapped link attached to the invite.
+//
+// Args:
+//
+// - message is the message to send in the invite
+//
+// - recipientPhoneNumbers is an array of phone numbers to send invites too. The
+//       phone numbers can be in e.164 format (begin with +country code) or just
+//       10-digit U.S. phone numbers begginning with area code. We only support
+//       sending SMS messages to the U.S. for now.
+//       Any phone numbers in incorrect format will be silenty skipped.
+//
+// - additionalOptions is a dictionary of optional parameters, use nil if none.
+//     Available options are:
+//     - "invite_context" - this is a string you can use if you are sending invites
+//           in different places (contexts) in your app to be able to look at the
+//           stats separately. Some examples might be "after first purchase" or
+//           "signup flow". Defaults to "programatic invite" if not set.
+//     - "link_destination_url" - you can optionally pass in a URL to which the link
+//           in the invite will redirect. If not set we use the app store link, you
+//           only need to set this if you want each invite to go to a different URL.
+- (void)sendSMSInviteMessage:(NSString *)message
+                toRecipients:(NSArray *)recipientPhoneNumbers
+           additionalOptions:(NSDictionary *)options
+                  errorBlock:(void (^)(NSError *))errorBlock;
+
 @end
