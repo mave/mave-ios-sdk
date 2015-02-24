@@ -305,10 +305,25 @@
                                             initWithActivityItems:activityItems
                                             applicationActivities:nil];
     activityVC.excludedActivityTypes = @[UIActivityTypeAddToReadingList];
-    activityVC.completionHandler = ^void (NSString *activityType, BOOL completed) {
+
+    // completion handler changed in ios8, but the alternative is deprecated in ios8 and gives warnings.
+    // So we define a handler compatible with the old format, but wrap it in the new format if the
+    // activity view controller responds to the new method
+    UIActivityViewControllerCompletionHandler completionHandler = ^void(NSString *activityType, BOOL completed) {
         unsigned int numberShares = completed ? 1 : 0;
         [self dismissSelf:numberShares];
     };
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    if ([activityVC respondsToSelector:@selector(completionWithItemsHandler)]) {
+        activityVC.completionWithItemsHandler = ^void(NSString *activityType, BOOL completed,
+                                                      NSArray *returnedItems, NSError *activityError) {
+            completionHandler(activityType, completed);
+        };
+    } else {
+        activityVC.completionHandler = completionHandler;
+    }
+#pragma clang diagnostic pop
     [self presentViewController:activityVC animated:YES completion:nil];
 
     // Tracking event that share sheet was presented
