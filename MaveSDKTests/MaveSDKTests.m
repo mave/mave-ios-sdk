@@ -505,6 +505,29 @@
 
 }
 
+- (void)testSendSMSInviteMessageProgramaticallyWithNilErrorBlockIsOk {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    [MaveSDK sharedInstance].userData = nil;
+    // no user data is set up
+
+    // mock the underlying method
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] sendInvitesWithPersons:[OCMArg any]
+                                              message:[OCMArg any]
+                                               userId:[OCMArg any]
+                             inviteLinkDestinationURL:nil
+                                      completionBlock:[OCMArg any]];
+
+    [[MaveSDK sharedInstance] sendSMSInviteMessage:@"2"
+                                      toRecipients:@[@"vasd"]
+                                 additionalOptions:nil
+                                        errorBlock:nil];
+
+    OCMVerifyAll(apiInterfaceMock);
+    // should have set the global invite context before sending
+    XCTAssertNil([MaveSDK sharedInstance].inviteContext);
+}
+
 
 
 @end

@@ -222,7 +222,9 @@ static dispatch_once_t sharedInstanceonceToken;
                   errorBlock:(void (^)(NSError *))errorBlock {
     NSError *userSetupError = [self validateUserSetup];
     if (userSetupError) {
-        errorBlock(userSetupError);
+        if (errorBlock) {
+            errorBlock(userSetupError);
+        }
         return;
     }
 
@@ -239,7 +241,7 @@ static dispatch_once_t sharedInstanceonceToken;
                                        userId:self.userData.userID
                      inviteLinkDestinationURL:linkDestinationURL
                               completionBlock:^(NSError *error, NSDictionary *responseData) {
-                                  if (error) {
+                                  if (error && errorBlock) {
                                       NSError *returnError = [[NSError alloc] initWithDomain:error.domain code:error.code userInfo:@{@"message": @"Error making request to send SMS invites"}];
                                       errorBlock(returnError);
                                   } else {
