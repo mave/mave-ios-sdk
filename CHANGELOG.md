@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.4.1
+- small cleanup & bugfixes
+- adds a method on the MaveSDK object to send SMS invites programatically, as an alternative to using the Mave invite page.
+
 ### v0.4.0
 - adds a search bar and ability to search through contacts to the invite page
 - a number of small UI improvements and bugfixes
