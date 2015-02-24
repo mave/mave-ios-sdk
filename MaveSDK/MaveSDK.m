@@ -223,4 +223,42 @@ static dispatch_once_t sharedInstanceonceToken;
     presentBlock(self.invitePageChooser.activeViewController);
 }
 
+//
+// Programatic SMS invites
+//
+- (void)sendSMSInviteMessage:(NSString *)message
+                toRecipients:(NSArray *)recipientPhoneNumbers
+           additionalOptions:(NSDictionary *)options
+                  errorBlock:(void (^)(NSError *))errorBlock {
+    NSError *userSetupError = [self validateUserSetup];
+    if (userSetupError) {
+        if (errorBlock) {
+            errorBlock(userSetupError);
+        }
+        return;
+    }
+
+    // options
+    NSString *inviteContext = [options objectForKey:@"invite_context"];
+    if (!inviteContext || (id)inviteContext == [NSNull null]) {
+        inviteContext = @"programatic invite";
+    }
+    self.inviteContext = inviteContext;
+    NSString *linkDestinationURL = [options objectForKey:@"link_destination_url"];
+
+    [self.APIInterface sendInvitesWithPersons:recipientPhoneNumbers
+                                      message:message
+                                       userId:self.userData.userID
+                     inviteLinkDestinationURL:linkDestinationURL
+                              completionBlock:^(NSError *error, NSDictionary *responseData) {
+                                  if (error && errorBlock) {
+                                      NSError *returnError = [[NSError alloc] initWithDomain:error.domain code:error.code userInfo:@{@"message": @"Error making request to send SMS invites"}];
+                                      errorBlock(returnError);
+                                  } else {
+                                      MAVEInfoLog(@"Sent %lu SMS invites", [recipientPhoneNumbers count]);
+                                  }
+                              }];
+}
+
+
 @end

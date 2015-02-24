@@ -53,7 +53,12 @@
     OCMExpect([VCMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
         UIActivityViewController *shareSheetVC = obj;
         XCTAssertNotNil(shareSheetVC);
-        shareSheetVC.completionHandler(nil, YES);
+        // we will have set either the old or new style completion handler based on being on ios 7 or 8
+        if (shareSheetVC.completionHandler) {
+            shareSheetVC.completionHandler(nil, YES);
+        } else {
+            shareSheetVC.completionWithItemsHandler(nil, YES, nil, nil);
+        }
         return YES;
     }] animated:YES completion:nil]);
     OCMExpect([APIInterfaceMock trackInvitePageOpenForPageType:MAVEInvitePageTypeNativeShareSheet]);

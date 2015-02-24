@@ -38,7 +38,7 @@
                                                         phone:nil];
     [[MaveSDK sharedInstance] identifyUser:user];
     self.testAPIInterface = [[MAVEAPIInterface alloc] init];
-    
+
 }
 
 - (void)tearDown {
