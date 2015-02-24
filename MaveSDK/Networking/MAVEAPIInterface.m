@@ -220,6 +220,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                                               preparationError:&requestCreationError];
     if (requestCreationError) {
         completionBlock(requestCreationError, nil);
+        return;
     }
     
     [self addCustomUserHeadersToRequest:request];

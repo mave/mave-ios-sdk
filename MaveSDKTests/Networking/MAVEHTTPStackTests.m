@@ -136,8 +136,9 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
                                                              error:nil];
     
     // Mock session data task method to call the callback
-    id taskMock = OCMPartialMock([[NSURLSessionTask alloc] init]);
-    id sessionMock = OCMPartialMock(self.testHTTPStack.session);
+    id taskMock = OCMClassMock([NSURLSessionTask class]);
+    id sessionMock = OCMClassMock([NSURLSession class]);
+    self.testHTTPStack.session = sessionMock;
     OCMExpect([sessionMock dataTaskWithRequest:req
                              completionHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
         MAVENSURLSessionCallback cb = (MAVENSURLSessionCallback)obj;

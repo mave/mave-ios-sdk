@@ -278,7 +278,7 @@
     id maveMock = OCMPartialMock(mave);
     OCMExpect([maveMock isSetupOK]).andReturn(NO);
 
-    __block BOOL called;
+    __block BOOL called = NO;
     // dismissal block nil triggers error
     [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteViewController) {
         called = YES;
@@ -327,7 +327,7 @@
     id maveMock = OCMPartialMock(mave);
     OCMExpect([maveMock isSetupOK]).andReturn(NO);
 
-    __block BOOL called;
+    __block BOOL called = NO;
     // dismissal block nil triggers error
     [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
         called = YES;
