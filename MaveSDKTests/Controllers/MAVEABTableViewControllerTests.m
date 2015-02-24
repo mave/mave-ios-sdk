@@ -90,27 +90,73 @@
     XCTAssertEqual([vc.tableData count], numSections);
     XCTAssertEqualObjects(vc.tableSections, expectedIndexes);
 
-    XCTAssertEqual([vc.personToIndexPathIndex count], numPeople);
-    XCTAssertEqualObjects([vc indexPathOnMainTableViewForPerson:lastPerson],
-                          [NSIndexPath indexPathForRow:1 inSection:14]);
+    XCTAssertEqual([vc.personToIndexPathsIndex count], numPeople);
+    XCTAssertEqualObjects([vc indexPathsOnMainTableViewForPerson:lastPerson],
+                          @[[NSIndexPath indexPathForRow:1 inSection:14]]);
 }
 
-- (void)testIndexPathOnMainTableWhenBadData {
-    NSIndexPath *fallbackIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+// Build the reverse index mapping a person to the list of index paths where that person
+// occurs in the table
+- (void)testUpdatePersonToIndexPathsIndexAndQueryForPaths {
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] init];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2;
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.recordID = 3;
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init]; p4.recordID = 4;
+    vc.tableSections = @[@"★", @"B", @"#"];
+    // Notice there's a duplicate, p0 occurs in multiple sections.
+    // This would happen with, say, suggested invites
+    vc.tableData = @{@"★": @[p1], @"B": @[p2, p3], @"#": @[p4, p1]};
+
+    // build the index and ensure it looks how we expect
+    [vc updatePersonToIndexPathsIndex];
+    NSDictionary *expectedIndex = @{
+        @(p1.recordID): @[[NSIndexPath indexPathForRow:0 inSection:0],
+                          [NSIndexPath indexPathForRow:1 inSection:2],
+                          ],
+        @(p2.recordID): @[[NSIndexPath indexPathForRow:0 inSection:1]],
+        @(p3.recordID): @[[NSIndexPath indexPathForRow:1 inSection:1]],
+        @(p4.recordID): @[[NSIndexPath indexPathForRow:0 inSection:2]],
+    };
+    XCTAssertEqualObjects(vc.personToIndexPathsIndex, expectedIndex);
+
+    // then query the index and ensure we get back data we expect
+    NSArray *expectedPaths1 = @[[NSIndexPath indexPathForRow:0 inSection:0],
+                               [NSIndexPath indexPathForRow:1 inSection:2]];
+    XCTAssertEqualObjects([vc indexPathsOnMainTableViewForPerson:p1], expectedPaths1);
+    NSArray *expectedPaths2 = @[[NSIndexPath indexPathForRow:0 inSection:1]];
+    XCTAssertEqualObjects([vc indexPathsOnMainTableViewForPerson:p2], expectedPaths2);
+
+    // person not in table should just return 0 index path
+    MAVEABPerson *p5 = [[MAVEABPerson alloc] init]; p5.recordID = 5;
+    NSArray *expectedPaths5 = @[[NSIndexPath indexPathForRow:0 inSection:0]];
+    XCTAssertEqualObjects([vc indexPathsOnMainTableViewForPerson:p5], expectedPaths5);
+}
+
+- (void)testIndexPathsOnMainTableWhenBadData {
+    NSArray *fallbackIndexPaths = @[[NSIndexPath indexPathForRow:0 inSection:0]];
     // no record ID
     MAVEABPerson *p1  = [[MAVEABPerson alloc] init];
     XCTAssertEqual(p1.recordID, 0);
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] init];
     [vc updateTableData:@{@"a": @[p1]}];
-    XCTAssertEqualObjects([vc indexPathOnMainTableViewForPerson:p1],
-                          fallbackIndexPath);
+    XCTAssertEqualObjects([vc indexPathsOnMainTableViewForPerson:p1],
+                          fallbackIndexPaths);
 
     // person not in table
     MAVEABPerson *p2  = [MAVEABTestDataFactory personWithFirstName:@"Bbbie" lastName:@"Foo"];
     XCTAssertGreaterThan(p2.recordID, 0);
     [vc updateTableData:@{}];
-    XCTAssertEqualObjects([vc indexPathOnMainTableViewForPerson:p2],
-                          fallbackIndexPath);
+    XCTAssertEqualObjects([vc indexPathsOnMainTableViewForPerson:p2],
+                          fallbackIndexPaths);
+
+    // Index somehow messed up so we get an array of length 0. This case should use the
+    // fallback path instead. We shouldn't get into this case, but test for it just in case,
+    // want to be robust against crashing when we try to get object at index 0
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.recordID = 3;
+    vc.personToIndexPathsIndex = @{@(p3.recordID): @[]};
+    XCTAssertEqualObjects([vc indexPathsOnMainTableViewForPerson:p3],
+                          fallbackIndexPaths);
 }
 
 - (void)testAllPersons {

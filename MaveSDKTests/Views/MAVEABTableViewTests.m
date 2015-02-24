@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MaveSDK.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEDisplayOptionsFactory.h"
@@ -65,20 +66,112 @@
     XCTAssertEqualObjects(cell.tintColor, displayOpts.contactCheckmarkColor);
 }
 
-- (void)testTableSectionStyle {
-    MAVEABPerson *person = [[MAVEABPerson alloc] init];
-    person.firstName = @"Danny";
-    NSDictionary *data = @{@"D": @[person]};
+- (void)testTableSectionHeader {
+    NSDictionary *data = @{@"D": @[[[MAVEABPerson alloc] init]]};
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:nil];
     [vc updateTableData:data];
-    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
 
     UIView *sectionHeaderView = [vc tableView:vc.tableView viewForHeaderInSection:0];
-    XCTAssertEqualObjects(sectionHeaderView.backgroundColor, displayOpts.contactSectionHeaderBackgroundColor);
-    UILabel *headerLabel = (UILabel *)sectionHeaderView.subviews[0];
-    XCTAssertEqualObjects(headerLabel.text, @"D");
-    XCTAssertEqualObjects(headerLabel.textColor, displayOpts.contactSectionHeaderTextColor);
-    XCTAssertEqualObjects(headerLabel.font, displayOpts.contactSectionHeaderFont);
+    XCTAssertTrue([sectionHeaderView isKindOfClass:[MAVEInviteTableSectionHeaderView class]]);
+    NSString *titleText = ((MAVEInviteTableSectionHeaderView *)sectionHeaderView).titleLabel.text;
+    XCTAssertEqualObjects(titleText, @"D");
+}
+
+
+- (void)testUpdateTableDataAnimatedWithSuggestedInvites {
+    // Set up existing state
+    MAVEABPerson *fakePerson = [[MAVEABPerson alloc] init];
+    NSDictionary *oldData = @{@"D": @[fakePerson]};
+    MAVEABTableViewController *tableVC = [[MAVEABTableViewController alloc] init];
+    id mockTable = OCMClassMock([UITableView class]);
+    id suggestedSectionHeader = OCMClassMock([MAVEInviteTableSectionHeaderView class]);
+    tableVC.tableView = mockTable;
+    tableVC.suggestedInvitesSectionHeaderView = suggestedSectionHeader;
+    [tableVC updateTableData:oldData];
+
+    // Set up expectation
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.firstName = @"Paul";
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p1.firstName = @"John";
+    NSArray *suggestedInvites = @[p1, p2];
+    NSDictionary *expectedData = @{@"★": suggestedInvites,
+                                   @"D": @[fakePerson]};
+    NSArray *expectedSections = @[@"★", @"D"];
+    OCMExpect([[mockTable ignoringNonObjectArgs] insertRowsAtIndexPaths:[OCMArg any] withRowAnimation:0]);
+    OCMExpect([suggestedSectionHeader stopWaiting]);
+
+    [tableVC updateTableDataAnimatedWithSuggestedInvites:suggestedInvites];
+
+    XCTAssertEqualObjects(tableVC.tableData, expectedData);
+    XCTAssertEqualObjects(tableVC.tableSections, expectedSections);
+    OCMVerifyAll(mockTable);
+    OCMVerifyAll(suggestedSectionHeader);
+}
+
+- (void)testUpdateTableDataAnimatedWithSuggestedWhenTableHasEmptySuggestedAlready {
+    // Set up existing state
+    MAVEABPerson *fakePerson = [[MAVEABPerson alloc] init];
+    NSDictionary *oldData = @{@"★": @[], @"D": @[fakePerson]};
+    MAVEABTableViewController *tableVC = [[MAVEABTableViewController alloc] init];
+    [tableVC updateTableData:oldData];
+
+    // Set up expectation
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.firstName = @"Paul";
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p1.firstName = @"John";
+    NSArray *suggestedInvites = @[p1, p2];
+    NSDictionary *expectedData = @{@"★": suggestedInvites,
+                                   @"D": @[fakePerson]};
+    NSArray *expectedSections = @[@"★", @"D"];
+
+    [tableVC updateTableDataAnimatedWithSuggestedInvites:suggestedInvites];
+
+    XCTAssertEqualObjects(tableVC.tableData, expectedData);
+    XCTAssertEqualObjects(tableVC.tableSections, expectedSections);
+}
+
+- (void)testUpdateTableDataAnimatedWithNoSuggestedInvites {
+    // Set up existing state
+    MAVEABPerson *fakePerson = [[MAVEABPerson alloc] init];
+    // the old data might already have the suggested section but it's empty
+    NSDictionary *oldData = @{@"D": @[fakePerson]};
+    MAVEABTableViewController *tableVC = [[MAVEABTableViewController alloc] init];
+    id mockTable = OCMClassMock([UITableView class]);
+    id suggestedSectionHeader = OCMClassMock([MAVEInviteTableSectionHeaderView class]);
+    tableVC.tableView = mockTable;
+    tableVC.suggestedInvitesSectionHeaderView = suggestedSectionHeader;
+    [tableVC updateTableData:oldData];
+
+    // Set up expectation
+    NSArray *suggestedInvites = @[];
+    NSDictionary *expectedData = @{@"D": @[fakePerson]};
+    NSArray *expectedSections = @[@"D"];
+    [[[mockTable reject] ignoringNonObjectArgs] insertRowsAtIndexPaths:[OCMArg any] withRowAnimation:0];
+    [[suggestedSectionHeader reject] stopWaiting];
+
+    [tableVC updateTableDataAnimatedWithSuggestedInvites:suggestedInvites];
+
+    XCTAssertEqualObjects(tableVC.tableData, expectedData);
+    XCTAssertEqualObjects(tableVC.tableSections, expectedSections);
+    OCMVerifyAll(mockTable);
+    OCMVerifyAll(suggestedSectionHeader);
+}
+
+- (void)testUpdateTableDataAnimatedWithNoSuggestedInvitesWhenTableHasEmptySuggestedAlready {
+    // Should delete the empty suggested category that already exists
+    // Set up existing state
+    MAVEABPerson *fakePerson = [[MAVEABPerson alloc] init];
+    NSDictionary *oldData = @{@"★": @[], @"D": @[fakePerson]};
+    MAVEABTableViewController *tableVC = [[MAVEABTableViewController alloc] init];
+    [tableVC updateTableData:oldData];
+
+    // Set up expectation
+    NSArray *suggestedInvites = @[];
+    NSDictionary *expectedData = @{@"D": @[fakePerson]};
+    NSArray *expectedSections = @[@"D"];
+
+    [tableVC updateTableDataAnimatedWithSuggestedInvites:suggestedInvites];
+
+    XCTAssertEqualObjects(tableVC.tableData, expectedData);
+    XCTAssertEqualObjects(tableVC.tableSections, expectedSections);
 }
 
 @end

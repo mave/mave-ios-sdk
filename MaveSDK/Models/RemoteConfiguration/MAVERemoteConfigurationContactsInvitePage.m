@@ -13,6 +13,7 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageEnabled = @"enabled";
 const NSString *MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
 const NSString *MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
 const NSString *MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy";
+const NSString *MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
 
 
 @implementation MAVERemoteConfigurationContactsInvitePage
@@ -39,6 +40,11 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explana
             if (explanationCopyVal != (id)[NSNull null]) {
                 self.explanationCopy = explanationCopyVal;
             }
+
+            id suggestedInvitesVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled];
+            if (suggestedInvitesVal && (id)suggestedInvitesVal != [NSNull null]) {
+                self.suggestedInvitesEnabled = [suggestedInvitesVal boolValue];
+            }
         }
     }
     return self;
@@ -49,7 +55,8 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explana
         MAVERemoteConfigKeyContactsInvitePageEnabled: @YES,
         MAVERemoteConfigKeyContactsInvitePageTemplate: @{
             MAVERemoteConfigKeyContactsInvitePageTemplateID: @"0",
-            // Explanation key defaults to nil, so leaving empty
+            // Explanation copy defaults to nil, so leaving empty
+            MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled: @NO,
         }
     };
 }

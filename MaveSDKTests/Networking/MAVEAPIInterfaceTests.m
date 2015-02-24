@@ -254,20 +254,59 @@
     OCMVerifyAll(merkleTreeMock);
 }
 
-- (void)testSendContactsChangeset {
+- (void)testSendContactsChangesetWithoutReturningClosest {
     id mocked = OCMPartialMock(self.testAPIInterface);
-    NSArray *fakeJSON = @[@"some changset"];
-    MAVEHTTPCompletionBlock fakeBlock = ^(NSError *error, NSDictionary *data){};
+    NSArray *fakeChangeset = @[@"some changset"];
+    NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
+                                   @"is_full_initial_sync": @YES,
+                                   @"return_closest_contacts": @NO};
+
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
                                               methodName:@"POST"
-                                                  params:fakeJSON
+                                                  params:expectedJSON
                                         gzipCompressBody:YES
-                                         completionBlock:fakeBlock]);
-    [self.testAPIInterface sendContactsChangeset:fakeJSON completionBlock:fakeBlock];
+                                         completionBlock:[OCMArg any]]);
+    [self.testAPIInterface sendContactsChangeset:fakeChangeset
 
+                                   isFullInitialSync:YES
+                           returnClosestContacts:NO
+                                 completionBlock:nil];
     OCMVerifyAll(mocked);
 }
 
+- (void)testSendContactsChangesetReturningClosestHashedRecordIDs {
+    // Set up expected request body
+    id mocked = OCMPartialMock(self.testAPIInterface);
+    NSArray *fakeChangeset = @[@"some changset"];
+    NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
+                                   @"is_full_initial_sync": @NO,
+                                   @"return_closest_contacts": @YES};
+
+    // set up expected response behavior
+    NSArray *fakeClosestHashedRecordIDs = @[@"hrid1", @"hrid2"];
+    __block NSArray *returnedClosestHashedRecordIDs;
+    void (^returnBlock)(NSArray * closestContacts) = ^void(NSArray * closestContacts) {
+        returnedClosestHashedRecordIDs = closestContacts;
+    };
+    OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
+                                              methodName:@"POST"
+                                                  params:expectedJSON
+                                        gzipCompressBody:YES
+                                         completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEHTTPCompletionBlock completionBlock = obj;
+        NSDictionary *returnVal = @{@"closest_contacts": fakeClosestHashedRecordIDs};
+        completionBlock(nil, returnVal);
+        return YES;
+    }]]);
+
+    // Run code under test
+    [self.testAPIInterface sendContactsChangeset:fakeChangeset
+                                   isFullInitialSync:NO
+                           returnClosestContacts:YES
+                                 completionBlock:returnBlock];
+    OCMVerifyAll(mocked);
+    XCTAssertEqualObjects(returnedClosestHashedRecordIDs, fakeClosestHashedRecordIDs);
+}
 
 
 - (void)testGetReferringUser {
@@ -290,6 +329,31 @@
     OCMVerifyAll(mocked);
     XCTAssertEqualObjects(userData.userID, @"1");
     XCTAssertEqualObjects(userData.firstName, @"dan");
+}
+
+
+- (void)testGetClosestContactsHashedRecordIDs {
+    NSArray *closestContacts = @[@"foo", @"bar"];
+
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/closest"
+                                            methodName:@"GET"
+                                                params:nil
+                                      gzipCompressBody:NO
+                                       completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        // Call the completion block with data, and then later check the data was returned
+        NSDictionary *fakeResponseData = @{@"closest_contacts": closestContacts};
+        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
+        return YES;
+    }]]);
+
+    __block NSArray *closestContactsReturned;
+    [self.testAPIInterface getClosestContactsHashedRecordIDs:^(NSArray *_closestContacts) {
+        closestContactsReturned = _closestContacts;
+    }];
+
+    OCMVerifyAll(mock);
+    XCTAssertEqualObjects(closestContactsReturned, closestContacts);
 }
 
 - (void)testGetReferringUserNull {
@@ -360,8 +424,8 @@
                                             methodName:@"GET"
                                                 params:nil
                                       gzipCompressBody:NO
-                                       completionBlock:myBlock];
-    [self.testAPIInterface getRemoteContactsFullMerkleTreeWithCompletionBlock:myBlock]);
+                                       completionBlock:myBlock]);
+    [self.testAPIInterface getRemoteContactsFullMerkleTreeWithCompletionBlock:myBlock];
     OCMVerifyAll(mock);
 }
 

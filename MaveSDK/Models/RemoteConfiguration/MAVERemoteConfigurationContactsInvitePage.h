@@ -15,6 +15,7 @@
 @property (nonatomic) BOOL enabled;
 @property (nonatomic, copy) NSString *templateID;
 @property (nonatomic, copy) NSString *explanationCopy;
+@property (nonatomic) BOOL suggestedInvitesEnabled;
 
 + (NSDictionary *)defaultJSONData;
 

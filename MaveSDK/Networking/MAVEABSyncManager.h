@@ -20,14 +20,27 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 // These methods do the full process of syncing contacts, the first will pull contacts
 // from the ios contacts api and the second lets you pass in the contacts to avoid pulling
 // them twice when we're already working with them.
-- (void)syncContactsInBackgroundIfAlreadyHavePermission;
-- (void)syncContactsInBackground:(NSArray *)contacts;
+//
+// Both methods will check the remote configuration flags for whether to sync contacts and
+// whether to return suggested and do the right thing based on that configuration.
+// The second method asks the server to return suggested friends
+- (void)atLaunchSyncContactsAndPopulateSuggestedByPermissions;
+- (void)syncContactsAndPopulateSuggestedInBackground:(NSArray *)contacts;
 
+- (NSArray *)doSyncContacts:(NSArray *)contacts returnSuggested:(BOOL)returnSuggested;
 
-- (void)doSyncContacts:(MAVEMerkleTree *)localContactsMerkleTree;
-
+// Synchronous methods to send data to server and process results
 - (MAVEMerkleTree *)buildLocalContactsMerkleTreeFromContacts:(NSArray *)contacts;
 - (MAVEContactSyncType)decideNeededSyncTypeCompareRemoteTreeRootToTree:(MAVEMerkleTree *)merkleTree;
+// Helper to send the changeset, telling the server to return suggested if specified
+- (NSArray *)sendContactsChangeset:(NSArray *)changeset
+                        merkleTree:(MAVEMerkleTree *)merkleTree
+                 isFullInitialSync:(BOOL)isFullInitialSync
+                   returnSuggested:(BOOL)returnSuggested
+                       allContacts:(NSArray *)contacts;
+// Helper to get suggested invites explicitly (as opposed to having them returned by the
+// send changeset request) and map the returned hashed record IDs to MAVEABPerson objects
+- (NSArray *)getSuggestedInvitesExplicitlyWithAllContacts:(NSArray *)contacts;
 
 - (NSArray *)changesetComparingFullRemoteTreeToTree:(MAVEMerkleTree *)merkleTree;
 

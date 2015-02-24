@@ -15,6 +15,7 @@
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
 #import "MAVEAPIInterface.h"
+#import "MAVESuggestedInvites.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -55,6 +56,7 @@
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
     XCTAssertNotNil(mave.shareTokenBuilder);
     XCTAssertNotNil(mave.addressBookSyncManager);
+    XCTAssertNotNil(mave.suggestedInvitesBuilder);
 }
 
 
@@ -106,6 +108,24 @@
     XCTAssertEqualObjects([[MaveSDK sharedInstance] remoteConfiguration],
                           remoteConfig);
 }
+
+- (void)testSuggestedInvitesWithDelay {
+    NSArray *suggestions = @[@"blah", @"foo"];
+    MAVESuggestedInvites *suggestedObject = [[MAVESuggestedInvites alloc] init];
+    suggestedObject.suggestions = suggestions;
+
+    CGFloat delay = 1.234;
+    id builderMock = OCMClassMock([MAVERemoteObjectBuilder class]);
+    OCMExpect([builderMock createObjectSynchronousWithTimeout:delay]).andReturn(suggestedObject);
+    [MaveSDK sharedInstance].suggestedInvitesBuilder = builderMock;
+
+    NSArray *returnedSuggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:delay];
+
+    XCTAssertEqualObjects(returnedSuggestions, suggestions);
+    OCMVerifyAll(builderMock);
+}
+
+
 - (void) testDefaultSMSText {
     MaveSDK *mave = [MaveSDK sharedInstance];
 

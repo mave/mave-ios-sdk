@@ -14,6 +14,13 @@
 #import "MAVEInviteExplanationView.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPersonCell.h"
+#import "MAVEInviteTableSectionHeaderView.h"
+#import "MAVEWaitingDotsImageView.h"
+
+// This is UTF-8 code point 0021, it should get sorted before any letters in any language
+NSString * const MAVESuggestedInvitesTableDataKey = @"\u2605";
+// This is the last UTF-8 printable character, it should get sorted after any letters in any language
+NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 @implementation MAVEABTableViewController
 
@@ -38,6 +45,7 @@
 
         [self setupTableHeader];
         [self setupSearchTableView];
+        self.suggestedInvitesSectionHeaderView = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Suggestions" sectionIsWaiting:YES];
     }
     return self;
 }
@@ -122,30 +130,76 @@
 
 # pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
-    self.tableData = data;
-    self.tableSections = [[self.tableData allKeys]
-                          sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    [self updatePersonToIndexPathIndex];
+    [self updateTableDataWithoutReloading:data];
 
+    // if there are definitely no suggestions, the section won't exist in table data.
+    // if section does exist and is empty, it should be pending (which is the default
+    // state of the suggestions section header view).
+    // if it's not empty, stop the pending dots
+    NSArray *suggestions = [data objectForKey:MAVESuggestedInvitesTableDataKey];
+    if (suggestions && [suggestions count] != 0) {
+        [self.suggestedInvitesSectionHeaderView stopWaiting];
+    }
     [self.tableView reloadData];
 }
 
-- (void)updatePersonToIndexPathIndex {
-    NSInteger sectionIdx = 0, rowIdx = 0;
+- (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
+    // Update the table data without telling the table to reload
+    NSMutableDictionary *newData = [NSMutableDictionary dictionaryWithDictionary:self.tableData];
+    if ([suggestedInvites count] == 0) {
+        // no suggested invites, remove the section from data source and reload
+        [newData removeObjectForKey:MAVESuggestedInvitesTableDataKey];
+        [self updateTableData:[NSDictionary dictionaryWithDictionary:newData]];
+        return;
+    } else {
+        // Add the suggested invites to data source before animating them in
+        [newData setObject:suggestedInvites forKey:MAVESuggestedInvitesTableDataKey];
+        [self updateTableDataWithoutReloading:[NSDictionary dictionaryWithDictionary:newData]];
+    }
+
+    // Animate in the new rows
+    NSUInteger indexOfSuggested = [self.tableSections indexOfObject:MAVESuggestedInvitesTableDataKey];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:[suggestedInvites count]];
+    for (NSInteger rowNumber = 0; rowNumber < [suggestedInvites count]; ++rowNumber) {
+        [indexPaths addObject:[NSIndexPath indexPathForRow:rowNumber inSection:indexOfSuggested]];
+    }
+
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView endUpdates];
+    [self.suggestedInvitesSectionHeaderView stopWaiting];
+}
+
+// This is a helper for places we may want to update table data and animate it in rather than reloading
+- (void)updateTableDataWithoutReloading:(NSDictionary *)data {
+    self.tableData = data;
+    self.tableSections = [[self.tableData allKeys]
+                          sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    [self updatePersonToIndexPathsIndex];
+}
+
+// Build a reverse index from people to the index paths they're found at in the table
+// The data structure is is an dictionary mapping an NSNumber (person recordID) to an NSArray of
+// NSIndexPaths.
+// NB: a person can be found at multiple rows in a table which is why we map to an array of index paths
+- (void)updatePersonToIndexPathsIndex {
+    NSNumber *personKey;
+    NSIndexPath *idxPath; NSInteger sectionIdx = 0, rowIdx = 0;
     NSMutableDictionary *index = [[NSMutableDictionary alloc] init];
-    for (NSString *key in self.tableSections) {
+    for (NSString *sectionKey in self.tableSections) {
         rowIdx = 0;
-        for (MAVEABPerson *person in [self.tableData objectForKey:key]) {
-            if ([index objectForKey:[NSNumber numberWithInteger:person.recordID]]) {
-                
+        for (MAVEABPerson *person in [self.tableData objectForKey:sectionKey]) {
+            personKey = [NSNumber numberWithInteger:person.recordID];
+            idxPath = [NSIndexPath indexPathForRow:rowIdx inSection:sectionIdx];
+            if (![index objectForKey:personKey]) {
+                [index setObject:[[NSMutableArray alloc] init] forKey:personKey];
             }
-            [index setObject:[NSIndexPath indexPathForRow:rowIdx inSection:sectionIdx]
-                      forKey:[NSNumber numberWithInteger:person.recordID]];
+            [[index objectForKey:personKey] addObject:idxPath];
             rowIdx++;
         }
         sectionIdx++;
     }
-    self.personToIndexPathIndex = index;
+    self.personToIndexPathsIndex = index;
 }
 
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
@@ -164,21 +218,24 @@
     }
 }
 
-- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person {
-    NSIndexPath *indexPath;
+// Returns an array of nsindexpaths, guarenteed to have at least one item in the array.
+// If person is not in the table it returns an array with the index path of the top
+// of the table
+- (NSArray *)indexPathsOnMainTableViewForPerson:(MAVEABPerson *)person {
+    NSArray *indexPaths;
     if (person.recordID > 0) {
         NSNumber *recordID = [NSNumber numberWithInteger:person.recordID];
-        indexPath = [self.personToIndexPathIndex objectForKey:recordID];
+        indexPaths = [self.personToIndexPathsIndex objectForKey:recordID];
     }
-    if (!indexPath) {
-        indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    if (!indexPaths || [indexPaths count] == 0) {
+        indexPaths = @[[NSIndexPath indexPathForRow:0 inSection:0]];
     }
-    return indexPath;
+    return indexPaths;
 }
 
-//
-// Sections
-//
+
+# pragma mark - Table Sections
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (tableView == self.tableView) {
         return [self.tableSections count];
@@ -189,35 +246,26 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    CGFloat labelMarginY = 0.0;
-    CGFloat labelOffsetX = 14.0;
-    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
-    NSString *labelText = [self tableView:tableView
-                  titleForHeaderInSection:section];
-    UIFont *labelFont = displayOpts.contactSectionHeaderFont;
-    CGSize labelSize = [labelText sizeWithAttributes:@{NSFontAttributeName: labelFont}];
-    CGRect labelFrame = CGRectMake(labelOffsetX,
-                                   labelMarginY,
-                                   labelSize.width,
-                                   labelSize.height);
-    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-    label.text = labelText;
-    label.textColor = displayOpts.contactSectionHeaderTextColor;
-    label.font = labelFont;
 
-    CGFloat sectionHeight = labelMarginY * 2 + label.frame.size.height;
-    // section width gets ignored, always stretches to full width
-    CGFloat sectionWidth = 0.0;
-    CGRect viewFrame = CGRectMake(0, 0, sectionWidth, sectionHeight);
-    UIView *view = [[UIView alloc] initWithFrame:viewFrame];
-    view.backgroundColor = displayOpts.contactSectionHeaderBackgroundColor;
-    
-    [view addSubview:label];
+    UIView *view;
+    if (tableView == self.tableView) {
+        NSString *sectionTitleShort = [self.tableSections objectAtIndex:section];
+        if (sectionTitleShort == MAVESuggestedInvitesTableDataKey) {
+            view = self.suggestedInvitesSectionHeaderView;
+        } else {
+            view = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:sectionTitleShort
+                                                              sectionIsWaiting:NO];
+        }
+
+    } else {
+        view = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Search results"
+                                                          sectionIsWaiting:NO];
+    }
 
     if (tableView == self.tableView) {
         // When scrolling up through the table index, when a given header is at the top of the screen (e.g. "M")
         // the header before it (e.g. "L") gets rendered onto the view just above the offset at the very front of
-        // the view stack so it's visible over the text bar.
+        // the view stack so it's visible over the search text bar.
         // As a workaround, whenever we return a view for a header we move the search bar to the front on a
         // very small delay. There may be a flash on the screen but it's a relatively edge case scenario anyway
         // so it's acceptable for now.
@@ -236,14 +284,6 @@
     return header.frame.size.height;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (tableView == self.tableView) {
-        return [self.tableSections objectAtIndex:section];
-    } else {
-        return @"Search results";
-    }
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger numberOfRows;
     if (tableView == self.tableView) {
@@ -260,9 +300,27 @@
     return numberOfRows;
 }
 
-//
-// Data Source methods
-//
+# pragma mark - Table index values
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    if (tableView == self.tableView) {
+        return self.tableSections;
+    } else {
+        return nil;
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    if (tableView == self.tableView) {
+        return index;
+    } else {
+        return -1;
+    }
+}
+
+
+# pragma mark - Data Source methods
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = MAVEInvitePageABPersonCellID;
     MAVEABPersonCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
@@ -281,6 +339,10 @@
     // choose person clicked on
     MAVEABPerson *person = [self personOnTableView:tableView atIndexPath:indexPath];
 
+    // person might appear in the main table more than once, lookup an array of all index paths
+    // for this person
+    NSArray *mainTableIndexPaths = [self indexPathsOnMainTableViewForPerson:person];
+
     // deal with selected state of person
     person.selected = !person.selected;
     if (person.selected) {
@@ -298,39 +360,21 @@
         [apiInterface trackInvitePageSelectedContactFromList:@"contacts"];
     }
 
-    // if selected/un-selected on search table view, switch back to main table view with same person
-    // selected, reload row, and clear search bar
+    // if selected/un-selected on search table view, switch back to main table view and scroll to the
+    // first instance of that person selected, reload row, and clear search bar
     if (tableView == self.searchTableView) {
-        NSIndexPath *mainTableIndex = [self indexPathOnMainTableViewForPerson:person];
+        NSIndexPath *scrollTo = [mainTableIndexPaths objectAtIndex:0];
         [self removeSearchTableView];
-        [self.tableView scrollToRowAtIndexPath:mainTableIndex
+        [self.tableView scrollToRowAtIndexPath:scrollTo
                               atScrollPosition:UITableViewScrollPositionTop
                                       animated:NO];
-        [self.tableView reloadRowsAtIndexPaths:@[mainTableIndex]
-                              withRowAnimation:UITableViewRowAnimationNone];
         self.searchBar.text = @"";
 
-    } else {
-        [tableView reloadRowsAtIndexPaths:@[indexPath]
-                         withRowAnimation:UITableViewRowAnimationNone];
     }
+    [self.tableView reloadRowsAtIndexPaths:mainTableIndexPaths
+                          withRowAnimation:UITableViewRowAnimationNone];
 }
 
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    if (tableView == self.tableView) {
-        return self.tableSections;
-    } else {
-        return nil;
-    }
-}
-
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    if (tableView == self.tableView) {
-        return index;
-    } else {
-        return -1;
-    }
-}
 
 #pragma mark - Search Results
 

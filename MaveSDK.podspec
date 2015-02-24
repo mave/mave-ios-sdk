@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'MaveSDK/**/*.{m,h}'
   s.resource_bundles = {
-    'MaveSDK' => ['MaveSDK/Resources/Images/*.png']
+    'MaveSDK' => ['MaveSDK/Resources/Images/**/*.png']
   }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'

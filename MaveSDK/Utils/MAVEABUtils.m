@@ -10,6 +10,7 @@
 #import "MAVEABUtils.h"
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
+#import "MAVEABTableViewController.h"
 
 NSString * const MAVEABPermissionStatusAllowed = @"allowed";
 NSString * const MAVEABPermissionStatusDenied = @"denied";
@@ -45,7 +46,7 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     [input sortUsingSelector:@selector(compareNames:)];
 }
 
-+ (NSDictionary *)indexedDictionaryFromMAVEABPersonArray:(NSArray *)persons {
++ (NSDictionary *)indexABPersonArrayForTableSections:(NSArray *)persons {
     if ([persons count] == 0) {
         return nil;
     }
@@ -64,6 +65,49 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
         [[result objectForKey:indexLetter] addObject:person];
     }
     return result;
+}
+
++ (NSArray *)listOfABPersonsFromListOfHashedRecordIDTuples:(NSArray *)hridTuples
+                                            andAllContacts:(NSArray *)persons {
+    NSDictionary *index = [self indexABPersonArrayByHashedRecordID:persons];
+    NSMutableArray *output = [[NSMutableArray alloc] initWithCapacity:[hridTuples count]];
+    NSArray *tuple; NSNumber *hrid; MAVEABPerson *personTmp;
+    for (id obj in hridTuples) {
+        if (![obj isKindOfClass:[NSArray class]]) {
+            continue;
+        }
+        tuple = obj;
+        if ([tuple count] != 2) {
+            continue;
+        }
+        hrid = [tuple objectAtIndex:0];
+        personTmp = [index objectForKey:hrid];
+        if (personTmp) {
+            [output addObject:personTmp];
+        }
+    }
+    return output;
+}
+
++ (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons {
+    NSMutableDictionary *output = [[NSMutableDictionary alloc] initWithCapacity:[persons count]];
+    for (MAVEABPerson *person in persons) {
+        [output setObject:person forKey:@(person.hashedRecordID)];
+    }
+    return output;
+}
+
++ (NSDictionary *)combineSuggested:(NSArray *)suggestedInvites intoABIndexedForTableSections:(NSDictionary *)indexedPersons {
+    NSMutableDictionary *newData = [[NSMutableDictionary alloc] initWithCapacity:[indexedPersons count]+1];
+    // Add the suggested invites to the new dictionary
+    [newData setObject:suggestedInvites forKey:MAVESuggestedInvitesTableDataKey];
+
+    // Add the existing invites to the new dictionary
+    for (NSString *key in indexedPersons) {
+        NSArray *listForKey = [indexedPersons objectForKey:key];
+        [newData setObject:listForKey forKey:key];
+    }
+    return [[NSDictionary alloc] initWithDictionary:newData];
 }
 
 @end

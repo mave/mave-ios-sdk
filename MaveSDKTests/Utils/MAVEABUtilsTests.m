@@ -63,23 +63,106 @@
     // TODO Assert that the sort function was called
 }
 
-- (void)testIndexedDictionaryOfMAVEABPersons {
+- (void)testIndexABPersonArrayForTableSections {
     MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Don" lastName:@"Adams"];
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Deb" lastName:@"Anderson"];
     MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Bernard"];
     NSArray *data = @[p1, p2, p3];
     NSDictionary *expected = @{@"D": @[p1, p2], @"F": @[p3]};
 
-    NSDictionary *indexed = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data];
+    NSDictionary *indexed = [MAVEABUtils indexABPersonArrayForTableSections:data];
     XCTAssertEqualObjects(indexed, expected);
 }
 
-- (void)testIndexedDictionaryOfMAVEABPersonsAcceptsNilAndEmpty {
+- (void)testIndexABPersonArrayForTableSectionsAcceptsNilAndEmpty {
     NSArray *data = nil;
-    XCTAssertNil([MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data]);
+    XCTAssertNil([MAVEABUtils indexABPersonArrayForTableSections:data]);
     
     data = @[];
-    XCTAssertNil([MAVEABUtils indexedDictionaryFromMAVEABPersonArray:data]);
+    XCTAssertNil([MAVEABUtils indexABPersonArrayForTableSections:data]);
+}
+
+- (void)testListOfABPersonsFromListOfHashedRecordIDTuples {
+    // make some people and explicitly overwrite hashed record id so we know it
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    NSArray *contacts = @[p0, p1, p2];
+
+    // The tuple format is (hashed record id, number connections).
+    // The second parameter is not used for now but is an integer score of how close the connection is,
+    // higher is better
+    NSArray *hashedRecordIDs = @[@[@0, @10], @[@2, @2]];
+    NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
+    NSArray *expectedSuggested = @[p0, p2];
+    XCTAssertEqualObjects(suggested, expectedSuggested);
+}
+
+- (void)testListOfABPersonsFromHashedRecordIDTuplesIgnoresBadInputData {
+    // if one of the list items is not a 2-tuple, should be ignored
+    // make some people and explicitly overwrite hashed record id so we know it
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    NSArray *contacts = @[p0];
+
+    // Data - 0 and 1 are the HRID's there, but only 0 exists so that should be only suggested
+    NSArray *evilNullTuple = (NSArray *)[NSNull null];
+    NSArray *hashedRecordIDs = @[@1, @[@0, @10], @[@1, @5], @[], evilNullTuple];
+    NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
+    NSArray *expectedSuggested = @[p0];
+    XCTAssertEqualObjects(suggested, expectedSuggested);
+}
+
+- (void)testIndexABPersonArrayByHashedRecordID {
+    // make some people and explicitly overwrite hashed record id so we know it
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    // if there happens to be a hashed record id collision, it simply uses the
+    // last one in the list. This should never happen due to md5 being
+    // evenly distributed and size of uint64_t
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.hashedRecordID = 2;
+    NSArray *contacts = @[p0, p1, p2, p3];
+
+    NSDictionary *indexed = [MAVEABUtils indexABPersonArrayByHashedRecordID:contacts];
+    XCTAssertEqual([indexed count], 3);
+    XCTAssertEqualObjects([indexed objectForKey:@(0)], p0);
+    XCTAssertEqualObjects([indexed objectForKey:@(1)], p1);
+    XCTAssertNotEqualObjects([indexed objectForKey:@(2)], p2);
+    XCTAssertEqualObjects([indexed objectForKey:@2], p3);
+}
+
+- (void)testCombineSuggestedIntoABIndexedForTableSections {
+    // build an indexed addres book
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.firstName = @"Aalbert";
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.firstName = @"Andy";
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.firstName = @"Beverly";
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.firstName = @"Carly";
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init]; p4.firstName = @"Clara";
+    NSDictionary *tableData = @{
+        @"A": @[p0, p1],
+        @"B": @[p2],
+        @"C": @[p3, p4],
+        };
+
+    // Also build a list of suggested people. Note there is some overlap but also one
+    // contact not found in address book (this may be impossible depending on implementation
+    // of suggested but may as well support it from a data model perspective).
+    MAVEABPerson *p5 = [[MAVEABPerson alloc] init]; p5.firstName = @"Suggested 1";
+    NSArray *suggested = @[p5, p0, p1];
+
+    // Define what the expected data should be.
+    // Note we don't take people out of the data just because they are in suggested
+    NSDictionary *expectedTableData = @{
+        @"\u2605": @[p5, p0, p1],
+        @"A": @[p0, p1],
+        @"B": @[p2],
+        @"C": @[p3, p4],
+    };
+
+    NSDictionary *newTableData = [MAVEABUtils combineSuggested:suggested
+                                 intoABIndexedForTableSections:tableData];
+
+    XCTAssertEqualObjects(newTableData, expectedTableData);
 }
 
 @end

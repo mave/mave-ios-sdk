@@ -34,6 +34,7 @@
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
 
     XCTAssertNil([template objectForKey:@"explanation_copy"]);
+    XCTAssertFalse([[template objectForKey:@"suggested_invites_enabled"] boolValue]);
 }
 
 - (void)testInitWithDefaultData {
@@ -43,6 +44,7 @@
     XCTAssertTrue(obj.enabled);
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertNil(obj.explanationCopy);
+    XCTAssertFalse(obj.suggestedInvitesEnabled);
 }
 
 - (void)testInitFailsIfEnabledKeyIsMissing {
@@ -56,7 +58,27 @@
     XCTAssertNil(obj);
 }
 
+- (void)testInitSucceedsIfTemplateValid {
+    NSDictionary *dict = @{
+        @"enabled": @YES,
+        @"template": @{
+            @"template_id": @"1",
+            @"explanation_copy": @"some copy",
+            @"suggested_invites_enabled": @YES,
+        }
+    };
+
+    MAVERemoteConfigurationContactsInvitePage *obj =
+        [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
+
+    XCTAssertNotNil(obj);
+    XCTAssertEqualObjects(obj.templateID, @"1");
+    XCTAssertEqualObjects(obj.explanationCopy, @"some copy");
+    XCTAssertTrue(obj.suggestedInvitesEnabled);
+}
+
 - (void)testInitSucceedsIfTemplateEmpty {
+    // if template empty
     NSDictionary *dict = @{
                            @"enabled": @YES,
                            @"template": @{}
@@ -69,10 +91,15 @@
                            @"enabled": @YES,
                            @"template": @{
                                    @"template_id": [NSNull null],
-                                   @"explanation_copy": [NSNull null]}
+                                   @"explanation_copy": [NSNull null],
+                                   @"suggested_invites_enabled": [NSNull null],
+                            }
                            };
     obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
     XCTAssertNotNil(obj);
+    XCTAssertNil(obj.templateID);
+    XCTAssertNil(obj.explanationCopy);
+    XCTAssertFalse(obj.suggestedInvitesEnabled);
 }
 
 - (void)testNSNullVauesChangedToNil {

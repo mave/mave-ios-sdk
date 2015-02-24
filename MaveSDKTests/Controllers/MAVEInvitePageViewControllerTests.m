@@ -222,4 +222,128 @@
     [mockABUtils stopMocking];
     [mockPrompter stopMocking];
 }
+
+// Tests for the helper for displaying suggested invites
+- (void)testBuildContactsToUseAtPageRenderWhenShowSuggestedFlaggedOff {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+
+    // flag off the show suggested flag
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = NO;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    NSDictionary *inputContacts = @{@"A": @[@"foo", @"bar"], @"#": @[@"nums"]};
+    NSDictionary *outputContactsList = nil;
+    BOOL outputAddSuggestedBool = NO;
+    [vc buildContactsToUseAtPageRender:&outputContactsList
+            addSuggestedLaterWhenReady:&outputAddSuggestedBool
+               fromIndexedContactsDict:inputContacts];
+
+    // expect it to not change the input contacts and not need to fetch later
+    XCTAssertEqualObjects(outputContactsList, inputContacts);
+    XCTAssertFalse(outputAddSuggestedBool);
+    OCMVerifyAll(maveMock);
+}
+
+- (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndContactsAlreadyReturned {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+
+    // flag on the show suggested flag
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = YES;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    // Set the suggested contacts as already fulfilled && mock the return val
+    [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status = MAVEPromiseStatusFulfilled;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Foobar";
+    NSArray *fakeSuggested = @[p1];
+    OCMExpect([maveMock suggestedInvitesWithDelay:0]).andReturn(fakeSuggested);
+
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.firstName = @"Not Suggested";
+    NSDictionary *inputContacts = @{@"N": @[p2]};
+    NSDictionary *expectedOutputContacts = @{@"★": @[p1], @"N": @[p2]};
+    NSDictionary *outputContactsList = nil;
+    BOOL outputAddSuggestedBool = NO;
+    [vc buildContactsToUseAtPageRender:&outputContactsList
+            addSuggestedLaterWhenReady:&outputAddSuggestedBool
+               fromIndexedContactsDict:inputContacts];
+
+    XCTAssertEqualObjects(outputContactsList, expectedOutputContacts);
+    XCTAssertFalse(outputAddSuggestedBool);
+    OCMVerifyAll(maveMock);
+}
+
+- (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndContactsAlreadyReturnedEmpty {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+
+    // flag on the show suggested flag
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = YES;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    // Set the suggested contacts as already fulfilled but empty.
+    // In this state, we should not add the suggestions category to the table
+    [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status = MAVEPromiseStatusRejected;
+    OCMExpect([maveMock suggestedInvitesWithDelay:0]).andReturn(@[]);
+
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.firstName = @"Not Suggested";
+    NSDictionary *inputContacts = @{@"N": @[p2]};
+    NSDictionary *expectedOutputContacts = @{@"N": @[p2]};
+    NSDictionary *outputContactsList = nil;
+    BOOL outputAddSuggestedBool = NO;
+    [vc buildContactsToUseAtPageRender:&outputContactsList
+            addSuggestedLaterWhenReady:&outputAddSuggestedBool
+               fromIndexedContactsDict:inputContacts];
+
+    XCTAssertEqualObjects(outputContactsList, expectedOutputContacts);
+    XCTAssertFalse(outputAddSuggestedBool);
+    OCMVerifyAll(maveMock);
+}
+
+- (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndWaitingOnContactsToBeReturned {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+
+    // flag on the show suggested flag
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    config.contactsInvitePage.suggestedInvitesEnabled = YES;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    // Set the suggested contacts as not yet fulfilled
+    [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status = MAVEPromiseStatusUnfulfilled;
+    [[[maveMock reject] ignoringNonObjectArgs] suggestedInvitesWithDelay:0];
+
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.firstName = @"Not Suggested";
+    NSDictionary *inputContacts = @{@"N": @[p2]};
+    // should return the pending empty suggestions section
+    NSDictionary *expectedOutputContacts = @{@"★": @[], @"N": @[p2]};
+    NSDictionary *outputContactsList = nil;
+    BOOL outputAddSuggestedBool = NO;
+    [vc buildContactsToUseAtPageRender:&outputContactsList
+            addSuggestedLaterWhenReady:&outputAddSuggestedBool
+               fromIndexedContactsDict:inputContacts];
+
+    XCTAssertEqualObjects(outputContactsList, expectedOutputContacts);
+    XCTAssertTrue(outputAddSuggestedBool);
+    OCMVerifyAll(maveMock);
+}
+
 @end

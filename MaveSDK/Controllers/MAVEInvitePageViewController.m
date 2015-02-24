@@ -119,6 +119,33 @@
 // Load the correct view(s) with data
 //
 
+
+- (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
+            addSuggestedLaterWhenReady:(BOOL *)addSuggestedLaterReturnVal
+               fromIndexedContactsDict:(NSDictionary *)indexedContacts {
+    BOOL suggestionsEnabled = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.suggestedInvitesEnabled;
+    if (!suggestionsEnabled) {
+        *suggestedContactsReturnVal = indexedContacts;
+        *addSuggestedLaterReturnVal = NO;
+        return;
+    }
+    BOOL suggestionsReady = [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status != MAVEPromiseStatusUnfulfilled;
+    if (!suggestionsReady) {
+        *suggestedContactsReturnVal = [MAVEABUtils combineSuggested:@[] intoABIndexedForTableSections:indexedContacts];
+        *addSuggestedLaterReturnVal = YES;
+        return;
+    }
+
+    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:0];
+    if ([suggestions count] > 0) {
+        *suggestedContactsReturnVal = [MAVEABUtils combineSuggested:suggestions intoABIndexedForTableSections:indexedContacts];
+    } else {
+        *suggestedContactsReturnVal = indexedContacts;
+    }
+    *addSuggestedLaterReturnVal = NO;
+}
+
+
 // TODO: unit test this method
 - (void)determineAndSetViewBasedOnABPermissions {
     [MAVEABPermissionPromptHandler
@@ -131,9 +158,25 @@
             });
         // Permission granted
         } else {
+            NSDictionary *indexedContactsToRenderNow;
+            BOOL updateSuggestionsWhenReady = NO;
+            [self buildContactsToUseAtPageRender:&indexedContactsToRenderNow
+                      addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
+                         fromIndexedContactsDict:indexedContacts];
+            if (updateSuggestionsWhenReady) {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:10];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.ABTableViewController updateTableDataAnimatedWithSuggestedInvites:suggestions];
+
+                    });
+                });
+            }
+
+            // Render the contacts we have now regardless
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self layoutInvitePageViewAndSubviews];
-                [self.ABTableViewController updateTableData:indexedContacts];
+                [self.ABTableViewController updateTableData:indexedContactsToRenderNow];
 
                 // Only if permission was granted should we log that we displayed
                 // the invite page with an address book list

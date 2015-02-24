@@ -8,8 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVEInviteTableHeaderView.h"
+#import "MAVEInviteTableSectionHeaderView.h"
 #import "MAVESearchBar.h"
 #import "MAVEABPerson.h"
+
+// This is the key to use in the table data dict for the suggested invites section.
+// It's set to ! which is the first non-whitespace ascii character so it always gets
+// sorted to the top of the list, and it won't be used as the first letter in a name
+// because all non-letters are mapped to the "#" sections.
+extern NSString * const MAVESuggestedInvitesTableDataKey;
 
 // This view controller can alert an additional delegate when the number of people selected changes
 @protocol MAVEABTableViewAdditionalDelegate <NSObject>
@@ -23,9 +30,10 @@
 @property (nonatomic, strong) MAVEInviteTableHeaderView *inviteTableHeaderView;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIView *aboveTableContentView;
+@property (nonatomic, strong) MAVEInviteTableSectionHeaderView *suggestedInvitesSectionHeaderView;
 @property (nonatomic, assign) CGFloat contentInsetTopWithoutSearch;
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
-@property (atomic, strong) NSDictionary *personToIndexPathIndex;
+@property (atomic, strong) NSDictionary *personToIndexPathsIndex;
 
 // Different forms of table data
 @property (nonatomic, strong) NSDictionary *tableData;
@@ -40,6 +48,8 @@
 
 - (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
 
+// Helper to create the table section header
+
 // constants for determining layout sizes
 // height of navigation bar currently
 - (CGFloat)navigationBarHeight;
@@ -50,12 +60,13 @@
 // it's visible, otherwise just the body of the table with the fixed search bar
 // is visible.
 - (CGFloat)showingTableHeaderOffsetThreshold;
-
 - (void)updateTableData:(NSDictionary *)data;
-- (void)updatePersonToIndexPathIndex;
+- (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
+- (void)updatePersonToIndexPathsIndex;
 - (MAVEABPerson *)personOnTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
-- (NSIndexPath *)indexPathOnMainTableViewForPerson:(MAVEABPerson *)person;
+- (NSArray *)indexPathsOnMainTableViewForPerson:(MAVEABPerson *)person;
 - (void)layoutHeaderViewForWidth:(CGFloat)width;
+
 - (BOOL)isSearchTableVisible;
 
 // add an additional ui text field delegate field, by monitoring an event

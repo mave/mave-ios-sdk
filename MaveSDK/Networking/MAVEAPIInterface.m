@@ -166,12 +166,26 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              completionBlock:nil];
 }
 
-- (void)sendContactsChangeset:(NSArray *)changeset completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+- (void)sendContactsChangeset:(NSArray *)changeset
+                isFullInitialSync:(BOOL)isFullInitialSync
+        returnClosestContacts:(BOOL)returnClosestContacts
+              completionBlock:(void (^)(NSArray *closestContacts))closestContactsBlock {
     NSString *route = @"/me/contacts/sync_changesets";
-    [self sendIdentifiedJSONRequestWithRoute:route
-                                  methodName:@"POST" params:changeset
-                            gzipCompressBody:YES
-                             completionBlock:completionBlock];
+    NSDictionary *params = @{@"changeset_list": changeset,
+                             @"is_full_initial_sync": @(isFullInitialSync),
+                             @"return_closest_contacts": @(returnClosestContacts)};
+    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"POST" params:params gzipCompressBody:YES completionBlock:^(NSError *error, NSDictionary *responseData) {
+        NSArray *returnVal;
+        if (returnClosestContacts && !error) {
+            returnVal = [responseData objectForKey:@"closest_contacts"];
+            if (!returnVal || (id)returnVal == [NSNull null]) {
+                returnVal = @[];
+            }
+        } else {
+            returnVal = @[];
+        }
+        closestContactsBlock(returnVal);
+    }];
 }
 
 
@@ -195,6 +209,22 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                  }
                                  referringUserBlock(userData);
                              }];
+}
+
+- (void)getClosestContactsHashedRecordIDs:(void (^)(NSArray *))closestContactsBlock {
+    NSString *route = @"/me/contacts/closest";
+    NSArray *emptyValue = @[];
+    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"GET" params:nil gzipCompressBody:NO completionBlock:^(NSError *error, NSDictionary *responseData) {
+        if (error) {
+            closestContactsBlock(emptyValue);
+        } else {
+            NSArray *val = [responseData objectForKey:@"closest_contacts"];
+            if (!val) {
+                val = emptyValue;
+            }
+            closestContactsBlock(val);
+        }
+    }];
 }
 
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block {

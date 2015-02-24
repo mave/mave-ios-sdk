@@ -24,8 +24,28 @@ extern NSString * const MAVEABPermissionStatusUnprompted;
 + (NSArray *)copyEntireAddressBookToMAVEABPersonArray:(NSArray *)addressBook;
 
 // Take an array of MAVEABPerson objects and return a dict mapping the first letter
-// of the sorted name to an array of MAVEABPerson objects beginning with that letter
-+ (NSDictionary *)indexedDictionaryFromMAVEABPersonArray:(NSArray *)persons;
+// of the sorted name to an array of MAVEABPerson objects beginning with that letter.
+// This way of indexing is for displaying them in a table view alphabetically with
+// sections corresponding to first letter of name.
++ (NSDictionary *)indexABPersonArrayForTableSections:(NSArray *)persons;
+
+// Take an array of MAVEABPerson objects and return a dict mapping each hashed_record_id
+// to the MAVEABPerson object.
+// This way of indexing lets us easily turn a list of hashed_records_ids (e.g. one returned
+// by the server) into a list of records
+
+
+// Convert an array of hashed record id's into an array of MAVEABPersons by looking up
+// each one in the full address book.
+// The following method is a helper to build an index for this one
++ (NSArray *)listOfABPersonsFromListOfHashedRecordIDTuples:(NSArray *)hridTuples
+                                       andAllContacts:(NSArray *)persons;
++ (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons;
+
+// Merge a list of suggested people into the dictionary of data for the address book table
+// (dict mapping each first letter to a list of MAVEABPersons).
++ (NSDictionary *)combineSuggested:(NSArray *)suggestedInvites
+     intoABIndexedForTableSections:(NSDictionary *)indexedPersons;
 
 // Sorter
 + (void)sortMAVEABPersonArray:(NSMutableArray *)input;

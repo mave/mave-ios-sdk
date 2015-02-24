@@ -25,6 +25,7 @@
 @property (nonatomic, strong) MAVEInvitePageChooser *invitePageChooser;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *remoteConfigurationBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *shareTokenBuilder;
+@property (nonatomic, strong) MAVERemoteObjectBuilder *suggestedInvitesBuilder;
 
 
 @property (nonatomic, copy) NSString *appId;
@@ -37,6 +38,7 @@
 
 // Internal, method to access the remote configuration
 - (MAVERemoteConfiguration *)remoteConfiguration;
+- (NSArray *)suggestedInvitesWithDelay:(CGFloat)seconds;
 
 - (BOOL)isSetupOK;
 

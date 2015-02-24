@@ -70,12 +70,15 @@ extern NSString * const MAVEAPIParamShareAudience;
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
 - (void)sendContactsChangeset:(NSArray *)changeset
-              completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+            isFullInitialSync:(BOOL)isFullInitialSync
+        returnClosestContacts:(BOOL)returnClosestContacts
+              completionBlock:(void (^)(NSArray *closestContacts))closestContactsBlock;
 
 ///
 /// GET requests
 ///
 - (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
+- (void)getClosestContactsHashedRecordIDs:(void (^)(NSArray *closestContacts))closestContactsBlock;
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 - (void)getNewShareTokenWithCompletionBlock:(MAVEHTTPCompletionBlock)block;
 - (void)getRemoteContactsMerkleTreeRootWithCompletionBlock:(MAVEHTTPCompletionBlock)block;

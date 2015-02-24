@@ -135,15 +135,16 @@
 }
 
 - (void)completeAfterPermissionGranted:(NSArray *)MAVEABPersonsArray {
+    // Kick off contacts sync in the background
+    [[MaveSDK sharedInstance].addressBookSyncManager syncContactsAndPopulateSuggestedInBackground:MAVEABPersonsArray];
+
     if (self.beganFlowAsStatusUnprompted) {
         MAVEInfoLog(@"User accepted address book permissions");
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted];
     }
-    NSDictionary *indexedPersons = [MAVEABUtils indexedDictionaryFromMAVEABPersonArray:MAVEABPersonsArray];
-    self.completionBlock(indexedPersons);
 
-    // Do contacts sync in the background
-    [[MaveSDK sharedInstance].addressBookSyncManager syncContactsInBackground:MAVEABPersonsArray];
+    NSDictionary *indexedPersons = [MAVEABUtils indexABPersonArrayForTableSections:MAVEABPersonsArray];
+    self.completionBlock(indexedPersons);
 
     self.retainSelf = nil; // let self get GC'd after completion block called
 }
