@@ -70,7 +70,7 @@
                              backBlock:(MAVEInvitePageDismissBlock)backBlock
                          inviteContext:(NSString *)inviteContext;
 
-// Send SMS messages programatically
+// Send SMS invite messages programatically
 //
 // The messge sent will be in the format:
 //   <sender first name>[ <last name>]: <message> <invite link>
@@ -98,6 +98,13 @@
 //     - "link_destination_url" - you can optionally pass in a URL to which the link
 //           in the invite will redirect. If not set we use the app store link, you
 //           only need to set this if you want each invite to go to a different URL.
+//
+// - errorBlock is a block that will be called with an error if you want to be notified
+//       if invites fail to send. This could happen if the parameters are not passed in
+//       or set up correctly, if the device can't reach our servers, etc.
+//       Note that the absense of an error does not guarantee the invites were delivered
+//       successfully (phone number could have gone out of service, etc. but these
+//       kinds of errors should be relatively uncommon).
 - (void)sendSMSInviteMessage:(NSString *)message
                 toRecipients:(NSArray *)recipientPhoneNumbers
            additionalOptions:(NSDictionary *)options
