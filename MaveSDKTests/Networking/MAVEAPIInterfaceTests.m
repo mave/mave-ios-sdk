@@ -259,6 +259,7 @@
     NSArray *fakeChangeset = @[@"some changset"];
     NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
                                    @"is_full_initial_sync": @YES,
+                                   @"own_merkle_tree_root": @"barfoo",
                                    @"return_closest_contacts": @NO};
 
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
@@ -266,9 +267,10 @@
                                                   params:expectedJSON
                                         gzipCompressBody:YES
                                          completionBlock:[OCMArg any]]);
-    [self.testAPIInterface sendContactsChangeset:fakeChangeset
 
-                                   isFullInitialSync:YES
+    [self.testAPIInterface sendContactsChangeset:fakeChangeset
+                               isFullInitialSync:YES
+                               ownMerkleTreeRoot:@"barfoo"
                            returnClosestContacts:NO
                                  completionBlock:nil];
     OCMVerifyAll(mocked);
@@ -280,6 +282,7 @@
     NSArray *fakeChangeset = @[@"some changset"];
     NSDictionary *expectedJSON = @{@"changeset_list": fakeChangeset,
                                    @"is_full_initial_sync": @NO,
+                                   @"own_merkle_tree_root": @"barfoo2",
                                    @"return_closest_contacts": @YES};
 
     // set up expected response behavior
@@ -301,7 +304,8 @@
 
     // Run code under test
     [self.testAPIInterface sendContactsChangeset:fakeChangeset
-                                   isFullInitialSync:NO
+                               isFullInitialSync:NO
+                               ownMerkleTreeRoot:@"barfoo2"
                            returnClosestContacts:YES
                                  completionBlock:returnBlock];
     OCMVerifyAll(mocked);

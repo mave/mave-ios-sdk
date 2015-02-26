@@ -276,19 +276,19 @@
     NSArray *fakeContacts = @[p0, p1, p2];
     NSArray *expectedSuggested = @[p1, p2];
     id syncerMock = OCMPartialMock(syncer);
-    id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
+    id fakeMerkleTree = @"not a tree";
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
 
     // mock the method that returns the merkle tree
-    OCMExpect([syncerMock buildLocalContactsMerkleTreeFromContacts:fakeContacts]).andReturn(merkleTreeMock);
+    OCMExpect([syncerMock buildLocalContactsMerkleTreeFromContacts:fakeContacts]).andReturn(fakeMerkleTree);
 
     // mock the method that determines if we sync or not
-    OCMExpect([syncerMock decideNeededSyncTypeCompareRemoteTreeRootToTree:merkleTreeMock])
+    OCMExpect([syncerMock decideNeededSyncTypeCompareRemoteTreeRootToTree:fakeMerkleTree])
         .andReturn(MAVEContactSyncTypeNone);
 
     // assert that we don't sync contacts
     [[syncerMock reject] changesetComparingFullRemoteTreeToTree:[OCMArg any]];
-    [[[apiInterfaceMock reject] ignoringNonObjectArgs] sendContactsChangeset:[OCMArg any] isFullInitialSync:NO returnClosestContacts:NO completionBlock:[OCMArg any]];
+    [[[apiInterfaceMock reject] ignoringNonObjectArgs] sendContactsChangeset:[OCMArg any] isFullInitialSync:NO ownMerkleTreeRoot:fakeMerkleTree returnClosestContacts:NO completionBlock:[OCMArg any]];
     [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any]];
 
     // we should fetch suggested separately since we're not syncing
@@ -297,7 +297,6 @@
     NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
     XCTAssertEqualObjects(closestContacts, expectedSuggested);
     OCMVerifyAll(syncerMock);
-    OCMVerifyAll(merkleTreeMock);
     OCMVerifyAll(apiInterfaceMock);
 }
 
@@ -465,12 +464,13 @@
     NSArray *expectedSuggested = @[p1, p2];
     NSArray *suggestedHashedRecordIDs = @[@[@1, @10], @[@2, @5]];
     NSArray *fakeChangeset = @[@"fake"];
-    id fakeMerkleTree = @"fake tree";
+    MAVEMerkleTree *fakeMerkleTree = [[MAVEMerkleTree alloc] init];
+    fakeMerkleTree.root = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:[MAVEMerkleTreeHashUtils dataFromHexString:@"049acf"]];
     OCMExpect([apiInterfaceMock sendContactsChangeset:fakeChangeset
-
                                     isFullInitialSync:YES
-                                   returnClosestContacts:YES
-                                         completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                    ownMerkleTreeRoot:@"049acf"
+                                returnClosestContacts:YES
+                                      completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^completionBlock)(NSArray *suggestions) = obj;
         completionBlock(suggestedHashedRecordIDs);
         return YES;

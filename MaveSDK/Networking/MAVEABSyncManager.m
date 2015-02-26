@@ -223,8 +223,9 @@ static dispatch_once_t syncContactsOnceToken;
                        allContacts:(NSArray *)contacts {
     MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    NSString *merkleTreeRootHexString = [[merkleTree.root serializeToJSONObject] objectForKey:@"k"];
     __block NSArray *suggestedHashedRecordIDTuples;
-    [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset isFullInitialSync:isFullInitialSync returnClosestContacts:returnSuggested completionBlock:^(NSArray *closestContacts) {
+    [[MaveSDK sharedInstance].APIInterface sendContactsChangeset:changeset isFullInitialSync:isFullInitialSync ownMerkleTreeRoot:merkleTreeRootHexString returnClosestContacts:returnSuggested completionBlock:^(NSArray *closestContacts) {
         suggestedHashedRecordIDTuples = closestContacts;
         dispatch_semaphore_signal(semaphore);
     }];

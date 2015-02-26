@@ -71,6 +71,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
 - (void)sendContactsChangeset:(NSArray *)changeset
             isFullInitialSync:(BOOL)isFullInitialSync
+            ownMerkleTreeRoot:(NSString *)ownMerkleTreeRoot
         returnClosestContacts:(BOOL)returnClosestContacts
               completionBlock:(void (^)(NSArray *closestContacts))closestContactsBlock;
 
