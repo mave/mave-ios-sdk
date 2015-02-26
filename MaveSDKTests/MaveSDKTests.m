@@ -188,19 +188,6 @@
     XCTAssertEqualObjects(mave.inviteExplanationCopy, @"foo");
 }
 
-- (void)testGetReferringUser {
-    // Just ensure that the method on mock manager gets called with our block
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *mave = [MaveSDK sharedInstance];
-    id mockAPIInterface = OCMPartialMock(mave.APIInterface);
-    void (^emptyReferringUserBlock)(MAVEUserData *userData) = ^void(MAVEUserData *userData) {};
-    OCMExpect([mockAPIInterface getReferringUser:emptyReferringUserBlock]);
-    
-    [mave getReferringUser:emptyReferringUserBlock];
-    
-    OCMVerifyAll(mockAPIInterface);
-}
-
 - (void)testIdentifyUser {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];

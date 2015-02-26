@@ -44,7 +44,6 @@
 
 - (BOOL)isSetupOK;
 
-- (void)getReferringUser:(void(^)(MAVEUserData * userData))referringUserHandler;
 - (void)getReferringData:(void(^)(MAVEReferringData *referringData))referringDataHandler;
 
 // Use this to identify your logged-in users to us

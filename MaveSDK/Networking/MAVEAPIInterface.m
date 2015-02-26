@@ -195,24 +195,6 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 // GET Requests
 // We generally want to pre-fetch them so that when we actually want to access
 // the data it's already here and there's no latency.
-- (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock {
-    NSString *launchRoute = @"/referring_user";
-    
-    [self sendIdentifiedJSONRequestWithRoute:launchRoute
-                                  methodName:@"GET"
-                                      params:nil
-                            gzipCompressBody:NO
-                             completionBlock:^(NSError *error, NSDictionary *responseData) {
-                                 MAVEUserData *userData;
-                                 if (error || [responseData count] == 0) {
-                                     userData = nil;
-                                 } else {
-                                     userData = [[MAVEUserData alloc] initWithDictionary:responseData];
-                                 }
-                                 referringUserBlock(userData);
-                             }];
-}
-
 - (void)getReferringData:(MAVEHTTPCompletionBlock)completionBlock {
     NSString *route = @"/referring_data";
 

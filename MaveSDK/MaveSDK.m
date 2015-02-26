@@ -165,10 +165,6 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Methods to get data from our sdk
 //
-- (void)getReferringUser:(void (^)(MAVEUserData *))referringUserHandler {
-    [self.APIInterface getReferringUser:referringUserHandler];
-}
-
 - (void)getReferringData:(void (^)(MAVEReferringData *))referringDataHandler {
     [self.referringDataBuilder createObjectWithTimeout:10 completionBlock:^(id object) {
         referringDataHandler((MAVEReferringData *)object);

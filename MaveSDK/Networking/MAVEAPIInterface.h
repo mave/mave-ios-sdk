@@ -78,7 +78,6 @@ extern NSString * const MAVEAPIParamShareAudience;
 ///
 /// GET requests
 ///
-- (void)getReferringUser:(void (^)(MAVEUserData *userData))referringUserBlock;
 - (void)getReferringData:(MAVEHTTPCompletionBlock)completionBlock;
 - (void)getClosestContactsHashedRecordIDs:(void (^)(NSArray *closestContacts))closestContactsBlock;
 - (void)getRemoteConfigurationWithCompletionBlock:(MAVEHTTPCompletionBlock)block;

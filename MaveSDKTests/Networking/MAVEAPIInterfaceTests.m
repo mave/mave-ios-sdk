@@ -312,29 +312,6 @@
     XCTAssertEqualObjects(returnedClosestHashedRecordIDs, fakeClosestHashedRecordIDs);
 }
 
-
-- (void)testGetReferringUser {
-    id mocked = OCMPartialMock(self.testAPIInterface);
-    NSDictionary *fakeResponseData = @{@"user_id": @"1", @"first_name": @"dan"};
-    OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_user"
-                                              methodName:@"GET"
-                                                  params:nil
-                                        gzipCompressBody:NO
-                                         completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        // Call the completion block with data, and then later check that the userData
-        // object got populated correctly from it
-        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
-        return YES;
-    }]]);
-    __block MAVEUserData *userData;
-    [self.testAPIInterface getReferringUser:^(MAVEUserData *_userData) {
-        userData = _userData;
-    }];
-    OCMVerifyAll(mocked);
-    XCTAssertEqualObjects(userData.userID, @"1");
-    XCTAssertEqualObjects(userData.firstName, @"dan");
-}
-
 - (void)testGetReferringData {
     id mocked = OCMPartialMock(self.testAPIInterface);
     MAVEHTTPCompletionBlock expectedBlock = ^void(NSError *error, NSDictionary *responseData) {};
@@ -370,27 +347,6 @@
 
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(closestContactsReturned, closestContacts);
-}
-
-- (void)testGetReferringUserNull {
-    // Same as above test, but this time the data returned from the server is nil
-    id mocked = OCMPartialMock(self.testAPIInterface);
-    OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_user"
-                                              methodName:@"GET"
-                                                  params:nil
-                                        gzipCompressBody:NO
-                                         completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        NSDictionary *fakeResponseData = nil;
-        ((void(^)(NSError *error, NSDictionary *responseData)) obj)(nil, fakeResponseData);
-        return YES;
-    }]]);
-    __block MAVEUserData *userData;
-    [self.testAPIInterface getReferringUser:^(MAVEUserData *_userData) {
-        userData = _userData;
-    }];
-    [mocked verify];
-    
-    XCTAssertNil(userData);
 }
 
 - (void)testGetRemoteConfiguration {
