@@ -57,6 +57,7 @@
     XCTAssertNotNil(mave.shareTokenBuilder);
     XCTAssertNotNil(mave.addressBookSyncManager);
     XCTAssertNotNil(mave.suggestedInvitesBuilder);
+    XCTAssertNotNil(mave.referringDataBuilder);
 }
 
 
@@ -123,6 +124,28 @@
 
     XCTAssertEqualObjects(returnedSuggestions, suggestions);
     OCMVerifyAll(builderMock);
+}
+
+- (void)testGetReferringData {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"asd932k"];
+
+    MAVEReferringData *referringDataObj = [[MAVEReferringData alloc] init];
+
+    id referringBuilderMock = OCMClassMock([MAVERemoteObjectBuilder class]);
+    [MaveSDK sharedInstance].referringDataBuilder = referringBuilderMock;
+    OCMExpect([referringBuilderMock createObjectWithTimeout:10 completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        ((void (^)(id object))(obj))(referringDataObj);
+        return YES;
+    }]]);
+
+    __block MAVEReferringData *returnedObject;
+    [[MaveSDK sharedInstance] getReferringData:^(MAVEReferringData *referringData) {
+        returnedObject = referringData;
+    }];
+
+    XCTAssertEqualObjects(returnedObject, referringDataObj);
+    OCMVerifyAll(referringBuilderMock);
 }
 
 

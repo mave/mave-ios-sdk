@@ -10,6 +10,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVEDisplayOptions.h"
 #import "MAVEUserData.h"
+#import "MAVEReferringData.h"
 #import "MAVEInvitePageChooser.h"
 #import "MAVEAPIInterface.h"
 #import "MAVERemoteObjectBuilder.h"
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) MAVERemoteObjectBuilder *remoteConfigurationBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *shareTokenBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *suggestedInvitesBuilder;
+@property (nonatomic, strong) MAVERemoteObjectBuilder *referringDataBuilder;
 
 
 @property (nonatomic, copy) NSString *appId;
@@ -43,6 +45,8 @@
 - (BOOL)isSetupOK;
 
 - (void)getReferringUser:(void(^)(MAVEUserData * userData))referringUserHandler;
+- (void)getReferringData:(void(^)(MAVEReferringData *referringData))referringDataHandler;
+
 // Use this to identify your logged-in users to us
 - (void)identifyUser:(MAVEUserData *)userData;
 // Use anonymous users if you don't have user accounts. Mave will generate

@@ -50,6 +50,7 @@ static dispatch_once_t sharedInstanceonceToken;
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
         sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
+        sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilder];
 
 #ifndef UNIT_TESTING
         // sync contacts, but wait a few seconds so it doesn't compete with fetching our
@@ -166,6 +167,12 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 - (void)getReferringUser:(void (^)(MAVEUserData *))referringUserHandler {
     [self.APIInterface getReferringUser:referringUserHandler];
+}
+
+- (void)getReferringData:(void (^)(MAVEReferringData *))referringDataHandler {
+    [self.referringDataBuilder createObjectWithTimeout:10 completionBlock:^(id object) {
+        referringDataHandler((MAVEReferringData *)object);
+    }];
 }
 
 //

@@ -213,6 +213,16 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              }];
 }
 
+- (void)getReferringData:(MAVEHTTPCompletionBlock)completionBlock {
+    NSString *route = @"/referring_data";
+
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"GET"
+                                      params:nil
+                            gzipCompressBody:NO
+                             completionBlock:completionBlock];
+}
+
 - (void)getClosestContactsHashedRecordIDs:(void (^)(NSArray *))closestContactsBlock {
     NSString *route = @"/me/contacts/closest";
     NSArray *emptyValue = @[];

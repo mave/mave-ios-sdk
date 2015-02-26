@@ -335,6 +335,18 @@
     XCTAssertEqualObjects(userData.firstName, @"dan");
 }
 
+- (void)testGetReferringData {
+    id mocked = OCMPartialMock(self.testAPIInterface);
+    MAVEHTTPCompletionBlock expectedBlock = ^void(NSError *error, NSDictionary *responseData) {};
+    OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_data"
+                                              methodName:@"GET"
+                                                  params:nil
+                                        gzipCompressBody:NO
+                                         completionBlock:expectedBlock]);
+    [self.testAPIInterface getReferringData:expectedBlock];
+    OCMVerifyAll(mocked);
+}
+
 
 - (void)testGetClosestContactsHashedRecordIDs {
     NSArray *closestContacts = @[@"foo", @"bar"];
