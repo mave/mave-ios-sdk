@@ -91,8 +91,10 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
 
 + (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons {
     NSMutableDictionary *output = [[NSMutableDictionary alloc] initWithCapacity:[persons count]];
+    NSString *stringKey;
     for (MAVEABPerson *person in persons) {
-        [output setObject:person forKey:@(person.hashedRecordID)];
+        stringKey = [NSString stringWithFormat:@"%llu", person.hashedRecordID];
+        [output setObject:person forKey:stringKey];
     }
     return output;
 }

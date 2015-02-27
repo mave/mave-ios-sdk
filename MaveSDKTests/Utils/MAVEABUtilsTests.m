@@ -115,7 +115,8 @@
 - (void)testIndexABPersonArrayByHashedRecordID {
     // make some people and explicitly overwrite hashed record id so we know it
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    uint64_t biggestValue = 1844674407370955161 * 10 + 5;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = biggestValue;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
     // if there happens to be a hashed record id collision, it simply uses the
     // last one in the list. This should never happen due to md5 being
@@ -125,10 +126,10 @@
 
     NSDictionary *indexed = [MAVEABUtils indexABPersonArrayByHashedRecordID:contacts];
     XCTAssertEqual([indexed count], 3);
-    XCTAssertEqualObjects([indexed objectForKey:@(0)], p0);
-    XCTAssertEqualObjects([indexed objectForKey:@(1)], p1);
-    XCTAssertNotEqualObjects([indexed objectForKey:@(2)], p2);
-    XCTAssertEqualObjects([indexed objectForKey:@2], p3);
+    XCTAssertEqualObjects([indexed objectForKey:@"0"], p0);
+    XCTAssertEqualObjects([indexed objectForKey:@"18446744073709551615"], p1);
+    XCTAssertNotEqualObjects([indexed objectForKey:@"2"], p2);
+    XCTAssertEqualObjects([indexed objectForKey:@"2"], p3);
 }
 
 - (void)testCombineSuggestedIntoABIndexedForTableSections {
