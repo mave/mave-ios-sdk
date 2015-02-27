@@ -12,6 +12,13 @@
 
 @implementation MAVEWaitingDotsImageView
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self setup];
+    }
+    return self;
+}
+
 - (instancetype)init {
     if (self = [super init]) {
         [self setup];
