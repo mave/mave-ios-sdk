@@ -71,7 +71,7 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
                                             andAllContacts:(NSArray *)persons {
     NSDictionary *index = [self indexABPersonArrayByHashedRecordID:persons];
     NSMutableArray *output = [[NSMutableArray alloc] initWithCapacity:[hridTuples count]];
-    NSArray *tuple; NSNumber *hrid; MAVEABPerson *personTmp;
+    NSArray *tuple; NSString *hrid; MAVEABPerson *personTmp;
     for (id obj in hridTuples) {
         if (![obj isKindOfClass:[NSArray class]]) {
             continue;

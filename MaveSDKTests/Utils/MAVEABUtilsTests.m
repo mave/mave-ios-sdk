@@ -92,7 +92,7 @@
     // The tuple format is (hashed record id, number connections).
     // The second parameter is not used for now but is an integer score of how close the connection is,
     // higher is better
-    NSArray *hashedRecordIDs = @[@[@0, @10], @[@2, @2]];
+    NSArray *hashedRecordIDs = @[@[@"0", @10], @[@"2", @2]];
     NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
     NSArray *expectedSuggested = @[p0, p2];
     XCTAssertEqualObjects(suggested, expectedSuggested);
@@ -106,7 +106,7 @@
 
     // Data - 0 and 1 are the HRID's there, but only 0 exists so that should be only suggested
     NSArray *evilNullTuple = (NSArray *)[NSNull null];
-    NSArray *hashedRecordIDs = @[@1, @[@0, @10], @[@1, @5], @[], evilNullTuple];
+    NSArray *hashedRecordIDs = @[@1, @[@"0", @10], @[@"1", @5], @[], evilNullTuple];
     NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
     NSArray *expectedSuggested = @[p0];
     XCTAssertEqualObjects(suggested, expectedSuggested);

@@ -462,7 +462,7 @@
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
     NSArray *allContacts = @[p0, p1, p2];
     NSArray *expectedSuggested = @[p1, p2];
-    NSArray *suggestedHashedRecordIDs = @[@[@1, @10], @[@2, @5]];
+    NSArray *suggestedHashedRecordIDs = @[@[@"1", @10], @[@"2", @5]];
     NSArray *fakeChangeset = @[@"fake"];
     MAVEMerkleTree *fakeMerkleTree = [[MAVEMerkleTree alloc] init];
     fakeMerkleTree.root = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:[MAVEMerkleTreeHashUtils dataFromHexString:@"049acf"]];
@@ -493,7 +493,7 @@
     NSArray *expectedSuggested = @[p1, p2];
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    NSArray *fakeSuggestedHashedRecordIDs = @[@[@1, @0], @[@2, @0]];
+    NSArray *fakeSuggestedHashedRecordIDs = @[@[@"1", @0], @[@"2", @0]];
     OCMExpect([apiInterfaceMock getClosestContactsHashedRecordIDs:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^contactsBlock)(NSArray *contacts) = obj;
         contactsBlock(fakeSuggestedHashedRecordIDs);
