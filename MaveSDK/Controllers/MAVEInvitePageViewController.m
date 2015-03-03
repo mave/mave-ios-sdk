@@ -188,13 +188,12 @@
     // Use address book invite as background while prompting for permission)
     self.view = [self createAddressBookInviteView];
     [self layoutInvitePageViewAndSubviews];
-//    self.ABTableViewController.tableView.contentOffset = CGPointMake(0, -1 * MAVESearchBarHeight);
 }
 
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
-    self.abTableFixedSearchbar.backgroundColor = [UIColor redColor];
+//    self.abTableFixedSearchbar.backgroundColor = [UIColor redColor];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
@@ -224,7 +223,6 @@
                                        self.keyboardFrame.origin.y);
 
     CGFloat yOffsetForContent = appFrame.origin.y + self.navigationController.navigationBar.frame.size.height;
-    NSLog(@"top offset is %f", yOffsetForContent);
 
     CGRect tableViewFrame = containerFrame;
     tableViewFrame.origin.y = yOffsetForContent;
@@ -246,6 +244,7 @@
     // Extend bottom of table view content so invite message view doesn't overlap it
     UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
     abTableViewInsets.bottom = inviteViewHeight;
+    abTableViewInsets.bottom += 20;  // TODO: figure out actual value, this just makes it work with the default simulator address book
     self.ABTableViewController.tableView.contentInset = abTableViewInsets;
 
     // Put the invite message view off bottom of screen unless we should display it,

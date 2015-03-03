@@ -429,35 +429,35 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 #pragma mark - Arranging search bars and content
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    CGFloat offsetY = self.tableView.contentOffset.y;
+    CGFloat zeroOffset = 0;
+    CGFloat offsetY = self.tableView.contentOffset.y;
+    CGFloat embeddedSearchBarTop = self.inviteTableHeaderView.searchBar.frame.origin.y;
+    CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
+    CGFloat embeddedSearchBarBottom = embeddedSearchBarTop + embeddedSearchBarHeight;
 
-//    // Scrolled above search bar
-//    if (offsetY < [self showingTableHeaderOffsetThreshold]) {
-//        // Vertically center the text above the table
-//        //
-//        // On some page loads (e.g. hitting back button from the next page in nav stack)
-//        // for some reason content inset is off by 64 when this method is called, so we
-//        // set the shifted offset to 0 in that case. Doing this causes the resizeWithShiftedOffsetY
-//        // method to be a noop b/c it only resizes when the offset is negative.
-//        CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
-//        if (shiftedOffsetY == -1 * [self fixedSearchBarYCoord]) {
-//            shiftedOffsetY = 0;
-//        }
-//        [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
-//
-//        self.inviteTableHeaderView.searchBar.hidden = NO;
-//        self.searchBar.hidden = YES;
-//
-//    } else {
-//        // Fix the real search bar to top of the view
-//        CGRect newFrame = self.searchBar.frame;
-//        newFrame.origin.y = offsetY + [self fixedSearchBarYCoord];
-//        self.searchBar.frame = newFrame;
-//
-//        // Hide the inviteTableHeaderView's search bar
-//        self.inviteTableHeaderView.searchBar.hidden = YES;
-//        self.searchBar.hidden = NO;
-//    }
+    if (!self.isFixedSearchBarActive && embeddedSearchBarTop > 0 && offsetY > embeddedSearchBarTop) {
+        self.isFixedSearchBarActive = YES;
+        CGPoint newOffset = CGPointMake(0, offsetY + embeddedSearchBarHeight);
+        NSLog(@"new offset is %@", NSStringFromCGPoint(newOffset));
+//        self.tableView.contentOffset = newOffset;
+        [self.parentViewController layoutInvitePageViewAndSubviews];
+        self.tableView.contentOffset = newOffset;
+        NSLog(@"new offset is %@", NSStringFromCGPoint(newOffset));
+
+        NSLog(@"a");
+    } else if (self.isFixedSearchBarActive && offsetY < embeddedSearchBarBottom) {
+        self.isFixedSearchBarActive = NO;
+        [self.parentViewController layoutInvitePageViewAndSubviews];
+        CGPoint newOffset = CGPointMake(0, offsetY - embeddedSearchBarHeight);
+        [self.parentViewController layoutInvitePageViewAndSubviews];
+        self.tableView.contentOffset = newOffset;
+    }
+
+
+    NSLog(@"current offset %f", offsetY);
+
+
+    NSLog(@"embedded search bar origin %f  %f", embeddedSearchBarTop, embeddedSearchBarBottom);
 }
 
 
