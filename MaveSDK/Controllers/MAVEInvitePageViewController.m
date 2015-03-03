@@ -32,7 +32,7 @@
     // On load keyboard is hidden
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
-     self.view = [[MAVECustomSharePageView alloc] init];
+//     self.view = [[MAVECustomSharePageView alloc] init];
 
     [self determineAndSetViewBasedOnABPermissions];
 }
@@ -193,6 +193,8 @@
 
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
+    self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
+    self.abTableFixedSearchbar.backgroundColor = [UIColor redColor];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
@@ -206,6 +208,8 @@
     };
     
     UIView *containerView = [[UIView alloc] init];
+    containerView.backgroundColor = [UIColor whiteColor];
+    [containerView addSubview:self.abTableFixedSearchbar];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageContainerView];
     return containerView;
@@ -219,7 +223,13 @@
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
+    CGFloat yOffsetForContent = appFrame.origin.y + self.navigationController.navigationBar.frame.size.height;
+    NSLog(@"top offset is %f", yOffsetForContent);
+    CGRect fixedSearchBarFrame = CGRectMake(0, yOffsetForContent, containerFrame.size.width, MAVESearchBarHeight);
+
     CGRect tableViewFrame = containerFrame;
+    tableViewFrame.origin.y = fixedSearchBarFrame.origin.y + fixedSearchBarFrame.size.height;
+    tableViewFrame.size.height = containerFrame.size.height - yOffsetForContent - MAVESearchBarHeight;
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
@@ -244,6 +254,7 @@
                                                inviteViewHeight);
 
     self.view.frame = containerFrame;
+    self.abTableFixedSearchbar.frame = fixedSearchBarFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
     self.ABTableViewController.aboveTableContentView.frame =
         CGRectMake(0,
@@ -266,7 +277,7 @@
 // Respond to children's Events
 //
 
-- (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num {
+- (void)ABTableViewControllerNumberSelectedChanged:(NSUInteger)numberChanged {
     // If called from the table view's "did select row at index path" method we'll already be
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
     // from somewhere else.
@@ -274,7 +285,7 @@
         [UIView animateWithDuration:0.25 animations:^{
             [self layoutInvitePageViewAndSubviews];
         }];
-        [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:num];
+        [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:numberChanged];
     });
 }
 

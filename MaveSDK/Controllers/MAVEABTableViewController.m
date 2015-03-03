@@ -25,7 +25,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 @implementation MAVEABTableViewController
 
 #pragma mark - Init and Layout
-- (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent {
+- (instancetype)initTableViewWithParent:(MAVEInvitePageViewController *)parent {
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
@@ -55,7 +55,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // match the above table header view if we add one
     self.aboveTableContentView = [[UIView alloc] init];
     self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
-    [self.tableView addSubview:self.aboveTableContentView];
+//    [self.tableView addSubview:self.aboveTableContentView];
 
     // Set up the header view
     self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] init];

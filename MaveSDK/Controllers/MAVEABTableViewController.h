@@ -12,21 +12,17 @@
 #import "MAVESearchBar.h"
 #import "MAVEABPerson.h"
 
+@class MAVEInvitePageViewController;
+
 // This is the key to use in the table data dict for the suggested invites section.
 // It's set to ! which is the first non-whitespace ascii character so it always gets
 // sorted to the top of the list, and it won't be used as the first letter in a name
 // because all non-letters are mapped to the "#" sections.
 extern NSString * const MAVESuggestedInvitesTableDataKey;
 
-// This view controller can alert an additional delegate when the number of people selected changes
-@protocol MAVEABTableViewAdditionalDelegate <NSObject>
-@required
-- (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num;
-@end
-
 @interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
-@property (nonatomic, weak) UIViewController<MAVEABTableViewAdditionalDelegate> *parentViewController;
+@property (nonatomic, weak) MAVEInvitePageViewController *parentViewController;
 @property (nonatomic, strong) MAVEInviteTableHeaderView *inviteTableHeaderView;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIView *aboveTableContentView;
@@ -43,10 +39,11 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 @property (nonatomic, strong) NSDictionary *recordIDsToindexPaths;
 
 // For searching
+@property (nonatomic, assign) BOOL isFixedSearchBarActive;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UITableView *searchTableView;
 
-- (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
+- (instancetype)initTableViewWithParent:(MAVEInvitePageViewController *)parent;
 
 // Helper to create the table section header
 
