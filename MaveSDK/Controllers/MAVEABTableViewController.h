@@ -52,14 +52,13 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 // constants for determining layout sizes
 // height of navigation bar currently
 - (CGFloat)navigationBarHeight;
-// y-coordinate of the fixed search bar (just below navigation bar)
-- (CGFloat)fixedSearchBarYCoord;
-- (CGFloat)tableHeaderViewHeight;
-// threshold for when the table header with its "fake" search bar & the above
-// table content is visible. If main table view contentOffset is less than this,
-// it's visible, otherwise just the body of the table with the fixed search bar
-// is visible.
-- (CGFloat)showingTableHeaderOffsetThreshold;
+// Value of origin.y for the "fake" search bar that's embedded in the table header,
+// this is the point to scroll to to switch over to the fixed real search bar.
+// Note that if scrolling with the fixed search bar already active above the table,
+// the point where it gets unfixed is the bottom of the search bar so it's this value
+// plus the search bar height
+- (CGFloat)tableHeaderEmbeddedSearchBarTopEdge;
+
 - (void)updateTableData:(NSDictionary *)data;
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
 - (void)updatePersonToIndexPathsIndex;

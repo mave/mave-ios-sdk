@@ -87,8 +87,7 @@
         CGRect explanationTextFrame = self.inviteExplanationView.messageCopy.frame;
         CGFloat newYCoord =
             roundf(DEFAULT_INNER_EXPLANATION_OFFSET
-                   + (shiftedOffsetY / 2)
-                   - MAVESearchBarHeight);
+                   + (shiftedOffsetY / 2));
         explanationTextFrame.origin.y = newYCoord;
         self.inviteExplanationView.messageCopy.frame = explanationTextFrame;
     }

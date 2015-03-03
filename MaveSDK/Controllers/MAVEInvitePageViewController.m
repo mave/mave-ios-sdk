@@ -32,7 +32,6 @@
     // On load keyboard is hidden
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
-//     self.view = [[MAVECustomSharePageView alloc] init];
 
     [self determineAndSetViewBasedOnABPermissions];
 }
@@ -193,7 +192,6 @@
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
-    self.abTableFixedSearchbar.backgroundColor = [UIColor redColor];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
