@@ -186,7 +186,6 @@
     if ([nationalNumber length] < minNationalNumberLength) {
         return nil;
     }
-    MAVEDebugLog(phoneNumber);
 
     NSError *formatError = nil;
     NSString *parsed = [phoneNumberUtil format:pnObject

@@ -20,6 +20,13 @@
 @property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 
+// This method determines whether or not we need to display this
+// view at all. Currently, the only content to show is explanation
+// copy (the search bar doesn't count, b/c if the search bar is the
+// only content we can just use the fixed search bar permanently
+// instead of starting with a fake search bar in this view).
+- (BOOL)hasContentToShow;
+
 - (CGFloat)computeHeightWithWidth:(CGFloat)width;
 - (void)resizeWithShiftedOffsetY:(CGFloat)shiftedOffsetY;
 

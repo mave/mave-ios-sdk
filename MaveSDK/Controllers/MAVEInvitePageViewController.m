@@ -193,7 +193,7 @@
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
     self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
-//    self.abTableFixedSearchbar.backgroundColor = [UIColor redColor];
+    self.abTableFixedSearchbar.backgroundColor = [UIColor redColor];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
@@ -260,6 +260,7 @@
                                                inviteViewHeight);
 
     self.view.frame = containerFrame;
+
     self.ABTableViewController.tableView.frame = tableViewFrame;
     self.ABTableViewController.aboveTableContentView.frame =
         CGRectMake(0,

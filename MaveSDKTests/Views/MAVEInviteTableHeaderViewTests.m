@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVEInviteTableHeaderView.h"
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
@@ -46,6 +47,24 @@
     // Search bar
     XCTAssertTrue([view.searchBar isDescendantOfView:view]);
     XCTAssertEqual(view.searchBar.frame.size.height, MAVESearchBarHeight);
+}
+
+- (void)testHasContentToShow {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock inviteExplanationCopy]).andReturn(@"Copy Override");
+
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
+    XCTAssertTrue([view hasContentToShow]);
+    OCMVerifyAll(maveMock);
+}
+
+- (void)testHasNoContentToShow {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock inviteExplanationCopy]).andReturn(nil);
+
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
+    XCTAssertFalse([view hasContentToShow]);
+    OCMVerifyAll(maveMock);
 }
 
 @end

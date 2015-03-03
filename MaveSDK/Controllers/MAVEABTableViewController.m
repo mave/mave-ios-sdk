@@ -29,6 +29,8 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
+        self.lockScrollViewDidScroll = NO;
+        self.didInitialTableHeaderLayout = NO;
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
 
         self.tableView = [[UITableView alloc] init];
@@ -63,11 +65,19 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     self.inviteTableHeaderView.searchBar.hidden = NO;
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
-    self.isFixedSearchBarActive = NO;
     self.parentViewController.abTableFixedSearchbar.delegate = self;
     [self.parentViewController.abTableFixedSearchbar addTarget:self
                                                         action:@selector(textFieldDidChange:)
                                               forControlEvents:UIControlEventEditingChanged];
+
+    // TODO test this
+//    self.isFixedSearchBarActive = NO;
+//    self.tableView.contentOffset = CGPointMake(0, 0);
+    if (![self.inviteTableHeaderView hasContentToShow]) {
+        self.isFixedSearchBarActive = YES;
+    } else {
+        self.isFixedSearchBarActive = NO;
+    }
 }
 
 - (void)setupSearchTableView {
@@ -86,11 +96,21 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 }
 
 - (void)layoutHeaderViewForWidth:(CGFloat)width {
+//    if (self.isFixedSearchBarActive) {
+//        CGPoint expectedOffset = CGPointMake(0, MAVESearchBarHeight);
+//        self.tableView.contentOffset = expectedOffset;
+//    }
+
+
     CGRect prevInviteTableHeaderViewFrame = self.inviteTableHeaderView.frame;
     // use ceil so rounding errors won't cause tiny gap below the table header view
     CGFloat inviteTableHeaderViewHeight = ceil([self.inviteTableHeaderView
                                                 computeHeightWithWidth:width]);
-    CGRect inviteExplanationViewFrame = CGRectMake(0, 0, width, inviteTableHeaderViewHeight);
+
+    CGRect inviteExplanationViewFrame = CGRectMake(0,
+                                                   0,
+                                                   width,
+                                                   inviteTableHeaderViewHeight);
 
     // table header view needs to be re-assigned when frame changes or the rest
     // of the table doesn't get offset and the header overlaps it
@@ -99,7 +119,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
         // match above table color to explanation view color so it looks like one view
-        if (self.inviteTableHeaderView.showsExplanation) {
+        if ([self.inviteTableHeaderView hasContentToShow]) {
             self.aboveTableContentView.backgroundColor = self.inviteTableHeaderView.backgroundColor;
         }
     }
@@ -107,6 +127,10 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 - (CGFloat)navigationBarHeight {
     return self.parentViewController.navigationController.navigationBar.frame.size.height;
+}
+
+- (CGFloat)tableHeaderViewHeight {
+    return self.inviteTableHeaderView.frame.size.height;
 }
 
 - (CGFloat)fixedSearchBarYCoord {
@@ -409,31 +433,73 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 #pragma mark - Arranging search bars and content
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat offsetY = self.tableView.contentOffset.y;
+    if (self.lockScrollViewDidScroll) {
+        NSLog(@"scroll view was locked");
+        return;
+    }
+    CGFloat offsetY = roundf(self.tableView.contentOffset.y);
+    NSLog(@"current offset %f", offsetY);
+
+
+    // Watch for when the search bar part of the table header view passes where the fixed
+    // bar will be and swap in/out the fixed bar when scrolling past that point
+//    NSLog(@"table header height %f",  self.inviteTableHeaderView.frame.size.height);
+    // If Search bar is the only thing in the table header view frame,
+//    if (self.inviteTableHeaderView.frame.size.height == self.inviteTableHeaderView.searchBar.frame.size.height) {
+//
+//    }
+    
     CGFloat embeddedSearchBarTop = self.inviteTableHeaderView.searchBar.frame.origin.y;
     CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
     CGFloat embeddedSearchBarBottom = embeddedSearchBarTop + embeddedSearchBarHeight;
 
-    if (!self.isFixedSearchBarActive && offsetY >= embeddedSearchBarTop) {
-        self.isFixedSearchBarActive = YES;
-        CGPoint newOffset = CGPointMake(0, offsetY + embeddedSearchBarHeight);
-        NSLog(@"new offset is %@", NSStringFromCGPoint(newOffset));
-        [self.parentViewController layoutInvitePageViewAndSubviews];
-        self.tableView.contentOffset = newOffset;
-        NSLog(@"new offset is %@", NSStringFromCGPoint(newOffset));
+    BOOL shouldMakeSearchBarFixed = !self.isFixedSearchBarActive && offsetY >= embeddedSearchBarTop;
+    BOOL shouldMakeSearchBarUnfixed = self.isFixedSearchBarActive && offsetY < embeddedSearchBarBottom;
 
-        NSLog(@"a");
-    } else if (self.isFixedSearchBarActive && offsetY < embeddedSearchBarBottom) {
+    if (shouldMakeSearchBarFixed) {
+        NSLog(@"fixed was NO start %f", offsetY);
+        CGPoint newOffset = CGPointMake(0, offsetY + embeddedSearchBarHeight);
+        [self makeSearchBarFixed:newOffset];
+
+//        self.lockScrollViewDidScroll = YES;
+//        self.lockScrollViewDidScroll = NO;
+
+//        CGRect scrollBounds = scrollView.bounds;
+//        scrollBounds.origin = newOffset;
+//        self.tableView.bounds = scrollBounds;
+
+        NSLog(@"fixed was NO current offset %f", newOffset.y);
+        
+    } else if (shouldMakeSearchBarUnfixed) {
         self.isFixedSearchBarActive = NO;
-        [self.parentViewController layoutInvitePageViewAndSubviews];
+        NSLog(@"fixed was yes start");
         CGPoint newOffset = CGPointMake(0, offsetY - embeddedSearchBarHeight);
+
+        self.lockScrollViewDidScroll = YES;
         [self.parentViewController layoutInvitePageViewAndSubviews];
         self.tableView.contentOffset = newOffset;
+        self.lockScrollViewDidScroll = NO;
+
+//        self.lockScrollViewDidScroll = YES;
+//        self.lockScrollViewDidScroll = NO;
+
+//        CGRect scrollBounds = scrollView.bounds;
+//        scrollBounds.origin = newOffset;
+//        self.tableView.bounds = scrollBounds;
+//
+//        NSLog(@"fixed was YES making offset %f", newOffset.y);
     }
 
+//    NSLog(@"embedded search bar origin %f  %f", embeddedSearchBarTop, embeddedSearchBarBottom);
+}
 
-    NSLog(@"current offset %f", offsetY);
-    NSLog(@"embedded search bar origin %f  %f", embeddedSearchBarTop, embeddedSearchBarBottom);
+- (void)makeSearchBarFixed:(CGPoint)newContentOffset {
+    self.isFixedSearchBarActive = YES;
+
+    self.lockScrollViewDidScroll = YES;
+    [self.parentViewController layoutInvitePageViewAndSubviews];
+    self.tableView.contentOffset = newContentOffset;
+    self.lockScrollViewDidScroll = NO;
 }
 
 
@@ -485,7 +551,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
     self.tableView.scrollEnabled = NO;
-    [self.tableView addSubview:self.searchTableView];
+    [self.parentViewController.view addSubview:self.searchTableView];
 }
 
 - (void)removeSearchTableView {

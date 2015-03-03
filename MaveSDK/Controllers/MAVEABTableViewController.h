@@ -40,6 +40,8 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 
 // For searching
 @property (nonatomic, assign) BOOL isFixedSearchBarActive;
+@property (nonatomic, assign) BOOL lockScrollViewDidScroll;
+@property (nonatomic, assign) BOOL didInitialTableHeaderLayout;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UITableView *searchTableView;
 
@@ -52,6 +54,7 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 - (CGFloat)navigationBarHeight;
 // y-coordinate of the fixed search bar (just below navigation bar)
 - (CGFloat)fixedSearchBarYCoord;
+- (CGFloat)tableHeaderViewHeight;
 // threshold for when the table header with its "fake" search bar & the above
 // table content is visible. If main table view contentOffset is less than this,
 // it's visible, otherwise just the body of the table with the fixed search bar
