@@ -64,18 +64,10 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
     self.isFixedSearchBarActive = NO;
-//    self.parentViewController.abTableFixedSearchbar.delegate = self;
-
-//    self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
-//    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//    self.searchBar.delegate = self;
-//    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
-//    self.searchBar.hidden = YES;
-//    [self.searchBar addTarget:self
-//                       action:@selector(textFieldDidChange:)
-//             forControlEvents:UIControlEventEditingChanged];
-
-    [self.tableView addSubview:self.searchBar];
+    self.parentViewController.abTableFixedSearchbar.delegate = self;
+    [self.parentViewController.abTableFixedSearchbar addTarget:self
+                                                        action:@selector(textFieldDidChange:)
+                                              forControlEvents:UIControlEventEditingChanged];
 }
 
 - (void)setupSearchTableView {
@@ -124,7 +116,8 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 
 - (CGFloat)showingTableHeaderOffsetThreshold {
-    return self.inviteTableHeaderView.frame.size.height - [self fixedSearchBarYCoord] - MAVESearchBarHeight;
+//    return self.inviteTableHeaderView.frame.size.height - [self fixedSearchBarYCoord] - MAVESearchBarHeight;
+    return self.inviteTableHeaderView.frame.size.height - self.inviteTableHeaderView.searchBar.frame.size.height;
 }
 
 - (BOOL)isSearchTableVisible {
@@ -249,7 +242,6 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-
     UIView *view;
     if (tableView == self.tableView) {
         NSString *sectionTitleShort = [self.tableSections objectAtIndex:section];
@@ -264,18 +256,6 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         view = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Search results"
                                                           sectionIsWaiting:NO];
     }
-
-//    if (tableView == self.tableView) {
-//        // When scrolling up through the table index, when a given header is at the top of the screen (e.g. "M")
-//        // the header before it (e.g. "L") gets rendered onto the view just above the offset at the very front of
-//        // the view stack so it's visible over the search text bar.
-//        // As a workaround, whenever we return a view for a header we move the search bar to the front on a
-//        // very small delay. There may be a flash on the screen but it's a relatively edge case scenario anyway
-//        // so it's acceptable for now.
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.tableView bringSubviewToFront:self.searchBar];
-//        });
-//    }
     return view;
 }
 
@@ -429,17 +409,15 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 #pragma mark - Arranging search bars and content
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat zeroOffset = 0;
     CGFloat offsetY = self.tableView.contentOffset.y;
     CGFloat embeddedSearchBarTop = self.inviteTableHeaderView.searchBar.frame.origin.y;
     CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
     CGFloat embeddedSearchBarBottom = embeddedSearchBarTop + embeddedSearchBarHeight;
 
-    if (!self.isFixedSearchBarActive && embeddedSearchBarTop > 0 && offsetY > embeddedSearchBarTop) {
+    if (!self.isFixedSearchBarActive && offsetY >= embeddedSearchBarTop) {
         self.isFixedSearchBarActive = YES;
         CGPoint newOffset = CGPointMake(0, offsetY + embeddedSearchBarHeight);
         NSLog(@"new offset is %@", NSStringFromCGPoint(newOffset));
-//        self.tableView.contentOffset = newOffset;
         [self.parentViewController layoutInvitePageViewAndSubviews];
         self.tableView.contentOffset = newOffset;
         NSLog(@"new offset is %@", NSStringFromCGPoint(newOffset));
@@ -455,8 +433,6 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 
     NSLog(@"current offset %f", offsetY);
-
-
     NSLog(@"embedded search bar origin %f  %f", embeddedSearchBarTop, embeddedSearchBarBottom);
 }
 
@@ -467,34 +443,25 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     if (searchBar == self.inviteTableHeaderView.searchBar) {
         [self transitionHeaderSearchBarToRealSearchBar];
         return NO;
-    } else {
-        // Strange hack, enabling editing on the fixed search bar at the top of the table view
-        // causes the table view to scroll the distance of the top inset for no apparent reason.
-        // So we disable it then enable it after field becomes editable
-        self.tableView.scrollEnabled = NO;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (![self isSearchTableVisible]) {
-                self.tableView.scrollEnabled = YES;
-            }
-        });
     }
     return YES;
 }
 
 - (void)transitionHeaderSearchBarToRealSearchBar {
-    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
-    self.searchBar.hidden = NO;
-    [self.searchBar becomeFirstResponder];
-    [UIView animateWithDuration:0.3 animations:^{
-        [self.tableView setContentOffset:CGPointMake(0, [self showingTableHeaderOffsetThreshold])
-                                animated:NO];
-    }];
+    CGPoint newOffset = CGPointMake(0, [self showingTableHeaderOffsetThreshold]);
+    [self.tableView setContentOffset:newOffset animated:YES];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.parentViewController.abTableFixedSearchbar becomeFirstResponder];
+    });
+
+    // make this disappear now, it'll disappear anyway when the search table view comes up
+    self.tableView.sectionIndexColor = [UIColor clearColor];
 }
 
 - (void)textFieldDidChange:(UITextField *)textField  {
     // This will always be the fixed search bar, text is not editable
     // in the search bar at the botton of the table header
-    if (![textField isEqual: self.searchBar]) {
+    if (![textField isEqual: self.parentViewController.abTableFixedSearchbar]) {
         return;
     }
 
@@ -514,10 +481,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // The index shows above all other subviews, make clear to hide while searching
     self.tableView.sectionIndexColor = [UIColor clearColor];
 
-    CGRect searchTableViewFrame = self.tableView.frame;
-    searchTableViewFrame.origin.y = self.searchBar.frame.origin.y + MAVE_DEFAULT_SEARCH_BAR_HEIGHT;
-    searchTableViewFrame.size.height = 350;
-    self.searchTableView.frame = searchTableViewFrame;
+    self.searchTableView.frame = self.tableView.frame;
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
     self.tableView.scrollEnabled = NO;
@@ -533,7 +497,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [self removeSearchTableView];
-    [self.searchBar resignFirstResponder];
+    [self.parentViewController.abTableFixedSearchbar resignFirstResponder];
 }
 
 // Even though there's no cancel or done button, this gets triggered when user starts scrolling
