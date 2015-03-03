@@ -188,7 +188,7 @@
     // Use address book invite as background while prompting for permission)
     self.view = [self createAddressBookInviteView];
     [self layoutInvitePageViewAndSubviews];
-    self.ABTableViewController.tableView.contentOffset = CGPointMake(0, -1 * MAVESearchBarHeight);
+//    self.ABTableViewController.tableView.contentOffset = CGPointMake(0, -1 * MAVESearchBarHeight);
 }
 
 - (UIView *)createAddressBookInviteView {
@@ -225,20 +225,27 @@
 
     CGFloat yOffsetForContent = appFrame.origin.y + self.navigationController.navigationBar.frame.size.height;
     NSLog(@"top offset is %f", yOffsetForContent);
-    CGRect fixedSearchBarFrame = CGRectMake(0, yOffsetForContent, containerFrame.size.width, MAVESearchBarHeight);
 
     CGRect tableViewFrame = containerFrame;
-    tableViewFrame.origin.y = fixedSearchBarFrame.origin.y + fixedSearchBarFrame.size.height;
-    tableViewFrame.size.height = containerFrame.size.height - yOffsetForContent - MAVESearchBarHeight;
+    tableViewFrame.origin.y = yOffsetForContent;
+    tableViewFrame.size.height = containerFrame.size.height - yOffsetForContent;
+
+    // If the fixed search bar is active, set the frame and make room for it by shrinking the table
+    if (self.ABTableViewController.isFixedSearchBarActive) {
+        CGRect fixedSearchBarFrame = CGRectMake(0, yOffsetForContent, containerFrame.size.width, MAVESearchBarHeight);
+        self.abTableFixedSearchbar.frame = fixedSearchBarFrame;
+        tableViewFrame.origin.y += MAVESearchBarHeight;
+        tableViewFrame.size.height -= MAVESearchBarHeight;
+    } else {
+        self.abTableFixedSearchbar.frame = CGRectMake(0, 0, 0, 0);
+    }
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
 
     // Extend bottom of table view content so invite message view doesn't overlap it
-    // and adjust top to leave room for search bar to anchor to the top of the table
     UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
     abTableViewInsets.bottom = inviteViewHeight;
-    abTableViewInsets.top = [self.ABTableViewController fixedSearchBarYCoord] + MAVESearchBarHeight;
     self.ABTableViewController.tableView.contentInset = abTableViewInsets;
 
     // Put the invite message view off bottom of screen unless we should display it,
@@ -254,14 +261,14 @@
                                                inviteViewHeight);
 
     self.view.frame = containerFrame;
-    self.abTableFixedSearchbar.frame = fixedSearchBarFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
     self.ABTableViewController.aboveTableContentView.frame =
         CGRectMake(0,
-                   tableViewFrame.origin.y - containerFrame.size.height,
+                   -containerFrame.size.height,
                    containerFrame.size.width,
                    containerFrame.size.height);
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
+
     // adjust the search table bottom content inset so it doesn't hide results behind
     // the area taken up by keyboard + invite message container view
     CGFloat searchViewOffset = self.keyboardFrame.size.height - self.ABTableViewController.tableView.contentInset.top;

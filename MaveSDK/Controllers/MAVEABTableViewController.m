@@ -55,7 +55,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // match the above table header view if we add one
     self.aboveTableContentView = [[UIView alloc] init];
     self.aboveTableContentView.backgroundColor = self.tableView.backgroundColor;
-//    [self.tableView addSubview:self.aboveTableContentView];
+    [self.tableView addSubview:self.aboveTableContentView];
 
     // Set up the header view
     self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] init];
@@ -63,14 +63,17 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     self.inviteTableHeaderView.searchBar.hidden = NO;
     self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
-    self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
-    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.searchBar.delegate = self;
-    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
-    self.searchBar.hidden = YES;
-    [self.searchBar addTarget:self
-                       action:@selector(textFieldDidChange:)
-             forControlEvents:UIControlEventEditingChanged];
+    self.isFixedSearchBarActive = NO;
+//    self.parentViewController.abTableFixedSearchbar.delegate = self;
+
+//    self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
+//    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//    self.searchBar.delegate = self;
+//    self.searchBar.frame = self.inviteTableHeaderView.searchBar.frame;
+//    self.searchBar.hidden = YES;
+//    [self.searchBar addTarget:self
+//                       action:@selector(textFieldDidChange:)
+//             forControlEvents:UIControlEventEditingChanged];
 
     [self.tableView addSubview:self.searchBar];
 }
@@ -262,17 +265,17 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
                                                           sectionIsWaiting:NO];
     }
 
-    if (tableView == self.tableView) {
-        // When scrolling up through the table index, when a given header is at the top of the screen (e.g. "M")
-        // the header before it (e.g. "L") gets rendered onto the view just above the offset at the very front of
-        // the view stack so it's visible over the search text bar.
-        // As a workaround, whenever we return a view for a header we move the search bar to the front on a
-        // very small delay. There may be a flash on the screen but it's a relatively edge case scenario anyway
-        // so it's acceptable for now.
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView bringSubviewToFront:self.searchBar];
-        });
-    }
+//    if (tableView == self.tableView) {
+//        // When scrolling up through the table index, when a given header is at the top of the screen (e.g. "M")
+//        // the header before it (e.g. "L") gets rendered onto the view just above the offset at the very front of
+//        // the view stack so it's visible over the search text bar.
+//        // As a workaround, whenever we return a view for a header we move the search bar to the front on a
+//        // very small delay. There may be a flash on the screen but it's a relatively edge case scenario anyway
+//        // so it's acceptable for now.
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.tableView bringSubviewToFront:self.searchBar];
+//        });
+//    }
     return view;
 }
 
@@ -368,7 +371,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         [self.tableView scrollToRowAtIndexPath:scrollTo
                               atScrollPosition:UITableViewScrollPositionTop
                                       animated:NO];
-        self.searchBar.text = @"";
+        self.parentViewController.abTableFixedSearchbar.text = @"";
 
     }
     [self.tableView reloadRowsAtIndexPaths:mainTableIndexPaths
@@ -426,35 +429,35 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 #pragma mark - Arranging search bars and content
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat offsetY = self.tableView.contentOffset.y;
+//    CGFloat offsetY = self.tableView.contentOffset.y;
 
-    // Scrolled above search bar
-    if (offsetY < [self showingTableHeaderOffsetThreshold]) {
-        // Vertically center the text above the table
-        //
-        // On some page loads (e.g. hitting back button from the next page in nav stack)
-        // for some reason content inset is off by 64 when this method is called, so we
-        // set the shifted offset to 0 in that case. Doing this causes the resizeWithShiftedOffsetY
-        // method to be a noop b/c it only resizes when the offset is negative.
-        CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
-        if (shiftedOffsetY == -1 * [self fixedSearchBarYCoord]) {
-            shiftedOffsetY = 0;
-        }
-        [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
-
-        self.inviteTableHeaderView.searchBar.hidden = NO;
-        self.searchBar.hidden = YES;
-
-    } else {
-        // Fix the real search bar to top of the view
-        CGRect newFrame = self.searchBar.frame;
-        newFrame.origin.y = offsetY + [self fixedSearchBarYCoord];
-        self.searchBar.frame = newFrame;
-
-        // Hide the inviteTableHeaderView's search bar
-        self.inviteTableHeaderView.searchBar.hidden = YES;
-        self.searchBar.hidden = NO;
-    }
+//    // Scrolled above search bar
+//    if (offsetY < [self showingTableHeaderOffsetThreshold]) {
+//        // Vertically center the text above the table
+//        //
+//        // On some page loads (e.g. hitting back button from the next page in nav stack)
+//        // for some reason content inset is off by 64 when this method is called, so we
+//        // set the shifted offset to 0 in that case. Doing this causes the resizeWithShiftedOffsetY
+//        // method to be a noop b/c it only resizes when the offset is negative.
+//        CGFloat shiftedOffsetY = offsetY + self.tableView.contentInset.top;
+//        if (shiftedOffsetY == -1 * [self fixedSearchBarYCoord]) {
+//            shiftedOffsetY = 0;
+//        }
+//        [self.inviteTableHeaderView resizeWithShiftedOffsetY:shiftedOffsetY];
+//
+//        self.inviteTableHeaderView.searchBar.hidden = NO;
+//        self.searchBar.hidden = YES;
+//
+//    } else {
+//        // Fix the real search bar to top of the view
+//        CGRect newFrame = self.searchBar.frame;
+//        newFrame.origin.y = offsetY + [self fixedSearchBarYCoord];
+//        self.searchBar.frame = newFrame;
+//
+//        // Hide the inviteTableHeaderView's search bar
+//        self.inviteTableHeaderView.searchBar.hidden = YES;
+//        self.searchBar.hidden = NO;
+//    }
 }
 
 
@@ -536,7 +539,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 // Even though there's no cancel or done button, this gets triggered when user starts scrolling
 // away while text is still in text field
 - (void)textFieldDidEndEditing:(UITextField *)searchBar {
-    self.searchBar.text = @"";
+    self.parentViewController.abTableFixedSearchbar.text = @"";
 }
 
 
