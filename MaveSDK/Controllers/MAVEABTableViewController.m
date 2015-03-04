@@ -382,9 +382,14 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     }
 
     NSMutableArray *mutableAllPeople = [NSMutableArray array];
-
+    NSMutableSet *mutableAllPeopleUnique = [[NSMutableSet alloc] init];
     for (NSArray *section in [self.tableData allValues]) {
-        [mutableAllPeople addObjectsFromArray:section];
+        for (MAVEABPerson *person in section) {
+            if (![mutableAllPeopleUnique containsObject:person]) {
+                [mutableAllPeople addObject:person];
+                [mutableAllPeopleUnique addObject:person];
+            }
+        }
     }
 
     _allPersons = [NSArray arrayWithArray:mutableAllPeople];

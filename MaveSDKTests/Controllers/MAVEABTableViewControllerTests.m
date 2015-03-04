@@ -189,7 +189,34 @@
                           @"d": @[p4]}];
 
     NSArray *expectedAllPersons = @[p1, p2, p3, p4];
-    XCTAssertEqual([expectedAllPersons count], [[vc allPersons] count]);
+    XCTAssertEqualObjects([vc allPersons], expectedAllPersons);
+}
+
+- (void)testAllPersonsDeDuplicatesThem {
+    // With e.g. suggested invites at the top, people can be duplicated in
+    // the table. The list of all persons should de-dupe them.
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Abbie"; p1.lastName = @"Foo";
+    p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
+
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.firstName = @"John"; p2.lastName = @"Graham";
+    p2.phoneNumbers = @[@"18085551235"]; p2.selected = NO;
+
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.firstName = @"John"; p3.lastName = @"Smith";
+    p3.phoneNumbers = @[@"18085551236"]; p3.selected = NO;
+
+    [vc updateTableData:@{@"\u2605": @[p1, p3],
+                          @"a": @[p1],
+                          @"j": @[p2, p3]}];
+
+    NSArray *expectedAllPersons = @[p1, p3, p2];
+    XCTAssertEqualObjects([vc allPersons], expectedAllPersons);
 }
 
 - (void)testClickDidSelectRowAtIndexPath {
