@@ -116,8 +116,6 @@
     mave.displayOptions.sharePageIconTextColor = gray;
     mave.displayOptions.sharePageExplanationFont = [UIFont systemFontOfSize:16];
     mave.displayOptions.sharePageExplanationTextColor = black;
-
-    mave.displayOptions.inviteExplanationCopy = @"foobar";
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
