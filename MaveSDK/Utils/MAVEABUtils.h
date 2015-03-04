@@ -41,6 +41,14 @@ extern NSString * const MAVEABPermissionStatusUnprompted;
 + (NSArray *)listOfABPersonsFromListOfHashedRecordIDTuples:(NSArray *)hridTuples
                                        andAllContacts:(NSArray *)persons;
 
+// Given a list of ABPerson objects, find the exact instances as found in list of all contacts
+// This is useful e.g. if we got a serialized list of suggestions from the server that we
+// convert into MAVEABPerson objects, when merging it into the contacts table those records will
+// not show up as duplicates unless they're pointers to the same objects in our contacts table.
+// So call this method to return the object, matched on hashed record id.
++ (NSArray *)instancesOfABPersonsInList:(NSArray *)persons
+                        fromAllContacts:(NSArray *)allContacts;
+
 + (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons;
 
 // Merge a list of suggested people into the dictionary of data for the address book table
