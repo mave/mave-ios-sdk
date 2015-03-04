@@ -70,7 +70,7 @@
 }
 
 
-- (void)testDoLayoutInviteExplanationBoxIfCopyNotNil {
+- (void)testLayoutInviteExplanationBoxWhenCopyNotNil {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
 
@@ -99,7 +99,7 @@
     XCTAssertTrue(CGRectEqualToRect(aboveViewFrame, expectedAboveViewFrame));
 }
 
-- (void)testDoNotLayoutInviteExplanationBoxIfCopyIsEmpty {
+- (void)testLayoutInviteExplanationBoxIfCopyIsEmpty {
     id sdkMock = OCMPartialMock([MaveSDK sharedInstance]);
     OCMExpect([sdkMock inviteExplanationCopy]).andReturn(nil);
 
@@ -109,7 +109,7 @@
     MAVEABTableViewController *abtvc = ipvc.ABTableViewController;
     
     XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.width, abtvc.tableView.frame.size.width);
-    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.height, 0);
+    XCTAssertEqual(abtvc.inviteTableHeaderView.frame.size.height, MAVESearchBarHeight);
     XCTAssertNil(abtvc.inviteTableHeaderView.inviteExplanationView);
     OCMVerifyAll(sdkMock);
 }

@@ -14,6 +14,11 @@
 #import "MAVEABPerson.h"
 #import "MaveSDK.h"
 #import "MAVEABTestDataFactory.h"
+#import "MAVEDisplayOptionsFactory.h"
+
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
 
 @interface MAVEABTableViewControllerTests : XCTestCase
 
@@ -21,17 +26,15 @@
 
 @implementation MAVEABTableViewControllerTests
 
-/*
- * Note, unable to use this mock when initializing an instance of MAVEABTableVC:
- *     id mockedIPVC = [OCMockObject mockForClass:[MAVEInvitePageViewController class]];
- *
- * When the searchDisplayController is created, UIKit requires an instance of a
- * UIViewController, a mock is not sufficient. Instead, set the mock on
- * MAVEABTableVC later in the test.
- */
-
 - (void)setUp {
     [super setUp];
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"1231234"];
+    [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
+    [MaveSDK sharedInstance].userData.userID = @"foo";
+    [MaveSDK sharedInstance].displayOptions =
+    [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].defaultSMSMessageText = @"dfeault text";
 }
 
 - (void)tearDown {
@@ -226,12 +229,14 @@
 - (void)testClickDidSelectRowAtIndexPathWithSearchTableView {
     // Set up data
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    ipvc.abTableFixedSearchbar = [[MAVESearchBar alloc] init];
+    ipvc.view = [[UIView alloc] init];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
     vc.searchTableView = [[UITableView alloc] init];
     id mockedTableView = OCMPartialMock(vc.tableView);
     id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    id mockedIPVC = OCMClassMock([MAVEInvitePageViewController class]);
+    id mockedIPVC = OCMPartialMock(ipvc);
     vc.parentViewController = mockedIPVC;
 
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
@@ -249,14 +254,14 @@
     OCMExpect([mockAPIInterface trackInvitePageSelectedContactFromList:@"contacts_search"]);
 
     // Run
-    vc.searchBar.text = @"foo";
-    [vc textFieldDidChange:vc.searchBar];
-    XCTAssertTrue([vc.searchTableView isDescendantOfView:vc.tableView]);
+    ipvc.abTableFixedSearchbar.text = @"foo";
+    [vc textFieldDidChange:ipvc.abTableFixedSearchbar];
+    XCTAssertTrue([vc.searchTableView isDescendantOfView:ipvc.view]);
     [vc tableView:vc.searchTableView didSelectRowAtIndexPath:indexPath];
 
     // Verify
     XCTAssertEqualObjects(vc.selectedPhoneNumbers, [NSSet setWithArray:@[@"18085551234"]]);
-    XCTAssertEqualObjects(vc.searchBar.text, @""); // text gets reset after searching
+    XCTAssertEqualObjects(ipvc.abTableFixedSearchbar.text, @""); // text gets reset after searching
     XCTAssertFalse([vc.searchTableView isDescendantOfView:vc.tableView]);
     OCMVerifyAll(mockedTableView);
     OCMVerifyAll(mockedIPVC);
@@ -347,27 +352,34 @@
                                              atIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]]);
 }
 
-- (void)testSearchBarsHiddenStatusDuringScroll {
+- (void)testSwitchToFixedSearchBarAndBackDuringScroll {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    ipvc.view = [[UIView alloc] init];
+    ipvc.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
+    ipvc.ABTableViewController = vc;
     [self populateTableDataForABTableVC:vc];
 
     // Starts at top, no scrolling yet
-    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.hidden);
-    XCTAssertTrue(vc.searchBar.hidden);
+    XCTAssertFalse(vc.isFixedSearchBarActive);
+    XCTAssertEqual(ipvc.abTableFixedSearchbar.frame.size.height, 0);
+    XCTAssertGreaterThan(vc.inviteTableHeaderView.searchBar.frame.size.height, 0);
 
     // Scroll to somewhere midway down
     [vc.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:9]
                         atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    XCTAssertTrue(vc.inviteTableHeaderView.searchBar.hidden);
-    XCTAssertFalse(vc.searchBar.hidden);
+    XCTAssertTrue(vc.isFixedSearchBarActive);
+    XCTAssertGreaterThan(ipvc.abTableFixedSearchbar.frame.size.height, 0);
+    // the header view search bar is out of frame so it doesn't need to get set to 0
+    XCTAssertGreaterThan(vc.inviteTableHeaderView.searchBar.frame.size.height, 0);
 
     // Back to top
     [vc.tableView setContentOffset:CGPointMake(0, -100) animated:NO];
     [vc scrollViewDidScroll:vc.tableView]; // force call, which isn't happening in the above line
-    XCTAssertFalse(vc.inviteTableHeaderView.searchBar.hidden);
-    XCTAssertTrue(vc.searchBar.hidden);
+    XCTAssertFalse(vc.isFixedSearchBarActive);
+    XCTAssertEqual(ipvc.abTableFixedSearchbar.frame.size.height, 0);
+    XCTAssertGreaterThan(vc.inviteTableHeaderView.searchBar.frame.size.height, 0);
 }
 
 - (void)testSearchContacts {
@@ -458,11 +470,11 @@
                                      initTableViewWithParent:ipvc];
 
     [vc textFieldShouldBeginEditing:vc.inviteTableHeaderView.searchBar];
-    [vc textFieldShouldBeginEditing:vc.searchBar];
+    [vc textFieldShouldBeginEditing:ipvc.abTableFixedSearchbar];
     XCTAssertNotEqual([UIColor clearColor], vc.tableView.sectionIndexColor);
 
-    vc.searchBar.text = @"a";  // it changed
-    [vc textFieldDidChange:vc.searchBar];
+    ipvc.abTableFixedSearchbar.text = @"a";  // it changed
+    [vc textFieldDidChange:ipvc.abTableFixedSearchbar];
     XCTAssertEqual([UIColor clearColor], vc.tableView.sectionIndexColor);
 }
 
