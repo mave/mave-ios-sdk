@@ -33,6 +33,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         self.lockScrollViewDidScroll = NO;
         self.didInitialTableHeaderLayout = NO;
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
+        self.selectedPeople = [[NSMutableSet alloc] init];
 
         self.tableView = [[UITableView alloc] init];
         self.tableView.delegate = self;
@@ -345,8 +346,10 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     person.selected = !person.selected;
     if (person.selected) {
         [self.selectedPhoneNumbers addObject:person.bestPhone];
+        [self.selectedPeople addObject:person];
     } else {
         [self.selectedPhoneNumbers removeObject:person.bestPhone];
+        [self.selectedPeople removeObject:person];
     }
     [self.parentViewController ABTableViewControllerNumberSelectedChanged:[self.selectedPhoneNumbers count]];
 

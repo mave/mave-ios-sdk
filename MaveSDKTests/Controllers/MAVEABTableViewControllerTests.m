@@ -239,6 +239,7 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
+    XCTAssertEqual([vc.selectedPeople count], 0);
     OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
     OCMExpect([mockedTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]);
     OCMExpect([mockAPIInterface trackInvitePageSelectedContactFromList:@"contacts"]);
@@ -248,6 +249,7 @@
     
     // Verify
     XCTAssertEqualObjects(vc.selectedPhoneNumbers, [NSSet setWithArray:@[@"18085551234"]]);
+    XCTAssertEqualObjects(vc.selectedPeople, [NSSet setWithArray:@[p1]]);
     OCMVerifyAll(mockedTableView);
     OCMVerifyAll(mockedIPVC);
     OCMVerifyAll(mockAPIInterface);
@@ -273,6 +275,7 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
+    XCTAssertEqual([vc.selectedPeople count], 0);
     OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
     OCMExpect([mockedTableView scrollToRowAtIndexPath:[OCMArg any]
                                      atScrollPosition:UITableViewScrollPositionTop
@@ -288,6 +291,7 @@
 
     // Verify
     XCTAssertEqualObjects(vc.selectedPhoneNumbers, [NSSet setWithArray:@[@"18085551234"]]);
+    XCTAssertEqualObjects(vc.selectedPeople, [NSSet setWithArray:@[p1]]);
     XCTAssertEqualObjects(ipvc.abTableFixedSearchbar.text, @""); // text gets reset after searching
     XCTAssertFalse([vc.searchTableView isDescendantOfView:vc.tableView]);
     OCMVerifyAll(mockedTableView);
@@ -313,6 +317,7 @@
     vc.parentViewController = mockedIPVC;
 
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
+    XCTAssertEqual([vc.selectedPeople count], 0);
     [[mockedIPVC expect] ABTableViewControllerNumberSelectedChanged:1];
     [[mockedTableView expect] reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     
@@ -321,10 +326,11 @@
     
     // Verify the <Mobile> number was selected
     XCTAssertEqualObjects(vc.selectedPhoneNumbers, [NSSet setWithArray:@[@"12125551234"]]);
+    XCTAssertEqualObjects(vc.selectedPeople, [NSSet setWithArray:@[p1]]);
     [mockedIPVC verify];
 }
 
-- (void)testClickDidSelectRowAtIndexPathRemovesBestNumberToSelectedPhoneNumbers {
+- (void)testClickDidSelectRowAtIndexPathRemovesBestNumberFromSelectedPhoneNumbers {
     // deselecting the row should remove the person's bestNumber from selectedPhoneNumbers
 
     // Set up data
@@ -343,6 +349,7 @@
     vc.parentViewController = mockedIPVC;
 
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
+    XCTAssertEqual([vc.selectedPeople count], 0);
     [[mockedIPVC expect] ABTableViewControllerNumberSelectedChanged:1];
     [[mockedTableView expect] reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     
@@ -354,6 +361,7 @@
     
     // Verify
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
+    XCTAssertEqual([vc.selectedPeople count], 0);
     [mockedIPVC verify];
 }
 

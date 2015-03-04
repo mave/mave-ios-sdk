@@ -28,7 +28,10 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 @property (nonatomic, strong) UIView *aboveTableContentView;
 @property (nonatomic, strong) MAVEInviteTableSectionHeaderView *suggestedInvitesSectionHeaderView;
 @property (nonatomic, assign) CGFloat contentInsetTopWithoutSearch;
+// We store the selected number in addition to the person record to make sure we
+// send the invite to the number on the person record that the user intended
 @property (nonatomic, strong) NSMutableSet *selectedPhoneNumbers;
+@property (nonatomic, strong) NSMutableSet *selectedPeople;
 @property (atomic, strong) NSDictionary *personToIndexPathsIndex;
 
 // Different forms of table data
