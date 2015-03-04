@@ -33,6 +33,7 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 
 // Different forms of table data
 @property (nonatomic, strong) NSDictionary *tableData;
+@property (nonatomic, assign) BOOL didInitialTableDataLoad;
 @property (nonatomic, strong) NSArray *allPersons;
 @property (nonatomic, strong) NSArray *searchedTableData;
 @property (nonatomic, strong) NSArray *tableSections;
@@ -58,6 +59,7 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 // plus the search bar height
 - (CGFloat)tableHeaderEmbeddedSearchBarTopEdge;
 
+- (NSUInteger)totalRowsInTable;
 - (void)updateTableData:(NSDictionary *)data;
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
 - (void)updatePersonToIndexPathsIndex;

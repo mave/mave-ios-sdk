@@ -29,6 +29,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     if(self = [super init]) {
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.parentViewController = parent;
+        self.didInitialTableDataLoad = NO;
         self.lockScrollViewDidScroll = NO;
         self.didInitialTableHeaderLayout = NO;
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
@@ -137,6 +138,14 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     return [self.searchTableView isDescendantOfView:self.tableView];
 }
 
+- (NSUInteger)totalRowsInTable {
+    NSUInteger count = 0;
+    for (NSString *sectionIndex in self.tableData) {
+        count += [[self.tableData objectForKey:sectionIndex] count];
+    }
+    return count;
+}
+
 # pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
     [self updateTableDataWithoutReloading:data];
@@ -150,6 +159,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         [self.suggestedInvitesSectionHeaderView stopWaiting];
     }
     [self.tableView reloadData];
+    self.didInitialTableDataLoad = YES;
 }
 
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
@@ -435,7 +445,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     //   - the inset, so the vertical center of the scroll view's content area stays in the same place
     //        which prevents the table section index from jumping vertically.
     //
-    CGFloat offsetY = roundf(self.tableView.contentOffset.y);    
+    CGFloat offsetY = self.tableView.contentOffset.y;
     CGFloat embeddedSearchBarTop = [self tableHeaderEmbeddedSearchBarTopEdge];
     CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
     CGFloat embeddedSearchBarBottom = embeddedSearchBarTop + embeddedSearchBarHeight;

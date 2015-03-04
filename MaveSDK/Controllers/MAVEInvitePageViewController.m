@@ -174,8 +174,8 @@
 
             // Render the contacts we have now regardless
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self layoutInvitePageViewAndSubviews];
                 [self.ABTableViewController updateTableData:indexedContactsToRenderNow];
+                [self layoutInvitePageViewAndSubviews];
 
                 // Only if permission was granted should we log that we displayed
                 // the invite page with an address book list
@@ -226,25 +226,27 @@
     tableViewFrame.origin.y = yOffsetForContent;
     tableViewFrame.size.height = containerFrame.size.height - yOffsetForContent;
 
-    // If the fixed search bar is active, set the frame and make room for it by shrinking the table
-    if (self.ABTableViewController.isFixedSearchBarActive) {
-        CGRect fixedSearchBarFrame = CGRectMake(0, yOffsetForContent, containerFrame.size.width, MAVESearchBarHeight);
-        self.abTableFixedSearchbar.frame = fixedSearchBarFrame;
-        tableViewFrame.origin.y += MAVESearchBarHeight;
-        tableViewFrame.size.height -= MAVESearchBarHeight;
-    } else {
-        self.abTableFixedSearchbar.frame = CGRectMake(0, 0, 0, 0);
-    }
-
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
 
-    // Extend bottom of table view content so invite message view doesn't overlap it
-    if ([self shouldDisplayInviteMessageView]) {
-        UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
-        abTableViewInsets.bottom = inviteViewHeight;
-        self.ABTableViewController.tableView.contentInset = abTableViewInsets;
+    // Adjust table bottom inset
+    //   - to fill up content frame if there are not enough contacts in the table
+    //   - to allow room for invite view at bottom if it's visible
+    CGFloat tableSizeContentSizeDifferenceY =
+        tableViewFrame.size.height
+        - self.ABTableViewController.tableView.contentSize.height;
+    UIEdgeInsets tableBottomInset = self.ABTableViewController.tableView.contentInset;
+    if (self.ABTableViewController.didInitialTableDataLoad && tableSizeContentSizeDifferenceY > 0) {
+        NSLog(@"diff is %f", tableSizeContentSizeDifferenceY);
+        if (tableBottomInset.bottom < tableSizeContentSizeDifferenceY) {
+            tableBottomInset.bottom = tableSizeContentSizeDifferenceY;
+        }
     }
+    if (tableBottomInset.bottom < inviteViewHeight) {
+        tableBottomInset.bottom  = inviteViewHeight;
+    }
+    self.ABTableViewController.tableView.contentInset = tableBottomInset;
+
 
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
@@ -256,6 +258,16 @@
                                                inviteViewOffsetY,
                                                containerFrame.size.width,
                                                inviteViewHeight);
+
+    // If the fixed search bar is active, set the frame and make room for it by shrinking the table
+    if (self.ABTableViewController.isFixedSearchBarActive) {
+        CGRect fixedSearchBarFrame = CGRectMake(0, yOffsetForContent, containerFrame.size.width, MAVESearchBarHeight);
+        self.abTableFixedSearchbar.frame = fixedSearchBarFrame;
+        tableViewFrame.origin.y += MAVESearchBarHeight;
+        tableViewFrame.size.height -= MAVESearchBarHeight;
+    } else {
+        self.abTableFixedSearchbar.frame = CGRectMake(0, 0, 0, 0);
+    }
 
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
