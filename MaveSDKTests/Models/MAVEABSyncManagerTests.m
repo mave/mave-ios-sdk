@@ -131,11 +131,11 @@
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
     NSArray *fakeAllContacts = @[@"asdf", @"sdfg"];
-    NSArray *suggestedContacts = @[@"foo", @"bar"];
-    OCMExpect([syncerMock doSyncContacts:fakeAllContacts returnSuggested:YES]).andReturn(suggestedContacts);
+    NSArray *suggestedHRIDTuples = @[@[@"0", @2], @[@"1", @1]];
+    OCMExpect([syncerMock doSyncContacts:fakeAllContacts returnSuggested:YES]).andReturn(suggestedHRIDTuples);
 
     id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
-    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedContacts};
+    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedHRIDTuples};
     OCMExpect([promiseMock fulfillPromise:expectedFulfillVal]);
 
     [syncer syncContactsAndPopulateSuggestedInBackground:fakeAllContacts];
@@ -161,12 +161,12 @@
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
     NSArray *fakeAllContacts = @[@"asdf", @"sdfg"];
-    NSArray *suggestedContacts = @[@"foo", @"bar"];
+    NSArray *suggestedHRIDTuples = @[@[@"0", @2], @[@"1", @1]];
     [[syncerMock reject] doSyncContacts:fakeAllContacts returnSuggested:YES];
-    OCMExpect([syncerMock getSuggestedInvitesExplicitlyWithAllContacts:fakeAllContacts]).andReturn(suggestedContacts);
+    OCMExpect([syncerMock getSuggestedInvitesExplicitly]).andReturn(suggestedHRIDTuples);
 
     id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
-    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedContacts};
+    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedHRIDTuples};
     OCMExpect([promiseMock fulfillPromise:expectedFulfillVal]);
 
     [syncer syncContactsAndPopulateSuggestedInBackground:fakeAllContacts];
@@ -225,7 +225,7 @@
 
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
-    [[syncerMock reject] getSuggestedInvitesExplicitlyWithAllContacts:[OCMArg any]];
+    [[syncerMock reject] getSuggestedInvitesExplicitly];
     [[[syncerMock reject] ignoringNonObjectArgs] doSyncContacts:[OCMArg any] returnSuggested:NO];
 
     [syncer syncContactsAndPopulateSuggestedInBackground:@[]];
@@ -274,7 +274,7 @@
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
     NSArray *fakeContacts = @[p0, p1, p2];
-    NSArray *expectedSuggested = @[p1, p2];
+    NSArray *expectedSuggestedHRIDTuples = @[@[@"0", @2], @[@"1", @1]];
     id syncerMock = OCMPartialMock(syncer);
     id fakeMerkleTree = @"not a tree";
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
@@ -292,10 +292,10 @@
     [[apiInterfaceMock reject] sendContactsMerkleTree:[OCMArg any]];
 
     // we should fetch suggested separately since we're not syncing
-    OCMExpect([syncerMock getSuggestedInvitesExplicitlyWithAllContacts:fakeContacts]).andReturn(expectedSuggested);
+    OCMExpect([syncerMock getSuggestedInvitesExplicitly]).andReturn(expectedSuggestedHRIDTuples);
 
     NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
-    XCTAssertEqualObjects(closestContacts, expectedSuggested);
+    XCTAssertEqualObjects(closestContacts, expectedSuggestedHRIDTuples);
     OCMVerifyAll(syncerMock);
     OCMVerifyAll(apiInterfaceMock);
 }
@@ -324,12 +324,12 @@
     NSArray *fakeChangeset = @[@"foo", @"bar"];
     OCMExpect([merkleTreeMock changesetForEmptyTreeToMatchSelf]).andReturn(fakeChangeset);
     // And then send resulting changeset to the server
-    NSArray *fakeClosestContacts = @[@"blah", @"blah"];
-    OCMExpect([mock sendContactsChangeset:fakeChangeset merkleTree:merkleTreeMock isFullInitialSync:YES returnSuggested:YES allContacts:fakeContacts]).andReturn(fakeClosestContacts);
+    NSArray *fakeSuggestedHRIDTuples = @[@[@"blah", @2], @[@"blah", @1]];
+    OCMExpect([mock sendContactsChangeset:fakeChangeset merkleTree:merkleTreeMock isFullInitialSync:YES returnSuggestedHRIDTuples:YES]).andReturn(fakeSuggestedHRIDTuples);
 
     NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
 
-    XCTAssertEqualObjects(closestContacts, fakeClosestContacts);
+    XCTAssertEqualObjects(closestContacts, fakeSuggestedHRIDTuples);
     OCMVerifyAll(mock);
     OCMVerifyAll(merkleTreeMock);
 }
@@ -353,12 +353,12 @@
 
     NSArray *fakeChangeset = @[@"foo"];
     OCMExpect([mock changesetComparingFullRemoteTreeToTree:merkleTreeMock]).andReturn(fakeChangeset);
-    NSArray *fakeClosestContacts = @[@"blah", @"blah"];
-    OCMExpect([mock sendContactsChangeset:fakeChangeset merkleTree:merkleTreeMock isFullInitialSync:NO returnSuggested:YES allContacts:fakeContacts]).andReturn(fakeClosestContacts);
+    NSArray *fakeSuggestedHRIDTuples = @[@[@"blah", @2], @[@"blah", @1]];
+    OCMExpect([mock sendContactsChangeset:fakeChangeset merkleTree:merkleTreeMock isFullInitialSync:NO returnSuggestedHRIDTuples:YES]).andReturn(fakeSuggestedHRIDTuples);
 
     NSArray *closestContacts = [syncer doSyncContacts:fakeContacts returnSuggested:YES];
 
-    XCTAssertEqualObjects(closestContacts, fakeClosestContacts);
+    XCTAssertEqualObjects(closestContacts, fakeSuggestedHRIDTuples);
     OCMVerifyAll(mock);
     OCMVerifyAll(merkleTreeMock);
 }
@@ -457,11 +457,6 @@
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
 
     // set up some abperson object contacts
-    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
-    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
-    NSArray *allContacts = @[p0, p1, p2];
-    NSArray *expectedSuggested = @[p1, p2];
     NSArray *suggestedHashedRecordIDs = @[@[@"1", @10], @[@"2", @5]];
     NSArray *fakeChangeset = @[@"fake"];
     MAVEMerkleTree *fakeMerkleTree = [[MAVEMerkleTree alloc] init];
@@ -478,20 +473,13 @@
     OCMExpect([apiInterfaceMock sendContactsMerkleTree:fakeMerkleTree]);
 
     // run the code under test
-    NSArray *returnedSuggested = [syncer sendContactsChangeset:fakeChangeset merkleTree:fakeMerkleTree isFullInitialSync:YES returnSuggested:YES allContacts:allContacts];
+    NSArray *returnedSuggested = [syncer sendContactsChangeset:fakeChangeset merkleTree:fakeMerkleTree isFullInitialSync:YES returnSuggestedHRIDTuples:YES];
 
-    XCTAssertEqualObjects(returnedSuggested, expectedSuggested);
+    XCTAssertEqualObjects(returnedSuggested, suggestedHashedRecordIDs);
     OCMVerifyAll(apiInterfaceMock);
 }
 
 - (void)testGetSuggestedInvitesExplicitlyWithAllContacts {
-    // set up some abperson object contacts
-    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
-    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
-    NSArray *allContacts = @[p0, p1, p2];
-    NSArray *expectedSuggested = @[p1, p2];
-
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     NSArray *fakeSuggestedHashedRecordIDs = @[@[@"1", @0], @[@"2", @0]];
     OCMExpect([apiInterfaceMock getClosestContactsHashedRecordIDs:[OCMArg checkWithBlock:^BOOL(id obj) {
@@ -501,9 +489,9 @@
     }]]);
 
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
-    NSArray *returnedSuggested = [syncer getSuggestedInvitesExplicitlyWithAllContacts:allContacts];
+    NSArray *returnedSuggested = [syncer getSuggestedInvitesExplicitly];
 
-    XCTAssertEqualObjects(returnedSuggested, expectedSuggested);
+    XCTAssertEqualObjects(returnedSuggested, fakeSuggestedHashedRecordIDs);
     OCMVerifyAll(apiInterfaceMock);
 }
 

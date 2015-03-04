@@ -40,6 +40,7 @@ extern NSString * const MAVEABPermissionStatusUnprompted;
 // The following method is a helper to build an index for this one
 + (NSArray *)listOfABPersonsFromListOfHashedRecordIDTuples:(NSArray *)hridTuples
                                        andAllContacts:(NSArray *)persons;
+
 + (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons;
 
 // Merge a list of suggested people into the dictionary of data for the address book table

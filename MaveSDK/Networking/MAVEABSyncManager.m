@@ -65,20 +65,20 @@ static dispatch_once_t syncContactsOnceToken;
             BOOL syncEnabled = config.contactsSync.enabled;
             BOOL useSuggestedInvites = config.contactsInvitePage.suggestedInvitesEnabled;
 
-            NSArray *suggestions = @[];
+            NSArray *suggestedHRIDTuples = @[];
             if (syncEnabled) {
                 MAVEInfoLog(@"Running contacts sync, found %lu contacts", [contacts count]);
-                suggestions = [self doSyncContacts:contacts
+                suggestedHRIDTuples = [self doSyncContacts:contacts
                                    returnSuggested:useSuggestedInvites];
-                if (!suggestions || (id)suggestions == [NSNull null]) {
-                    suggestions = @[];
+                if (!suggestedHRIDTuples || (id)suggestedHRIDTuples == [NSNull null]) {
+                    suggestedHRIDTuples = @[];
                 }
             } else {
                 if (useSuggestedInvites) {
-                    suggestions = [self getSuggestedInvitesExplicitlyWithAllContacts:contacts];
+                    suggestedHRIDTuples = [self getSuggestedInvitesExplicitly];
                 }
             }
-            NSDictionary *suggestionsObject = @{@"closest_contacts": suggestions};
+            NSDictionary *suggestionsObject = @{@"closest_contacts": suggestedHRIDTuples};
             [[MaveSDK sharedInstance].suggestedInvitesBuilder.promise fulfillPromise:(NSValue *)suggestionsObject];
         });
     });
@@ -116,7 +116,7 @@ static dispatch_once_t syncContactsOnceToken;
             // Here the remote tree is in sync with current state so no need to sync
             // We just query for closest contacts instead and return that.
             case MAVEContactSyncTypeNone: {
-                return [self getSuggestedInvitesExplicitlyWithAllContacts:contacts];
+                return [self getSuggestedInvitesExplicitly];
             }
 
             // Here the remote tree is different than current tree so we need to send
@@ -138,8 +138,7 @@ static dispatch_once_t syncContactsOnceToken;
         return [self sendContactsChangeset:changeset
                                 merkleTree:localContactsMerkleTree
                          isFullInitialSync:isInitialSync
-                           returnSuggested:returnSuggested
-                               allContacts:contacts];
+                 returnSuggestedHRIDTuples:returnSuggested];
 
     } @catch (NSException *exception) {
         MAVEErrorLog(@"Caught exception %@ doing contacts sync", exception);
@@ -219,8 +218,7 @@ static dispatch_once_t syncContactsOnceToken;
 - (NSArray *)sendContactsChangeset:(NSArray *)changeset
                         merkleTree:(MAVEMerkleTree *)merkleTree
                  isFullInitialSync:(BOOL)isFullInitialSync
-                   returnSuggested:(BOOL)returnSuggested
-                       allContacts:(NSArray *)contacts {
+         returnSuggestedHRIDTuples:(BOOL)returnSuggested {
     MAVEDebugLog(@"CONTACT SYNC sending changeset: %@", changeset);
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     NSString *merkleTreeRootHexString = [[merkleTree.root serializeToJSONObject] objectForKey:@"k"];
@@ -231,14 +229,13 @@ static dispatch_once_t syncContactsOnceToken;
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     [[MaveSDK sharedInstance].APIInterface sendContactsMerkleTree:merkleTree];
-    NSArray *suggestedInvites = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:suggestedHashedRecordIDTuples andAllContacts:contacts];
     if (returnSuggested) {
-        MAVEDebugLog(@"sync changeset returned %lu suggested invites", [suggestedInvites count]);
+        MAVEDebugLog(@"sync changeset returned %lu suggested invites", [suggestedHashedRecordIDTuples count]);
     }
-    return suggestedInvites;
+    return suggestedHashedRecordIDTuples;
 }
 
-- (NSArray *)getSuggestedInvitesExplicitlyWithAllContacts:(NSArray *)contacts {
+- (NSArray *)getSuggestedInvitesExplicitly {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSArray *returnedHashedRecordIDs = @[];
     [[MaveSDK sharedInstance].APIInterface getClosestContactsHashedRecordIDs:^(NSArray *closestHashedRecordIDs) {
@@ -248,9 +245,8 @@ static dispatch_once_t syncContactsOnceToken;
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    NSArray *suggestedInvites = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:returnedHashedRecordIDs andAllContacts:contacts];
-    MAVEDebugLog(@"get suggested invites returned %lu suggested invites", [suggestedInvites count]);
-    return suggestedInvites;
+    MAVEDebugLog(@"get suggested invites returned %lu suggested invites", [returnedHashedRecordIDs count]);
+    return returnedHashedRecordIDs;
 }
 
 - (NSData *)serializeAndCompressAddressBook:(NSArray *)addressBook {

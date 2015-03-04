@@ -112,6 +112,8 @@
     XCTAssertEqualObjects(suggested, expectedSuggested);
 }
 
+
+
 - (void)testIndexABPersonArrayByHashedRecordID {
     // make some people and explicitly overwrite hashed record id so we know it
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;

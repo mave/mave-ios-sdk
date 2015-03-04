@@ -121,21 +121,23 @@
 
 - (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
             addSuggestedLaterWhenReady:(BOOL *)addSuggestedLaterReturnVal
-               fromIndexedContactsDict:(NSDictionary *)indexedContacts {
+                      fromContactsList:(NSArray *)contacts {
     BOOL suggestionsEnabled = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.suggestedInvitesEnabled;
     if (!suggestionsEnabled) {
-        *suggestedContactsReturnVal = indexedContacts;
+        *suggestedContactsReturnVal = [MAVEABUtils indexABPersonArrayForTableSections:contacts];
         *addSuggestedLaterReturnVal = NO;
         return;
     }
     BOOL suggestionsReady = [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status != MAVEPromiseStatusUnfulfilled;
     if (!suggestionsReady) {
+        NSDictionary *indexedContacts = [MAVEABUtils indexABPersonArrayForTableSections:contacts];
         *suggestedContactsReturnVal = [MAVEABUtils combineSuggested:@[] intoABIndexedForTableSections:indexedContacts];
         *addSuggestedLaterReturnVal = YES;
         return;
     }
 
-    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:0];
+    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithFullContactsList:contacts delay:0];
+    NSDictionary *indexedContacts = [MAVEABUtils indexABPersonArrayForTableSections:contacts];
     if ([suggestions count] > 0) {
         *suggestedContactsReturnVal = [MAVEABUtils combineSuggested:suggestions intoABIndexedForTableSections:indexedContacts];
     } else {
@@ -147,11 +149,9 @@
 
 // TODO: unit test this method
 - (void)determineAndSetViewBasedOnABPermissions {
-    [MAVEABPermissionPromptHandler
-            promptForContactsWithCompletionBlock:
-            ^(NSDictionary *indexedContacts) {
+    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
         // Permission denied
-        if ([indexedContacts count] == 0) {
+        if ([contacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[MaveSDK sharedInstance].invitePageChooser replaceActiveViewControllerWithSharePage];
             });
@@ -161,10 +161,10 @@
             BOOL updateSuggestionsWhenReady = NO;
             [self buildContactsToUseAtPageRender:&indexedContactsToRenderNow
                       addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
-                         fromIndexedContactsDict:indexedContacts];
+                                fromContactsList:contacts];
             if (updateSuggestionsWhenReady) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:10];
+                    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithFullContactsList:contacts delay:10];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.ABTableViewController updateTableDataAnimatedWithSuggestedInvites:suggestions];
 

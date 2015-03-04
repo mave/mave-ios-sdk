@@ -16,6 +16,7 @@
 #import "MAVEShareToken.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVESuggestedInvites.h"
+#import "MAVEABUtils.h"
 
 @implementation MaveSDK {
     // Controller
@@ -116,9 +117,10 @@ static dispatch_once_t sharedInstanceonceToken;
     return (MAVERemoteConfiguration *)obj;
 }
 
-- (NSArray *)suggestedInvitesWithDelay:(CGFloat)seconds {
+- (NSArray *)suggestedInvitesWithFullContactsList:(NSArray *)contacts delay:(CGFloat)seconds {
     MAVESuggestedInvites *suggestedInvites = (MAVESuggestedInvites *)[self.suggestedInvitesBuilder createObjectSynchronousWithTimeout:seconds];
-    return suggestedInvites.suggestions;
+    NSArray *suggestions = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:suggestedInvites.suggestions andAllContacts:contacts];
+    return suggestions;
 }
 
 - (NSString *)defaultSMSMessageText {

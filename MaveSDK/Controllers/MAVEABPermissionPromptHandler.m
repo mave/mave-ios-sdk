@@ -25,7 +25,7 @@
 // Prompt for contacts permissions. Based on remote configuration settings, we may show a
 // pre-prompt UIAlertView (i.e. double prompt for contacts), and if so the copy can come
 // from remote configuration as well.
-+ (instancetype)promptForContactsWithCompletionBlock:(void (^)(NSDictionary *))completionBlock {
++ (instancetype)promptForContactsWithCompletionBlock:(void (^)(NSArray *))completionBlock {
     MAVEABPermissionPromptHandler *this = [[[self class] alloc] init];
     this.completionBlock = completionBlock;
     NSString *abStatus = [MAVEABUtils addressBookPermissionStatus];
@@ -143,8 +143,7 @@
         [self logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionGranted];
     }
 
-    NSDictionary *indexedPersons = [MAVEABUtils indexABPersonArrayForTableSections:MAVEABPersonsArray];
-    self.completionBlock(indexedPersons);
+    self.completionBlock(MAVEABPersonsArray);
 
     self.retainSelf = nil; // let self get GC'd after completion block called
 }

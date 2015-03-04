@@ -111,18 +111,24 @@
 }
 
 - (void)testSuggestedInvitesWithDelay {
-    NSArray *suggestions = @[@"blah", @"foo"];
+    NSArray *suggestedHRIDTuples = @[@[@"2", @3], @[@"0", @1]];
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.hashedRecordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2; p2.hashedRecordID = 2;
+    NSArray *contacts = @[p0, p1, p2];
+    NSArray *expectedSuggestions = @[p2, p0];
+
     MAVESuggestedInvites *suggestedObject = [[MAVESuggestedInvites alloc] init];
-    suggestedObject.suggestions = suggestions;
+    suggestedObject.suggestions = suggestedHRIDTuples;
 
     CGFloat delay = 1.234;
     id builderMock = OCMClassMock([MAVERemoteObjectBuilder class]);
     OCMExpect([builderMock createObjectSynchronousWithTimeout:delay]).andReturn(suggestedObject);
     [MaveSDK sharedInstance].suggestedInvitesBuilder = builderMock;
 
-    NSArray *returnedSuggestions = [[MaveSDK sharedInstance] suggestedInvitesWithDelay:delay];
+    NSArray *returnedSuggestions = [[MaveSDK sharedInstance] suggestedInvitesWithFullContactsList:contacts delay:delay];
 
-    XCTAssertEqualObjects(returnedSuggestions, suggestions);
+    XCTAssertEqualObjects(returnedSuggestions, expectedSuggestions);
     OCMVerifyAll(builderMock);
 }
 
