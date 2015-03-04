@@ -46,6 +46,10 @@
     [self addSubview:self.searchBar];
 }
 
+- (BOOL)hasContentOtherThanSearchBar {
+    return self.showsExplanation;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
 
@@ -68,12 +72,12 @@
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {
-    CGFloat searchBarHeight = self.searchBar.frame.size.height;
+    CGFloat height = 0;
     if (self.showsExplanation) {
-        return [self.inviteExplanationView computeHeightWithWidth:width] + searchBarHeight;
-    } else {
-        return 0;
+        height += [self.inviteExplanationView computeHeightWithWidth:width];
     }
+    height += self.searchBar.frame.size.height;
+    return height;
 }
 
 - (void)resizeWithShiftedOffsetY:(CGFloat)shiftedOffsetY {
@@ -83,8 +87,7 @@
         CGRect explanationTextFrame = self.inviteExplanationView.messageCopy.frame;
         CGFloat newYCoord =
             roundf(DEFAULT_INNER_EXPLANATION_OFFSET
-                   + (shiftedOffsetY / 2)
-                   - MAVESearchBarHeight);
+                   + (shiftedOffsetY / 2));
         explanationTextFrame.origin.y = newYCoord;
         self.inviteExplanationView.messageCopy.frame = explanationTextFrame;
     }

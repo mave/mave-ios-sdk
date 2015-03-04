@@ -56,9 +56,7 @@
     XCTAssertEqualWithAccuracy(labelSize.width, viewWidth - 2*20, 1);
     XCTAssertEqualWithAccuracy(labelSize.height, expectedViewHeight - 2*20, 1);
 
-    // the invite explanation view itself is smaller b/c of content inset for mave search bar height
-    XCTAssertEqualWithAccuracy([copyView computeHeightWithWidth:viewWidth],
-                               expectedViewHeight - MAVESearchBarHeight, 1);
+    XCTAssertEqualWithAccuracy([copyView computeHeightWithWidth:viewWidth], expectedViewHeight, 1);
 }
 
 @end

@@ -12,8 +12,9 @@
 #import "MAVEInviteTableHeaderView.h"
 
 
-@interface MAVEInvitePageViewController : UIViewController <MAVEABTableViewAdditionalDelegate>
+@interface MAVEInvitePageViewController : UIViewController
 
+@property (strong, nonatomic) MAVESearchBar *abTableFixedSearchbar;
 @property (strong, nonatomic) MAVEABTableViewController *ABTableViewController;
 @property (strong, nonatomic) MAVEInviteMessageContainerView *inviteMessageContainerView;
 
@@ -29,6 +30,9 @@
 - (void)layoutInvitePageViewAndSubviews;
 
 - (void)determineAndSetViewBasedOnABPermissions;
+
+// Callback for table to alert this view controller when new people are selected
+- (void) ABTableViewControllerNumberSelectedChanged:(NSUInteger)numberChanged;
 
 // Helper to manipulate contacts to also show suggested invites.
 // Based on the current state, we might

@@ -32,7 +32,6 @@
     // On load keyboard is hidden
     self.isKeyboardVisible = NO;
     self.keyboardFrame = [self keyboardFrameWhenHidden];
-     self.view = [[MAVECustomSharePageView alloc] init];
 
     [self determineAndSetViewBasedOnABPermissions];
 }
@@ -175,8 +174,8 @@
 
             // Render the contacts we have now regardless
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self layoutInvitePageViewAndSubviews];
                 [self.ABTableViewController updateTableData:indexedContactsToRenderNow];
+                [self layoutInvitePageViewAndSubviews];
 
                 // Only if permission was granted should we log that we displayed
                 // the invite page with an address book list
@@ -188,11 +187,11 @@
     // Use address book invite as background while prompting for permission)
     self.view = [self createAddressBookInviteView];
     [self layoutInvitePageViewAndSubviews];
-    self.ABTableViewController.tableView.contentOffset = CGPointMake(0, -1 * MAVESearchBarHeight);
 }
 
 - (UIView *)createAddressBookInviteView {
     // Instantiate the view controllers for child views
+    self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
     self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
     [self.inviteMessageContainerView.inviteMessageView.sendButton
@@ -206,6 +205,8 @@
     };
     
     UIView *containerView = [[UIView alloc] init];
+    containerView.backgroundColor = [UIColor whiteColor];
+    [containerView addSubview:self.abTableFixedSearchbar];
     [containerView addSubview:self.ABTableViewController.tableView];
     [containerView addSubview:self.inviteMessageContainerView];
     return containerView;
@@ -219,17 +220,33 @@
                                        appFrame.origin.x + appFrame.size.width,
                                        self.keyboardFrame.origin.y);
 
+    CGFloat yOffsetForContent = appFrame.origin.y + self.navigationController.navigationBar.frame.size.height;
+
     CGRect tableViewFrame = containerFrame;
+    tableViewFrame.origin.y = yOffsetForContent;
+    tableViewFrame.size.height = containerFrame.size.height - yOffsetForContent;
 
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
 
-    // Extend bottom of table view content so invite message view doesn't overlap it
-    // and adjust top to leave room for search bar to anchor to the top of the table
-    UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
-    abTableViewInsets.bottom = inviteViewHeight;
-    abTableViewInsets.top = [self.ABTableViewController fixedSearchBarYCoord] + MAVESearchBarHeight;
-    self.ABTableViewController.tableView.contentInset = abTableViewInsets;
+    // Adjust table bottom inset
+    //   - to fill up content frame if there are not enough contacts in the table
+    //   - to allow room for invite view at bottom if it's visible
+    CGFloat tableSizeContentSizeDifferenceY =
+        tableViewFrame.size.height
+        - self.ABTableViewController.tableView.contentSize.height;
+    UIEdgeInsets tableBottomInset = self.ABTableViewController.tableView.contentInset;
+    if (self.ABTableViewController.didInitialTableDataLoad && tableSizeContentSizeDifferenceY > 0) {
+        NSLog(@"diff is %f", tableSizeContentSizeDifferenceY);
+        if (tableBottomInset.bottom < tableSizeContentSizeDifferenceY) {
+            tableBottomInset.bottom = tableSizeContentSizeDifferenceY;
+        }
+    }
+    if (tableBottomInset.bottom < inviteViewHeight) {
+        tableBottomInset.bottom  = inviteViewHeight;
+    }
+    self.ABTableViewController.tableView.contentInset = tableBottomInset;
+
 
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
@@ -237,20 +254,30 @@
     if ([self shouldDisplayInviteMessageView]) {
         inviteViewOffsetY -= inviteViewHeight;
     }
-
     CGRect inviteMessageViewFrame = CGRectMake(0,
                                                inviteViewOffsetY,
                                                containerFrame.size.width,
                                                inviteViewHeight);
 
+    // If the fixed search bar is active, set the frame and make room for it by shrinking the table
+    if (self.ABTableViewController.isFixedSearchBarActive) {
+        CGRect fixedSearchBarFrame = CGRectMake(0, yOffsetForContent, containerFrame.size.width, MAVESearchBarHeight);
+        self.abTableFixedSearchbar.frame = fixedSearchBarFrame;
+        tableViewFrame.origin.y += MAVESearchBarHeight;
+        tableViewFrame.size.height -= MAVESearchBarHeight;
+    } else {
+        self.abTableFixedSearchbar.frame = CGRectMake(0, 0, 0, 0);
+    }
+
     self.view.frame = containerFrame;
     self.ABTableViewController.tableView.frame = tableViewFrame;
     self.ABTableViewController.aboveTableContentView.frame =
         CGRectMake(0,
-                   tableViewFrame.origin.y - containerFrame.size.height,
+                   -containerFrame.size.height,
                    containerFrame.size.width,
                    containerFrame.size.height);
     self.inviteMessageContainerView.frame = inviteMessageViewFrame;
+
     // adjust the search table bottom content inset so it doesn't hide results behind
     // the area taken up by keyboard + invite message container view
     CGFloat searchViewOffset = self.keyboardFrame.size.height - self.ABTableViewController.tableView.contentInset.top;
@@ -266,7 +293,7 @@
 // Respond to children's Events
 //
 
-- (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num {
+- (void)ABTableViewControllerNumberSelectedChanged:(NSUInteger)numberChanged {
     // If called from the table view's "did select row at index path" method we'll already be
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
     // from somewhere else.
@@ -274,7 +301,7 @@
         [UIView animateWithDuration:0.25 animations:^{
             [self layoutInvitePageViewAndSubviews];
         }];
-        [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:num];
+        [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:numberChanged];
     });
 }
 

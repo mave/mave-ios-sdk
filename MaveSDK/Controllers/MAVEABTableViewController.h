@@ -12,21 +12,17 @@
 #import "MAVESearchBar.h"
 #import "MAVEABPerson.h"
 
+@class MAVEInvitePageViewController;
+
 // This is the key to use in the table data dict for the suggested invites section.
 // It's set to ! which is the first non-whitespace ascii character so it always gets
 // sorted to the top of the list, and it won't be used as the first letter in a name
 // because all non-letters are mapped to the "#" sections.
 extern NSString * const MAVESuggestedInvitesTableDataKey;
 
-// This view controller can alert an additional delegate when the number of people selected changes
-@protocol MAVEABTableViewAdditionalDelegate <NSObject>
-@required
-- (void)ABTableViewControllerNumberSelectedChanged:(unsigned long)num;
-@end
-
 @interface MAVEABTableViewController : NSObject <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
-@property (nonatomic, weak) UIViewController<MAVEABTableViewAdditionalDelegate> *parentViewController;
+@property (nonatomic, weak) MAVEInvitePageViewController *parentViewController;
 @property (nonatomic, strong) MAVEInviteTableHeaderView *inviteTableHeaderView;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIView *aboveTableContentView;
@@ -37,29 +33,32 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 
 // Different forms of table data
 @property (nonatomic, strong) NSDictionary *tableData;
+@property (nonatomic, assign) BOOL didInitialTableDataLoad;
 @property (nonatomic, strong) NSArray *allPersons;
 @property (nonatomic, strong) NSArray *searchedTableData;
 @property (nonatomic, strong) NSArray *tableSections;
 @property (nonatomic, strong) NSDictionary *recordIDsToindexPaths;
 
 // For searching
-@property (nonatomic, strong) MAVESearchBar *searchBar;
+@property (nonatomic, assign) BOOL isFixedSearchBarActive;
+@property (nonatomic, assign) BOOL lockScrollViewDidScroll;
+@property (nonatomic, assign) BOOL didInitialTableHeaderLayout;
 @property (nonatomic, strong) UITableView *searchTableView;
 
-- (instancetype)initTableViewWithParent:(UIViewController<MAVEABTableViewAdditionalDelegate> *)parent;
+- (instancetype)initTableViewWithParent:(MAVEInvitePageViewController *)parent;
 
 // Helper to create the table section header
 
 // constants for determining layout sizes
 // height of navigation bar currently
 - (CGFloat)navigationBarHeight;
-// y-coordinate of the fixed search bar (just below navigation bar)
-- (CGFloat)fixedSearchBarYCoord;
-// threshold for when the table header with its "fake" search bar & the above
-// table content is visible. If main table view contentOffset is less than this,
-// it's visible, otherwise just the body of the table with the fixed search bar
-// is visible.
-- (CGFloat)showingTableHeaderOffsetThreshold;
+// Value of origin.y for the "fake" search bar that's embedded in the table header,
+// this is the point to scroll to to switch over to the fixed real search bar.
+// Note that if scrolling with the fixed search bar already active above the table,
+// the point where it gets unfixed is the bottom of the search bar so it's this value
+// plus the search bar height
+- (CGFloat)tableHeaderEmbeddedSearchBarTopEdge;
+
 - (void)updateTableData:(NSDictionary *)data;
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
 - (void)updatePersonToIndexPathsIndex;
