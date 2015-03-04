@@ -138,14 +138,6 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     return [self.searchTableView isDescendantOfView:self.tableView];
 }
 
-- (NSUInteger)totalRowsInTable {
-    NSUInteger count = 0;
-    for (NSString *sectionIndex in self.tableData) {
-        count += [[self.tableData objectForKey:sectionIndex] count];
-    }
-    return count;
-}
-
 # pragma mark - Updating the table data
 - (void)updateTableData:(NSDictionary *)data {
     [self updateTableDataWithoutReloading:data];

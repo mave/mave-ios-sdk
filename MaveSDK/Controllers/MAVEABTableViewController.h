@@ -59,7 +59,6 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 // plus the search bar height
 - (CGFloat)tableHeaderEmbeddedSearchBarTopEdge;
 
-- (NSUInteger)totalRowsInTable;
 - (void)updateTableData:(NSDictionary *)data;
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
 - (void)updatePersonToIndexPathsIndex;
