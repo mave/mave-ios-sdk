@@ -70,9 +70,6 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
                                                         action:@selector(textFieldDidChange:)
                                               forControlEvents:UIControlEventEditingChanged];
 
-    // TODO test this
-//    self.isFixedSearchBarActive = NO;
-//    self.tableView.contentOffset = CGPointMake(0, 0);
     if (![self.inviteTableHeaderView hasContentOtherThanSearchBar]) {
         self.isFixedSearchBarActive = YES;
     } else {
