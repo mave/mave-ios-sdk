@@ -518,6 +518,44 @@
     XCTAssertEqual([p2 compareNames:p1], NSOrderedDescending);
 }
 
+- (void)testEqualityAndHash {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = 100;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.recordID = 101;
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.recordID = 100;
+
+    // Test equality
+    XCTAssertTrue([p1 isEqual:p1]);
+    XCTAssertFalse([p1 isEqual:p2]);
+    XCTAssertFalse([p2 isEqual:p1]);
+    XCTAssertTrue([p1 isEqual:p3]);
+    XCTAssertTrue([p3 isEqual:p1]);
+
+    // Test hash method via set containment
+    NSMutableSet *set = [[NSMutableSet alloc] init];
+    [set addObject:p1];
+    [set addObject:p2];
+    [set addObject:p1];
+    [set addObject:p3];
+    XCTAssertEqual([set count], 2);
+    XCTAssertTrue([set containsObject:p1]);
+    XCTAssertTrue([set containsObject:p2]);
+    XCTAssertTrue([set containsObject:p3]);
+
+    // Test hash still works w negative numbers, since hash is NSUInteger
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init];
+    p4.recordID = -1;
+    MAVEABPerson *p5 = [[MAVEABPerson alloc] init];
+    p5.recordID = -1;
+    [set addObject:p4];
+    [set addObject:p5];
+    XCTAssertEqual([set count], 3);
+    XCTAssertTrue([set containsObject:p4]);
+    XCTAssertTrue([set containsObject:p5]);
+}
+
 - (void)testCompareRecordIDs {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.recordID = 100;

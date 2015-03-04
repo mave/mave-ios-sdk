@@ -168,19 +168,19 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
 
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
     p1.firstName = @"Abbie"; p1.lastName = @"Foo";
     p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
 
-    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2;
     p2.firstName = @"John"; p2.lastName = @"Graham";
     p2.phoneNumbers = @[@"18085551235"]; p2.selected = NO;
 
-    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.recordID = 3;
     p3.firstName = @"John"; p3.lastName = @"Smith";
     p3.phoneNumbers = @[@"18085551236"]; p3.selected = NO;
 
-    MAVEABPerson *p4 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init]; p4.recordID = 4;
     p4.firstName = @"Danny"; p4.lastName = @"Cosson";
     p4.phoneNumbers = @[@"18085551237"]; p4.selected = NO;
 
@@ -199,15 +199,15 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
 
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
     p1.firstName = @"Abbie"; p1.lastName = @"Foo";
     p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
 
-    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2;
     p2.firstName = @"John"; p2.lastName = @"Graham";
     p2.phoneNumbers = @[@"18085551235"]; p2.selected = NO;
 
-    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.recordID = 3;
     p3.firstName = @"John"; p3.lastName = @"Smith";
     p3.phoneNumbers = @[@"18085551236"]; p3.selected = NO;
 
@@ -415,19 +415,19 @@
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
 
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
     p1.firstName = @"Abbie"; p1.lastName = @"Foo"; p1.phoneNumbers = @[@"18085551234"]; p1.selected = NO;
 
-    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2;
     p2.firstName = @"John"; p2.lastName = @"Graham"; p2.phoneNumbers = @[@"18085551235"]; p2.selected = NO;
 
-    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.recordID = 3;
     p3.firstName = @"John"; p3.lastName = @"Smith"; p3.phoneNumbers = @[@"18085551236"]; p3.selected = NO;
 
-    MAVEABPerson *p4 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p4 = [[MAVEABPerson alloc] init]; p4.recordID = 4;
     p4.firstName = @"Danny"; p4.lastName = @"Cosson"; p4.phoneNumbers = @[@"18085551237"]; p4.selected = NO;
 
-    MAVEABPerson *p5 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p5 = [[MAVEABPerson alloc] init]; p5.recordID = 5;
     p5.firstName = @"Josh"; p5.lastName = @"Smith"; p5.phoneNumbers = @[@"18085551236"]; p5.selected = NO;
 
 

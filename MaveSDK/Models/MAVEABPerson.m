@@ -269,6 +269,15 @@
     return [NSString stringWithFormat:@"%@%@",fn,ln];
 }
 
+#pragma mark - Comparison methods
+- (BOOL)isEqual:(id)object {
+    return [self hash] == [object hash];
+}
+
+- (NSUInteger)hash {
+    return self.recordID;
+}
+
 - (NSComparisonResult)compareRecordIDs:(MAVEABPerson *)otherPerson {
     if (self.recordID > otherPerson.recordID) {
         return NSOrderedDescending;

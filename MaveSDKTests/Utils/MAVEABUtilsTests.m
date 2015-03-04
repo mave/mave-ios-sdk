@@ -114,14 +114,18 @@
 
 - (void)testIndexABPersonArrayByHashedRecordID {
     // make some people and explicitly overwrite hashed record id so we know it
-    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    p0.recordID = 0; p0.hashedRecordID = 0;
     uint64_t biggestValue = 1844674407370955161 * 10 + 5;
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = biggestValue;
-    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = -1; p1.hashedRecordID = biggestValue;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.recordID = 2; p2.hashedRecordID = 2;
     // if there happens to be a hashed record id collision, it simply uses the
     // last one in the list. This should never happen due to md5 being
     // evenly distributed and size of uint64_t
-    MAVEABPerson *p3 = [[MAVEABPerson alloc] init]; p3.hashedRecordID = 2;
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.recordID = 3; p3.hashedRecordID = 2;
     NSArray *contacts = @[p0, p1, p2, p3];
 
     NSDictionary *indexed = [MAVEABUtils indexABPersonArrayByHashedRecordID:contacts];
