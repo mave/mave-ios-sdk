@@ -240,10 +240,11 @@
                                 computeHeightWithWidth:containerFrame.size.width];
 
     // Extend bottom of table view content so invite message view doesn't overlap it
-    UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
-    abTableViewInsets.bottom = inviteViewHeight;
-    abTableViewInsets.bottom += 20;  // TODO: figure out actual value, this just makes it work with the default simulator address book
-    self.ABTableViewController.tableView.contentInset = abTableViewInsets;
+    if ([self shouldDisplayInviteMessageView]) {
+        UIEdgeInsets abTableViewInsets = self.ABTableViewController.tableView.contentInset;
+        abTableViewInsets.bottom = inviteViewHeight;
+        self.ABTableViewController.tableView.contentInset = abTableViewInsets;
+    }
 
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
@@ -251,14 +252,12 @@
     if ([self shouldDisplayInviteMessageView]) {
         inviteViewOffsetY -= inviteViewHeight;
     }
-
     CGRect inviteMessageViewFrame = CGRectMake(0,
                                                inviteViewOffsetY,
                                                containerFrame.size.width,
                                                inviteViewHeight);
 
     self.view.frame = containerFrame;
-
     self.ABTableViewController.tableView.frame = tableViewFrame;
     self.ABTableViewController.aboveTableContentView.frame =
         CGRectMake(0,

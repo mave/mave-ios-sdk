@@ -46,7 +46,7 @@
     [self addSubview:self.searchBar];
 }
 
-- (BOOL)hasContentToShow {
+- (BOOL)hasContentOtherThanSearchBar {
     return self.showsExplanation;
 }
 

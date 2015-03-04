@@ -54,7 +54,7 @@
     OCMExpect([maveMock inviteExplanationCopy]).andReturn(@"Copy Override");
 
     MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
-    XCTAssertTrue([view hasContentToShow]);
+    XCTAssertTrue([view hasContentOtherThanSearchBar]);
     OCMVerifyAll(maveMock);
 }
 
@@ -63,7 +63,7 @@
     OCMExpect([maveMock inviteExplanationCopy]).andReturn(nil);
 
     MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
-    XCTAssertFalse([view hasContentToShow]);
+    XCTAssertFalse([view hasContentOtherThanSearchBar]);
     OCMVerifyAll(maveMock);
 }
 

@@ -73,7 +73,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // TODO test this
 //    self.isFixedSearchBarActive = NO;
 //    self.tableView.contentOffset = CGPointMake(0, 0);
-    if (![self.inviteTableHeaderView hasContentToShow]) {
+    if (![self.inviteTableHeaderView hasContentOtherThanSearchBar]) {
         self.isFixedSearchBarActive = YES;
     } else {
         self.isFixedSearchBarActive = NO;
@@ -113,7 +113,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         self.tableView.tableHeaderView = self.inviteTableHeaderView;
 
         // match above table color to explanation view color so it looks like one view
-        if ([self.inviteTableHeaderView hasContentToShow]) {
+        if ([self.inviteTableHeaderView hasContentOtherThanSearchBar]) {
             self.aboveTableContentView.backgroundColor = self.inviteTableHeaderView.backgroundColor;
         }
     }
@@ -121,7 +121,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // first time we layout the page, if the header view is only a search bar anyway then replace
     // it with the fixed search bar
     if (!self.didInitialTableHeaderLayout) {
-        if (![self.inviteTableHeaderView hasContentToShow]) {
+        if (![self.inviteTableHeaderView hasContentOtherThanSearchBar]) {
             self.tableView.contentOffset = CGPointMake(0, self.inviteTableHeaderView.searchBar.frame.size.height);
         }
         self.didInitialTableHeaderLayout = YES;
@@ -429,9 +429,15 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         return;
     }
 
-    ///
-    /// Attach/detach the search bar from the top when scrolling
-    ///
+    //
+    // Attach/detach the search bar from the top when scrolling.
+    //
+    // The whole table view gets moved when this happens to make room for the fixed search bar above it
+    // as a sibling view, so we need to counter-adjust:
+    //   - the offset so it doesn't look like a jump in scrolling content when this happens
+    //   - the inset, so the vertical center of the scroll view's content area stays in the same place
+    //        which prevents the table section index from jumping vertically.
+    //
     CGFloat offsetY = roundf(self.tableView.contentOffset.y);    
     CGFloat embeddedSearchBarTop = [self tableHeaderEmbeddedSearchBarTopEdge];
     CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
@@ -443,26 +449,33 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     if (shouldMakeSearchBarFixed) {
         self.isFixedSearchBarActive = YES;
         CGPoint newOffset = CGPointMake(0, offsetY + embeddedSearchBarHeight);
+        UIEdgeInsets newInset = self.tableView.contentInset;
+        newInset.bottom += embeddedSearchBarHeight;
 
         self.lockScrollViewDidScroll = YES;
         [self.parentViewController layoutInvitePageViewAndSubviews];
+        self.tableView.contentInset = newInset;
         self.tableView.contentOffset = newOffset;
         self.lockScrollViewDidScroll = NO;
 
     } else if (shouldMakeSearchBarUnfixed) {
         self.isFixedSearchBarActive = NO;
-        CGPoint newOffset = CGPointMake(0, offsetY - embeddedSearchBarHeight);
+        CGPoint newOffset = self.tableView.contentOffset;
+        newOffset.y -= embeddedSearchBarHeight;
+        UIEdgeInsets newInset = self.tableView.contentInset;
+        newInset.bottom -= embeddedSearchBarHeight;
 
         self.lockScrollViewDidScroll = YES;
         [self.parentViewController layoutInvitePageViewAndSubviews];
+        self.tableView.contentInset = newInset;
         self.tableView.contentOffset = newOffset;
         self.lockScrollViewDidScroll = NO;
     }
 
-    ///
-    /// re-layout the invite header view if it's not just the search bar to keep it centered
-    ///
-    if ([self.inviteTableHeaderView hasContentToShow] && offsetY < 0) {
+    //
+    // re-layout the invite header view if it's not just the search bar to keep it centered
+    //
+    if ([self.inviteTableHeaderView hasContentOtherThanSearchBar] && offsetY < 0) {
         [self.inviteTableHeaderView resizeWithShiftedOffsetY:offsetY];
     }
 }
