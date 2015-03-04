@@ -89,6 +89,21 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     return output;
 }
 
++ (NSArray *)instancesOfABPersonsInList:(NSArray *)persons
+                        fromAllContacts:(NSArray *)allContacts {
+    NSDictionary *contactsIndexByHRID = [self indexABPersonArrayByHashedRecordID:allContacts];
+    NSString *stringKey; MAVEABPerson *queriedPerson;
+    NSMutableArray *output = [[NSMutableArray alloc] initWithCapacity:[persons count]];
+    for (MAVEABPerson *person in persons) {
+        stringKey = [NSString stringWithFormat:@"%llu", person.hashedRecordID];
+        queriedPerson = [contactsIndexByHRID objectForKey:stringKey];
+        if (queriedPerson) {
+            [output addObject:queriedPerson];
+        }
+    }
+    return [NSArray arrayWithArray:output];
+}
+
 + (NSDictionary *)indexABPersonArrayByHashedRecordID:(NSArray *)persons {
     NSMutableDictionary *output = [[NSMutableDictionary alloc] initWithCapacity:[persons count]];
     NSString *stringKey;

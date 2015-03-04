@@ -10,12 +10,12 @@
 #import <UIKit/UIKit.h>
 #import "MAVERemoteConfiguration.h"
 
-typedef void (^MAVEABDataBlock)(NSDictionary *indexedContacts);
+typedef void (^MAVEABDataBlock)(NSArray *contacts);
 
 @interface MAVEABPermissionPromptHandler : NSObject<UIAlertViewDelegate>
 
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePrompt *prePromptTemplate;
-@property (nonatomic, copy) void(^completionBlock)(NSDictionary *contacts);
+@property (nonatomic, copy) void(^completionBlock)(NSArray *contacts);
 @property (nonatomic, strong) id retainSelf;
 @property (nonatomic) BOOL beganFlowAsStatusUnprompted;
 

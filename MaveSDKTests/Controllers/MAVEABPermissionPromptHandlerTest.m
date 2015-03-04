@@ -53,7 +53,7 @@
     OCMExpect([mock completeAfterPermissionDenied]);
 
     MAVEABPermissionPromptHandler *handler = [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:
-        ^(NSDictionary *indexedContacts) {}];
+        ^(NSArray *indexedContacts) {}];
 
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(handler, mock);
@@ -74,7 +74,7 @@
 
     OCMExpect([mock loadAddressBookAndComplete]);
 
-    MAVEABPermissionPromptHandler *handler = [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSDictionary *indexedContacts) {}];
+    MAVEABPermissionPromptHandler *handler = [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSArray *indexedContacts) {}];
 
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(handler, mock);
@@ -149,7 +149,7 @@
         return YES;
     }]]);
 
-    MAVEABDataBlock completionBlock = ^void(NSDictionary *data){};
+    MAVEABDataBlock completionBlock = ^void(NSArray *data){};
 
     // set up expectaions
     OCMExpect([permissionPrompterMock loadAddressBookAndComplete]);
@@ -170,9 +170,9 @@
     // Test the alert view delegate method with the "No Thanks" button pressed (index 0)
     // Should call the completion block with nil
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
-    __block NSDictionary *returnedData;
+    __block NSArray *returnedData;
     __block BOOL called = NO;
-    promptHandler.completionBlock = ^void(NSDictionary *indexedData) {
+    promptHandler.completionBlock = ^void(NSArray *indexedData) {
         called = YES;
         returnedData = indexedData;
     };
@@ -203,12 +203,11 @@
 
 - (void)testCompleteAfterPermissionUnfulfilledToGranted {
     NSArray *fakeContacts = @[[MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Cosson"]];
-    NSDictionary *expectedIndexedData = [MAVEABUtils indexABPersonArrayForTableSections:fakeContacts];
 
     // generate object under test and its block
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
-    __block NSDictionary *returnedData;
-    promptHandler.completionBlock = ^void(NSDictionary *data) {
+    __block NSArray *returnedData;
+    promptHandler.completionBlock = ^void(NSArray *data) {
         returnedData = data;
     };
 
@@ -226,12 +225,12 @@
 
     OCMVerifyAll(mock);
     OCMVerifyAll(abSyncerMock);
-    XCTAssertEqualObjects(returnedData, expectedIndexedData);
+    XCTAssertEqualObjects(returnedData, fakeContacts);
 }
 
 - (void)testCompleteAfterPermissionAlreadyGranted {
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
-    promptHandler.completionBlock = ^(NSDictionary *dict) {};
+    promptHandler.completionBlock = ^(NSArray *dict) {};
 
     // If already had status granted to start with, don't log permission
     // granted event (or any other event)
@@ -248,9 +247,9 @@
 - (void)testCompleteAfterPermissionDeniedCallsBlock {
     // generate object under test and its block
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
-    __block NSDictionary *returnedData;
+    __block NSArray *returnedData;
     __block BOOL called;
-    promptHandler.completionBlock = ^void(NSDictionary *data) {
+    promptHandler.completionBlock = ^void(NSArray *data) {
         called = YES;
         returnedData = data;
     };
@@ -268,7 +267,7 @@
 
 - (void)testCompleteAfterPermissionAlreadyDenied {
     MAVEABPermissionPromptHandler *promptHandler = [[MAVEABPermissionPromptHandler alloc] init];
-    promptHandler.completionBlock = ^(NSDictionary *dict) {};
+    promptHandler.completionBlock = ^(NSArray *dict) {};
 
     // If already had status granted to start with, don't log permission
     // granted event (or any other event)

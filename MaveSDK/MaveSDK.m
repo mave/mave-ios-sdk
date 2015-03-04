@@ -16,6 +16,7 @@
 #import "MAVEShareToken.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVESuggestedInvites.h"
+#import "MAVEABUtils.h"
 
 @implementation MaveSDK {
     // Controller
@@ -116,10 +117,17 @@ static dispatch_once_t sharedInstanceonceToken;
     return (MAVERemoteConfiguration *)obj;
 }
 
-- (NSArray *)suggestedInvitesWithDelay:(CGFloat)seconds {
+
+- (NSArray *)suggestedInvitesWithFullContactsList:(NSArray *)contacts delay:(CGFloat)seconds {
     MAVESuggestedInvites *suggestedInvites = (MAVESuggestedInvites *)[self.suggestedInvitesBuilder createObjectSynchronousWithTimeout:seconds];
-    return suggestedInvites.suggestions;
+    // At this point we don't know when the suggestion objects were created, and bc of
+    // how the contacts invite page is designed we need them to be instances of the
+    // same objects displayed in the address book. So use the helper method to look
+    // up the exact instances that we want by hashed record IDs.
+    NSArray *suggestionsWrongInstances = suggestedInvites.suggestions;
+    return [MAVEABUtils instancesOfABPersonsInList:suggestionsWrongInstances fromAllContacts:contacts];
 }
+
 
 - (NSString *)defaultSMSMessageText {
     if (_defaultSMSMessageText) {
