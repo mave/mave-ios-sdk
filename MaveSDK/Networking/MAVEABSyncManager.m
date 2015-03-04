@@ -78,7 +78,8 @@ static dispatch_once_t syncContactsOnceToken;
                     suggestedHRIDTuples = [self getSuggestedInvitesExplicitly];
                 }
             }
-            NSDictionary *suggestionsObject = @{@"closest_contacts": suggestedHRIDTuples};
+            NSArray *suggestedMAVEABPersonObjects = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:suggestedHRIDTuples andAllContacts:contacts];
+            NSDictionary *suggestionsObject = @{@"closest_contacts": suggestedMAVEABPersonObjects};
             [[MaveSDK sharedInstance].suggestedInvitesBuilder.promise fulfillPromise:(NSValue *)suggestionsObject];
         });
     });

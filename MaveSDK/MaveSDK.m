@@ -117,11 +117,17 @@ static dispatch_once_t sharedInstanceonceToken;
     return (MAVERemoteConfiguration *)obj;
 }
 
+
 - (NSArray *)suggestedInvitesWithFullContactsList:(NSArray *)contacts delay:(CGFloat)seconds {
     MAVESuggestedInvites *suggestedInvites = (MAVESuggestedInvites *)[self.suggestedInvitesBuilder createObjectSynchronousWithTimeout:seconds];
-    NSArray *suggestions = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:suggestedInvites.suggestions andAllContacts:contacts];
-    return suggestions;
+    // At this point we don't know when the suggestion objects were created, and bc of
+    // how the contacts invite page is designed we need them to be instances of the
+    // same objects displayed in the address book. So use the helper method to look
+    // up the exact instances that we want by hashed record IDs.
+    NSArray *suggestionsWrongInstances = suggestedInvites.suggestions;
+    return [MAVEABUtils instancesOfABPersonsInList:suggestionsWrongInstances fromAllContacts:contacts];
 }
+
 
 - (NSString *)defaultSMSMessageText {
     if (_defaultSMSMessageText) {

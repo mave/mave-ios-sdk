@@ -111,15 +111,18 @@
 }
 
 - (void)testSuggestedInvitesWithDelay {
-    NSArray *suggestedHRIDTuples = @[@[@"2", @3], @[@"0", @1]];
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0; p0.hashedRecordID = 0;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.hashedRecordID = 1;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2; p2.hashedRecordID = 2;
+    MAVEABPerson *p0dup = [[MAVEABPerson alloc] init]; p0dup.recordID = 0; p0dup.hashedRecordID = 0;
+    MAVEABPerson *p2dup = [[MAVEABPerson alloc] init]; p2dup.recordID = 0; p2dup.hashedRecordID = 2;
+
     NSArray *contacts = @[p0, p1, p2];
+    NSArray *suggestionsWrongInstances = @[p2dup, p0dup];
     NSArray *expectedSuggestions = @[p2, p0];
 
     MAVESuggestedInvites *suggestedObject = [[MAVESuggestedInvites alloc] init];
-    suggestedObject.suggestions = suggestedHRIDTuples;
+    suggestedObject.suggestions = suggestionsWrongInstances;
 
     CGFloat delay = 1.234;
     id builderMock = OCMClassMock([MAVERemoteObjectBuilder class]);

@@ -26,6 +26,7 @@ const NSString *MAVESuggestedInvitesKeyClosestContacts = @"closest_contacts";
 }
 
 + (MAVERemoteObjectBuilder *)remoteBuilder {
+    // not using the usual initializer because we don't want the block to start right away
     MAVERemoteObjectBuilder *remoteBuilder = [[MAVERemoteObjectBuilder alloc] init];
     remoteBuilder.classToCreate = [self class];
     remoteBuilder.promise = [[MAVEPromise alloc] initWithBlock:nil];

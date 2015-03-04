@@ -130,15 +130,19 @@
 
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
-    NSArray *fakeAllContacts = @[@"asdf", @"sdfg"];
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    NSArray *allContacts = @[p0, p1];
     NSArray *suggestedHRIDTuples = @[@[@"0", @2], @[@"1", @1]];
-    OCMExpect([syncerMock doSyncContacts:fakeAllContacts returnSuggested:YES]).andReturn(suggestedHRIDTuples);
+    OCMExpect([syncerMock doSyncContacts:allContacts returnSuggested:YES]).andReturn(suggestedHRIDTuples);
 
     id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
-    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedHRIDTuples};
+    NSArray *suggestionObjects = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:suggestedHRIDTuples
+                                                                             andAllContacts:allContacts];
+    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestionObjects};
     OCMExpect([promiseMock fulfillPromise:expectedFulfillVal]);
 
-    [syncer syncContactsAndPopulateSuggestedInBackground:fakeAllContacts];
+    [syncer syncContactsAndPopulateSuggestedInBackground:allContacts];
 
     OCMVerifyAllWithDelay(maveMock, 0.25);
     OCMVerifyAllWithDelay(syncerMock, 0.25);
@@ -160,16 +164,18 @@
 
     MAVEABSyncManager *syncer = [[MAVEABSyncManager alloc] init];
     id syncerMock = OCMPartialMock(syncer);
-    NSArray *fakeAllContacts = @[@"asdf", @"sdfg"];
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
+    NSArray *allContacts = @[p0, p1];
     NSArray *suggestedHRIDTuples = @[@[@"0", @2], @[@"1", @1]];
-    [[syncerMock reject] doSyncContacts:fakeAllContacts returnSuggested:YES];
+    [[syncerMock reject] doSyncContacts:allContacts returnSuggested:YES];
     OCMExpect([syncerMock getSuggestedInvitesExplicitly]).andReturn(suggestedHRIDTuples);
 
     id promiseMock = OCMPartialMock([MaveSDK sharedInstance].suggestedInvitesBuilder.promise);
-    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": suggestedHRIDTuples};
+    NSValue *expectedFulfillVal = (NSValue *)@{@"closest_contacts": allContacts};
     OCMExpect([promiseMock fulfillPromise:expectedFulfillVal]);
 
-    [syncer syncContactsAndPopulateSuggestedInBackground:fakeAllContacts];
+    [syncer syncContactsAndPopulateSuggestedInBackground:allContacts];
 
     OCMVerifyAllWithDelay(maveMock, 0.25);
     OCMVerifyAllWithDelay(syncerMock, 0.25);
