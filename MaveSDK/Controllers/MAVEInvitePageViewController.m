@@ -251,7 +251,6 @@
     }
     self.ABTableViewController.tableView.contentInset = tableBottomInset;
 
-
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
     CGFloat inviteViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
@@ -289,6 +288,18 @@
         searchViewOffset += self.inviteMessageContainerView.frame.size.height;
     }
     self.ABTableViewController.searchTableView.contentInset = UIEdgeInsetsMake(0, 0, searchViewOffset, 0);
+
+    // Add extra space at the bottom of the table view
+    CGFloat topSpace = self.ABTableViewController.tableView.contentInset.top;
+    CGFloat contentHeight = self.ABTableViewController.tableView.contentSize.height;
+    CGFloat tableHeight = containerFrame.size.height;
+    NSLog(@"Table height %f content offset %f and height %f", tableHeight, topSpace, contentHeight);
+    self.ABTableViewController.belowContentFillerView.frame = CGRectMake(0, contentHeight, containerFrame.size.width, containerFrame.size.height);
+//    if (tableHeight > contentHeight) {
+//        self.ABTableViewController.belowContentFillerView.frame = CGRectMake(0, contentHeight, containerFrame.size.width, tableHeight - contentHeight + 200);
+//    } else {
+//        self.ABTableViewController.belowContentFillerView.frame = CGRectMake(0, 0, 0, 0);
+//    }
 
     // Resize the header based on width
     [self.ABTableViewController layoutHeaderViewForWidth:containerFrame.size.width];

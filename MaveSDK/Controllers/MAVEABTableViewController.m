@@ -48,6 +48,10 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 
         [self setupTableHeader];
+        self.belowContentFillerView = [[UIView alloc] init];
+        self.belowContentFillerView.backgroundColor = [UIColor orangeColor];
+        [self.tableView addSubview:self.belowContentFillerView];
+
         [self setupSearchTableView];
         self.suggestedInvitesSectionHeaderView = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Suggestions" sectionIsWaiting:YES];
     }
