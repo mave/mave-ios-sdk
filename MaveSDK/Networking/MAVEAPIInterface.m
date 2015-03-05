@@ -131,17 +131,13 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:recipientPhones forKey:@"recipient_phone_numbers"];
 
-    id serializeableRecpientContacts;
     if (recipientContacts && (id)recipientContacts != [NSNull null]) {
         NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[recipientContacts count]];
         for (MAVEABPerson *contact in recipientContacts) {
             [tmp addObject:[contact toJSONDictionary]];
         }
-        serializeableRecpientContacts = [NSArray arrayWithArray:tmp];
-    } else {
-        serializeableRecpientContacts = [NSNull null];
+        [params setObject:[NSArray arrayWithArray:tmp] forKey:@"recipient_contact_records"];
     }
-    [params setObject:serializeableRecpientContacts forKey:@"recipient_contact_records"];
 
     [params setObject:messageText forKey:@"sms_copy"];
     [params setObject:userId forKey:@"sender_user_id"];

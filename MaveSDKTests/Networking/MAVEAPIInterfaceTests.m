@@ -226,7 +226,6 @@
 - (void)testSendInvitesLinkDestinationEmptyFields {
     id mocked = OCMPartialMock(self.testAPIInterface);
     NSDictionary *expectedParams = @{@"recipient_phone_numbers": @[],
-                                     @"recipient_contact_records": [NSNull null],
                                      @"sms_copy": @"",
                                      @"sender_user_id": @"",
                                      };
