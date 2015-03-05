@@ -304,8 +304,9 @@
 
     // Set up data
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    id mockedTableView = [OCMockObject mockForClass:[UITableView class]];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc] initTableViewWithParent:ipvc];
+    id mockedTableView = OCMClassMock([UITableView class]);
+    vc.tableView = mockedTableView;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.firstName = @"Abbie"; p1.lastName = @"Foo";
     p1.phoneNumbers = @[@"18085551234", @"12125551234"]; p1.selected = NO;
@@ -313,13 +314,14 @@
     [vc updateTableData:@{@"A": @[p1]}];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 
-    id mockedIPVC = [OCMockObject mockForClass:[MAVEInvitePageViewController class]];
+    id mockedIPVC = OCMClassMock([MAVEInvitePageViewController class]);
     vc.parentViewController = mockedIPVC;
 
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
     XCTAssertEqual([vc.selectedPeople count], 0);
-    [[mockedIPVC expect] ABTableViewControllerNumberSelectedChanged:1];
-    [[mockedTableView expect] reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
+    OCMExpect([mockedIPVC layoutInvitePageViewAndSubviews]);
+    OCMExpect([mockedTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]);
     
     // Run
     [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
@@ -327,7 +329,8 @@
     // Verify the <Mobile> number was selected
     XCTAssertEqualObjects(vc.selectedPhoneNumbers, [NSSet setWithArray:@[@"12125551234"]]);
     XCTAssertEqualObjects(vc.selectedPeople, [NSSet setWithArray:@[p1]]);
-    [mockedIPVC verify];
+    OCMVerifyAll(mockedTableView);
+    OCMVerifyAll(mockedIPVC);
 }
 
 - (void)testClickDidSelectRowAtIndexPathRemovesBestNumberFromSelectedPhoneNumbers {
@@ -335,9 +338,10 @@
 
     // Set up data
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
-    id mockedTableView = [OCMockObject mockForClass:[UITableView class]];
+    id mockedTableView = OCMClassMock([UITableView class]);
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
                                      initTableViewWithParent:ipvc];
+    vc.tableView = mockedTableView;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.firstName = @"Abbie"; p1.lastName = @"Foo";
     p1.phoneNumbers = @[@"18085551234", @"12125551234"]; p1.selected = NO;
@@ -350,19 +354,22 @@
 
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
     XCTAssertEqual([vc.selectedPeople count], 0);
-    [[mockedIPVC expect] ABTableViewControllerNumberSelectedChanged:1];
-    [[mockedTableView expect] reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
+    OCMExpect([mockedIPVC layoutInvitePageViewAndSubviews]);
+    OCMExpect([mockedTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]);
     
     // Select, then deselect
     [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
     
-    [[mockedIPVC expect] ABTableViewControllerNumberSelectedChanged:0];
+    OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:0]);
+    OCMExpect([mockedIPVC layoutInvitePageViewAndSubviews]);
     [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
     
     // Verify
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
     XCTAssertEqual([vc.selectedPeople count], 0);
-    [mockedIPVC verify];
+    OCMVerifyAll(mockedIPVC);
+    OCMVerifyAll(mockedTableView);
 }
 
 - (void)testPersonOnTableViewAtIndexPath {
