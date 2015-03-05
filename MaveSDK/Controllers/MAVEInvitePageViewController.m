@@ -247,12 +247,18 @@
         if (self.ABTableViewController.isFixedSearchBarActive) {
             adjustOffsetBy = inviteViewHeight;
         } else {
-            adjustOffsetBy = inviteViewHeight - 44;
+            adjustOffsetBy = inviteViewHeight - MAVESearchBarHeight;
         }
         tableBottomInset.bottom  = adjustOffsetBy;
     }
     if (![self shouldDisplayInviteMessageView] && tableBottomInset.bottom != tableSizeContentSizeDifferenceY) {
-        tableBottomInset.bottom = 0;
+        CGFloat adjustOffsetBy;
+        if (self.ABTableViewController.isFixedSearchBarActive) {
+            adjustOffsetBy = 0;
+        } else {
+            adjustOffsetBy = 0 - MAVESearchBarHeight;
+        }
+        tableBottomInset.bottom = adjustOffsetBy;
     }
     self.ABTableViewController.tableView.contentInset = tableBottomInset;
 
