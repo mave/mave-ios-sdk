@@ -8,15 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVEABTableViewController.h"
-#import "MAVEInviteMessageContainerView.h"
+#import "MAVEInvitePageBottomActionContainerView.h"
 #import "MAVEInviteTableHeaderView.h"
-
 
 @interface MAVEInvitePageViewController : UIViewController
 
 @property (strong, nonatomic) MAVESearchBar *abTableFixedSearchbar;
 @property (strong, nonatomic) MAVEABTableViewController *ABTableViewController;
-@property (strong, nonatomic) MAVEInviteMessageContainerView *inviteMessageContainerView;
+@property (strong, nonatomic) MAVEInvitePageBottomActionContainerView *bottomActionContainerView;
+
+@property (nonatomic, assign) MAVESMSInviteSendMethod smsInviteSendMethod;
 
 // Helpers for keeping track of keyboard for frame resizing
 @property (atomic) CGRect keyboardFrame; // keep track to use when resizing frame

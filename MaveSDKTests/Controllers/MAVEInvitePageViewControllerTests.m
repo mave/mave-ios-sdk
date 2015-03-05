@@ -118,7 +118,7 @@
 - (void)testRespondAsAdditionalTableViewDelegate {
     id mock = [OCMockObject mockForClass:[MAVEInviteMessageView class]];
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    vc.inviteMessageContainerView.inviteMessageView = mock;
+    vc.bottomActionContainerView.inviteMessageView = mock;
     OCMExpect([mock updateNumberPeopleSelected:2]);
     [vc ABTableViewControllerNumberSelectedChanged:2];
     OCMVerify(mock);
@@ -155,7 +155,7 @@
     NSArray *inviteContacts = @[p1];
     vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
     vc.ABTableViewController.selectedPeople = [[NSMutableSet alloc] initWithArray:inviteContacts];
-    vc.inviteMessageContainerView.inviteMessageView.textView.text = inviteMessage;
+    vc.bottomActionContainerView.inviteMessageView.textView.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
     id mockAPIInterface = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].APIInterface];

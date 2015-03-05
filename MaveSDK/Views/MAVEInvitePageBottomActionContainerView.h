@@ -1,0 +1,31 @@
+//
+//  MAVEBottomActionContainerView.h
+//  MaveSDK
+//
+//  Created by Danny Cosson on 11/16/14.
+//
+//
+
+#import <UIKit/UIKit.h>
+#import "MAVEInviteMessageView.h"
+#import "MAVEInviteSendingProgressView.h"
+
+typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
+    MAVESMSInviteSendMethodServerSide,
+    MAVESMSInviteSendMethodClientSideGroup
+};
+
+@interface MAVEInvitePageBottomActionContainerView : UIView
+
+@property (nonatomic, assign) MAVESMSInviteSendMethod smsInviteSendMethod;
+@property (nonatomic, strong) MAVEInviteMessageView *inviteMessageView;
+@property (nonatomic, strong) MAVEInviteSendingProgressView *sendingInProgressView;
+@property (nonatomic, strong) UIView *clientSideBottomActionView;
+
+- (instancetype)initWithSMSInviteSendMethod:(MAVESMSInviteSendMethod)smsInviteSendMethod;
+- (void)makeInviteMessageViewActive;
+- (void)makeSendingInProgressViewActive;
+
+- (CGFloat)heightForViewCurrentInviteSendMethodWithWidth:(CGFloat)width;
+
+@end

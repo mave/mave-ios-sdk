@@ -1,18 +1,19 @@
 //
-//  MAVEInviteMessageContainerView.m
+//  MAVEBottomActionContainerView.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 11/16/14.
 //
 //
 
-#import "MAVEInviteMessageContainerView.h"
+#import "MAVEInvitePageBottomActionContainerView.h"
 
-@implementation MAVEInviteMessageContainerView
+@implementation MAVEInvitePageBottomActionContainerView
 
-- (instancetype)init {
+- (instancetype)initWithSMSInviteSendMethod:(MAVESMSInviteSendMethod)smsInviteSendMethod {
     self = [super init];
     if (self) {
+        self.smsInviteSendMethod = smsInviteSendMethod;
         self.inviteMessageView = [[MAVEInviteMessageView alloc] init];
         self.sendingInProgressView = [[MAVEInviteSendingProgressView alloc] init];
         [self makeInviteMessageViewActive];
@@ -32,6 +33,10 @@
     self.inviteMessageView.hidden = YES;
     self.sendingInProgressView.hidden = NO;
     [self.sendingInProgressView startTimedProgress];
+}
+
+- (CGFloat)heightForViewCurrentInviteSendMethodWithWidth:(CGFloat)width {
+    return [self.inviteMessageView computeHeightWithWidth:width];
 }
 
 - (void)layoutSubviews {
