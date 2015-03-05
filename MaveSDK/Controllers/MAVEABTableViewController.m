@@ -371,6 +371,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     }
     [self.tableView reloadRowsAtIndexPaths:mainTableIndexPaths
                           withRowAnimation:UITableViewRowAnimationNone];
+    [self.parentViewController layoutInvitePageViewAndSubviews];
 }
 
 

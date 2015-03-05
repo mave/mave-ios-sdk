@@ -231,19 +231,28 @@
 
     // Adjust table bottom inset
     //   - to fill up content frame if there are not enough contacts in the table
-    //   - to allow room for invite view at bottom if it's visible
+    //   - to allow correct amount of room for invite view at bottom if it's visible
     CGFloat tableSizeContentSizeDifferenceY =
         tableViewFrame.size.height
         - self.ABTableViewController.tableView.contentSize.height;
     UIEdgeInsets tableBottomInset = self.ABTableViewController.tableView.contentInset;
     if (self.ABTableViewController.didInitialTableDataLoad && tableSizeContentSizeDifferenceY > 0) {
-        NSLog(@"diff is %f", tableSizeContentSizeDifferenceY);
         if (tableBottomInset.bottom < tableSizeContentSizeDifferenceY) {
             tableBottomInset.bottom = tableSizeContentSizeDifferenceY;
         }
     }
-    if (tableBottomInset.bottom < inviteViewHeight) {
-        tableBottomInset.bottom  = inviteViewHeight;
+
+    if ([self shouldDisplayInviteMessageView] && tableBottomInset.bottom < inviteViewHeight) {
+        CGFloat adjustOffsetBy;
+        if (self.ABTableViewController.isFixedSearchBarActive) {
+            adjustOffsetBy = inviteViewHeight;
+        } else {
+            adjustOffsetBy = inviteViewHeight - 44;
+        }
+        tableBottomInset.bottom  = adjustOffsetBy;
+    }
+    if (![self shouldDisplayInviteMessageView] && tableBottomInset.bottom != tableSizeContentSizeDifferenceY) {
+        tableBottomInset.bottom = 0;
     }
     self.ABTableViewController.tableView.contentInset = tableBottomInset;
 
