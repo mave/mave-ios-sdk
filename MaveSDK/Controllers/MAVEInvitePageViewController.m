@@ -229,19 +229,8 @@
     CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
                                 computeHeightWithWidth:containerFrame.size.width];
 
-    // Adjust table bottom inset
-    //   - to fill up content frame if there are not enough contacts in the table
-    //   - to allow correct amount of room for invite view at bottom if it's visible
-    CGFloat tableSizeContentSizeDifferenceY =
-        tableViewFrame.size.height
-        - self.ABTableViewController.tableView.contentSize.height;
+    // Adjust bottom inset to make extra room for the invite view, and remove ex
     UIEdgeInsets tableBottomInset = self.ABTableViewController.tableView.contentInset;
-    if (self.ABTableViewController.didInitialTableDataLoad && tableSizeContentSizeDifferenceY > 0) {
-        if (tableBottomInset.bottom < tableSizeContentSizeDifferenceY) {
-            tableBottomInset.bottom = tableSizeContentSizeDifferenceY;
-        }
-    }
-
     if ([self shouldDisplayInviteMessageView] && tableBottomInset.bottom < inviteViewHeight) {
         CGFloat adjustOffsetBy;
         if (self.ABTableViewController.isFixedSearchBarActive) {
@@ -251,7 +240,7 @@
         }
         tableBottomInset.bottom  = adjustOffsetBy;
     }
-    if (![self shouldDisplayInviteMessageView] && tableBottomInset.bottom != tableSizeContentSizeDifferenceY) {
+    if (![self shouldDisplayInviteMessageView]) {
         CGFloat adjustOffsetBy;
         if (self.ABTableViewController.isFixedSearchBarActive) {
             adjustOffsetBy = 0;
