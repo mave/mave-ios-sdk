@@ -151,19 +151,23 @@
     // Setup content for invites
     NSString *inviteMessage = @"This was the text typed in";
     NSArray *invitePhones = @[@"18085551234"];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.firstName = @"Foo";
+    NSArray *inviteContacts = @[p1];
     vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
+    vc.ABTableViewController.selectedPeople = [[NSMutableSet alloc] initWithArray:inviteContacts];
     vc.inviteMessageContainerView.inviteMessageView.textView.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
     id mockAPIInterface = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].APIInterface];
 
-    [[mockAPIInterface expect] sendInvitesWithPersons:invitePhones
-                                            message:inviteMessage
-                                              userId:mave.userData.userID
-                            inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
-                                     completionBlock:[OCMArg any]];
+    OCMExpect([mockAPIInterface sendInvitesWithRecipientPhoneNumbers:invitePhones
+                                             recipientContactRecords:inviteContacts
+                                                             message:inviteMessage
+                                                              userId:mave.userData.userID
+                                            inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                                     completionBlock:[OCMArg any]]);
     [vc sendInvites];
-    [mockAPIInterface verify];
+    OCMVerifyAll(mockAPIInterface);
 }
 
 ///
