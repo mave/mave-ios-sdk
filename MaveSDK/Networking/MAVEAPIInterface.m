@@ -121,14 +121,24 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 ///
 /// Other remote calls
 ///
-- (void)sendInvitesWithPersons:(NSArray *)persons
-                       message:(NSString *)messageText
-                        userId:(NSString *)userId
-      inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
-               completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+- (void)sendInvitesWithRecipientPhoneNumbers:(NSArray *)recipientPhones
+                     recipientContactRecords:(NSArray *)recipientContacts
+                                     message:(NSString *)messageText
+                                      userId:(NSString *)userId
+                    inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                             completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSString *invitesRoute = @"/invites/sms";
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [params setObject:persons forKey:@"recipients"];
+    [params setObject:recipientPhones forKey:@"recipient_phone_numbers"];
+
+    if (recipientContacts && (id)recipientContacts != [NSNull null]) {
+        NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[recipientContacts count]];
+        for (MAVEABPerson *contact in recipientContacts) {
+            [tmp addObject:[contact toJSONDictionary]];
+        }
+        [params setObject:[NSArray arrayWithArray:tmp] forKey:@"recipient_contact_records"];
+    }
+
     [params setObject:messageText forKey:@"sms_copy"];
     [params setObject:userId forKey:@"sender_user_id"];
     if ([inviteLinkDestinationURL length] > 0) {

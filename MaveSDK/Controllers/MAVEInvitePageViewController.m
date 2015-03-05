@@ -315,8 +315,9 @@
 //
 - (void)sendInvites {
     NSString *message = self.inviteMessageContainerView.inviteMessageView.textView.text;
-    NSArray *phones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
-    NSInteger numberInvites = [phones count];
+    NSArray *phonesToInvite = [self.ABTableViewController.selectedPhoneNumbers allObjects];
+    NSArray *peopleToInvite = [self.ABTableViewController.selectedPeople allObjects];
+    NSInteger numberInvites = [phonesToInvite count];
     if (numberInvites == 0) {
         MAVEDebugLog(@"Pressed Send but no recipients selected");
         return;
@@ -324,11 +325,13 @@
     
     MaveSDK *mave = [MaveSDK sharedInstance];
     MAVEAPIInterface *apiInterface = mave.APIInterface;
-    [apiInterface sendInvitesWithPersons:phones
-                                 message:message
-                                  userId:mave.userData.userID
-               inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
-                        completionBlock:^(NSError *error, NSDictionary *responseData) {
+
+    [apiInterface sendInvitesWithRecipientPhoneNumbers:phonesToInvite
+                               recipientContactRecords:peopleToInvite
+                                               message:message
+                                                userId:mave.userData.userID
+                              inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                       completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
             MAVEDebugLog(@"Invites failed to send, error: %@, response: %@",
                   error, responseData);
@@ -341,7 +344,7 @@
                 [self.inviteMessageContainerView.sendingInProgressView completeSendingProgress];
             });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self dismissSelf:(unsigned int)[phones count]];
+                [self dismissSelf:(unsigned int)numberInvites];
             });
         }
     }];

@@ -194,11 +194,16 @@
 
 - (void)testSendInvites {
     id mocked = OCMPartialMock(self.testAPIInterface);
-    NSArray *recipients = @[@"18085551234", @"18085555678"];
+    NSArray *recipientPhones = @[@"18085551234", @"18085555678"];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.firstName = @"Foo";
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2; p2.firstName = @"Bar";
+    NSArray *recipientContacts = @[p1, p2];
+    NSArray *recipientContactsSerializable = @[[p1 toJSONDictionary], [p2 toJSONDictionary]];
     NSString *smsCopy = @"This is as test";
     NSString *userId = @"some-user-id";
     NSString *linkDestination = @"http://example.com/foo?code=hello";
-    NSDictionary *expectedParams = @{@"recipients": recipients,
+    NSDictionary *expectedParams = @{@"recipient_phone_numbers": recipientPhones,
+                                     @"recipient_contact_records": recipientContactsSerializable,
                                      @"sms_copy": smsCopy,
                                      @"sender_user_id": userId,
                                      @"link_destination": linkDestination,
@@ -208,18 +213,19 @@
                                                  params:expectedParams
                                         gzipCompressBody:NO
                                         completionBlock:nil]);
-    [self.testAPIInterface sendInvitesWithPersons:recipients
-                                           message:smsCopy
-                                            userId:userId
-                          inviteLinkDestinationURL:linkDestination
-                                   completionBlock:nil];
+    [self.testAPIInterface sendInvitesWithRecipientPhoneNumbers:recipientPhones
+                                        recipientContactRecords:recipientContacts
+                                                        message:smsCopy
+                                                         userId:userId
+                                       inviteLinkDestinationURL:linkDestination
+                                                completionBlock:nil];
+
     OCMVerifyAll(mocked);
 }
 
-- (void)testSendInvitesLinkDestinationOmittedIfEmpty {
+- (void)testSendInvitesLinkDestinationEmptyFields {
     id mocked = OCMPartialMock(self.testAPIInterface);
-    NSString *linkDestination = nil;
-    NSDictionary *expectedParams = @{@"recipients": @[],
+    NSDictionary *expectedParams = @{@"recipient_phone_numbers": @[],
                                      @"sms_copy": @"",
                                      @"sender_user_id": @"",
                                      };
@@ -228,11 +234,12 @@
                                                  params:expectedParams
                                         gzipCompressBody:NO
                                         completionBlock:nil]);
-    [self.testAPIInterface sendInvitesWithPersons:@[]
-                                           message:@""
-                                            userId:@""
-                          inviteLinkDestinationURL:linkDestination
-                                   completionBlock:nil];
+    [self.testAPIInterface sendInvitesWithRecipientPhoneNumbers:@[]
+                                        recipientContactRecords:nil
+                                                        message:@""
+                                                         userId:@""
+                                       inviteLinkDestinationURL:nil
+                                                completionBlock:nil];
     OCMVerifyAll(mocked);
 }
 

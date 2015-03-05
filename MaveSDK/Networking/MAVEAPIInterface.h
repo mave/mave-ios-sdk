@@ -63,11 +63,12 @@ extern NSString * const MAVEAPIParamShareAudience;
 /// Other individual requests
 ///
 - (void)identifyUser;
-- (void)sendInvitesWithPersons:(NSArray *)persons
-                       message:(NSString *)messageText
-                        userId:(NSString *)userId
-      inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
-               completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+- (void)sendInvitesWithRecipientPhoneNumbers:(NSArray *)recipientPhones
+                     recipientContactRecords:(NSArray *)recipientContacts
+                                     message:(NSString *)messageText
+                                      userId:(NSString *)userId
+                    inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                             completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
 - (void)sendContactsChangeset:(NSArray *)changeset
             isFullInitialSync:(BOOL)isFullInitialSync
