@@ -128,7 +128,8 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSString *invitesRoute = @"/invites/sms";
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [params setObject:persons forKey:@"recipients"];
+    [params setObject:persons forKey:@"recipient_phone_numbers"];
+    [params setObject:@[] forKey:@"recipient_contact_records"];
     [params setObject:messageText forKey:@"sms_copy"];
     [params setObject:userId forKey:@"sender_user_id"];
     if ([inviteLinkDestinationURL length] > 0) {
