@@ -1,5 +1,5 @@
 //
-//  MAVEInviteTableSectionHeaderViewTests.m
+//  MAVEInvitePageBottomActionContainerViewTests.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 2/19/15.
@@ -12,11 +12,11 @@
 #import "MAVEInviteTableSectionHeaderView.h"
 #import "MAVEDisplayOptionsFactory.h"
 
-@interface MAVEInviteTableSectionHeaderViewTests : XCTestCase
+@interface MAVEInvitePageBottomActionContainerViewTests : XCTestCase
 
 @end
 
-@implementation MAVEInviteTableSectionHeaderViewTests
+@implementation MAVEInvitePageBottomActionContainerViewTests
 
 - (void)setUp {
     [super setUp];
