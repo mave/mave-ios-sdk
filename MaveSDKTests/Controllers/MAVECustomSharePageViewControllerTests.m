@@ -93,76 +93,60 @@
     [self setupPartialMockForClientShareTests];
 }
 
-- (void)testClientSideSMSShare {
-    [self setupPartialMockForClientShareTests];
-    NSString *expectedSMS = [NSString stringWithFormat:@"Join me on DemoApp! %@s/foobarsharetoken", MAVEShortLinkBaseURL];
-
-    // SMS compose controller can't even init in the simulator, i.e:
-    MFMessageComposeViewController *_cntrlr = [[MFMessageComposeViewController alloc] init];
-    XCTAssertNil(_cntrlr);
-
-    // So we mock it
-    id smsComposerMock = OCMClassMock([MFMessageComposeViewController class]);
-    OCMExpect([self.viewControllerMock _createMessageComposeViewController]).andReturn(smsComposerMock);
-
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:@"client_sms"]);
-
-    OCMExpect([self.viewControllerMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
-        MFMessageComposeViewController *controller = (MFMessageComposeViewController *)obj;
-        XCTAssertNotNil(controller);
-        XCTAssertEqualObjects(controller, smsComposerMock);
+- (void)testClientSideSMSShareSent {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MessageComposeResult result) = obj;
+        completionBlock(MessageComposeResultSent);
         return YES;
-    }] animated:YES completion:nil]);
+    }]]);
+    OCMExpect([mock presentViewController:[OCMArg any] animated:YES completion:nil]);
+    OCMExpect([mock dismissAfterShare]);
 
-    OCMExpect([smsComposerMock setMessageComposeDelegate:self.viewController]);
-    OCMExpect([smsComposerMock setBody:expectedSMS]);
+    [vc smsClientSideShare];
 
-    [self.viewController smsClientSideShare];
-
-    OCMVerifyAll(self.viewControllerMock);
-    OCMVerifyAll(smsComposerMock);
-    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
 }
 
-- (void)testClientSideSMSShareHandlerSMSSent {
-    [self setupPartialMockForClientShareTests];
+- (void)testClientSideSMSShareCanceled {
+    // On cancel, we don't dismiss the share page view controller
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MessageComposeResult result) = obj;
+        completionBlock(MessageComposeResultCancelled);
+        return YES;
+    }]]);
+    OCMExpect([mock presentViewController:[OCMArg any] animated:YES completion:nil]);
+    [[mock reject] dismissAfterShare];
 
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([self.viewControllerMock dismissAfterShare]);
-    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
-    OCMExpect([apiInterfaceMock trackShareWithShareType:@"client_sms" shareToken:[self.viewController.sharerObject shareToken] audience:nil]);
+    [vc smsClientSideShare];
 
-    [self.viewController messageComposeViewController:nil didFinishWithResult:MessageComposeResultSent];
-
-    OCMVerifyAll(self.viewControllerMock);
-    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
 }
 
-- (void)testClientSideSMSShareHandlerSMSCancelled {
-    [self setupPartialMockForClientShareTests];
+- (void)testClientSideSMSShareFailed {
+    // Failed is same as cancel, the underlying helper displays the error alert
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MessageComposeResult result) = obj;
+        completionBlock(MessageComposeResultFailed);
+        return YES;
+    }]]);
+    OCMExpect([mock presentViewController:[OCMArg any] animated:YES completion:nil]);
+    [[mock reject] dismissAfterShare];
 
-    // When cancelled
-    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissAfterShare];
-    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
+    [vc smsClientSideShare];
 
-    [self.viewController messageComposeViewController:nil didFinishWithResult:MessageComposeResultCancelled];
-
-    OCMVerifyAll(self.viewControllerMock);
-}
-
-- (void)testClientSideSMSShareHandlerSMSFailed {
-    [self setupPartialMockForClientShareTests];
-
-    // When failed
-    [[[self.viewControllerMock reject] ignoringNonObjectArgs] dismissAfterShare];
-    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
-
-    // TODO figure out how to mock the UIAlertView
-
-    [self.viewController messageComposeViewController:nil didFinishWithResult:MessageComposeResultCancelled];
-
-    OCMVerifyAll(self.viewControllerMock);
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
 }
 
 - (void)testClientEmailShare {

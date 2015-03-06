@@ -88,6 +88,51 @@
     OCMVerifyAll(builderMock);
 }
 
+- (void)testComposeClientSMSCompletionBlockSuccess {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block MessageComposeResult returnedResult;
+    sharer.completionBlockClientSMS = ^void(MessageComposeResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398akj";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:fakeToken audience:nil]);
+
+    id messageComposeVCMock = OCMClassMock([MFMessageComposeViewController class]);
+    OCMExpect([messageComposeVCMock dismissViewControllerAnimated:YES completion:nil]);
+    [sharer messageComposeViewController:messageComposeVCMock didFinishWithResult:MessageComposeResultSent];
+
+    XCTAssertEqual(returnedResult, MessageComposeResultSent);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockClientSMS);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(messageComposeVCMock);
+}
+
+- (void)testComposeClientSMSCancelled {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block MessageComposeResult returnedResult;
+    sharer.completionBlockClientSMS = ^void(MessageComposeResult result) {
+        returnedResult = result;
+    };
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[OCMArg any] audience:[OCMArg any]];
+
+    id messageComposeVCMock = OCMClassMock([MFMessageComposeViewController class]);
+    OCMExpect([messageComposeVCMock dismissViewControllerAnimated:YES completion:nil]);
+    [sharer messageComposeViewController:messageComposeVCMock didFinishWithResult:MessageComposeResultCancelled];
+
+    XCTAssertEqual(returnedResult, MessageComposeResultCancelled);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockClientSMS);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(messageComposeVCMock);
+}
+
 
 
 #pragma mark - Helpers for building share content

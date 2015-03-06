@@ -29,8 +29,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)releaseSelf {
-    self.retainedSelf = nil;
     self.completionBlockClientSMS = nil;
+    self.retainedSelf = nil;
 }
 
 + (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones completionBlock:(void (^)(MessageComposeResult))completionBlock {
@@ -56,7 +56,24 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
-
+    switch (result) {
+        case MessageComposeResultCancelled: {
+            break;
+        }
+        case MessageComposeResultFailed: {
+            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [warningAlert show];
+        }
+        case MessageComposeResultSent: {
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self shareToken] audience:nil];
+            break;
+        }
+    }
+    [controller dismissViewControllerAnimated:YES completion:nil];
+    if (self.completionBlockClientSMS) {
+        self.completionBlockClientSMS(result);
+    }
+    [self releaseSelf];
 }
 
 #pragma mark - Helpers for building share content

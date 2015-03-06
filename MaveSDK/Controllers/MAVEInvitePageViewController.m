@@ -371,7 +371,15 @@
 }
 
 - (void)composeClientGroupInvites {
+    NSArray *recipientPhones = @[];
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:recipientPhones completionBlock:^(MessageComposeResult result) {
 
+    }];
+    if (!vc) {
+        MAVEErrorLog(@"Cant present controller to compose client SMS, likely device cannot send SMS messages");
+        return;
+    }
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller

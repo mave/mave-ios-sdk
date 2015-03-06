@@ -37,52 +37,13 @@
 }
 
 - (void)smsClientSideShare {
-    MFMessageComposeViewController *controller = [self _createMessageComposeViewController];
-
-    NSString *message = [self.sharerObject shareCopyFromCopy:self.sharerObject.remoteConfiguration.clientSMS.text
-                      andLinkWithSubRouteLetter:@"s"];
-
-    controller.messageComposeDelegate = self;
-    controller.body = message;
-
-    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientSMS];
-    
-    // Present message view controller on screen
-    [self presentViewController:controller animated:YES completion:nil];
-}
-// This method can easily be mocked when we can't create a real
-// one of these controllers
-- (MFMessageComposeViewController *)_createMessageComposeViewController {
-    return [[MFMessageComposeViewController alloc] init];
-}
-
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
-                 didFinishWithResult:(MessageComposeResult) result
-{
-    BOOL dismissSent = NO;
-
-    switch (result) {
-        case MessageComposeResultCancelled: {
-            break;
-
-        } case MessageComposeResultFailed: {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-            break;
-
-        } case MessageComposeResultSent: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self.sharerObject shareToken] audience:nil];
-            dismissSent = YES;
-            break;
-
-        } default:
-            break;
-    }
-
-    [self dismissViewControllerAnimated:YES completion:nil];
-    if (dismissSent) {
-        [self dismissAfterShare];
-    }
+    NSLog(@"new sms client side share code");
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MessageComposeResult result) {
+        if (result == MessageComposeResultSent) {
+            [self dismissAfterShare];
+        }
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)emailClientSideShare {
