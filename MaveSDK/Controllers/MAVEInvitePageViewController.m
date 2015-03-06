@@ -370,6 +370,15 @@
     [alertView dismissWithClickedButtonIndex:0 animated:YES];
 }
 
+- (void)composeClientGroupInvites {
+
+}
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result {
+
+}
+
 // Do Share sheet invites instead
 - (void)presentShareSheet {
     MaveSDK *mave = [MaveSDK sharedInstance];

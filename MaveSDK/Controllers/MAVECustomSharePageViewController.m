@@ -32,19 +32,20 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)viewDidLoad {
+    self.sharerObject = [[MAVESharer alloc] init];
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeCustomShare];
 }
 
 // Call this after a successful share
 - (void)dismissAfterShare {
-    [self resetShareToken];
+    [self.sharerObject resetShareToken];
     return [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
 }
 
 - (void)smsClientSideShare {
     MFMessageComposeViewController *controller = [self _createMessageComposeViewController];
 
-    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.clientSMS.text
+    NSString *message = [self.sharerObject shareCopyFromCopy:self.sharerObject.remoteConfiguration.clientSMS.text
                       andLinkWithSubRouteLetter:@"s"];
 
     controller.messageComposeDelegate = self;
@@ -76,7 +77,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
             break;
 
         } case MessageComposeResultSent: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self.sharerObject shareToken] audience:nil];
             dismissSent = YES;
             break;
 
@@ -93,8 +94,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)emailClientSideShare {
     // TODO: use the data from the remote config
     MFMailComposeViewController *mailController = [self _createMailComposeViewController];
-    NSString *subject = self.remoteConfiguration.clientEmail.subject;
-    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.clientEmail.body
+    NSString *subject = self.sharerObject.remoteConfiguration.clientEmail.subject;
+    NSString *message = [self.sharerObject shareCopyFromCopy:self.sharerObject.remoteConfiguration.clientEmail.body
                       andLinkWithSubRouteLetter:@"e"];
 
     mailController.mailComposeDelegate = self;
@@ -117,7 +118,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
     switch (result) {
         case MFMailComposeResultSent:
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self.sharerObject shareToken] audience:nil];
             dismissSent = YES;
             break;
 
@@ -141,8 +142,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 - (void)facebookiOSNativeShare {
     // TODO: if they don't have facebook connected in ios we should check if the app has the facebook sdk implemented with the appropriate callbacks.
-    NSString *message = self.remoteConfiguration.facebookShare.text;
-    NSString *url = [self shareLinkWithSubRouteLetter:@"f"];
+    NSString *message = self.sharerObject.remoteConfiguration.facebookShare.text;
+    NSString *url = [self.sharerObject shareLinkWithSubRouteLetter:@"f"];
 
     SLComposeViewController *facebookSheet = [self _createFacebookComposeViewController];
     [facebookSheet setInitialText:message];
@@ -163,7 +164,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     BOOL dismissShared = NO;
     switch (result) {
         case SLComposeViewControllerResultDone: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[self.sharerObject shareToken] audience:nil];
             dismissShared = YES;
         } case SLComposeViewControllerResultCancelled: {
             break;
@@ -178,7 +179,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)twitteriOSNativeShare {
-    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.twitterShare.text
+    NSString *message = [self.sharerObject shareCopyFromCopy:self.sharerObject.remoteConfiguration.twitterShare.text
                       andLinkWithSubRouteLetter:@"t"];
 
     SLComposeViewController *tweetSheet = [self _createTwitterComposeViewController];
@@ -198,7 +199,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     BOOL dismissShared = NO;
     switch (result) {
         case SLComposeViewControllerResultDone: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[self.sharerObject shareToken] audience:nil];
             dismissShared = YES;
         } case SLComposeViewControllerResultCancelled: {
             break;
@@ -214,7 +215,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 
 - (void)clipboardShare {
-    NSString *message = [self shareCopyFromCopy:self.remoteConfiguration.clipboardShare.text
+    NSString *message = [self.sharerObject shareCopyFromCopy:self.sharerObject.remoteConfiguration.clipboardShare.text
                       andLinkWithSubRouteLetter:@"c"];
 
     UIPasteboard *pasteboard = [self _generalPasteboardForClipboardShare];
@@ -223,7 +224,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard];
 
     // Any copy to clipboard might be shared, so reset the share token here
-    [self resetShareToken];
+    [self.sharerObject resetShareToken];
 
     UIAlertView *alert;
     alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
@@ -247,53 +248,53 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 #pragma mark - Helpers for building share content
 
-- (MAVERemoteConfiguration *)remoteConfiguration {
-    return [MaveSDK sharedInstance].remoteConfiguration;
-}
-
-- (NSString *)shareToken {
-    MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
-    return tokenObject.shareToken;
-}
-
-- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
-      andLinkWithSubRouteLetter:(NSString *)letter {
-    NSString* link = [self shareLinkWithSubRouteLetter:letter];
-    NSString *outputText = shareCopy;
-    if ([outputText length] == 0) {
-        outputText = link;
-    } else {
-        // if string doesn't end in a whitespace char, append a regular space
-        NSString *lastLetter = [outputText substringFromIndex:([outputText length] - 1)];
-        if (![@[@" ", @"\n"] containsObject:lastLetter]) {
-            outputText = [outputText stringByAppendingString:@" "];
-        }
-        outputText = [outputText stringByAppendingString:link];
-    }
-    return outputText;
-}
-
-- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
-    NSString *shareToken = [self shareToken];
-    NSString *output;// = MAVEShortLinkBaseURL;
-
-    if ([shareToken length] > 0) {
-        NSString *shareToken = [self shareToken];
-        output = [NSString stringWithFormat:@"%@%@/%@",
-                  MAVEShortLinkBaseURL, subRoute, shareToken];
-    } else {
-        NSString * base64AppID = [MAVEClientPropertyUtils urlSafeBase64ApplicationID];
-        output = [NSString stringWithFormat:@"%@o/%@/%@",
-                  MAVEShortLinkBaseURL, subRoute, base64AppID];
-    }
-    return output;
-}
-
-- (void)resetShareToken {
-    MAVEDebugLog(@"Resetting share token after share, was: %@", [self shareToken]);
-    [MAVEShareToken clearUserDefaults];
-    [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
-}
+//- (MAVERemoteConfiguration *)remoteConfiguration {
+//    return [MaveSDK sharedInstance].remoteConfiguration;
+//}
+//
+//- (NSString *)shareToken {
+//    MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
+//    return tokenObject.shareToken;
+//}
+//
+//- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
+//      andLinkWithSubRouteLetter:(NSString *)letter {
+//    NSString* link = [self shareLinkWithSubRouteLetter:letter];
+//    NSString *outputText = shareCopy;
+//    if ([outputText length] == 0) {
+//        outputText = link;
+//    } else {
+//        // if string doesn't end in a whitespace char, append a regular space
+//        NSString *lastLetter = [outputText substringFromIndex:([outputText length] - 1)];
+//        if (![@[@" ", @"\n"] containsObject:lastLetter]) {
+//            outputText = [outputText stringByAppendingString:@" "];
+//        }
+//        outputText = [outputText stringByAppendingString:link];
+//    }
+//    return outputText;
+//}
+//
+//- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
+//    NSString *shareToken = [self shareToken];
+//    NSString *output;// = MAVEShortLinkBaseURL;
+//
+//    if ([shareToken length] > 0) {
+//        NSString *shareToken = [self shareToken];
+//        output = [NSString stringWithFormat:@"%@%@/%@",
+//                  MAVEShortLinkBaseURL, subRoute, shareToken];
+//    } else {
+//        NSString * base64AppID = [MAVEClientPropertyUtils urlSafeBase64ApplicationID];
+//        output = [NSString stringWithFormat:@"%@o/%@/%@",
+//                  MAVEShortLinkBaseURL, subRoute, base64AppID];
+//    }
+//    return output;
+//}
+//
+//- (void)resetShareToken {
+//    MAVEDebugLog(@"Resetting share token after share, was: %@", [self shareToken]);
+//    [MAVEShareToken clearUserDefaults];
+//    [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
+//}
 
 
 @end

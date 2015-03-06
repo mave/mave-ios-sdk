@@ -10,8 +10,11 @@
 #import <Social/Social.h>
 #import <MessageUI/MessageUI.h>
 #import "MAVERemoteConfiguration.h"
+#import "MAVESharer.h"
 
 @interface MAVECustomSharePageViewController: UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
+
+@property (nonatomic, strong) MAVESharer *sharerObject;
 
 - (void)dismissAfterShare;
 
@@ -34,13 +37,13 @@
 
 // Helpers
 
-- (MAVERemoteConfiguration *)remoteConfiguration;
-- (NSString *)shareToken;
-- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
-      andLinkWithSubRouteLetter:(NSString *)letter;
-// Build a link of the format: http://appjoin.us/<subRoute>/SHARE-TOKEN
-- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
-- (void)resetShareToken;
+//- (MAVERemoteConfiguration *)remoteConfiguration;
+//- (NSString *)shareToken;
+//- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
+//      andLinkWithSubRouteLetter:(NSString *)letter;
+//// Build a link of the format: http://appjoin.us/<subRoute>/SHARE-TOKEN
+//- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
+//- (void)resetShareToken;
 
 
 @end
