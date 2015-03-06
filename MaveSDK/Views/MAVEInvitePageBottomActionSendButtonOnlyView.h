@@ -18,6 +18,5 @@
 
 - (CGFloat)heightOfSelf;
 - (void)setupViewsWithSingletonObject:(MaveSDK *)mave;
-- (void)updateNumberPeopleSelected:(uint64_t)numberSelected;
 
 @end

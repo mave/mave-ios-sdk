@@ -31,6 +31,23 @@
     return self;
 }
 
+- (void)addToSendButtonTarget:(id)target andAction:(SEL)action {
+    switch (self.smsInviteSendMethod) {
+        case MAVESMSInviteSendMethodServerSide: {
+            [self.inviteMessageView.sendButton addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+            break;
+        }
+        case MAVESMSInviteSendMethodClientSideGroup: {
+            [self.clientSideBottomActionView.sendButton addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+// Switch the active view when using server side SMS method
 - (void)makeInviteMessageViewActive {
     self.inviteMessageView.hidden = NO;
     self.sendingInProgressView.hidden = YES;

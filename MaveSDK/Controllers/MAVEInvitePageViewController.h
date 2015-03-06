@@ -47,6 +47,7 @@
 // Invite Sending
 - (void)sendInvites;
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error;
+- (void)composeClientGroupInvites;
 
 // Methods to dismiss self after user done sending invites or user hit cancel
 - (void)dismissSelf:(NSUInteger)numberOfInvitesSent;

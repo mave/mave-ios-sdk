@@ -1,16 +1,15 @@
 //
-//  MAVEInvitePageBottomActionContainerViewTests.m
+//  MAVEInviteMessageContainerViewTests.m
 //  MaveSDK
 //
-//  Created by Danny Cosson on 2/19/15.
+//  Created by Danny Cosson on 11/16/14.
 //
 //
 
 #import <UIKit/UIKit.h>
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
-#import "MaveSDK.h"
-#import "MAVEInviteTableSectionHeaderView.h"
-#import "MAVEDisplayOptionsFactory.h"
+#import "MAVEInvitePageBottomActionContainerView.h"
 
 @interface MAVEInvitePageBottomActionContainerViewTests : XCTestCase
 
@@ -21,8 +20,6 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    [MaveSDK sharedInstance].displayOptions = [MAVEDisplayOptionsFactory generateDisplayOptions];
 }
 
 - (void)tearDown {
@@ -30,30 +27,91 @@
     [super tearDown];
 }
 
-- (void)testInitAndSetupNotWaiting {
-    MAVEInviteTableSectionHeaderView *view = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"footext" sectionIsWaiting:NO];
+- (void)testInitAsServerSideSMSInviteMessageView {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
+    XCTAssertEqual(view.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
+    XCTAssertNotNil(view.inviteMessageView);
+    XCTAssertNotNil(view.sendingInProgressView);
+    XCTAssertNotNil(view.clientSideBottomActionView);
+    XCTAssertTrue([view.inviteMessageView isDescendantOfView:view]);
+    XCTAssertTrue([view.sendingInProgressView isDescendantOfView:view]);
+    XCTAssertFalse([view.clientSideBottomActionView isDescendantOfView:view]);
+    XCTAssertFalse(view.inviteMessageView.hidden);
+    XCTAssertTrue(view.sendingInProgressView.hidden);
 
-    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
-    XCTAssertEqualObjects(view.titleLabel.text, @"footext");
-    XCTAssertEqualObjects(view.titleLabel.textColor, displayOpts.contactSectionHeaderTextColor);
-    XCTAssertEqualObjects(view.titleLabel.font, displayOpts.contactSectionHeaderFont);
-    XCTAssertEqualObjects(view.backgroundColor, displayOpts.contactSectionHeaderBackgroundColor);
-    XCTAssertNil(view.waitingDotsView);
+    // height method should call the invite message view's height method
+    id serverSideInviteMessageViewMock = OCMPartialMock(view.inviteMessageView);
+    OCMExpect([serverSideInviteMessageViewMock computeHeightWithWidth:123]).andReturn(456);
 
-    // This is just a no-op bc it's not waiting
-    [view stopWaiting];
-    XCTAssertNil(view.waitingDotsView);
+    CGFloat height = [view heightForViewWithWidth:123];
+
+    XCTAssertEqual(height, 456);
+    OCMVerifyAll(serverSideInviteMessageViewMock);
 }
 
-- (void)testInitAndSetupWaiting {
-    MAVEInviteTableSectionHeaderView *view = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"bartext" sectionIsWaiting:YES];
-    
-    XCTAssertEqualObjects(view.titleLabel.text, @"bartext");
-    XCTAssertNotNil(view.waitingDotsView);
-    XCTAssertFalse(view.waitingDotsView.hidden);
+- (void)testInitAsClientGroupSMSMessageView {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodClientSideGroup];
+    XCTAssertEqual(view.smsInviteSendMethod, MAVESMSInviteSendMethodClientSideGroup);
+    XCTAssertNotNil(view.inviteMessageView);
+    XCTAssertNotNil(view.sendingInProgressView);
+    XCTAssertNotNil(view.clientSideBottomActionView);
+    XCTAssertFalse([view.inviteMessageView isDescendantOfView:view]);
+    XCTAssertFalse([view.sendingInProgressView isDescendantOfView:view]);
+    XCTAssertTrue([view.clientSideBottomActionView isDescendantOfView:view]);
 
-    [view stopWaiting];
-    XCTAssertTrue(view.waitingDotsView.hidden);
+    // height method should call the underlying height method
+    id clientSideBottomActionViewMock = OCMPartialMock(view.clientSideBottomActionView);
+    OCMExpect([clientSideBottomActionViewMock heightOfSelf]).andReturn(124);
+
+    CGFloat height = [view heightForViewWithWidth:123];
+
+    XCTAssertEqual(height, 124);
+    OCMVerifyAll(clientSideBottomActionViewMock);
+}
+
+- (void)testAddTargetToButtonForServerSMSMethod {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
+    id sendButtonMock = OCMPartialMock(view.inviteMessageView.sendButton);
+    NSObject *fakeTarget = [[NSObject alloc] init];
+    SEL fakeSelector = @selector(tearDown);
+    OCMExpect([sendButtonMock addTarget:fakeTarget action:fakeSelector forControlEvents:UIControlEventTouchUpInside]);
+
+    [view addToSendButtonTarget:fakeTarget andAction:fakeSelector];
+
+    OCMVerifyAll(sendButtonMock);
+}
+
+- (void)testAddTargetToButtonForClientSideGroupSMSMethod {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodClientSideGroup];
+    id sendButtonMock = OCMPartialMock(view.clientSideBottomActionView.sendButton);
+    NSObject *fakeTarget = [[NSObject alloc] init];
+    SEL fakeSelector = @selector(tearDown);
+    OCMExpect([sendButtonMock addTarget:fakeTarget action:fakeSelector forControlEvents:UIControlEventTouchUpInside]);
+
+    [view addToSendButtonTarget:fakeTarget andAction:fakeSelector];
+
+    OCMVerifyAll(sendButtonMock);
+}
+
+- (void)testServerSMSSwitchToSendingInProgressView {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
+    id sendingInProgressViewMock = [OCMockObject partialMockForObject:view.sendingInProgressView];
+    [[sendingInProgressViewMock expect] startTimedProgress];
+
+    [view makeSendingInProgressViewActive];
+
+    [sendingInProgressViewMock verify];
+    XCTAssertTrue(view.inviteMessageView.hidden);
+    XCTAssertFalse(view.sendingInProgressView.hidden);
+}
+
+- (void)testServerSMSSwitchToInviteMessageView {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
+    [view makeSendingInProgressViewActive];
+    [view makeInviteMessageViewActive];
+    XCTAssertFalse(view.inviteMessageView.hidden);
+    XCTAssertTrue(view.sendingInProgressView.hidden);
+    
 }
 
 @end

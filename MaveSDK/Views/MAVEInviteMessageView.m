@@ -61,7 +61,6 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
         [self.sendButton setTitle:buttonTitle forState:UIControlStateDisabled];
         self.sendButton.enabled = NO;
         
-        
         self.sendMediumIndicator = [[UILabel alloc] init];
         self.sendMediumIndicator.font = displayOptions.contactDetailsFont;
         self.sendMediumIndicator.textColor = [MAVEDisplayOptions colorMediumGrey];

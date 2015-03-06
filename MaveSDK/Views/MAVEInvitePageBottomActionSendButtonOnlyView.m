@@ -22,6 +22,7 @@ const NSString *NumberSelectedIndicatorFormat = @"Compose SMS to %llu people";
 }
 
 - (void)setupViewsWithSingletonObject:(MaveSDK *)mave {
+    self.numberSelected = 0;
     self.backgroundColor = mave.displayOptions.bottomViewBackgroundColor;
 
     self.sendButton = [[UIButton alloc] init];
@@ -34,7 +35,7 @@ const NSString *NumberSelectedIndicatorFormat = @"Compose SMS to %llu people";
     self.sendButton.enabled = YES;
 
     self.numberSelectedIndicator = [[UILabel alloc] init];
-    self.numberSelectedIndicator.textColor = [UIColor grayColor];
+    self.numberSelectedIndicator.textColor = [[mave.displayOptions class] colorMediumGrey];
     self.numberSelectedIndicator.font = [UIFont systemFontOfSize:10];
 
     [self addSubview:self.sendButton];

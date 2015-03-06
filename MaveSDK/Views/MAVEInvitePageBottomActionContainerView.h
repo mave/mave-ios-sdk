@@ -28,5 +28,7 @@ typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
 - (void)makeSendingInProgressViewActive;
 
 - (CGFloat)heightForViewWithWidth:(CGFloat)width;
+- (void)updateNumberPeopleSelected:(uint64_t)numberOfPeople;
+- (void)addToSendButtonTarget:(id)target andAction:(SEL)action;
 
 @end
