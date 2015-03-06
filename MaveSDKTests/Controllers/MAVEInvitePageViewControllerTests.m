@@ -259,6 +259,12 @@
     [mockPrompter stopMocking];
 }
 
+- (void)testCreateAddressBookInviteViewWhenServerSideSMSMethod {
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    UIView *view = [vc createAddressBookInviteView];
+    // TODO, finish test logic
+}
+
 // Tests for the helper for displaying suggested invites
 - (void)testBuildContactsToUseAtPageRenderWhenShowSuggestedFlaggedOff {
     [MaveSDK resetSharedInstanceForTesting];

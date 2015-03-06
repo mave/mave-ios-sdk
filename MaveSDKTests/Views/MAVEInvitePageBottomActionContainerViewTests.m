@@ -93,6 +93,25 @@
     OCMVerifyAll(sendButtonMock);
 }
 
+- (void)testUpdateNumberPeopleSelectedForServerSideSMSMethod {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
+    id inviteMessageViewMock = OCMPartialMock(view.inviteMessageView);
+    OCMExpect([inviteMessageViewMock updateNumberPeopleSelected:123]);
+
+    [view updateNumberPeopleSelected:123];
+
+    OCMVerifyAll(inviteMessageViewMock);
+}
+
+- (void)testUpdateNumberPeopleSelectedForClientSideGroupSMSMethod {
+    MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodClientSideGroup];
+    XCTAssertEqual(view.clientSideBottomActionView.numberSelected, 0);
+
+    [view updateNumberPeopleSelected:123];
+
+    XCTAssertEqual(view.clientSideBottomActionView.numberSelected, 123);
+}
+
 - (void)testServerSMSSwitchToSendingInProgressView {
     MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
     id sendingInProgressViewMock = [OCMockObject partialMockForObject:view.sendingInProgressView];

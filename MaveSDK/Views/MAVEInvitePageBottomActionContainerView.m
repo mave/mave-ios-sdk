@@ -47,6 +47,21 @@
     }
 }
 
+- (void)updateNumberPeopleSelected:(uint64_t)numberOfPeople {
+    switch (self.smsInviteSendMethod) {
+        case MAVESMSInviteSendMethodServerSide: {
+            [self.inviteMessageView updateNumberPeopleSelected:numberOfPeople];
+        }
+        case MAVESMSInviteSendMethodClientSideGroup: {
+            self.clientSideBottomActionView.numberSelected = numberOfPeople;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+}
+
 // Switch the active view when using server side SMS method
 - (void)makeInviteMessageViewActive {
     self.inviteMessageView.hidden = NO;
