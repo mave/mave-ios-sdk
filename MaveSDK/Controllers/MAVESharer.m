@@ -13,6 +13,12 @@
 #import "MaveShareToken.h"
 #import "MAVEClientPropertyUtils.h"
 
+NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
+NSString * const MAVESharePageShareTypeClientEmail = @"client_email";
+NSString * const MAVESharePageShareTypeFacebook = @"facebook";
+NSString * const MAVESharePageShareTypeTwitter = @"twitter";
+NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
+
 @implementation MAVESharer
 
 - (instancetype)initAndRetainSelf {
@@ -24,6 +30,33 @@
 
 - (void)releaseSelf {
     self.retainedSelf = nil;
+    self.completionBlockClientSMS = nil;
+}
+
++ (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones completionBlock:(void (^)(MessageComposeResult))completionBlock {
+    if (![MFMessageComposeViewController canSendText]) {
+        MAVEErrorLog(@"Tried to do compose client sms but canSendText is false");
+        return nil;
+    }
+    MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
+    ownInstance.completionBlockClientSMS = completionBlock;
+
+    MFMessageComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMessageComposeViewController];
+    NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
+
+    composeVC.messageComposeDelegate = ownInstance;
+    composeVC.body = message;
+
+    if (recipientPhones && [recipientPhones count] > 0) {
+        composeVC.recipients = recipientPhones;
+    }
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientSMS];
+    return composeVC;
+}
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+
 }
 
 #pragma mark - Helpers for building share content
@@ -73,6 +106,20 @@
     MAVEDebugLog(@"Resetting share token after share, was: %@", [self shareToken]);
     [MAVEShareToken clearUserDefaults];
     [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
+}
+
+@end
+
+
+// Builder to allow mocking for testing, it just returns the different types
+// of share view controllers we'll need to present after calling alloc init
+@implementation MAVESharerViewControllerBuilder
+
++ (MAVESharer *)sharerInstanceRetained {
+    return [[MAVESharer alloc] initAndRetainSelf];
+}
++ (MFMessageComposeViewController *)MFMessageComposeViewController {
+    return [[MFMessageComposeViewController alloc] init];
 }
 
 @end

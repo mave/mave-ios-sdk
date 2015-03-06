@@ -18,12 +18,6 @@
 #import "MAVEShareToken.h"
 #import "MAVEClientPropertyUtils.h"
 
-NSString * const MAVESharePageShareTypeClientSMS = @"client_sms";
-NSString * const MAVESharePageShareTypeClientEmail = @"client_email";
-NSString * const MAVESharePageShareTypeFacebook = @"facebook";
-NSString * const MAVESharePageShareTypeTwitter = @"twitter";
-NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
-
 
 @implementation MAVECustomSharePageViewController
 

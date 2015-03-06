@@ -15,6 +15,10 @@
 #import "MAVESharer.h"
 #import "MAVEShareToken.h"
 
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
+
 @interface MAVESharerTests : XCTestCase
 
 @end
@@ -23,7 +27,8 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
 }
 
 - (void)tearDown {
@@ -39,7 +44,48 @@
 }
 
 - (void)testComposeClientSMSInvite {
+    NSArray *recipientPhones = @[@"+18085551234", @"86753"];
 
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:MAVESharePageShareTypeClientSMS]);
+
+    // we need to use a mock of this, because the simulator can't send texts
+    // so this class can't even be initialized
+    id messageComposeVCMock = OCMClassMock([MFMessageComposeViewController class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock MFMessageComposeViewController]).andReturn(messageComposeVCMock);
+    MAVESharer *sharerInstance = [[MAVESharer alloc] init];
+    OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
+
+    // sms message text
+    NSString *expectedMessageText = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
+    XCTAssertGreaterThan([expectedMessageText length], 0);
+    OCMExpect([messageComposeVCMock setBody:expectedMessageText]);
+
+    // sms recipient
+    OCMExpect([messageComposeVCMock setRecipients:recipientPhones]);
+
+    void (^myCompletionBlock)(MessageComposeResult result) = ^void(MessageComposeResult result) {};
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:recipientPhones completionBlock:myCompletionBlock];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqualObjects(vc, messageComposeVCMock);
+    XCTAssertEqualObjects(sharerInstance.completionBlockClientSMS,
+                          myCompletionBlock);
+
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(messageComposeVCMock);
+    OCMVerifyAll(builderMock);
+}
+
+- (void)testComposeClientSMSInviteReturnsNilIfCantSendSMS {
+    XCTAssertFalse([MFMessageComposeViewController canSendText]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    [[builderMock reject] sharerInstanceRetained];
+
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:nil];
+    XCTAssertNil(vc);
+    OCMVerifyAll(builderMock);
 }
 
 
