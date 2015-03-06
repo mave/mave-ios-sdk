@@ -195,7 +195,7 @@
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
 
     SEL sendSelector;
-    sendSelector = @selector(composeClientGroupInvites);
+    sendSelector = @selector(composeClientGroupSMSInvites);
     self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodClientSideGroup];
     [self.bottomActionContainerView addToSendButtonTarget:self andAction:sendSelector];
     
@@ -370,7 +370,7 @@
     [alertView dismissWithClickedButtonIndex:0 animated:YES];
 }
 
-- (void)composeClientGroupInvites {
+- (void)composeClientGroupSMSInvites {
     NSArray *recipientPhones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:recipientPhones completionBlock:^(MessageComposeResult result) {
 

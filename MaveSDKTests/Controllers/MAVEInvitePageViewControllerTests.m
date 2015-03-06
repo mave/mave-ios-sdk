@@ -193,7 +193,7 @@
     id vcMock = OCMPartialMock(vc);
     OCMExpect([vcMock presentViewController:fakeMessageComposeVC animated:YES completion:nil]);
 
-    [vc composeClientGroupInvites];
+    [vc composeClientGroupSMSInvites];
 
     OCMVerifyAll(vcMock);
     OCMVerifyAll(maveSharerMock);
