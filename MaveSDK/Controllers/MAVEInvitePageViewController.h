@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MessageUI/MessageUI.h>
 #import "MAVEABTableViewController.h"
 #import "MAVEInvitePageBottomActionContainerView.h"
 #import "MAVEInviteTableHeaderView.h"
 
-@interface MAVEInvitePageViewController : UIViewController <MFMessageComposeViewControllerDelegate>
+@interface MAVEInvitePageViewController : UIViewController
 
 @property (strong, nonatomic) MAVESearchBar *abTableFixedSearchbar;
 @property (strong, nonatomic) MAVEABTableViewController *ABTableViewController;

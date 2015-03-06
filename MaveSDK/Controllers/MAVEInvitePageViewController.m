@@ -382,11 +382,6 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
-                 didFinishWithResult:(MessageComposeResult)result {
-
-}
-
 // Do Share sheet invites instead
 - (void)presentShareSheet {
     MaveSDK *mave = [MaveSDK sharedInstance];
