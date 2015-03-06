@@ -7,6 +7,7 @@
 //
 
 #import "MAVEInvitePageBottomActionSendButtonOnlyView.h"
+#import "MaveSDK.h"
 
 @implementation MAVEInvitePageBottomActionSendButtonOnlyView
 
@@ -18,11 +19,21 @@
 
         [self addSubview:self.sendButton];
         [self addSubview:self.numberSelectedIndicator];
+        [self setupViewsWithSingletonObject:[MaveSDK sharedInstance]];
     }
     return self;
 }
 
+- (void)setupViewsWithSingletonObject:(MaveSDK *)mave {
+    self.backgroundColor = [UIColor greenColor];
+}
+
 - (void)layoutSubviews {
+    self.sendButton.frame = CGRectMake(50, 20, 100, 30);
+}
+
+- (CGFloat)heightOfSelf {
+    return 70;
 }
 
 @end

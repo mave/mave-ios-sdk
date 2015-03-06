@@ -8,9 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class MaveSDK;
+
 @interface MAVEInvitePageBottomActionSendButtonOnlyView : UIView
 
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UILabel *numberSelectedIndicator;
+
+- (CGFloat)heightOfSelf;
+- (void)setupViewsWithSingletonObject:(MaveSDK *)mave;
 
 @end
