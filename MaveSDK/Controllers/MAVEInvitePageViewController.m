@@ -307,7 +307,7 @@
         [UIView animateWithDuration:0.25 animations:^{
             [self layoutInvitePageViewAndSubviews];
         }];
-        [self.bottomActionContainerView.inviteMessageView updateNumberPeopleSelected:numberChanged];
+        [self.bottomActionContainerView updateNumberPeopleSelected:numberChanged];
     });
 }
 

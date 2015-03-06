@@ -54,6 +54,7 @@
         }
         case MAVESMSInviteSendMethodClientSideGroup: {
             self.clientSideBottomActionView.numberSelected = numberOfPeople;
+            [self.clientSideBottomActionView setNeedsLayout];
             break;
         }
         default: {
@@ -83,6 +84,7 @@
 }
 
 - (void)layoutSubviews {
+    [super layoutSubviews];
     CGRect fullOwnFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     self.inviteMessageView.frame = fullOwnFrame;
     self.sendingInProgressView.frame = fullOwnFrame;
