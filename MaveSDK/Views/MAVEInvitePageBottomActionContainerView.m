@@ -16,10 +16,17 @@
         self.smsInviteSendMethod = smsInviteSendMethod;
         self.inviteMessageView = [[MAVEInviteMessageView alloc] init];
         self.sendingInProgressView = [[MAVEInviteSendingProgressView alloc] init];
-        [self makeInviteMessageViewActive];
+        self.clientSideBottomActionView = [[MAVEInvitePageBottomActionSendButtonOnlyView alloc] init];
 
-        [self addSubview:self.inviteMessageView];
-        [self addSubview:self.sendingInProgressView];
+        if (self.smsInviteSendMethod == MAVESMSInviteSendMethodServerSide) {
+
+            [self makeInviteMessageViewActive];
+
+            [self addSubview:self.inviteMessageView];
+            [self addSubview:self.sendingInProgressView];
+        } else {
+            [self addSubview:self.clientSideBottomActionView];
+        }
     }
     return self;
 }
@@ -35,14 +42,19 @@
     [self.sendingInProgressView startTimedProgress];
 }
 
-- (CGFloat)heightForViewCurrentInviteSendMethodWithWidth:(CGFloat)width {
-    return [self.inviteMessageView computeHeightWithWidth:width];
+- (CGFloat)heightForViewWithWidth:(CGFloat)width {
+    if (self.smsInviteSendMethod == MAVESMSInviteSendMethodServerSide) {
+        return [self.inviteMessageView computeHeightWithWidth:width];
+    } else {
+        return [self.clientSideBottomActionView heightOfSelf];
+    }
 }
 
 - (void)layoutSubviews {
     CGRect fullOwnFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     self.inviteMessageView.frame = fullOwnFrame;
     self.sendingInProgressView.frame = fullOwnFrame;
+    self.clientSideBottomActionView.frame = fullOwnFrame;
 }
 
 @end

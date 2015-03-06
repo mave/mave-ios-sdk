@@ -32,6 +32,10 @@
     XCTAssertEqual(view.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
     XCTAssertNotNil(view.inviteMessageView);
     XCTAssertNotNil(view.sendingInProgressView);
+    XCTAssertNotNil(view.clientSideBottomActionView);
+    XCTAssertTrue([view.inviteMessageView isDescendantOfView:view]);
+    XCTAssertTrue([view.sendingInProgressView isDescendantOfView:view]);
+    XCTAssertFalse([view.clientSideBottomActionView isDescendantOfView:view]);
     XCTAssertFalse(view.inviteMessageView.hidden);
     XCTAssertTrue(view.sendingInProgressView.hidden);
 
@@ -39,7 +43,7 @@
     id serverSideInviteMessageViewMock = OCMPartialMock(view.inviteMessageView);
     OCMExpect([serverSideInviteMessageViewMock computeHeightWithWidth:123]).andReturn(456);
 
-    CGFloat height = [view heightForViewCurrentInviteSendMethodWithWidth:123];
+    CGFloat height = [view heightForViewWithWidth:123];
 
     XCTAssertEqual(height, 456);
     OCMVerifyAll(serverSideInviteMessageViewMock);
@@ -47,12 +51,22 @@
 
 - (void)testInitAsClientGroupSMSMessageView {
     MAVEInvitePageBottomActionContainerView *view = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodClientSideGroup];
-    XCTAssertEqual(view.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
-    XCTAssertNil(view.inviteMessageView);
-    XCTAssertNil(view.sendingInProgressView);
+    XCTAssertEqual(view.smsInviteSendMethod, MAVESMSInviteSendMethodClientSideGroup);
+    XCTAssertNotNil(view.inviteMessageView);
+    XCTAssertNotNil(view.sendingInProgressView);
     XCTAssertNotNil(view.clientSideBottomActionView);
+    XCTAssertFalse([view.inviteMessageView isDescendantOfView:view]);
+    XCTAssertFalse([view.sendingInProgressView isDescendantOfView:view]);
+    XCTAssertTrue([view.clientSideBottomActionView isDescendantOfView:view]);
 
     // height method should call the underlying height method
+    id clientSideBottomActionViewMock = OCMPartialMock(view.clientSideBottomActionView);
+    OCMExpect([clientSideBottomActionViewMock heightOfSelf]).andReturn(124);
+
+    CGFloat height = [view heightForViewWithWidth:123];
+
+    XCTAssertEqual(height, 124);
+    OCMVerifyAll(clientSideBottomActionViewMock);
 }
 
 - (void)testSwitchToSendingInProgressView {

@@ -320,7 +320,6 @@
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
     XCTAssertEqual([vc.selectedPeople count], 0);
     OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
-    OCMExpect([mockedIPVC layoutInvitePageViewAndSubviews]);
     OCMExpect([mockedTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]);
     
     // Run
@@ -355,14 +354,12 @@
     XCTAssertEqual([vc.selectedPhoneNumbers count], 0);
     XCTAssertEqual([vc.selectedPeople count], 0);
     OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:1]);
-    OCMExpect([mockedIPVC layoutInvitePageViewAndSubviews]);
     OCMExpect([mockedTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]);
     
     // Select, then deselect
     [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
     
     OCMExpect([mockedIPVC ABTableViewControllerNumberSelectedChanged:0]);
-    OCMExpect([mockedIPVC layoutInvitePageViewAndSubviews]);
     [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
     
     // Verify

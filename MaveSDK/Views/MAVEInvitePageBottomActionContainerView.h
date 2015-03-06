@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MAVEInviteMessageView.h"
 #import "MAVEInviteSendingProgressView.h"
+#import "MAVEInvitePageBottomActionSendButtonOnlyView.h"
 
 typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
     MAVESMSInviteSendMethodServerSide,
@@ -20,12 +21,12 @@ typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
 @property (nonatomic, assign) MAVESMSInviteSendMethod smsInviteSendMethod;
 @property (nonatomic, strong) MAVEInviteMessageView *inviteMessageView;
 @property (nonatomic, strong) MAVEInviteSendingProgressView *sendingInProgressView;
-@property (nonatomic, strong) UIView *clientSideBottomActionView;
+@property (nonatomic, strong) MAVEInvitePageBottomActionSendButtonOnlyView *clientSideBottomActionView;
 
 - (instancetype)initWithSMSInviteSendMethod:(MAVESMSInviteSendMethod)smsInviteSendMethod;
 - (void)makeInviteMessageViewActive;
 - (void)makeSendingInProgressViewActive;
 
-- (CGFloat)heightForViewCurrentInviteSendMethodWithWidth:(CGFloat)width;
+- (CGFloat)heightForViewWithWidth:(CGFloat)width;
 
 @end

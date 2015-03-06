@@ -193,7 +193,7 @@
     // Instantiate the view controllers for child views
     self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] init];
+    self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
     [self.bottomActionContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
     
@@ -226,17 +226,17 @@
     tableViewFrame.origin.y = yOffsetForContent;
     tableViewFrame.size.height = containerFrame.size.height - yOffsetForContent;
 
-    CGFloat inviteViewHeight = [self.bottomActionContainerView.inviteMessageView
-                                computeHeightWithWidth:containerFrame.size.width];
+    CGFloat bottomActionViewHeight = [self.bottomActionContainerView
+                                      heightForViewWithWidth:containerFrame.size.width];
 
-    // Adjust bottom inset to make extra room for the invite view, and remove ex
+    // Adjust bottom inset to make extra room for the bottom action view & remove when it's going away
     UIEdgeInsets tableBottomInset = self.ABTableViewController.tableView.contentInset;
-    if ([self shouldDisplayInviteMessageView] && tableBottomInset.bottom < inviteViewHeight) {
+    if ([self shouldDisplayInviteMessageView] && tableBottomInset.bottom < bottomActionViewHeight) {
         CGFloat adjustOffsetBy;
         if (self.ABTableViewController.isFixedSearchBarActive) {
-            adjustOffsetBy = inviteViewHeight;
+            adjustOffsetBy = bottomActionViewHeight;
         } else {
-            adjustOffsetBy = inviteViewHeight - MAVESearchBarHeight;
+            adjustOffsetBy = bottomActionViewHeight - MAVESearchBarHeight;
         }
         tableBottomInset.bottom  = adjustOffsetBy;
     }
@@ -254,14 +254,14 @@
 
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
-    CGFloat inviteViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
+    CGFloat bottomActionViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
     if ([self shouldDisplayInviteMessageView]) {
-        inviteViewOffsetY -= inviteViewHeight;
+        bottomActionViewOffsetY -= bottomActionViewHeight;
     }
-    CGRect inviteMessageViewFrame = CGRectMake(0,
-                                               inviteViewOffsetY,
-                                               containerFrame.size.width,
-                                               inviteViewHeight);
+    CGRect bottomActionViewFrame = CGRectMake(0,
+                                              bottomActionViewOffsetY,
+                                              containerFrame.size.width,
+                                              bottomActionViewHeight);
 
     // If the fixed search bar is active, set the frame and make room for it by shrinking the table
     if (self.ABTableViewController.isFixedSearchBarActive) {
@@ -280,7 +280,7 @@
                    -containerFrame.size.height,
                    containerFrame.size.width,
                    containerFrame.size.height);
-    self.bottomActionContainerView.frame = inviteMessageViewFrame;
+    self.bottomActionContainerView.frame = bottomActionViewFrame;
 
     // adjust the search table bottom content inset so it doesn't hide results behind
     // the area taken up by keyboard + invite message container view
