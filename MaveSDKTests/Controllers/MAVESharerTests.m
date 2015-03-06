@@ -52,6 +52,7 @@
     // we need to use a mock of this, because the simulator can't send texts
     // so this class can't even be initialized
     id messageComposeVCMock = OCMClassMock([MFMessageComposeViewController class]);
+    OCMExpect([messageComposeVCMock canSendText]).andReturn(YES);
     id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
     OCMExpect([builderMock MFMessageComposeViewController]).andReturn(messageComposeVCMock);
     MAVESharer *sharerInstance = [[MAVESharer alloc] init];
