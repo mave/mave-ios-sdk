@@ -14,6 +14,9 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
 const NSString *MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
 const NSString *MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy";
 const NSString *MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
+const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethod = @"sms_send_method";
+const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide = @"server_side";
+const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGroup = @"client_side_group";
 
 
 @implementation MAVERemoteConfigurationContactsInvitePage
@@ -45,6 +48,7 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @
             if (suggestedInvitesVal && (id)suggestedInvitesVal != [NSNull null]) {
                 self.suggestedInvitesEnabled = [suggestedInvitesVal boolValue];
             }
+            self.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
         }
     }
     return self;

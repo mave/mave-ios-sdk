@@ -7,14 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MAVERemoteConfigurationContactsInvitePage.h"
 #import "MAVEInviteMessageView.h"
 #import "MAVEInviteSendingProgressView.h"
 #import "MAVEInvitePageBottomActionSendButtonOnlyView.h"
-
-typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
-    MAVESMSInviteSendMethodServerSide,
-    MAVESMSInviteSendMethodClientSideGroup
-};
 
 @interface MAVEInvitePageBottomActionContainerView : UIView
 

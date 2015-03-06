@@ -7,6 +7,7 @@
 //
 
 #import "MAVEInvitePageBottomActionContainerView.h"
+#import "MAVERemoteConfigurationContactsInvitePage.h"
 
 @implementation MAVEInvitePageBottomActionContainerView
 

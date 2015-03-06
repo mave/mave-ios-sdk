@@ -194,9 +194,14 @@
     self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
 
+    MAVESMSInviteSendMethod inviteSendMethod = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod;
     SEL sendSelector;
-    sendSelector = @selector(composeClientGroupSMSInvites);
-    self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodClientSideGroup];
+    if (inviteSendMethod == MAVESMSInviteSendMethodServerSide) {
+        sendSelector = @selector(sendInvites);
+    } else {
+        sendSelector = @selector(composeClientGroupSMSInvites);
+    }
+    self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:inviteSendMethod];
     [self.bottomActionContainerView addToSendButtonTarget:self andAction:sendSelector];
     
     __weak typeof(self) weakSelf = self;
