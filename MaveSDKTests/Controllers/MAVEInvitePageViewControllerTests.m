@@ -170,6 +170,35 @@
     OCMVerifyAll(mockAPIInterface);
 }
 
+- (void)testComposeClientGroupInvites {
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    [vc loadView];
+    [vc viewDidLoad];
+
+    // Setup content for invites
+    NSArray *invitePhones = @[@"18085551234"];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.firstName = @"Foo";
+    NSArray *inviteContacts = @[p1];
+    vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
+    vc.ABTableViewController.selectedPeople = [[NSMutableSet alloc] initWithArray:inviteContacts];
+
+    UIViewController *fakeMessageComposeVC = OCMClassMock([MFMessageComposeViewController class]);
+    id maveSharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([maveSharerMock composeClientSMSInviteToRecipientPhones:invitePhones completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MessageComposeResult result) = obj;
+        completionBlock(MessageComposeResultSent);
+        return YES;
+    }]]).andReturn(fakeMessageComposeVC);
+
+    id vcMock = OCMPartialMock(vc);
+    OCMExpect([vcMock presentViewController:fakeMessageComposeVC animated:YES completion:nil]);
+
+    [vc composeClientGroupInvites];
+
+    OCMVerifyAll(vcMock);
+    OCMVerifyAll(maveSharerMock);
+}
+
 ///
 /// Tests for the load contacts invite view code
 ///

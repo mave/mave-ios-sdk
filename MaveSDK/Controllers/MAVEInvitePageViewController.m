@@ -371,7 +371,7 @@
 }
 
 - (void)composeClientGroupInvites {
-    NSArray *recipientPhones = @[];
+    NSArray *recipientPhones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:recipientPhones completionBlock:^(MessageComposeResult result) {
 
     }];
