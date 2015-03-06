@@ -193,7 +193,7 @@
     // Instantiate the view controllers for child views
     self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodServerSide];
+    self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:MAVESMSInviteSendMethodClientSideGroup];
     [self.bottomActionContainerView.inviteMessageView.sendButton
         addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
     

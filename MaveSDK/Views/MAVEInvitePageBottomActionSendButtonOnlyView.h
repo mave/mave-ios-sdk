@@ -14,8 +14,10 @@
 
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UILabel *numberSelectedIndicator;
+@property (nonatomic, assign) NSUInteger numberSelected;
 
 - (CGFloat)heightOfSelf;
 - (void)setupViewsWithSingletonObject:(MaveSDK *)mave;
+- (void)updateNumberPeopleSelected:(uint64_t)numberSelected;
 
 @end
