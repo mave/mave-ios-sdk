@@ -49,10 +49,10 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
                 self.suggestedInvitesEnabled = [suggestedInvitesVal boolValue];
             }
             NSString *smsSendMethod = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSMSSendMethod];
-            if ([smsSendMethod isEqualToString:MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide]) {
-                self.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
-            } else {
+            if ([smsSendMethod isEqualToString:MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGroup]) {
                 self.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+            } else {
+                self.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
             }
         }
     }

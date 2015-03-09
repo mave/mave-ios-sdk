@@ -260,9 +260,53 @@
 }
 
 - (void)testCreateAddressBookInviteViewWhenServerSideSMSMethod {
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.contactsInvitePage.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    // run code under test
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     UIView *view = [vc createAddressBookInviteView];
-    // TODO, finish test logic
+
+    // test views are layed out as expected
+    XCTAssertEqual(vc.bottomActionContainerView.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
+    XCTAssertTrue([vc.bottomActionContainerView.inviteMessageView isDescendantOfView:view]);
+    XCTAssertFalse([vc.bottomActionContainerView.clientSideBottomActionView isDescendantOfView:view]);
+
+    // test send button will call the right method
+    UIButton *sendButton = vc.bottomActionContainerView.inviteMessageView.sendButton;
+    XCTAssertEqual([sendButton.allTargets count], 1);
+    id target = [sendButton.allTargets anyObject];
+    NSArray *actions =[sendButton actionsForTarget:target forControlEvent:UIControlEventTouchUpInside];
+    XCTAssertEqual([actions count], 1);
+    NSString *action = [actions objectAtIndex:0];
+    XCTAssertEqualObjects(action, @"sendInvites");
+}
+
+- (void)testCreateAddressBookInviteViewWhenClientSideGroupSMSMethod{
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.contactsInvitePage.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    // run code under test
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    UIView *view = [vc createAddressBookInviteView];
+
+    // test views are layed out as expected
+    XCTAssertEqual(vc.bottomActionContainerView.smsInviteSendMethod, MAVESMSInviteSendMethodClientSideGroup);
+    XCTAssertFalse([vc.bottomActionContainerView.inviteMessageView isDescendantOfView:view]);
+    XCTAssertTrue([vc.bottomActionContainerView.clientSideBottomActionView isDescendantOfView:view]);
+
+    // test send button will call the right method
+    UIButton *sendButton = vc.bottomActionContainerView.clientSideBottomActionView.sendButton;
+    XCTAssertEqual([sendButton.allTargets count], 1);
+    id target = [sendButton.allTargets anyObject];
+    NSArray *actions =[sendButton actionsForTarget:target forControlEvent:UIControlEventTouchUpInside];
+    XCTAssertEqual([actions count], 1);
+    NSString *action = [actions objectAtIndex:0];
+    XCTAssertEqualObjects(action, @"composeClientGroupSMSInvites");
 }
 
 // Tests for the helper for displaying suggested invites
