@@ -9,14 +9,14 @@
 #import "MAVERemoteConfigurationContactsInvitePage.h"
 #import "MAVEClientPropertyUtils.h"
 
-const NSString *MAVERemoteConfigKeyContactsInvitePageEnabled = @"enabled";
-const NSString *MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
-const NSString *MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
-const NSString *MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy";
-const NSString *MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
-const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethod = @"sms_send_method";
-const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide = @"server_side";
-const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGroup = @"client_side_group";
+NSString * const MAVERemoteConfigKeyContactsInvitePageEnabled = @"enabled";
+NSString * const MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
+NSString * const MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
+NSString * const MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy";
+NSString * const MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
+NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethod = @"sms_send_method";
+NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide = @"server_side";
+NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGroup = @"client_side_group";
 
 
 @implementation MAVERemoteConfigurationContactsInvitePage
@@ -48,7 +48,12 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGrou
             if (suggestedInvitesVal && (id)suggestedInvitesVal != [NSNull null]) {
                 self.suggestedInvitesEnabled = [suggestedInvitesVal boolValue];
             }
-            self.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+            NSString *smsSendMethod = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSMSSendMethod];
+            if ([smsSendMethod isEqualToString:MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide]) {
+                self.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
+            } else {
+                self.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+            }
         }
     }
     return self;
@@ -61,6 +66,7 @@ const NSString *MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGrou
             MAVERemoteConfigKeyContactsInvitePageTemplateID: @"0",
             // Explanation copy defaults to nil, so leaving empty
             MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled: @NO,
+            MAVERemoteConfigKeyContactsInvitePageSMSSendMethod: MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide,
         }
     };
 }
