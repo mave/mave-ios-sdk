@@ -122,6 +122,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     if (!self.didInitialTableHeaderLayout) {
         if (![self.inviteTableHeaderView hasContentOtherThanSearchBar]) {
             self.tableView.contentOffset = CGPointMake(0, self.inviteTableHeaderView.searchBar.frame.size.height);
+            self.tableView.contentOffset = CGPointMake(0, 0);
         }
         self.didInitialTableHeaderLayout = YES;
     }

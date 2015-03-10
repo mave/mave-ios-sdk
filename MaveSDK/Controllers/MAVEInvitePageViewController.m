@@ -258,6 +258,12 @@
     }
     self.ABTableViewController.tableView.contentInset = tableBottomInset;
 
+    // Add extra footer space when there are too few contacts
+    CGFloat heightDiff =  containerFrame.size.height - self.ABTableViewController.tableView.contentSize.height;
+    if ([self.ABTableViewController.tableData count] > 0 && heightDiff > 0) {
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, heightDiff)];
+        self.ABTableViewController.tableView.tableFooterView = footerView;
+    }
 
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
