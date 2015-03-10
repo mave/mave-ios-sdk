@@ -153,7 +153,7 @@
         // Permission denied
         if ([contacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[MaveSDK sharedInstance].invitePageChooser replaceActiveViewControllerWithSharePage];
+                [[MaveSDK sharedInstance].invitePageChooser replaceActiveViewControllerWithFallbackPage];
             });
         // Permission granted
         } else {

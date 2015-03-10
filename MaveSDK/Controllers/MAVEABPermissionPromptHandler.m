@@ -82,6 +82,7 @@
     CFErrorRef accessErrorCF = NULL;
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
     if (accessErrorCF) {
+        if (addressBook != NULL) CFRelease(addressBook);
         return nil;
     }
 

@@ -132,8 +132,7 @@
     id utilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([utilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
 
-    id permissionPrompterMock =
-    OCMClassMock([MAVEABPermissionPromptHandler class]);
+    id permissionPrompterMock = OCMClassMock([MAVEABPermissionPromptHandler class]);
     OCMExpect([permissionPrompterMock alloc]).andReturn(permissionPrompterMock);
     OCMExpect([permissionPrompterMock initCustom]).andReturn(permissionPrompterMock);
 
@@ -163,7 +162,6 @@
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:completionBlock];
 
     OCMVerifyAll(permissionPrompterMock);
-    [permissionPrompterMock stopMocking];
 }
 
 - (void)testPrePromptPermissionDenied {

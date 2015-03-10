@@ -12,6 +12,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+#import "MAVEInvitePageViewController.h"
 
 typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteController);
 typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInteger numberOfInvitesSent);
@@ -39,14 +41,12 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 
 // Choose which invite page to present and initialize is view controller
 - (UIViewController *)chooseAndCreateInvitePageViewController;
+- (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed;
+- (MFMessageComposeViewController *)createClientSMSInvitePage;
 
 // Helpers for business logic
 - (BOOL)isInSupportedRegionForServerSideSMSInvites;
 - (BOOL)isContactsInvitePageEnabledServerSide;
-
-// Create custom view controllers
-- (UIViewController *)createAddressBookInvitePage;
-- (UIViewController *)createCustomShareInvitePage;
 
 //
 // Handling the changing of view controllers
@@ -61,7 +61,7 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 - (void)_setupNavigationBarButtonsPushStyle;
 
 // Helper to replace whatever the active controller is with a new share page view controller
-- (void)replaceActiveViewControllerWithSharePage;
+- (void)replaceActiveViewControllerWithFallbackPage;
 
 - (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent;
 - (void)dismissOnCancel;
