@@ -88,6 +88,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
 + (NSDictionary *)defaultJSONData {
     return @{
+        MAVERemoteConfigKeyInvitePage: [MAVERemoteConfigurationInvitePage defaultJSONData],
         MAVERemoteConfigKeyContactsSync: [MAVERemoteConfigurationContactsSync defaultJSONData],
         MAVERemoteConfigKeyContactsPrePrompt: [MAVERemoteConfigurationContactsPrePrompt defaultJSONData],
         MAVERemoteConfigKeyContactsInvitePage:[MAVERemoteConfigurationContactsInvitePage defaultJSONData],
