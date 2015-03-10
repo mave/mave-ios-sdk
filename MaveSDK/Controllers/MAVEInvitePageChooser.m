@@ -56,6 +56,12 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     if (!vc) {
         vc = [self createViewControllerOfType:invitePageConfig.fallbackPageType];
     }
+    // if fallback failed, try the share page as a second fallback since it has no restrictions
+    // on when it can be displayed
+    if (!vc) {
+        MAVEErrorLog(@"Error, got nil view controller from fallback page type, trying share page");
+        vc = [[MAVECustomSharePageViewController alloc] init];
+    }
     self.activeViewController = vc;
     return vc;
 }
@@ -108,8 +114,23 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (MFMessageComposeViewController *)createClientSMSInvitePage {
+    // can't do this if we're going to push the VC instead of display modally
+    if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
+        MAVEErrorLog(@"Tried to push the client sms form which doesn't work, need to display the view controller modally to show the client sms compose invite page.");
+        return nil;
+    }
     return [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MessageComposeResult result) {
-
+        switch (result) {
+            case MessageComposeResultCancelled:
+                [self dismissOnCancel];
+                break;
+            case MessageComposeResultFailed:
+                [self dismissOnCancel];
+                break;
+            case MessageComposeResultSent:
+                [self dismissOnSuccess:1];
+        }
+        [self dismissOnCancel];
     }];
 }
 
@@ -143,6 +164,12 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (void)setupNavigationBarForActiveViewController {
+    // if our view controller is already a navigation controller, don't
+    // need to wrap it
+    if ([self.activeViewController isKindOfClass:[UINavigationController class]]) {
+        return;
+    }
+
     if (!self.activeViewController.navigationController) {
         [self _embedActiveViewControllerInNewNavigationController];
     }

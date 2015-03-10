@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0C03BE671AAA30090008BCC0 /* MAVESharer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C03BE661AAA30090008BCC0 /* MAVESharer.m */; };
 		0C03BE691AAA33CE0008BCC0 /* MAVESharerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C03BE681AAA33CE0008BCC0 /* MAVESharerTests.m */; };
-		0C03BE6A1AAA3F2F0008BCC0 /* MAVESharer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C03BE661AAA30090008BCC0 /* MAVESharer.m */; };
 		0C03BE6B1AAA59AE0008BCC0 /* MAVEInvitePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02927F519E82D03006AEE43 /* MAVEInvitePageViewController.m */; };
 		0C0996E51A76B593003B82AA /* MAVEMerkleTreeDataEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C0996E41A76B593003B82AA /* MAVEMerkleTreeDataEnumerator.m */; };
 		0C0996E71A76F302003B82AA /* MAVEMerkleTreeDataEnumeratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C0996E61A76F302003B82AA /* MAVEMerkleTreeDataEnumeratorTests.m */; };
@@ -57,7 +56,6 @@
 		0C29BC541A5DD39400C27DA5 /* MAVEShareToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC531A5DD39400C27DA5 /* MAVEShareToken.m */; };
 		0C29BC551A5DE6EA00C27DA5 /* MAVERemoteConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */; };
 		0C29BC571A5DE74300C27DA5 /* MAVEShareTokenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC561A5DE74300C27DA5 /* MAVEShareTokenTests.m */; };
-		0C29BC581A5DE9DE00C27DA5 /* MAVEShareToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC531A5DD39400C27DA5 /* MAVEShareToken.m */; };
 		0C29BC5B1A5DED3A00C27DA5 /* MAVECustomSharePageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC5A1A5DED3A00C27DA5 /* MAVECustomSharePageView.m */; };
 		0C29BC671A5EC96600C27DA5 /* MAVECustomSharePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C29BC661A5EC96600C27DA5 /* MAVECustomSharePageViewController.m */; };
 		0C2D73181A1FCB640059CA54 /* MAVEIDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */; };
@@ -1183,11 +1181,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C03BE6B1AAA59AE0008BCC0 /* MAVEInvitePageViewController.m in Sources */,
-				0C03BE6A1AAA3F2F0008BCC0 /* MAVESharer.m in Sources */,
 				0C1A8FD41A641F8000518D9A /* MAVECustomSharePageViewController.m in Sources */,
 				0C58FE001A657A8C007F8F12 /* MAVERemoteConfigurationCustomSharePageTests.m in Sources */,
 				0C1A8FCD1A632F1800518D9A /* MAVERemoteConfigurationTwitterShareTests.m in Sources */,
-				0C29BC581A5DE9DE00C27DA5 /* MAVEShareToken.m in Sources */,
 				0C29BC551A5DE6EA00C27DA5 /* MAVERemoteConfiguration.m in Sources */,
 				0C6D92AF1A72E3E000B65B82 /* MAVECompressionUtilsTests.m in Sources */,
 				0C1A8FC91A632B9700518D9A /* MAVERemoteConfigurationClientEmailTests.m in Sources */,
