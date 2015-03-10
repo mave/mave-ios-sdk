@@ -13,6 +13,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MAVERemoteObjectBuilder.h"
+#import "MAVERemoteConfigurationInvitePage.h"
 #import "MAVERemoteConfigurationContactsSync.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 #import "MAVERemoteConfigurationContactsInvitePage.h"
@@ -26,6 +27,7 @@
 
 @interface MAVERemoteConfiguration : NSObject<MAVEDictionaryInitializable>
 
+@property (nonatomic, strong) MAVERemoteConfigurationInvitePage *invitePage;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsSync *contactsSync;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsPrePrompt *contactsPrePrompt;
 @property (nonatomic, strong) MAVERemoteConfigurationContactsInvitePage *contactsInvitePage;

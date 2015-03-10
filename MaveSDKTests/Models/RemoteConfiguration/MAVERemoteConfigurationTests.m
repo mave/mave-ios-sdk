@@ -68,6 +68,7 @@
 - (void)testInitFromDefaultData {
     MAVERemoteConfiguration *config =
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    XCTAssertNotNil(config.invitePage);
     XCTAssertNotNil(config.contactsSync);
     XCTAssertNotNil(config.contactsPrePrompt);
     XCTAssertNotNil(config.contactsInvitePage);
