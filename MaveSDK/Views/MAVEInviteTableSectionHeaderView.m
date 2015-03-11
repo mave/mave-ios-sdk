@@ -62,7 +62,6 @@
             (sectionHeight - dotsHeight) / 2,
             dotsWidth,
             dotsHeight);
-        NSLog(@"waiting dots size: %@", NSStringFromCGSize(self.waitingDotsView.frame.size));
     }
 }
 
