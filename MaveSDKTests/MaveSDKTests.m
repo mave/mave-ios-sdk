@@ -569,12 +569,12 @@
     // mock the underlying method
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     [[apiInterfaceMock reject] sendInvitesWithRecipientPhoneNumbers:[OCMArg any]
-                                             recipientContactRecords:[OCMArg any]
-                                                             message:[OCMArg any]
-                                                              userId:[OCMArg any]
-                                            inviteLinkDestinationURL:nil
-                                                         customData:nil
-                                                     completionBlock:[OCMArg any]];
+                                            recipientContactRecords:[OCMArg any]
+                                                            message:[OCMArg any]
+                                                             userId:[OCMArg any]
+                                           inviteLinkDestinationURL:[OCMArg any]
+                                                         customData:[OCMArg any]
+                                                    completionBlock:[OCMArg any]];
 
     [[MaveSDK sharedInstance] sendSMSInviteMessage:@"2"
                                       toRecipients:@[@"vasd"]
@@ -595,12 +595,13 @@
 
     // mock the underlying method
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    [[apiInterfaceMock reject] sendInvitesWithPersons:[OCMArg any]
-                                              message:[OCMArg any]
-                                               userId:[OCMArg any]
-                             inviteLinkDestinationURL:[OCMArg any]
-                                           customData:[OCMArg any]
-                                      completionBlock:[OCMArg any]];
+    [[apiInterfaceMock reject] sendInvitesWithRecipientPhoneNumbers:[OCMArg any]
+                                            recipientContactRecords:[OCMArg any]
+                                                            message:[OCMArg any]
+                                                             userId:[OCMArg any]
+                                           inviteLinkDestinationURL:[OCMArg any]
+                                                         customData:[OCMArg any]
+                                                    completionBlock:[OCMArg any]];
 
     NSDictionary *badCustomReferringData = @{@"foo": [[NSObject alloc] init]};
     NSDictionary *options = @{@"custom_referring_data": badCustomReferringData};
