@@ -254,7 +254,7 @@ static dispatch_once_t sharedInstanceonceToken;
 - (void)sendSMSInviteMessage:(NSString *)message
                 toRecipients:(NSArray *)recipientPhoneNumbers
            additionalOptions:(NSDictionary *)options
-                  errorBlock:(void (^)(NSError *))errorBlock {
+                  errorBlock:(void (^)(NSError *error))errorBlock {
     NSError *userSetupError = [self validateUserSetup];
     if (userSetupError) {
         if (errorBlock) {
@@ -271,6 +271,14 @@ static dispatch_once_t sharedInstanceonceToken;
     self.inviteContext = inviteContext;
     NSString *linkDestinationURL = [options objectForKey:@"link_destination_url"];
     NSDictionary *customData = [options objectForKey:@"custom_referring_data"];
+    if (customData && ![NSJSONSerialization isValidJSONObject:customData]) {
+        customData = nil;
+        if (errorBlock) {
+            NSError *error = [NSError errorWithDomain:MAVE_VALIDATION_ERROR_DOMAIN code:0 userInfo:@{@"message": @"custom_referring_data parameter can't be serialized as JSON"}];
+            errorBlock(error);
+        }
+        return;
+    }
 
     [self.APIInterface sendInvitesWithRecipientPhoneNumbers:recipientPhoneNumbers
                                     recipientContactRecords:nil

@@ -105,6 +105,13 @@
 //     - "link_destination_url" - you can optionally pass in a URL to which the link
 //           in the invite will redirect. If not set we use the app store link, you
 //           only need to set this if you want each invite to go to a different URL.
+//     - "custom_referring_data" - this is a freeform dictionary that you can use to
+//           pass through any data you want to retrieve once the invited user opens
+//           your app from this invite link. It will be available as the `customData`
+//           property on the MAVEReferringData object. It is sent over our API as JSON
+//           data so the object you pass in here must be JSON serializable - i.e.
+//           NSJSONSerializiation `isValidJSONObject:` returns true.
+//
 //
 // - errorBlock is a block that will be called with an error if you want to be notified
 //       if invites fail to send. This could happen if the parameters are not passed in
@@ -115,6 +122,6 @@
 - (void)sendSMSInviteMessage:(NSString *)message
                 toRecipients:(NSArray *)recipientPhoneNumbers
            additionalOptions:(NSDictionary *)options
-                  errorBlock:(void (^)(NSError *))errorBlock;
+                  errorBlock:(void (^)(NSError *error))errorBlock;
 
 @end

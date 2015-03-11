@@ -559,7 +559,6 @@
     OCMVerifyAll(apiInterfaceMock);
     // should have set the global invite context before sending
     XCTAssertEqualObjects([MaveSDK sharedInstance].inviteContext, @"programatic invite");
-
 }
 
 - (void)testSendSMSInviteMessageProgramaticallyWithNilErrorBlockIsOk {
@@ -587,6 +586,37 @@
     XCTAssertNil([MaveSDK sharedInstance].inviteContext);
 }
 
+- (void)testSendSMSInviteMessageProgramaticallyFailsIfCustomReferringDataNotIsValidJSONObject {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    // setup the user to send sms from
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.userID = @"1"; user.firstName = @"Dan";
+    [[MaveSDK sharedInstance] identifyUser:user];
 
+    // mock the underlying method
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] sendInvitesWithPersons:[OCMArg any]
+                                              message:[OCMArg any]
+                                               userId:[OCMArg any]
+                             inviteLinkDestinationURL:[OCMArg any]
+                                           customData:[OCMArg any]
+                                      completionBlock:[OCMArg any]];
+
+    NSDictionary *badCustomReferringData = @{@"foo": [[NSObject alloc] init]};
+    NSDictionary *options = @{@"custom_referring_data": badCustomReferringData};
+    __block NSError *returnedError;
+    [[MaveSDK sharedInstance] sendSMSInviteMessage:@"2"
+                                      toRecipients:@[@"vasd"]
+                                 additionalOptions:options
+                                        errorBlock:^(NSError *error) {
+                                            returnedError = error;
+                                        }];
+
+    XCTAssertNotNil(returnedError);
+    XCTAssertEqualObjects(returnedError.domain, MAVE_VALIDATION_ERROR_DOMAIN);
+    XCTAssertEqualObjects([returnedError.userInfo objectForKey:@"message"],
+                          @"custom_referring_data parameter can't be serialized as JSON");
+    OCMVerifyAll(apiInterfaceMock);
+}
 
 @end
