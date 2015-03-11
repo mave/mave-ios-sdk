@@ -126,6 +126,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                      message:(NSString *)messageText
                                       userId:(NSString *)userId
                     inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                                  customData:(NSDictionary *)customData
                              completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSString *invitesRoute = @"/invites/sms";
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
@@ -143,6 +144,9 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [params setObject:userId forKey:@"sender_user_id"];
     if ([inviteLinkDestinationURL length] > 0) {
         [params setObject:inviteLinkDestinationURL forKey:@"link_destination"];
+    }
+    if ([customData count] > 0) {
+        [params setObject:customData forKey:@"custom_data"];
     }
     
     [self sendIdentifiedJSONRequestWithRoute:invitesRoute

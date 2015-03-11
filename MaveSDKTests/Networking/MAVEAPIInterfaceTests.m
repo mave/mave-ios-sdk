@@ -202,24 +202,27 @@
     NSString *smsCopy = @"This is as test";
     NSString *userId = @"some-user-id";
     NSString *linkDestination = @"http://example.com/foo?code=hello";
+    NSDictionary *customData = @{@"foo0": @"bar"};
     NSDictionary *expectedParams = @{@"recipient_phone_numbers": recipientPhones,
                                      @"recipient_contact_records": recipientContactsSerializable,
                                      @"sms_copy": smsCopy,
                                      @"sender_user_id": userId,
                                      @"link_destination": linkDestination,
+                                     @"custom_data": customData,
                                      };
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodName:@"POST"
                                                  params:expectedParams
                                         gzipCompressBody:NO
                                         completionBlock:nil]);
+
     [self.testAPIInterface sendInvitesWithRecipientPhoneNumbers:recipientPhones
                                         recipientContactRecords:recipientContacts
                                                         message:smsCopy
                                                          userId:userId
                                        inviteLinkDestinationURL:linkDestination
+                                                     customData:customData
                                                 completionBlock:nil];
-
     OCMVerifyAll(mocked);
 }
 
@@ -234,11 +237,13 @@
                                                  params:expectedParams
                                         gzipCompressBody:NO
                                         completionBlock:nil]);
+
     [self.testAPIInterface sendInvitesWithRecipientPhoneNumbers:@[]
                                         recipientContactRecords:nil
                                                         message:@""
                                                          userId:@""
                                        inviteLinkDestinationURL:nil
+                                                     customData:nil
                                                 completionBlock:nil];
     OCMVerifyAll(mocked);
 }

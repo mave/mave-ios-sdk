@@ -332,12 +332,12 @@
     
     MaveSDK *mave = [MaveSDK sharedInstance];
     MAVEAPIInterface *apiInterface = mave.APIInterface;
-
     [apiInterface sendInvitesWithRecipientPhoneNumbers:phonesToInvite
                                recipientContactRecords:peopleToInvite
                                                message:message
                                                 userId:mave.userData.userID
                               inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                            customData:nil
                                        completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
             MAVEDebugLog(@"Invites failed to send, error: %@, response: %@",

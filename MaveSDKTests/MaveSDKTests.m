@@ -425,6 +425,7 @@
     NSString *message = @"hello this is an invite";
     NSArray *recipientPhones = @[@"8085551234", @"wontgetvalidatedclientsideanyway"];
     NSString *linkDestinationURL = @"http://example.com/signup";
+    NSDictionary *customData = @{@"foo0": @"bar", @"foo1": [NSNull null], @"foo2": @13.5};
     NSString *context = @"blahcontext";
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     OCMExpect([apiInterfaceMock sendInvitesWithRecipientPhoneNumbers:recipientPhones
@@ -432,11 +433,13 @@
                                                              message:message
                                                               userId:user.userID
                                             inviteLinkDestinationURL:linkDestinationURL
+                                                          customData:customData
                                                      completionBlock:[OCMArg any]]);
 
     NSDictionary *additionalOptions = @{
         @"invite_context": context,
         @"link_destination_url": linkDestinationURL,
+        @"custom_referring_data": customData,
         };
     __block NSError *returnedError = nil;
     [[MaveSDK sharedInstance] sendSMSInviteMessage:message
@@ -464,12 +467,12 @@
     NSString *message = @"hello this is an invite";
     NSArray *recipientPhones = @[@"8085551234", @"wontgetvalidatedclientsideanyway"];
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-
     OCMExpect([apiInterfaceMock sendInvitesWithRecipientPhoneNumbers:recipientPhones
                                              recipientContactRecords:nil
                                                              message:message
                                                               userId:user.userID
                                             inviteLinkDestinationURL:nil
+                                                          customData:nil
                                                      completionBlock:[OCMArg any]]);
 
     __block NSError *returnedError = nil;
@@ -497,11 +500,12 @@
     // mock the underlying method
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     [[apiInterfaceMock reject] sendInvitesWithRecipientPhoneNumbers:[OCMArg any]
-                                             recipientContactRecords:[OCMArg any]
-                                                             message:[OCMArg any]
-                                                              userId:user.userID
-                                            inviteLinkDestinationURL:nil
-                                                     completionBlock:[OCMArg any]];
+                                            recipientContactRecords:[OCMArg any]
+                                                            message:[OCMArg any]
+                                                             userId:user.userID
+                                           inviteLinkDestinationURL:nil
+                                                         customData:nil
+                                                    completionBlock:[OCMArg any]];
 
     __block NSError *returnedError = nil;
     [[MaveSDK sharedInstance] sendSMSInviteMessage:@"2"
@@ -528,12 +532,12 @@
 
     // mock the underlying method
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-
     OCMExpect([apiInterfaceMock sendInvitesWithRecipientPhoneNumbers:[OCMArg any]
                                              recipientContactRecords:[OCMArg any]
                                                              message:[OCMArg any]
                                                               userId:user.userID
                                             inviteLinkDestinationURL:nil
+                                                          customData:nil
                                                      completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         MAVEHTTPCompletionBlock completionBlock = obj;
         NSError *requestError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN code:400 userInfo:@{}];
@@ -565,12 +569,12 @@
 
     // mock the underlying method
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-
     [[apiInterfaceMock reject] sendInvitesWithRecipientPhoneNumbers:[OCMArg any]
                                              recipientContactRecords:[OCMArg any]
                                                              message:[OCMArg any]
                                                               userId:[OCMArg any]
                                             inviteLinkDestinationURL:nil
+                                                         customData:nil
                                                      completionBlock:[OCMArg any]];
 
     [[MaveSDK sharedInstance] sendSMSInviteMessage:@"2"

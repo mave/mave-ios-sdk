@@ -270,12 +270,14 @@ static dispatch_once_t sharedInstanceonceToken;
     }
     self.inviteContext = inviteContext;
     NSString *linkDestinationURL = [options objectForKey:@"link_destination_url"];
+    NSDictionary *customData = [options objectForKey:@"custom_referring_data"];
 
     [self.APIInterface sendInvitesWithRecipientPhoneNumbers:recipientPhoneNumbers
                                     recipientContactRecords:nil
                                                     message:message
                                                      userId:self.userData.userID
                                    inviteLinkDestinationURL:linkDestinationURL
+                                                 customData:customData
                                             completionBlock:^(NSError *error, NSDictionary *responseData) {
                                   if (error && errorBlock) {
                                       NSError *returnError = [[NSError alloc] initWithDomain:error.domain code:error.code userInfo:@{@"message": @"Error making request to send SMS invites"}];

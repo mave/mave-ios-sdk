@@ -159,12 +159,12 @@
 
     // Create a mock http manager & stub the singleton object to use it
     id mockAPIInterface = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].APIInterface];
-
     OCMExpect([mockAPIInterface sendInvitesWithRecipientPhoneNumbers:invitePhones
                                              recipientContactRecords:inviteContacts
                                                              message:inviteMessage
                                                               userId:mave.userData.userID
                                             inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                                          customData:nil
                                                      completionBlock:[OCMArg any]]);
     [vc sendInvites];
     OCMVerifyAll(mockAPIInterface);
