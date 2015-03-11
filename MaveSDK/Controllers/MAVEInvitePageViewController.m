@@ -250,14 +250,20 @@
     if (![self shouldDisplayInviteMessageView]) {
         CGFloat adjustOffsetBy;
         if (self.ABTableViewController.isFixedSearchBarActive) {
-            adjustOffsetBy = 0;
+            adjustOffsetBy = 0 + MAVESearchBarHeight;
         } else {
-            adjustOffsetBy = 0 - MAVESearchBarHeight;
+            adjustOffsetBy = 0;
         }
         tableBottomInset.bottom = adjustOffsetBy;
     }
     self.ABTableViewController.tableView.contentInset = tableBottomInset;
 
+    // Add extra footer space when there are too few contacts
+    CGFloat heightDiff =  containerFrame.size.height - self.ABTableViewController.tableView.contentSize.height;
+    if ([self.ABTableViewController.tableData count] > 0 && heightDiff > 0) {
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, heightDiff)];
+        self.ABTableViewController.tableView.tableFooterView = footerView;
+    }
 
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
@@ -300,10 +306,11 @@
     // Resize the header based on width
     [self.ABTableViewController layoutHeaderViewForWidth:containerFrame.size.width];
 }
+
+
 //
 // Respond to children's Events
 //
-
 - (void)ABTableViewControllerNumberSelectedChanged:(NSUInteger)numberChanged {
     // If called from the table view's "did select row at index path" method we'll already be
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
