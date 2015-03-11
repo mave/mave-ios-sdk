@@ -13,6 +13,7 @@
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVERemoteConfigurationContactsPrePrompt.h"
 
+NSString * const MAVERemoteConfigKeyInvitePageChoice = @"invite_page_choice";
 NSString * const MAVERemoteConfigKeyContactsSync = @"contacts_sync";
 NSString * const MAVERemoteConfigKeyContactsPrePrompt = @"contacts_pre_permission_prompt";
 NSString * const MAVERemoteConfigKeyContactsInvitePage =
@@ -30,6 +31,8 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
+        self.invitePageChoice = [[MAVERemoteConfigurationInvitePageChoice alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyInvitePageChoice]];
+
         self.contactsSync = [[MAVERemoteConfigurationContactsSync alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsSync]];
 
         self.contactsPrePrompt = [[MAVERemoteConfigurationContactsPrePrompt alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyContactsPrePrompt]];
@@ -50,7 +53,8 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
         self.clipboardShare = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:[data objectForKey:MAVERemoteConfigKeyClipboardShare]];
 
-        if (   !self.contactsSync
+        if (   !self.invitePageChoice
+            || !self.contactsSync
             || !self.contactsPrePrompt
             || !self.contactsInvitePage
             || !self.customSharePage
@@ -84,6 +88,7 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
 
 + (NSDictionary *)defaultJSONData {
     return @{
+        MAVERemoteConfigKeyInvitePageChoice: [MAVERemoteConfigurationInvitePageChoice defaultJSONData],
         MAVERemoteConfigKeyContactsSync: [MAVERemoteConfigurationContactsSync defaultJSONData],
         MAVERemoteConfigKeyContactsPrePrompt: [MAVERemoteConfigurationContactsPrePrompt defaultJSONData],
         MAVERemoteConfigKeyContactsInvitePage:[MAVERemoteConfigurationContactsInvitePage defaultJSONData],

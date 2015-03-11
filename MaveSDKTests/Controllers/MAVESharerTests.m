@@ -181,7 +181,6 @@
 
     [sharer resetShareToken];
 
-    // No idea why but this simple class method mock is not working at all
     OCMVerifyAll(stClassMock);
     XCTAssertNotEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, builderInitial);
 }

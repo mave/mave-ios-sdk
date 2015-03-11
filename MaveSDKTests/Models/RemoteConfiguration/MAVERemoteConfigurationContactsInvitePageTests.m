@@ -35,7 +35,7 @@
 
     XCTAssertNil([template objectForKey:@"explanation_copy"]);
     XCTAssertFalse([[template objectForKey:@"suggested_invites_enabled"] boolValue]);
-    XCTAssertEqualObjects([template objectForKey:@"sms_send_method"], @"server_side");
+    XCTAssertEqualObjects([template objectForKey:@"sms_invite_send_method"], @"server_side");
 }
 
 - (void)testInitWithDefaultData {

@@ -221,7 +221,14 @@ static dispatch_once_t sharedInstanceonceToken;
     [self.invitePageChooser chooseAndCreateInvitePageViewController];
     [self.invitePageChooser setupNavigationBarForActiveViewController];
     self.inviteContext = inviteContext;
-    presentBlock(self.invitePageChooser.activeViewController.navigationController);
+
+    // present the navigation controller if it's wrapped in one, otherwise just
+    // the active view controller
+    UIViewController *vcToPresent = self.invitePageChooser.activeViewController;
+    if (vcToPresent.navigationController) {
+        vcToPresent = vcToPresent.navigationController;
+    }
+    presentBlock(vcToPresent);
 }
 
 - (void)presentInvitePagePushWithBlock:(MAVEInvitePagePresentBlock)presentBlock

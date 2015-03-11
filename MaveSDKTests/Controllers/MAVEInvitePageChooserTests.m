@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import "MAVEDisplayOptionsFactory.h"
 #import "MaveSDK.h"
+#import "MAVEABUtils.h"
 #import "MAVEInvitePageChooser.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVERemoteConfigurationContactsInvitePage.h"
@@ -60,17 +61,231 @@
     XCTAssertNil(ipc.navigationCancelBlock);
 }
 
-- (void)testChooseAndCreateInvitePageViewControllerAddressBookDenied {
+#pragma mark - Test the choose and create method in different states
 
+- (void)testChooseAndCreateUsingContactsInvitePagePrimary {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.invitePageChoice.primaryPageType = MAVEInvitePageTypeContactsInvitePage;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    UIViewController *expectedVC = [[UIViewController alloc] init];
+    OCMExpect([chooserMock createContactsInvitePageIfAllowed]).andReturn(expectedVC);
+
+    UIViewController *vc = [chooser chooseAndCreateInvitePageViewController];
+    XCTAssertEqualObjects(vc, expectedVC);
+    XCTAssertEqualObjects(chooser.activeViewController, expectedVC);
+    OCMVerifyAll(chooserMock);
 }
 
-- (void)testChooseAndCreateFallsBackToShareSheetIfNoUserData {
-    [MaveSDK sharedInstance].userData = nil;
+- (void)testChooseAndCreateUsingSharePagePrimary {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.invitePageChoice.primaryPageType = MAVEInvitePageTypeSharePage;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     UIViewController *vc = [chooser chooseAndCreateInvitePageViewController];
-    XCTAssertEqualObjects(NSStringFromClass([vc class]), @"MAVECustomSharePageViewController");
+    XCTAssertNotNil(vc);
+    XCTAssertEqualObjects(NSStringFromClass([vc class]),
+                          @"MAVECustomSharePageViewController");
+    XCTAssertEqualObjects(vc, chooser.activeViewController);
 }
 
+- (void)testChooseAndCreateUsingClientSMSSecondaryWhenContactsPageFails {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.invitePageChoice.primaryPageType = MAVEInvitePageTypeContactsInvitePage;
+    remoteConfig.invitePageChoice.fallbackPageType = MAVEInvitePageTypeClientSMS;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock createContactsInvitePageIfAllowed]).andReturn(nil);
+    // Use a mock b/c we can't use the client sms view controller on simulator
+    UIViewController *expectedVC = [[UIViewController alloc] init];
+    OCMExpect([chooserMock createClientSMSInvitePage]).andReturn(expectedVC);
+    UIViewController *vc = [chooser chooseAndCreateInvitePageViewController];
+    XCTAssertNotNil(vc);
+    XCTAssertEqualObjects(vc, expectedVC);
+    XCTAssertEqualObjects(vc, chooser.activeViewController);
+    [maveMock stopMocking];
+}
+
+- (void)testReplaceActiveViewControllerWithFallbackWhenModalPresentationMode {
+    // Mock remote config to use fallback type client sms
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.invitePageChoice.fallbackPageType = MAVEInvitePageTypeClientSMS;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    id navVCMock = OCMClassMock([UINavigationController class]);
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock activeNavigationController]).andReturn(navVCMock);
+    [[navVCMock reject] popViewControllerAnimated:NO];
+
+    UIViewController *expectedVC = [[UIViewController alloc] init];
+    OCMExpect([chooserMock createClientSMSInvitePage]).andReturn(expectedVC);
+    OCMExpect([navVCMock pushViewController:expectedVC animated:NO]);
+
+    [chooser replaceActiveViewControllerWithFallbackPage];
+    OCMVerifyAll(navVCMock);
+    OCMVerifyAll(chooserMock);
+    XCTAssertEqualObjects(chooser.activeViewController, expectedVC);
+}
+
+- (void)testReplaceActiveViewControllerWithFallbackWhenPushPresentationMode {
+    // Mock remote config to use fallback type client sms
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.invitePageChoice.fallbackPageType = MAVEInvitePageTypeClientSMS;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    id navVCMock = OCMClassMock([UINavigationController class]);
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatPush;
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock activeNavigationController]).andReturn(navVCMock);
+    OCMExpect([navVCMock popViewControllerAnimated:NO]);
+
+    UIViewController *expectedVC = [[UIViewController alloc] init];
+    OCMExpect([chooserMock createClientSMSInvitePage]).andReturn(expectedVC);
+    OCMExpect([navVCMock pushViewController:expectedVC animated:NO]);
+
+    [chooser replaceActiveViewControllerWithFallbackPage];
+    OCMVerifyAll(navVCMock);
+    OCMVerifyAll(chooserMock);
+    XCTAssertEqualObjects(chooser.activeViewController, expectedVC);
+}
+
+#pragma mark - Create contacts invite page if allowed, test in different states
+
+- (void)testCreateContactsInvitePageIfAllowed {
+    NSLog(@"got to beginning");
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    NSLog(@"got here");
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+    NSLog(@"got here 2");
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(YES);
+    OCMStub([chooserMock isContactsInvitePageEnabledServerSide]).andReturn(YES);
+    MAVEUserData *okUserData = [[MAVEUserData alloc] init];
+    okUserData.userID = @"1234"; okUserData.firstName = @"Foo";
+    [MaveSDK sharedInstance].userData = okUserData;
+
+    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
+    XCTAssertNotNil(vc);
+    NSLog(@"got to end");
+}
+
+- (void)testCreateContactsInvitePageNotAllowedWhenABPermissionStatusDenied {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusDenied);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+
+    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
+    XCTAssertNil(vc);
+}
+
+- (void)testCreateContactsInvitePageNotAllowedWhenNotInSupportedRegion {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(NO);
+
+    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
+    XCTAssertNil(vc);
+}
+
+- (void)testCreateContactsInvitePageNotAllowedWhenDisabledServerSide {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(YES);
+    OCMStub([chooserMock isContactsInvitePageEnabledServerSide]).andReturn(NO);
+
+    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
+    XCTAssertNil(vc);
+}
+
+- (void)testCreateContactsInvitePageNotAllowedWhenUserDataNotOK {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(YES);
+    OCMStub([chooserMock isContactsInvitePageEnabledServerSide]).andReturn(YES);
+    MAVEUserData *notOKUserData = [[MAVEUserData alloc] init]; //
+    [MaveSDK sharedInstance].userData = notOKUserData;
+
+    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
+    XCTAssertNil(vc);
+}
+
+- (void)testCreateClientSMSInvitePageCleanupOnInviteSent {
+    UIViewController *fakeReturnedVC = [[UIViewController alloc] init];
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MessageComposeResult result) = obj;
+        completionBlock(MessageComposeResultSent);
+        return YES;
+    }]]).andReturn(fakeReturnedVC);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock dismissOnSuccess:1]);
+
+    MFMessageComposeViewController *vc = [chooser createClientSMSInvitePage];
+    XCTAssertEqualObjects(vc, fakeReturnedVC);
+    OCMVerifyAll(sharerMock);
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testCreateClientSMSInvitePageCleanupOnInviteCancelled {
+    UIViewController *fakeReturnedVC = [[UIViewController alloc] init];
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MessageComposeResult result) = obj;
+        completionBlock(MessageComposeResultCancelled);
+        return YES;
+    }]]).andReturn(fakeReturnedVC);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock dismissOnCancel]);
+
+    MFMessageComposeViewController *vc = [chooser createClientSMSInvitePage];
+    XCTAssertEqualObjects(vc, fakeReturnedVC);
+    OCMVerifyAll(sharerMock);
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testCreateClientSMSInvitePageReturnsNilIfDisplayingAsPush {
+    // do not call these methods
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    [[sharerMock reject] composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg any]];
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatPush;
+
+    MFMessageComposeViewController *vc = [chooser createClientSMSInvitePage];
+    XCTAssertNil(vc);
+    OCMVerifyAll(sharerMock);
+}
 
 # pragma mark - Tests for logic that determines which page to show
 
@@ -123,27 +338,6 @@
     OCMVerifyAll(configBuilderMock);
 }
 
-
-#pragma mark - Create invite page methods
-
-- (void)testCreateAddressBookInvitePage {
-    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    UIViewController *vc = [chooser createAddressBookInvitePage];
-    XCTAssertNotNil(vc);
-    XCTAssertEqualObjects(NSStringFromClass([MAVEInvitePageViewController class]),
-                          @"MAVEInvitePageViewController");
-    XCTAssertEqualObjects(chooser.activeViewController, vc);
-}
-
-- (void)testCreateCustomShareInvitePage {
-    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    UIViewController *vc = [chooser createCustomShareInvitePage];
-    XCTAssertNotNil(vc);
-    XCTAssertEqualObjects(NSStringFromClass([MAVECustomSharePageViewController class]),
-                          @"MAVECustomSharePageViewController");
-    XCTAssertEqualObjects(chooser.activeViewController, vc);
-}
-
 #pragma mark - Navigation controller setup logic
 
 - (void)testSetupNavigationBarForActiveViewControllerModal {
@@ -175,6 +369,22 @@
     OCMExpect([chooserMock _embedActiveViewControllerInNewNavigationController]);
     OCMExpect([chooserMock _styleNavigationItemForActiveViewController]);
     OCMExpect([chooserMock _setupNavigationBarButtonsPushStyle]);
+
+    [chooser setupNavigationBarForActiveViewController];
+
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testSetupNavigationBarForActiveViewControllerWhenItIsANavigationController {
+    // If the active vc is already an instanace of navigation controller, don't
+    // wrap it in a navigation controller
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UINavigationController alloc] init];
+    // should not call any of these methods, just return
+    id chooserMock = OCMPartialMock(chooser);
+    [[chooserMock reject] _embedActiveViewControllerInNewNavigationController];
+    [[chooserMock reject] _styleNavigationItemForActiveViewController];
+    [[chooserMock reject] _setupNavigationBarButtonsPushStyle];
 
     [chooser setupNavigationBarForActiveViewController];
 
@@ -331,14 +541,26 @@
     XCTAssertEqual(numInvites, 102);
 }
 
--(void)testDismissOnCancel {
+-(void)testDismissOnCancelNoBlock {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     chooser.activeViewController = [[UIViewController alloc] init];
     id viewMock = OCMClassMock([UIView class]);
-    chooser.activeViewController.view = viewMock;
+    id vcMock = OCMPartialMock(chooser.activeViewController);
+    OCMStub([vcMock view]).andReturn(viewMock);
+    OCMExpect([viewMock endEditing:YES]);
 
-    // with no back block, does nothing
+    // with no back block just ends editing for the view
     [chooser dismissOnCancel];
+    OCMVerifyAll(viewMock);
+}
+
+- (void)testDismissOnCancelWithBlock {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[UIViewController alloc] init];
+    id viewMock = OCMClassMock([UIView class]);
+    id vcMock = OCMPartialMock(chooser.activeViewController);
+    OCMStub([vcMock view]).andReturn(viewMock);
+    OCMExpect([viewMock endEditing:YES]);
 
     __block UIViewController *calledWithVC;
     __block NSUInteger numInvites;
@@ -349,7 +571,7 @@
 
     [chooser dismissOnCancel];
 
-    OCMVerify([viewMock endEditing:YES]);
+    OCMVerifyAll(viewMock);
     XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
     XCTAssertEqual(numInvites, 0);
 }

@@ -8,7 +8,7 @@
 
 #import "MAVERemoteConfigurationContactsSync.h"
 
-const NSString *MAVERemoteConfigKeyContactsSyncEnabled = @"enabled";
+NSString * const MAVERemoteConfigKeyContactsSyncEnabled = @"enabled";
 
 @implementation MAVERemoteConfigurationContactsSync
 

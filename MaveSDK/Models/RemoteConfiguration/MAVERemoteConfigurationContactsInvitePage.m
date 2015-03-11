@@ -14,7 +14,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
 NSString * const MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
 NSString * const MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
-NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethod = @"sms_send_method";
+NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethod = @"sms_invite_send_method";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide = @"server_side";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGroup = @"client_side_group";
 

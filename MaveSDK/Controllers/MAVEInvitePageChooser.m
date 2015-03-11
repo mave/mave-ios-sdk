@@ -49,35 +49,89 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 
 
 - (UIViewController *)chooseAndCreateInvitePageViewController {
-    // If contacts permission already denied, load the share page
+    // Based on the primary and fallback page configuration options,
+    // display the appropriate invite page.
+    MAVERemoteConfigurationInvitePageChoice *invitePageConfig = [MaveSDK sharedInstance].remoteConfiguration.invitePageChoice;
+    UIViewController *vc = [self createViewControllerOfType:invitePageConfig.primaryPageType];
+    if (!vc) {
+        vc = [self createViewControllerOfType:invitePageConfig.fallbackPageType];
+    }
+    // if fallback failed, try the share page as a second fallback since it has no restrictions
+    // on when it can be displayed
+    if (!vc) {
+        MAVEErrorLog(@"Error, got nil view controller from fallback page type, trying share page");
+        vc = [[MAVECustomSharePageViewController alloc] init];
+    }
+    self.activeViewController = vc;
+    return vc;
+}
+
+- (UIViewController *)createViewControllerOfType:(MAVEInvitePageType)invitePageType {
+    switch (invitePageType) {
+        case MAVEInvitePageTypeContactsInvitePage:
+            return [self createContactsInvitePageIfAllowed];
+        case MAVEInvitePageTypeSharePage:
+            return [[MAVECustomSharePageViewController alloc] init];
+        case MAVEInvitePageTypeClientSMS:
+            return [self createClientSMSInvitePage];
+        case MAVEInvitePageTypeNone:
+            return nil;
+    }
+}
+
+- (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed {
+    // Once we fully support client-side invite send method, incorporate that option
+    // into the logic:
+    //  MAVESMSInviteSendMethod smsInviteSendMethod = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod;
+
+    // If contacts permission already denied, return nil
     NSString *addressBookStatus = [MAVEABUtils addressBookPermissionStatus];
     if (addressBookStatus == MAVEABPermissionStatusDenied) {
-        MAVEInfoLog(@"Fallback to Custom Share invite page b/c address book permission already denied");
-        return [self createCustomShareInvitePage];
+        MAVEInfoLog(@"Using fallback invite page b/c address book permission already denied");
+        return nil;
     }
 
-    // If not in a supported region, load the share page
+    // If not in a supported region, return nil
     if (![self isInSupportedRegionForServerSideSMSInvites]) {
-        return [self createCustomShareInvitePage];
-        MAVEInfoLog(@"Fallback to Custom Share invite page b/c not in supported region for server-side SMS");
+        MAVEInfoLog(@"Using fallback invite page b/c not in supported region for server-side SMS");
+        return nil;
     }
 
-    // If configured server-side to turn off contacts invite page, use share page instead
+    // If configured server-side to turn off contacts invite page, return nil
     if (![self isContactsInvitePageEnabledServerSide]) {
-        MAVEInfoLog(@"Fallback to custom share page b/c contacts page set to NO server-side");
-        return [self createCustomShareInvitePage];
+        MAVEInfoLog(@"Using fallback invite page b/c contacts page set to NO server-side");
+        return nil;
     }
 
     // If user data doesn't have a legit user id & first name, can't send server-side SMS
     // so use share page instead
     if (![[MaveSDK sharedInstance].userData isUserInfoOkToSendServerSideSMS]) {
         MAVEInfoLog(@"Fallback to custom share page b/c user info invalid");
-        return [self createCustomShareInvitePage];
+        return nil;
     }
 
-    // otherwise we can load the address book invite page
-    MAVEInfoLog(@"Displaying address book invite page");
-    return [self createAddressBookInvitePage];
+    return [[MAVEInvitePageViewController alloc] init];
+}
+
+- (MFMessageComposeViewController *)createClientSMSInvitePage {
+    // can't do this if we're going to push the VC instead of display modally
+    if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
+        MAVEErrorLog(@"Tried to push the client sms form which doesn't work, need to display the view controller modally to show the client sms compose invite page.");
+        return nil;
+    }
+    return [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MessageComposeResult result) {
+        switch (result) {
+            case MessageComposeResultCancelled:
+                [self dismissOnCancel];
+                break;
+            case MessageComposeResultFailed:
+                [self dismissOnCancel];
+                break;
+            case MessageComposeResultSent:
+                [self dismissOnSuccess:1];
+        }
+        [self dismissOnCancel];
+    }];
 }
 
 
@@ -97,18 +151,6 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 
-#pragma mark - helpers to create the kinds of view controllers
-
-- (UIViewController *)createAddressBookInvitePage {
-    self.activeViewController = [[MAVEInvitePageViewController alloc] init];
-    return self.activeViewController;
-}
-
-- (UIViewController *)createCustomShareInvitePage {
-    self.activeViewController = [[MAVECustomSharePageViewController alloc] init];
-    return self.activeViewController;
-}
-
 #pragma mark - additional setup to view controllers
 
 // View controller and navigation controller custom getters/setters
@@ -122,6 +164,12 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (void)setupNavigationBarForActiveViewController {
+    // if our view controller is already a navigation controller, don't
+    // need to wrap it
+    if ([self.activeViewController isKindOfClass:[UINavigationController class]]) {
+        return;
+    }
+
     if (!self.activeViewController.navigationController) {
         [self _embedActiveViewControllerInNewNavigationController];
     }
@@ -185,7 +233,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     self.activeViewController.navigationItem.rightBarButtonItem = forwardButton;
 }
 
-- (void)replaceActiveViewControllerWithSharePage {
+- (void)replaceActiveViewControllerWithFallbackPage {
     // if displaying pushed on stack, pop then push to replace it on the stack
     //
     // if displaying modally, we can push just it onto our new modal stack b/c
@@ -194,10 +242,16 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
         [navigationController popViewControllerAnimated:NO];
     }
-    [self createCustomShareInvitePage];
+    MAVEInvitePageType fallbackPageType = [MaveSDK sharedInstance].remoteConfiguration.invitePageChoice.fallbackPageType;
+    self.activeViewController = [self createViewControllerOfType:fallbackPageType];
+    if (!self.activeViewController) {
+        MAVEErrorLog(@"Error, got nil view controller from fallback page type");
+        self.activeViewController = [[MAVECustomSharePageViewController alloc] init];
+    }
     [self setupNavigationBarForActiveViewController];
     [navigationController pushViewController:self.activeViewController animated:NO];
 }
+
 
 - (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent {
     [self.activeViewController.view endEditing:YES];
