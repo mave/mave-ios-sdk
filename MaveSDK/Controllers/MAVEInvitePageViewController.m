@@ -250,9 +250,9 @@
     if (![self shouldDisplayInviteMessageView]) {
         CGFloat adjustOffsetBy;
         if (self.ABTableViewController.isFixedSearchBarActive) {
-            adjustOffsetBy = 0;
+            adjustOffsetBy = 0 + MAVESearchBarHeight;
         } else {
-            adjustOffsetBy = 0 - MAVESearchBarHeight;
+            adjustOffsetBy = 0;
         }
         tableBottomInset.bottom = adjustOffsetBy;
     }
@@ -306,10 +306,11 @@
     // Resize the header based on width
     [self.ABTableViewController layoutHeaderViewForWidth:containerFrame.size.width];
 }
+
+
 //
 // Respond to children's Events
 //
-
 - (void)ABTableViewControllerNumberSelectedChanged:(NSUInteger)numberChanged {
     // If called from the table view's "did select row at index path" method we'll already be
     // in the main thread anyway, but dispatch it asynchronously just in case we ever call
