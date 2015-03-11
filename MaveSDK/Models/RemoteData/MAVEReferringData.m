@@ -9,8 +9,9 @@
 #import "MAVEReferringData.h"
 #import "MaveSDK.h"
 
-const NSString *MAVEReferringDataKeyReferringUser = @"referring_user";
-const NSString *MAVEReferringDataKeyCurrentUser = @"current_user";
+NSString * const MAVEReferringDataKeyReferringUser = @"referring_user";
+NSString * const MAVEReferringDataKeyCurrentUser = @"current_user";
+NSString * const MAVEReferringDataKeyCustomData = @"custom_data";
 
 @implementation MAVEReferringData
 
@@ -33,6 +34,12 @@ const NSString *MAVEReferringDataKeyCurrentUser = @"current_user";
         } @catch (NSException *exception) {
             self.currentUser = nil;
         }
+
+        NSDictionary *customData = [data objectForKey:MAVEReferringDataKeyCustomData];
+        if (!customData || (id)customData == [NSNull null]) {
+            customData = @{};
+        }
+        self.customData = customData;
     }
     return self;
 }
@@ -53,6 +60,7 @@ const NSString *MAVEReferringDataKeyCurrentUser = @"current_user";
     return @{
         MAVEReferringDataKeyReferringUser: [NSNull null],
         MAVEReferringDataKeyCurrentUser: [NSNull null],
+        MAVEReferringDataKeyCustomData: @{},
     };
 }
 

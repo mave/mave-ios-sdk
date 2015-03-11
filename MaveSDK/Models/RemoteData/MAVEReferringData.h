@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) MAVEUserData *referringUser;
 @property (nonatomic, strong) MAVEUserData *currentUser;
+@property (nonatomic, strong) NSDictionary *customData;
 
 + (MAVERemoteObjectBuilder *)remoteBuilder;
 + (NSDictionary *)defaultData;

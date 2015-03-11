@@ -31,7 +31,8 @@
 - (void)testDefaultData {
     NSDictionary *defaultData = [MAVEReferringData defaultData];
     NSDictionary *expected = @{@"referring_user": [NSNull null],
-                               @"current_user": [NSNull null]};
+                               @"current_user": [NSNull null],
+                               @"custom_data": @{}};
     XCTAssertEqualObjects(defaultData, expected);
 }
 
@@ -40,6 +41,7 @@
     XCTAssertNotNil(obj);
     XCTAssertNil(obj.referringUser);
     XCTAssertNil(obj.currentUser);
+    XCTAssertEqualObjects(obj.customData, @{});
 }
 
 - (void)testInitWithOtherInvalidData {
@@ -50,16 +52,18 @@
     XCTAssertNotNil(obj);
     XCTAssertEqualObjects(obj.referringUser.userID, @"");
     XCTAssertNil(obj.currentUser.phone);
-
+    XCTAssertEqualObjects(obj.customData, @{});
 }
 
 - (void)testInitWithNonDefaultButValidDictionary {
+    NSDictionary *customData = @{@"foo": @"bar"};
     NSDictionary *referringUserData = @{@"user_id": @"1",
                                         @"first_name": @"Dan",
                                         @"random_key_will_be_ignored": @"adfasdf"};
     NSDictionary *currentUserData = @{@"phone": @"+12125551234"};
     NSDictionary *data = @{@"referring_user": referringUserData,
-                           @"current_user": currentUserData};
+                           @"current_user": currentUserData,
+                           @"custom_data": customData};
     MAVEReferringData *obj = [[MAVEReferringData alloc] initWithDictionary:data];
     XCTAssertNotNil(obj);
     XCTAssertEqualObjects(obj.referringUser.userID, [referringUserData objectForKey:@"user_id"]);
@@ -67,6 +71,7 @@
     XCTAssertEqualObjects(obj.referringUser.lastName, nil);
     XCTAssertEqualObjects(obj.currentUser.userID, nil);
     XCTAssertEqualObjects(obj.currentUser.phone, [currentUserData objectForKey:@"phone"]);
+    XCTAssertEqualObjects(obj.customData, customData);
 }
 
 - (void)testRemoteBuilderFulfillSuccess {
