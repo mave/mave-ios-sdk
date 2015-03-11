@@ -130,7 +130,7 @@
 		0CF0E3CB1A72B370008BBFB3 /* MAVEABSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0E3CA1A72B370008BBFB3 /* MAVEABSyncManager.m */; };
 		0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */; };
 		0CFDBE2B1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */; };
-		0CFE94871AAE039F00320FF3 /* MAVERemoteConfigurationInvitePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFE94861AAE039F00320FF3 /* MAVERemoteConfigurationInvitePage.m */; };
+		0CFE94871AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFE94861AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.m */; };
 		0CFE94891AAE3A5700320FF3 /* MAVERemoteConfigurationInvitePageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFE94881AAE3A5700320FF3 /* MAVERemoteConfigurationInvitePageTests.m */; };
 		2B7A4228379B9D57ECBA102F /* libPods-DemoApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BA8557394AD1E344016951 /* libPods-DemoApp.a */; };
 		6A056CC01A5F2F4B00AAD8B0 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A056CBF1A5F2F4B00AAD8B0 /* Social.framework */; };
@@ -356,8 +356,8 @@
 		0CFDBE271A1B875100DD2AAF /* MAVEInviteExplanationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteExplanationView.h; sourceTree = "<group>"; };
 		0CFDBE281A1B875100DD2AAF /* MAVEInviteExplanationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteExplanationView.m; sourceTree = "<group>"; };
 		0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInviteExplanationViewTests.m; sourceTree = "<group>"; };
-		0CFE94851AAE039F00320FF3 /* MAVERemoteConfigurationInvitePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationInvitePage.h; sourceTree = "<group>"; };
-		0CFE94861AAE039F00320FF3 /* MAVERemoteConfigurationInvitePage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationInvitePage.m; sourceTree = "<group>"; };
+		0CFE94851AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationInvitePageChoice.h; sourceTree = "<group>"; };
+		0CFE94861AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationInvitePageChoice.m; sourceTree = "<group>"; };
 		0CFE94881AAE3A5700320FF3 /* MAVERemoteConfigurationInvitePageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationInvitePageTests.m; sourceTree = "<group>"; };
 		2110DFB92C7B0700F5577B76 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5D1D110D19FDCF9921E21868 /* libPods-MaveSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MaveSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -611,8 +611,8 @@
 			children = (
 				0C1F1A001A435EAE00B2D482 /* MAVERemoteConfiguration.h */,
 				0C1F1A011A435EAE00B2D482 /* MAVERemoteConfiguration.m */,
-				0CFE94851AAE039F00320FF3 /* MAVERemoteConfigurationInvitePage.h */,
-				0CFE94861AAE039F00320FF3 /* MAVERemoteConfigurationInvitePage.m */,
+				0CFE94851AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.h */,
+				0CFE94861AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.m */,
 				0CE3AA281A95214300E7C987 /* MAVERemoteConfigurationContactsSync.h */,
 				0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */,
 				0C1F1A031A435FD300B2D482 /* MAVERemoteConfigurationContactsPrePrompt.h */,
@@ -1147,7 +1147,7 @@
 				0C1A8FB91A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m in Sources */,
 				0CD2743B1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m in Sources */,
 				C029280619E82D0F006AEE43 /* MAVEDisplayOptions.m in Sources */,
-				0CFE94871AAE039F00320FF3 /* MAVERemoteConfigurationInvitePage.m in Sources */,
+				0CFE94871AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.m in Sources */,
 				0C1134D11A12C42200631797 /* MAVENoAddressBookPermissionView.m in Sources */,
 				0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */,
 				0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */,

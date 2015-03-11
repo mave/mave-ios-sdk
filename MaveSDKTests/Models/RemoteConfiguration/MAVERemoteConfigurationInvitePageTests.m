@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "MAVERemoteConfigurationInvitePage.h"
+#import "MAVERemoteConfigurationInvitePageChoice.h"
 
 @interface MAVERemoteConfigurationInvitePageTests : XCTestCase
 
@@ -27,14 +27,14 @@
 }
 
 - (void)testDefaultJSON {
-    NSDictionary *defaults = [MAVERemoteConfigurationInvitePage defaultJSONData];
+    NSDictionary *defaults = [MAVERemoteConfigurationInvitePageChoice defaultJSONData];
     XCTAssertEqual([defaults count], 2);
     XCTAssertEqualObjects([defaults objectForKey:@"primary_page"], @"contacts_invite_page");
     XCTAssertEqualObjects([defaults objectForKey:@"fallback_page"], @"share_page");
 }
 
 - (void)testInitWithDefaultData {
-    MAVERemoteConfigurationInvitePage *invitePage = [[MAVERemoteConfigurationInvitePage alloc] initWithDictionary:[MAVERemoteConfigurationInvitePage defaultJSONData]];
+    MAVERemoteConfigurationInvitePageChoice *invitePage = [[MAVERemoteConfigurationInvitePageChoice alloc] initWithDictionary:[MAVERemoteConfigurationInvitePageChoice defaultJSONData]];
 
     XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeContactsInvitePage);
     XCTAssertEqual(invitePage.fallbackPageType, MAVEInvitePageTypeSharePage);
@@ -44,7 +44,7 @@
     NSDictionary *options = @{@"primary_page": @"share_page",
                               @"fallback_page": @"client_sms"};
 
-    MAVERemoteConfigurationInvitePage *invitePage = [[MAVERemoteConfigurationInvitePage alloc] initWithDictionary:options];
+    MAVERemoteConfigurationInvitePageChoice *invitePage = [[MAVERemoteConfigurationInvitePageChoice alloc] initWithDictionary:options];
 
     XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeSharePage);
     XCTAssertEqual(invitePage.fallbackPageType, MAVEInvitePageTypeClientSMS);
@@ -53,12 +53,12 @@
 - (void)testInitWithInvalidOptions {
     NSDictionary *options = @{@"primary_page": @"foo",
                               @"fallback_page": @"bar"};
-    MAVERemoteConfigurationInvitePage *invitePage = [[MAVERemoteConfigurationInvitePage alloc] initWithDictionary:options];
+    MAVERemoteConfigurationInvitePageChoice *invitePage = [[MAVERemoteConfigurationInvitePageChoice alloc] initWithDictionary:options];
     XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeContactsInvitePage);
     XCTAssertEqual(invitePage.fallbackPageType, MAVEInvitePageTypeSharePage);
 
     // or init with nil, same thing
-    invitePage = [[MAVERemoteConfigurationInvitePage alloc] initWithDictionary:nil];
+    invitePage = [[MAVERemoteConfigurationInvitePageChoice alloc] initWithDictionary:nil];
     XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeContactsInvitePage);
     XCTAssertEqual(invitePage.fallbackPageType, MAVEInvitePageTypeSharePage);
 }

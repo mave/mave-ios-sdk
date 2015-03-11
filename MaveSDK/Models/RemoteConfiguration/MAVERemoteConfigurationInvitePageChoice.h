@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, MAVEInvitePageType) {
 };
 
 
-@interface MAVERemoteConfigurationInvitePage : NSObject<MAVEDictionaryInitializable>
+@interface MAVERemoteConfigurationInvitePageChoice : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic, assign) MAVEInvitePageType primaryPageType;
 @property (nonatomic, assign) MAVEInvitePageType fallbackPageType;

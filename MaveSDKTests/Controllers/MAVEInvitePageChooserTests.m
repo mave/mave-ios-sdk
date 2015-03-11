@@ -66,7 +66,7 @@
 - (void)testChooseAndCreateUsingContactsInvitePagePrimary {
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    remoteConfig.invitePage.primaryPageType = MAVEInvitePageTypeContactsInvitePage;
+    remoteConfig.invitePageChoice.primaryPageType = MAVEInvitePageTypeContactsInvitePage;
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
@@ -83,7 +83,7 @@
 - (void)testChooseAndCreateUsingSharePagePrimary {
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    remoteConfig.invitePage.primaryPageType = MAVEInvitePageTypeSharePage;
+    remoteConfig.invitePageChoice.primaryPageType = MAVEInvitePageTypeSharePage;
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
@@ -97,8 +97,8 @@
 - (void)testChooseAndCreateUsingClientSMSSecondaryWhenContactsPageFails {
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    remoteConfig.invitePage.primaryPageType = MAVEInvitePageTypeContactsInvitePage;
-    remoteConfig.invitePage.fallbackPageType = MAVEInvitePageTypeClientSMS;
+    remoteConfig.invitePageChoice.primaryPageType = MAVEInvitePageTypeContactsInvitePage;
+    remoteConfig.invitePageChoice.fallbackPageType = MAVEInvitePageTypeClientSMS;
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
@@ -118,7 +118,7 @@
     // Mock remote config to use fallback type client sms
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    remoteConfig.invitePage.fallbackPageType = MAVEInvitePageTypeClientSMS;
+    remoteConfig.invitePageChoice.fallbackPageType = MAVEInvitePageTypeClientSMS;
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
     id navVCMock = OCMClassMock([UINavigationController class]);
@@ -142,7 +142,7 @@
     // Mock remote config to use fallback type client sms
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    remoteConfig.invitePage.fallbackPageType = MAVEInvitePageTypeClientSMS;
+    remoteConfig.invitePageChoice.fallbackPageType = MAVEInvitePageTypeClientSMS;
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
     id navVCMock = OCMClassMock([UINavigationController class]);

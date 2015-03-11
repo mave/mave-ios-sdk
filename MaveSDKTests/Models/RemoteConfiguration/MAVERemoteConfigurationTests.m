@@ -33,9 +33,9 @@
 
 - (void)testDefaultData {
     NSDictionary *defaults = [MAVERemoteConfiguration defaultJSONData];
-    XCTAssertNotNil([defaults objectForKey:@"invite_page"]);
-    XCTAssertEqualObjects([defaults objectForKey:@"invite_page"],
-                          [MAVERemoteConfigurationInvitePage defaultJSONData]);
+    XCTAssertNotNil([defaults objectForKey:@"invite_page_choice"]);
+    XCTAssertEqualObjects([defaults objectForKey:@"invite_page_choice"],
+                          [MAVERemoteConfigurationInvitePageChoice defaultJSONData]);
     XCTAssertNotNil([defaults objectForKey:@"contacts_sync"]);
     XCTAssertEqualObjects([defaults objectForKey:@"contacts_sync"],
                           [MAVERemoteConfigurationContactsSync defaultJSONData]);
@@ -71,7 +71,7 @@
 - (void)testInitFromDefaultData {
     MAVERemoteConfiguration *config =
         [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
-    XCTAssertNotNil(config.invitePage);
+    XCTAssertNotNil(config.invitePageChoice);
     XCTAssertNotNil(config.contactsSync);
     XCTAssertNotNil(config.contactsPrePrompt);
     XCTAssertNotNil(config.contactsInvitePage);

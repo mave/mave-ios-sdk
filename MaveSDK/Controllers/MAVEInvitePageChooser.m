@@ -51,7 +51,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 - (UIViewController *)chooseAndCreateInvitePageViewController {
     // Based on the primary and fallback page configuration options,
     // display the appropriate invite page.
-    MAVERemoteConfigurationInvitePage *invitePageConfig = [MaveSDK sharedInstance].remoteConfiguration.invitePage;
+    MAVERemoteConfigurationInvitePageChoice *invitePageConfig = [MaveSDK sharedInstance].remoteConfiguration.invitePageChoice;
     UIViewController *vc = [self createViewControllerOfType:invitePageConfig.primaryPageType];
     if (!vc) {
         vc = [self createViewControllerOfType:invitePageConfig.fallbackPageType];
@@ -242,7 +242,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatPush]) {
         [navigationController popViewControllerAnimated:NO];
     }
-    MAVEInvitePageType fallbackPageType = [MaveSDK sharedInstance].remoteConfiguration.invitePage.fallbackPageType;
+    MAVEInvitePageType fallbackPageType = [MaveSDK sharedInstance].remoteConfiguration.invitePageChoice.fallbackPageType;
     self.activeViewController = [self createViewControllerOfType:fallbackPageType];
     if (!self.activeViewController) {
         MAVEErrorLog(@"Error, got nil view controller from fallback page type");

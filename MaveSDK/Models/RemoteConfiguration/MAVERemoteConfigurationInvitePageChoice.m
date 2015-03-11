@@ -6,13 +6,13 @@
 //
 //
 
-#import "MAVERemoteConfigurationInvitePage.h"
+#import "MAVERemoteConfigurationInvitePageChoice.h"
 #import "MAVERemoteConfiguration.h"
 
 NSString * const MAVERemoteConfigKeyInvitePagePrimary = @"primary_page";
 NSString * const MAVERemoteConfigKeyInvitePageFallback = @"fallback_page";
 
-@implementation MAVERemoteConfigurationInvitePage
+@implementation MAVERemoteConfigurationInvitePageChoice
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
