@@ -193,12 +193,19 @@
     // Instantiate the view controllers for child views
     self.abTableFixedSearchbar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
     self.ABTableViewController = [[MAVEABTableViewController alloc] initTableViewWithParent:self];
-    self.inviteMessageContainerView = [[MAVEInviteMessageContainerView alloc] init];
-    [self.inviteMessageContainerView.inviteMessageView.sendButton
-        addTarget:self action:@selector(sendInvites) forControlEvents: UIControlEventTouchUpInside];
+
+    MAVESMSInviteSendMethod inviteSendMethod = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod;
+    SEL sendSelector;
+    if (inviteSendMethod == MAVESMSInviteSendMethodServerSide) {
+        sendSelector = @selector(sendInvites);
+    } else {
+        sendSelector = @selector(composeClientGroupSMSInvites);
+    }
+    self.bottomActionContainerView = [[MAVEInvitePageBottomActionContainerView alloc] initWithSMSInviteSendMethod:inviteSendMethod];
+    [self.bottomActionContainerView addToSendButtonTarget:self andAction:sendSelector];
     
     __weak typeof(self) weakSelf = self;
-    self.inviteMessageContainerView.inviteMessageView.textViewContentChangingBlock = ^void() {
+    self.bottomActionContainerView.inviteMessageView.textViewContentChangingBlock = ^void() {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf layoutInvitePageViewAndSubviews];
         });
@@ -208,7 +215,7 @@
     containerView.backgroundColor = [UIColor whiteColor];
     [containerView addSubview:self.abTableFixedSearchbar];
     [containerView addSubview:self.ABTableViewController.tableView];
-    [containerView addSubview:self.inviteMessageContainerView];
+    [containerView addSubview:self.bottomActionContainerView];
     return containerView;
 }
 
@@ -226,17 +233,17 @@
     tableViewFrame.origin.y = yOffsetForContent;
     tableViewFrame.size.height = containerFrame.size.height - yOffsetForContent;
 
-    CGFloat inviteViewHeight = [self.inviteMessageContainerView.inviteMessageView
-                                computeHeightWithWidth:containerFrame.size.width];
+    CGFloat bottomActionViewHeight = [self.bottomActionContainerView
+                                      heightForViewWithWidth:containerFrame.size.width];
 
-    // Adjust bottom inset to make extra room for the invite view, and remove ex
+    // Adjust bottom inset to make extra room for the bottom action view & remove when it's going away
     UIEdgeInsets tableBottomInset = self.ABTableViewController.tableView.contentInset;
-    if ([self shouldDisplayInviteMessageView] && tableBottomInset.bottom < inviteViewHeight) {
+    if ([self shouldDisplayInviteMessageView] && tableBottomInset.bottom < bottomActionViewHeight) {
         CGFloat adjustOffsetBy;
         if (self.ABTableViewController.isFixedSearchBarActive) {
-            adjustOffsetBy = inviteViewHeight;
+            adjustOffsetBy = bottomActionViewHeight;
         } else {
-            adjustOffsetBy = inviteViewHeight - MAVESearchBarHeight;
+            adjustOffsetBy = bottomActionViewHeight - MAVESearchBarHeight;
         }
         tableBottomInset.bottom  = adjustOffsetBy;
     }
@@ -254,14 +261,14 @@
 
     // Put the invite message view off bottom of screen unless we should display it,
     // then it goes at the very bottom
-    CGFloat inviteViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
+    CGFloat bottomActionViewOffsetY = containerFrame.origin.y + containerFrame.size.height;
     if ([self shouldDisplayInviteMessageView]) {
-        inviteViewOffsetY -= inviteViewHeight;
+        bottomActionViewOffsetY -= bottomActionViewHeight;
     }
-    CGRect inviteMessageViewFrame = CGRectMake(0,
-                                               inviteViewOffsetY,
-                                               containerFrame.size.width,
-                                               inviteViewHeight);
+    CGRect bottomActionViewFrame = CGRectMake(0,
+                                              bottomActionViewOffsetY,
+                                              containerFrame.size.width,
+                                              bottomActionViewHeight);
 
     // If the fixed search bar is active, set the frame and make room for it by shrinking the table
     if (self.ABTableViewController.isFixedSearchBarActive) {
@@ -280,13 +287,13 @@
                    -containerFrame.size.height,
                    containerFrame.size.width,
                    containerFrame.size.height);
-    self.inviteMessageContainerView.frame = inviteMessageViewFrame;
+    self.bottomActionContainerView.frame = bottomActionViewFrame;
 
     // adjust the search table bottom content inset so it doesn't hide results behind
     // the area taken up by keyboard + invite message container view
     CGFloat searchViewOffset = self.keyboardFrame.size.height - self.ABTableViewController.tableView.contentInset.top;
     if ([self shouldDisplayInviteMessageView]) {
-        searchViewOffset += self.inviteMessageContainerView.frame.size.height;
+        searchViewOffset += self.bottomActionContainerView.frame.size.height;
     }
     self.ABTableViewController.searchTableView.contentInset = UIEdgeInsetsMake(0, 0, searchViewOffset, 0);
 
@@ -305,7 +312,7 @@
         [UIView animateWithDuration:0.25 animations:^{
             [self layoutInvitePageViewAndSubviews];
         }];
-        [self.inviteMessageContainerView.inviteMessageView updateNumberPeopleSelected:numberChanged];
+        [self.bottomActionContainerView updateNumberPeopleSelected:numberChanged];
     });
 }
 
@@ -314,7 +321,7 @@
 // Send invites and update UI when done
 //
 - (void)sendInvites {
-    NSString *message = self.inviteMessageContainerView.inviteMessageView.textView.text;
+    NSString *message = self.bottomActionContainerView.inviteMessageView.textView.text;
     NSArray *phonesToInvite = [self.ABTableViewController.selectedPhoneNumbers allObjects];
     NSArray *peopleToInvite = [self.ABTableViewController.selectedPeople allObjects];
     NSInteger numberInvites = [phonesToInvite count];
@@ -341,18 +348,18 @@
         } else {
             MAVEInfoLog(@"Sent %d invites!", numberInvites);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.inviteMessageContainerView.sendingInProgressView completeSendingProgress];
+                [self.bottomActionContainerView.sendingInProgressView completeSendingProgress];
             });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self dismissSelf:(unsigned int)numberInvites];
             });
         }
     }];
-    [self.inviteMessageContainerView makeSendingInProgressViewActive];
+    [self.bottomActionContainerView makeSendingInProgressViewActive];
 }
 
 - (void)showErrorAndResetAfterSendInvitesFailure:(NSError *)error {
-    [self.inviteMessageContainerView makeInviteMessageViewActive];
+    [self.bottomActionContainerView makeInviteMessageViewActive];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
                                                     message:@"Server was unavailable or internet connection failed"
                                                    delegate:nil
@@ -366,6 +373,18 @@
 
 - (void)dismissSendInvitesFailedAlertView:(UIAlertView *)alertView {
     [alertView dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+- (void)composeClientGroupSMSInvites {
+    NSArray *recipientPhones = [self.ABTableViewController.selectedPhoneNumbers allObjects];
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:recipientPhones completionBlock:^(MessageComposeResult result) {
+
+    }];
+    if (!vc) {
+        MAVEErrorLog(@"Cant present controller to compose client SMS, likely device cannot send SMS messages");
+        return;
+    }
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 // Do Share sheet invites instead

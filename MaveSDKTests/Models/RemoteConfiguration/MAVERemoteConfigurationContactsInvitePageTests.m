@@ -10,11 +10,11 @@
 #import <XCTest/XCTest.h>
 #import "MAVERemoteConfigurationContactsInvitePage.h"
 
-@interface MAVERemoteConfigurationInvitePageTests : XCTestCase
+@interface MAVERemoteConfigurationContactsInvitePageTests : XCTestCase
 
 @end
 
-@implementation MAVERemoteConfigurationInvitePageTests
+@implementation MAVERemoteConfigurationContactsInvitePageTests
 
 - (void)setUp {
     [super setUp];
@@ -35,6 +35,7 @@
 
     XCTAssertNil([template objectForKey:@"explanation_copy"]);
     XCTAssertFalse([[template objectForKey:@"suggested_invites_enabled"] boolValue]);
+    XCTAssertEqualObjects([template objectForKey:@"sms_send_method"], @"server_side");
 }
 
 - (void)testInitWithDefaultData {
@@ -45,6 +46,7 @@
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertNil(obj.explanationCopy);
     XCTAssertFalse(obj.suggestedInvitesEnabled);
+    XCTAssertEqual(obj.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
 }
 
 - (void)testInitFailsIfEnabledKeyIsMissing {

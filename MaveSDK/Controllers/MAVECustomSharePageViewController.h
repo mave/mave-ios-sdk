@@ -10,17 +10,20 @@
 #import <Social/Social.h>
 #import <MessageUI/MessageUI.h>
 #import "MAVERemoteConfiguration.h"
+#import "MAVESharer.h"
 
-@interface MAVECustomSharePageViewController: UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface MAVECustomSharePageViewController: UIViewController <MFMailComposeViewControllerDelegate>
+
+@property (nonatomic, strong) MAVESharer *sharerObject;
 
 - (void)dismissAfterShare;
 
+- (void)smsClientSideShare;
+
 // Do the client side shares
 // the helpers let us test in the simulator
-- (void)smsClientSideShare;
-// this is a helper to let us test in the simulater where we can't init the
-// message compose controller
-- (MFMessageComposeViewController *)_createMessageComposeViewController;
+// TODO: move these all the MAVESharer object so we can re-use them on different
+// view controllers
 - (void)emailClientSideShare;
 - (MFMailComposeViewController *)_createMailComposeViewController;
 - (void)facebookiOSNativeShare;
@@ -31,16 +34,5 @@
 - (void)twitterHandleShareResult:(SLComposeViewControllerResult) result;
 - (void)clipboardShare;
 - (UIPasteboard *)_generalPasteboardForClipboardShare;
-
-// Helpers
-
-- (MAVERemoteConfiguration *)remoteConfiguration;
-- (NSString *)shareToken;
-- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
-      andLinkWithSubRouteLetter:(NSString *)letter;
-// Build a link of the format: http://appjoin.us/<subRoute>/SHARE-TOKEN
-- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
-- (void)resetShareToken;
-
 
 @end

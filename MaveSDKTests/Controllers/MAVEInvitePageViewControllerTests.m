@@ -118,7 +118,7 @@
 - (void)testRespondAsAdditionalTableViewDelegate {
     id mock = [OCMockObject mockForClass:[MAVEInviteMessageView class]];
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
-    vc.inviteMessageContainerView.inviteMessageView = mock;
+    vc.bottomActionContainerView.inviteMessageView = mock;
     OCMExpect([mock updateNumberPeopleSelected:2]);
     [vc ABTableViewControllerNumberSelectedChanged:2];
     OCMVerify(mock);
@@ -155,7 +155,7 @@
     NSArray *inviteContacts = @[p1];
     vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
     vc.ABTableViewController.selectedPeople = [[NSMutableSet alloc] initWithArray:inviteContacts];
-    vc.inviteMessageContainerView.inviteMessageView.textView.text = inviteMessage;
+    vc.bottomActionContainerView.inviteMessageView.textView.text = inviteMessage;
 
     // Create a mock http manager & stub the singleton object to use it
     id mockAPIInterface = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].APIInterface];
@@ -168,6 +168,35 @@
                                                      completionBlock:[OCMArg any]]);
     [vc sendInvites];
     OCMVerifyAll(mockAPIInterface);
+}
+
+- (void)testComposeClientGroupInvites {
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    [vc loadView];
+    [vc viewDidLoad];
+
+    // Setup content for invites
+    NSArray *invitePhones = @[@"18085551234"];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.firstName = @"Foo";
+    NSArray *inviteContacts = @[p1];
+    vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
+    vc.ABTableViewController.selectedPeople = [[NSMutableSet alloc] initWithArray:inviteContacts];
+
+    UIViewController *fakeMessageComposeVC = OCMClassMock([MFMessageComposeViewController class]);
+    id maveSharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([maveSharerMock composeClientSMSInviteToRecipientPhones:invitePhones completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MessageComposeResult result) = obj;
+        completionBlock(MessageComposeResultSent);
+        return YES;
+    }]]).andReturn(fakeMessageComposeVC);
+
+    id vcMock = OCMPartialMock(vc);
+    OCMExpect([vcMock presentViewController:fakeMessageComposeVC animated:YES completion:nil]);
+
+    [vc composeClientGroupSMSInvites];
+
+    OCMVerifyAll(vcMock);
+    OCMVerifyAll(maveSharerMock);
 }
 
 ///
@@ -228,6 +257,56 @@
     OCMVerifyAll(mockPrompter);
     [mockABUtils stopMocking];
     [mockPrompter stopMocking];
+}
+
+- (void)testCreateAddressBookInviteViewWhenServerSideSMSMethod {
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.contactsInvitePage.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    // run code under test
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    UIView *view = [vc createAddressBookInviteView];
+
+    // test views are layed out as expected
+    XCTAssertEqual(vc.bottomActionContainerView.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
+    XCTAssertTrue([vc.bottomActionContainerView.inviteMessageView isDescendantOfView:view]);
+    XCTAssertFalse([vc.bottomActionContainerView.clientSideBottomActionView isDescendantOfView:view]);
+
+    // test send button will call the right method
+    UIButton *sendButton = vc.bottomActionContainerView.inviteMessageView.sendButton;
+    XCTAssertEqual([sendButton.allTargets count], 1);
+    id target = [sendButton.allTargets anyObject];
+    NSArray *actions =[sendButton actionsForTarget:target forControlEvent:UIControlEventTouchUpInside];
+    XCTAssertEqual([actions count], 1);
+    NSString *action = [actions objectAtIndex:0];
+    XCTAssertEqualObjects(action, @"sendInvites");
+}
+
+- (void)testCreateAddressBookInviteViewWhenClientSideGroupSMSMethod{
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.contactsInvitePage.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    // run code under test
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    UIView *view = [vc createAddressBookInviteView];
+
+    // test views are layed out as expected
+    XCTAssertEqual(vc.bottomActionContainerView.smsInviteSendMethod, MAVESMSInviteSendMethodClientSideGroup);
+    XCTAssertFalse([vc.bottomActionContainerView.inviteMessageView isDescendantOfView:view]);
+    XCTAssertTrue([vc.bottomActionContainerView.clientSideBottomActionView isDescendantOfView:view]);
+
+    // test send button will call the right method
+    UIButton *sendButton = vc.bottomActionContainerView.clientSideBottomActionView.sendButton;
+    XCTAssertEqual([sendButton.allTargets count], 1);
+    id target = [sendButton.allTargets anyObject];
+    NSArray *actions =[sendButton actionsForTarget:target forControlEvent:UIControlEventTouchUpInside];
+    XCTAssertEqual([actions count], 1);
+    NSString *action = [actions objectAtIndex:0];
+    XCTAssertEqualObjects(action, @"composeClientGroupSMSInvites");
 }
 
 // Tests for the helper for displaying suggested invites

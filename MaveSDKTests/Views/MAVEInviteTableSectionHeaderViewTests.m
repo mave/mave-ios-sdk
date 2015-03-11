@@ -1,5 +1,5 @@
 //
-//  MAVEInviteTableSectionHeaderViewTests.m
+//  MAVEInvitePageBottomActionContainerViewTests.m
 //  MaveSDK
 //
 //  Created by Danny Cosson on 2/19/15.
