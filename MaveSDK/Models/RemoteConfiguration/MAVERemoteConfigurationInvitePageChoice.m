@@ -9,6 +9,7 @@
 #import "MAVERemoteConfigurationInvitePageChoice.h"
 #import "MAVERemoteConfiguration.h"
 
+NSString * const MAVERemoteConfigKeyTemplate = @"template";
 NSString * const MAVERemoteConfigKeyInvitePagePrimary = @"primary_page";
 NSString * const MAVERemoteConfigKeyInvitePageFallback = @"fallback_page";
 
@@ -16,13 +17,14 @@ NSString * const MAVERemoteConfigKeyInvitePageFallback = @"fallback_page";
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
-        MAVEInvitePageType primaryPageType = [[self class] invitePageTypeFromJSONStringName:[data objectForKey:MAVERemoteConfigKeyInvitePagePrimary]];
+        NSDictionary *template = [data objectForKey:MAVERemoteConfigKeyTemplate];
+        MAVEInvitePageType primaryPageType = [[self class] invitePageTypeFromJSONStringName:[template objectForKey:MAVERemoteConfigKeyInvitePagePrimary]];
         if (primaryPageType == MAVEInvitePageTypeNone) {
             primaryPageType = MAVEInvitePageTypeContactsInvitePage;
         }
         self.primaryPageType = primaryPageType;
 
-        MAVEInvitePageType fallbackPageType = [[self class] invitePageTypeFromJSONStringName:[data objectForKey:MAVERemoteConfigKeyInvitePageFallback]];
+        MAVEInvitePageType fallbackPageType = [[self class] invitePageTypeFromJSONStringName:[template objectForKey:MAVERemoteConfigKeyInvitePageFallback]];
         if (fallbackPageType == MAVEInvitePageTypeNone) {
             fallbackPageType = MAVEInvitePageTypeSharePage;
         }
@@ -45,8 +47,10 @@ NSString * const MAVERemoteConfigKeyInvitePageFallback = @"fallback_page";
 
 + (NSDictionary *)defaultJSONData {
     return @{
-        MAVERemoteConfigKeyInvitePagePrimary: @"contacts_invite_page",
-        MAVERemoteConfigKeyInvitePageFallback: @"share_page",
+        MAVERemoteConfigKeyTemplate: @{
+            MAVERemoteConfigKeyInvitePagePrimary: @"contacts_invite_page",
+            MAVERemoteConfigKeyInvitePageFallback: @"share_page",
+        },
     };
 }
 
