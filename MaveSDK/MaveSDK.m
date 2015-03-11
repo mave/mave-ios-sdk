@@ -152,9 +152,11 @@ static dispatch_once_t sharedInstanceonceToken;
     if (!_userData) {
         @try {
             NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:MAVEUserDefaultsKeyUserData];
-            NSDictionary *userDataAttrs = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-            if (userDataAttrs && [userDataAttrs count] > 0) {
-                _userData = [[MAVEUserData alloc] initWithDictionary:userDataAttrs];
+            if (data) {
+                NSDictionary *userDataAttrs = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                if (userDataAttrs && [userDataAttrs count] > 0) {
+                    _userData = [[MAVEUserData alloc] initWithDictionary:userDataAttrs];
+                }
             }
         }
         @catch (NSException *exception) {
