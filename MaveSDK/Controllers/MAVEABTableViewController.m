@@ -120,11 +120,10 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     // first time we layout the page, if the header view is only a search bar anyway then replace
     // it with the fixed search bar
     if (!self.didInitialTableHeaderLayout) {
-        if (![self.inviteTableHeaderView hasContentOtherThanSearchBar]) {
-            self.tableView.contentOffset = CGPointMake(0, self.inviteTableHeaderView.searchBar.frame.size.height);
-            self.tableView.contentOffset = CGPointMake(0, 0);
-        }
         self.didInitialTableHeaderLayout = YES;
+        if (![self.inviteTableHeaderView hasContentOtherThanSearchBar]) {
+            [self makeSearchBarFixed];
+        }
     }
 }
 
@@ -455,29 +454,9 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     BOOL shouldMakeSearchBarUnfixed = self.isFixedSearchBarActive && offsetY < embeddedSearchBarBottom;
 
     if (shouldMakeSearchBarFixed) {
-        self.isFixedSearchBarActive = YES;
-        CGPoint newOffset = CGPointMake(0, offsetY + embeddedSearchBarHeight);
-        UIEdgeInsets newInset = self.tableView.contentInset;
-        newInset.bottom += embeddedSearchBarHeight;
-
-        self.lockScrollViewDidScroll = YES;
-        [self.parentViewController layoutInvitePageViewAndSubviews];
-        self.tableView.contentInset = newInset;
-        self.tableView.contentOffset = newOffset;
-        self.lockScrollViewDidScroll = NO;
-
+        [self makeSearchBarFixed];
     } else if (shouldMakeSearchBarUnfixed) {
-        self.isFixedSearchBarActive = NO;
-        CGPoint newOffset = self.tableView.contentOffset;
-        newOffset.y -= embeddedSearchBarHeight;
-        UIEdgeInsets newInset = self.tableView.contentInset;
-        newInset.bottom -= embeddedSearchBarHeight;
-
-        self.lockScrollViewDidScroll = YES;
-        [self.parentViewController layoutInvitePageViewAndSubviews];
-        self.tableView.contentInset = newInset;
-        self.tableView.contentOffset = newOffset;
-        self.lockScrollViewDidScroll = NO;
+        [self makeSearchBarUnfixed];
     }
 
     //
@@ -486,6 +465,36 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     if ([self.inviteTableHeaderView hasContentOtherThanSearchBar] && offsetY < 0) {
         [self.inviteTableHeaderView resizeWithShiftedOffsetY:offsetY];
     }
+}
+
+- (void)makeSearchBarFixed {
+    CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
+    self.isFixedSearchBarActive = YES;
+    CGPoint newOffset = self.tableView.contentOffset;
+    newOffset.y += embeddedSearchBarHeight;
+    UIEdgeInsets newInset = self.tableView.contentInset;
+    newInset.bottom += embeddedSearchBarHeight;
+
+    self.lockScrollViewDidScroll = YES;
+    [self.parentViewController layoutInvitePageViewAndSubviews];
+    self.tableView.contentInset = newInset;
+    self.tableView.contentOffset = newOffset;
+    self.lockScrollViewDidScroll = NO;
+}
+
+- (void)makeSearchBarUnfixed {
+    CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
+    self.isFixedSearchBarActive = NO;
+    CGPoint newOffset = self.tableView.contentOffset;
+    newOffset.y -= embeddedSearchBarHeight;
+    UIEdgeInsets newInset = self.tableView.contentInset;
+    newInset.bottom -= embeddedSearchBarHeight;
+
+    self.lockScrollViewDidScroll = YES;
+    [self.parentViewController layoutInvitePageViewAndSubviews];
+    self.tableView.contentInset = newInset;
+    self.tableView.contentOffset = newOffset;
+    self.lockScrollViewDidScroll = NO;
 }
 
 #pragma mark - Search TableView management
