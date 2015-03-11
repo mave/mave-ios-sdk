@@ -24,7 +24,7 @@
 - (void)makeSendingInProgressViewActive;
 
 - (CGFloat)heightForViewWithWidth:(CGFloat)width;
-- (void)updateNumberPeopleSelected:(uint64_t)numberOfPeople;
+- (void)updateNumberPeopleSelected:(NSUInteger)numberOfPeople;
 - (void)addToSendButtonTarget:(id)target andAction:(SEL)action;
 
 @end

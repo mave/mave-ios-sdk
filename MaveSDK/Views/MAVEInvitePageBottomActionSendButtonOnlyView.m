@@ -9,7 +9,7 @@
 #import "MAVEInvitePageBottomActionSendButtonOnlyView.h"
 #import "MaveSDK.h"
 
-const NSString *NumberSelectedIndicatorFormat = @"Compose SMS to %llu people";
+NSString * const NumberSelectedIndicatorFormat = @"Compose SMS to %@ people";
 
 @implementation MAVEInvitePageBottomActionSendButtonOnlyView
 
@@ -51,7 +51,7 @@ const NSString *NumberSelectedIndicatorFormat = @"Compose SMS to %llu people";
     CGFloat aboveButtonExtraPaddingY = 7;
     CGFloat buttonToLabelPaddingY = 2;
 
-    self.numberSelectedIndicator.text = [NSString stringWithFormat:(NSString *)NumberSelectedIndicatorFormat, self.numberSelected];
+    self.numberSelectedIndicator.text = [NSString stringWithFormat:NumberSelectedIndicatorFormat, @(self.numberSelected)];
     CGSize numberSelectedSize = [self.numberSelectedIndicator.text
                                 sizeWithAttributes:@{NSFontAttributeName: self.numberSelectedIndicator.font}];
     numberSelectedSize.width = ceil(numberSelectedSize.width);

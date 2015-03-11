@@ -48,7 +48,7 @@
     }
 }
 
-- (void)updateNumberPeopleSelected:(uint64_t)numberOfPeople {
+- (void)updateNumberPeopleSelected:(NSUInteger)numberOfPeople {
     switch (self.smsInviteSendMethod) {
         case MAVESMSInviteSendMethodServerSide: {
             [self.inviteMessageView updateNumberPeopleSelected:numberOfPeople];
