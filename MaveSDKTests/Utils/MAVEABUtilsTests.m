@@ -48,9 +48,14 @@
 }
 
 - (void) testCopyEntireAddressBookToMAVEABPersonArray {
-    NSArray *addressBook = [MAVEABTestDataFactory generateAddressBookOfSize:3];
-    NSString *firstName = CFBridgingRelease(
-                                            ABRecordCopyValue((__bridge ABRecordRef)addressBook[0], kABPersonFirstNameProperty));
+    ABRecordRef rec0 = MAVECreateABRecordRef();
+    ABRecordRef rec1 = MAVECreateABRecordRef();
+    ABRecordRef rec2 = MAVECreateABRecordRef();
+    id rec0Arc = (__bridge id)rec0;
+    NSArray *addressBook = @[rec0Arc, (__bridge id)rec1, (__bridge id)rec2];
+
+    CFStringRef firstNameCF = ABRecordCopyValue(rec0, kABPersonFirstNameProperty);
+    NSString *firstName = CFBridgingRelease(firstNameCF);
     XCTAssertNotEqualObjects(firstName, nil);
     
     NSArray *formattedAB = [MAVEABUtils copyEntireAddressBookToMAVEABPersonArray:addressBook];
@@ -60,7 +65,11 @@
             ((MAVEABPerson *)formattedAB[1]).firstName,
             ((MAVEABPerson *)formattedAB[2]).firstName, nil];
     XCTAssertEqual([firstNames containsObject:firstName], YES);
-    // TODO Assert that the sort function was called
+
+    // assert that it's sorted
+    NSMutableArray *resortedFormattedAB = [[NSMutableArray alloc] initWithArray:formattedAB];
+    [MAVEABUtils sortMAVEABPersonArray:resortedFormattedAB];
+    XCTAssertEqualObjects(resortedFormattedAB, formattedAB);
 }
 
 - (void)testIndexABPersonArrayForTableSections {

@@ -17,7 +17,7 @@
 @implementation MAVEABTestDataTests
 
 - (void)testGenerateABRecordRef {
-    ABRecordRef rec = [MAVEABTestDataFactory generateABRecordRef];
+    ABRecordRef rec = MAVECreateABRecordRef();
     NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(rec, kABPersonFirstNameProperty);
     NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(rec, kABPersonLastNameProperty);
     XCTAssertNotEqualObjects(firstName, nil);
@@ -26,12 +26,14 @@
 }
 
 - (void)testGenerateABAddressBookRef {
-    NSArray *addressBook = [MAVEABTestDataFactory generateAddressBookOfSize:3];
+    ABRecordRef rec0 = MAVECreateABRecordRef();
+    ABRecordRef rec1 = MAVECreateABRecordRef();
+    ABRecordRef rec2 = MAVECreateABRecordRef();
+    NSArray *addressBook = @[(__bridge id)rec0, (__bridge id)rec1, (__bridge id)rec2];
+
     XCTAssertEqual([addressBook count], 3);
-    ABRecordRef rec1 = (__bridge ABRecordRef)(addressBook[0]);
-    NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(rec1, kABPersonFirstNameProperty);
+    NSString *firstName = (__bridge NSString *)ABRecordCopyValue(rec0, kABPersonFirstNameProperty);
     XCTAssertNotEqualObjects(firstName, nil);
-    if (rec1 != NULL) CFRelease(rec1);
 }
 
 @end

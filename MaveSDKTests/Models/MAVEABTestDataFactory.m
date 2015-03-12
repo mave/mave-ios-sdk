@@ -13,6 +13,42 @@
 #include <stdlib.h>
 #import "Gizou.h"
 
+
+ABRecordRef MAVECreateABRecordRefWithLastName(NSString *lastName) {
+    ABRecordRef rec = ABPersonCreate();
+
+    CFStringRef firstNameCF = CFBridgingRetain([GZNames firstName]);
+    ABRecordSetValue(rec, kABPersonFirstNameProperty, firstNameCF, nil);
+    if (firstNameCF != nil) CFRelease(firstNameCF);
+
+    CFStringRef lastNameCF = CFBridgingRetain(lastName);
+    ABRecordSetValue(rec, kABPersonLastNameProperty, lastNameCF, nil);
+    if (lastNameCF != nil) CFRelease(lastNameCF);
+
+    ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
+    CFStringRef phoneNumberCF = CFBridgingRetain([GZPhoneNumbers phoneNumber]);
+    ABMultiValueAddValueAndLabel(pnmv, phoneNumberCF, kABPersonPhoneMobileLabel, NULL);
+    if (phoneNumberCF != nil) CFRelease(phoneNumberCF);
+    ABRecordSetValue(rec, kABPersonPhoneProperty, pnmv, nil);
+    if (pnmv != nil) CFRelease(pnmv);
+
+    ABMutableMultiValueRef emv = ABMultiValueCreateMutable(kABPersonEmailProperty);
+    CFStringRef emailCF = CFBridgingRetain([GZInternet email]);
+    ABMultiValueAddValueAndLabel(emv, emailCF, kABOtherLabel, NULL);
+    if (emailCF != nil) CFRelease(emailCF);
+    ABRecordSetValue(rec, kABPersonEmailProperty, emv, nil);
+    if (emv != nil) CFRelease(emv);
+
+    return rec;
+}
+
+ABRecordRef MAVECreateABRecordRef() {
+    NSString *randomLastName = [GZNames lastName];
+    return MAVECreateABRecordRefWithLastName(randomLastName);
+}
+
+
+
 @implementation MAVEABTestDataFactory
 
 + (MAVEABPerson *)personWithFirstName:(NSString *)firstName lastName:(NSString *)lastName {
@@ -21,36 +57,6 @@
     p.recordID = arc4random_uniform(maxRecordID);
     p.firstName = firstName; p.lastName = lastName;
     return p;
-}
-
-+ (ABRecordRef)generateABRecordRef {
-    NSString *randomLastName = [GZNames lastName];
-    return [[self class]generateABRecordRefWithLastName:randomLastName];
-}
-
-+ (ABRecordRef)generateABRecordRefWithLastName:(NSString *)lastName {
-    ABRecordRef rec = ABPersonCreate();
-    ABRecordSetValue(rec, kABPersonFirstNameProperty, CFBridgingRetain([GZNames firstName]), nil);
-    ABRecordSetValue(rec, kABPersonLastNameProperty, CFBridgingRetain(lastName), nil);
-
-    ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
-    NSString *phoneNumber = [GZPhoneNumbers phoneNumber];
-    ABMultiValueAddValueAndLabel(pnmv, CFBridgingRetain(phoneNumber), kABPersonPhoneMobileLabel, NULL);
-    ABRecordSetValue(rec, kABPersonPhoneProperty, pnmv, nil);
-    
-    ABMutableMultiValueRef emv = ABMultiValueCreateMutable(kABPersonEmailProperty);
-    ABMultiValueAddValueAndLabel(emv, CFBridgingRetain([GZInternet email]), kABOtherLabel, NULL);
-    ABRecordSetValue(rec, kABPersonEmailProperty, emv, nil);
-    return rec;
-}
-
-+ (NSArray *)generateAddressBookOfSize:(NSUInteger)size {
-    NSMutableArray *addressBook = [[NSMutableArray alloc] initWithCapacity:size];
-    for (NSUInteger i = 0; i < size; i++) {
-        id item = [[self class] generateABRecordRef];
-        [addressBook insertObject: item atIndex: i];
-    }
-    return (NSArray *)addressBook;
 }
 
 @end

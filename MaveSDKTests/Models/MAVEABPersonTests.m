@@ -192,7 +192,7 @@
 }
 
 - (void)testPhoneNumbersFromABRecordRefWhenTheUnexpectedHappens {
-    ABRecordRef rec = [MAVEABTestDataFactory generateABRecordRef];
+    ABRecordRef rec = MAVECreateABRecordRef();
 
     MAVEABPerson *p1 = [MAVEABPerson alloc];
     id p1mock = OCMPartialMock(p1);
