@@ -32,7 +32,10 @@
 - (instancetype)initWithAppId:(NSString *)appId {
     if (self = [self init]) {
         _appId = appId;
+
+        _isInitialAppLaunch = ![MAVEIDUtils isAppDeviceIDStoredToDefaults];
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
+
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
         _APIInterface = [[MAVEAPIInterface alloc] init];
         _addressBookSyncManager = [[MAVEABSyncManager alloc] init];
@@ -51,7 +54,7 @@ static dispatch_once_t sharedInstanceonceToken;
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
         sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
-        sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilder];
+        sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilderWithPreFetch];
 
 #ifndef UNIT_TESTING
         // sync contacts, but wait a few seconds so it doesn't compete with fetching our

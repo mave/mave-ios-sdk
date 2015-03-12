@@ -84,7 +84,7 @@
         return YES;
     }]]);
 
-    MAVERemoteObjectBuilder *remoteBuilder = [MAVEReferringData remoteBuilder];
+    MAVERemoteObjectBuilder *remoteBuilder = [MAVEReferringData remoteBuilderWithPreFetch];
     MAVEReferringData *referringData = [remoteBuilder createObjectSynchronousWithTimeout:0.25];
 
     XCTAssertEqualObjects(referringData.referringUser.userID, @"123");
@@ -102,7 +102,7 @@
         return YES;
     }]]);
 
-    MAVERemoteObjectBuilder *remoteBuilder = [MAVEReferringData remoteBuilder];
+    MAVERemoteObjectBuilder *remoteBuilder = [MAVEReferringData remoteBuilderWithPreFetch];
     MAVEReferringData *referringData = [remoteBuilder createObjectSynchronousWithTimeout:0.25];
     // will fall back to default data which is nil
     XCTAssertEqualObjects(referringData.referringUser.userID, nil);

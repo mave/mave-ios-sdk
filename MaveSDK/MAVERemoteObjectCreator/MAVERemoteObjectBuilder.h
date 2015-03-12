@@ -21,7 +21,9 @@
 // and want to, say,
 @property (atomic, strong) MAVEPromise *promise;
 
-// Initialize builder to use response from promise or the hard-coded default data
+// Initialize builder to use response from promise or the hard-coded default data.
+// If preFetchBlock is nil we won't pre-fetch the data now, do this if you're planning to fulfill
+//     the promise elsewhere in your code later
 - (instancetype)initWithClassToCreate:(Class<MAVEDictionaryInitializable>)classToCreate
                         preFetchBlock:(void(^)(MAVEPromise *promise))preFetchBlock
                           defaultData:(NSDictionary *)defaultData;

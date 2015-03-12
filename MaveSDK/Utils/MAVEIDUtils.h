@@ -14,5 +14,6 @@
 + (void)clearStoredAppDeviceID;
 
 + (NSString *)generateAppDeviceIDUUIDString;
++ (BOOL)isAppDeviceIDStoredToDefaults;
 
 @end

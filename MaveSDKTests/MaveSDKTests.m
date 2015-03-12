@@ -16,6 +16,7 @@
 #import "MAVEConstants.h"
 #import "MAVEAPIInterface.h"
 #import "MAVESuggestedInvites.h"
+#import "MAVEIDUtils.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -256,7 +257,7 @@
     XCTAssertEqualObjects(queriedData.firstName, @"aa234");
 }
 
-- (void)testGetUserDataGetsFromUserDefaultsIfNotSet {
+- (void)testUserDataGetsFromUserDefaultsIfNotSet {
     // Make sure state is reset
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
@@ -276,6 +277,23 @@
     user.firstName = @"aa240";
     [MaveSDK sharedInstance].userData = user;
     XCTAssertEqualObjects([MaveSDK sharedInstance].userData.firstName, @"aa240");
+}
+
+- (void)testIsInitialLaunchYesWhenNoStoredAdid {
+    // We use the presence of an app_device_id having been read from disk
+    // to mean that the app has been launched before, if it's not on disk
+    // then this is the first time the app has been launched
+    [MAVEIDUtils clearStoredAppDeviceID];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertTrue([MaveSDK sharedInstance].isInitialAppLaunch);
+}
+
+- (void)testIsInitialLaunchNoOnSubsequentLaunches {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertNotNil([MaveSDK sharedInstance].appDeviceID);
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertFalse([MaveSDK sharedInstance].isInitialAppLaunch);
 }
 
 - (void)testIsSetupOKFailsWithNoApplicationID {

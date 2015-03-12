@@ -47,10 +47,12 @@
     XCTAssertEqualObjects(uuid, [MAVEIDUtils loadOrCreateNewAppDeviceID]);
 }
 
-- (void) testClearStoredAppDeviceIDClearsIt {
+- (void) testClearStoredAppDeviceIDClearsItButThenItGetsReCreated {
     NSString *uuid1 = [MAVEIDUtils loadOrCreateNewAppDeviceID];
     [MAVEIDUtils clearStoredAppDeviceID];
+    XCTAssertFalse([MAVEIDUtils isAppDeviceIDStoredToDefaults]);
     NSString *uuid2 = [MAVEIDUtils loadOrCreateNewAppDeviceID];
+    XCTAssertTrue([MAVEIDUtils isAppDeviceIDStoredToDefaults]);
     XCTAssertNotNil(uuid2);
     XCTAssertNotEqualObjects(uuid1, uuid2);
 }

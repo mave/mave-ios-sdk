@@ -32,6 +32,7 @@
 
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;
+@property (nonatomic, assign) BOOL isInitialAppLaunch;
 @property (nonatomic, copy) NSString *inviteContext;
 @property (nonatomic, strong) MAVEUserData *userData;
 
