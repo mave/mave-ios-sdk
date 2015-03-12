@@ -134,7 +134,6 @@ const NSUInteger MAVEMerkleTreeKeySize = sizeof(NSUIntegerMax);
     if (isLeaf) {
         NSData *hashValue = [MAVEMerkleTreeHashUtils dataFromHexString:currentKeyHexString];
         MAVEMerkleTreeLeafNode *outNode = [[MAVEMerkleTreeLeafNode alloc] initWithHashValue:hashValue];
-        hashValue = [outNode hashValue];
         return outNode;
     } else {
         NSDictionary *leftChildJSON = [jsonObject objectForKey:@"l"];

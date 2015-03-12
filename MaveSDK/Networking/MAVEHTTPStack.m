@@ -59,8 +59,8 @@
                                                         code:MAVEHTTPErrorRequestJSONCode
                                                     userInfo:userInfo];
         }
-        if (jsonParseError != nil) {
-            *preparationError = jsonParseError;
+        if (jsonParseError) {
+            if (preparationError != NULL) { *preparationError = jsonParseError; }
             return nil;
         }
     }

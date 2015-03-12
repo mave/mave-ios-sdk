@@ -255,7 +255,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     method_exchangeImplementations(mockMethod, ogMethod);
 }
 - (NSData *)failingDataWithJSONObject:(id)params options:(NSJSONWritingOptions)options error:(NSError **)error {
-    *error = [[NSError alloc] init];
+    if (error != NULL) { *error = [[NSError alloc] init]; }
     return nil;
 }
 

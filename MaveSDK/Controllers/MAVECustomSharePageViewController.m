@@ -26,6 +26,7 @@
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     self.sharerObject = [[MAVESharer alloc] init];
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeCustomShare];
 }

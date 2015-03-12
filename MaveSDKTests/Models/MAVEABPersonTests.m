@@ -191,22 +191,17 @@
     XCTAssertEqualObjects(p.phoneNumberLabels[1], @"_$!<Main>!$_");
 }
 
-- (void)fakeCrashySetPhoneFromABRecordRef:(id)record {
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:nil forKey:@"any key"];
-}
-
 - (void)testPhoneNumbersFromABRecordRefWhenTheUnexpectedHappens {
-    // Swizzle the set phone numbers for the record method
-    Method ogMethod = class_getInstanceMethod([MAVEABPerson class], @selector(setPhoneNumbersFromABRecordRef:));
-    Method mockMethod = class_getInstanceMethod([self class], @selector(fakeCrashySetPhoneFromABRecordRef:));
-    method_exchangeImplementations(ogMethod, mockMethod);
-
     ABRecordRef rec = [MAVEABTestDataFactory generateABRecordRef];
-    MAVEABPerson *person = [[MAVEABPerson alloc] initFromABRecordRef:rec];
-    // It will have crashed, check that we caught exception and just returned nil instead
-    XCTAssertEqualObjects(person, nil);
-    method_exchangeImplementations(mockMethod, ogMethod);
+
+    MAVEABPerson *p1 = [MAVEABPerson alloc];
+    id p1mock = OCMPartialMock(p1);
+    NSException *exception = [[NSException alloc] init];
+    [[[p1mock expect] initFromABRecordRef:rec] andThrow:exception];
+
+    id obj = [p1 initFromABRecordRef:rec];
+    XCTAssertNil(obj);  // should have raised an exception and not returned
+    OCMVerifyAll(p1mock);
 }
 
 - (void)testPhoneNumbersFromABRecordRefNilLabel {
