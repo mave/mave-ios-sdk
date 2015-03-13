@@ -104,7 +104,8 @@ extern NSString * const MAVEAPIParamShareAudience;
 // If userData is not null, the user id will be included in the request data, plus any
 // additional params passed in.
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute
-                      additionalParams:(NSDictionary *)params;
+                      additionalParams:(NSDictionary *)params
+                       completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 
 

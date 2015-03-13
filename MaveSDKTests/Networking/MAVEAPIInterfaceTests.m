@@ -59,14 +59,14 @@
 ///
 - (void)testTrackAppOpen {
     id mock = OCMPartialMock(self.testAPIInterface);
-    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:nil]);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:nil completionBlock:nil]);
     [self.testAPIInterface trackAppOpen];
     OCMVerifyAll(mock);
 }
 
 - (void)testTrackSignup {
     id mock = OCMPartialMock(self.testAPIInterface);
-    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil]);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil completionBlock:nil]);
     [self.testAPIInterface trackSignup];
     OCMVerifyAll(mock);
 }
@@ -76,7 +76,8 @@
     NSString *type = @"blahblahtype";
     id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEAPIParamInvitePageType: type}]);
+                                  additionalParams:@{MAVEAPIParamInvitePageType: type}
+                                   completionBlock:nil]);
     [self.testAPIInterface trackInvitePageOpenForPageType:type];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -84,14 +85,16 @@
     // nil and empty string get set as unknown
     mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}]);
+                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}
+                                   completionBlock:nil]);
     [self.testAPIInterface trackInvitePageOpenForPageType:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
     mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}]);
+                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}
+                                   completionBlock:nil]);
     [self.testAPIInterface trackInvitePageOpenForPageType:@""];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -101,7 +104,8 @@
     NSString *listType = @"fooblahtype";
     id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageSelectedContact
-                                  additionalParams:@{MAVEAPIParamContactSelectedFromList: listType}]);
+                                  additionalParams:@{MAVEAPIParamContactSelectedFromList: listType}
+                                   completionBlock:nil]);
     [self.testAPIInterface trackInvitePageSelectedContactFromList:listType];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -110,7 +114,8 @@
     listType = nil;
     mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageSelectedContact
-                                  additionalParams:@{MAVEAPIParamContactSelectedFromList: @"unknown"}]);
+                                  additionalParams:@{MAVEAPIParamContactSelectedFromList: @"unknown"}
+                                   completionBlock:nil]);
     [self.testAPIInterface trackInvitePageSelectedContactFromList:listType];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -120,7 +125,7 @@
     // With a value
     NSString *type = @"foo";
     id mock = OCMPartialMock(self.testAPIInterface);
-    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick additionalParams:@{@"medium": type}]);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick additionalParams:@{@"medium": type} completionBlock:nil]);
     [self.testAPIInterface trackShareActionClickWithShareType:type];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -128,7 +133,7 @@
      // if type is nil it becomes "unkown"
     type = nil;
     mock = OCMPartialMock(self.testAPIInterface);
-    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick additionalParams:@{@"medium": @"unknown"}]);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick additionalParams:@{@"medium": @"unknown"} completionBlock:nil]);
     [self.testAPIInterface trackShareActionClickWithShareType:type];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -141,7 +146,7 @@
     NSString *audience = @"all";
     id mock = OCMPartialMock(self.testAPIInterface);
     NSDictionary *params = @{@"medium": type, @"share_token": token, @"audience": audience};
-    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params]);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params completionBlock:nil]);
     [self.testAPIInterface trackShareWithShareType:type shareToken:token audience:audience];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -150,7 +155,7 @@
     type = nil; token = nil; audience = nil;
     mock = OCMPartialMock(self.testAPIInterface);
     params = @{@"medium": @"unknown", @"share_token": @"", @"audience": @"unknown"};
-    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params]);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params completionBlock:nil]);
     [self.testAPIInterface trackShareWithShareType:type shareToken:token audience:audience];
     OCMVerifyAll(mock);
     [mock stopMocking];
@@ -518,7 +523,7 @@
                                                 params:expectedParams
                                       gzipCompressBody:NO
                                        completionBlock:nil]);
-    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
+    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams completionBlock:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
@@ -530,7 +535,7 @@
                                                 params:additionalParams
                                       gzipCompressBody:NO
                                        completionBlock:nil]);
-    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams];
+    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams completionBlock:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
@@ -541,7 +546,7 @@
                                                 params:@{}
                                       gzipCompressBody:NO
                                        completionBlock:nil]);
-    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil];
+    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil completionBlock:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
 }

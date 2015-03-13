@@ -67,11 +67,12 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 ///
 - (void)trackAppOpen {
     [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch
-                        additionalParams:nil];
+                        additionalParams:nil
+                         completionBlock:nil];
 }
 
 - (void)trackSignup {
-    [self trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil];
+    [self trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil completionBlock:nil];
 }
 
 - (void)trackInvitePageOpenForPageType:(NSString *)invitePageType {
@@ -80,7 +81,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     NSDictionary *params = @{MAVEAPIParamInvitePageType: invitePageType};
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                        additionalParams:params];
+                        additionalParams:params completionBlock:nil];
 }
 
 - (void)trackInvitePageSelectedContactFromList:(NSString *)listType {
@@ -89,7 +90,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     NSDictionary *params = @{MAVEAPIParamContactSelectedFromList: listType};
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageSelectedContact
-                        additionalParams:params];
+                        additionalParams:params completionBlock:nil];
 }
 
 - (void)trackShareActionClickWithShareType:(NSString *)shareType {
@@ -97,7 +98,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
         shareType = @"unknown";
     }
     [self trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick
-                        additionalParams:@{MAVEAPIParamShareMedium: shareType}];
+                        additionalParams:@{MAVEAPIParamShareMedium: shareType} completionBlock:nil];
 }
 
 - (void)trackShareWithShareType:(NSString *)shareType
@@ -115,7 +116,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     NSDictionary *params = @{MAVEAPIParamShareMedium: shareType,
                              MAVEAPIParamShareToken: shareToken,
                              MAVEAPIParamShareAudience: audience};
-    [self trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params];
+    [self trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params completionBlock:nil];
 }
 
 ///
@@ -315,7 +316,8 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 }
 
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute
-                      additionalParams:(NSDictionary *)params {
+                      additionalParams:(NSDictionary *)params
+                       completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSMutableDictionary *fullParams = [[NSMutableDictionary alloc] init];
     MAVEUserData *userData = [MaveSDK sharedInstance].userData;
     if (userData.userID) {
