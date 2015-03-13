@@ -113,7 +113,6 @@
         // another weird thing where on ios7, left is missing 20px
         // at the top but right is ok, so add extra space if left
         if (orientation == UIDeviceOrientationLandscapeLeft) {
-            NSLog(@"LEFT!");
             newFrame.origin.y += 20;
         }
         return newFrame;

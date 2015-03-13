@@ -38,7 +38,6 @@
 }
 
 - (void)smsClientSideShare {
-    NSLog(@"new sms client side share code");
     UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MessageComposeResult result) {
         if (result == MessageComposeResultSent) {
             [self dismissAfterShare];

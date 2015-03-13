@@ -165,11 +165,8 @@
 #pragma mark - Create contacts invite page if allowed, test in different states
 
 - (void)testCreateContactsInvitePageIfAllowed {
-    NSLog(@"got to beginning");
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
-    NSLog(@"got here");
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
-    NSLog(@"got here 2");
 
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     id chooserMock = OCMPartialMock(chooser);
@@ -181,7 +178,6 @@
 
     MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
     XCTAssertNotNil(vc);
-    NSLog(@"got to end");
 }
 
 - (void)testCreateContactsInvitePageNotAllowedWhenABPermissionStatusDenied {
