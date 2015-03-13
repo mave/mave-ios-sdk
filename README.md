@@ -1,10 +1,5 @@
 # Mave iOS SDK
 
-[![CI Status](http://img.shields.io/travis/Danny Cosson/GrowthKit.svg?style=flat)](https://travis-ci.org/Danny Cosson/GrowthKit)
-[![Version](https://img.shields.io/cocoapods/v/GrowthKit.svg?style=flat)](http://cocoadocs.org/docsets/GrowthKit)
-[![License](https://img.shields.io/cocoapods/l/GrowthKit.svg?style=flat)](http://cocoadocs.org/docsets/GrowthKit)
-[![Platform](https://img.shields.io/cocoapods/p/GrowthKit.svg?style=flat)](http://cocoadocs.org/docsets/GrowthKit)
-
 ## Usage
 
 You can see it in action (without any server-side interactions) in the included demo app. To run it:
