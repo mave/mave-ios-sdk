@@ -62,7 +62,7 @@ static dispatch_once_t sharedInstanceonceToken;
         // sync contacts, but wait a few seconds so it doesn't compete with fetching our
         // share token or remote configuration.
         // Don't run this in unit tests because it interferes with the other tests.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [sharedInstance.addressBookSyncManager atLaunchSyncContactsAndPopulateSuggestedByPermissions];
         });
 #endif
@@ -181,7 +181,7 @@ static dispatch_once_t sharedInstanceonceToken;
 // Methods to get data from our sdk
 //
 - (void)getReferringData:(void (^)(MAVEReferringData *))referringDataHandler {
-    [self.referringDataBuilder createObjectWithTimeout:10 completionBlock:^(id object) {
+    [self.referringDataBuilder createObjectWithTimeout:4 completionBlock:^(id object) {
         referringDataHandler((MAVEReferringData *)object);
     }];
 }
