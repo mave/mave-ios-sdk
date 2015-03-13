@@ -571,6 +571,17 @@
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil completionBlock:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
+
+    // when completion block is passed in, it gets passed through
+    MAVEHTTPCompletionBlock completionBlock = ^void(NSError *error, NSDictionary *responseData) {};
+    mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
+                                            methodName:@"POST"
+                                                params:@{}
+                                      gzipCompressBody:NO
+                                       completionBlock:completionBlock]);
+    [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil completionBlock:completionBlock];
+    OCMVerifyAll(mock);
 }
 
 @end

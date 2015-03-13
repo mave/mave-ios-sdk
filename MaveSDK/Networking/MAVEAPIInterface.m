@@ -72,7 +72,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 - (void)trackAppOpenFetchingReferringDataWithPromise:(MAVEPromise *)promise {
     NSDictionary *params = @{@"return_referring_data": @YES};
     [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:params completionBlock:^(NSError *error, NSDictionary *responseData) {
-
+        MAVEDebugLog(@"Referring data returned on launch: %@", responseData);
         NSDictionary *referringData = [responseData objectForKey:@"referring_data"];
         if (referringData && (id)referringData != [NSNull null]) {
             [promise fulfillPromise:(NSValue *)referringData];
@@ -320,7 +320,6 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     
     [self addCustomUserHeadersToRequest:request];
-    
     [self.httpStack sendPreparedRequest:request completionBlock:completionBlock];
 }
 
@@ -340,7 +339,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                   methodName:@"POST"
                                       params:fullParams
                             gzipCompressBody:NO
-                             completionBlock:nil];
+                             completionBlock:completionBlock];
 }
 
 @end
