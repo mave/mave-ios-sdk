@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.homepage         = "http://mave.io"
   s.license          = 'Proprietary'
   s.author           = 'Mave'
-  s.source           = { :git => "https://github.com/mave/mave-ios-sdk.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/mave/mave-ios-sdk.git", :tag => "v#{s.version.to_s}" }
   s.social_media_url = 'https://twitter.com/mavegrowth'
 
   s.platform     = :ios, '7.0'
