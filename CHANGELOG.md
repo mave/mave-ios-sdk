@@ -1,5 +1,11 @@
 ## Mave SDK releases
 
+### v0.5.2
+ - adds ability to participate in suggested invites (defaulted to OFF, configured server side on a per-application basis).
+ - adds the concept of "referring data" - if the currently installed app was the result of an invite, have access to info about the referring user, any info we already know about the current user, and a "custom data" blob that you can use to pass arbitrary data through the app store.
+ - adds ability to have the fallback page be the normal SMS widget (MFMessagingController) instead of the share page
+ - numerous bugfixes, tracks some additional useful metrics, UI improvements
+
 ### v0.4.1
 - small cleanup & bugfixes
 - adds a method on the MaveSDK object to send SMS invites programatically, as an alternative to using the Mave invite page.
