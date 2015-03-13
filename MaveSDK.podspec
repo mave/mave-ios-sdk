@@ -10,7 +10,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MaveSDK"
-  s.version          = "0.5.1-rc1"
+  s.version          = "0.5.2"
   s.summary          = "A short description of MaveSDK."
   s.description      = <<-DESC
                        An optional longer description of MaveSDK
