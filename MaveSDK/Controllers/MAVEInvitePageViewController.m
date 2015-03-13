@@ -20,6 +20,8 @@
 
 #import <Social/Social.h>
 
+#define IS_IOS7_OR_BELOW ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)
+
 
 @interface MAVEInvitePageViewController ()
 
@@ -97,8 +99,33 @@
     }
 }
 
+// Prior to iOS8, things like keyboard frame and app frame are returned relative to
+// portrait orientation. Our layout is assuming ios8 behavior, so we use this helper
+// function that swaps x & y directions in the frame only if below ios8
+- (CGRect)swapFrameIfIOS7AndLandscape:(CGRect)frame {
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if (IS_IOS7_OR_BELOW &&
+        UIDeviceOrientationIsLandscape(orientation)) {
+        CGRect newFrame = CGRectMake(frame.origin.y,
+                                     frame.origin.x,
+                                     frame.size.height,
+                                     frame.size.width);
+        // another weird thing where on ios7, left is missing 20px
+        // at the top but right is ok, so add extra space if left
+        if (orientation == UIDeviceOrientationLandscapeLeft) {
+            NSLog(@"LEFT!");
+            newFrame.origin.y += 20;
+        }
+        return newFrame;
+    } else {
+        return frame;
+    }
+}
+
 - (void)keyboardWillChangeFrame:(NSNotification *)notification {
     self.keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.keyboardFrame = [self swapFrameIfIOS7AndLandscape:self.keyboardFrame];
+
     if (self.keyboardFrame.origin.y == [self keyboardFrameWhenHidden].origin.y) {
         self.isKeyboardVisible = NO;
     } else {
@@ -222,6 +249,8 @@
 
 - (void)layoutInvitePageViewAndSubviews {
     CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+    // in landscape on ios7, our frame x & y directs are reversed
+    appFrame = [self swapFrameIfIOS7AndLandscape:appFrame];
 
     CGRect containerFrame = CGRectMake(0,
                                        0,
