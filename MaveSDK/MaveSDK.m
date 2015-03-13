@@ -49,12 +49,14 @@ static dispatch_once_t sharedInstanceonceToken;
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
     dispatch_once(&sharedInstanceonceToken, ^{
         sharedInstance = [[self alloc] initWithAppId:applicationID];
+
+        sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilderNoPreFetch];
         [sharedInstance trackAppOpen];
 
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
         sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
-        sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilderWithPreFetch];
+
 
 #ifndef UNIT_TESTING
         // sync contacts, but wait a few seconds so it doesn't compete with fetching our

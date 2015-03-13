@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MAVEReferringData.h"
+#import "MAVERemoteObjectBuilder_Internal.h"
 #import "MaveSDK.h"
 
 @interface MAVEReferringDataTests : XCTestCase
@@ -74,7 +75,18 @@
     XCTAssertEqualObjects(obj.customData, customData);
 }
 
-- (void)testRemoteBuilderFulfillSuccess {
+- (void)testRemoteBuilderNoPreFetch {
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] getReferringData:[OCMArg any]];
+
+    MAVERemoteObjectBuilder *remoteBuilder = [MAVEReferringData remoteBuilderNoPreFetch];
+    XCTAssertEqualObjects(remoteBuilder.classToCreate, [MAVEReferringData class]);
+    XCTAssertNotNil(remoteBuilder.promise);
+    XCTAssertEqualObjects(remoteBuilder.defaultData, [MAVEReferringData defaultData]);
+    OCMVerifyAll(apiInterfaceMock);
+}
+
+- (void)testRemoteBuilderWithPreFetchFulfillSuccess {
     NSDictionary *responseData = @{@"referring_user": @{@"user_id": @"123", @"first_name": @"Fooz"},
                                    @"current_user": @{@"phone": @"+18085556712"}};
 
@@ -93,7 +105,7 @@
     OCMVerifyAll(apiInterfaceMock);
 }
 
-- (void)testRemoteBuilderFulfillFailure {
+- (void)testRemoteBuilderWithPreFetchFulfillFailure {
     NSError *responseError = [[NSError alloc] init];  // doesn't matter what the error is
 
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);

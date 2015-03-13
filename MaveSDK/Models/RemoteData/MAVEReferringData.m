@@ -56,6 +56,12 @@ NSString * const MAVEReferringDataKeyCustomData = @"custom_data";
     } defaultData:[self defaultData]];
 }
 
++ (MAVERemoteObjectBuilder *)remoteBuilderNoPreFetch {
+    return [[MAVERemoteObjectBuilder alloc] initWithClassToCreate:[self class]
+                                                    preFetchBlock:nil
+                                                      defaultData:[self defaultData]];
+}
+
 
 
 + (NSDictionary *)defaultData {
