@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
                        with an invite page that's as good or better as what the top apps are using.
                        DESC
   s.homepage         = "http://mave.io"
-  s.license          = 'GPL v2'
+  s.license          = 'Proprietary'
   s.author           = 'Mave'
   s.source           = { :git => "https://github.com/mave/mave-ios-sdk.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/mavegrowth'
