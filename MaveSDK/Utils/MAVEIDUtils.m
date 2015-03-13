@@ -11,8 +11,6 @@
 #import "MAVEConstants.h"
 #import <uuid/uuid.h>
 
-#define MAVEUserDefaultsKeyAppDeviceID @"MAVEUserDefaultsKeyAppDeviceID"
-
 @implementation MAVEIDUtils
 
 + (NSString *)loadOrCreateNewAppDeviceID {
@@ -38,6 +36,12 @@
 
 + (NSString *)generateAppDeviceIDUUIDString {
     return [self generateUUIDVersion1String];
+}
+
++ (BOOL)isAppDeviceIDStoredToDefaults {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *data = [userDefaults objectForKey:MAVEUserDefaultsKeyAppDeviceID];
+    return (!!data);
 }
 
 // Generate uuid1 with timestamp. This is normally MAC address + timestamp, since

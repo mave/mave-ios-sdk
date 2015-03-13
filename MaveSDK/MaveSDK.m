@@ -32,7 +32,10 @@
 - (instancetype)initWithAppId:(NSString *)appId {
     if (self = [self init]) {
         _appId = appId;
+
+        _isInitialAppLaunch = ![MAVEIDUtils isAppDeviceIDStoredToDefaults];
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
+
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
         _APIInterface = [[MAVEAPIInterface alloc] init];
         _addressBookSyncManager = [[MAVEABSyncManager alloc] init];
@@ -46,12 +49,14 @@ static dispatch_once_t sharedInstanceonceToken;
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID {
     dispatch_once(&sharedInstanceonceToken, ^{
         sharedInstance = [[self alloc] initWithAppId:applicationID];
-        [sharedInstance trackAppOpen];
+
+        sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilderNoPreFetch];
+        [sharedInstance.APIInterface trackAppOpenFetchingReferringDataWithPromise:sharedInstance.referringDataBuilder.promise];
 
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
         sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
-        sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilder];
+
 
 #ifndef UNIT_TESTING
         // sync contacts, but wait a few seconds so it doesn't compete with fetching our
@@ -184,10 +189,6 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Funnel events that need to be called explicitly by consumer
 //
-- (void)trackAppOpen {
-    [self.APIInterface trackAppOpen];
-}
-
 - (void)identifyUser:(MAVEUserData *)userData {
     self.userData = userData;
     NSError *validationError = [self validateUserSetup];

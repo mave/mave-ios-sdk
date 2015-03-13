@@ -291,7 +291,8 @@
     NSDictionary *expectedParams = @{MAVEAPIParamPrePromptTemplateID:
                                          promptHandler.prePromptTemplate.templateID};
     OCMExpect([APIInterfaceMock trackGenericUserEventWithRoute:fakeRoute
-                                              additionalParams:expectedParams]);
+                                              additionalParams:expectedParams
+                                               completionBlock:nil]);
 
     [promptHandler logContactsPromptRelatedEventWithRoute:fakeRoute];
 

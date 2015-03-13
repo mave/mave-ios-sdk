@@ -44,7 +44,7 @@ NSString * const MAVEReferringDataKeyCustomData = @"custom_data";
     return self;
 }
 
-+ (MAVERemoteObjectBuilder *)remoteBuilder {
++ (MAVERemoteObjectBuilder *)remoteBuilderWithPreFetch {
     return [[MAVERemoteObjectBuilder alloc] initWithClassToCreate:[self class] preFetchBlock:^(MAVEPromise *promise) {
         [[MaveSDK sharedInstance].APIInterface getReferringData:^(NSError *error, NSDictionary *responseData) {
             if (!error && responseData) {
@@ -55,6 +55,14 @@ NSString * const MAVEReferringDataKeyCustomData = @"custom_data";
         }];
     } defaultData:[self defaultData]];
 }
+
++ (MAVERemoteObjectBuilder *)remoteBuilderNoPreFetch {
+    return [[MAVERemoteObjectBuilder alloc] initWithClassToCreate:[self class]
+                                                    preFetchBlock:nil
+                                                      defaultData:[self defaultData]];
+}
+
+
 
 + (NSDictionary *)defaultData {
     return @{

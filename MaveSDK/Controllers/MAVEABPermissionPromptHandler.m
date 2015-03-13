@@ -167,7 +167,8 @@
                        self.prePromptTemplate.templateID};
     }
     [[MaveSDK sharedInstance].APIInterface trackGenericUserEventWithRoute:route
-                                                         additionalParams:params];
+                                                         additionalParams:params
+                                                          completionBlock:nil];
 }
 
 # pragma mark - pre prompt related Methods

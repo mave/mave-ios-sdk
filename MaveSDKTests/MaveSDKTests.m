@@ -16,6 +16,7 @@
 #import "MAVEConstants.h"
 #import "MAVEAPIInterface.h"
 #import "MAVESuggestedInvites.h"
+#import "MAVEIDUtils.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -83,20 +84,6 @@
     XCTAssertEqualObjects(appDeviceID1, [MaveSDK sharedInstance].appDeviceID);
 }
 
-- (void)testSetupSharedInstanceTriggersAppOpenEvent {
-    id mock = OCMClassMock([MaveSDK class]);
-    OCMStub([mock alloc]).andReturn(mock);
-    OCMStub([mock initWithAppId:[OCMArg any]]).andReturn(mock);
-    
-    OCMExpect([mock trackAppOpen]);
-    
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    
-    OCMVerifyAll(mock);
-    // explicitly stop mocking b/c it's a singleton and won't get cleaned up
-    [mock stopMocking];
-}
-
 // Test getting properties on the mave object
 - (void) testRemoteConfiguration {
     MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
@@ -111,6 +98,7 @@
 }
 
 - (void)testSuggestedInvitesWithDelay {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0; p0.hashedRecordID = 0;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.hashedRecordID = 1;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2; p2.hashedRecordID = 2;
@@ -256,7 +244,7 @@
     XCTAssertEqualObjects(queriedData.firstName, @"aa234");
 }
 
-- (void)testGetUserDataGetsFromUserDefaultsIfNotSet {
+- (void)testUserDataGetsFromUserDefaultsIfNotSet {
     // Make sure state is reset
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
@@ -276,6 +264,23 @@
     user.firstName = @"aa240";
     [MaveSDK sharedInstance].userData = user;
     XCTAssertEqualObjects([MaveSDK sharedInstance].userData.firstName, @"aa240");
+}
+
+- (void)testIsInitialLaunchYesWhenNoStoredAdid {
+    // We use the presence of an app_device_id having been read from disk
+    // to mean that the app has been launched before, if it's not on disk
+    // then this is the first time the app has been launched
+    [MAVEIDUtils clearStoredAppDeviceID];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertTrue([MaveSDK sharedInstance].isInitialAppLaunch);
+}
+
+- (void)testIsInitialLaunchNoOnSubsequentLaunches {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertNotNil([MaveSDK sharedInstance].appDeviceID);
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertFalse([MaveSDK sharedInstance].isInitialAppLaunch);
 }
 
 - (void)testIsSetupOKFailsWithNoApplicationID {
@@ -387,16 +392,8 @@
     XCTAssertFalse(called);
 }
 
-- (void)testTrackAppOpen {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *mave = [MaveSDK sharedInstance];
-    id mockAPIInterface = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([mockAPIInterface trackAppOpen]);
-    [mave trackAppOpen];
-    OCMVerifyAll(mockAPIInterface);
-}
-
 - (void)testTrackSignup {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     // Verify the API request is sent
     id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];

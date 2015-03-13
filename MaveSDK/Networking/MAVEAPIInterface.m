@@ -66,12 +66,22 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 /// Specific Tracking Events
 ///
 - (void)trackAppOpen {
-    [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch
-                        additionalParams:nil];
+    [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:nil completionBlock:nil];
+}
+
+- (void)trackAppOpenFetchingReferringDataWithPromise:(MAVEPromise *)promise {
+    NSDictionary *params = @{@"return_referring_data": @YES};
+    [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:params completionBlock:^(NSError *error, NSDictionary *responseData) {
+        MAVEDebugLog(@"Referring data returned on launch: %@", responseData);
+        NSDictionary *referringData = [responseData objectForKey:@"referring_data"];
+        if (referringData && (id)referringData != [NSNull null]) {
+            [promise fulfillPromise:(NSValue *)referringData];
+        };
+    }];
 }
 
 - (void)trackSignup {
-    [self trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil];
+    [self trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil completionBlock:nil];
 }
 
 - (void)trackInvitePageOpenForPageType:(NSString *)invitePageType {
@@ -80,7 +90,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     NSDictionary *params = @{MAVEAPIParamInvitePageType: invitePageType};
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                        additionalParams:params];
+                        additionalParams:params completionBlock:nil];
 }
 
 - (void)trackInvitePageSelectedContactFromList:(NSString *)listType {
@@ -89,7 +99,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     NSDictionary *params = @{MAVEAPIParamContactSelectedFromList: listType};
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageSelectedContact
-                        additionalParams:params];
+                        additionalParams:params completionBlock:nil];
 }
 
 - (void)trackShareActionClickWithShareType:(NSString *)shareType {
@@ -97,7 +107,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
         shareType = @"unknown";
     }
     [self trackGenericUserEventWithRoute:MAVERouteTrackShareActionClick
-                        additionalParams:@{MAVEAPIParamShareMedium: shareType}];
+                        additionalParams:@{MAVEAPIParamShareMedium: shareType} completionBlock:nil];
 }
 
 - (void)trackShareWithShareType:(NSString *)shareType
@@ -115,7 +125,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     NSDictionary *params = @{MAVEAPIParamShareMedium: shareType,
                              MAVEAPIParamShareToken: shareToken,
                              MAVEAPIParamShareAudience: audience};
-    [self trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params];
+    [self trackGenericUserEventWithRoute:MAVERouteTrackShare additionalParams:params completionBlock:nil];
 }
 
 ///
@@ -310,14 +320,14 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }
     
     [self addCustomUserHeadersToRequest:request];
-    
     [self.httpStack sendPreparedRequest:request completionBlock:completionBlock];
 }
 
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute
-                      additionalParams:(NSDictionary *)params {
+                      additionalParams:(NSDictionary *)params
+                       completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSMutableDictionary *fullParams = [[NSMutableDictionary alloc] init];
-    MAVEUserData *userData = [MaveSDK sharedInstance].userData;
+    MAVEUserData *userData = [self userData];
     if (userData.userID) {
         [fullParams setObject:userData.userID forKey:MAVEUserDataKeyUserID];
     }
@@ -329,7 +339,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                   methodName:@"POST"
                                       params:fullParams
                             gzipCompressBody:NO
-                             completionBlock:nil];
+                             completionBlock:completionBlock];
 }
 
 @end

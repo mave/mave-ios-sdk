@@ -12,6 +12,7 @@
 #import "MAVEHTTPStack.h"
 #import "MAVEUserData.h"
 #import "MAVEMerkleTree.h"
+#import "MAVEPromise.h"
 
 
 extern NSString * const MAVERouteTrackSignup;
@@ -51,6 +52,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 ///
 
 - (void)trackAppOpen;
+- (void)trackAppOpenFetchingReferringDataWithPromise:(MAVEPromise *)promise;
 - (void)trackSignup;
 - (void)trackInvitePageOpenForPageType:(NSString *)invitePageType;
 - (void)trackInvitePageSelectedContactFromList:(NSString *)listType;
@@ -104,7 +106,8 @@ extern NSString * const MAVEAPIParamShareAudience;
 // If userData is not null, the user id will be included in the request data, plus any
 // additional params passed in.
 - (void)trackGenericUserEventWithRoute:(NSString *)relativeRoute
-                      additionalParams:(NSDictionary *)params;
+                      additionalParams:(NSDictionary *)params
+                       completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 
 
