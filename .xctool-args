@@ -3,5 +3,5 @@
   "-scheme", "DemoApp",
   "-configuration", "UnitTesting",
   "-sdk", "iphonesimulator",
-  "-destination", "platform=iOS Simulator,OS=8.1,name=iPhone 6"
+  "-destination", "platform=iOS Simulator,OS=8.2,name=iPhone 6"
 ]
