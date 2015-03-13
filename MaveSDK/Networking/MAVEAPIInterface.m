@@ -10,6 +10,7 @@
 #import "MaveSDK.h"
 #import "MAVEUserData.h"
 #import "MAVEConstants.h"
+#import "MAVEABUtils.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVECompressionUtils.h"
 
@@ -28,8 +29,9 @@ NSString * const MAVERouteTrackContactsPermissionPromptView = @"/events/contacts
 NSString * const MAVERouteTrackContactsPermissionGranted = @"/events/contacts_permission_granted";
 NSString * const MAVERouteTrackContactsPermissionDenied = @"/events/contacts_permission_denied";
 
-NSString * const MAVEAPIParamPrePromptTemplateID = @"contacts_pre_permission_prompt_template_id";
 NSString * const MAVEAPIParamInvitePageType = @"invite_page_type";
+NSString * const MAVEAPIParamPrePromptTemplateID = @"contacts_pre_permission_prompt_template_id";
+NSString * const MAVEAPIParamContactsPermissionStatus = @"contacts_permission_status";
 NSString * const MAVEAPIParamContactSelectedFromList = @"from_list";
 NSString * const MAVEAPIParamShareMedium = @"medium";
 NSString * const MAVEAPIParamShareToken = @"share_token";
@@ -88,7 +90,9 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     if ([invitePageType length] == 0) {
         invitePageType = @"unknown";
     }
-    NSDictionary *params = @{MAVEAPIParamInvitePageType: invitePageType};
+    NSDictionary *params = @{MAVEAPIParamInvitePageType: invitePageType,
+                             MAVEAPIParamContactsPermissionStatus: [MAVEABUtils addressBookPermissionStatus],
+                             };
     [self trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
                         additionalParams:params completionBlock:nil];
 }

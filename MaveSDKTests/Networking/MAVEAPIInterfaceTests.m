@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
+#import "MAVEABUtils.h"
 #import "MAVEAPIInterface.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVECompressionUtils.h"
@@ -93,32 +94,69 @@
     OCMVerifyAll(mock);
 }
 
-- (void)testTrackInvitePageOpen {
+- (void)testTrackInvitePageOpenPageTypeParam {
+    // mock this to be the same in all cases
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(@"allowed");
+
     // With a value
     NSString *type = @"blahblahtype";
     id mock = OCMPartialMock(self.testAPIInterface);
+    NSDictionary *params = @{MAVEAPIParamInvitePageType: type, MAVEAPIParamContactsPermissionStatus: @"allowed"};
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEAPIParamInvitePageType: type}
+                                  additionalParams:params
                                    completionBlock:nil]);
     [self.testAPIInterface trackInvitePageOpenForPageType:type];
     OCMVerifyAll(mock);
     [mock stopMocking];
     
     // nil and empty string get set as unknown
+    params = @{MAVEAPIParamInvitePageType: @"unknown", MAVEAPIParamContactsPermissionStatus: @"allowed"};
     mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}
+                                  additionalParams:params
                                    completionBlock:nil]);
     [self.testAPIInterface trackInvitePageOpenForPageType:nil];
     OCMVerifyAll(mock);
     [mock stopMocking];
-    
+
+    params = @{MAVEAPIParamInvitePageType: @"unknown", MAVEAPIParamContactsPermissionStatus: @"allowed"};
     mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
-                                  additionalParams:@{MAVEAPIParamInvitePageType: @"unknown"}
+                                  additionalParams:params
                                    completionBlock:nil]);
     [self.testAPIInterface trackInvitePageOpenForPageType:@""];
     OCMVerifyAll(mock);
+    [mock stopMocking];
+}
+
+- (void)testTrackInvitePageOpenContactsPermissionStatusParam {
+    NSString *type = @"foo";
+
+    // test permission was allowed
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(@"allowed");
+    id mock = OCMPartialMock(self.testAPIInterface);
+    NSDictionary *params = @{MAVEAPIParamInvitePageType: type, MAVEAPIParamContactsPermissionStatus: @"allowed"};
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
+                                  additionalParams:params
+                                   completionBlock:nil]);
+    [self.testAPIInterface trackInvitePageOpenForPageType:type];
+    OCMVerifyAll(mock);
+    [abUtilsMock stopMocking];
+    [mock stopMocking];
+
+    // test one other permission
+    abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(@"unprompted");
+    params = @{MAVEAPIParamInvitePageType: type, MAVEAPIParamContactsPermissionStatus: @"unprompted"};
+    mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackInvitePageOpen
+                                  additionalParams:params
+                                   completionBlock:nil]);
+    [self.testAPIInterface trackInvitePageOpenForPageType:type];
+    OCMVerifyAll(mock);
+    [abUtilsMock stopMocking];
     [mock stopMocking];
 }
 
