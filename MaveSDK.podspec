@@ -11,19 +11,18 @@
 Pod::Spec.new do |s|
   s.name             = "MaveSDK"
   s.version          = "0.5.2"
-  s.summary          = "A short description of MaveSDK."
+  s.summary          = "A drop-in SMS invite and share platform to accelerate your user growth"
   s.description      = <<-DESC
-                       An optional longer description of MaveSDK
+                       Make it simple for your users to send more, higher quality invites and shares.
 
-                       * Markdown format.
-                       * Don't worry about the indent, we strip it!
+                       Sign up on our website to get started, and be up and running in 20 minutes
+                       with an invite page that's as good or better as what the top apps are using.
                        DESC
-  s.homepage         = "https://github.com/mave/mave-ios-sdk"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+  s.homepage         = "http://mave.io"
   s.license          = 'GPL v2'
   s.author           = 'Mave'
   s.source           = { :git => "https://github.com/mave/mave-ios-sdk.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url = 'https://twitter.com/mavegrowth'
 
   s.platform     = :ios, '7.0'
   s.requires_arc = true
@@ -33,7 +32,6 @@ Pod::Spec.new do |s|
     'MaveSDK' => ['MaveSDK/Resources/Images/**/*.png']
   }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'AddressBook', 'UIKit'
   s.libraries = 'z'
 
