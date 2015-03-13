@@ -12,6 +12,7 @@
 #import "MAVEHTTPStack.h"
 #import "MAVEUserData.h"
 #import "MAVEMerkleTree.h"
+#import "MAVEPromise.h"
 
 
 extern NSString * const MAVERouteTrackSignup;
@@ -51,6 +52,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 ///
 
 - (void)trackAppOpen;
+- (void)trackAppOpenFetchingReferringDataWithPromise:(MAVEPromise *)promise;
 - (void)trackSignup;
 - (void)trackInvitePageOpenForPageType:(NSString *)invitePageType;
 - (void)trackInvitePageSelectedContactFromList:(NSString *)listType;

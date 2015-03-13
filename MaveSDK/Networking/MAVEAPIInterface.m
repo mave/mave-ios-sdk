@@ -66,9 +66,18 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 /// Specific Tracking Events
 ///
 - (void)trackAppOpen {
-    [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch
-                        additionalParams:nil
-                         completionBlock:nil];
+    [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:nil completionBlock:nil];
+}
+
+- (void)trackAppOpenFetchingReferringDataWithPromise:(MAVEPromise *)promise {
+    NSDictionary *params = @{@"return_referring_data": @YES};
+    [self trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:params completionBlock:^(NSError *error, NSDictionary *responseData) {
+
+        NSDictionary *referringData = [responseData objectForKey:@"referring_data"];
+        if (referringData && (id)referringData != [NSNull null]) {
+            [promise fulfillPromise:(NSValue *)referringData];
+        };
+    }];
 }
 
 - (void)trackSignup {
@@ -319,7 +328,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                       additionalParams:(NSDictionary *)params
                        completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSMutableDictionary *fullParams = [[NSMutableDictionary alloc] init];
-    MAVEUserData *userData = [MaveSDK sharedInstance].userData;
+    MAVEUserData *userData = [self userData];
     if (userData.userID) {
         [fullParams setObject:userData.userID forKey:MAVEUserDataKeyUserID];
     }

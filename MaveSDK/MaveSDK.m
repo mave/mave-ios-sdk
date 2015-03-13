@@ -51,7 +51,7 @@ static dispatch_once_t sharedInstanceonceToken;
         sharedInstance = [[self alloc] initWithAppId:applicationID];
 
         sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilderNoPreFetch];
-        [sharedInstance trackAppOpen];
+        [sharedInstance.APIInterface trackAppOpenFetchingReferringDataWithPromise:sharedInstance.referringDataBuilder.promise];
 
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
@@ -189,10 +189,6 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 // Funnel events that need to be called explicitly by consumer
 //
-- (void)trackAppOpen {
-    [self.APIInterface trackAppOpen];
-}
-
 - (void)identifyUser:(MAVEUserData *)userData {
     self.userData = userData;
     NSError *validationError = [self validateUserSetup];

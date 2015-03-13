@@ -17,8 +17,6 @@
 
 - (instancetype)initWithAppId:(NSString *)appId;
 
-- (void)trackAppOpen;
-
 // This function checks that required fields for the MaveSDK invite page to work
 // correctly have been initialized. It logs any errors with a big "ERROR"
 

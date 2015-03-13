@@ -64,6 +64,28 @@
     OCMVerifyAll(mock);
 }
 
+- (void)testTrackAppOpenFetchingReferringDataWithPromise {
+    NSDictionary *expectedParams = @{@"return_referring_data": @YES};
+    NSDictionary *fakeReferringData = @{@"foo": @"bar"};
+    NSDictionary *fakeResponse = @{@"referring_data": fakeReferringData};
+
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackAppLaunch additionalParams:expectedParams completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        MAVEHTTPCompletionBlock completionBlock = obj;
+        completionBlock(nil, fakeResponse);
+        return YES;
+    }]]);
+
+    id promiseMock = OCMClassMock([MAVEPromise class]);
+    OCMExpect([promiseMock fulfillPromise:(NSValue *)fakeReferringData]);
+
+    [self.testAPIInterface trackAppOpenFetchingReferringDataWithPromise:promiseMock];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(promiseMock);
+}
+
+
 - (void)testTrackSignup {
     id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock trackGenericUserEventWithRoute:MAVERouteTrackSignup additionalParams:nil completionBlock:nil]);
