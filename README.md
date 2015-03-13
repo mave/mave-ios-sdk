@@ -12,40 +12,46 @@ See full docs [here](http://mave.io/docs).
 
 The Mave SDK is available through CocoaPods. To install it, simply add the following line to your Podfile:
 
-    pod "MaveSDK"
+```objc
+pod "MaveSDK"
+```
 
 
 Then, initialize the SDK in `applicationDidFinishLaunchingWithOptions:`
 
-    #import <MaveSDK.h>;
+```objc
+#import <MaveSDK.h>;
 
-    #define MAVE_SDK_APPLICATION_ID @"YOUR_APPLICATION_ID"
+#define MAVE_SDK_APPLICATION_ID @"YOUR_APPLICATION_ID"
 
-    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-        [MaveSDK setupSharedInstanceWithApplicationID:MAVE_SDK_APPLICATION_ID];
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [MaveSDK setupSharedInstanceWithApplicationID:MAVE_SDK_APPLICATION_ID];
 
-        // The rest of your app's setup code
-    }
+    // The rest of your app's setup code
+}
+```
 
 
 Then, use the following code to present the page (e.g. in the action for clicking on an "invite friends" button)
 
 
-    MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"1"
-                                                        firstName:@"Example"
-                                                         lastName:@"Person"];
-    [[MaveSDK sharedInstance] identifyUser:userData];
-    [[MaveSDK sharedInstance] presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
-        // Code to present Mave's view controller from yours, e.g:
-        // [self presentViewController:inviteController animated:YES completion:nil];
-    } dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
-        // Code to transition back to your view controller after Mave's
-        // is dismissed (sent invites or cancelled), e.g:
-        // [controller dismissViewControllerAnimated:YES completion:nil];
-    } inviteContext:@"default"];
-        // Passing an inviteContext allows you to track where a user came 
-        // from to get to the invite page. (e.g. "drawer menu", "profile") 
-        // It's used for analytics, not functionality.
+```objc
+MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"1"
+                                                    firstName:@"Example"
+                                                     lastName:@"Person"];
+[[MaveSDK sharedInstance] identifyUser:userData];
+[[MaveSDK sharedInstance] presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
+    // Code to present Mave's view controller from yours, e.g:
+    // [self presentViewController:inviteController animated:YES completion:nil];
+} dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+    // Code to transition back to your view controller after Mave's
+    // is dismissed (sent invites or cancelled), e.g:
+    // [controller dismissViewControllerAnimated:YES completion:nil];
+} inviteContext:@"default"];
+    // Passing an inviteContext allows you to track where a user came
+    // from to get to the invite page. (e.g. "drawer menu", "profile")
+    // It's used for analytics, not functionality.
+```
 
 
 ## Author
