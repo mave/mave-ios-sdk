@@ -131,7 +131,7 @@
 
     id referringBuilderMock = OCMClassMock([MAVERemoteObjectBuilder class]);
     [MaveSDK sharedInstance].referringDataBuilder = referringBuilderMock;
-    OCMExpect([referringBuilderMock createObjectWithTimeout:10 completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+    OCMExpect([referringBuilderMock createObjectWithTimeout:4 completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         ((void (^)(id object))(obj))(referringDataObj);
         return YES;
     }]]);
