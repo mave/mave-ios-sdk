@@ -79,8 +79,10 @@
     CGSize totalFrameSize = self.frame.size;
     BOOL isInPortrait = totalFrameSize.width < totalFrameSize.height;
 
-    CGSize explanationLabelSize = [self.shareExplanationLabel.text
-        sizeWithAttributes:@{NSFontAttributeName: self.shareExplanationLabel.font}];
+    CGFloat explanationLabelSideMargins = 25;
+    CGFloat explanationLabelWidth = totalFrameSize.width - 2 * explanationLabelSideMargins;
+    CGSize explanationLabelSize = [self.shareExplanationLabel sizeThatFits:CGSizeMake(explanationLabelWidth, FLT_MAX)];
+
     CGFloat explanationLabelX = (totalFrameSize.width - explanationLabelSize.width) / 2;
     // space between the explanation copy and row of share buttons
 
