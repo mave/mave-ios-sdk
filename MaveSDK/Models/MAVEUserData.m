@@ -18,6 +18,14 @@
 
 @implementation MAVEUserData
 
+- (instancetype)initBase {
+    if (self = [super init]) {
+        self.isSetAutomaticallyFromDevice = NO;
+        self.wrapInviteLink = YES;
+    }
+    return self;
+}
+
 - (instancetype)initWithUserID:(NSString *)userID
                      firstName:(NSString *)firstName
                       lastName:(NSString *)lastName {
@@ -33,7 +41,7 @@
                       lastName:(NSString *)lastName
                          email:(NSString *)email
                          phone:(NSString *)phone {
-    if (self = [super init]) {
+    if (self = [self initBase]) {
         self.userID = userID;
         self.firstName = firstName;
         self.lastName = lastName;
@@ -44,7 +52,7 @@
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
-    if (self = [self init]) {
+    if (self = [self initBase]) {
         self.userID = [dict objectForKey:MAVEUserDataKeyUserID];
         self.firstName = [dict objectForKey:MAVEUserDataKeyFirstName];
         self.lastName = [dict objectForKey:MAVEUserDataKeyLastName];
@@ -55,7 +63,7 @@
 }
 
 - (instancetype)initAutomaticallyFromDeviceName {
-    if (self = [self init]) {
+    if (self = [self initBase]) {
         self.userID = [MaveSDK sharedInstance].appDeviceID;
         self.firstName = [MAVEClientPropertyUtils deviceUsersFirstName];
         self.lastName = [MAVEClientPropertyUtils deviceUsersLastName];

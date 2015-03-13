@@ -42,6 +42,8 @@
     XCTAssertEqualObjects(ud.lastName, @"la");
     XCTAssertNil(ud.email);
     XCTAssertNil(ud.phone);
+    XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
+    XCTAssertTrue(ud.wrapInviteLink);
 }
 
 - (void)testInitWithFullUserData {
@@ -51,6 +53,8 @@
     XCTAssertEqualObjects(ud.lastName, @"la");
     XCTAssertEqualObjects(ud.email, @"em");
     XCTAssertEqualObjects(ud.phone, @"ph");
+    XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
+    XCTAssertTrue(ud.wrapInviteLink);
 }
 
 - (void)testInitWithDictionary {
@@ -66,6 +70,8 @@
     XCTAssertEqualObjects(ud.lastName, @"la");
     XCTAssertEqualObjects(ud.email, @"em");
     XCTAssertEqualObjects(ud.phone, @"ph");
+    XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
+    XCTAssertTrue(ud.wrapInviteLink);
 }
 
 - (void)testInitAutomatically {
@@ -82,6 +88,7 @@
     XCTAssertNil(user.phone);
     XCTAssertNil(user.email);
     XCTAssertTrue(user.isSetAutomaticallyFromDevice);
+    XCTAssertTrue(user.wrapInviteLink);
 }
 
 - (void)testIsUserInfoOkToSendServerSideSMS {

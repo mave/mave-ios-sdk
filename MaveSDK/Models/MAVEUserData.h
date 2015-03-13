@@ -19,12 +19,17 @@
 @property (nonatomic, copy) NSString *phone;
 
 // Internal flag, for use with anonymous users
-@property (nonatomic) BOOL isSetAutomaticallyFromDevice;
+@property (nonatomic, assign) BOOL isSetAutomaticallyFromDevice;
 
-// Essentially a referral code for web & mobile web signup flows,
-// if this (optional) URL is set invite links sent by this user
-// redirect here instead of app store or a non-attributed signup page
+// Explicitly set the link that will be used in invites sent by this user.
+// Optional, without this being set invites will to the relevant app-store
+// or generic web signup page, depending on the platform the person who
+// clicks the link is on (e.g. click on ios -> ios app store).
 @property (strong, nonatomic) NSString *inviteLinkDestinationURL;
+// Whether Mave should wrap the invite link in a deep link, which adds
+// analytics and redirects to the appropriate place based on device.
+// Defaults to YES, but you can set to NO if using your own deep linking tool
+@property (nonatomic, assign) BOOL wrapInviteLink;
 
 - (instancetype)initWithUserID:(NSString *)userID
                      firstName:(NSString *)firstName
