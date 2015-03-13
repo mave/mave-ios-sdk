@@ -515,6 +515,16 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     });
 }
 
+// allow dismissing keyboard by pressing Return
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if ([newText isEqualToString:@"\n"]) {
+        [textField endEditing:YES];
+        return NO;
+    }
+    return YES;
+}
+
 - (void)textFieldDidChange:(UITextField *)textField  {
     // This will always be the fixed search bar, text is not editable
     // in the search bar at the botton of the table header
