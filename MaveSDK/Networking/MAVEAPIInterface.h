@@ -70,8 +70,10 @@ extern NSString * const MAVEAPIParamShareAudience;
                                      message:(NSString *)messageText
                                       userId:(NSString *)userId
                     inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                              wrapInviteLink:(BOOL)wrapInviteLink
                                   customData:(NSDictionary *)customData
                              completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
 - (void)sendContactsChangeset:(NSArray *)changeset
             isFullInitialSync:(BOOL)isFullInitialSync

@@ -415,7 +415,7 @@
 
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
-    user.userID = @"1"; user.firstName = @"Dan";
+    user.userID = @"1"; user.firstName = @"Dan"; user.wrapInviteLink = YES;
     [[MaveSDK sharedInstance] identifyUser:user];
 
     // mock the underlying method
@@ -430,6 +430,7 @@
                                                              message:message
                                                               userId:user.userID
                                             inviteLinkDestinationURL:linkDestinationURL
+                                                      wrapInviteLink:YES
                                                           customData:customData
                                                      completionBlock:[OCMArg any]]);
 
@@ -457,7 +458,7 @@
 
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
-    user.userID = @"1"; user.firstName = @"Dan";
+    user.userID = @"1"; user.firstName = @"Dan"; user.wrapInviteLink = NO;
     [[MaveSDK sharedInstance] identifyUser:user];
 
     // mock the underlying method
@@ -469,6 +470,7 @@
                                                              message:message
                                                               userId:user.userID
                                             inviteLinkDestinationURL:nil
+                                                      wrapInviteLink:NO
                                                           customData:nil
                                                      completionBlock:[OCMArg any]]);
 
@@ -501,6 +503,7 @@
                                                             message:[OCMArg any]
                                                              userId:user.userID
                                            inviteLinkDestinationURL:nil
+                                                     wrapInviteLink:NO
                                                          customData:nil
                                                     completionBlock:[OCMArg any]];
 
@@ -524,7 +527,7 @@
 
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
-    user.userID = @"1"; user.firstName = @"Dan";
+    user.userID = @"1"; user.firstName = @"Dan"; user.wrapInviteLink = YES;
     [[MaveSDK sharedInstance] identifyUser:user];
 
     // mock the underlying method
@@ -534,6 +537,7 @@
                                                              message:[OCMArg any]
                                                               userId:user.userID
                                             inviteLinkDestinationURL:nil
+                                                      wrapInviteLink:YES
                                                           customData:nil
                                                      completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         MAVEHTTPCompletionBlock completionBlock = obj;
@@ -570,6 +574,7 @@
                                                             message:[OCMArg any]
                                                              userId:[OCMArg any]
                                            inviteLinkDestinationURL:[OCMArg any]
+                                                     wrapInviteLink:NO
                                                          customData:[OCMArg any]
                                                     completionBlock:[OCMArg any]];
 
@@ -587,7 +592,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
-    user.userID = @"1"; user.firstName = @"Dan";
+    user.userID = @"1"; user.firstName = @"Dan"; user.wrapInviteLink = YES;
     [[MaveSDK sharedInstance] identifyUser:user];
 
     // mock the underlying method
@@ -597,6 +602,7 @@
                                                             message:[OCMArg any]
                                                              userId:[OCMArg any]
                                            inviteLinkDestinationURL:[OCMArg any]
+                                                     wrapInviteLink:YES
                                                          customData:[OCMArg any]
                                                     completionBlock:[OCMArg any]];
 

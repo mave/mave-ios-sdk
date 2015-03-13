@@ -345,6 +345,7 @@
                                                message:message
                                                 userId:mave.userData.userID
                               inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                        wrapInviteLink:mave.userData.wrapInviteLink
                                             customData:nil
                                        completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {

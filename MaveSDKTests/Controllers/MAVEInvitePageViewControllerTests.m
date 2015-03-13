@@ -144,6 +144,7 @@
 - (void)testSendInvites {
     MaveSDK *mave = [MaveSDK sharedInstance];
     mave.userData.inviteLinkDestinationURL = @"http://example.com/foo?referralCode=blah";
+    mave.userData.wrapInviteLink = NO;
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     [vc loadView];
     [vc viewDidLoad];
@@ -164,6 +165,7 @@
                                                              message:inviteMessage
                                                               userId:mave.userData.userID
                                             inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                                      wrapInviteLink:NO
                                                           customData:nil
                                                      completionBlock:[OCMArg any]]);
     [vc sendInvites];

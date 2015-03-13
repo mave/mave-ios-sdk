@@ -136,6 +136,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                      message:(NSString *)messageText
                                       userId:(NSString *)userId
                     inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                              wrapInviteLink:(BOOL)wrapInviteLink
                                   customData:(NSDictionary *)customData
                              completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSString *invitesRoute = @"/invites/sms";
@@ -149,6 +150,8 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
         }
         [params setObject:[NSArray arrayWithArray:tmp] forKey:@"recipient_contact_records"];
     }
+
+    [params setObject:@(wrapInviteLink) forKey:@"wrap_invite_link"];
 
     [params setObject:messageText forKey:@"sms_copy"];
     [params setObject:userId forKey:@"sender_user_id"];

@@ -235,6 +235,7 @@
                                      @"sms_copy": smsCopy,
                                      @"sender_user_id": userId,
                                      @"link_destination": linkDestination,
+                                     @"wrap_invite_link": @NO,
                                      @"custom_data": customData,
                                      };
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
@@ -248,6 +249,7 @@
                                                         message:smsCopy
                                                          userId:userId
                                        inviteLinkDestinationURL:linkDestination
+                                                 wrapInviteLink:NO
                                                      customData:customData
                                                 completionBlock:nil];
     OCMVerifyAll(mocked);
@@ -258,6 +260,7 @@
     NSDictionary *expectedParams = @{@"recipient_phone_numbers": @[],
                                      @"sms_copy": @"",
                                      @"sender_user_id": @"",
+                                     @"wrap_invite_link": @YES,
                                      };
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodName:@"POST"
@@ -270,6 +273,7 @@
                                                         message:@""
                                                          userId:@""
                                        inviteLinkDestinationURL:nil
+                                                 wrapInviteLink:YES
                                                      customData:nil
                                                 completionBlock:nil];
     OCMVerifyAll(mocked);

@@ -288,6 +288,7 @@ static dispatch_once_t sharedInstanceonceToken;
                                                     message:message
                                                      userId:self.userData.userID
                                    inviteLinkDestinationURL:linkDestinationURL
+                                             wrapInviteLink:self.userData.wrapInviteLink
                                                  customData:customData
                                             completionBlock:^(NSError *error, NSDictionary *responseData) {
                                   if (error && errorBlock) {
