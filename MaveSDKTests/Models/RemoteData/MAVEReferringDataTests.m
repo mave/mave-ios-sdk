@@ -86,41 +86,4 @@
     OCMVerifyAll(apiInterfaceMock);
 }
 
-- (void)testRemoteBuilderWithPreFetchFulfillSuccess {
-    NSDictionary *responseData = @{@"referring_user": @{@"user_id": @"123", @"first_name": @"Fooz"},
-                                   @"current_user": @{@"phone": @"+18085556712"}};
-
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([apiInterfaceMock getReferringData:[OCMArg checkWithBlock:^BOOL(id obj) {
-        ((MAVEHTTPCompletionBlock)obj)(nil, responseData);
-        return YES;
-    }]]);
-
-    MAVERemoteObjectBuilder *remoteBuilder = [MAVEReferringData remoteBuilderWithPreFetch];
-    MAVEReferringData *referringData = [remoteBuilder createObjectSynchronousWithTimeout:0.25];
-
-    XCTAssertEqualObjects(referringData.referringUser.userID, @"123");
-    XCTAssertEqualObjects(referringData.referringUser.firstName, @"Fooz");
-    XCTAssertEqualObjects(referringData.currentUser.phone, @"+18085556712");
-    OCMVerifyAll(apiInterfaceMock);
-}
-
-- (void)testRemoteBuilderWithPreFetchFulfillFailure {
-    NSError *responseError = [[NSError alloc] init];  // doesn't matter what the error is
-
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([apiInterfaceMock getReferringData:[OCMArg checkWithBlock:^BOOL(id obj) {
-        ((MAVEHTTPCompletionBlock)obj)(responseError, nil);
-        return YES;
-    }]]);
-
-    MAVERemoteObjectBuilder *remoteBuilder = [MAVEReferringData remoteBuilderWithPreFetch];
-    MAVEReferringData *referringData = [remoteBuilder createObjectSynchronousWithTimeout:0.25];
-    // will fall back to default data which is nil
-    XCTAssertEqualObjects(referringData.referringUser.userID, nil);
-    XCTAssertEqualObjects(referringData.referringUser.firstName, nil);
-    XCTAssertEqualObjects(referringData.currentUser.phone, nil);
-    OCMVerifyAll(apiInterfaceMock);
-}
-
 @end
