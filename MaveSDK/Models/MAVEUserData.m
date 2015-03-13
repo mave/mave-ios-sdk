@@ -20,10 +20,20 @@
 
 - (instancetype)initWithUserID:(NSString *)userID
                      firstName:(NSString *)firstName
+                      lastName:(NSString *)lastName {
+    return [self initWithUserID:userID
+                      firstName:firstName
+                       lastName:lastName
+                          email:nil
+                          phone:nil];
+}
+
+- (instancetype)initWithUserID:(NSString *)userID
+                     firstName:(NSString *)firstName
                       lastName:(NSString *)lastName
                          email:(NSString *)email
                          phone:(NSString *)phone {
-    if (self = [self init]) {
+    if (self = [super init]) {
         self.userID = userID;
         self.firstName = firstName;
         self.lastName = lastName;

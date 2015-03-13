@@ -35,7 +35,16 @@
     [super tearDown];
 }
 
-- (void)testInitWithUserData {
+- (void)testInitWithShortUserData {
+    MAVEUserData *ud = [[MAVEUserData alloc] initWithUserID:@"id1" firstName:@"fi" lastName:@"la"];
+    XCTAssertEqualObjects(ud.userID, @"id1");
+    XCTAssertEqualObjects(ud.firstName, @"fi");
+    XCTAssertEqualObjects(ud.lastName, @"la");
+    XCTAssertNil(ud.email);
+    XCTAssertNil(ud.phone);
+}
+
+- (void)testInitWithFullUserData {
     MAVEUserData *ud = [[MAVEUserData alloc] initWithUserID:@"id1" firstName:@"fi" lastName:@"la" email:@"em" phone:@"ph"];
     XCTAssertEqualObjects(ud.userID, @"id1");
     XCTAssertEqualObjects(ud.firstName, @"fi");

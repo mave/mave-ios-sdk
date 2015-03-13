@@ -28,6 +28,10 @@
 
 - (instancetype)initWithUserID:(NSString *)userID
                      firstName:(NSString *)firstName
+                      lastName:(NSString *)lastName;
+
+- (instancetype)initWithUserID:(NSString *)userID
+                     firstName:(NSString *)firstName
                       lastName:(NSString *)lastName
                          email:(NSString *)email
                          phone:(NSString *)phone;
