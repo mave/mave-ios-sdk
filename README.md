@@ -58,8 +58,8 @@ MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"1"
 
 © Mave Technologies 2015
 
-support@mave.io
+info@mave.io
 
 ## License
 
-This SDK is released under a proprietary license, to use it in your released application you need to be using the Mave platform (sign up for our beta at [mave.io](http://app.mave.io/beta/signup)). See the LICENSE file.
+This SDK is released under a proprietary license, to use it in your released application you need to be using the Mave platform (sign up for our beta at [mave.io/beta/signup](http://app.mave.io/beta/signup)). See the LICENSE file.
