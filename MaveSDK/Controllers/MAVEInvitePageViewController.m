@@ -374,7 +374,7 @@
                                                 userId:mave.userData.userID
                               inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
                                         wrapInviteLink:mave.userData.wrapInviteLink
-                                            customData:nil
+                                            customData:mave.userData.customData
                                        completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error != nil) {
             MAVEDebugLog(@"Invites failed to send, error: %@, response: %@",
