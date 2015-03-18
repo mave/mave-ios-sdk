@@ -31,6 +31,15 @@
 // Defaults to YES, but you can set to NO if using your own deep linking tool
 @property (nonatomic, assign) BOOL wrapInviteLink;
 
+// customData is a freeform dictionary that you can use to
+// pass through any data you want to retrieve once the invited user opens
+// your app from this invite link. It will be available as the `customData`
+// property on the MAVEReferringData object. It is sent over our API as JSON
+// data so the object you pass in here must be JSON serializable - i.e.
+// NSJSONSerializiation `isValidJSONObject:` returns true.
+@property (nonatomic, strong) NSDictionary *customData;
+
+
 - (instancetype)initWithUserID:(NSString *)userID
                      firstName:(NSString *)firstName
                       lastName:(NSString *)lastName;

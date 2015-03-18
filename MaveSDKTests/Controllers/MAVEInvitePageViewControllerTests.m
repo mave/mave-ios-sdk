@@ -172,6 +172,40 @@
     OCMVerifyAll(mockAPIInterface);
 }
 
+- (void)testSendInvitesWithCustomData {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.userData.inviteLinkDestinationURL = @"http://example.com/foo?referralCode=blah";
+    mave.userData.wrapInviteLink = NO;
+    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
+    [vc loadView];
+    [vc viewDidLoad];
+    
+    // Setup content for invites
+    NSString *inviteMessage = @"This was the text typed in";
+    NSArray *invitePhones = @[@"18085551234"];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.firstName = @"Foo";
+    NSArray *inviteContacts = @[p1];
+    vc.ABTableViewController.selectedPhoneNumbers = [[NSMutableSet alloc] initWithArray: invitePhones];
+    vc.ABTableViewController.selectedPeople = [[NSMutableSet alloc] initWithArray:inviteContacts];
+    vc.bottomActionContainerView.inviteMessageView.textView.text = inviteMessage;
+    
+    NSDictionary *customData = @{@"foo": @"bar"};
+    mave.userData.customData = customData;
+    
+    // Create a mock http manager & stub the singleton object to use it
+    id mockAPIInterface = [OCMockObject partialMockForObject:[MaveSDK sharedInstance].APIInterface];
+    OCMExpect([mockAPIInterface sendInvitesWithRecipientPhoneNumbers:invitePhones
+                                             recipientContactRecords:inviteContacts
+                                                             message:inviteMessage
+                                                              userId:mave.userData.userID
+                                            inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                                      wrapInviteLink:NO
+                                                          customData:customData
+                                                     completionBlock:[OCMArg any]]);
+    [vc sendInvites];
+    OCMVerifyAll(mockAPIInterface);
+}
+
 - (void)testComposeClientGroupInvites {
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     [vc loadView];
