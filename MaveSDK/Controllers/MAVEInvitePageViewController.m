@@ -55,6 +55,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    self.ABTableViewController.tableView.delegate = nil;
     [self.view endEditing:YES];
 }
 
