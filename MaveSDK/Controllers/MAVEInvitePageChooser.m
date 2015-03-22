@@ -119,7 +119,8 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
         MAVEErrorLog(@"Tried to push the client sms form which doesn't work, need to display the view controller modally to show the client sms compose invite page.");
         return nil;
     }
-    return [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MessageComposeResult result) {
+    return [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller,
+                                                                                     MessageComposeResult result) {
         switch (result) {
             case MessageComposeResultCancelled:
                 [self dismissOnCancel];
@@ -130,7 +131,6 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
             case MessageComposeResultSent:
                 [self dismissOnSuccess:1];
         }
-        [self dismissOnCancel];
     }];
 }
 
@@ -248,12 +248,35 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
         MAVEErrorLog(@"Error, got nil view controller from fallback page type");
         self.activeViewController = [[MAVECustomSharePageViewController alloc] init];
     }
-    [self setupNavigationBarForActiveViewController];
-    [navigationController pushViewController:self.activeViewController animated:NO];
+
+    // We prefer to push the replacement controller onto the navigation stack so that we can still dismiss
+    // our bottom level view controller normally. But if the replacement controller is a navigation controller
+    // (e.g. client sms dialog) we can't do that so we have to present it on top of the modal
+    if ([self.activeViewController isKindOfClass:[UINavigationController class]]) {
+        [navigationController presentViewController:self.activeViewController animated:YES completion:nil];
+        self.needToUnwindReplacementModalViewController = YES;
+    } else {
+        [self setupNavigationBarForActiveViewController];
+        [navigationController pushViewController:self.activeViewController animated:NO];
+    }
 }
 
+- (void)dismissModalViewControllersAboveBottomIfAny {
+    // If we presented a second view controller over our view controller as a modal,
+    // remove it so that we're back to just one view controller displayed that can
+    // be dismissed by the application code.
+    //
+    // This gets triggered for client side sms compose screen fallback
+    if (self.needToUnwindReplacementModalViewController) {
+        UIViewController *bottomActiveViewController = [self.activeViewController presentingViewController];
+        [self.activeViewController dismissViewControllerAnimated:NO completion:nil];
+        self.activeViewController = bottomActiveViewController;
+        self.needToUnwindReplacementModalViewController = NO;
+    }
+}
 
 - (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent {
+    [self dismissModalViewControllersAboveBottomIfAny];
     [self.activeViewController.view endEditing:YES];
     if ([self.navigationPresentedFormat isEqualToString:MAVEInvitePagePresentFormatModal]) {
         if (self.navigationCancelBlock) {
@@ -269,6 +292,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (void)dismissOnCancel {
+    [self dismissModalViewControllersAboveBottomIfAny];
     [self.activeViewController.view endEditing:YES];
     if (self.navigationCancelBlock) {
         self.navigationCancelBlock(self.activeViewController, 0);

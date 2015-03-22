@@ -28,6 +28,7 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 @interface MAVEInvitePageChooser : NSObject
 
 @property (nonatomic, strong) UIViewController *activeViewController;
+@property (nonatomic, assign) BOOL needToUnwindReplacementModalViewController;
 - (UINavigationController *)activeNavigationController;
 @property (nonatomic, copy) NSString *navigationPresentedFormat;
 @property (nonatomic, copy) MAVEInvitePageDismissBlock navigationCancelBlock;
@@ -62,6 +63,8 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 
 // Helper to replace whatever the active controller is with a new share page view controller
 - (void)replaceActiveViewControllerWithFallbackPage;
+- (void)dismissModalViewControllersAboveBottomIfAny;
+
 
 - (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent;
 - (void)dismissOnCancel;

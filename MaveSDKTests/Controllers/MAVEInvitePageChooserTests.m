@@ -234,8 +234,8 @@
     UIViewController *fakeReturnedVC = [[UIViewController alloc] init];
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultSent);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultSent);
         return YES;
     }]]).andReturn(fakeReturnedVC);
 
@@ -254,8 +254,8 @@
     UIViewController *fakeReturnedVC = [[UIViewController alloc] init];
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultCancelled);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultCancelled);
         return YES;
     }]]).andReturn(fakeReturnedVC);
 
@@ -490,12 +490,42 @@
     XCTAssertEqual(forwardButton.action, @selector(dismissOnForward));
 }
 
+- (void)testDismissModalViewControllersAboveBottomNoNeedToUnwind {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    // need to unwind will be false
+    chooser.activeViewController = [[UIViewController alloc] init];
+    id vcMock = OCMPartialMock(chooser.activeViewController);
+    [[vcMock reject] dismissViewControllerAnimated:NO completion:nil];
+
+    [chooser dismissModalViewControllersAboveBottomIfAny];
+
+    OCMVerifyAll(vcMock);
+}
+
+- (void)testDismissModalViewControllersAboveBottom {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.needToUnwindReplacementModalViewController = YES;
+    chooser.activeViewController = [[UIViewController alloc] init];
+    id vcMock = OCMPartialMock(chooser.activeViewController);
+    UIViewController *fakePresentingVC = [[UIViewController alloc] init];
+    OCMExpect([vcMock presentingViewController]).andReturn(fakePresentingVC);
+    OCMExpect([vcMock dismissViewControllerAnimated:NO completion:nil]);
+
+    [chooser dismissModalViewControllersAboveBottomIfAny];
+
+    OCMVerifyAll(vcMock);
+    XCTAssertEqualObjects(chooser.activeViewController, fakePresentingVC);
+    XCTAssertFalse(chooser.needToUnwindReplacementModalViewController);
+}
+
+
 ///
 /// Forward and back/cancel actions
 ///
 - (void)testDismissOnSuccessWhenModal {
     // When modal, dismiss on success calls the cancel block
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
     chooser.navigationPresentedFormat = MAVEInvitePagePresentFormatModal;
     chooser.activeViewController = [[UIViewController alloc] init];
 
@@ -509,10 +539,13 @@
         numInvites = numberOfInvitesSent;
     };
 
+    OCMExpect([chooserMock dismissModalViewControllersAboveBottomIfAny]);
+
     [chooser dismissOnSuccess:102];
 
     XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
     XCTAssertEqual(numInvites, 102);
+    OCMVerifyAll(chooserMock);
 }
 
 - (void)testDismissOnSuccessWhenPush {
@@ -540,19 +573,23 @@
 -(void)testDismissOnCancelNoBlock {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     chooser.activeViewController = [[UIViewController alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
     id viewMock = OCMClassMock([UIView class]);
     id vcMock = OCMPartialMock(chooser.activeViewController);
     OCMStub([vcMock view]).andReturn(viewMock);
     OCMExpect([viewMock endEditing:YES]);
+    OCMExpect([chooserMock dismissModalViewControllersAboveBottomIfAny]);
 
     // with no back block just ends editing for the view
     [chooser dismissOnCancel];
     OCMVerifyAll(viewMock);
+    OCMVerifyAll(chooserMock);
 }
 
 - (void)testDismissOnCancelWithBlock {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     chooser.activeViewController = [[UIViewController alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
     id viewMock = OCMClassMock([UIView class]);
     id vcMock = OCMPartialMock(chooser.activeViewController);
     OCMStub([vcMock view]).andReturn(viewMock);
@@ -565,9 +602,12 @@
         numInvites = numberOfInvitesSent;
     };
 
+    OCMExpect([chooserMock dismissModalViewControllersAboveBottomIfAny]);
+
     [chooser dismissOnCancel];
 
     OCMVerifyAll(viewMock);
+    OCMVerifyAll(chooserMock);
     XCTAssertEqualObjects(calledWithVC, chooser.activeViewController);
     XCTAssertEqual(numInvites, 0);
 }
