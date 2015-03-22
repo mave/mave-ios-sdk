@@ -38,7 +38,8 @@
 }
 
 - (void)smsClientSideShare {
-    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MessageComposeResult result) {
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
         if (result == MessageComposeResultSent) {
             [self dismissAfterShare];
         }

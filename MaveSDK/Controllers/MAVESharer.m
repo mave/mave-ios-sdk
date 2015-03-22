@@ -33,7 +33,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     self.retainedSelf = nil;
 }
 
-+ (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones completionBlock:(void (^)(MessageComposeResult))completionBlock {
++ (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones completionBlock:(void (^)(MFMessageComposeViewController *controller, MessageComposeResult composeResult))completionBlock {
     if (![MFMessageComposeViewController canSendText]) {
         MAVEErrorLog(@"Tried to do compose client sms but canSendText is false");
         return nil;
@@ -69,9 +69,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
             break;
         }
     }
-    [controller dismissViewControllerAnimated:YES completion:nil];
     if (self.completionBlockClientSMS) {
-        self.completionBlockClientSMS(result);
+        self.completionBlockClientSMS(controller, result);
     }
     [self releaseSelf];
 }

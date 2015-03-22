@@ -119,7 +119,8 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
         MAVEErrorLog(@"Tried to push the client sms form which doesn't work, need to display the view controller modally to show the client sms compose invite page.");
         return nil;
     }
-    return [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MessageComposeResult result) {
+    return [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller,
+                                                                                     MessageComposeResult result) {
         switch (result) {
             case MessageComposeResultCancelled:
                 [self dismissOnCancel];

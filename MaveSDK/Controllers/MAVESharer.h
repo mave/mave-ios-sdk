@@ -19,7 +19,7 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 @interface MAVESharer : NSObject <MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic, strong) MAVESharer *retainedSelf;
-@property (nonatomic, strong) void(^completionBlockClientSMS)(MessageComposeResult composeResult);
+@property (nonatomic, strong) void(^completionBlockClientSMS)(MFMessageComposeViewController *controller, MessageComposeResult composeResult);
 
 - (instancetype)initAndRetainSelf;
 - (void)releaseSelf;
@@ -28,7 +28,8 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 // Methods to compose and share, they return UIViewControllers that need to be presented to display the compose views
 //
 + (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones
-                                              completionBlock:(void(^)(MessageComposeResult result))completionBlock;
+                                              completionBlock:(void(^)(MFMessageComposeViewController *controller,
+                                                                       MessageComposeResult composeResult))completionBlock;
 //
 // Helpers
 //
