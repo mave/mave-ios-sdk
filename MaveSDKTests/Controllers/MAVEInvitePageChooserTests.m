@@ -492,7 +492,7 @@
 
 - (void)testDismissModalViewControllersAboveBottomNoNeedToUnwind {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    chooser.needToUnwindReplacementModalViewController = NO;
+    // need to unwind will be false
     chooser.activeViewController = [[UIViewController alloc] init];
     id vcMock = OCMPartialMock(chooser.activeViewController);
     [[vcMock reject] dismissViewControllerAnimated:NO completion:nil];
