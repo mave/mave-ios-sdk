@@ -63,6 +63,8 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 
 // Helper to replace whatever the active controller is with a new share page view controller
 - (void)replaceActiveViewControllerWithFallbackPage;
+- (void)dismissModalViewControllersAboveBottomIfAny;
+
 
 - (void)dismissOnSuccess:(NSUInteger)numberOfInvitesSent;
 - (void)dismissOnCancel;
