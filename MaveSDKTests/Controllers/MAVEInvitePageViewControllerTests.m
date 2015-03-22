@@ -221,8 +221,8 @@
     UIViewController *fakeMessageComposeVC = OCMClassMock([MFMessageComposeViewController class]);
     id maveSharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([maveSharerMock composeClientSMSInviteToRecipientPhones:invitePhones completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultSent);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultSent);
         return YES;
     }]]).andReturn(fakeMessageComposeVC);
 

@@ -66,7 +66,7 @@
     // sms recipient
     OCMExpect([messageComposeVCMock setRecipients:recipientPhones]);
 
-    void (^myCompletionBlock)(MessageComposeResult result) = ^void(MessageComposeResult result) {};
+    void (^myCompletionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = ^void(MFMessageComposeViewController *controller, MessageComposeResult result) {};
     UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:recipientPhones completionBlock:myCompletionBlock];
 
     XCTAssertNotNil(vc);
@@ -92,7 +92,7 @@
 - (void)testComposeClientSMSCompletionBlockSuccess {
     MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
     __block MessageComposeResult returnedResult;
-    sharer.completionBlockClientSMS = ^void(MessageComposeResult result) {
+    sharer.completionBlockClientSMS = ^void(MFMessageComposeViewController *controller, MessageComposeResult result) {
         returnedResult = result;
     };
     NSString *fakeToken = @"foo12398akj";
@@ -103,7 +103,8 @@
     OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:fakeToken audience:nil]);
 
     id messageComposeVCMock = OCMClassMock([MFMessageComposeViewController class]);
-    OCMExpect([messageComposeVCMock dismissViewControllerAnimated:YES completion:nil]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[messageComposeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
     [sharer messageComposeViewController:messageComposeVCMock didFinishWithResult:MessageComposeResultSent];
 
     XCTAssertEqual(returnedResult, MessageComposeResultSent);
@@ -116,7 +117,7 @@
 - (void)testComposeClientSMSCancelled {
     MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
     __block MessageComposeResult returnedResult;
-    sharer.completionBlockClientSMS = ^void(MessageComposeResult result) {
+    sharer.completionBlockClientSMS = ^void(MFMessageComposeViewController *controller, MessageComposeResult result) {
         returnedResult = result;
     };
 
@@ -124,7 +125,7 @@
     [[apiInterfaceMock reject] trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[OCMArg any] audience:[OCMArg any]];
 
     id messageComposeVCMock = OCMClassMock([MFMessageComposeViewController class]);
-    OCMExpect([messageComposeVCMock dismissViewControllerAnimated:YES completion:nil]);
+    [[messageComposeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
     [sharer messageComposeViewController:messageComposeVCMock didFinishWithResult:MessageComposeResultCancelled];
 
     XCTAssertEqual(returnedResult, MessageComposeResultCancelled);

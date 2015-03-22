@@ -234,8 +234,8 @@
     UIViewController *fakeReturnedVC = [[UIViewController alloc] init];
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultSent);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultSent);
         return YES;
     }]]).andReturn(fakeReturnedVC);
 
@@ -254,8 +254,8 @@
     UIViewController *fakeReturnedVC = [[UIViewController alloc] init];
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultCancelled);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultCancelled);
         return YES;
     }]]).andReturn(fakeReturnedVC);
 

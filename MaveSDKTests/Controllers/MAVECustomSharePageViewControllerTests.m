@@ -98,8 +98,8 @@
     id mock = OCMPartialMock(vc);
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultSent);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultSent);
         return YES;
     }]]);
     OCMExpect([mock presentViewController:[OCMArg any] animated:YES completion:nil]);
@@ -117,8 +117,8 @@
     id mock = OCMPartialMock(vc);
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultCancelled);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultCancelled);
         return YES;
     }]]);
     OCMExpect([mock presentViewController:[OCMArg any] animated:YES completion:nil]);
@@ -136,8 +136,8 @@
     id mock = OCMPartialMock(vc);
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void (^completionBlock)(MessageComposeResult result) = obj;
-        completionBlock(MessageComposeResultFailed);
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultFailed);
         return YES;
     }]]);
     OCMExpect([mock presentViewController:[OCMArg any] animated:YES completion:nil]);
