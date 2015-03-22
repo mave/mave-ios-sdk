@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.5.5
+ - Fix bug in using a client sms dialog as the fallback for the invite page
+
 ### v0.5.4
  - Add `customData` attribute to `MAVEUserData` which will pass custom deep link data to the SMS invites sent from the contacts invite page.
 
