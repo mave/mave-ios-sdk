@@ -28,6 +28,7 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 @interface MAVEInvitePageChooser : NSObject
 
 @property (nonatomic, strong) UIViewController *activeViewController;
+@property (nonatomic, assign) BOOL needToUnwindReplacementModalViewController;
 - (UINavigationController *)activeNavigationController;
 @property (nonatomic, copy) NSString *navigationPresentedFormat;
 @property (nonatomic, copy) MAVEInvitePageDismissBlock navigationCancelBlock;
