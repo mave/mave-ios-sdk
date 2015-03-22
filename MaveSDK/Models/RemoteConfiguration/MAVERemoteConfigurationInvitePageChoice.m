@@ -49,7 +49,7 @@ NSString * const MAVERemoteConfigKeyInvitePageFallback = @"fallback_page";
     return @{
         MAVERemoteConfigKeyTemplate: @{
             MAVERemoteConfigKeyInvitePagePrimary: @"contacts_invite_page",
-            MAVERemoteConfigKeyInvitePageFallback: @"share_page",
+            MAVERemoteConfigKeyInvitePageFallback: @"client_sms",
         },
     };
 }

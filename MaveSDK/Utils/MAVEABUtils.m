@@ -20,6 +20,7 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
 @implementation MAVEABUtils
 
 + (NSString *)addressBookPermissionStatus {
+    return MAVEABPermissionStatusUnprompted;
     ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
     if (status == kABAuthorizationStatusAuthorized) {
         return MAVEABPermissionStatusAllowed;
