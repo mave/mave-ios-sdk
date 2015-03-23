@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.5.6
+ - Use `inviteLinkDestinationURL` in the client sms share option if `wrapInviteLink` is `NO`
+
 ### v0.5.5
  - Fix bug in using a client sms dialog as the fallback for the invite page
 
