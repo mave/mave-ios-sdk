@@ -46,8 +46,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     NSString *message;
     if ( maveUser.inviteLinkDestinationURL && !maveUser.wrapInviteLink ) {
         // If the inviteLinkDestinationURL is set, and the link should NOT be wrapped, pass the raw inviteLinkDestinationURL to the SMS VC
-        message = ownInstance.remoteConfiguration.clientSMS.text;
-        message = [[message stringByAppendingString:@" "] stringByAppendingString:maveUser.inviteLinkDestinationURL];
+        message = [[ownInstance.remoteConfiguration.clientSMS.text stringByAppendingString:@" "] stringByAppendingString:maveUser.inviteLinkDestinationURL];
     } else {
         message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
     }
