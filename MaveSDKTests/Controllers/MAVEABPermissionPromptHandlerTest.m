@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MAVEBaseTestCase.h"
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
 #import "MAVEConstants.h"
@@ -16,24 +17,11 @@
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABTestDataFactory.h"
 
-@interface MaveSDK(Testing)
-+ (void)resetSharedInstanceForTesting;
-@end
-
-@interface MAVEABPermissionPromptHandlerTest : XCTestCase
+@interface MAVEABPermissionPromptHandlerTest : MAVEBaseTestCase
 
 @end
 
 @implementation MAVEABPermissionPromptHandlerTest
-
-- (void)setUp {
-    [super setUp];
-    [MaveSDK resetSharedInstanceForTesting];
-}
-
-- (void)tearDown {
-    [super tearDown];
-}
 
 ///
 /// Test prompt function when status is already granted or denied
@@ -57,7 +45,6 @@
 
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(handler, mock);
-    [mock stopMocking];
 }
 
 - (void)testPromptForContactsWhenPermissionGranted {
@@ -78,7 +65,6 @@
 
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(handler, mock);
-    [mock stopMocking];
 }
 
 ///

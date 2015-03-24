@@ -20,7 +20,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [self setupMaveSDK];
+//    [self setupMaveSDK];
     return YES;
 }
 

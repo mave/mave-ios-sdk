@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <objc/runtime.h>
+#import "MAVEBaseTestCase.h"
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
 #import "MAVEInvitePageChooser.h"
@@ -18,32 +19,16 @@
 #import "MAVESuggestedInvites.h"
 #import "MAVEIDUtils.h"
 
-@interface MaveSDK(Testing)
-+ (void)resetSharedInstanceForTesting;
-@end
-
 @interface MAVEABSyncManager(Testing)
 + (NSInteger)valueOfSyncContactsOnceToken;
 + (void)resetSyncContactsOnceTokenForTesting;
 @end
 
-@interface MaveSDKTests : XCTestCase
+@interface MaveSDKTests : MAVEBaseTestCase
 
 @end
 
-@implementation MaveSDKTests {
-    BOOL _fakeAppLaunchWasTriggered;
-}
-
-- (void)setUp {
-    [super setUp];
-    [MaveSDK resetSharedInstanceForTesting];
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
+@implementation MaveSDKTests
 
 - (void)testSetupSharedInstance {
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
@@ -78,8 +63,7 @@
     [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
     [MaveSDK sharedInstance].userData.userID = @"blah";
 
-    [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [self resetTestState];
     XCTAssertNil([MaveSDK sharedInstance].userData.userID);
     XCTAssertEqualObjects(appDeviceID1, [MaveSDK sharedInstance].appDeviceID);
 }
@@ -124,8 +108,7 @@
 }
 
 - (void)testGetReferringData {
-    [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"asd932k"];
+    [self resetTestState];
 
     MAVEReferringData *referringDataObj = [[MAVEReferringData alloc] init];
 
@@ -264,23 +247,6 @@
     user.firstName = @"aa240";
     [MaveSDK sharedInstance].userData = user;
     XCTAssertEqualObjects([MaveSDK sharedInstance].userData.firstName, @"aa240");
-}
-
-- (void)testIsInitialLaunchYesWhenNoStoredAdid {
-    // We use the presence of an app_device_id having been read from disk
-    // to mean that the app has been launched before, if it's not on disk
-    // then this is the first time the app has been launched
-    [MAVEIDUtils clearStoredAppDeviceID];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    XCTAssertTrue([MaveSDK sharedInstance].isInitialAppLaunch);
-}
-
-- (void)testIsInitialLaunchNoOnSubsequentLaunches {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    XCTAssertNotNil([MaveSDK sharedInstance].appDeviceID);
-    [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    XCTAssertFalse([MaveSDK sharedInstance].isInitialAppLaunch);
 }
 
 - (void)testIsSetupOKFailsWithNoApplicationID {
