@@ -8,11 +8,12 @@
 
 #import "MAVERemoteConfigurationClientEmail.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVETemplatingUtils.h"
 
 NSString * const MAVERemoteConfigKeyClientEmailTemplate = @"template";
 NSString * const MAVERemoteConfigKeyClientEmailTemplateID = @"template_id";
-NSString * const MAVERemoteConfigKeyClientEmailSubject = @"subject";
-NSString * const MAVERemoteConfigKeyClientEmailBody = @"body";
+NSString * const MAVERemoteConfigKeyClientEmailSubject = @"subject_template";
+NSString * const MAVERemoteConfigKeyClientEmailBody = @"body_template";
 
 @implementation MAVERemoteConfigurationClientEmail
 
@@ -26,17 +27,25 @@ NSString * const MAVERemoteConfigKeyClientEmailBody = @"body";
         }
         NSString *subject = [template objectForKey:MAVERemoteConfigKeyClientEmailSubject];
         if (![subject isEqual:[NSNull null]]) {
-            self.subject = subject;
+            self.subjectTemplate = subject;
         }
         NSString *body = [template objectForKey:MAVERemoteConfigKeyClientEmailBody];
         if (![body isEqual:[NSNull null]]) {
-            self.body = body;
+            self.bodyTemplate = body;
         }
-        if (!self.subject || !self.body) {
+        if (!self.subjectTemplate || !self.bodyTemplate) {
             return nil;
         }
     }
     return self;
+}
+
+- (NSString *)subject {
+    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.subjectTemplate];
+}
+
+- (NSString *)body {
+    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.bodyTemplate];
 }
 
 + (NSDictionary *)defaultJSONData {
