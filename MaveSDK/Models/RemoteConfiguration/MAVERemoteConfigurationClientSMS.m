@@ -8,10 +8,11 @@
 
 #import "MAVERemoteConfigurationClientSMS.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVETemplatingUtils.h"
 
 NSString * const MAVERemoteConfigKeyClientSMSTemplate = @"template";
 NSString * const MAVERemoteConfigKeyClientSMSTemplateID = @"template_id";
-NSString * const MAVERemoteConfigKeyClientSMSCopy = @"copy";
+NSString * const MAVERemoteConfigKeyClientSMSCopyTemplate = @"copy_template";
 
 
 @implementation MAVERemoteConfigurationClientSMS
@@ -24,16 +25,20 @@ NSString * const MAVERemoteConfigKeyClientSMSCopy = @"copy";
         if (![templateID isEqual:[NSNull null]]) {
             self.templateID = templateID;
         }
-        NSString *text = [template objectForKey:MAVERemoteConfigKeyClientSMSCopy];
+        NSString *text = [template objectForKey:MAVERemoteConfigKeyClientSMSCopyTemplate];
         if (![text isEqual:[NSNull null]]) {
-            self.text = text;
+            self.textTemplate = text;
         }
-        if (!self.text) {
+        if (!self.textTemplate) {
             return nil;
         }
         
     }
     return self;
+}
+
+- (NSString *)text {
+    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.textTemplate];
 }
 
 + (NSDictionary *)defaultJSONData {
@@ -42,7 +47,7 @@ NSString * const MAVERemoteConfigKeyClientSMSCopy = @"copy";
     return @{
         MAVERemoteConfigKeyClientSMSTemplate: @{
             MAVERemoteConfigKeyClientSMSTemplateID: @"0",
-            MAVERemoteConfigKeyClientSMSCopy: text,
+            MAVERemoteConfigKeyClientSMSCopyTemplate: text,
         },
 
     };

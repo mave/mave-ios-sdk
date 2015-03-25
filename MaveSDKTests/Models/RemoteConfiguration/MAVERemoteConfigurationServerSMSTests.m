@@ -72,7 +72,7 @@
     XCTAssertNil(obj.templateID);
 }
 
-- (void)testSMSCopy {
+- (void)testTextFillsInTemplate {
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
     NSString *templateString = @"{{ customData.foo }}";
     OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
