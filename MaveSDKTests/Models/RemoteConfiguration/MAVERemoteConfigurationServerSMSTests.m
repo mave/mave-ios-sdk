@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVERemoteConfigurationServerSMS.h"
+#import "MAVETemplatingUtils.h"
+#import "MaveSDK.h"
 
 @interface MAVERemoteConfigurationServerSMSTests : XCTestCase
 
@@ -32,7 +35,7 @@
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy"],
+    XCTAssertEqualObjects([template objectForKey:@"copy_template"],
                           @"Join me on DemoApp!");
 }
 
@@ -40,7 +43,7 @@
     MAVERemoteConfigurationServerSMS *obj = [[MAVERemoteConfigurationServerSMS alloc] initWithDictionary:[MAVERemoteConfigurationServerSMS defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.text, @"Join me on DemoApp!");
+    XCTAssertEqualObjects(obj.textTemplate, @"Join me on DemoApp!");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
@@ -60,13 +63,27 @@
                            @"enabled": @YES,
                            @"template": @{
                                    @"template_id": [NSNull null],
-                                   @"copy": @"foo",
+                                   @"copy_template": @"foo",
                                    }
                            };
     MAVERemoteConfigurationServerSMS *obj = [[MAVERemoteConfigurationServerSMS alloc] initWithDictionary:dict];
     XCTAssertNotNil(obj); // text is required so this will still be nil
     // should be nil, not nsnull
     XCTAssertNil(obj.templateID);
+}
+
+- (void)testSMSCopy {
+    id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
+    NSString *templateString = @"{{ customData.foo }}";
+    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+
+    MAVERemoteConfigurationServerSMS *serverSMSConfig = [[MAVERemoteConfigurationServerSMS alloc] init];
+    serverSMSConfig.textTemplate = templateString;
+
+    NSString *output = [serverSMSConfig smsCopy];
+
+    OCMVerifyAll(templatingUtilsMock);
+    XCTAssertEqualObjects(output, @"bar1");
 }
 
 @end
