@@ -8,10 +8,11 @@
 
 #import "MAVERemoteConfigurationClipboardShare.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVETemplatingUtils.h"
 
 NSString * const MAVERemoteConfigKeyClipboardShareTemplate = @"template";
 NSString * const MAVERemoteConfigKeyClipboardShareTemplateID = @"template_id";
-NSString * const MAVERemoteConfigKeyClipboardShareCopy = @"copy";
+NSString * const MAVERemoteConfigKeyClipboardShareCopy = @"copy_template";
 
 @implementation MAVERemoteConfigurationClipboardShare
 
@@ -25,14 +26,18 @@ NSString * const MAVERemoteConfigKeyClipboardShareCopy = @"copy";
         }
         NSString *text = [template objectForKey:MAVERemoteConfigKeyClipboardShareCopy];
         if (![text isEqual:[NSNull null]]) {
-            self.text = text;
+            self.textTemplate = text;
         }
-        if (!self.text) {
+        if (!self.textTemplate) {
             return nil;
         }
 
     }
     return self;
+}
+
+- (NSString *)text {
+    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.textTemplate];
 }
 
 + (NSDictionary *)defaultJSONData {
