@@ -8,10 +8,11 @@
 
 #import "MAVERemoteConfigurationTwitterShare.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVETemplatingUtils.h"
 
 NSString * const MAVERemoteConfigKeyTwitterShareTemplate = @"template";
 NSString * const MAVERemoteConfigKeyTwitterShareTemplateID = @"template_id";
-NSString * const MAVERemoteConfigKeyTwitterShareCopy = @"copy";
+NSString * const MAVERemoteConfigKeyTwitterShareCopy = @"copy_template";
 
 @implementation MAVERemoteConfigurationTwitterShare
 
@@ -25,14 +26,18 @@ NSString * const MAVERemoteConfigKeyTwitterShareCopy = @"copy";
         }
         NSString *text = [template objectForKey:MAVERemoteConfigKeyTwitterShareCopy];
         if (![text isEqual:[NSNull null]]) {
-            self.text = text;
+            self.textTemplate = text;
         }
-        if (!self.text) {
+        if (!self.textTemplate) {
             return nil;
         }
 
     }
     return self;
+}
+
+- (NSString *)text {
+    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.textTemplate];
 }
 
 + (NSDictionary *)defaultJSONData {
