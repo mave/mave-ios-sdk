@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define MAVEUserDataKeyUserID @"user_id"
+extern NSString * const MAVEUserDataKeyUserID;
 
 @interface MAVEUserData : NSObject
 
@@ -17,6 +17,7 @@
 @property (nonatomic, copy) NSString *lastName;
 @property (nonatomic, copy) NSString *email;
 @property (nonatomic, copy) NSString *phone;
+@property (nonatomic, copy) NSString *promoCode;
 
 // Internal flag, for use with anonymous users
 @property (nonatomic, assign) BOOL isSetAutomaticallyFromDevice;

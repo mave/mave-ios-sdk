@@ -11,10 +11,12 @@
 #import "MAVENameParsingUtils.h"
 #import "MAVEClientPropertyUtils.h"
 
-#define MAVEUserDataKeyFirstName @"first_name"
-#define MAVEUserDataKeyLastName @"last_name"
-#define MAVEUserDataKeyEmail @"email"
-#define MAVEUserDataKeyPhone @"phone"
+NSString * const MAVEUserDataKeyUserID = @"user_id";
+NSString * const MAVEUserDataKeyFirstName = @"first_name";
+NSString * const MAVEUserDataKeyLastName = @"last_name";
+NSString * const MAVEUserDataKeyEmail = @"email";
+NSString * const MAVEUserDataKeyPhone = @"phone";
+NSString * const MAVEUserDataKeyPromoCode = @"promo_code";
 
 @implementation MAVEUserData
 
@@ -58,6 +60,7 @@
         self.lastName = [dict objectForKey:MAVEUserDataKeyLastName];
         self.email = [dict objectForKey:MAVEUserDataKeyEmail];
         self.phone = [dict objectForKey:MAVEUserDataKeyPhone];
+        self.promoCode = [dict objectForKey:MAVEUserDataKeyPromoCode];
     }
     return self;
 }
@@ -80,11 +83,12 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
-    if (self.userID) [output setObject:self.userID forKey:MAVEUserDataKeyUserID];
-    if (self.firstName) [output setObject:self.firstName forKey:MAVEUserDataKeyFirstName];
-    if (self.lastName) [output setObject:self.lastName forKey:MAVEUserDataKeyLastName];
-    if (self.email) [output setObject:self.email forKey:MAVEUserDataKeyEmail];
-    if (self.phone) [output setObject:self.phone forKey:MAVEUserDataKeyPhone];
+    if (self.userID) [output setValue:self.userID forKey:MAVEUserDataKeyUserID];
+    if (self.firstName) [output setValue:self.firstName forKey:MAVEUserDataKeyFirstName];
+    if (self.lastName) [output setValue:self.lastName forKey:MAVEUserDataKeyLastName];
+    if (self.email) [output setValue:self.email forKey:MAVEUserDataKeyEmail];
+    if (self.phone) [output setValue:self.phone forKey:MAVEUserDataKeyPhone];
+    if (self.promoCode) [output setValue:self.promoCode forKey:MAVEUserDataKeyPromoCode];
     return (NSDictionary *)output;
 }
 
