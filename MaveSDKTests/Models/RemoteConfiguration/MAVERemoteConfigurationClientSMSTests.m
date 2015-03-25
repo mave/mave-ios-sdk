@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVERemoteConfigurationClientSMS.h"
+#import "MAVETemplatingUtils.h"
 
 @interface MAVERemoteConfigurationClientSMSTests : XCTestCase
 
@@ -32,7 +34,7 @@
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy"],
+    XCTAssertEqualObjects([template objectForKey:@"copy_template"],
                           @"Join me on DemoApp!");
 }
 
@@ -40,7 +42,7 @@
     MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:[MAVERemoteConfigurationClientSMS defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.text, @"Join me on DemoApp!");
+    XCTAssertEqualObjects(obj.textTemplate, @"Join me on DemoApp!");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
@@ -48,7 +50,7 @@
     NSDictionary *data = @{@"template": @{@"template_id": @"foo"}};
     MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:data];
 
-    data = @{@"template": @{@"template_id": @"foo", @"copy": [NSNull null]}};
+    data = @{@"template": @{@"template_id": @"foo", @"copy_template": [NSNull null]}};
     obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:data];
 
     XCTAssertNil(obj);
@@ -59,13 +61,27 @@
                            @"enabled": @YES,
                            @"template": @{
                                    @"template_id": [NSNull null],
-                                   @"copy": @"foo",
+                                   @"copy_template": @"foo",
                                    }
                            };
     MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:dict];
     // should be nil, not nsnull
     XCTAssertNotNil(obj);
     XCTAssertNil(obj.templateID);
+}
+
+- (void)testTextFillsInTemplate {
+    id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
+    NSString *templateString = @"{{ customData.foo }}";
+    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+
+    MAVERemoteConfigurationClientSMS *clientSMSConfig = [[MAVERemoteConfigurationClientSMS alloc] init];
+    clientSMSConfig.textTemplate = templateString;
+
+    NSString *output = [clientSMSConfig text];
+
+    OCMVerifyAll(templatingUtilsMock);
+    XCTAssertEqualObjects(output, @"bar1");
 }
 
 @end
