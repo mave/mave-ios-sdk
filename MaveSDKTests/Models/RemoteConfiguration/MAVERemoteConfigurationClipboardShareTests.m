@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVERemoteConfigurationClipboardShare.h"
+#import "MAVETemplatingUtils.h"
 
 @interface MAVERemoteConfigurationClipboardShareTests : XCTestCase
 
@@ -32,14 +34,14 @@
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy"], @"");
+    XCTAssertEqualObjects([template objectForKey:@"copy_template"], @"");
 }
 
 - (void)testInitFromDefaultData {
     MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:[MAVERemoteConfigurationClipboardShare defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.text, @"");
+    XCTAssertEqualObjects(obj.textTemplate, @"");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
@@ -48,7 +50,7 @@
     MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:data];
     XCTAssertNil(obj);
 
-    data = @{@"template": @{@"template_id": @"foo", @"copy": [NSNull null]}};
+    data = @{@"template": @{@"template_id": @"foo", @"copy_template": [NSNull null]}};
     obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:data];
     XCTAssertNil(obj);
 
@@ -59,13 +61,27 @@
                            @"enabled": @YES,
                            @"template": @{
                                    @"template_id": [NSNull null],
-                                   @"copy": @"foo",
+                                   @"copy_template": @"foo",
                                    }
                            };
     MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:dict];
     // should be nil, not nsnull
     XCTAssertNotNil(obj);
     XCTAssertNil(obj.templateID);
+}
+
+- (void)testTextFillsInTemplate {
+    id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
+    NSString *templateString = @"{{ customData.foo }}";
+    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+
+    MAVERemoteConfigurationClipboardShare *twitterShareConfig = [[MAVERemoteConfigurationClipboardShare alloc] init];
+    twitterShareConfig.textTemplate = templateString;
+
+    NSString *output = [twitterShareConfig text];
+
+    OCMVerifyAll(templatingUtilsMock);
+    XCTAssertEqualObjects(output, @"bar1");
 }
 
 
