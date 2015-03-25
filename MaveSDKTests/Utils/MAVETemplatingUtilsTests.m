@@ -77,8 +77,35 @@
     XCTAssertEqualObjects(output, expected);
 }
 
-- (void)testInterpolateTemplateStringNSNumberDictionaryValues {
+- (void)testConvertValueToStringFromVariousTypes {
+    id a = @2;
+    id b = @(2.129312);
+    id c = @(YES);
+    id d = [NSNull null];
+    id e = @"string";
+    id f = [[MAVEUserData alloc] init];
 
+    XCTAssertEqualObjects([MAVETemplatingUtils convertValueToString:a], @"2");
+    XCTAssertEqualObjects([MAVETemplatingUtils convertValueToString:b], @"2.129312");
+    XCTAssertEqualObjects([MAVETemplatingUtils convertValueToString:c], @"1");
+    XCTAssertEqualObjects([MAVETemplatingUtils convertValueToString:d], @"<null>");
+    XCTAssertEqualObjects([MAVETemplatingUtils convertValueToString:e], @"string");
+    XCTAssertNil([MAVETemplatingUtils convertValueToString:f]);
+}
+
+- (void)testInterpolateTemplateStringConvertsValuesToStrings {
+    NSDictionary *customData = @{@"a": @19, @"b": @(19.55), @"c": @(YES), @"d": [NSNull null], @"e": @"string", @"f": [[MAVEUserData alloc] init]};
+    NSString *templateString = @"a {{ customData.a }} b {{ customData.b }} c {{ customData.c }} d {{ customData.d }} e {{ customData.e }} f {{ customData.f }}";
+
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:templateString withUser:nil customData:customData];
+    NSString *expected = @"a 19 b 19.55 c 1 d <null> e string f ";
+    XCTAssertEqualObjects(output, expected);
+}
+
+- (void)testInterpolateTemplateStringSkipsNonStringKeys {
+    NSDictionary *customData = @{@(19): @"foo"};
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:@"{{ customData.19 }}" withUser:nil customData:customData];
+    XCTAssertEqualObjects(output, @"");
 }
 
 - (void)testInterpolateWithSingletonData {
