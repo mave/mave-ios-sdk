@@ -12,8 +12,10 @@
 @interface MAVERemoteConfigurationClientEmail : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic, copy) NSString *templateID;
-@property (nonatomic, copy) NSString *subject;
-@property (nonatomic, copy) NSString *body;
+@property (nonatomic, copy) NSString *subjectTemplate;
+- (NSString *)subject;
+@property (nonatomic, copy) NSString *bodyTemplate;
+- (NSString *)body;
 
 + (NSDictionary *)defaultJSONData;
 
