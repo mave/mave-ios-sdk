@@ -138,7 +138,7 @@ static dispatch_once_t sharedInstanceonceToken;
     if (_defaultSMSMessageText) {
         return _defaultSMSMessageText;
     } else {
-        return self.remoteConfiguration.serverSMS.text;
+        return self.remoteConfiguration.serverSMS.smsCopy;
     }
 }
 
