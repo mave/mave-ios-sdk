@@ -48,52 +48,13 @@
 }
 
 - (void)emailClientSideShare {
-    // TODO: use the data from the remote config
-    MFMailComposeViewController *mailController = [self _createMailComposeViewController];
-    NSString *subject = self.sharerObject.remoteConfiguration.clientEmail.subject;
-    NSString *message = [self.sharerObject shareCopyFromCopy:self.sharerObject.remoteConfiguration.clientEmail.body
-                      andLinkWithSubRouteLetter:@"e"];
-
-    mailController.mailComposeDelegate = self;
-    mailController.subject = subject;
-    [mailController setMessageBody:message isHTML:NO];
-
-    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientEmail];
-    
-    [self presentViewController:mailController animated:YES completion:nil];
-}
-- (MFMailComposeViewController *)_createMailComposeViewController {
-    return [[MFMailComposeViewController alloc] init];
-}
-
-- (void)mailComposeController:(MFMailComposeViewController *)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError *)error
-{
-    BOOL dismissSent = NO;
-
-    switch (result) {
-        case MFMailComposeResultSent:
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self.sharerObject shareToken] audience:nil];
-            dismissSent = YES;
-            break;
-
-        case MFMailComposeResultSaved:
-            break;
-        case MFMailComposeResultCancelled:
-            break;
-        case MFMailComposeResultFailed:
-            break;
-        default:
-            break;
-    }
-
-    // This dismisses the email compose view, so the share page
-    // is still active
-    [self dismissViewControllerAnimated:YES completion:nil];
-    if (dismissSent) {
-        [self dismissAfterShare];
-    }
+    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+        if (result == MFMailComposeResultSent) {
+            [self dismissAfterShare];
+        }
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)facebookiOSNativeShare {

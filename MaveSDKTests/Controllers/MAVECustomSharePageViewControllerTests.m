@@ -149,60 +149,24 @@
     OCMVerifyAll(sharerMock);
 }
 
-- (void)testClientEmailShare {
-    [self setupPartialMockForClientShareTests];
-    NSString *expectedSubject = @"Join DemoApp";
-    NSString *expectedBody = [NSString stringWithFormat:@"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\n%@e/foobarsharetoken", MAVEShortLinkBaseURL];
+#pragma mark - client Email
 
-    id mailComposerMock = OCMClassMock([MFMailComposeViewController class]);
-    OCMExpect([self.viewControllerMock _createMailComposeViewController]).andReturn(mailComposerMock);
-
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:@"client_email"]);
-
-    OCMExpect([self.viewControllerMock presentViewController:[OCMArg checkWithBlock:^BOOL(id obj) {
-        MFMailComposeViewController *controller = obj;
-        XCTAssertEqualObjects(controller, mailComposerMock);
+- (void)testClientSideEmailShareSent {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    id mock = OCMPartialMock(vc);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientEmailWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = obj;
+        completionBlock(nil, MFMailComposeResultSent);
         return YES;
-    }] animated:YES completion:nil]);
+    }]]);
+    OCMExpect([mock presentViewController:[OCMArg any] animated:YES completion:nil]);
+    OCMExpect([mock dismissAfterShare]);
 
-    OCMExpect([mailComposerMock setMailComposeDelegate:self.viewController]);
-    OCMExpect([mailComposerMock setSubject:expectedSubject]);
-    OCMExpect([mailComposerMock setMessageBody:expectedBody isHTML:NO]);
+    [vc emailClientSideShare];
 
-    [self.viewController emailClientSideShare];
-
-    OCMVerifyAll(self.viewControllerMock);
-    OCMVerifyAll(mailComposerMock);
-    OCMVerifyAll(apiInterfaceMock);
-}
-
-- (void)testClientEmailHandlerEmailSent {
-    [self setupPartialMockForClientShareTests];
-
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    OCMExpect([self.viewControllerMock dismissAfterShare]);
-    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
-    OCMExpect([apiInterfaceMock trackShareWithShareType:@"client_email" shareToken:[self.viewController.sharerObject shareToken] audience:nil]);
-
-    [self.viewController mailComposeController:nil didFinishWithResult:MFMailComposeResultSent error:nil];
-
-    OCMVerifyAll(self.viewControllerMock);
-    OCMVerifyAll(apiInterfaceMock);
-}
-
-- (void)testClientEmailHandlerEmailNotSent {
-    [self setupPartialMockForClientShareTests];
-
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    [[self.viewControllerMock reject] dismissAfterShare];
-    OCMExpect([self.viewControllerMock dismissViewControllerAnimated:YES completion:nil]);
-    [[apiInterfaceMock reject] trackShareWithShareType:@"client_email" shareToken:[self.viewController.sharerObject shareToken] audience:nil];
-
-    [self.viewController mailComposeController:nil didFinishWithResult:MFMailComposeResultCancelled error:nil];
-
-    OCMVerifyAll(self.viewControllerMock);
-    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
 }
 
 - (void)testFacebookiOSNativeShare {
