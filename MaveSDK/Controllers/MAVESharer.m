@@ -30,8 +30,11 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 - (void)releaseSelf {
     self.completionBlockClientSMS = nil;
+    self.completionBlockClientEmail = nil;
     self.retainedSelf = nil;
 }
+
+#pragma mark - client SMS
 
 + (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones completionBlock:(void (^)(MFMessageComposeViewController *controller, MessageComposeResult composeResult))completionBlock {
     if (![MFMessageComposeViewController canSendText]) {
@@ -81,6 +84,51 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     }
     [self releaseSelf];
 }
+
+#pragma mark - client Email
+
++ (MFMailComposeViewController *)composeClientEmailWithCompletionBlock:(void (^)(MFMailComposeViewController *, MFMailComposeResult))completionBlock {
+
+    MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
+    ownInstance.completionBlockClientEmail = completionBlock;
+
+    MFMailComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMailComposeViewController];
+    NSString *subject = ownInstance.remoteConfiguration.clientEmail.subject;
+    NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.clientEmail.body
+                                   andLinkWithSubRouteLetter:@"e"];
+
+    composeVC.mailComposeDelegate = ownInstance;
+    composeVC.subject = subject;
+    [composeVC setMessageBody:message isHTML:NO];
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientEmail];
+    return composeVC;
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    switch (result) {
+        case MFMailComposeResultSent: {
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self shareToken] audience:nil];
+            break;
+        }
+        case MFMailComposeResultFailed: {
+            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send Email" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [warningAlert show];
+            break;
+        }
+        case MFMailComposeResultSaved: {
+            break;
+        }
+        case MFMailComposeResultCancelled: {
+            break;
+        }
+    }
+    if (self.completionBlockClientEmail) {
+        self.completionBlockClientEmail(controller, result);
+    }
+    [self releaseSelf];
+}
+
 
 #pragma mark - Helpers for building share content
 - (MAVERemoteConfiguration *)remoteConfiguration {
@@ -143,6 +191,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 + (MFMessageComposeViewController *)MFMessageComposeViewController {
     return [[MFMessageComposeViewController alloc] init];
+}
++ (MFMailComposeViewController *)MFMailComposeViewController {
+    return [[MFMailComposeViewController alloc] init];
 }
 
 @end

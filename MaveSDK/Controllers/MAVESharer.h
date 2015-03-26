@@ -16,10 +16,11 @@ extern NSString * const MAVESharePageShareTypeFacebook;
 extern NSString * const MAVESharePageShareTypeTwitter;
 extern NSString * const MAVESharePageShareTypeClipboard;
 
-@interface MAVESharer : NSObject <MFMessageComposeViewControllerDelegate>
+@interface MAVESharer : NSObject <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) MAVESharer *retainedSelf;
 @property (nonatomic, strong) void(^completionBlockClientSMS)(MFMessageComposeViewController *controller, MessageComposeResult composeResult);
+@property (nonatomic, strong) void(^completionBlockClientEmail)(MFMailComposeViewController *controller, MFMailComposeResult result);
 
 - (instancetype)initAndRetainSelf;
 - (void)releaseSelf;
@@ -27,9 +28,8 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 //
 // Methods to compose and share, they return UIViewControllers that need to be presented to display the compose views
 //
-+ (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones
-                                              completionBlock:(void(^)(MFMessageComposeViewController *controller,
-                                                                       MessageComposeResult composeResult))completionBlock;
++ (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones completionBlock:(void(^)(MFMessageComposeViewController *controller, MessageComposeResult composeResult))completionBlock;
++ (MFMailComposeViewController *)composeClientEmailWithCompletionBlock:(void(^)(MFMailComposeViewController *controller, MFMailComposeResult result))completionBlock;
 //
 // Helpers
 //
@@ -48,5 +48,6 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 
 + (MAVESharer *)sharerInstanceRetained;
 + (MFMessageComposeViewController *)MFMessageComposeViewController;
++ (MFMailComposeViewController *)MFMailComposeViewController;
 
 @end

@@ -43,6 +43,8 @@
     XCTAssertNil(obj.retainedSelf);
 }
 
+#pragma mark - client SMS
+
 - (void)testComposeClientSMSInvite {
     NSArray *recipientPhones = @[@"+18085551234", @"86753"];
 
@@ -179,7 +181,88 @@
     OCMVerifyAll(messageComposeVCMock);
 }
 
+#pragma mark - client Email
 
+- (void)testComposeClientEmailInvite {
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:MAVESharePageShareTypeClientEmail]);
+
+    // use a mock of the vc
+    id emailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock MFMailComposeViewController]).andReturn(emailComposeVCMock);
+    MAVESharer *sharerInstance = [[MAVESharer alloc] init];
+    OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
+
+    OCMExpect([emailComposeVCMock setMailComposeDelegate:sharerInstance]);
+
+    // email message subject and body
+    NSString *expectedMessageSubject = sharerInstance.remoteConfiguration.clientEmail.subject;
+    XCTAssertGreaterThan([expectedMessageSubject length], 0);
+    OCMExpect([emailComposeVCMock setSubject:expectedMessageSubject]);
+    NSString *expectedMessageBody = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clientEmail.body andLinkWithSubRouteLetter:@"e"];
+    XCTAssertGreaterThan([expectedMessageBody length], 0);
+    OCMExpect([emailComposeVCMock setMessageBody:expectedMessageBody isHTML:NO]);
+
+    void (^myCompletionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = ^void(MFMailComposeViewController *controller, MFMailComposeResult result) {};
+
+    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:myCompletionBlock];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqualObjects(vc, emailComposeVCMock);
+    XCTAssertEqualObjects(sharerInstance.completionBlockClientEmail, myCompletionBlock);
+
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(emailComposeVCMock);
+    OCMVerifyAll(builderMock);
+}
+
+
+- (void)testComposeClientEmailCompletionBlockSuccess {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block MFMailComposeResult returnedResult;
+    sharer.completionBlockClientEmail = ^void(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398akj";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:fakeToken audience:nil]);
+
+    id emailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[emailComposeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+    [sharer mailComposeController:emailComposeVCMock didFinishWithResult:MFMailComposeResultSent error:nil];
+
+    XCTAssertEqual(returnedResult, MFMailComposeResultSent);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockClientEmail);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(emailComposeVCMock);
+}
+
+- (void)testComposeClientEmailCompletionBlockCancelled {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block MFMailComposeResult returnedResult;
+    sharer.completionBlockClientEmail = ^void(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        returnedResult = result;
+    };
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[OCMArg any] audience:nil];
+    id emailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    [[emailComposeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    [sharer mailComposeController:emailComposeVCMock didFinishWithResult:MFMailComposeResultCancelled error:nil];
+
+    XCTAssertEqual(returnedResult, MFMailComposeResultCancelled);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockClientEmail);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(emailComposeVCMock);
+}
 
 #pragma mark - Helpers for building share content
 - (void)testShareToken {
