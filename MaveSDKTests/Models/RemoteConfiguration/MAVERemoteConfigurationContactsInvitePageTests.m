@@ -33,7 +33,9 @@
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
 
-    XCTAssertNil([template objectForKey:@"explanation_copy"]);
+    XCTAssertEqual([template objectForKey:@"explanation_copy"],
+                   [NSNull null]);
+    XCTAssertFalse([template objectForKey:@"share_buttons_enabled"]);
     XCTAssertFalse([[template objectForKey:@"suggested_invites_enabled"] boolValue]);
     XCTAssertEqualObjects([template objectForKey:@"sms_invite_send_method"], @"server_side");
 }
@@ -45,6 +47,7 @@
     XCTAssertTrue(obj.enabled);
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertNil(obj.explanationCopy);
+    XCTAssertFalse(obj.shareButtonsEnabled);
     XCTAssertFalse(obj.suggestedInvitesEnabled);
     XCTAssertEqual(obj.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
 }
@@ -66,6 +69,7 @@
         @"template": @{
             @"template_id": @"1",
             @"explanation_copy": @"some copy",
+            @"share_buttons_enabled": @YES,
             @"suggested_invites_enabled": @YES,
         }
     };
@@ -76,6 +80,7 @@
     XCTAssertNotNil(obj);
     XCTAssertEqualObjects(obj.templateID, @"1");
     XCTAssertEqualObjects(obj.explanationCopy, @"some copy");
+    XCTAssertTrue(obj.shareButtonsEnabled);
     XCTAssertTrue(obj.suggestedInvitesEnabled);
 }
 
