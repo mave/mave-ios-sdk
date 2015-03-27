@@ -15,13 +15,16 @@
 
 @interface MAVEInviteTableHeaderView : UIView
 
-@property (readonly, assign) BOOL showsExplanation;
-@property (readonly, assign) BOOL showsShareButtons;
+@property (nonatomic, assign) BOOL showsExplanation;
+@property (nonatomic, assign) BOOL showsShareButtons;
 
+@property (nonatomic, weak) id<MAVESharePageDelegate>shareDelegate;
 @property (nonatomic, strong) MAVEInviteExplanationView *inviteExplanationView;
+@property (nonatomic, strong) MAVEShareIconsView *shareButtonsView;
 @property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
-@property (nonatomic, strong) MAVEShareIconsView *shareButtonsView;
+
+- (instancetype)initWithShareDelegate:(id<MAVESharePageDelegate>)shareDelegate;
 
 // This method determines whether or not we need to display this
 // view at all. Currently, the only content to show is explanation

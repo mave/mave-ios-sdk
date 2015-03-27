@@ -62,7 +62,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     [self.tableView addSubview:self.aboveTableContentView];
 
     // Set up the header view
-    self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] init];
+    self.inviteTableHeaderView = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:self.parentViewController];
     self.inviteTableHeaderView.searchBar.delegate = self;
     self.inviteTableHeaderView.searchBar.hidden = NO;
     self.tableView.tableHeaderView = self.inviteTableHeaderView;

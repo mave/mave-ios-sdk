@@ -466,4 +466,12 @@
 
 #pragma mark - Share Icon delegate methods
 
+- (void)smsClientSideShare {
+    NSLog(@"client side sms");
+}
+
+- (void)emailClientSideShare {
+    NSLog(@"client side emailss");
+}
+
 @end

@@ -30,15 +30,21 @@
     [super tearDown];
 }
 
-- (void)testInit {
+- (void)testInitWithDelegate {
+    MAVECustomSharePageViewController *delegate = [[MAVECustomSharePageViewController alloc] init];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
-    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:delegate];
+    view.showsShareButtons = YES;
 
     // Invite explanation view is present b/c copy is set
     XCTAssertGreaterThan([[MaveSDK sharedInstance].inviteExplanationCopy length], 0);
     XCTAssertTrue(view.showsExplanation);
     XCTAssertTrue([view.inviteExplanationView isDescendantOfView:view]);
     XCTAssertFalse(view.inviteExplanationView.hidden);
+
+    XCTAssertEqualObjects(view.shareDelegate, delegate);
+    XCTAssertEqualObjects(view.shareButtonsView.delegate, delegate);
+    XCTAssertTrue([view.shareButtonsView isDescendantOfView:view]);
 
     // Search bar top border
     XCTAssertEqual(view.searchBarTopBorder.frame.size.height, 1);
