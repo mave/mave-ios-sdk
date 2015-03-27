@@ -474,4 +474,16 @@
     NSLog(@"client side emailss");
 }
 
+- (void)facebookiOSNativeShare {
+    NSLog(@"facebook native share");
+}
+
+- (void)twitteriOSNativeShare {
+    NSLog(@"twitter native share");
+}
+
+- (void)clipboardShare {
+    NSLog(@"clipboard share");
+}
+
 @end
