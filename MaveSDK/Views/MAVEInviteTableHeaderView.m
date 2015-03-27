@@ -47,8 +47,8 @@
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:self.searchBar];
 
-//    self.shareIconsView = [[MAVEShareIconsView alloc] initWithDelegate:nil];
-//    [self addSubview:self.shareIconsView];
+    self.shareIconsView = [[MAVEShareIconsView alloc] initWithDelegate:nil iconColor:displayOptions.inviteExplanationShareButtonsColor iconFont:displayOptions.inviteExplanationShareButtonsFont backgroundColor:displayOptions.inviteExplanationShareButtonsBackgroundColor];
+    [self addSubview:self.shareIconsView];
 }
 
 - (BOOL)hasContentOtherThanSearchBar {
@@ -69,17 +69,17 @@
         self.inviteExplanationView.frame = newInviteExplanationViewRect;
     }
 
-    CGRect searchBarTopBorderFrame = self.searchBarTopBorder.frame;
-    searchBarTopBorderFrame.origin.y = inviteExplanationViewHeight;
-    searchBarTopBorderFrame.size.width = frame.size.width;
-    self.searchBarTopBorder.frame = searchBarTopBorderFrame;
-    [self bringSubviewToFront:self.searchBarTopBorder];
-
-    CGFloat shareIconsHeight = [self.shareIconsView shareButtonSize].height;
+    CGFloat shareIconsHeight = [self.shareIconsView sizeThatFits:frame.size].height;
     self.shareIconsView.frame = CGRectMake(0,
                                            inviteExplanationViewHeight,
                                            frame.size.width,
                                            shareIconsHeight);
+
+    CGRect searchBarTopBorderFrame = self.searchBarTopBorder.frame;
+    searchBarTopBorderFrame.origin.y = inviteExplanationViewHeight + shareIconsHeight;
+    searchBarTopBorderFrame.size.width = frame.size.width;
+    self.searchBarTopBorder.frame = searchBarTopBorderFrame;
+    [self bringSubviewToFront:self.searchBarTopBorder];
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {
@@ -88,7 +88,7 @@
         height += [self.inviteExplanationView computeHeightWithWidth:width];
     }
 
-    height += [self.shareIconsView shareButtonSize].height;
+    height += [self.shareIconsView sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)].height;
 
     height += self.searchBar.frame.size.height;
 

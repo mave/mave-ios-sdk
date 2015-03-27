@@ -55,6 +55,10 @@
     XCTAssertEqualObjects(opts.inviteExplanationTextColor, almostBlack);
     XCTAssertEqualObjects(opts.inviteExplanationCellBackgroundColor, extraLightGrey);
 
+    XCTAssertEqualObjects(opts.inviteExplanationShareButtonsColor, blueTint);
+    XCTAssertEqualObjects(opts.inviteExplanationShareButtonsFont, smallerFont);
+    XCTAssertEqualObjects(opts.inviteExplanationShareButtonsBackgroundColor, extraLightGrey);
+
     // Search Bar
     XCTAssertEqualObjects(opts.searchBarFont, defaultFont);
     XCTAssertEqualObjects(opts.searchBarPlaceholderTextColor, mediumGrey);
@@ -106,6 +110,16 @@
     XCTAssertTrue([opts.navigationBarTitleTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.navigationBarTitleFont isKindOfClass:[UIFont class]]);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
+
+    // Invite explanation section
+    XCTAssertGreaterThan([opts.inviteExplanationCopy length], 0);
+    XCTAssertTrue([opts.inviteExplanationFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.inviteExplanationTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.inviteExplanationCellBackgroundColor isKindOfClass:[UIColor class]]);
+
+    XCTAssertTrue([opts.inviteExplanationShareButtonsColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.inviteExplanationShareButtonsFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.inviteExplanationShareButtonsBackgroundColor isKindOfClass:[UIColor class]]);
 
     // Search Bar
     XCTAssertTrue([opts.searchBarFont isKindOfClass:[UIFont class]]);

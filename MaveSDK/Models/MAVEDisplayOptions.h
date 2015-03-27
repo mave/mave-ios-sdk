@@ -36,10 +36,14 @@
 @property (nonatomic, strong) UIBarButtonItem *navigationBarForwardButton;
 
 // Explanation of how the referral program works section
-@property (nonatomic, copy) NSString *inviteExplanationCopy;
-@property (nonatomic, strong) UIFont   *inviteExplanationFont;
-@property (nonatomic, strong) UIColor  *inviteExplanationTextColor;
-@property (nonatomic, strong) UIColor  *inviteExplanationCellBackgroundColor;
+@property (nonatomic, copy) NSString  *inviteExplanationCopy;
+@property (nonatomic, strong) UIFont  *inviteExplanationFont;
+@property (nonatomic, strong) UIColor *inviteExplanationTextColor;
+@property (nonatomic, strong) UIColor *inviteExplanationCellBackgroundColor;
+
+@property (nonatomic, strong) UIColor *inviteExplanationShareButtonsColor;
+@property (nonatomic, strong) UIFont  *inviteExplanationShareButtonsFont;
+@property (nonatomic, strong) UIColor *inviteExplanationShareButtonsBackgroundColor;
 
 // Search bar options
 @property (nonatomic, strong) UIFont *searchBarFont;
