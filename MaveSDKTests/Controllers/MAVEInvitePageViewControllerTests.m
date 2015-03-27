@@ -70,7 +70,7 @@
 }
 
 
-- (void)testLayoutInviteExplanationBoxWhenCopyNotNil {
+- (void)testLayoutInviteExplanationBoxToComputedHeightIfContent {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
 
@@ -99,11 +99,15 @@
     XCTAssertTrue(CGRectEqualToRect(aboveViewFrame, expectedAboveViewFrame));
 }
 
-- (void)testLayoutInviteExplanationBoxIfCopyIsEmpty {
+- (void)testLayoutInviteExplanationBoxIfCopyAndShareButtonsNotDisplayed {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"1231234"];
     id sdkMock = OCMPartialMock([MaveSDK sharedInstance]);
     OCMExpect([sdkMock inviteExplanationCopy]).andReturn(nil);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    remoteConfig.contactsInvitePage.shareButtonsEnabled = NO;
+    OCMExpect([sdkMock remoteConfiguration]).andReturn(remoteConfig);
 
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     [ipvc loadView]; [ipvc viewDidLoad];
@@ -116,7 +120,6 @@
     OCMVerifyAll(sdkMock);
 }
 
-//
 - (void)testRespondAsAdditionalTableViewDelegate {
     id mock = [OCMockObject mockForClass:[MAVEInviteMessageView class]];
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
