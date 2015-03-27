@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVECustomSharePageViewController.h"
-#import "MAVEShareIconsView.h"
+#import "MAVEShareButtonsView.h"
 
 @interface MAVECustomSharePageView : UIView
 
 @property (nonatomic, weak) MAVECustomSharePageViewController *delegate;
 @property (nonatomic, strong) UILabel *shareExplanationLabel;
-@property (nonatomic, strong) MAVEShareIconsView *shareIconsView;
+@property (nonatomic, strong) MAVEShareButtonsView *shareIconsView;
 
 - (instancetype)initWithDelegate:(MAVECustomSharePageViewController *)delegate;
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MAVEInviteExplanationView.h"
 #import "MAVESearchBar.h"
-#import "MAVEShareIconsView.h"
+#import "MAVEShareButtonsView.h"
 
 #define MAVE_DEFAULT_SEARCH_BAR_HEIGHT 44
 
@@ -18,13 +18,13 @@
 @property (nonatomic, assign) BOOL showsExplanation;
 @property (nonatomic, assign) BOOL showsShareButtons;
 
-@property (nonatomic, weak) id<MAVESharePageDelegate>shareDelegate;
+@property (nonatomic, weak) id<MAVEShareButtonsDelegate>shareDelegate;
 @property (nonatomic, strong) MAVEInviteExplanationView *inviteExplanationView;
-@property (nonatomic, strong) MAVEShareIconsView *shareButtonsView;
+@property (nonatomic, strong) MAVEShareButtonsView *shareButtonsView;
 @property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 
-- (instancetype)initWithShareDelegate:(id<MAVESharePageDelegate>)shareDelegate;
+- (instancetype)initWithShareDelegate:(id<MAVEShareButtonsDelegate>)shareDelegate;
 
 // This method determines whether or not we need to display this
 // view at all. Currently, the only content to show is explanation

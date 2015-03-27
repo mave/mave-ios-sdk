@@ -6,7 +6,7 @@
 //
 //
 
-#import "MAVEShareIconsView.h"
+#import "MAVEShareButtonsView.h"
 #import "MAVEConstants.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEBuiltinUIElementUtils.h"
@@ -16,9 +16,9 @@
 CGFloat const MAVEShareIconsViewVerticalPadding = 10;
 
 
-@implementation MAVEShareIconsView
+@implementation MAVEShareButtonsView
 
-- (instancetype)initWithDelegate:(id<MAVESharePageDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor {
+- (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor {
     if (self = [super init]) {
         self.delegate = delegate;
         self.iconColor = iconColor;

@@ -11,9 +11,9 @@
 #import <MessageUI/MessageUI.h>
 #import "MAVERemoteConfiguration.h"
 #import "MAVESharer.h"
-#import "MAVEShareIconsView.h"
+#import "MAVEShareButtonsView.h"
 
-@interface MAVECustomSharePageViewController: UIViewController <MAVESharePageDelegate>
+@interface MAVECustomSharePageViewController: UIViewController <MAVEShareButtonsDelegate>
 
 @property (nonatomic, strong) MAVESharer *sharerObject;
 

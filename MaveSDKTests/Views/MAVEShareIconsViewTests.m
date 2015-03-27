@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "MAVEShareIconsView.h"
+#import "MAVEShareButtonsView.h"
 #import "MaveSDK.h"
 #import "MAVEBuiltinUIElementUtils.h"
 #import "MAVECustomSharePageView.h"
@@ -38,7 +38,7 @@
     UIFont *iconFont = [UIFont systemFontOfSize:11.35];
 
 
-    MAVEShareIconsView *view = [[MAVEShareIconsView alloc] initWithDelegate:delegate iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:delegate iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor];
 
     XCTAssertEqualObjects(view.delegate, delegate);
     XCTAssertNil(view.shareButtons);
@@ -57,7 +57,7 @@
     id uiUtilsMock = OCMClassMock([MAVEBuiltinUIElementUtils class]);
     OCMExpect([uiUtilsMock tintWhitesInImage:[OCMArg any] withColor:iconColor]);
 
-    MAVEShareIconsView *view = [[MAVEShareIconsView alloc] initWithDelegate:nil iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:nil iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor];
     UIButton *button = [view genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png" andLabelText:@"FooBar"];
 
     OCMVerifyAll(uiUtilsMock);
