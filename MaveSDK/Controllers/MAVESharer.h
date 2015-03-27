@@ -37,8 +37,8 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 + (SLComposeViewController *)composeTwitterNativeShareWithCompletionBlock:(void(^)(SLComposeViewController *controller, SLComposeViewControllerResult result)) completionBlock;
 
 // Extra completion methods
-- (void)facebookHandleShareResult:(SLComposeViewControllerResult)result;
-- (void)twitterHandleShareResult:(SLComposeViewControllerResult)result;
+- (void)facebookNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result;
+- (void)twitterNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result;
 
 //
 // Helpers

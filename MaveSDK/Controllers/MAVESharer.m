@@ -140,16 +140,31 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
     [composeVC setInitialText:message];
     [composeVC addURL:[NSURL URLWithString:url]];
+    __weak SLComposeViewController *weakComposeVC = composeVC;
     composeVC.completionHandler = ^(SLComposeViewControllerResult result){
-        [ownInstance facebookHandleShareResult:result];
+        [ownInstance facebookNativeShareController:weakComposeVC didFinishWithResult:result];
     };
 
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeFacebook];
     return composeVC;
 }
 
-- (void)facebookHandleShareResult:(SLComposeViewControllerResult)result {
+- (void)facebookNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result {
+    switch (result) {
+        case SLComposeViewControllerResultDone: {
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[self shareToken] audience:nil];
+        } case SLComposeViewControllerResultCancelled: {
+            break;
+        }
+        default:
+            break;
+    }
 
+    if (self.completionBlockFacebookNativeShare) {
+        self.completionBlockFacebookNativeShare(controller, result);
+    }
+    self.completionBlockFacebookNativeShare = nil;
+    [self releaseSelf];
 }
 
 + (SLComposeViewController *)composeTwitterNativeShareWithCompletionBlock:(void (^)(SLComposeViewController *, SLComposeViewControllerResult))completionBlock {
@@ -161,16 +176,28 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.twitterShare.text
                                    andLinkWithSubRouteLetter:@"t"];
     [composeVC setInitialText:message];
+    __weak SLComposeViewController *weakComposeVC = composeVC;
     composeVC.completionHandler = ^(SLComposeViewControllerResult result) {
-        [ownInstance twitterHandleShareResult:result];
+        [ownInstance twitterNativeShareController:weakComposeVC didFinishWithResult:result];
     };
 
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeTwitter];
     return composeVC;
 }
 
-- (void)twitterHandleShareResult:(SLComposeViewControllerResult)result {
-
+- (void)twitterNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result {
+    switch (result) {
+        case SLComposeViewControllerResultDone: {
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[self shareToken] audience:nil];
+        } case SLComposeViewControllerResultCancelled: {
+            break;
+        }
+    }
+    if (self.completionBlockTwitterNativeShare) {
+        self.completionBlockTwitterNativeShare(controller, result);
+    }
+    self.completionBlockTwitterNativeShare = nil;
+    [self releaseSelf];
 }
 
 

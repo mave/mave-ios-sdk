@@ -300,6 +300,33 @@
     OCMVerifyAll(builderMock);
 }
 
+- (void)testComposeFacebookNativeCompletionSuccess {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block SLComposeViewControllerResult returnedResult;
+    sharer.completionBlockFacebookNativeShare = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398akk";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:fakeToken audience:nil]);
+
+    id composeVCMock = OCMClassMock([SLComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[composeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    // run code under test
+    [sharer facebookNativeShareController:composeVCMock didFinishWithResult:SLComposeViewControllerResultDone];
+
+    XCTAssertEqual(returnedResult, SLComposeViewControllerResultDone);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockFacebookNativeShare);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(composeVCMock);
+}
+
 #pragma mark - native Twitter share widget
 
 - (void)testComposeTwitterNativeShare {
@@ -331,6 +358,33 @@
     OCMVerifyAll(apiInterfaceMock);
     OCMVerifyAll(socialComposeVCMock);
     OCMVerifyAll(builderMock);
+}
+
+- (void)testComposeTwitterNativeCompletionSuccess {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block SLComposeViewControllerResult returnedResult;
+    sharer.completionBlockTwitterNativeShare = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398ako";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:fakeToken audience:nil]);
+
+    id composeVCMock = OCMClassMock([SLComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[composeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    // run code under test
+    [sharer twitterNativeShareController:composeVCMock didFinishWithResult:SLComposeViewControllerResultDone];
+
+    XCTAssertEqual(returnedResult, SLComposeViewControllerResultDone);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockTwitterNativeShare);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(composeVCMock);
 }
 
 #pragma mark - Helpers for building share content
