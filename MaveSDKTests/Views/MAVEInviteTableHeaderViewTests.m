@@ -33,8 +33,13 @@
 - (void)testInitWithDelegate {
     MAVECustomSharePageViewController *delegate = [[MAVECustomSharePageViewController alloc] init];
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    remoteConfig.contactsInvitePage.shareButtonsEnabled = YES;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
     MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:delegate];
-    view.showsShareButtons = YES;
 
     // Invite explanation view is present b/c copy is set
     XCTAssertGreaterThan([[MaveSDK sharedInstance].inviteExplanationCopy length], 0);
