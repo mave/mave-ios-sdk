@@ -17,8 +17,7 @@
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
 #import "MAVESearchBar.h"
-
-#import <Social/Social.h>
+#import "MAVESharer.h"
 
 #define IS_IOS7_OR_BELOW ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)
 
@@ -467,23 +466,31 @@
 #pragma mark - Share Icon delegate methods
 
 - (void)smsClientSideShare {
-    NSLog(@"client side sms");
+    MAVEDebugLog(@"Doing client side sms share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)emailClientSideShare {
-    NSLog(@"client side emailss");
+    MAVEDebugLog(@"Doing client side email share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)facebookiOSNativeShare {
-    NSLog(@"facebook native share");
+    MAVEDebugLog(@"Doing client side native facebook share from contacts invite page");
 }
 
 - (void)twitteriOSNativeShare {
-    NSLog(@"twitter native share");
+    MAVEDebugLog(@"Doing client side native twitter share from contacts invite page");
 }
 
 - (void)clipboardShare {
-    NSLog(@"clipboard share");
+    MAVEDebugLog(@"Doing clipboard copy from contacts invite page");
 }
 
 @end

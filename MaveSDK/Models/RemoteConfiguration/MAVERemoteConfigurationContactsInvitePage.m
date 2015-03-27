@@ -49,6 +49,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
             if (shareButtonsEnabled != (id)[NSNull null]) {
                 self.shareButtonsEnabled = [shareButtonsEnabled boolValue];
             }
+            self.shareButtonsEnabled = YES;
 
             id suggestedInvitesVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled];
             if (suggestedInvitesVal && (id)suggestedInvitesVal != [NSNull null]) {
