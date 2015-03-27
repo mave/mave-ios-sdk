@@ -27,8 +27,6 @@ CGFloat const MAVEShareIconsViewVerticalPadding = 10;
         self.backgroundColor = backgroundColor;
 
         self.allowIncludeSMSIcon = YES;
-        
-        [self setupShareButtons];
     }
     return self;
 }
@@ -68,6 +66,10 @@ CGFloat const MAVEShareIconsViewVerticalPadding = 10;
 }
 
 - (void)layoutSubviews {
+    if (!self.shareButtons) {
+        [self setupShareButtons];
+    }
+
     CGSize totalFrameSize = self.frame.size;
 
     CGSize shareButtonSize = [self shareButtonSize];

@@ -31,7 +31,7 @@
         self.inviteExplanationTextColor = [[self class] colorAlmostBlack];
         self.inviteExplanationCellBackgroundColor = [[self class] colorExtraLightGrey];
 
-        self.inviteExplanationShareButtonsColor = [[self class] colorBlueTint];
+        self.inviteExplanationShareButtonsColor = [[self class] colorMediumGrey];
         self.inviteExplanationShareButtonsFont = [UIFont systemFontOfSize:14];
         self.inviteExplanationShareButtonsBackgroundColor = [[self class] colorExtraLightGrey];
 

@@ -55,7 +55,7 @@
     XCTAssertEqualObjects(opts.inviteExplanationTextColor, almostBlack);
     XCTAssertEqualObjects(opts.inviteExplanationCellBackgroundColor, extraLightGrey);
 
-    XCTAssertEqualObjects(opts.inviteExplanationShareButtonsColor, blueTint);
+    XCTAssertEqualObjects(opts.inviteExplanationShareButtonsColor, mediumGrey);
     XCTAssertEqualObjects(opts.inviteExplanationShareButtonsFont, smallerFont);
     XCTAssertEqualObjects(opts.inviteExplanationShareButtonsBackgroundColor, extraLightGrey);
 

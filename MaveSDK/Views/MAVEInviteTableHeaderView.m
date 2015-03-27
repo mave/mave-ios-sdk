@@ -65,23 +65,35 @@
 
     CGRect frame = self.frame;
     CGFloat inviteExplanationViewHeight = 0;
+    CGFloat searchBarTopY = 0;
     if (self.showsExplanation) {
         // Reposition the inviteExplanationView based on width of text
         inviteExplanationViewHeight = ceil([self.inviteExplanationView
                                             computeHeightWithWidth:frame.size.width]);
+        searchBarTopY = inviteExplanationViewHeight;
         CGRect newInviteExplanationViewRect = CGRectMake(0, 0, frame.size.width,
                                                          inviteExplanationViewHeight);
         self.inviteExplanationView.frame = newInviteExplanationViewRect;
     }
 
-    CGFloat shareIconsHeight = [self.shareButtonsView sizeThatFits:frame.size].height;
-    self.shareButtonsView.frame = CGRectMake(0,
-                                           inviteExplanationViewHeight,
+    CGFloat shareButtonsHeight = 0;
+    if (self.showsShareButtons) {
+        shareButtonsHeight = [self.shareButtonsView sizeThatFits:frame.size].height;
+        CGFloat yoffset = 0;
+        if (self.showsExplanation) {
+            // take off the invite explanation margin so there's less space between share
+            // buttons and explanation copy
+            yoffset = inviteExplanationViewHeight - 15;
+        }
+        searchBarTopY = yoffset + shareButtonsHeight;
+        self.shareButtonsView.frame = CGRectMake(0,
+                                           yoffset,
                                            frame.size.width,
-                                           shareIconsHeight);
+                                           shareButtonsHeight);
+    }
 
     CGRect searchBarTopBorderFrame = self.searchBarTopBorder.frame;
-    searchBarTopBorderFrame.origin.y = inviteExplanationViewHeight + shareIconsHeight;
+    searchBarTopBorderFrame.origin.y =  searchBarTopY;
     searchBarTopBorderFrame.size.width = frame.size.width;
     self.searchBarTopBorder.frame = searchBarTopBorderFrame;
     [self bringSubviewToFront:self.searchBarTopBorder];
@@ -93,7 +105,14 @@
         height += [self.inviteExplanationView computeHeightWithWidth:width];
     }
 
-    height += [self.shareButtonsView sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)].height;
+    if (self.showsShareButtons) {
+        height += [self.shareButtonsView sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)].height;
+        if (self.showsExplanation) {
+            // take off the invite explanation margin so there's less space between share
+            // buttons and explanation copy
+            height -= 15;
+        }
+    }
 
     height += self.searchBar.frame.size.height;
 
