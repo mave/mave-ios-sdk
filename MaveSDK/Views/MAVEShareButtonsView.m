@@ -112,8 +112,8 @@ CGFloat const MAVEShareIconsViewVerticalPadding = 10;
         tmpLabelSize = [button.titleLabel.text
                         sizeWithAttributes:@{NSFontAttributeName:button.titleLabel.font}];
         tmpHeight = button.imageView.image.size.height +
-        button.paddingBetweenImageAndText +
-        tmpLabelSize.height;
+            button.paddingBetweenImageAndText +
+            tmpLabelSize.height;
         if (tmpHeight > size.height) {
             size.height = tmpHeight;
         }
