@@ -129,6 +129,50 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     [self releaseSelf];
 }
 
++ (SLComposeViewController *)composeFacebookNativeShareWithCompletionBlock:(void (^)(SLComposeViewController *, SLComposeViewControllerResult))completionBlock {
+
+    MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
+    ownInstance.completionBlockFacebookNativeShare = completionBlock;
+
+    SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewController];
+    NSString *message = ownInstance.remoteConfiguration.facebookShare.text;
+    NSString *url = [ownInstance shareLinkWithSubRouteLetter:@"f"];
+
+    [composeVC setInitialText:message];
+    [composeVC addURL:[NSURL URLWithString:url]];
+    composeVC.completionHandler = ^(SLComposeViewControllerResult result){
+        [ownInstance facebookHandleShareResult:result];
+    };
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeFacebook];
+    return composeVC;
+}
+
+- (void)facebookHandleShareResult:(SLComposeViewControllerResult)result {
+
+}
+
++ (SLComposeViewController *)composeTwitterNativeShareWithCompletionBlock:(void (^)(SLComposeViewController *, SLComposeViewControllerResult))completionBlock {
+
+    MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
+    ownInstance.completionBlockTwitterNativeShare = completionBlock;
+
+    SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewController];
+    NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.twitterShare.text
+                                   andLinkWithSubRouteLetter:@"t"];
+    [composeVC setInitialText:message];
+    composeVC.completionHandler = ^(SLComposeViewControllerResult result) {
+        [ownInstance twitterHandleShareResult:result];
+    };
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeTwitter];
+    return composeVC;
+}
+
+- (void)twitterHandleShareResult:(SLComposeViewControllerResult)result {
+
+}
+
 
 #pragma mark - Helpers for building share content
 - (MAVERemoteConfiguration *)remoteConfiguration {
@@ -194,6 +238,10 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 + (MFMailComposeViewController *)MFMailComposeViewController {
     return [[MFMailComposeViewController alloc] init];
+}
+
++ (SLComposeViewController *)SLComposeViewController {
+    return [[SLComposeViewController alloc] init];
 }
 
 @end
