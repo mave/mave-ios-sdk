@@ -12,6 +12,9 @@
 
 - (void)smsClientSideShare;
 - (void)emailClientSideShare;
+- (void)facebookiOSNativeShare;
+- (void)twitteriOSNativeShare;
+- (void)clipboardShare;
 
 @end
 

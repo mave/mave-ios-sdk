@@ -63,7 +63,7 @@
     remoteConfig.contactsInvitePage.shareButtonsEnabled = YES;
     OCMExpect([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
-    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:nil];
     XCTAssertTrue([view hasContentOtherThanSearchBar]);
     OCMVerifyAll(maveMock);
 }
@@ -76,7 +76,7 @@
     remoteConfig.contactsInvitePage.shareButtonsEnabled = NO;
     OCMExpect([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
-    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:nil];
     XCTAssertFalse([view hasContentOtherThanSearchBar]);
     OCMVerifyAll(maveMock);
 }
