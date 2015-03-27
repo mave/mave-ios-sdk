@@ -464,4 +464,6 @@
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNativeShareSheet];
 }
 
+#pragma mark - Share Icon delegate methods
+
 @end

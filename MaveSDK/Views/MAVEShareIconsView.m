@@ -7,23 +7,33 @@
 //
 
 #import "MAVEShareIconsView.h"
-#import "MaveSDK.h"
 #import "MAVEConstants.h"
 #import "MAVERemoteConfiguration.h"
-#import "MAVEDisplayOptions.h"
 #import "MAVEBuiltinUIElementUtils.h"
+#import <MessageUI/MessageUI.h>
+#import <Social/Social.h>
+
+CGFloat const MAVEShareIconsViewVerticalPadding = 10;
+
 
 @implementation MAVEShareIconsView
 
-- (instancetype)initWithDelegate:(id<MAVESharePageDelegate>)delegate {
+- (instancetype)initWithDelegate:(id<MAVESharePageDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor {
     if (self = [super init]) {
         self.delegate = delegate;
-        [self doInitialSetupAfterSettingDelegate];
+        self.iconColor = iconColor;
+        self.iconTextColor = iconColor;
+        self.iconFont = iconFont;
+        self.backgroundColor = backgroundColor;
+
+        self.allowIncludeSMSIcon = YES;
+        
+        [self setupShareButtons];
     }
     return self;
 }
 
-- (void)doInitialSetupAfterSettingDelegate {
+- (void)setupShareButtons {
     self.shareButtons = [[NSMutableArray alloc] init];
 
     // Add share buttons for services
@@ -75,11 +85,17 @@
     CGFloat marginWidth = combinedMarginWidth / numberMargins;
 
     CGFloat coordX = marginWidth;
-    CGFloat coordY = 0;
+    CGFloat coordY = MAVEShareIconsViewVerticalPadding;
     for (UIButton *shareButton in self.shareButtons) {
         shareButton.frame = CGRectMake(coordX, coordY, shareButtonSize.width, shareButtonSize.height);
         coordX += shareButtonSize.width + marginWidth;
     }
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    CGFloat height = [self shareButtonSize].height + 2*MAVEShareIconsViewVerticalPadding;
+    CGFloat width = size.width;
+    return CGSizeMake(width, height);
 }
 
 - (CGSize)shareButtonSize {
@@ -114,10 +130,9 @@
 
 # pragma mark - Share buttons by service
 - (UIButton *)genericShareButtonWithIconNamed:(NSString*)imageName andLabelText:(NSString *)text {
-    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
-    UIColor *labelColor = opts.sharePageIconTextColor;
-    UIFont *labelFont = opts.sharePageIconFont;
-    UIColor *iconColor = opts.sharePageIconColor;
+    UIColor *labelColor = self.iconTextColor;
+    UIFont *labelFont = self.iconFont;
+    UIColor *iconColor = self.iconColor;
 
     UIImage *image = [MAVEBuiltinUIElementUtils imageNamed:imageName fromBundle:MAVEResourceBundleName];
     image = [MAVEBuiltinUIElementUtils tintWhitesInImage:image withColor:iconColor];

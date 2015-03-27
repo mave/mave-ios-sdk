@@ -45,7 +45,7 @@
     self.shareExplanationLabel.numberOfLines = 0;
     [self addSubview:self.shareExplanationLabel];
 
-    self.shareIconsView = [[MAVEShareIconsView alloc] initWithDelegate:self.delegate];
+    self.shareIconsView = [[MAVEShareIconsView alloc] initWithDelegate:self.delegate iconColor:opts.sharePageIconColor iconFont:opts.sharePageIconFont backgroundColor:[UIColor blueColor]];
     [self addSubview:self.shareIconsView];
 }
 
@@ -79,7 +79,8 @@
                                                   explanationLabelSize.width,
                                                   explanationLabelSize.height);
 
-    CGFloat shareIconsHeight = [self.shareIconsView shareButtonSize].height;
-    self.shareIconsView.frame = CGRectMake(0, shareButtonsY, totalFrameSize.width, shareIconsHeight);
+    CGSize shareIconsSize = [self.shareIconsView sizeThatFits:
+                             CGSizeMake(totalFrameSize.width, CGFLOAT_MAX)];
+    self.shareIconsView.frame = CGRectMake(0, shareButtonsY, shareIconsSize.width, shareIconsSize.height);
 }
 @end

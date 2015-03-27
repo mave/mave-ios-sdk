@@ -9,16 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "MAVEInviteExplanationView.h"
 #import "MAVESearchBar.h"
+#import "MAVEShareIconsView.h"
 
 #define MAVE_DEFAULT_SEARCH_BAR_HEIGHT 44
 
 @interface MAVEInviteTableHeaderView : UIView
 
 @property (readonly, assign) BOOL showsExplanation;
+@property (readonly, assign) BOOL showsShareIcons;
 
 @property (nonatomic, strong) MAVEInviteExplanationView *inviteExplanationView;
 @property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
+@property (nonatomic, strong) MAVEShareIconsView *shareIconsView;
 
 // This method determines whether or not we need to display this
 // view at all. Currently, the only content to show is explanation

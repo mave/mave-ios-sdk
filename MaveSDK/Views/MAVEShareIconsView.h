@@ -20,7 +20,16 @@
 @property (nonatomic, strong) id<MAVESharePageDelegate>delegate;
 @property (nonatomic, strong) NSMutableArray *shareButtons;
 
-- (instancetype)initWithDelegate:(id<MAVESharePageDelegate>)delegate;
+@property (nonatomic, strong) UIColor *iconColor;
+@property (nonatomic, strong) UIColor *iconTextColor;
+@property (nonatomic, strong) UIFont *iconFont;
+
+@property (nonatomic, assign) BOOL allowIncludeSMSIcon;
+
+- (instancetype)initWithDelegate:(id<MAVESharePageDelegate>)delegate
+                       iconColor:(UIColor *)iconColor
+                        iconFont:(UIFont *)iconFont
+                 backgroundColor:(UIColor *)backgroundColor;
 
 // Helpers
 - (CGSize)shareButtonSize;  // all share buttons should be the same size

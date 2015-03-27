@@ -25,7 +25,7 @@
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
 
     _showsExplanation = [MaveSDK sharedInstance].inviteExplanationCopy.length > 0;
-    if (self.showsExplanation) {
+    if ([self hasContentOtherThanSearchBar]) {
         self.inviteExplanationView = [[MAVEInviteExplanationView alloc] init];
         [self addSubview:self.inviteExplanationView];
         self.backgroundColor = displayOptions.inviteExplanationCellBackgroundColor;
@@ -44,9 +44,13 @@
                                       MAVESearchBarHeight);
     self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:self.searchBar];
+
+//    self.shareIconsView = [[MAVEShareIconsView alloc] initWithDelegate:nil];
+//    [self addSubview:self.shareIconsView];
 }
 
 - (BOOL)hasContentOtherThanSearchBar {
+    return YES;
     return self.showsExplanation;
 }
 
@@ -69,6 +73,12 @@
     searchBarTopBorderFrame.size.width = frame.size.width;
     self.searchBarTopBorder.frame = searchBarTopBorderFrame;
     [self bringSubviewToFront:self.searchBarTopBorder];
+
+    CGFloat shareIconsHeight = [self.shareIconsView shareButtonSize].height;
+    self.shareIconsView.frame = CGRectMake(0,
+                                           inviteExplanationViewHeight,
+                                           frame.size.width,
+                                           shareIconsHeight);
 }
 
 - (CGFloat)computeHeightWithWidth:(CGFloat)width {
@@ -76,7 +86,11 @@
     if (self.showsExplanation) {
         height += [self.inviteExplanationView computeHeightWithWidth:width];
     }
+
+    height += [self.shareIconsView shareButtonSize].height;
+
     height += self.searchBar.frame.size.height;
+
     return height;
 }
 
