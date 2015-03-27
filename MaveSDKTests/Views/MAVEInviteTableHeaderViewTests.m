@@ -52,6 +52,10 @@
 - (void)testHasContentToShow {
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     OCMExpect([maveMock inviteExplanationCopy]).andReturn(@"Copy Override");
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    remoteConfig.contactsInvitePage.shareButtonsEnabled = YES;
+    OCMExpect([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
     MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
     XCTAssertTrue([view hasContentOtherThanSearchBar]);
@@ -61,6 +65,10 @@
 - (void)testHasNoContentToShow {
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     OCMExpect([maveMock inviteExplanationCopy]).andReturn(nil);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    remoteConfig.contactsInvitePage.shareButtonsEnabled = NO;
+    OCMExpect([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
     MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
     XCTAssertFalse([view hasContentOtherThanSearchBar]);

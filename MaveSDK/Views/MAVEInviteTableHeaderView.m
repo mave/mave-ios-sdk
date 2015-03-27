@@ -25,6 +25,8 @@
     MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
 
     _showsExplanation = [MaveSDK sharedInstance].inviteExplanationCopy.length > 0;
+    _showsShareIcons = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.shareButtonsEnabled;
+
     if ([self hasContentOtherThanSearchBar]) {
         self.inviteExplanationView = [[MAVEInviteExplanationView alloc] init];
         [self addSubview:self.inviteExplanationView];
@@ -50,8 +52,7 @@
 }
 
 - (BOOL)hasContentOtherThanSearchBar {
-    return YES;
-    return self.showsExplanation;
+    return self.showsExplanation || self.showsShareIcons;
 }
 
 - (void)layoutSubviews {
