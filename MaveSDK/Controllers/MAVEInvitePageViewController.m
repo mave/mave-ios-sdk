@@ -470,7 +470,9 @@
     // sms option on the contacts invite page
     MAVEDebugLog(@"Doing client side sms share from contacts invite page");
     UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
-        [controller dismissViewControllerAnimated:YES completion:nil];
+        [controller dismissViewControllerAnimated:NO completion:nil];
+        NSUInteger numberSent = composeResult == MessageComposeResultSent ? 1 : 0;
+        [self dismissSelf:numberSent];
     }];
     [self presentViewController:vc animated:YES completion:nil];
 }
@@ -478,7 +480,9 @@
 - (void)emailClientSideShare {
     MAVEDebugLog(@"Doing client side email share from contacts invite page");
     UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
-        [controller dismissViewControllerAnimated:YES completion:nil];
+        [controller dismissViewControllerAnimated:NO completion:nil];
+        NSUInteger numberSent = result == MFMailComposeResultSent ? 1 : 0;
+        [self dismissSelf:numberSent];
     }];
     [self presentViewController:vc animated:YES completion:nil];
 }

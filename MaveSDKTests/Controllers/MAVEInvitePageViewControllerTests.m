@@ -487,7 +487,8 @@
     id vcMock = OCMClassMock([UIViewController class]);
     id inviteVCMock = OCMPartialMock(inviteVC);
     OCMExpect([inviteVCMock presentViewController:vcMock animated:YES completion:nil]);
-    OCMExpect([vcMock dismissViewControllerAnimated:YES completion:nil]);
+    OCMExpect([vcMock dismissViewControllerAnimated:NO completion:nil]);
+    OCMExpect([inviteVCMock dismissSelf:1]);
 
     OCMExpect([sharerMock composeClientEmailWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void(^completionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = obj;
