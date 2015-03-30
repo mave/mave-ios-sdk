@@ -39,7 +39,7 @@ const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanatio
             if (![explanationCopyTemplate isEqual:[NSNull null]]) {
                 self.explanationCopyTemplate = explanationCopyTemplate;
             }
-            if (!self.explanationCopy) {
+            if (!self.explanationCopyTemplate) {
                 return nil;
             }
         }
