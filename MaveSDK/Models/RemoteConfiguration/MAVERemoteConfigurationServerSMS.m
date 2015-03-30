@@ -38,7 +38,7 @@ NSString * const MAVERemoteConfigKeyServerSMSCopy = @"copy_template";
 }
 
 // Returns the sms copy with template values filled in
-- (NSString *)smsCopy {
+- (NSString *)text {
     return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.textTemplate];
 }
 

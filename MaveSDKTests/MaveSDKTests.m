@@ -52,7 +52,7 @@
     MaveSDK *mave = [MaveSDK sharedInstance];
     XCTAssertEqualObjects(mave.appId, @"foo123");
     XCTAssertNotNil(mave.displayOptions);
-    XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.serverSMS.smsCopy);
+    XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.serverSMS.text);
     XCTAssertNotNil(mave.appDeviceID);
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
     XCTAssertNotNil(mave.shareTokenBuilder);
