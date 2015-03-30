@@ -547,7 +547,14 @@
 }
 
 - (void)testClipboardShare {
-    
+    MAVEInvitePageViewController *inviteVC = [[MAVEInvitePageViewController alloc] init];
+
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composePasteboardShare]);
+
+    [inviteVC clipboardShare];
+
+    OCMVerifyAll(sharerMock);
 }
 
 @end

@@ -501,6 +501,7 @@
 
 - (void)clipboardShare {
     MAVEDebugLog(@"Doing clipboard copy from contacts invite page");
+    [MAVESharer composePasteboardShare];
 }
 
 @end
