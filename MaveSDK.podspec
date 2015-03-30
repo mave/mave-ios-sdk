@@ -37,4 +37,5 @@ Pod::Spec.new do |s|
 
   # 3rd party cocoapod dependencies
   s.dependency 'libPhoneNumber-iOS', '~> 0.8.3'
+  s.dependency 'CCTemplate', '0.2.0'
 end

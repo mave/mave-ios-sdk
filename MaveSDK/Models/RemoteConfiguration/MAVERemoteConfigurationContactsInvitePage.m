@@ -8,11 +8,12 @@
 
 #import "MAVERemoteConfigurationContactsInvitePage.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVETemplatingUtils.h"
 
 NSString * const MAVERemoteConfigKeyContactsInvitePageEnabled = @"enabled";
 NSString * const MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
 NSString * const MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
-NSString * const MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy";
+NSString * const MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy_template";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethod = @"sms_invite_send_method";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide = @"server_side";
@@ -39,9 +40,9 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
                 self.templateID = templateIDVal;
             }
 
-            NSString *explanationCopyVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageExplanationCopy];
-            if (explanationCopyVal != (id)[NSNull null]) {
-                self.explanationCopy = explanationCopyVal;
+            NSString *explanationCopyTemplate = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageExplanationCopy];
+            if (explanationCopyTemplate != (id)[NSNull null]) {
+                self.explanationCopyTemplate = explanationCopyTemplate;
             }
 
             id suggestedInvitesVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled];
@@ -57,6 +58,10 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
         }
     }
     return self;
+}
+
+- (NSString *)explanationCopy {
+    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.explanationCopyTemplate];
 }
 
 + (NSDictionary *)defaultJSONData {

@@ -12,7 +12,8 @@
 @interface MAVERemoteConfigurationServerSMS : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic, copy) NSString *templateID;
-@property (nonatomic, copy) NSString *text;
+@property (nonatomic, copy) NSString *textTemplate;
+- (NSString *)text;
 
 + (NSDictionary *)defaultJSONData;
 

@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVERemoteConfigurationTwitterShare.h"
+#import "MAVETemplatingUtils.h"
 
 @interface MAVERemoteConfigurationTwitterShareTests : XCTestCase
 
@@ -32,14 +34,14 @@
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy"], @"I love DemoApp. Try it out");
+    XCTAssertEqualObjects([template objectForKey:@"copy_template"], @"I love DemoApp. Try it out");
 }
 
 - (void)testInitFromDefaultData {
     MAVERemoteConfigurationTwitterShare *obj = [[MAVERemoteConfigurationTwitterShare alloc] initWithDictionary:[MAVERemoteConfigurationTwitterShare defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.text, @"I love DemoApp. Try it out");
+    XCTAssertEqualObjects(obj.textTemplate, @"I love DemoApp. Try it out");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
@@ -48,7 +50,7 @@
     MAVERemoteConfigurationTwitterShare *obj = [[MAVERemoteConfigurationTwitterShare alloc] initWithDictionary:data];
     XCTAssertNil(obj);
 
-    data = @{@"template": @{@"template_id": @"foo", @"copy": [NSNull null]}};
+    data = @{@"template": @{@"template_id": @"foo", @"copy_template": [NSNull null]}};
     obj = [[MAVERemoteConfigurationTwitterShare alloc] initWithDictionary:data];
     XCTAssertNil(obj);
 }
@@ -58,13 +60,27 @@
                            @"enabled": @YES,
                            @"template": @{
                                    @"template_id": [NSNull null],
-                                   @"copy": @"foo",
+                                   @"copy_template": @"foo",
                                    }
                            };
     MAVERemoteConfigurationTwitterShare *obj = [[MAVERemoteConfigurationTwitterShare alloc] initWithDictionary:dict];
     // should be nil, not nsnull
     XCTAssertNotNil(obj);
     XCTAssertNil(obj.templateID);
+}
+
+- (void)testTextFillsInTemplate {
+    id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
+    NSString *templateString = @"{{ customData.foo }}";
+    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+
+    MAVERemoteConfigurationTwitterShare *twitterShareConfig = [[MAVERemoteConfigurationTwitterShare alloc] init];
+    twitterShareConfig.textTemplate = templateString;
+
+    NSString *output = [twitterShareConfig text];
+
+    OCMVerifyAll(templatingUtilsMock);
+    XCTAssertEqualObjects(output, @"bar1");
 }
 
 @end

@@ -45,6 +45,7 @@
     XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
     XCTAssertTrue(ud.wrapInviteLink);
     XCTAssertNil(ud.customData);
+    XCTAssertNil(ud.promoCode);
 }
 
 - (void)testInitWithFullUserData {
@@ -57,6 +58,7 @@
     XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
     XCTAssertTrue(ud.wrapInviteLink);
     XCTAssertNil(ud.customData);
+    XCTAssertNil(ud.promoCode);
 }
 
 - (void)testInitWithDictionary {
@@ -66,12 +68,14 @@
             @"last_name": @"la",
             @"email": @"em",
             @"phone": @"ph",
+            @"promo_code": @"pc",
     }];
     XCTAssertEqualObjects(ud.userID, @"id1");
     XCTAssertEqualObjects(ud.firstName, @"fi");
     XCTAssertEqualObjects(ud.lastName, @"la");
     XCTAssertEqualObjects(ud.email, @"em");
     XCTAssertEqualObjects(ud.phone, @"ph");
+    XCTAssertEqualObjects(ud.promoCode, @"pc");
     XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
     XCTAssertTrue(ud.wrapInviteLink);
     XCTAssertNil(ud.customData);
@@ -90,6 +94,7 @@
     XCTAssertEqualObjects(user.lastName, @"Cosson");
     XCTAssertNil(user.phone);
     XCTAssertNil(user.email);
+    XCTAssertNil(user.promoCode);
     XCTAssertTrue(user.isSetAutomaticallyFromDevice);
     XCTAssertTrue(user.wrapInviteLink);
     XCTAssertNil(user.customData);
@@ -129,11 +134,13 @@
 
 - (void)testToDictionaryNoNils {
     MAVEUserData *ud = [[MAVEUserData alloc] initWithUserID:@"id1" firstName:@"fi" lastName:@"la" email:@"em" phone:@"ph"];
+    ud.promoCode = @"pc";
     NSDictionary *expected = @{@"user_id": @"id1",
                                @"first_name": @"fi",
                                @"last_name": @"la",
                                @"email": @"em",
-                               @"phone": @"ph"};
+                               @"phone": @"ph",
+                               @"promo_code": @"pc"};
     XCTAssertEqualObjects([ud toDictionary], expected);
 }
 
