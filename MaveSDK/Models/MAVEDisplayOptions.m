@@ -32,7 +32,7 @@
         self.inviteExplanationCellBackgroundColor = [[self class] colorExtraLightGrey];
 
         self.inviteExplanationShareButtonsColor = [[self class] colorMediumGrey];
-        self.inviteExplanationShareButtonsFont = [UIFont systemFontOfSize:14];
+        self.inviteExplanationShareButtonsFont = [UIFont systemFontOfSize:10];
         self.inviteExplanationShareButtonsBackgroundColor = [[self class] colorExtraLightGrey];
 
         // Search Bar

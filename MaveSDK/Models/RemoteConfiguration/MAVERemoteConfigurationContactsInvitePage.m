@@ -49,7 +49,6 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
             if (shareButtonsEnabled != (id)[NSNull null]) {
                 self.shareButtonsEnabled = [shareButtonsEnabled boolValue];
             }
-            self.shareButtonsEnabled = YES;
 
             id suggestedInvitesVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled];
             if (suggestedInvitesVal && (id)suggestedInvitesVal != [NSNull null]) {
@@ -72,7 +71,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
         MAVERemoteConfigKeyContactsInvitePageTemplate: @{
             MAVERemoteConfigKeyContactsInvitePageTemplateID: @"0",
             MAVERemoteConfigKeyContactsInvitePageExplanationCopy: [NSNull null],
-//            MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons: @NO,
+            MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons: @NO,
             MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled: @NO,
             MAVERemoteConfigKeyContactsInvitePageSMSSendMethod: MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide,
         }

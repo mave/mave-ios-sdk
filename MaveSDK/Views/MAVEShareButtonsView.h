@@ -26,13 +26,15 @@
 @property (nonatomic, strong) UIColor *iconColor;
 @property (nonatomic, strong) UIColor *iconTextColor;
 @property (nonatomic, strong) UIFont *iconFont;
+@property (nonatomic, assign) BOOL useSmallIcons;
 
 @property (nonatomic, assign) BOOL allowIncludeSMSIcon;
 
 - (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate
                        iconColor:(UIColor *)iconColor
                         iconFont:(UIFont *)iconFont
-                 backgroundColor:(UIColor *)backgroundColor;
+                 backgroundColor:(UIColor *)backgroundColor
+                   useSmallIcons:(BOOL)useSmallIcons;
 
 // Helpers
 - (CGSize)shareButtonSize;  // all share buttons should be the same size

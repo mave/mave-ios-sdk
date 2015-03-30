@@ -14,17 +14,18 @@
 #import <Social/Social.h>
 
 CGFloat const MAVEShareIconsViewVerticalPadding = 10;
-
+CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 
 @implementation MAVEShareButtonsView
 
-- (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor {
+- (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor useSmallIcons:(BOOL)useSmallIcons {
     if (self = [super init]) {
         self.delegate = delegate;
         self.iconColor = iconColor;
         self.iconTextColor = iconColor;
         self.iconFont = iconFont;
         self.backgroundColor = backgroundColor;
+        self.useSmallIcons = useSmallIcons;
 
         self.allowIncludeSMSIcon = YES;
     }
@@ -139,12 +140,23 @@ CGFloat const MAVEShareIconsViewVerticalPadding = 10;
     UIImage *image = [MAVEBuiltinUIElementUtils imageNamed:imageName fromBundle:MAVEResourceBundleName];
     image = [MAVEBuiltinUIElementUtils tintWhitesInImage:image withColor:iconColor];
 
+    CGFloat textToImagePadding;
+    if (self.useSmallIcons) {
+        // scale image and reduce padding from image to text
+        CGSize smallSize = CGSizeMake(MAVEShareIconsSmallIconsEdgeSize,
+                                  MAVEShareIconsSmallIconsEdgeSize);
+        image = [MAVEBuiltinUIElementUtils imageWithImage:image scaledToSize:smallSize];
+        textToImagePadding = 1;
+    } else {
+        textToImagePadding = 4;
+    }
+
     MAVEUIButtonWithImageAndText *button = [[MAVEUIButtonWithImageAndText alloc] init];
     [button setImage:image forState:UIControlStateNormal];
     [button setTitle:text forState:UIControlStateNormal];
     button.titleLabel.font = labelFont;
     [button setTitleColor:labelColor forState:UIControlStateNormal];
-    button.paddingBetweenImageAndText = 4;
+    button.paddingBetweenImageAndText = textToImagePadding;
     return button;
 }
 

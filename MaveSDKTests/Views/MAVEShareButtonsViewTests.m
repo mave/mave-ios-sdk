@@ -15,11 +15,11 @@
 #import "MAVECustomSharePageView.h"
 #import "MAVECustomSharePageViewController.h"
 
-@interface MAVEShareIconsViewTests : XCTestCase
+@interface MAVEShareButtonsViewTests : XCTestCase
 
 @end
 
-@implementation MAVEShareIconsViewTests
+@implementation MAVEShareButtonsViewTests
 
 - (void)setUp {
     [super setUp];
@@ -38,7 +38,7 @@
     UIFont *iconFont = [UIFont systemFontOfSize:11.35];
 
 
-    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:delegate iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:delegate iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:YES];
 
     XCTAssertEqualObjects(view.delegate, delegate);
     XCTAssertNil(view.shareButtons);
@@ -46,6 +46,7 @@
     XCTAssertEqualObjects(view.iconTextColor, iconColor);
     XCTAssertEqualObjects(view.iconFont, iconFont);
     XCTAssertEqualObjects(view.backgroundColor, backgroundColor);
+    XCTAssertTrue(view.useSmallIcons);
     XCTAssertTrue(view.allowIncludeSMSIcon);
 }
 
@@ -57,10 +58,11 @@
     id uiUtilsMock = OCMClassMock([MAVEBuiltinUIElementUtils class]);
     OCMExpect([uiUtilsMock tintWhitesInImage:[OCMArg any] withColor:iconColor]);
 
-    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:nil iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:nil iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:NO];
     UIButton *button = [view genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png" andLabelText:@"FooBar"];
 
     OCMVerifyAll(uiUtilsMock);
+    XCTAssertFalse(view.useSmallIcons);
     XCTAssertEqualObjects(button.currentTitle, @"FooBar");
     XCTAssertEqualObjects(button.currentTitleColor, iconColor);
     XCTAssertEqualObjects(button.titleLabel.font,

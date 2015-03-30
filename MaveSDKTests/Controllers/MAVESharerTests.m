@@ -327,6 +327,10 @@
     OCMVerifyAll(composeVCMock);
 }
 
+- (void)testComposeFacebookNativeCompletionCanceled {
+
+}
+
 #pragma mark - native Twitter share widget
 
 - (void)testComposeTwitterNativeShare {
@@ -385,6 +389,10 @@
     XCTAssertNil(sharer.completionBlockTwitterNativeShare);
     OCMVerifyAll(apiInterfaceMock);
     OCMVerifyAll(composeVCMock);
+}
+
+- (void)testComposeTwitterNativeCompletionCanceled {
+
 }
 
 #pragma mark - Helpers for building share content

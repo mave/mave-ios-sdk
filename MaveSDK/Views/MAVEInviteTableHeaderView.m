@@ -38,7 +38,7 @@
     }
 
     if (self.showsShareButtons) {
-        self.shareButtonsView = [[MAVEShareButtonsView alloc] initWithDelegate:self.shareDelegate iconColor:displayOptions.inviteExplanationShareButtonsColor iconFont:displayOptions.inviteExplanationShareButtonsFont backgroundColor:displayOptions.inviteExplanationShareButtonsBackgroundColor];
+        self.shareButtonsView = [[MAVEShareButtonsView alloc] initWithDelegate:self.shareDelegate iconColor:displayOptions.inviteExplanationShareButtonsColor iconFont:displayOptions.inviteExplanationShareButtonsFont backgroundColor:displayOptions.inviteExplanationShareButtonsBackgroundColor useSmallIcons:YES];
         [self addSubview:self.shareButtonsView];
     }
 
