@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
+#import "MaveSDK.h"
 #import "MAVERemoteConfigurationCustomSharePage.h"
 
 @interface MAVERemoteConfigurationCustomSharePageTests : XCTestCase
@@ -35,7 +37,7 @@
 
     // The actual app name here comes from the bundle name, this test always runs in
     // the context of the demo app
-    XCTAssertEqualObjects([template objectForKey:@"explanation_copy"],
+    XCTAssertEqualObjects([template objectForKey:@"explanation_copy_template"],
                           @"Share DemoApp with friends");
 }
 
@@ -45,6 +47,18 @@
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertEqualObjects(obj.explanationCopy,
                           @"Share DemoApp with friends");
+}
+
+- (void)testExplanationCopyInterpolatesTemplate {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.promoCode = @"1234foo";
+    OCMStub([maveMock userData]).andReturn(user);
+
+    MAVERemoteConfigurationCustomSharePage *obj = [[MAVERemoteConfigurationCustomSharePage alloc] init];
+    obj.explanationCopyTemplate = @"Hey use my code {{ user.promoCode }}!";
+
+    XCTAssertEqualObjects(obj.explanationCopy, @"Hey use my code 1234foo!");
 }
 
 - (void)testInitFailsIfEnabledKeyIsMissing {
@@ -71,7 +85,7 @@
     // or if required fields are nsnull
     dict = @{ @"enabled": @YES, @"template": @{
                     @"template_id": @"foo",
-                    @"explanation_copy": [NSNull null],
+                    @"explanation_copy_template": [NSNull null],
             }
     };
     obj = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:dict];
@@ -82,7 +96,7 @@
     NSDictionary *dict = @{
                            @"enabled": @YES,
                            @"template": @{
-                                   @"explanation_copy": @"",
+                                   @"explanation_copy_template": @"",
                                    }
                            };
 
@@ -96,7 +110,7 @@
     NSDictionary *dict = @{
                            @"enabled": @YES,
                            @"template": @{
-                                   @"explanation_copy": @"foo",
+                                   @"explanation_copy_template": @"foo",
                                    @"template_id": [NSNull null],
                                    }
                            };

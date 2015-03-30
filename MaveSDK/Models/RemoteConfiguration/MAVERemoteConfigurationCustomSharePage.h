@@ -13,7 +13,8 @@
 
 @property (nonatomic) BOOL enabled;
 @property (nonatomic, copy) NSString *templateID;
-@property (nonatomic, copy) NSString *explanationCopy;
+@property (nonatomic, copy) NSString *explanationCopyTemplate;
+- (NSString *)explanationCopy;
 
 + (NSDictionary *)defaultJSONData;
 

@@ -21,6 +21,7 @@
     [interpolationDict setValue:user.firstName forKey:@"user.firstName"];
     [interpolationDict setValue:user.lastName forKey:@"user.lastName"];
     [interpolationDict setValue:user.fullName forKey:@"user.fullName"];
+    [interpolationDict setValue:user.promoCode forKey:@"user.promoCode"];
 
     NSString *namespacedKey, *key, *stringValue;
     for (key in customData) {
