@@ -34,7 +34,8 @@
                        iconColor:(UIColor *)iconColor
                         iconFont:(UIFont *)iconFont
                  backgroundColor:(UIColor *)backgroundColor
-                   useSmallIcons:(BOOL)useSmallIcons;
+                   useSmallIcons:(BOOL)useSmallIcons
+                   allowSMSShare:(BOOL)allowSMSShare;
 
 // Helpers
 - (CGSize)shareButtonSize;  // all share buttons should be the same size

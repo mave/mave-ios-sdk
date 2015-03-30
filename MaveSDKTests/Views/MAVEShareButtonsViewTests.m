@@ -38,10 +38,9 @@
     UIFont *iconFont = [UIFont systemFontOfSize:11.35];
 
 
-    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:delegate iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:YES];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:delegate iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:YES allowSMSShare:YES];
 
     XCTAssertEqualObjects(view.delegate, delegate);
-    XCTAssertNil(view.shareButtons);
     XCTAssertEqualObjects(view.iconColor, iconColor);
     XCTAssertEqualObjects(view.iconTextColor, iconColor);
     XCTAssertEqualObjects(view.iconFont, iconFont);
@@ -58,7 +57,7 @@
     id uiUtilsMock = OCMClassMock([MAVEBuiltinUIElementUtils class]);
     OCMExpect([uiUtilsMock tintWhitesInImage:[OCMArg any] withColor:iconColor]);
 
-    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:nil iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:NO];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:nil iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:NO allowSMSShare:YES];
     UIButton *button = [view genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png" andLabelText:@"FooBar"];
 
     OCMVerifyAll(uiUtilsMock);

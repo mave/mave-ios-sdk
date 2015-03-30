@@ -45,7 +45,7 @@
     self.shareExplanationLabel.numberOfLines = 0;
     [self addSubview:self.shareExplanationLabel];
 
-    self.shareIconsView = [[MAVEShareButtonsView alloc] initWithDelegate:self.delegate iconColor:opts.sharePageIconColor iconFont:opts.sharePageIconFont backgroundColor:[UIColor blueColor] useSmallIcons:NO];
+    self.shareIconsView = [[MAVEShareButtonsView alloc] initWithDelegate:self.delegate iconColor:opts.sharePageIconColor iconFont:opts.sharePageIconFont backgroundColor:[UIColor clearColor] useSmallIcons:NO allowSMSShare:YES];
     [self addSubview:self.shareIconsView];
 }
 
