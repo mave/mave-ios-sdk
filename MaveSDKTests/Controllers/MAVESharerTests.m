@@ -441,6 +441,35 @@
     OCMVerifyAll(composeVCMock);
 }
 
+#pragma mark - Clipboard share
+
+- (void)testClipboardShare {
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard]);
+
+    // use a mock of the pasteboard
+    id pasteboardMock = OCMClassMock([UIPasteboard class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock UIPasteboard]).andReturn(pasteboardMock);
+    MAVESharer *sharerInstance = [[MAVESharer alloc] init];
+    OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
+    id sharerMock = OCMPartialMock(sharerInstance);
+    OCMExpect([sharerMock resetShareToken]);
+    OCMExpect([sharerMock releaseSelf]);
+
+    // expectations for content to pass to share view controller
+    NSString *expectedText = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clipboardShare.text andLinkWithSubRouteLetter:@"c"];
+    OCMExpect([pasteboardMock setString:expectedText]);
+
+    // run code under test
+    [MAVESharer composePasteboardShare];
+
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(pasteboardMock);
+    OCMVerifyAll(builderMock);
+    OCMVerifyAll(sharerMock);
+}
+
 #pragma mark - Helpers for building share content
 - (void)testShareToken {
     MAVESharer *sharer = [[MAVESharer alloc] init];

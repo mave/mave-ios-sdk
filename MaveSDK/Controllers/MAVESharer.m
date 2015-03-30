@@ -200,6 +200,36 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     [self releaseSelf];
 }
 
++ (void)composePasteboardShare {
+    MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
+    NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.clipboardShare.text
+                                   andLinkWithSubRouteLetter:@"c"];
+
+    UIPasteboard *pasteboard = [MAVESharerViewControllerBuilder UIPasteboard];
+    pasteboard.string = message;
+
+    [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard];
+
+    // Any copy to clipboard might be shared, so reset the share token here
+    [ownInstance resetShareToken];
+
+    UIAlertView *alert;
+    alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
+                                       message:nil
+                                      delegate:self
+                             cancelButtonTitle:nil
+                             otherButtonTitles:nil];
+    [alert show];
+
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [alert dismissWithClickedButtonIndex:0 animated:YES];
+    });
+    [ownInstance releaseSelf];
+    return;
+}
+
 
 #pragma mark - Helpers for building share content
 - (MAVERemoteConfiguration *)remoteConfiguration {
@@ -269,6 +299,10 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 + (SLComposeViewController *)SLComposeViewController {
     return [[SLComposeViewController alloc] init];
+}
+
++ (UIPasteboard *)UIPasteboard {
+    return [UIPasteboard generalPasteboard];
 }
 
 @end

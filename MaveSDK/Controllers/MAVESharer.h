@@ -35,6 +35,7 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 + (MFMailComposeViewController *)composeClientEmailWithCompletionBlock:(void(^)(MFMailComposeViewController *controller, MFMailComposeResult result))completionBlock;
 + (SLComposeViewController *)composeFacebookNativeShareWithCompletionBlock:(void(^)(SLComposeViewController *controller, SLComposeViewControllerResult result)) completionBlock;
 + (SLComposeViewController *)composeTwitterNativeShareWithCompletionBlock:(void(^)(SLComposeViewController *controller, SLComposeViewControllerResult result)) completionBlock;
++ (void)composePasteboardShare;
 
 // Extra completion methods
 - (void)facebookNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result;
@@ -60,5 +61,6 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 + (MFMessageComposeViewController *)MFMessageComposeViewController;
 + (MFMailComposeViewController *)MFMailComposeViewController;
 + (SLComposeViewController *)SLComposeViewController;
++ (UIPasteboard *)UIPasteboard;
 
 @end
