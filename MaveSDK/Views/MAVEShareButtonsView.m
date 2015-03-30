@@ -27,7 +27,7 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
         self.backgroundColor = backgroundColor;
         self.useSmallIcons = useSmallIcons;
 
-        self.allowIncludeSMSIcon = YES;
+        self.allowSMSShare = YES;
     }
     return self;
 }
@@ -38,7 +38,7 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     // Add share buttons for services
     // TODO: test this logic
     UIButton *shareButton;
-    if ([MFMessageComposeViewController canSendText]) {
+    if (self.allowSMSShare && [MFMessageComposeViewController canSendText]) {
         shareButton = [self smsShareButton];
         [self.shareButtons addObject:shareButton];
         [self addSubview:shareButton];

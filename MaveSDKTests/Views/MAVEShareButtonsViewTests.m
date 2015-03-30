@@ -47,7 +47,7 @@
     XCTAssertEqualObjects(view.iconFont, iconFont);
     XCTAssertEqualObjects(view.backgroundColor, backgroundColor);
     XCTAssertTrue(view.useSmallIcons);
-    XCTAssertTrue(view.allowIncludeSMSIcon);
+    XCTAssertTrue(view.allowSMSShare);
 }
 
 - (void)testGenericButtonStyles {

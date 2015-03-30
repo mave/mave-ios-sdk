@@ -47,9 +47,12 @@
     XCTAssertTrue([view.inviteExplanationView isDescendantOfView:view]);
     XCTAssertFalse(view.inviteExplanationView.hidden);
 
+    // share buttons view is active, and it uses small icons + client sms share disabled
     XCTAssertEqualObjects(view.shareDelegate, delegate);
     XCTAssertEqualObjects(view.shareButtonsView.delegate, delegate);
     XCTAssertTrue([view.shareButtonsView isDescendantOfView:view]);
+    XCTAssertTrue(view.shareButtonsView.useSmallIcons);
+    XCTAssertFalse(view.shareButtonsView.allowSMSShare);
 
     // Search bar top border
     XCTAssertEqual(view.searchBarTopBorder.frame.size.height, 1);

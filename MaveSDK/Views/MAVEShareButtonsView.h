@@ -28,7 +28,7 @@
 @property (nonatomic, strong) UIFont *iconFont;
 @property (nonatomic, assign) BOOL useSmallIcons;
 
-@property (nonatomic, assign) BOOL allowIncludeSMSIcon;
+@property (nonatomic, assign) BOOL allowSMSShare;
 
 - (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate
                        iconColor:(UIColor *)iconColor
