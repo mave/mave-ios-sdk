@@ -52,7 +52,7 @@
     MaveSDK *mave = [MaveSDK sharedInstance];
     XCTAssertEqualObjects(mave.appId, @"foo123");
     XCTAssertNotNil(mave.displayOptions);
-    XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.serverSMS.smsCopy);
+    XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.serverSMS.text);
     XCTAssertNotNil(mave.appDeviceID);
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
     XCTAssertNotNil(mave.shareTokenBuilder);
@@ -172,7 +172,7 @@
     // can be set in remote config
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
     remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
-    remoteConfig.contactsInvitePage.explanationCopy = @"foo";
+    remoteConfig.contactsInvitePage.explanationCopyTemplate = @"foo";
     id maveMock = OCMPartialMock(mave);
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 

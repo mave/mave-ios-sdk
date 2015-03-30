@@ -80,7 +80,7 @@
     MAVERemoteConfigurationServerSMS *serverSMSConfig = [[MAVERemoteConfigurationServerSMS alloc] init];
     serverSMSConfig.textTemplate = templateString;
 
-    NSString *output = [serverSMSConfig smsCopy];
+    NSString *output = [serverSMSConfig text];
 
     OCMVerifyAll(templatingUtilsMock);
     XCTAssertEqualObjects(output, @"bar1");

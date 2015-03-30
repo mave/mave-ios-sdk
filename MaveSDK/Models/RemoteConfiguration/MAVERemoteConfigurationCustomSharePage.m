@@ -8,11 +8,12 @@
 
 #import "MAVERemoteConfigurationCustomSharePage.h"
 #import "MAVEClientPropertyUtils.h"
+#import "MAVETemplatingUtils.h"
 
 const NSString *MAVERemoteConfigKeyCustomSharePageEnabled = @"enabled";
 const NSString *MAVERemoteConfigKeyCustomSharePageTemplate = @"template";
 const NSString *MAVERemoteConfigKeyCustomSharePageTemplateID = @"template_id";
-const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanation_copy";
+const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanation_copy_template";
 
 @implementation MAVERemoteConfigurationCustomSharePage
 
@@ -34,16 +35,20 @@ const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanatio
                 self.templateID = templateID;
             }
 
-            NSString *explanationCopy = [template objectForKey:MAVERemoteConfigKeyCustomSharePageExplanationCopy];
-            if (![explanationCopy isEqual:[NSNull null]]) {
-                self.explanationCopy = explanationCopy;
+            NSString *explanationCopyTemplate = [template objectForKey:MAVERemoteConfigKeyCustomSharePageExplanationCopy];
+            if (![explanationCopyTemplate isEqual:[NSNull null]]) {
+                self.explanationCopyTemplate = explanationCopyTemplate;
             }
-            if (!self.explanationCopy) {
+            if (!self.explanationCopyTemplate) {
                 return nil;
             }
         }
     }
     return self;
+}
+
+- (NSString *)explanationCopy {
+    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.explanationCopyTemplate];
 }
 
 + (NSDictionary *)defaultJSONData {

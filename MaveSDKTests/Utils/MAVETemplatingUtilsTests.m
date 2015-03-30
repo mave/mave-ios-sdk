@@ -61,10 +61,11 @@
 
 - (void)testInterpolateTemplateStringAllUserFields {
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
-    NSString *template = @"{{ user.userID }} {{ user.firstName }} {{ user.lastName }} \"{{ user.fullName }}\"";
+    user.promoCode = @"123foo";
+    NSString *template = @"{{ user.userID }} {{ user.firstName }} {{ user.lastName }} '{{ user.fullName }}' {{ user.promoCode }}";
     NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user customData:@{}];
 
-    NSString *expected = @"1 Foo Bar \"Foo Bar\"";
+    NSString *expected = @"1 Foo Bar 'Foo Bar' 123foo";
     XCTAssertEqualObjects(output, expected);
 }
 

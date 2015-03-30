@@ -10,7 +10,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MaveSDK"
-  s.version          = "0.5.6"
+  s.version          = "0.5.7"
   s.summary          = "A drop-in SMS invite and share platform to accelerate your user growth"
   s.description      = <<-DESC
                        Make it simple for your users to send more, higher quality invites and shares.

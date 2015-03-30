@@ -13,7 +13,7 @@
 
 @property (nonatomic, copy) NSString *templateID;
 @property (nonatomic, copy) NSString *textTemplate;
-- (NSString *)smsCopy;
+- (NSString *)text;
 
 + (NSDictionary *)defaultJSONData;
 

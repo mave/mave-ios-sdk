@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
+#import "MaveSDK.h"
 #import "MAVERemoteConfigurationContactsInvitePage.h"
 
 @interface MAVERemoteConfigurationContactsInvitePageTests : XCTestCase
@@ -33,7 +35,7 @@
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
 
-    XCTAssertEqual([template objectForKey:@"explanation_copy"],
+    XCTAssertEqual([template objectForKey:@"explanation_copy_template"],
                    [NSNull null]);
     XCTAssertFalse([[template objectForKey:@"share_buttons_enabled"] boolValue]);
     XCTAssertFalse([[template objectForKey:@"suggested_invites_enabled"] boolValue]);
@@ -63,12 +65,26 @@
     XCTAssertNil(obj);
 }
 
+- (void)testExplanationCopyInterpolatesTemplate {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.promoCode = @"1234foo";
+    OCMStub([maveMock userData]).andReturn(user);
+
+    MAVERemoteConfigurationContactsInvitePage *obj = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    obj.explanationCopyTemplate = @"Hey use my code {{ user.promoCode }}!";
+
+    XCTAssertEqualObjects(obj.explanationCopy, @"Hey use my code 1234foo!");
+}
+
 - (void)testInitSucceedsIfTemplateValid {
     NSDictionary *dict = @{
         @"enabled": @YES,
         @"template": @{
             @"template_id": @"1",
             @"explanation_copy": @"some copy",
+            @"share_buttons_enabled": @YES,
+            @"explanation_copy_template": @"some copy",
             @"share_buttons_enabled": @YES,
             @"suggested_invites_enabled": @YES,
         }
@@ -98,7 +114,7 @@
                            @"enabled": @YES,
                            @"template": @{
                                    @"template_id": [NSNull null],
-                                   @"explanation_copy": [NSNull null],
+                                   @"explanation_copy_template": [NSNull null],
                                    @"suggested_invites_enabled": [NSNull null],
                             }
                            };
