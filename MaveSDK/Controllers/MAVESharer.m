@@ -134,7 +134,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
     ownInstance.completionBlockFacebookNativeShare = completionBlock;
 
-    SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewController];
+    SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewControllerForFacebook];
     NSString *message = ownInstance.remoteConfiguration.facebookShare.text;
     NSString *url = [ownInstance shareLinkWithSubRouteLetter:@"f"];
 
@@ -172,7 +172,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
     ownInstance.completionBlockTwitterNativeShare = completionBlock;
 
-    SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewController];
+    SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewControllerForTwitter];
     NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.twitterShare.text
                                    andLinkWithSubRouteLetter:@"t"];
     [composeVC setInitialText:message];
@@ -297,8 +297,12 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return [[MFMailComposeViewController alloc] init];
 }
 
-+ (SLComposeViewController *)SLComposeViewController {
-    return [[SLComposeViewController alloc] init];
++ (SLComposeViewController *)SLComposeViewControllerForFacebook {
+    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+}
+
++ (SLComposeViewController *)SLComposeViewControllerForTwitter {
+    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
 }
 
 + (UIPasteboard *)UIPasteboard {

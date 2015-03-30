@@ -273,7 +273,7 @@
     // use a mock of the vc
     id socialComposeVCMock = OCMClassMock([SLComposeViewController class]);
     id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
-    OCMExpect([builderMock SLComposeViewController]).andReturn(socialComposeVCMock);
+    OCMExpect([builderMock SLComposeViewControllerForFacebook]).andReturn(socialComposeVCMock);
     MAVESharer *sharerInstance = [[MAVESharer alloc] init];
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 
@@ -363,7 +363,7 @@
     // use a mock of the vc
     id socialComposeVCMock = OCMClassMock([SLComposeViewController class]);
     id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
-    OCMExpect([builderMock SLComposeViewController]).andReturn(socialComposeVCMock);
+    OCMExpect([builderMock SLComposeViewControllerForTwitter]).andReturn(socialComposeVCMock);
     MAVESharer *sharerInstance = [[MAVESharer alloc] init];
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 

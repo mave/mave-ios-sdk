@@ -60,7 +60,8 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 + (MAVESharer *)sharerInstanceRetained;
 + (MFMessageComposeViewController *)MFMessageComposeViewController;
 + (MFMailComposeViewController *)MFMailComposeViewController;
-+ (SLComposeViewController *)SLComposeViewController;
++ (SLComposeViewController *)SLComposeViewControllerForFacebook;
++ (SLComposeViewController *)SLComposeViewControllerForTwitter;
 + (UIPasteboard *)UIPasteboard;
 
 @end
