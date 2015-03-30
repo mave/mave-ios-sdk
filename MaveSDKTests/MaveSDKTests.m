@@ -172,7 +172,7 @@
     // can be set in remote config
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
     remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
-    remoteConfig.contactsInvitePage.explanationCopy = @"foo";
+    remoteConfig.contactsInvitePage.explanationCopyTemplate = @"foo";
     id maveMock = OCMPartialMock(mave);
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
