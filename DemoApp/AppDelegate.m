@@ -31,12 +31,14 @@
                                                         firstName:@"Example"
                                                          lastName:@"Person"];
     [[MaveSDK sharedInstance] identifyUser:userData];
+}
 
+- (void)doDisplayOptionsCustomization {
     ///
     /// Display customizations
     ///
 
-    // Set some variables for our app's common fonts and colors
+    // Set some variables to re-use
     UIColor *green = [[UIColor alloc] initWithRed:43.0/255 green:202.0/255
                                              blue:125.0/255 alpha:1.0];
     UIColor *clear = [UIColor clearColor];

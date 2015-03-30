@@ -43,6 +43,8 @@
     XCTAssertNil(obj.retainedSelf);
 }
 
+#pragma mark - client SMS
+
 - (void)testComposeClientSMSInvite {
     NSArray *recipientPhones = @[@"+18085551234", @"86753"];
 
@@ -179,7 +181,294 @@
     OCMVerifyAll(messageComposeVCMock);
 }
 
+#pragma mark - client Email
 
+- (void)testComposeClientEmailInvite {
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:MAVESharePageShareTypeClientEmail]);
+
+    // use a mock of the vc
+    id emailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock MFMailComposeViewController]).andReturn(emailComposeVCMock);
+    MAVESharer *sharerInstance = [[MAVESharer alloc] init];
+    OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
+
+    OCMExpect([emailComposeVCMock setMailComposeDelegate:sharerInstance]);
+
+    // email message subject and body
+    NSString *expectedMessageSubject = sharerInstance.remoteConfiguration.clientEmail.subject;
+    XCTAssertGreaterThan([expectedMessageSubject length], 0);
+    OCMExpect([emailComposeVCMock setSubject:expectedMessageSubject]);
+    NSString *expectedMessageBody = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clientEmail.body andLinkWithSubRouteLetter:@"e"];
+    XCTAssertGreaterThan([expectedMessageBody length], 0);
+    OCMExpect([emailComposeVCMock setMessageBody:expectedMessageBody isHTML:NO]);
+
+    void (^myCompletionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = ^void(MFMailComposeViewController *controller, MFMailComposeResult result) {};
+
+    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:myCompletionBlock];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqualObjects(vc, emailComposeVCMock);
+    XCTAssertEqualObjects(sharerInstance.completionBlockClientEmail, myCompletionBlock);
+
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(emailComposeVCMock);
+    OCMVerifyAll(builderMock);
+}
+
+
+- (void)testComposeClientEmailCompletionBlockSuccess {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block MFMailComposeResult returnedResult;
+    sharer.completionBlockClientEmail = ^void(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398akj";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:fakeToken audience:nil]);
+
+    id emailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[emailComposeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+    [sharer mailComposeController:emailComposeVCMock didFinishWithResult:MFMailComposeResultSent error:nil];
+
+    XCTAssertEqual(returnedResult, MFMailComposeResultSent);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockClientEmail);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(emailComposeVCMock);
+}
+
+- (void)testComposeClientEmailCompletionBlockCancelled {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block MFMailComposeResult returnedResult;
+    sharer.completionBlockClientEmail = ^void(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        returnedResult = result;
+    };
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[OCMArg any] audience:nil];
+    id emailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    [[emailComposeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    [sharer mailComposeController:emailComposeVCMock didFinishWithResult:MFMailComposeResultCancelled error:nil];
+
+    XCTAssertEqual(returnedResult, MFMailComposeResultCancelled);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockClientEmail);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(emailComposeVCMock);
+}
+
+#pragma mark - native Facebook share widget
+
+- (void)testComposeFacebookNativeShare {
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:MAVESharePageShareTypeFacebook]);
+
+    // use a mock of the vc
+    id socialComposeVCMock = OCMClassMock([SLComposeViewController class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock SLComposeViewControllerForFacebook]).andReturn(socialComposeVCMock);
+    MAVESharer *sharerInstance = [[MAVESharer alloc] init];
+    OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
+
+    // expectations for content to pass to share view controller
+    NSString *expectedText = sharerInstance.remoteConfiguration.facebookShare.text;
+    OCMExpect([socialComposeVCMock setInitialText:expectedText]);
+    NSString *expectedURLString = [sharerInstance shareLinkWithSubRouteLetter:@"f"];
+    NSURL *expectedURL = [NSURL URLWithString:expectedURLString];
+    OCMExpect([socialComposeVCMock addURL:expectedURL]);
+
+    OCMExpect([socialComposeVCMock setCompletionHandler:[OCMArg any]]);
+
+    void (^myCompletionBlock)(SLComposeViewController *controller, SLComposeViewControllerResult result) = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {};
+
+    // run code under test
+    UIViewController *vc = [MAVESharer composeFacebookNativeShareWithCompletionBlock:myCompletionBlock];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqualObjects(vc, socialComposeVCMock);
+    XCTAssertEqualObjects(sharerInstance.completionBlockFacebookNativeShare, myCompletionBlock);
+
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(socialComposeVCMock);
+    OCMVerifyAll(builderMock);
+}
+
+- (void)testComposeFacebookNativeCompletionSuccess {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block SLComposeViewControllerResult returnedResult;
+    sharer.completionBlockFacebookNativeShare = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398akk";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:fakeToken audience:nil]);
+
+    id composeVCMock = OCMClassMock([SLComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[composeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    // run code under test
+    [sharer facebookNativeShareController:composeVCMock didFinishWithResult:SLComposeViewControllerResultDone];
+
+    XCTAssertEqual(returnedResult, SLComposeViewControllerResultDone);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockFacebookNativeShare);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(composeVCMock);
+}
+
+- (void)testComposeFacebookNativeCompletionCanceled {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block SLComposeViewControllerResult returnedResult;
+    sharer.completionBlockFacebookNativeShare = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398akk";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject ]trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:fakeToken audience:nil];
+
+    id composeVCMock = OCMClassMock([SLComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[composeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    // run code under test
+    [sharer facebookNativeShareController:composeVCMock didFinishWithResult:SLComposeViewControllerResultCancelled];
+
+    XCTAssertEqual(returnedResult, SLComposeViewControllerResultCancelled);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockFacebookNativeShare);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(composeVCMock);
+}
+
+#pragma mark - native Twitter share widget
+
+- (void)testComposeTwitterNativeShare {
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:MAVESharePageShareTypeTwitter]);
+
+    // use a mock of the vc
+    id socialComposeVCMock = OCMClassMock([SLComposeViewController class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock SLComposeViewControllerForTwitter]).andReturn(socialComposeVCMock);
+    MAVESharer *sharerInstance = [[MAVESharer alloc] init];
+    OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
+
+    // expectations for content to pass to share view controller
+    NSString *expectedText = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.twitterShare.text andLinkWithSubRouteLetter:@"t"];
+    OCMExpect([socialComposeVCMock setInitialText:expectedText]);
+    OCMExpect([socialComposeVCMock setCompletionHandler:[OCMArg any]]);
+
+    void (^myCompletionBlock)(SLComposeViewController *controller, SLComposeViewControllerResult result) = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {};
+
+
+    // run code under test
+    UIViewController *vc = [MAVESharer composeTwitterNativeShareWithCompletionBlock:myCompletionBlock];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqualObjects(vc, socialComposeVCMock);
+    XCTAssertEqualObjects(sharerInstance.completionBlockTwitterNativeShare, myCompletionBlock);
+
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(socialComposeVCMock);
+    OCMVerifyAll(builderMock);
+}
+
+- (void)testComposeTwitterNativeCompletionSuccess {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block SLComposeViewControllerResult returnedResult;
+    sharer.completionBlockTwitterNativeShare = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398ako";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:fakeToken audience:nil]);
+
+    id composeVCMock = OCMClassMock([SLComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[composeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    // run code under test
+    [sharer twitterNativeShareController:composeVCMock didFinishWithResult:SLComposeViewControllerResultDone];
+
+    XCTAssertEqual(returnedResult, SLComposeViewControllerResultDone);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockTwitterNativeShare);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(composeVCMock);
+}
+
+- (void)testComposeTwitterNativeCompletionCanceled {
+    MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
+    __block SLComposeViewControllerResult returnedResult;
+    sharer.completionBlockTwitterNativeShare = ^void(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        returnedResult = result;
+    };
+    NSString *fakeToken = @"foo12398ako";
+    id sharerMock = OCMPartialMock(sharer);
+    OCMStub([sharerMock shareToken]).andReturn(fakeToken);
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    [[apiInterfaceMock reject] trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:fakeToken audience:nil];
+
+    id composeVCMock = OCMClassMock([SLComposeViewController class]);
+    // should not get dismissed, the caller is responsible for dismissing controller in the block
+    [[composeVCMock reject] dismissViewControllerAnimated:YES completion:nil];
+
+    // run code under test
+    [sharer twitterNativeShareController:composeVCMock didFinishWithResult:SLComposeViewControllerResultCancelled];
+
+    XCTAssertEqual(returnedResult, SLComposeViewControllerResultCancelled);
+    XCTAssertNil(sharer.retainedSelf);
+    XCTAssertNil(sharer.completionBlockTwitterNativeShare);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(composeVCMock);
+}
+
+#pragma mark - Clipboard share
+
+- (void)testClipboardShare {
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    OCMExpect([apiInterfaceMock trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard]);
+
+    // use a mock of the pasteboard
+    id pasteboardMock = OCMClassMock([UIPasteboard class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock UIPasteboard]).andReturn(pasteboardMock);
+    MAVESharer *sharerInstance = [[MAVESharer alloc] init];
+    OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
+    id sharerMock = OCMPartialMock(sharerInstance);
+    OCMExpect([sharerMock resetShareToken]);
+    OCMExpect([sharerMock releaseSelf]);
+
+    // expectations for content to pass to share view controller
+    NSString *expectedText = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clipboardShare.text andLinkWithSubRouteLetter:@"c"];
+    OCMExpect([pasteboardMock setString:expectedText]);
+
+    // run code under test
+    [MAVESharer composePasteboardShare];
+
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(pasteboardMock);
+    OCMVerifyAll(builderMock);
+    OCMVerifyAll(sharerMock);
+}
 
 #pragma mark - Helpers for building share content
 - (void)testShareToken {

@@ -11,28 +11,12 @@
 #import <MessageUI/MessageUI.h>
 #import "MAVERemoteConfiguration.h"
 #import "MAVESharer.h"
+#import "MAVEShareButtonsView.h"
 
-@interface MAVECustomSharePageViewController: UIViewController <MFMailComposeViewControllerDelegate>
+@interface MAVECustomSharePageViewController: UIViewController <MAVEShareButtonsDelegate>
 
 @property (nonatomic, strong) MAVESharer *sharerObject;
 
 - (void)dismissAfterShare;
-
-- (void)smsClientSideShare;
-
-// Do the client side shares
-// the helpers let us test in the simulator
-// TODO: move these all the MAVESharer object so we can re-use them on different
-// view controllers
-- (void)emailClientSideShare;
-- (MFMailComposeViewController *)_createMailComposeViewController;
-- (void)facebookiOSNativeShare;
-- (SLComposeViewController *)_createFacebookComposeViewController;
-- (void)facebookHandleShareResult:(SLComposeViewControllerResult) result;
-- (void)twitteriOSNativeShare;
-- (SLComposeViewController *)_createTwitterComposeViewController;
-- (void)twitterHandleShareResult:(SLComposeViewControllerResult) result;
-- (void)clipboardShare;
-- (UIPasteboard *)_generalPasteboardForClipboardShare;
 
 @end

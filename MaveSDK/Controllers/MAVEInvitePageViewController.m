@@ -17,8 +17,7 @@
 #import "MAVENoAddressBookPermissionView.h"
 #import "MAVEConstants.h"
 #import "MAVESearchBar.h"
-
-#import <Social/Social.h>
+#import "MAVESharer.h"
 
 #define IS_IOS7_OR_BELOW ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)
 
@@ -462,6 +461,51 @@
 
     // Tracking event that share sheet was presented
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNativeShareSheet];
+}
+
+#pragma mark - Share Button delegate methods
+
+- (void)smsClientSideShare {
+    // This normally won't be able to be triggered because we don't include the
+    // sms option on the contacts invite page
+    MAVEDebugLog(@"Doing client side sms share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
+        [controller dismissViewControllerAnimated:NO completion:nil];
+        NSUInteger numberSent = composeResult == MessageComposeResultSent ? 1 : 0;
+        [self dismissSelf:numberSent];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)emailClientSideShare {
+    MAVEDebugLog(@"Doing client side email share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        [controller dismissViewControllerAnimated:NO completion:nil];
+        NSUInteger numberSent = result == MFMailComposeResultSent ? 1 : 0;
+        [self dismissSelf:numberSent];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)facebookiOSNativeShare {
+    MAVEDebugLog(@"Doing client side native facebook share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeFacebookNativeShareWithCompletionBlock:^(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)twitteriOSNativeShare {
+    MAVEDebugLog(@"Doing client side native twitter share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeTwitterNativeShareWithCompletionBlock:^(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)clipboardShare {
+    MAVEDebugLog(@"Doing clipboard copy from contacts invite page");
+    [MAVESharer composePasteboardShare];
 }
 
 @end

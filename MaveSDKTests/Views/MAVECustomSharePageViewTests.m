@@ -47,22 +47,10 @@
                           expectedLabelText);
     XCTAssertEqualObjects(view.shareExplanationLabel.textColor,
                           opts.sharePageExplanationTextColor);
-}
 
-- (void)testGenericButtonStyles {
-    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
-    id uiUtilsMock = OCMClassMock([MAVEBuiltinUIElementUtils class]);
-    OCMExpect([uiUtilsMock tintWhitesInImage:[OCMArg any] withColor:opts.sharePageIconColor]);
-
-    MAVECustomSharePageView *view = [[MAVECustomSharePageView alloc] init];
-    UIButton *button = [view genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png" andLabelText:@"FooBar"];
-
-    OCMVerifyAll(uiUtilsMock);
-    XCTAssertEqualObjects(button.currentTitle, @"FooBar");
-    XCTAssertEqualObjects(button.currentTitleColor,
-                          opts.sharePageIconTextColor);
-    XCTAssertEqualObjects(button.titleLabel.font,
-                          opts.sharePageIconFont);
+    // share icons view
+    XCTAssertNotNil(view.shareIconsView);
+    XCTAssertTrue([view.shareIconsView isDescendantOfView:view]);
 }
 
 @end

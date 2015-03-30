@@ -20,7 +20,8 @@ typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
 @property (nonatomic, copy) NSString *templateID;
 @property (nonatomic, copy) NSString *explanationCopyTemplate;
 - (NSString *)explanationCopy;
-@property (nonatomic) BOOL suggestedInvitesEnabled;
+@property (nonatomic, assign) BOOL shareButtonsEnabled;
+@property (nonatomic, assign) BOOL suggestedInvitesEnabled;
 @property (nonatomic, assign) MAVESMSInviteSendMethod smsInviteSendMethod;
 
 + (NSDictionary *)defaultJSONData;

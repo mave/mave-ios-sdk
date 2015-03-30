@@ -14,6 +14,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageEnabled = @"enabled";
 NSString * const MAVERemoteConfigKeyContactsInvitePageTemplate = @"template";
 NSString * const MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id";
 NSString * const MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy_template";
+NSString * const MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons = @"share_buttons_enabled";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethod = @"sms_invite_send_method";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide = @"server_side";
@@ -45,6 +46,11 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
                 self.explanationCopyTemplate = explanationCopyTemplate;
             }
 
+            NSNumber *shareButtonsEnabled = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons];
+            if (shareButtonsEnabled != (id)[NSNull null]) {
+                self.shareButtonsEnabled = [shareButtonsEnabled boolValue];
+            }
+
             id suggestedInvitesVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled];
             if (suggestedInvitesVal && (id)suggestedInvitesVal != [NSNull null]) {
                 self.suggestedInvitesEnabled = [suggestedInvitesVal boolValue];
@@ -69,7 +75,8 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
         MAVERemoteConfigKeyContactsInvitePageEnabled: @YES,
         MAVERemoteConfigKeyContactsInvitePageTemplate: @{
             MAVERemoteConfigKeyContactsInvitePageTemplateID: @"0",
-            // Explanation copy defaults to nil, so leaving empty
+            MAVERemoteConfigKeyContactsInvitePageExplanationCopy: [NSNull null],
+            MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons: @NO,
             MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled: @NO,
             MAVERemoteConfigKeyContactsInvitePageSMSSendMethod: MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide,
         }
