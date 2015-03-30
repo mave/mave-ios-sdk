@@ -463,9 +463,11 @@
     [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeNativeShareSheet];
 }
 
-#pragma mark - Share Icon delegate methods
+#pragma mark - Share Button delegate methods
 
 - (void)smsClientSideShare {
+    // This normally won't be able to be triggered because we don't include the
+    // sms option on the contacts invite page
     MAVEDebugLog(@"Doing client side sms share from contacts invite page");
     UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
         [controller dismissViewControllerAnimated:YES completion:nil];
@@ -483,10 +485,18 @@
 
 - (void)facebookiOSNativeShare {
     MAVEDebugLog(@"Doing client side native facebook share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeFacebookNativeShareWithCompletionBlock:^(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)twitteriOSNativeShare {
     MAVEDebugLog(@"Doing client side native twitter share from contacts invite page");
+    UIViewController *vc = [MAVESharer composeTwitterNativeShareWithCompletionBlock:^(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)clipboardShare {
