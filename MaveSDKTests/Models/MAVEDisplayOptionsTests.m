@@ -44,6 +44,7 @@
     UIColor *blueTint = [[UIColor alloc] initWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
 
     // Header options
+    XCTAssertEqual(opts.statusBarStyle, UIStatusBarStyleDefault);
     XCTAssertEqualObjects(opts.navigationBarTitleCopy, @"Invite Friends");
     XCTAssertEqualObjects(opts.navigationBarTitleFont, defaultFont);
     XCTAssertEqualObjects(opts.navigationBarTitleTextColor, almostBlack);

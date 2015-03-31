@@ -28,6 +28,7 @@
 // Note: any target & action set on the navigation bar buttons will
 // be ignored, we run the block you provide instead.
 //
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 // Cancel button is used when the invite page is presented modally
 // (whether native present modally or some custom way like in a drawer, etc).
 @property (nonatomic, strong) UIBarButtonItem *navigationBarCancelButton;

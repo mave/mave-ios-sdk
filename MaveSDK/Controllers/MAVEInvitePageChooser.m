@@ -9,6 +9,7 @@
 #import "MaveSDK.h"
 #import "MaveSDK_Internal.h"
 #import "MAVEInvitePageChooser.h"
+#import "MAVEWrapperNavigationController.h"
 #import "MAVEConstants.h"
 #import "MAVEABUtils.h"
 #import "MAVERemoteConfiguration.h"
@@ -186,7 +187,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (void)_embedActiveViewControllerInNewNavigationController {
-    _activeNavigationController = [[UINavigationController alloc] initWithRootViewController:self.activeViewController];
+    _activeNavigationController = [[MAVEWrapperNavigationController alloc] initWithRootViewController:self.activeViewController];
 }
 
 - (void)_styleNavigationItemForActiveViewController {

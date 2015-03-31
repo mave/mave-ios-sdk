@@ -15,6 +15,7 @@
 - (MAVEDisplayOptions *)initWithDefaults {
     if (self = [super init]) {
         // Header options
+        self.statusBarStyle = UIStatusBarStyleDefault;
         self.navigationBarTitleCopy = @"Invite Friends";
         self.navigationBarTitleFont = [UIFont systemFontOfSize:16];
         self.navigationBarTitleTextColor = [[self class] colorAlmostBlack];
