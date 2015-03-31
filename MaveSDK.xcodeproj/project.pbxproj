@@ -18,6 +18,7 @@
 		0C0996F31A793A50003B82AA /* MAVEMerkleTreeUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C0996F21A793A50003B82AA /* MAVEMerkleTreeUtils.m */; };
 		0C0996F81A793B4F003B82AA /* MAVEMerkleTreeUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C0996F71A793B4F003B82AA /* MAVEMerkleTreeUtilsTests.m */; };
 		0C1134D11A12C42200631797 /* MAVENoAddressBookPermissionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1134D01A12C42200631797 /* MAVENoAddressBookPermissionView.m */; };
+		0C131EEE1ACAFE9A00F34539 /* MAVEWrapperNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C131EED1ACAFE9A00F34539 /* MAVEWrapperNavigationController.m */; };
 		0C141D301A0BC1A80036202A /* MAVEUserData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C141D2F1A0BC1A80036202A /* MAVEUserData.m */; };
 		0C141D321A0BCFB50036202A /* MAVEUserDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */; };
 		0C1A8FB21A61E7AD00518D9A /* MAVERemoteConfigurationContactsInvitePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1A8FB11A61E7AD00518D9A /* MAVERemoteConfigurationContactsInvitePage.m */; };
@@ -207,6 +208,8 @@
 		0C0996F71A793B4F003B82AA /* MAVEMerkleTreeUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEMerkleTreeUtilsTests.m; sourceTree = "<group>"; };
 		0C1134CF1A12C42200631797 /* MAVENoAddressBookPermissionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVENoAddressBookPermissionView.h; sourceTree = "<group>"; };
 		0C1134D01A12C42200631797 /* MAVENoAddressBookPermissionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVENoAddressBookPermissionView.m; sourceTree = "<group>"; };
+		0C131EEC1ACAFE9A00F34539 /* MAVEWrapperNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEWrapperNavigationController.h; sourceTree = "<group>"; };
+		0C131EED1ACAFE9A00F34539 /* MAVEWrapperNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEWrapperNavigationController.m; sourceTree = "<group>"; };
 		0C141D2E1A0BC1A80036202A /* MAVEUserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEUserData.h; sourceTree = "<group>"; };
 		0C141D2F1A0BC1A80036202A /* MAVEUserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEUserData.m; sourceTree = "<group>"; };
 		0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEUserDataTests.m; sourceTree = "<group>"; };
@@ -806,6 +809,8 @@
 			children = (
 				0CCC92B81A5F44F7008CB888 /* MAVEInvitePageChooser.h */,
 				0CCC92B91A5F44F7008CB888 /* MAVEInvitePageChooser.m */,
+				0C131EEC1ACAFE9A00F34539 /* MAVEWrapperNavigationController.h */,
+				0C131EED1ACAFE9A00F34539 /* MAVEWrapperNavigationController.m */,
 				C02927F419E82D03006AEE43 /* MAVEInvitePageViewController.h */,
 				C02927F519E82D03006AEE43 /* MAVEInvitePageViewController.m */,
 				C02927F619E82D03006AEE43 /* MAVEABTableViewController.h */,
@@ -1140,6 +1145,7 @@
 				0C29BC311A56FFA900C27DA5 /* MAVEHTTPStack.m in Sources */,
 				C02927FB19E82D03006AEE43 /* MAVEABTableViewController.m in Sources */,
 				0C0996E51A76B593003B82AA /* MAVEMerkleTreeDataEnumerator.m in Sources */,
+				0C131EEE1ACAFE9A00F34539 /* MAVEWrapperNavigationController.m in Sources */,
 				0C29BC411A5D7DEC00C27DA5 /* MAVERemoteObjectBuilderDataPersistor.m in Sources */,
 				0C0996F01A78527F003B82AA /* MAVEMerkleTreeDataDemo.m in Sources */,
 				C02927F319E82CF8006AEE43 /* MaveSDK.m in Sources */,
