@@ -1,5 +1,10 @@
 ## Mave SDK releases
 
+### v0.5.7
+ - Adds the option for share buttons (email, fb, twitter, copy link) at the top of the contacts invite page. Set via server config
+ - Adds templating to configuration options, so you can e.g. put a user's promo code in the default invite copy
+ - Adds displayOptions.statusBarStyle for setting the status bar style (only works if "View controller-based status bar appearance" in Info.plist is YES, if it's NO the status bar style is controlled globally via UIApplication.setStatusBarStyle.
+
 ### v0.5.6
  - Use `inviteLinkDestinationURL` in the client sms share option if `wrapInviteLink` is `NO`
 
