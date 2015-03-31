@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import <OCMock/OCMock.h>
 #import "MaveSDK.h"
 #import "MAVEWrapperNavigationController.h"
 
@@ -26,16 +25,6 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
-}
-
-- (void)testViewDidLoad {
-    MAVEWrapperNavigationController *vc = [[MAVEWrapperNavigationController alloc] init];
-    id mock = OCMPartialMock(vc);
-    OCMExpect([mock setNeedsStatusBarAppearanceUpdate]);
-
-    [vc viewDidLoad];
-
-    OCMVerifyAll(mock);
 }
 
 - (void)testStatusBarStyle {
