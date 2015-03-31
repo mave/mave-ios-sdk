@@ -1,2 +1,4 @@
 language: objective-c
+before_script:
+  - brew upgrade xctool
 script: "./ci-run-tests.sh"
