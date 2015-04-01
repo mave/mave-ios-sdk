@@ -1,5 +1,7 @@
 # Mave iOS SDK
 
+[![Build Status](https://travis-ci.org/mave/mave-ios-sdk.svg?branch=master)](https://travis-ci.org/mave/mave-ios-sdk)
+
 ## Usage
 
 You can see it in action (without any server-side interactions) in the included demo app. To run it:
