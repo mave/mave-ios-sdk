@@ -24,10 +24,10 @@ DEPENDENCIES:
   - OCMock (~> 3.1.1)
 
 SPEC CHECKSUMS:
-  CCTemplate: da9e9debe44a9d1e37fc46b94f43675003f59af4
-  Gizou: f0025df05b51197ab8979c728a1cd525b7d6911f
-  libPhoneNumber-iOS: 640f078c832d2ded97ae24134bc009c3300686e3
-  MMDrawerController: c3ab7a318ddc7e2bcd133139c3161af08c6e1197
-  OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
+  CCTemplate: f00efa85dad31e12b8a766b8e8198eb772c71c4f
+  Gizou: 93853bf634a9382c257795db052aa9a75e972c43
+  libPhoneNumber-iOS: da1768fbe05092df0d5b3cecd8194c5a9a2c5d4d
+  MMDrawerController: 7a4cf8e25596bf2434e03ce50d22a8608ddee6a1
+  OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
 
 COCOAPODS: 0.36.0
