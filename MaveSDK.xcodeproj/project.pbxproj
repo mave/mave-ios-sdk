@@ -112,7 +112,6 @@
 		0CCC92B71A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92B61A5F28E1008CB888 /* MAVEBuiltinUIElementUtils.m */; };
 		0CCC92BA1A5F44F7008CB888 /* MAVEInvitePageChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92B91A5F44F7008CB888 /* MAVEInvitePageChooser.m */; };
 		0CCC92BC1A5F50A6008CB888 /* MAVEInvitePageChooserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92BB1A5F50A6008CB888 /* MAVEInvitePageChooserTests.m */; };
-		0CCC92BE1A5F849F008CB888 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CCC92BD1A5F849F008CB888 /* Default-568h@2x.png */; };
 		0CCC92C01A60090D008CB888 /* MAVECustomSharePageViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92BF1A60090D008CB888 /* MAVECustomSharePageViewControllerTests.m */; };
 		0CCC92C31A6011E8008CB888 /* MAVEPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92C21A6011E8008CB888 /* MAVEPromise.m */; };
 		0CCC92C61A603996008CB888 /* MAVERemoteObjectBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC92C51A603996008CB888 /* MAVERemoteObjectBuilder.m */; };
@@ -337,7 +336,6 @@
 		0CCC92B81A5F44F7008CB888 /* MAVEInvitePageChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInvitePageChooser.h; sourceTree = "<group>"; };
 		0CCC92B91A5F44F7008CB888 /* MAVEInvitePageChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInvitePageChooser.m; sourceTree = "<group>"; };
 		0CCC92BB1A5F50A6008CB888 /* MAVEInvitePageChooserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInvitePageChooserTests.m; sourceTree = "<group>"; };
-		0CCC92BD1A5F849F008CB888 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../../Default-568h@2x.png"; sourceTree = "<group>"; };
 		0CCC92BF1A60090D008CB888 /* MAVECustomSharePageViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomSharePageViewControllerTests.m; sourceTree = "<group>"; };
 		0CCC92C11A6011E8008CB888 /* MAVEPromise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEPromise.h; sourceTree = "<group>"; };
 		0CCC92C21A6011E8008CB888 /* MAVEPromise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEPromise.m; sourceTree = "<group>"; };
@@ -775,7 +773,6 @@
 		C029279419E823E2006AEE43 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0CCC92BD1A5F849F008CB888 /* Default-568h@2x.png */,
 				C029279519E823E2006AEE43 /* Info.plist */,
 				C029279619E823E2006AEE43 /* main.m */,
 			);
@@ -1028,7 +1025,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CD4FBF81A9C277C00667655 /* MAVEWaitingDots1@1x.png in Resources */,
-				0CCC92BE1A5F849F008CB888 /* Default-568h@2x.png in Resources */,
 				C02927A219E823E2006AEE43 /* Images.xcassets in Resources */,
 				0CD4FBFA1A9C277C00667655 /* MAVEWaitingDots3@1x.png in Resources */,
 				0C58FDF61A649AF4007F8F12 /* MAVEShareIconSMS@1x.png in Resources */,
