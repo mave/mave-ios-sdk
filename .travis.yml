@@ -1,2 +1,4 @@
 language: objective-c
 script: "./ci-run-tests.sh"
+env:
+  - DESTINATION_OS="8.1" DESTINATION_NAME="iPhone 6"
