@@ -51,7 +51,7 @@ const CGFloat LABEL_MARGIN_Y = 20;
 
 - (CGSize)messageCopyLabelSizeWithWidth:(CGFloat)width {
     CGFloat labelWidth = width - 2*LABEL_MARGIN_X;
-    CGFloat labelHeight = [self.messageCopy sizeThatFits:CGSizeMake(width, FLT_MAX)].height;
+    CGFloat labelHeight = [self.messageCopy sizeThatFits:CGSizeMake(labelWidth, FLT_MAX)].height;
     return CGSizeMake(labelWidth, labelHeight);
 }
 
