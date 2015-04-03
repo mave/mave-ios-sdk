@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.5.8
+ - Small layout bugfixes for edge cases on invite page
+
 ### v0.5.7
  - Adds the option for share buttons (email, fb, twitter, copy link) at the top of the contacts invite page. Set via server config
  - Adds templating to configuration options, so you can e.g. put a user's promo code in the default invite copy
