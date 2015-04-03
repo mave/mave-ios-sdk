@@ -8,7 +8,13 @@ DESTINATION="platform=iOS Simulator,OS=${DESTINATION_OS},name=${DESTINATION_NAME
 echo "Running with destination ${DESTINATION}"
 
 clean_and_build_tests() {
-    xctool clean
+    xctool \
+        -workspace MaveSDK.xcworkspace \
+        -scheme DemoApp \
+        -configuration UnitTesting \
+        -sdk iphonesimulator \
+        -destination "${DESTINATION}" \
+        clean
     xctool \
         -workspace MaveSDK.xcworkspace \
         -scheme DemoApp \
@@ -19,7 +25,14 @@ clean_and_build_tests() {
 }
 
 run_tests() {
-    xctool run-tests -resetSimulator
+    xctool \
+        -workspace MaveSDK.xcworkspace \
+        -scheme DemoApp \
+        -configuration UnitTesting \
+        -sdk iphonesimulator \
+        -destination "${DESTINATION}" \
+        run-tests \
+        -resetSimulator
 }
 
 clean_and_build_tests
