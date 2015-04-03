@@ -12,5 +12,4 @@ xctool \
     -sdk iphonesimulator \
     -destination "${DESTINATION}" \
     test \
-    -freshInstall \
     -freshSimulator
