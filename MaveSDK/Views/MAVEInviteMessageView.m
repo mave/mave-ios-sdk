@@ -158,8 +158,8 @@ CGFloat const textViewSendMediumIndicatorSpacingHeight = 5;
     newText = [newText stringByAppendingString:text];
     newText = [newText stringByAppendingString:[textView.text substringFromIndex:range.location + range.length]];
 
-    // Limit so that Name + message + link isn't over 160
-    if ([newText length] >= 110) {
+    // Set a reasonable limit on text length not to go over
+    if ([newText length] >= 300) {
         return NO;
     }
     return YES;
