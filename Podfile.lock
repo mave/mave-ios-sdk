@@ -2,17 +2,17 @@ PODS:
   - CCTemplate (0.2.0)
   - Gizou (0.1.3)
   - libPhoneNumber-iOS (0.8.3)
-  - MMDrawerController (0.5.7):
-    - MMDrawerController/Core (= 0.5.7)
-    - MMDrawerController/MMDrawerBarButtonItem (= 0.5.7)
-    - MMDrawerController/MMDrawerVisualStates (= 0.5.7)
-    - MMDrawerController/Subclass (= 0.5.7)
-  - MMDrawerController/Core (0.5.7)
-  - MMDrawerController/MMDrawerBarButtonItem (0.5.7):
+  - MMDrawerController (0.6.0):
+    - MMDrawerController/Core (= 0.6.0)
+    - MMDrawerController/MMDrawerBarButtonItem (= 0.6.0)
+    - MMDrawerController/MMDrawerVisualStates (= 0.6.0)
+    - MMDrawerController/Subclass (= 0.6.0)
+  - MMDrawerController/Core (0.6.0)
+  - MMDrawerController/MMDrawerBarButtonItem (0.6.0):
     - MMDrawerController/Core
-  - MMDrawerController/MMDrawerVisualStates (0.5.7):
+  - MMDrawerController/MMDrawerVisualStates (0.6.0):
     - MMDrawerController/Core
-  - MMDrawerController/Subclass (0.5.7):
+  - MMDrawerController/Subclass (0.6.0):
     - MMDrawerController/Core
   - OCMock (3.1.2)
 
@@ -20,14 +20,14 @@ DEPENDENCIES:
   - CCTemplate (= 0.2.0)
   - Gizou
   - libPhoneNumber-iOS (= 0.8.3)
-  - MMDrawerController (~> 0.5.7)
+  - MMDrawerController (~> 0.6.0)
   - OCMock (~> 3.1.1)
 
 SPEC CHECKSUMS:
   CCTemplate: f00efa85dad31e12b8a766b8e8198eb772c71c4f
   Gizou: 93853bf634a9382c257795db052aa9a75e972c43
   libPhoneNumber-iOS: da1768fbe05092df0d5b3cecd8194c5a9a2c5d4d
-  MMDrawerController: 7a4cf8e25596bf2434e03ce50d22a8608ddee6a1
+  MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
 
 COCOAPODS: 0.36.0
