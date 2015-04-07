@@ -21,6 +21,12 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 
 @implementation MAVEShareButtonsView
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+    }
+    return self;
+}
+
 - (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor useSmallIcons:(BOOL)useSmallIcons allowSMSShare:(BOOL)allowSMSShare {
     if (self = [super init]) {
         self.delegate = delegate;
@@ -31,46 +37,13 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
         self.useSmallIcons = useSmallIcons;
 
         self.allowSMSShare = allowSMSShare;
-        [self setupShareButtons];
     }
     return self;
 }
 
-- (void)setupShareButtons {
-    self.shareButtons = [[NSMutableArray alloc] init];
-
-    // Add share buttons for services
-    // TODO: test this logic
-    UIButton *shareButton;
-    if (self.allowSMSShare && [MFMessageComposeViewController canSendText]) {
-        shareButton = [self smsShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
-    }
-    if ([MFMailComposeViewController canSendMail]) {
-        shareButton = [self emailShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
-    }
-
-    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
-        shareButton = [self facebookShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
-    }
-
-    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter] && !IS_IOS8_3) {
-        shareButton = [self twitterShareButton];
-        [self.shareButtons addObject:shareButton];
-        [self addSubview:shareButton];
-    }
-
-    shareButton = [self clipboardShareButton];
-    [self.shareButtons addObject:shareButton];
-    [self addSubview:shareButton];
-}
-
 - (void)layoutSubviews {
+    [self layoutShareButtons];
+
     CGSize totalFrameSize = self.frame.size;
 
     CGSize shareButtonSize = [self shareButtonSize];
@@ -95,6 +68,19 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     }
 }
 
+- (void)layoutShareButtons {
+    for (UIView *button in self.shareButtons) {
+        if (![button isDescendantOfView:self]) {
+            [self addSubview:button];
+        }
+    }
+}
+
+- (CGSize)intrinsicContentSize {
+    CGFloat height = [self shareButtonSize].height + 2*MAVEShareIconsViewVerticalPadding;
+    return CGSizeMake(UIViewNoIntrinsicMetric, height);
+}
+
 - (CGSize)sizeThatFits:(CGSize)size {
     CGFloat height = [self shareButtonSize].height + 2*MAVEShareIconsViewVerticalPadding;
     CGFloat width = size.width;
@@ -102,6 +88,9 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 }
 
 - (CGSize)shareButtonSize {
+    if (!self.shareButtons) {
+        [self setupShareButtons];
+    }
     // Make them all the same size, pick that size to be the smallest
     // that will fit the largest icon image and text of all the share buttons to display
     CGSize size = CGSizeMake(0, 0);
@@ -128,6 +117,34 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     size.width = ceil(size.width);
     size.height = ceil(size.height);
     return size;
+}
+
+- (void)setupShareButtons {
+    self.shareButtons = [[NSMutableArray alloc] init];
+
+    // Add share buttons for services
+    UIButton *shareButton;
+    if (self.allowSMSShare && [MFMessageComposeViewController canSendText]) {
+        shareButton = [self smsShareButton];
+        [self.shareButtons addObject:shareButton];
+    }
+    if ([MFMailComposeViewController canSendMail]) {
+        shareButton = [self emailShareButton];
+        [self.shareButtons addObject:shareButton];
+    }
+
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+        shareButton = [self facebookShareButton];
+        [self.shareButtons addObject:shareButton];
+    }
+
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter] && !IS_IOS8_3) {
+        shareButton = [self twitterShareButton];
+        [self.shareButtons addObject:shareButton];
+    }
+
+    shareButton = [self clipboardShareButton];
+    [self.shareButtons addObject:shareButton];
 }
 
 
