@@ -75,7 +75,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
             [warningAlert show];
         }
         case MessageComposeResultSent: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[[self class] shareToken] audience:nil];
             break;
         }
     }
@@ -108,7 +108,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
     switch (result) {
         case MFMailComposeResultSent: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[[self class] shareToken] audience:nil];
             break;
         }
         case MFMailComposeResultFailed: {
@@ -152,7 +152,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)facebookNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result {
     switch (result) {
         case SLComposeViewControllerResultDone: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[[self class] shareToken] audience:nil];
         } case SLComposeViewControllerResultCancelled: {
             break;
         }
@@ -188,7 +188,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)twitterNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result {
     switch (result) {
         case SLComposeViewControllerResultDone: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[[self class] shareToken] audience:nil];
         } case SLComposeViewControllerResultCancelled: {
             break;
         }
@@ -236,10 +236,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return [MaveSDK sharedInstance].remoteConfiguration;
 }
 
-- (NSString *)shareToken {
++ (NSString *)shareToken {
     MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
-    return tokenObject.shareToken;
-}
+    return tokenObject.shareToken;}
 
 - (NSString *)shareCopyFromCopy:(NSString *)shareCopy
       andLinkWithSubRouteLetter:(NSString *)letter {
@@ -259,11 +258,11 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
-    NSString *shareToken = [self shareToken];
+    NSString *shareToken = [[self class] shareToken];
     NSString *output;// = MAVEShortLinkBaseURL;
 
     if ([shareToken length] > 0) {
-        NSString *shareToken = [self shareToken];
+        NSString *shareToken = [[self class] shareToken];
         output = [NSString stringWithFormat:@"%@%@/%@",
                   MAVEShortLinkBaseURL, subRoute, shareToken];
     } else {
@@ -275,7 +274,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 - (void)resetShareToken {
-    MAVEDebugLog(@"Resetting share token after share, was: %@", [self shareToken]);
+    MAVEDebugLog(@"Resetting share token after share, was: %@", [[self class] shareToken]);
     [MAVEShareToken clearUserDefaults];
     [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
 }
