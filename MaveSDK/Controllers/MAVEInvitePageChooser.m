@@ -15,6 +15,7 @@
 #import "MAVERemoteConfiguration.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVECustomSharePageViewController.h"
+#import "MAVEContactsInvitePageV2ViewController.h"
 #import "MAVEDisplayOptions.h"
 
 NSString * const MAVEInvitePageTypeContactList = @"contact_list";
@@ -70,7 +71,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 - (UIViewController *)createViewControllerOfType:(MAVEInvitePageType)invitePageType {
     switch (invitePageType) {
         case MAVEInvitePageTypeContactsInvitePage:
-            return [self createContactsInvitePageIfAllowed];
+            return [self createContactsInvitePageV2IfAllowed];
         case MAVEInvitePageTypeSharePage:
             return [[MAVECustomSharePageViewController alloc] init];
         case MAVEInvitePageTypeClientSMS:
@@ -112,6 +113,10 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     }
 
     return [[MAVEInvitePageViewController alloc] init];
+}
+
+- (MAVEContactsInvitePageV2ViewController *)createContactsInvitePageV2IfAllowed {
+    return [[MAVEContactsInvitePageV2ViewController alloc] init];
 }
 
 - (MFMessageComposeViewController *)createClientSMSInvitePage {
