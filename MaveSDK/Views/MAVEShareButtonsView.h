@@ -52,7 +52,7 @@
 
 - (void)afterShareActions;
 - (void)doClientSMSShare;
-- (void)doEmailShare;
+- (void)doClientEmailShare;
 - (void)doFacebookNativeiOSShare;
 - (void)doTwitterNativeiOSShare;
 - (void)doClipboardShare;

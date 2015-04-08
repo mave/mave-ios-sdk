@@ -176,8 +176,8 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 - (UIButton *)smsShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png"
                                                 andLabelText:@"SMS"];
-    [button addTarget:self.delegate
-               action:@selector(smsClientSideShare)
+    [button addTarget:self
+               action:@selector(doClientSMSShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -185,11 +185,8 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 - (UIButton *)emailShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconEmail.png"
                                                 andLabelText:@"EMAIL"];
-//    [button addTarget:self.delegate
-//               action:@selector(emailClientSideShare)
-//     forControlEvents:UIControlEventTouchUpInside];
     [button addTarget:self
-               action:@selector(doEmailShare)
+               action:@selector(doClientEmailShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -197,8 +194,8 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 - (UIButton *)facebookShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconFacebook.png"
                                                 andLabelText:@"SHARE"];
-    [button addTarget:self.delegate
-               action:@selector(facebookiOSNativeShare)
+    [button addTarget:self
+               action:@selector(doFacebookNativeiOSShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -206,8 +203,8 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 - (UIButton *)twitterShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconTwitter.png"
                                                 andLabelText:@"TWEET"];
-    [button addTarget:self.delegate
-               action:@selector(twitteriOSNativeShare)
+    [button addTarget:self
+               action:@selector(doTwitterNativeiOSShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -215,9 +212,9 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 - (UIButton *)clipboardShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconClipboard.png"
                                                 andLabelText:@"COPY"];
-//    [button addTarget:self.delegate
-//               action:@selector(clipboardShare)
-//     forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self
+               action:@selector(doClipboardShare)
+     forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
 
@@ -250,7 +247,7 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     [self.presentingViewController presentViewController:vc animated:YES completion:nil];
 }
 
-- (void)doEmailShare {
+- (void)doClientEmailShare {
     UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
         [controller dismissViewControllerAnimated:YES completion:nil];
         if (result == MFMailComposeResultSent) {

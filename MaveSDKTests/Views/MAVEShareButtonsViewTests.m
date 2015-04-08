@@ -163,7 +163,7 @@
     OCMExpect([mock presentingViewController]).andReturn(vcMock);
     OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
 
-    [view doEmailShare];
+    [view doClientEmailShare];
 
     OCMVerifyAll(mock);
     OCMVerifyAll(vcMock);
@@ -185,7 +185,7 @@
     OCMExpect([mock presentingViewController]).andReturn(vcMock);
     OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
 
-    [view doEmailShare];
+    [view doClientEmailShare];
 
     OCMVerifyAll(mock);
     OCMVerifyAll(vcMock);
