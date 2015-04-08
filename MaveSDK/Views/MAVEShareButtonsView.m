@@ -23,20 +23,6 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 
 @implementation MAVEShareButtonsView
 
-- (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor useSmallIcons:(BOOL)useSmallIcons allowSMSShare:(BOOL)allowSMSShare {
-    if (self = [super init]) {
-        self.delegate = delegate;
-        self.iconColor = iconColor;
-        self.iconTextColor = iconColor;
-        self.iconFont = iconFont;
-        self.backgroundColor = backgroundColor;
-        self.useSmallIcons = useSmallIcons;
-
-        self.allowSMSShare = allowSMSShare;
-    }
-    return self;
-}
-
 - (void)layoutSubviews {
     [self layoutShareButtons];
 

@@ -13,10 +13,8 @@
 #import "MAVESharer.h"
 #import "MAVEShareButtonsView.h"
 
-@interface MAVECustomSharePageViewController: UIViewController <MAVEShareButtonsDelegate>
+@interface MAVECustomSharePageViewController: UIViewController
 
 @property (nonatomic, strong) MAVESharer *sharerObject;
-
-- (void)dismissAfterShare;
 
 @end

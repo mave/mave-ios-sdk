@@ -31,24 +31,6 @@
     [super tearDown];
 }
 
-- (void)testFullInitMethod {
-    MAVECustomSharePageViewController *delegate = [[MAVECustomSharePageViewController alloc] init];
-    UIColor *iconColor = [UIColor redColor];
-    UIColor *backgroundColor = [UIColor blackColor];
-    UIFont *iconFont = [UIFont systemFontOfSize:11.35];
-
-
-    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:delegate iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:YES allowSMSShare:YES];
-
-    XCTAssertEqualObjects(view.delegate, delegate);
-    XCTAssertEqualObjects(view.iconColor, iconColor);
-    XCTAssertEqualObjects(view.iconTextColor, iconColor);
-    XCTAssertEqualObjects(view.iconFont, iconFont);
-    XCTAssertEqualObjects(view.backgroundColor, backgroundColor);
-    XCTAssertTrue(view.useSmallIcons);
-    XCTAssertTrue(view.allowSMSShare);
-}
-
 - (void)testGenericButtonStyles {
     UIColor *iconColor = [UIColor redColor];
     UIColor *backgroundColor = [UIColor blackColor];
@@ -57,7 +39,14 @@
     id uiUtilsMock = OCMClassMock([MAVEBuiltinUIElementUtils class]);
     OCMExpect([uiUtilsMock tintWhitesInImage:[OCMArg any] withColor:iconColor]);
 
-    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] initWithDelegate:nil iconColor:iconColor iconFont:iconFont backgroundColor:backgroundColor useSmallIcons:NO allowSMSShare:YES];
+
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    view.iconColor = iconColor;
+    view.iconTextColor = iconColor;
+    view.iconFont = iconFont;
+    view.backgroundColor = backgroundColor;
+    view.useSmallIcons = NO;
+    view.allowSMSShare = YES;
     UIButton *button = [view genericShareButtonWithIconNamed:@"MAVEShareIconSMS.png" andLabelText:@"FooBar"];
 
     OCMVerifyAll(uiUtilsMock);
@@ -96,7 +85,7 @@
     OCMExpect([sharerMock resetShareToken]);
     id chooserMock = OCMClassMock([MAVEInvitePageChooser class]);
     [MaveSDK sharedInstance].invitePageChooser = chooserMock;
-    [[chooserMock reject] dismissOnSuccess:1];
+    OCMExpect([chooserMock dismissOnSuccess:1]);
 
     [view afterShareActions];
 
@@ -277,12 +266,12 @@
 }
 
 - (void) testClipboardShare {
-    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
 
     id sharerMock = OCMClassMock([MAVESharer class]);
     OCMExpect([sharerMock composePasteboardShare]);
 
-    [vc clipboardShare];
+    [view doClipboardShare];
     
     OCMVerifyAll(sharerMock);
 }
