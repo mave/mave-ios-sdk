@@ -23,6 +23,39 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 
 @implementation MAVEShareButtonsView
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self setupDefaultStyling];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super init]) {
+        [self setupDefaultStyling];
+        self.frame = frame;
+    }
+    return self;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        [self setupDefaultStyling];
+    }
+    return self;
+}
+
+- (void)setupDefaultStyling {
+    self.iconColor = [MAVEDisplayOptions colorMediumGrey];
+    self.iconTextColor = [MAVEDisplayOptions colorMediumGrey];
+    self.backgroundColor = [UIColor clearColor];
+    self.iconFont = [UIFont systemFontOfSize:13];
+
+    self.useSmallIcons = NO;
+    self.allowSMSShare = YES;
+    self.dismissMaveTopLevelOnSuccessfulShare = NO;
+}
+
 - (void)layoutSubviews {
     [self layoutShareButtons];
 
