@@ -30,14 +30,6 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super init]) {
-        [self setupDefaultStyling];
-        self.frame = frame;
-    }
-    return self;
-}
-
 - (instancetype)init {
     if (self = [super init]) {
         [self setupDefaultStyling];
