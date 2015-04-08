@@ -47,7 +47,6 @@
 
     // setup the share icons view
     self.shareIconsView = [[MAVEShareButtonsView alloc] init];
-    self.shareIconsView.delegate = self.delegate;
     self.shareIconsView.iconColor = opts.sharePageIconColor;
     self.shareIconsView.iconTextColor = opts.sharePageIconColor;
     self.shareIconsView.iconFont = opts.sharePageIconFont;

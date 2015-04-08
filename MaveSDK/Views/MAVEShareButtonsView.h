@@ -8,19 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol MAVEShareButtonsDelegate
-
-- (void)smsClientSideShare;
-- (void)emailClientSideShare;
-- (void)facebookiOSNativeShare;
-- (void)twitteriOSNativeShare;
-- (void)clipboardShare;
-
-@end
-
 @interface MAVEShareButtonsView : UIView
 
-@property (nonatomic, strong) id<MAVEShareButtonsDelegate>delegate;
 @property (nonatomic, strong) NSMutableArray *shareButtons;
 
 @property (nonatomic, strong) UIColor *iconColor;
@@ -31,13 +20,6 @@
 @property (nonatomic, assign) BOOL allowSMSShare;
 
 @property (nonatomic, assign) BOOL dismissMaveTopLevelOnSuccessfulShare;
-
-- (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate
-                       iconColor:(UIColor *)iconColor
-                        iconFont:(UIFont *)iconFont
-                 backgroundColor:(UIColor *)backgroundColor
-                   useSmallIcons:(BOOL)useSmallIcons
-                   allowSMSShare:(BOOL)allowSMSShare;
 
 // Helpers
 - (CGSize)shareButtonSize;  // all share buttons should be the same size
