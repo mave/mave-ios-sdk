@@ -30,8 +30,7 @@
     [super tearDown];
 }
 
-- (void)testInitWithDelegate {
-    MAVECustomSharePageViewController *delegate = [[MAVECustomSharePageViewController alloc] init];
+- (void)testInit {
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
     remoteConfig.contactsInvitePage = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
@@ -39,7 +38,7 @@
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
-    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:delegate];
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
 
     // Invite explanation view is present b/c copy is set
     XCTAssertGreaterThan([[MaveSDK sharedInstance].inviteExplanationCopy length], 0);
@@ -48,8 +47,6 @@
     XCTAssertFalse(view.inviteExplanationView.hidden);
 
     // share buttons view is active, and it uses small icons + client sms share disabled
-    XCTAssertEqualObjects(view.shareDelegate, delegate);
-    XCTAssertEqualObjects(view.shareButtonsView.delegate, delegate);
     XCTAssertTrue([view.shareButtonsView isDescendantOfView:view]);
     XCTAssertTrue(view.shareButtonsView.useSmallIcons);
     XCTAssertFalse(view.shareButtonsView.allowSMSShare);
@@ -71,7 +68,7 @@
     remoteConfig.contactsInvitePage.shareButtonsEnabled = YES;
     OCMExpect([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
-    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:nil];
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
     XCTAssertTrue([view hasContentOtherThanSearchBar]);
     OCMVerifyAll(maveMock);
 }
@@ -84,7 +81,7 @@
     remoteConfig.contactsInvitePage.shareButtonsEnabled = NO;
     OCMExpect([maveMock remoteConfiguration]).andReturn(remoteConfig);
 
-    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] initWithShareDelegate:nil];
+    MAVEInviteTableHeaderView *view = [[MAVEInviteTableHeaderView alloc] init];
     XCTAssertFalse([view hasContentOtherThanSearchBar]);
     OCMVerifyAll(maveMock);
 }
