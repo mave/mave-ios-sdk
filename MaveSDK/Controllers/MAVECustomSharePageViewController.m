@@ -33,7 +33,7 @@
 
 // Call this after a successful share
 - (void)dismissAfterShare {
-    [self.sharerObject resetShareToken];
+    [MAVESharer resetShareToken];
     return [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
 }
 

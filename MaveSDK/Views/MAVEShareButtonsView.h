@@ -30,6 +30,8 @@
 
 @property (nonatomic, assign) BOOL allowSMSShare;
 
+@property (nonatomic, assign) BOOL dismissMaveTopLevelOnSuccessfulShare;
+
 - (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate
                        iconColor:(UIColor *)iconColor
                         iconFont:(UIFont *)iconFont
@@ -47,5 +49,12 @@
 - (UIButton *)facebookShareButton;
 - (UIButton *)twitterShareButton;
 - (UIButton *)clipboardShareButton;
+
+- (void)afterShareActions;
+- (void)doClientSMSShare;
+- (void)doEmailShare;
+- (void)doFacebookNativeiOSShare;
+- (void)doTwitterNativeiOSShare;
+- (void)doClipboardShare;
 
 @end

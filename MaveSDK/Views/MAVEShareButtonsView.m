@@ -7,7 +7,9 @@
 //
 
 #import "MAVEShareButtonsView.h"
+#import "MaveSDK.h"
 #import "MAVEConstants.h"
+#import "MAVESharer.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEBuiltinUIElementUtils.h"
 #import <MessageUI/MessageUI.h>
@@ -20,12 +22,6 @@ CGFloat const MAVEShareIconsViewVerticalPadding = 10;
 CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 
 @implementation MAVEShareButtonsView
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super initWithCoder:aDecoder]) {
-    }
-    return self;
-}
 
 - (instancetype)initWithDelegate:(id<MAVEShareButtonsDelegate>)delegate iconColor:(UIColor *)iconColor iconFont:(UIFont *)iconFont backgroundColor:(UIColor *)backgroundColor useSmallIcons:(BOOL)useSmallIcons allowSMSShare:(BOOL)allowSMSShare {
     if (self = [super init]) {
@@ -189,8 +185,11 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 - (UIButton *)emailShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconEmail.png"
                                                 andLabelText:@"EMAIL"];
-    [button addTarget:self.delegate
-               action:@selector(emailClientSideShare)
+//    [button addTarget:self.delegate
+//               action:@selector(emailClientSideShare)
+//     forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self
+               action:@selector(doEmailShare)
      forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -216,10 +215,73 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 - (UIButton *)clipboardShareButton {
     UIButton *button = [self genericShareButtonWithIconNamed:@"MAVEShareIconClipboard.png"
                                                 andLabelText:@"COPY"];
-    [button addTarget:self.delegate
-               action:@selector(clipboardShare)
-     forControlEvents:UIControlEventTouchUpInside];
+//    [button addTarget:self.delegate
+//               action:@selector(clipboardShare)
+//     forControlEvents:UIControlEventTouchUpInside];
     return button;
+}
+
+#pragma mark - Share Actions
+
+- (UIViewController *)presentingViewController {
+    UIResponder *responder = self;
+    while (![responder isKindOfClass:[UIViewController class]])
+        responder = [responder nextResponder];
+        if (!responder) {
+            return nil;
+        }
+    return (UIViewController *)responder;
+}
+
+- (void)afterShareActions {
+    [MAVESharer resetShareToken];
+    if (self.dismissMaveTopLevelOnSuccessfulShare) {
+        [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
+    }
+}
+
+- (void)doClientSMSShare {
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+        if (composeResult == MessageComposeResultSent) {
+            [self afterShareActions];
+        }
+    }];
+    [self.presentingViewController presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)doEmailShare {
+    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+        if (result == MFMailComposeResultSent) {
+            [self afterShareActions];
+        }
+    }];
+    [self.presentingViewController presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)doFacebookNativeiOSShare {
+    UIViewController *vc = [MAVESharer composeFacebookNativeShareWithCompletionBlock:^(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+        if (result == SLComposeViewControllerResultDone) {
+            [self afterShareActions];
+        }
+    }];
+    [self.presentingViewController presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)doTwitterNativeiOSShare {
+    UIViewController *vc = [MAVESharer composeTwitterNativeShareWithCompletionBlock:^(SLComposeViewController *controller, SLComposeViewControllerResult result) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+        if (result == SLComposeViewControllerResultDone) {
+            [self afterShareActions];
+        }
+    }];
+    [self.presentingViewController presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)doClipboardShare {
+    [MAVESharer composePasteboardShare];
 }
 
 @end

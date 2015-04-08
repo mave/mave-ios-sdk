@@ -69,4 +69,223 @@
     XCTAssertEqualObjects(view.backgroundColor, backgroundColor);
 }
 
+#pragma mark - Test Share Actions
+
+- (void)testAfterShareActionsDismissAfterShare {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    view.dismissMaveTopLevelOnSuccessfulShare = YES;
+
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock resetShareToken]);
+    id chooserMock = OCMClassMock([MAVEInvitePageChooser class]);
+    [MaveSDK sharedInstance].invitePageChooser = chooserMock;
+    OCMExpect([chooserMock dismissOnSuccess:1]);
+
+    [view afterShareActions];
+
+    OCMVerifyAll(sharerMock);
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testAfterShareActionsNoDismissAfterShare {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    view.dismissMaveTopLevelOnSuccessfulShare = YES;
+
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock resetShareToken]);
+    id chooserMock = OCMClassMock([MAVEInvitePageChooser class]);
+    [MaveSDK sharedInstance].invitePageChooser = chooserMock;
+    [[chooserMock reject] dismissOnSuccess:1];
+
+    [view afterShareActions];
+
+    OCMVerifyAll(sharerMock);
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testClientSideSMSShareSent {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultSent);
+        return YES;
+    }]]);
+    OCMExpect([mock afterShareActions]);
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doClientSMSShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(vcMock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void)testClientSideSMSShareCanceled {
+    // On cancel, we don't dismiss the share page view controller
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:nil completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result) = obj;
+        completionBlock(nil, MessageComposeResultCancelled);
+        return YES;
+    }]]);
+    [[mock reject] afterShareActions];
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doClientSMSShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void)testDoEmailShareSent {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientEmailWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = obj;
+        completionBlock(nil, MFMailComposeResultSent);
+        return YES;
+    }]]);
+    OCMExpect([mock afterShareActions]);
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doEmailShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(vcMock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void)testDoEmailShareCanceled {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeClientEmailWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = obj;
+        completionBlock(nil, MFMailComposeResultCancelled);
+        return YES;
+    }]]);
+    [[mock reject] afterShareActions];
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doEmailShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(vcMock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void)testFacebookiOSNativeShare {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeFacebookNativeShareWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(SLComposeViewController *controller, SLComposeViewControllerResult result) = obj;
+        completionBlock(nil, SLComposeViewControllerResultDone);
+        return YES;
+    }]]);
+    OCMExpect([mock afterShareActions]);
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doFacebookNativeiOSShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void)testFacebookiOSNativeShareCanceled {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeFacebookNativeShareWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(SLComposeViewController *controller, SLComposeViewControllerResult result) = obj;
+        completionBlock(nil, SLComposeViewControllerResultCancelled);
+        return YES;
+    }]]);
+    [[mock reject] afterShareActions];
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doFacebookNativeiOSShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void)testTwitteriOSNativeShare {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeTwitterNativeShareWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(SLComposeViewController *controller, SLComposeViewControllerResult result) = obj;
+        completionBlock(nil, SLComposeViewControllerResultDone);
+        return YES;
+    }]]);
+    OCMExpect([mock afterShareActions]);
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doTwitterNativeiOSShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void)testTwitteriOSNativeShareCanceled {
+    MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
+    id mock = OCMPartialMock(view);
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composeTwitterNativeShareWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(SLComposeViewController *controller, SLComposeViewControllerResult result) = obj;
+        completionBlock(nil, SLComposeViewControllerResultCancelled);
+        return YES;
+    }]]);
+    [[mock reject] afterShareActions];
+
+    id vcMock = OCMClassMock([UIViewController class]);
+    OCMExpect([mock presentingViewController]).andReturn(vcMock);
+    OCMExpect([vcMock presentViewController:[OCMArg any] animated:YES completion:nil]);
+
+    [view doTwitterNativeiOSShare];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(sharerMock);
+}
+
+- (void) testClipboardShare {
+    MAVECustomSharePageViewController *vc = [[MAVECustomSharePageViewController alloc] init];
+
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock composePasteboardShare]);
+
+    [vc clipboardShare];
+    
+    OCMVerifyAll(sharerMock);
+}
+
+
 @end
