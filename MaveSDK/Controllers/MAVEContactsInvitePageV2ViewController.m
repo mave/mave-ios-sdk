@@ -13,6 +13,7 @@
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
 #import "MAVEABUtils.h"
+#import "MAVEBuiltinUIElementUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEInviteTableSectionHeaderView.h"
@@ -78,7 +79,8 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     self.searchTableView.estimatedRowHeight = 50;
     self.searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
-    [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
+    NSBundle *bundle = [MAVEBuiltinUIElementUtils bundleForMave];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:bundle] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
 }
 
 
@@ -370,7 +372,6 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
                [self.tableView reloadData];
                // if search table view is active, switch back to non-search table view
                if (!self.searchTableView.hidden) {
-                   [self.searchTableView reloadData];
                    [self jumpToMainTableRowForPerson:person];
                }
            });
@@ -394,6 +395,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     if (person) {
         person.selected = NO;
         [self.tableView reloadData];
+        [self jumpToMainTableRowForPerson:person];
     }
 }
 
