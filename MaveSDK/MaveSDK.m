@@ -118,7 +118,7 @@ static dispatch_once_t sharedInstanceonceToken;
 }
 
 - (MAVERemoteConfiguration *)remoteConfiguration {
-    id obj = [self.remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
+    id obj = [self.remoteConfigurationBuilder createObjectSynchronousWithTimeout:3];
     return (MAVERemoteConfiguration *)obj;
 }
 

@@ -62,6 +62,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (void)setupAboveTableView {
     self.messageTextView.delegate = self;
     self.searchBar.delegate = self;
+    self.searchBar.returnKeyType = UIReturnKeyDone;
 }
 - (void)setupTableView {
     self.tableView.delegate = self;
@@ -135,7 +136,30 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     [self.tableView reloadData];
 }
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
-    NSLog(@"loaded suggestions");
+    // Update the table data without telling the table to reload
+    NSMutableDictionary *newData = [NSMutableDictionary dictionaryWithDictionary:self.tableData];
+    if ([suggestedInvites count] == 0) {
+        // no suggested invites, remove the section from data source and reload
+        [newData removeObjectForKey:MAVESuggestedInvitesTableDataKey];
+        [self updateTableData:[NSDictionary dictionaryWithDictionary:newData]];
+        return;
+    } else {
+        // Add the suggested invites to data source before animating them in
+        [newData setObject:suggestedInvites forKey:MAVESuggestedInvitesTableDataKey];
+        [self updateTableDataWithoutReloading:[NSDictionary dictionaryWithDictionary:newData]];
+    }
+
+    // Animate in the new rows
+    NSUInteger indexOfSuggested = [self.tableSections indexOfObject:MAVESuggestedInvitesTableDataKey];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:[suggestedInvites count]];
+    for (NSInteger rowNumber = 0; rowNumber < [suggestedInvites count]; ++rowNumber) {
+        [indexPaths addObject:[NSIndexPath indexPathForRow:rowNumber inSection:indexOfSuggested]];
+    }
+
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView endUpdates];
+    [self.suggestionsSectionHeaderView stopWaiting];
 }
 - (void)updateTableDataWithoutReloading:(NSDictionary *)tableData {
     self.tableData = tableData;
@@ -213,7 +237,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     [self.wrapperView layoutSubviews];
 }
 
-#pragma mark - TextFieldDelegate methods (only for search bar)
+#pragma mark - Search related (UITextFieldDelegate methods)
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
     if ([newText isEqualToString:@"\n"]) {
@@ -233,6 +257,17 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (void)searchAndUpdateSearchTableView:(NSString *)searchText {
     self.searchTableData = [MAVEABTableViewController searchContacts:[self allContacts] withText:searchText];
     [self.searchTableView reloadData];
+}
+// Must call this method in the main thread
+- (void)jumpToMainTableRowForPerson:(MAVEABPerson *)person {
+    self.searchBar.text = @"";
+    [self.searchBar endEditing:YES];
+    self.searchTableView.hidden = YES;
+    self.tableView.hidden = NO;
+    NSIndexPath *indexOnMainTable = [[self indexPathsOnMainTableViewForPerson:person] objectAtIndex:0];
+    if (indexOnMainTable) {
+        [self.tableView scrollToRowAtIndexPath:indexOnMainTable atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
 }
 
 #pragma mark - Table sections layout
@@ -332,6 +367,12 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
            MAVEInfoLog(@"Sent invite to %@!", person.fullName);
            dispatch_async(dispatch_get_main_queue(), ^{
                person.selected = YES;
+               [self.tableView reloadData];
+               // if search table view is active, switch back to non-search table view
+               if (!self.searchTableView.hidden) {
+                   [self.searchTableView reloadData];
+                   [self jumpToMainTableRowForPerson:person];
+               }
            });
        }
     }];
