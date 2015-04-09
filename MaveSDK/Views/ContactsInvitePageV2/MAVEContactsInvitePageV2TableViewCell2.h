@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MAVEABPerson.h"
 
 @interface MAVEContactsInvitePageV2TableViewCell2 : UITableViewCell
 
@@ -14,5 +15,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *contactInfoLabel;
 @property (strong, nonatomic) IBOutlet UIButton *sendButton;
 
+- (void)updateWithInfoForPerson:(MAVEABPerson *)person;
 
 @end

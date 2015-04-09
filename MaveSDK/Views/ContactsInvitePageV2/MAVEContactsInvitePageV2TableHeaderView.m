@@ -33,6 +33,7 @@ CGFloat const MAVESearchBarHeightt = 40;
     self.messageTextView.font = [UIFont systemFontOfSize:18];
     self.messageTextView.scrollEnabled = NO;
     self.messageTextView.text = @"Check out Shyp: a cool app that helps you ship your stuff. Use my referral ink to get $30 off your first shipment: http://get.shyp.com/ic/dasdn";
+    self.messageTextView.font = [UIFont systemFontOfSize:15];
     self.messageTextView.layer.borderWidth = 0.5;
     self.messageTextView.layer.borderColor = [[UIColor grayColor] CGColor];
     self.messageTextView.layer.cornerRadius = 4;

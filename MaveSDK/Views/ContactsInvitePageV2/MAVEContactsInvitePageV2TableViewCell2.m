@@ -27,7 +27,19 @@
 //}
 
 - (void)doInitialSetup {
-    self.nameLabel.text = @"FOo";
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.nameLabel.text = @"Foo Bar";
+    self.contactInfoLabel.text = @"foo@foo.com";
+
+    [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [self.sendButton setTitle:@"Send" forState:UIControlStateHighlighted];
+    [self.sendButton setTitle:@"Sent!" forState:UIControlStateDisabled];
+    [self.sendButton addTarget:self action:@selector(foo) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)foo {
+    NSLog(@"hi");
+    self.sendButton.enabled = NO;
 }
 
 - (void)awakeFromNib {
