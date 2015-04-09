@@ -8,7 +8,7 @@
 
 #import "MAVEConstants.h"
 
-NSString * const MAVESDKVersion = @"0.5.8";
+NSString * const MAVESDKVersion = @"0.5.9";
 
 #ifdef MAVE_USE_DEV_API
 
