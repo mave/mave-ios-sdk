@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="54" id="qQw-58-JRJ" customClass="MAVEContactsInvitePageV2TableViewCell2">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="54"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qQw-58-JRJ" id="A6f-RR-aLX">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eds-Nv-7tK">
+                        <rect key="frame" x="8" y="8" width="359" height="37.5"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D2o-vB-FVW">
+                                <rect key="frame" x="0.0" y="0.0" width="215.5" height="37.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="meE-mH-7A3">
+                                        <rect key="frame" x="16" y="0.0" width="92.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(808) 555-1234" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QQy-DQ-YjH">
+                                        <rect key="frame" x="16" y="21" width="91" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="QQy-DQ-YjH" firstAttribute="leading" secondItem="D2o-vB-FVW" secondAttribute="leading" constant="16" id="4xq-5a-xaH"/>
+                                    <constraint firstItem="meE-mH-7A3" firstAttribute="top" secondItem="D2o-vB-FVW" secondAttribute="top" id="HN8-UV-sit"/>
+                                    <constraint firstItem="QQy-DQ-YjH" firstAttribute="top" secondItem="meE-mH-7A3" secondAttribute="bottom" id="gLK-BQ-y0a"/>
+                                    <constraint firstItem="meE-mH-7A3" firstAttribute="leading" secondItem="D2o-vB-FVW" secondAttribute="leading" constant="16" id="hKL-mc-gCa"/>
+                                    <constraint firstAttribute="bottom" secondItem="QQy-DQ-YjH" secondAttribute="bottom" constant="0.5" id="vfp-sm-ieA"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hRd-So-D4a">
+                                <rect key="frame" x="215" y="4" width="90" height="30"/>
+                                <state key="normal" title="Send">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="hRd-So-D4a" secondAttribute="centerY" id="4NP-VA-mJi"/>
+                            <constraint firstItem="D2o-vB-FVW" firstAttribute="leading" secondItem="eds-Nv-7tK" secondAttribute="leading" id="BwM-PA-qfg"/>
+                            <constraint firstAttribute="bottom" secondItem="D2o-vB-FVW" secondAttribute="bottom" id="TOG-pD-eCd"/>
+                            <constraint firstItem="hRd-So-D4a" firstAttribute="width" secondItem="eds-Nv-7tK" secondAttribute="width" multiplier="0.25" id="WKf-E3-yOl"/>
+                            <constraint firstItem="hRd-So-D4a" firstAttribute="leading" secondItem="D2o-vB-FVW" secondAttribute="trailing" id="i7I-no-MPr"/>
+                            <constraint firstItem="D2o-vB-FVW" firstAttribute="top" secondItem="eds-Nv-7tK" secondAttribute="top" id="krH-cz-MEZ"/>
+                            <constraint firstItem="D2o-vB-FVW" firstAttribute="width" secondItem="eds-Nv-7tK" secondAttribute="width" multiplier="0.6" id="loy-Ia-ps3"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="eds-Nv-7tK" firstAttribute="top" secondItem="A6f-RR-aLX" secondAttribute="topMargin" id="1DA-ju-WQu"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="eds-Nv-7tK" secondAttribute="bottom" id="Snn-bb-z1z"/>
+                    <constraint firstItem="eds-Nv-7tK" firstAttribute="leading" secondItem="A6f-RR-aLX" secondAttribute="leadingMargin" id="U37-iT-SGn"/>
+                    <constraint firstItem="eds-Nv-7tK" firstAttribute="trailing" secondItem="A6f-RR-aLX" secondAttribute="trailingMargin" id="V5a-hn-vxe"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contactInfoLabel" destination="QQy-DQ-YjH" id="foT-HK-udn"/>
+                <outlet property="nameLabel" destination="meE-mH-7A3" id="Nqh-ag-3RM"/>
+                <outlet property="sendButton" destination="hRd-So-D4a" id="dg2-xa-TDI"/>
+            </connections>
+            <point key="canvasLocation" x="264" y="198"/>
+        </tableViewCell>
+    </objects>
+</document>

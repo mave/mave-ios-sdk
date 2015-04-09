@@ -8,10 +8,9 @@
 
 #import "MAVEContactsInvitePageV2ViewController.h"
 #import "MAVEContactsInvitePageV2TableHeaderView.h"
+#import "MAVEContactsInvitePageV2TableViewCell2.h"
 
-@interface MAVEContactsInvitePageV2ViewController ()
-
-@end
+NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
 @implementation MAVEContactsInvitePageV2ViewController
 
@@ -25,13 +24,33 @@
     // Dispose of any resources that can be recreated.
 }
 
+// Helpers for accessing deeply nested objects
+- (UITableView *)tableView {
+    return self.wrapperView.tableView;
+}
+- (UITextView *)messageTextView {
+    return self.wrapperView.aboveTableView.messageTextView;
+}
+
 - (void)loadView {
     self.navigationItem.title = @"Send SMS Separately";
 
     self.wrapperView = [[MAVEContactsInvitePageV2TableWrapperView alloc] init];
-    self.wrapperView.aboveTableView.messageTextView.delegate = self;
 
-    
+    // set self up as delegates and such
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+//    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 50;
+    self.tableView.estimatedSectionHeaderHeight = 90;
+
+    [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
+
+//    [self.tableView registerClass:[MAVEContactsInvitePageV2TableViewCell2 class]
+//                       forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
+    self.messageTextView.delegate = self;
+
+
     self.wrapperView.frame = CGRectMake(0, 64, 200, 200);
 
     self.view = self.wrapperView;
@@ -51,5 +70,19 @@
 - (void)textViewDidChange:(UITextView *)textView {
     [self.wrapperView layoutSubviews];
 }
+
+#pragma mark - TableViewDelegate methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 5;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV2CellIdentifier];
+}
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return 50;
+//}
 
 @end

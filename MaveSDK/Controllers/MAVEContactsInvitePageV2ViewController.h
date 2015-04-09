@@ -12,5 +12,7 @@
 @interface MAVEContactsInvitePageV2ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 
 @property (nonatomic, strong) MAVEContactsInvitePageV2TableWrapperView *wrapperView;
+@property (nonatomic, strong) NSArray *contacts;
+@property (nonatomic, strong) NSDictionary *indexedContactsForSectionedDisplay;
 
 @end
