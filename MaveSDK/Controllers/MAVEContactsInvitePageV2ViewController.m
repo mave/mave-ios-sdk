@@ -51,6 +51,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
         self.navigationItem.title = @"Send SMS Separately";
     }
     self.wrapperView = [[MAVEContactsInvitePageV2TableWrapperView alloc] init];
+    self.suggestionsSectionHeaderView = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Suggestions" sectionIsWaiting:YES];
     [self setupAboveTableView];
     [self setupTableView];
     self.view = self.wrapperView;
@@ -67,12 +68,14 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     self.tableView.dataSource = self;
     //    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 50;
-    self.tableView.estimatedSectionHeaderHeight = 90;
+    self.tableView.estimatedSectionHeaderHeight = 20;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
 
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
+    self.searchTableView.estimatedRowHeight = 50;
+    self.searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
 }
@@ -89,9 +92,24 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
             });
             // Permission granted
         } else {
+            NSDictionary *indexedContactsToRenderNow;
+            BOOL updateSuggestionsWhenReady = NO;
+            [MAVEInvitePageViewController buildContactsToUseAtPageRender:&indexedContactsToRenderNow
+                                              addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
+                                                        fromContactsList:contacts];
+            if (updateSuggestionsWhenReady) {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    NSArray *suggestions = [[MaveSDK sharedInstance] suggestedInvitesWithFullContactsList:contacts delay:10];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self updateTableDataAnimatedWithSuggestedInvites:suggestions];
+
+                    });
+                });
+            }
+
+            // Render the contacts we have now regardless
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSDictionary *indexedContacts = [MAVEABUtils indexABPersonArrayForTableSections:contacts];
-                [self updateTableData:indexedContacts];
+                [self updateTableData:indexedContactsToRenderNow];
 
                 // Only if permission was granted should we log that we displayed
                 // the invite page with an address book list
@@ -107,10 +125,20 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     self.tableSections = [[tableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     self.allContacts = [self enumerateAllContacts];
     [self updatePersonToIndexPathsIndex];
+
+    // if there are definitely no suggestions, the section won't exist in table data.
+    // if section does exist and is empty, it should be pending (which is the default
+    // state of the suggestions section header view).
+    // if it's not empty, stop the pending dots
+    NSArray *suggestions = [tableData objectForKey:MAVESuggestedInvitesTableDataKey];
+    if (suggestions && [suggestions count] != 0) {
+        [self.suggestionsSectionHeaderView stopWaiting];
+    }
+
     [self.tableView reloadData];
 }
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
-
+    NSLog(@"loading suggestions");
 }
 - (NSArray *)enumerateAllContacts {
     NSMutableArray *mutableAllPeople = [NSMutableArray array];
@@ -226,6 +254,9 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
         return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Search Results" sectionIsWaiting:NO];
     }
     NSString *sectionKey = [self.tableSections objectAtIndex:section];
+    if ([sectionKey isEqualToString:MAVESuggestedInvitesTableDataKey]) {
+        return self.suggestionsSectionHeaderView;
+    }
     return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:sectionKey sectionIsWaiting:NO];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
