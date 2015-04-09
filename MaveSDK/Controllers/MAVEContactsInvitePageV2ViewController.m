@@ -239,6 +239,15 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     [self.wrapperView layoutSubviews];
 }
 
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSString *newText = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    // Set some limit so people don't go crazy with long sms messages
+    if ([newText length] > 300) {
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - Search related (UITextFieldDelegate methods)
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
