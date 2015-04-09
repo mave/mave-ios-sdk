@@ -19,7 +19,7 @@
                         <rect key="frame" x="8" y="8" width="359" height="84.5"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D2o-vB-FVW">
-                                <rect key="frame" x="0.0" y="0.0" width="215.5" height="84.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="244" height="84.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="meE-mH-7A3">
                                         <rect key="frame" x="10" y="0.0" width="92.5" height="20.5"/>
@@ -34,7 +34,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3G-8G-cgZ">
-                                        <rect key="frame" x="0.0" y="36" width="215.5" height="48"/>
+                                        <rect key="frame" x="0.0" y="36" width="244" height="48"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="5Us-mf-aFz"/>
@@ -54,7 +54,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hRd-So-D4a">
-                                <rect key="frame" x="215" y="27" width="90" height="30"/>
+                                <rect key="frame" x="264" y="28" width="36" height="30"/>
                                 <state key="normal" title="Send">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -65,10 +65,9 @@
                             <constraint firstAttribute="centerY" secondItem="hRd-So-D4a" secondAttribute="centerY" id="4NP-VA-mJi"/>
                             <constraint firstItem="D2o-vB-FVW" firstAttribute="leading" secondItem="eds-Nv-7tK" secondAttribute="leading" id="BwM-PA-qfg"/>
                             <constraint firstAttribute="bottom" secondItem="D2o-vB-FVW" secondAttribute="bottom" id="TOG-pD-eCd"/>
-                            <constraint firstItem="hRd-So-D4a" firstAttribute="width" secondItem="eds-Nv-7tK" secondAttribute="width" multiplier="0.25" id="WKf-E3-yOl"/>
-                            <constraint firstItem="hRd-So-D4a" firstAttribute="leading" secondItem="D2o-vB-FVW" secondAttribute="trailing" id="i7I-no-MPr"/>
+                            <constraint firstItem="hRd-So-D4a" firstAttribute="leading" secondItem="D2o-vB-FVW" secondAttribute="trailing" constant="20" id="i7I-no-MPr"/>
                             <constraint firstItem="D2o-vB-FVW" firstAttribute="top" secondItem="eds-Nv-7tK" secondAttribute="top" id="krH-cz-MEZ"/>
-                            <constraint firstItem="D2o-vB-FVW" firstAttribute="width" secondItem="eds-Nv-7tK" secondAttribute="width" multiplier="0.6" id="loy-Ia-ps3"/>
+                            <constraint firstItem="D2o-vB-FVW" firstAttribute="width" secondItem="eds-Nv-7tK" secondAttribute="width" multiplier="0.68" id="loy-Ia-ps3"/>
                         </constraints>
                     </view>
                 </subviews>
