@@ -121,10 +121,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
 #pragma mark - Table data person records
 - (void)updateTableData:(NSDictionary *)tableData {
-    self.tableData = tableData;
-    self.tableSections = [[tableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    self.allContacts = [self enumerateAllContacts];
-    [self updatePersonToIndexPathsIndex];
+    [self updateTableDataWithoutReloading:tableData];
 
     // if there are definitely no suggestions, the section won't exist in table data.
     // if section does exist and is empty, it should be pending (which is the default
@@ -138,7 +135,13 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     [self.tableView reloadData];
 }
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
-    NSLog(@"loading suggestions");
+    NSLog(@"loaded suggestions");
+}
+- (void)updateTableDataWithoutReloading:(NSDictionary *)tableData {
+    self.tableData = tableData;
+    self.tableSections = [[tableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    self.allContacts = [self enumerateAllContacts];
+    [self updatePersonToIndexPathsIndex];
 }
 - (NSArray *)enumerateAllContacts {
     NSMutableArray *mutableAllPeople = [NSMutableArray array];
