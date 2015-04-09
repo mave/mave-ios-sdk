@@ -12,6 +12,7 @@
 #import "MaveSDK.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
+#import "MAVEABTableViewController.h"
 #import "MAVEInviteTableSectionHeaderView.h"
 
 NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
@@ -67,6 +68,9 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
 
+    self.searchTableView.delegate = self;
+    self.searchTableView.dataSource = self;
+
     [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
 }
 
@@ -96,15 +100,37 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (void)updateTableData:(NSDictionary *)tableData {
     self.tableData = tableData;
     self.tableSections = [[tableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    self.allContacts = [self enumerateAllContacts];
     [self.tableView reloadData];
 }
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
 
 }
+- (NSArray *)enumerateAllContacts {
+    NSMutableArray *mutableAllPeople = [NSMutableArray array];
+    NSMutableSet *mutableAllPeopleUnique = [[NSMutableSet alloc] init];
+    for (NSString *sectionKey in self.tableSections) {
+        NSArray *section = [self.tableData objectForKey:sectionKey];
+        for (MAVEABPerson *person in section) {
+            if (![mutableAllPeopleUnique containsObject:person]) {
+                [mutableAllPeople addObject:person];
+                [mutableAllPeopleUnique addObject:person];
+            }
+        }
+    }
+    return [NSArray arrayWithArray:mutableAllPeople];
+}
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([tableView isEqual:self.searchTableView]) {
+        if ([self.searchTableData count] == 0) {
+            return nil;
+        } else {
+            return [self.searchTableData objectAtIndex:indexPath.row];
+        }
+    }
     NSString *sectionIndexLetter = [self.tableSections objectAtIndex:indexPath.section];
-    NSArray *rowsInsection = [self.tableData objectForKey:sectionIndexLetter];
-    return (MAVEABPerson *)[rowsInsection objectAtIndex:indexPath.row];
+    NSArray *rowsInSection = [self.tableData objectForKey:sectionIndexLetter];
+    return (MAVEABPerson *)[rowsInSection objectAtIndex:indexPath.row];
 }
 
 
@@ -120,22 +146,42 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
         [self.searchBar endEditing:YES];
         return NO;
     }
-    self.tableView.hidden = [newText length] > 0;
-    self.searchTableView.hidden = ![newText length] > 0;
+    if ([newText length] > 0) {
+        self.tableView.hidden = YES;
+        self.searchTableView.hidden = NO;
+        [self searchAndUpdateSearchTableView:newText];
+    } else {
+        self.tableView.hidden = NO;
+        self.searchTableView.hidden = YES;
+    }
     return YES;
+}
+- (void)searchAndUpdateSearchTableView:(NSString *)searchText {
+    self.searchTableData = [MAVEABTableViewController searchContacts:[self allContacts] withText:searchText];
+    [self.searchTableView reloadData];
 }
 
 #pragma mark - Table sections layout
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if ([tableView isEqual:self.searchTableView]) {
+        return 1;
+    }
     return [self.tableSections count];
-
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if ([tableView isEqual:self.searchTableView]) {
+        NSInteger numberRows = [self.searchTableData count];
+        if (numberRows == 0) { numberRows = 1; }
+        return numberRows;
+    }
     NSString *sectionKey = [self.tableSections objectAtIndex:section];
     NSArray *rowsInSection = [self.tableData valueForKey:sectionKey];
     return [rowsInSection count];
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if ([tableView isEqual:self.searchTableView]) {
+        return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Search Results" sectionIsWaiting:NO];
+    }
     NSString *sectionKey = [self.tableSections objectAtIndex:section];
     return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:sectionKey sectionIsWaiting:NO];
 }
@@ -148,7 +194,11 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEContactsInvitePageV2TableViewCell2 *cell =  [self.tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV2CellIdentifier];
     MAVEABPerson *person = [self tableView:tableView personForRowAtIndexPath:indexPath];
-    [cell updateWithInfoForPerson:person];
+    if (!person) {
+        [cell updateWithInfoForNoPersonFound];
+    } else {
+        [cell updateWithInfoForPerson:person];
+    }
     return cell;
 }
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -46,6 +46,8 @@
     XCTAssertEqualObjects(vc.tableData, data);
     NSArray *expectedSections = @[@"A", @"B"];
     XCTAssertEqualObjects(vc.tableSections, expectedSections);
+    NSArray *expectedAllContacts = @[p3, p1, p2];
+    XCTAssertEqualObjects(vc.allContacts, expectedAllContacts);
 
     XCTAssertEqual([vc numberOfSectionsInTableView:vc.tableView], 2);
     XCTAssertEqual([vc tableView:vc.tableView numberOfRowsInSection:0], 1);

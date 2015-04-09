@@ -46,6 +46,12 @@
     self.contactInfoLabel.text = [MAVEABPerson displayPhoneNumber:person.bestPhone];
 }
 
+- (void)updateWithInfoForNoPersonFound {
+    self.nameLabel.text = @"No results found";
+    self.contactInfoLabel.text = nil;
+    self.sendButton.hidden = YES;
+}
+
 - (void)foo {
     NSLog(@"hi");
     self.sendButton.enabled = NO;

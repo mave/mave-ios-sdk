@@ -18,5 +18,6 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *expandedContactInfoHeightConstraint;
 - (void)doInitialSetup;
 - (void)updateWithInfoForPerson:(MAVEABPerson *)person;
+- (void)updateWithInfoForNoPersonFound;
 
 @end
