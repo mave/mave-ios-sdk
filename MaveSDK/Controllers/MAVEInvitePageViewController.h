@@ -40,7 +40,7 @@
 //   - already have suggestions to display
 //   - already know we don't have suggestions to display
 //   - still be waiting for api response to return 0 or more suggestions
-- (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
++ (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
             addSuggestedLaterWhenReady:(BOOL *)addSuggestedLaterReturnVal
                       fromContactsList:(NSArray *)contacts;
 

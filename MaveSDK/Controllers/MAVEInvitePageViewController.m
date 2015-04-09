@@ -146,7 +146,7 @@
 //
 
 
-- (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
++ (void)buildContactsToUseAtPageRender:(NSDictionary **)suggestedContactsReturnVal
             addSuggestedLaterWhenReady:(BOOL *)addSuggestedLaterReturnVal
                       fromContactsList:(NSArray *)contacts {
     BOOL suggestionsEnabled = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.suggestedInvitesEnabled;
@@ -186,7 +186,7 @@
         } else {
             NSDictionary *indexedContactsToRenderNow;
             BOOL updateSuggestionsWhenReady = NO;
-            [self buildContactsToUseAtPageRender:&indexedContactsToRenderNow
+            [[self class] buildContactsToUseAtPageRender:&indexedContactsToRenderNow
                       addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
                                 fromContactsList:contacts];
             if (updateSuggestionsWhenReady) {

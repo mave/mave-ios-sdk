@@ -350,6 +350,8 @@
     XCTAssertEqualObjects(action, @"composeClientGroupSMSInvites");
 }
 
+#pragma mark - Build Contacts To Use and Suggestions
+
 // Tests for the helper for displaying suggested invites
 - (void)testBuildContactsToUseAtPageRenderWhenShowSuggestedFlaggedOff {
     [MaveSDK resetSharedInstanceForTesting];
@@ -366,10 +368,9 @@
     NSDictionary *indexedContacts = @{@"A": @[@"foo", @"bar"], @"#": @[@"nums"]};
     OCMExpect([utilsMock indexABPersonArrayForTableSections:inputContacts]).andReturn(indexedContacts);
 
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     NSDictionary *outputContacts = nil;
     BOOL outputAddSuggestedBool = NO;
-    [vc buildContactsToUseAtPageRender:&outputContacts
+    [MAVEInvitePageViewController buildContactsToUseAtPageRender:&outputContacts
             addSuggestedLaterWhenReady:&outputAddSuggestedBool
                       fromContactsList:inputContacts];
 
@@ -396,7 +397,6 @@
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.firstName = @"Foobar";
     NSArray *fakeSuggested = @[p1];
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
     p2.firstName = @"Not Suggested";
     NSArray *inputContacts = @[p2];
@@ -406,7 +406,7 @@
     NSDictionary *expectedOutputContacts = @{@"★": @[p1], @"N": @[p2]};
     NSDictionary *outputContactsList = nil;
     BOOL outputAddSuggestedBool = NO;
-    [vc buildContactsToUseAtPageRender:&outputContactsList
+    [MAVEInvitePageViewController buildContactsToUseAtPageRender:&outputContactsList
             addSuggestedLaterWhenReady:&outputAddSuggestedBool
                       fromContactsList:inputContacts];
 
@@ -428,7 +428,6 @@
 
     // Set the suggested contacts as already fulfilled but empty.
     // In this state, we should not add the suggestions category to the table
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
     p2.firstName = @"Not Suggested";
     NSArray *inputContacts = @[p2];
@@ -438,7 +437,7 @@
     NSDictionary *expectedOutputContacts = @{@"N": @[p2]};
     NSDictionary *outputContactsList = nil;
     BOOL outputAddSuggestedBool = NO;
-    [vc buildContactsToUseAtPageRender:&outputContactsList
+    [MAVEInvitePageViewController buildContactsToUseAtPageRender:&outputContactsList
             addSuggestedLaterWhenReady:&outputAddSuggestedBool
                       fromContactsList:inputContacts];
 
@@ -462,14 +461,13 @@
     [MaveSDK sharedInstance].suggestedInvitesBuilder.promise.status = MAVEPromiseStatusUnfulfilled;
     [[[maveMock reject] ignoringNonObjectArgs] suggestedInvitesWithFullContactsList:[OCMArg any] delay:0];
 
-    MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.firstName = @"Not Suggested";
     NSArray *inputContacts = @[p2];
     // should return the pending empty suggestions section
     NSDictionary *expectedOutputContacts = @{@"★": @[], @"N": @[p2]};
     NSDictionary *outputContactsList = nil;
     BOOL outputAddSuggestedBool = NO;
-    [vc buildContactsToUseAtPageRender:&outputContactsList
+    [MAVEInvitePageViewController buildContactsToUseAtPageRender:&outputContactsList
             addSuggestedLaterWhenReady:&outputAddSuggestedBool
                       fromContactsList:inputContacts];
 

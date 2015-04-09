@@ -26,10 +26,12 @@
 //    return self;
 //}
 
+- (void)awakeFromNib {
+    [self doInitialSetup];
+}
+
 - (void)doInitialSetup {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    self.nameLabel.text = @"Foo Bar";
-    self.contactInfoLabel.text = @"foo@foo.com";
 
     [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
     [self.sendButton setTitle:@"Send" forState:UIControlStateHighlighted];
@@ -39,15 +41,14 @@
     self.expandedContactInfoHeightConstraint.constant = 0;
 }
 
+- (void)updateWithInfoForPerson:(MAVEABPerson *)person {
+    self.nameLabel.text = [person fullName];
+    self.contactInfoLabel.text = [MAVEABPerson displayPhoneNumber:person.bestPhone];
+}
+
 - (void)foo {
     NSLog(@"hi");
     self.sendButton.enabled = NO;
-}
-
-- (void)awakeFromNib {
-    // Initialization code
-    NSLog(@"awoke");
-    [self doInitialSetup];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
