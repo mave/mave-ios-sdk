@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVEABPerson.h"
+#import "MAVEContactsInvitePageV2ViewController.h"
 
 @interface MAVEContactsInvitePageV2TableViewCell2 : UITableViewCell
 
+@property (nonatomic, weak) MAVEContactsInvitePageV2ViewController *delegateController;
+@property (nonatomic, weak) MAVEABPerson *person;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *contactInfoLabel;
 @property (strong, nonatomic) IBOutlet UIButton *sendButton;
@@ -19,5 +22,6 @@
 - (void)doInitialSetup;
 - (void)updateWithInfoForPerson:(MAVEABPerson *)person;
 - (void)updateWithInfoForNoPersonFound;
+- (void)sendInviteToCurrentPerson;
 
 @end

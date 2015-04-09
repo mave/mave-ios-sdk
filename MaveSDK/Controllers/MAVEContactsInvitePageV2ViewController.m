@@ -6,15 +6,18 @@
 //
 //
 
+#import <objc/runtime.h>
 #import "MAVEContactsInvitePageV2ViewController.h"
 #import "MAVEContactsInvitePageV2TableHeaderView.h"
 #import "MAVEContactsInvitePageV2TableViewCell2.h"
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 #import "MAVEABUtils.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEInviteTableSectionHeaderView.h"
 
+const char MAVESendFailedAlertViewDataKey;
 NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
 @implementation MAVEContactsInvitePageV2ViewController
@@ -97,10 +100,13 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
         }
     }];
 }
+
+#pragma mark - Table data person records
 - (void)updateTableData:(NSDictionary *)tableData {
     self.tableData = tableData;
     self.tableSections = [[tableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     self.allContacts = [self enumerateAllContacts];
+    [self updatePersonToIndexPathsIndex];
     [self.tableView reloadData];
 }
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
@@ -120,6 +126,29 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     }
     return [NSArray arrayWithArray:mutableAllPeople];
 }
+// Build a reverse index from people to the index paths they're found at in the table
+// The data structure is is an dictionary mapping an NSNumber (person recordID) to an NSArray of
+// NSIndexPaths.
+// NB: a person can be found at multiple rows in a table which is why we map to an array of index paths
+- (void)updatePersonToIndexPathsIndex {
+    NSNumber *personKey;
+    NSIndexPath *idxPath; NSInteger sectionIdx = 0, rowIdx = 0;
+    NSMutableDictionary *index = [[NSMutableDictionary alloc] init];
+    for (NSString *sectionKey in self.tableSections) {
+        rowIdx = 0;
+        for (MAVEABPerson *person in [self.tableData objectForKey:sectionKey]) {
+            personKey = [NSNumber numberWithInteger:person.recordID];
+            idxPath = [NSIndexPath indexPathForRow:rowIdx inSection:sectionIdx];
+            if (![index objectForKey:personKey]) {
+                [index setObject:[[NSMutableArray alloc] init] forKey:personKey];
+            }
+            [[index objectForKey:personKey] addObject:idxPath];
+            rowIdx++;
+        }
+        sectionIdx++;
+    }
+    self.personToIndexPathsIndex = index;
+}
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([tableView isEqual:self.searchTableView]) {
         if ([self.searchTableData count] == 0) {
@@ -131,6 +160,20 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     NSString *sectionIndexLetter = [self.tableSections objectAtIndex:indexPath.section];
     NSArray *rowsInSection = [self.tableData objectForKey:sectionIndexLetter];
     return (MAVEABPerson *)[rowsInSection objectAtIndex:indexPath.row];
+}
+// Returns an array of nsindexpaths, guarenteed to have at least one item in the array.
+// If person is not in the table it returns an array with the index path of the top
+// of the table
+- (NSArray *)indexPathsOnMainTableViewForPerson:(MAVEABPerson *)person {
+    NSArray *indexPaths;
+    if (person.recordID > 0) {
+        NSNumber *recordID = [NSNumber numberWithInteger:person.recordID];
+        indexPaths = [self.personToIndexPathsIndex objectForKey:recordID];
+    }
+    if (!indexPaths || [indexPaths count] == 0) {
+        indexPaths = @[[NSIndexPath indexPathForRow:0 inSection:0]];
+    }
+    return indexPaths;
 }
 
 
@@ -193,6 +236,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 # pragma mark - Table cell layout
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEContactsInvitePageV2TableViewCell2 *cell =  [self.tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV2CellIdentifier];
+    cell.delegateController = self;
     MAVEABPerson *person = [self tableView:tableView personForRowAtIndexPath:indexPath];
     if (!person) {
         [cell updateWithInfoForNoPersonFound];
@@ -221,6 +265,60 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
         return index;
     } else {
         return -1;
+    }
+}
+
+#pragma mark - Send invites
+- (void)sendInviteToPerson:(MAVEABPerson *)person {
+    NSString *phoneToinvite = [person bestPhone];
+    if (!phoneToinvite) {
+        return;
+    }
+    NSArray *phonesToInvite = @[phoneToinvite];
+    NSArray *peopleToinvite = @[person];
+    NSString *message = self.messageTextView.text;
+
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    MAVEAPIInterface *apiInterface = mave.APIInterface;
+    [apiInterface sendInvitesWithRecipientPhoneNumbers:phonesToInvite
+                               recipientContactRecords:peopleToinvite
+                                               message:message
+                                                userId:mave.userData.userID
+                              inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL
+                                        wrapInviteLink:mave.userData.wrapInviteLink
+                                            customData:mave.userData.customData
+                                       completionBlock:^(NSError *error, NSDictionary *responseData) {
+       if (error != nil) {
+           MAVEDebugLog(@"Invites failed to send, error: %@, response: %@",
+                        error, responseData);
+           dispatch_async(dispatch_get_main_queue(), ^{
+                [self showSendFailureErrorAndResetPerson:person];
+           });
+       } else {
+           MAVEInfoLog(@"Sent invite to %@!", person.fullName);
+           dispatch_async(dispatch_get_main_queue(), ^{
+               person.selected = YES;
+           });
+       }
+    }];
+}
+
+- (void)showSendFailureErrorAndResetPerson:(MAVEABPerson *)person {
+    NSString *message = [NSString stringWithFormat:@"Invite to %@ failed.\nServer was unavailable or internet connection failed.\nTry again later.", person.fullName];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invite not sent"
+                                                    message:message
+                                                   delegate:self
+                                          cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:nil];
+    objc_setAssociatedObject(alert, &MAVESendFailedAlertViewDataKey, person, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [alert show];
+}
+// Only alert view is the send failure error, and only button on alert is cancel
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    MAVEABPerson *person = objc_getAssociatedObject(alertView, &MAVESendFailedAlertViewDataKey);
+    if (person) {
+        person.selected = NO;
+        [self.tableView reloadData];
     }
 }
 
