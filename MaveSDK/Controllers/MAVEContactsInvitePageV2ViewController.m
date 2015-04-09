@@ -32,8 +32,14 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (UITableView *)tableView {
     return self.wrapperView.tableView;
 }
+- (UITableView *)searchTableView {
+    return self.wrapperView.searchTableView;
+}
 - (UITextView *)messageTextView {
     return self.wrapperView.aboveTableView.messageTextView;
+}
+- (MAVESearchBar *)searchBar {
+    return self.wrapperView.aboveTableView.searchBar;
 }
 
 - (void)loadView {
@@ -48,6 +54,10 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
     [self loadContactsIntoTableOrSwitchToFallbackBasedOnPermissions];
 }
+- (void)setupAboveTableView {
+    self.messageTextView.delegate = self;
+    self.searchBar.delegate = self;
+}
 - (void)setupTableView {
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -59,9 +69,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
     [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
 }
-- (void)setupAboveTableView {
-    self.messageTextView.delegate = self;
-}
+
 
 
 #pragma mark - Loading Content into table
@@ -85,17 +93,14 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
         }
     }];
 }
-
 - (void)updateTableData:(NSDictionary *)tableData {
     self.tableData = tableData;
     self.tableSections = [[tableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     [self.tableView reloadData];
 }
-
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites {
 
 }
-
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *sectionIndexLetter = [self.tableSections objectAtIndex:indexPath.section];
     NSArray *rowsInsection = [self.tableData objectForKey:sectionIndexLetter];
@@ -103,9 +108,21 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 }
 
 
-#pragma mark - TextViewDelegate methods (for message field)
+#pragma mark - TextViewDelegate methods (only for message field)
 - (void)textViewDidChange:(UITextView *)textView {
     [self.wrapperView layoutSubviews];
+}
+
+#pragma mark - TextFieldDelegate methods (only for search bar)
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if ([newText isEqualToString:@"\n"]) {
+        [self.searchBar endEditing:YES];
+        return NO;
+    }
+    self.tableView.hidden = [newText length] > 0;
+    self.searchTableView.hidden = ![newText length] > 0;
+    return YES;
 }
 
 #pragma mark - Table sections layout

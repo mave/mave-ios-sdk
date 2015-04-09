@@ -14,5 +14,6 @@
 
 @property (nonatomic, strong) MAVEContactsInvitePageV2TableHeaderView *aboveTableView;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UITableView *searchTableView;
 
 @end

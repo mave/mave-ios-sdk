@@ -23,8 +23,13 @@
     self.aboveTableView = [[MAVEContactsInvitePageV2TableHeaderView alloc] init];
     self.tableView = [[UITableView alloc] init];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+    self.tableView.hidden = NO;
+    self.searchTableView = [[UITableView alloc] init];
+    self.searchTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+    self.searchTableView.hidden = YES;
     [self addSubview:self.aboveTableView];
     [self addSubview:self.tableView];
+    [self addSubview:self.searchTableView];
 }
 
 - (void)layoutSubviews {
@@ -32,10 +37,12 @@
     CGSize aboveTableBounds = CGSizeMake(fullSize.width, CGFLOAT_MAX);
     CGSize aboveTableSize = [self.aboveTableView sizeThatFits:aboveTableBounds];
     self.aboveTableView.frame = CGRectMake(0, 0, fullSize.width, aboveTableSize.height);
-    self.tableView.frame = CGRectMake(0,
-                                      aboveTableSize.height,
-                                      fullSize.width,
-                                      fullSize.height - aboveTableSize.height);
+    CGRect tableViewFrame = CGRectMake(0,
+                                       aboveTableSize.height,
+                                       fullSize.width,
+                                       fullSize.height - aboveTableSize.height);
+    self.tableView.frame = tableViewFrame;
+    self.searchTableView.frame = tableViewFrame;
 }
 
 @end

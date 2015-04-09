@@ -17,12 +17,13 @@
 
 @end
 
-@interface MAVEContactsInvitePageV2ViewController : UIViewController <UITableViewDataSource, MAVEContactsWithSuggestionsTable, UITableViewDelegate, UITextViewDelegate>
+@interface MAVEContactsInvitePageV2ViewController : UIViewController <UITableViewDataSource, MAVEContactsWithSuggestionsTable, UITableViewDelegate, UITextViewDelegate, UITextFieldDelegate>
 
 @property (nonatomic, strong) MAVEContactsInvitePageV2TableWrapperView *wrapperView;
 @property (nonatomic, strong) NSArray *contacts;
 @property (nonatomic, strong) NSArray *tableSections;
 @property (nonatomic, strong) NSDictionary *tableData;
+@property (nonatomic, strong) NSDictionary *searchTableData;
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 // Helpers for accessing nested objects
