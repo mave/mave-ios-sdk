@@ -35,6 +35,8 @@
     [self.sendButton setTitle:@"Send" forState:UIControlStateHighlighted];
     [self.sendButton setTitle:@"Sent!" forState:UIControlStateDisabled];
     [self.sendButton addTarget:self action:@selector(foo) forControlEvents:UIControlEventTouchUpInside];
+
+    self.expandedContactInfoHeightConstraint.constant = 0;
 }
 
 - (void)foo {

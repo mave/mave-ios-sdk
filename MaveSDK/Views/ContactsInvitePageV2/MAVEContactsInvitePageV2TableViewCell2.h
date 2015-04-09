@@ -15,6 +15,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *contactInfoLabel;
 @property (strong, nonatomic) IBOutlet UIButton *sendButton;
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *expandedContactInfoHeightConstraint;
+
 - (void)updateWithInfoForPerson:(MAVEABPerson *)person;
 
 @end

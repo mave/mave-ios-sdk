@@ -43,6 +43,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 //    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 50;
     self.tableView.estimatedSectionHeaderHeight = 90;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
 
@@ -84,5 +85,14 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //    return 50;
 //}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"selected");
+
+    MAVEContactsInvitePageV2TableViewCell2 *cell = (MAVEContactsInvitePageV2TableViewCell2 *)[self tableView:tableView cellForRowAtIndexPath:indexPath];
+    cell.expandedContactInfoHeightConstraint.constant = 50;
+    [cell layoutIfNeeded];
+//    [self.tableView beginUpdates];
+//    [self.tableView endUpdates];
+}
 
 @end
