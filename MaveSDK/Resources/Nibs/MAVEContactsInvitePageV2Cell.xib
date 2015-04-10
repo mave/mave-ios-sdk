@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -85,7 +84,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="contactInfoLabel" destination="QQy-DQ-YjH" id="foT-HK-udn"/>
+                <outlet property="detailLabel" destination="QQy-DQ-YjH" id="vQI-ab-qj9"/>
                 <outlet property="expandedContactInfoHeightConstraint" destination="5Us-mf-aFz" id="NiF-YP-Qh3"/>
                 <outlet property="nameLabel" destination="meE-mH-7A3" id="Nqh-ag-3RM"/>
                 <outlet property="sendButton" destination="hRd-So-D4a" id="dg2-xa-TDI"/>

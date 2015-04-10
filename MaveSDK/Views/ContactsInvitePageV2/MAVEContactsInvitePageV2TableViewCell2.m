@@ -30,11 +30,11 @@
 - (void)doCreateSubviews {
     self.contactInfoWrapper = [[UIView alloc] init];
     self.nameLabel = [[UILabel alloc] init];
-    self.contactInfoLabel = [[UILabel alloc] init];
+    self.detailLabel = [[UILabel alloc] init];
     self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:self.contactInfoWrapper];
     [self.contactInfoWrapper addSubview:self.nameLabel];
-    [self.contactInfoWrapper addSubview:self.contactInfoLabel];
+    [self.contactInfoWrapper addSubview:self.detailLabel];
     [self.contentView addSubview:self.sendButton];
 }
 
@@ -43,7 +43,12 @@
 
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
+    self.backgroundColor = opts.contactCellBackgroundColor;
 
+    self.nameLabel.font = opts.contactNameFont;
+    self.nameLabel.textColor = opts.contactNameTextColor;
+    self.detailLabel.font = opts.contactDetailsFont;
+    self.detailLabel.textColor = opts.contactDetailsTextColor;
 
     self.sendButton.titleLabel.font = opts.sendButtonFont;
     [self.sendButton setTitle:opts.sendButtonCopy forState:UIControlStateNormal];
@@ -58,13 +63,13 @@
 - (void)doConstraintSetup {
     self.contactInfoWrapper.translatesAutoresizingMaskIntoConstraints = NO;
     self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.contactInfoLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.detailLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.sendButton.translatesAutoresizingMaskIntoConstraints = NO;
 
     NSDictionary *viewsDict = @{@"contentView": self.contentView,
                                 @"contactInfoWrapper": self.contactInfoWrapper,
                                 @"nameLabel": self.nameLabel,
-                                @"detailsLabel": self.contactInfoLabel,
+                                @"detailsLabel": self.detailLabel,
                                 @"sendButton": self.sendButton};
 
     NSString *fsOuterLevelV = @"V:|-0-[contactInfoWrapper]-0-|";
@@ -96,7 +101,7 @@
 - (void)updateWithInfoForPerson:(MAVEABPerson *)person {
     self.person = person;
     self.nameLabel.text = [person fullName];
-    self.contactInfoLabel.text = [MAVEABPerson displayPhoneNumber:person.bestPhone];
+    self.detailLabel.text = [MAVEABPerson displayPhoneNumber:person.bestPhone];
     self.sendButton.hidden = NO;
     // On this table we use the selected field to mean already sent, since it's one-click
     // send instead of selecting people
@@ -111,7 +116,7 @@
 - (void)updateWithInfoForNoPersonFound {
     self.person = nil;
     self.nameLabel.text = @"No results found";
-    self.contactInfoLabel.text = nil;
+    self.detailLabel.text = nil;
     self.sendButton.hidden = YES;
 }
 

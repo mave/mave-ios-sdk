@@ -37,6 +37,15 @@
     MAVEContactsInvitePageV2TableViewCell2 *cell = [[MAVEContactsInvitePageV2TableViewCell2 alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"foo"];
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
+    XCTAssertEqualObjects(cell.backgroundColor, opts.contactCellBackgroundColor);
+
+    // Name & detail labels
+    XCTAssertEqualObjects(cell.nameLabel.font, opts.contactNameFont);
+    XCTAssertEqualObjects(cell.nameLabel.textColor, opts.contactNameTextColor);
+    XCTAssertEqualObjects(cell.detailLabel.font, opts.contactDetailsFont);
+    XCTAssertEqualObjects(cell.detailLabel.textColor, opts.contactDetailsTextColor);
+
+    // Send Button
     XCTAssertEqualObjects(cell.sendButton.titleLabel.font, opts.sendButtonFont);
     XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateNormal], opts.sendButtonCopy);
     XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateSelected], @"Sending...");
@@ -49,7 +58,7 @@
 - (void)testUpdateWithInfoForPerson {
     MAVEContactsInvitePageV2TableViewCell2 *cell = [[MAVEContactsInvitePageV2TableViewCell2 alloc] init];
     cell.nameLabel = [[UILabel alloc] init];
-    cell.contactInfoLabel = [[UILabel alloc] init];
+    cell.detailLabel = [[UILabel alloc] init];
 
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.firstName = @"Peter";
@@ -59,7 +68,7 @@
 
     [cell updateWithInfoForPerson:p1];
     XCTAssertEqualObjects(cell.nameLabel.text, @"Peter Foo");
-    XCTAssertEqualObjects(cell.contactInfoLabel.text, @"(808)\u00a0555-1111");
+    XCTAssertEqualObjects(cell.detailLabel.text, @"(808)\u00a0555-1111");
 }
 
 @end

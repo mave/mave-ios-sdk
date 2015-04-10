@@ -17,7 +17,7 @@
 //@property (strong, nonatomic) UIView *contentWrapper;
 @property (strong, nonatomic) UIView *contactInfoWrapper;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *contactInfoLabel;
+@property (strong, nonatomic) IBOutlet UILabel *detailLabel;
 @property (strong, nonatomic) IBOutlet UIButton *sendButton;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *expandedContactInfoHeightConstraint;
