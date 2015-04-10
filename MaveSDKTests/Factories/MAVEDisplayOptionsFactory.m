@@ -55,6 +55,8 @@
 
     opts.messageFieldFont = [self randomFont];
     opts.messageFieldTextColor = [self randomColor];
+    opts.messageFieldLabelFont = [self randomFont];
+    opts.messageFieldLabelTextColor = [self randomColor];
     opts.messageFieldBackgroundColor = [self randomColor];
     opts.sendButtonCopy = @"Different Send";
     opts.sendButtonFont = [self randomFont];

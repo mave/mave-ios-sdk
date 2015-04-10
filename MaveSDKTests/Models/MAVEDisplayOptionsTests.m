@@ -86,6 +86,8 @@
     // Message and Send section options
     XCTAssertEqualObjects(opts.messageFieldFont, defaultFont);
     XCTAssertEqualObjects(opts.messageFieldTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.messageFieldLabelFont, smallerBoldFont);
+    XCTAssertEqualObjects(opts.messageFieldLabelTextColor, lightGrey);
     XCTAssertEqualObjects(opts.messageFieldBackgroundColor, white);
     XCTAssertEqualObjects(opts.sendButtonCopy, @"Send");
     XCTAssertEqualObjects(opts.sendButtonFont, sendButtonFont);
@@ -139,6 +141,10 @@
     XCTAssertTrue([opts.contactCheckmarkColor isKindOfClass:[UIColor class]]);
     
     // Message and Send section options
+    XCTAssertTrue([opts.messageFieldFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.messageFieldTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.messageFieldLabelFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.messageFieldLabelTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.bottomViewBackgroundColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.bottomViewBorderColor isKindOfClass:[UIColor class]]);
     XCTAssertNotNil(opts.sendButtonCopy);

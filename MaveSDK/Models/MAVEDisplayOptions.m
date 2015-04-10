@@ -61,6 +61,8 @@
         // Message and Send section options
         self.messageFieldFont = [UIFont systemFontOfSize:16];
         self.messageFieldTextColor = [[self class] colorAlmostBlack];
+        self.messageFieldLabelFont = [UIFont boldSystemFontOfSize:14];
+        self.messageFieldLabelTextColor = [[self class] colorLightGrey];
         self.messageFieldBackgroundColor = [[self class] colorWhite];
         self.sendButtonCopy = @"Send";
         self.sendButtonFont = [UIFont systemFontOfSize:18];
