@@ -31,4 +31,18 @@
 
 }
 
+- (void)testToggleMessageTextViewEditable {
+    MAVEContactsInvitePageV2AboveTableView *view = [[MAVEContactsInvitePageV2AboveTableView alloc] init];
+    XCTAssertFalse(view.messageTextView.editable);
+    NSArray *actions = [view.editButton actionsForTarget:view forControlEvent:UIControlEventTouchUpInside];
+    XCTAssertEqual([actions count], 1);
+    XCTAssertEqualObjects(actions[0], @"toggleMessageTextViewEditable");
+
+    [view toggleMessageTextViewEditable];
+    XCTAssertTrue(view.messageTextView.editable);
+
+    [view toggleMessageTextViewEditable];
+    XCTAssertFalse(view.messageTextView.editable);
+}
+
 @end

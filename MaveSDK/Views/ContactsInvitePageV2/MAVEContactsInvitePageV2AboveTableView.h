@@ -21,5 +21,7 @@
 
 - (CGFloat)heightOfView;
 
+- (void)toggleMessageTextViewEditable;
+
 
 @end

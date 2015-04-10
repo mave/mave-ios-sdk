@@ -31,21 +31,28 @@ CGFloat const MAVESearchBarHeightt = 40;
 
 - (void)doInitialSetup {
     self.backgroundColor = [UIColor whiteColor];
+
     self.topLabelContainerView = [[UIView alloc] init];
-    self.topLabelContainerView.backgroundColor = [UIColor redColor];
+    self.topLabelContainerView.backgroundColor = [UIColor clearColor];
     self.messageLabel = [[UILabel alloc] init];
     self.messageLabel.text = @"Message:";
+    self.messageLabel.font = [UIFont boldSystemFontOfSize:15];
+    self.messageLabel.textColor = [UIColor grayColor];
     self.editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.editButton.titleLabel.font = [UIFont systemFontOfSize:13];
     [self.editButton setTitle:@"Edit" forState:UIControlStateNormal];
+    [self.editButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.editButton setTitle:@"Done Editing" forState:UIControlStateSelected];
+    [self.editButton setTitleColor:[UIColor grayColor] forState:UIControlStateSelected];
+    [self.editButton addTarget:self action:@selector(toggleMessageTextViewEditable) forControlEvents:UIControlEventTouchUpInside];
 
     self.messageTextView = [[UITextView alloc] init];
     self.messageTextView.font = [UIFont systemFontOfSize:18];
     self.messageTextView.scrollEnabled = NO;
     self.messageTextView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
     self.messageTextView.font = [UIFont systemFontOfSize:15];
-    self.messageTextView.layer.borderWidth = 0.5;
-    self.messageTextView.layer.borderColor = [[UIColor grayColor] CGColor];
-    self.messageTextView.layer.cornerRadius = 4;
+    self.messageTextView.editable = NO;
+    self.messageTextView.backgroundColor = [UIColor clearColor];
 
     self.searchBarTopBorder = [[UIView alloc] init];
     self.searchBarTopBorder.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
@@ -60,18 +67,6 @@ CGFloat const MAVESearchBarHeightt = 40;
     [self addSubview:self.searchBarTopBorder];
     [self addSubview:self.searchBar];
     [self addSubview:self.searchBarBottomBorder];
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    CGSize msgViewSizeLimit = CGSizeMake(size.width - MAVELeftMargin - MAVERightMargin,
-                                         size.height - MAVETopMargin - MAVEBottomMargin);
-    CGSize msgViewSize = [self.messageTextView sizeThatFits:msgViewSizeLimit];
-    CGSize output = CGSizeMake(size.width,
-                               MAVETopMargin
-                               + msgViewSize.height + MAVEMessageViewToSearchBarMargin
-                               + MAVESearchBarBorderThickness + MAVESearchBarHeightt + MAVESearchBarBorderThickness
-                               + MAVEBottomMargin);
-    return output;
 }
 
 - (void)doSetupConstraints {
@@ -92,7 +87,7 @@ CGFloat const MAVESearchBarHeightt = 40;
                                 @"searchBarBottomBorder": self.searchBarBottomBorder,
     };
 
-    NSString *sfOuterV = @"V:|-0-[topLabelContainer]-0-[messageTextView]-10-[searchBarTopBorder(==0.5)]-0-[searchBar]-0-[searchBarBottomBorder(==0.5)]-0-|";
+    NSString *sfOuterV = @"V:|-5-[topLabelContainer]-(-5)-[messageTextView]-0-[searchBarTopBorder(==0.5)]-0-[searchBar]-0-[searchBarBottomBorder(==0.5)]-0-|";
     NSString *sfTopContainerH = @"H:|-0-[topLabelContainer]-0-|";
     NSString *sfMessageH = @"H:|-10-[messageTextView]-10-|";
     NSString *sfSearchTopH = @"H:|-0-[searchBarTopBorder]-0-|";
@@ -107,40 +102,21 @@ CGFloat const MAVESearchBarHeightt = 40;
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfSearchBottomH options:0 metrics:nil views:viewsDict]];
 
     NSString *sfTopLabelH = @"H:|-10-[messageLabel]-(>=0)-[editButton]-10-|";
-    NSString *sfMesageLabelV = @"V:|-(>=0)-[messageLabel]-(>=0)-|";
-    NSString *sfEditButtonV = @"V:|-(>=0)-[editButton]-(>=0)-|";
+    NSString *sfMesageLabelV = @"V:|-(>=0)-[messageLabel]-0-|";
+    NSString *sfEditButtonV = @"V:|-(>=0)-[editButton]-(-5)-|";
     [self.topLabelContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfTopLabelH options:0 metrics:nil views:viewsDict]];
     [self.topLabelContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfMesageLabelV options:0 metrics:nil views:viewsDict]];
     [self.topLabelContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfEditButtonV options:0 metrics:nil views:viewsDict]];
-    // Center the message label and edit button vertically
-    [self.topLabelContainerView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.topLabelContainerView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-    [self.topLabelContainerView addConstraint:[NSLayoutConstraint constraintWithItem:self.editButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.topLabelContainerView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
 }
 
-//- (void)layoutSubviews {
-//    CGSize currentSize = self.frame.size;
-//    CGSize msgViewSizeLimit = CGSizeMake(currentSize.width - MAVELeftMargin - MAVERightMargin, CGFLOAT_MAX);
-//    CGSize msgViewSize = [self.messageTextView sizeThatFits:msgViewSizeLimit];
-//    CGRect newMVFrame = CGRectMake(MAVELeftMargin, MAVETopMargin, msgViewSizeLimit.width, msgViewSize.height);
-//    [self.messageTextView setFrame:newMVFrame];
-//
-//    CGRect newSBTopBorderFrame = CGRectMake(0,
-//                                            newMVFrame.origin.y + newMVFrame.size.height + MAVEMessageViewToSearchBarMargin,
-//                                            currentSize.width,
-//                                            MAVESearchBarBorderThickness);
-//    [self.searchBarTopBorder setFrame:newSBTopBorderFrame];
-//
-//    CGRect newSBFrame = CGRectMake(0,
-//                                   newSBTopBorderFrame.origin.y + newSBTopBorderFrame.size.height,
-//                                   currentSize.width,
-//                                   MAVESearchBarHeightt);
-//    [self.searchBar setFrame:newSBFrame];
-//
-//    CGRect newSBBottomBorderFrame = CGRectMake(0,
-//                                               newSBFrame.origin.y + newSBFrame.size.height,
-//                                               currentSize.width,
-//                                               MAVESearchBarBorderThickness);
-//    [self.searchBarBottomBorder setFrame:newSBBottomBorderFrame];
-//}
+- (void)toggleMessageTextViewEditable {
+    self.messageTextView.editable = !self.messageTextView.editable;
+    self.editButton.selected = !self.editButton.selected;
+    if (self.messageTextView.editable) {
+        [self.messageTextView becomeFirstResponder];
+    } else {
+        [self.messageTextView endEditing:YES];
+    }
+}
 
 @end
