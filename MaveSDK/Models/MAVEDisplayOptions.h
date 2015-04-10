@@ -75,6 +75,7 @@
 @property (nonatomic, copy) NSString *sendButtonCopy;
 @property (nonatomic, strong) UIFont  *sendButtonFont;
 @property (nonatomic, strong) UIColor *sendButtonTextColor;
+@property (nonatomic, strong) UIColor *sendButtonDisabledTextColor;
 @property (nonatomic, strong) UIColor *bottomViewBackgroundColor;
 @property (nonatomic, strong) UIColor *bottomViewBorderColor;
 

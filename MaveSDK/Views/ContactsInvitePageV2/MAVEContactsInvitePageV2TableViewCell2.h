@@ -14,12 +14,15 @@
 
 @property (nonatomic, weak) MAVEContactsInvitePageV2ViewController *delegateController;
 @property (nonatomic, weak) MAVEABPerson *person;
+//@property (strong, nonatomic) UIView *contentWrapper;
+@property (strong, nonatomic) UIView *contactInfoWrapper;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *contactInfoLabel;
 @property (strong, nonatomic) IBOutlet UIButton *sendButton;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *expandedContactInfoHeightConstraint;
-- (void)doInitialSetup;
+
+
 - (void)updateWithInfoForPerson:(MAVEABPerson *)person;
 - (void)updateWithInfoForNoPersonFound;
 - (void)sendInviteToCurrentPerson;

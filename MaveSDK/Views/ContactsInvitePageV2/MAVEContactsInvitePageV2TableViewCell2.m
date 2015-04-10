@@ -7,23 +7,90 @@
 //
 
 #import "MAVEContactsInvitePageV2TableViewCell2.h"
+#import "MaveSDK.h"
 
 @implementation MAVEContactsInvitePageV2TableViewCell2
 
-- (void)awakeFromNib {
-    [self doInitialSetup];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style
+              reuseIdentifier:(NSString *)reuseIdentifier {
+    style = UITableViewCellStyleDefault;
+    if (self = [super initWithStyle:style
+                    reuseIdentifier:reuseIdentifier]) {
+        [self doCreateSubviews];
+        [self doStylingSetup];
+        [self doConstraintSetup];
+    }
+    return self;
 }
 
-- (void)doInitialSetup {
+- (void)awakeFromNib {
+    [self doStylingSetup];
+}
+
+- (void)doCreateSubviews {
+    self.contactInfoWrapper = [[UIView alloc] init];
+    self.nameLabel = [[UILabel alloc] init];
+    self.contactInfoLabel = [[UILabel alloc] init];
+    self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.contentView addSubview:self.contactInfoWrapper];
+    [self.contactInfoWrapper addSubview:self.nameLabel];
+    [self.contactInfoWrapper addSubview:self.contactInfoLabel];
+    [self.contentView addSubview:self.sendButton];
+}
+
+- (void)doStylingSetup {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 
-    self.sendButton.titleLabel.textColor = [UIColor blueColor];
-    [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
-    [self.sendButton setTitle:@"Sending..." forState:UIControlStateSelected];
-    [self.sendButton setTitle:@"Sent" forState:UIControlStateDisabled];
-    [self.sendButton addTarget:self action:@selector(sendInviteToCurrentPerson) forControlEvents:UIControlEventTouchUpInside];
+    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
-    self.expandedContactInfoHeightConstraint.constant = 0;
+
+
+    self.sendButton.titleLabel.font = opts.sendButtonFont;
+    [self.sendButton setTitle:opts.sendButtonCopy forState:UIControlStateNormal];
+    [self.sendButton setTitleColor:opts.sendButtonTextColor forState:UIControlStateNormal];
+    [self.sendButton setTitle:@"Sending..." forState:UIControlStateSelected];
+    [self.sendButton setTitleColor:opts.sendButtonDisabledTextColor forState:UIControlStateSelected];
+    [self.sendButton setTitle:@"Sent" forState:UIControlStateDisabled];
+    [self.sendButton setTitleColor:opts.sendButtonDisabledTextColor forState:UIControlStateDisabled];
+    [self.sendButton addTarget:self action:@selector(sendInviteToCurrentPerson) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)doConstraintSetup {
+    self.contactInfoWrapper.translatesAutoresizingMaskIntoConstraints = NO;
+    self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.contactInfoLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.sendButton.translatesAutoresizingMaskIntoConstraints = NO;
+
+    NSDictionary *viewsDict = @{@"contentView": self.contentView,
+                                @"contactInfoWrapper": self.contactInfoWrapper,
+                                @"nameLabel": self.nameLabel,
+                                @"detailsLabel": self.contactInfoLabel,
+                                @"sendButton": self.sendButton};
+
+    NSString *fsOuterLevelV = @"V:|-0-[contactInfoWrapper]-0-|";
+    NSString *fsOuterLevelH = @"H:|-0-[contactInfoWrapper]-10-[sendButton]";
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsOuterLevelV options:0 metrics:nil views:viewsDict]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsOuterLevelH options:0 metrics:nil views:viewsDict]];
+    NSLayoutConstraint *wrapperWidthConstraint =
+    [NSLayoutConstraint constraintWithItem:self.contactInfoWrapper
+                                 attribute:NSLayoutAttributeWidth
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.contentView
+                                 attribute:NSLayoutAttributeWidth
+                                multiplier:0.68
+                                  constant:0];
+    [self.contentView addConstraint:wrapperWidthConstraint];
+
+    NSString *fsNameDetailsV = @"V:|-8-[nameLabel]-0-[detailsLabel]-8-|";
+    NSString *fsNameH = @"H:|-10-[nameLabel]";
+    NSString *fsDetailsH = @"H:|-10-[detailsLabel]";
+    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameDetailsV options:0 metrics:nil views:viewsDict]];
+    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameH options:0 metrics:nil views:viewsDict]];
+    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsDetailsH options:0 metrics:nil views:viewsDict]];
+
+    NSLayoutConstraint *vCenterButtonConstraint =
+    [NSLayoutConstraint constraintWithItem:self.sendButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+    [self.contentView addConstraint:vCenterButtonConstraint];
 }
 
 - (void)updateWithInfoForPerson:(MAVEABPerson *)person {
@@ -50,7 +117,6 @@
 
 - (void)sendInviteToCurrentPerson {
     if (self.delegateController) {
-//        self.sendButton.enabled = NO;
         [self.delegateController sendInviteToPerson:self.person sendButton:self.sendButton];
     }
 }

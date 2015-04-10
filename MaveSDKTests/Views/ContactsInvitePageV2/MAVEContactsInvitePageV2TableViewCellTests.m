@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MaveSDK.h"
 #import "MAVEContactsInvitePageV2TableViewCell2.h"
+#import "MAVEDisplayOptionsFactory.h"
+#import "MAVEBuiltinUIElementUtils.h"
 
 @interface MAVEContactsInvitePageV2TableViewCellTests : XCTestCase
 
@@ -27,14 +30,20 @@
     [super tearDown];
 }
 
-- (void)testAwakeFromNib {
-    MAVEContactsInvitePageV2TableViewCell2 *cell = [[MAVEContactsInvitePageV2TableViewCell2 alloc] init];
-    id cellMock = OCMPartialMock(cell);
-    OCMExpect([cellMock doInitialSetup]);
+- (void)testInitialSetup {
+    MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].displayOptions = opts;
 
-    [cell awakeFromNib];
+    MAVEContactsInvitePageV2TableViewCell2 *cell = [[MAVEContactsInvitePageV2TableViewCell2 alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"foo"];
 
-    OCMVerifyAll(cellMock);
+    XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
+    XCTAssertEqualObjects(cell.sendButton.titleLabel.font, opts.sendButtonFont);
+    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateNormal], opts.sendButtonCopy);
+    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateSelected], @"Sending...");
+    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateDisabled], @"Sent");
+    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateNormal], opts.sendButtonTextColor);
+    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateSelected], opts.sendButtonDisabledTextColor);
+    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateDisabled], opts.sendButtonDisabledTextColor);
 }
 
 - (void)testUpdateWithInfoForPerson {

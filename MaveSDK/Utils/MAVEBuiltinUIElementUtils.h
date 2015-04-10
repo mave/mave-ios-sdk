@@ -28,6 +28,10 @@
 // Mask a white & transparent image (like an icon) with the given color
 + (UIImage *)tintWhitesInImage:(UIImage *)baseImage withColor:(UIColor *)tintColor;
 
++ (void)addConstraintsWithVisualFormatStrings:(NSArray *)constraintStrings
+                              viewsDictionary:(NSDictionary *)viewsDictionary
+                                       toView:(UIView *)view;
+
 @end
 
 
