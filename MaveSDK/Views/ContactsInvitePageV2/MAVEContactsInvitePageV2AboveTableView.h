@@ -12,6 +12,7 @@
 @interface MAVEContactsInvitePageV2AboveTableView : UIView
 
 @property (nonatomic, strong) UIView *topLabelContainerView;
+@property (nonatomic, strong) UIView *nonSearchContainerView;
 @property (nonatomic, strong) UILabel *messageLabel;
 @property (nonatomic, strong) UIButton *editButton;
 @property (nonatomic, strong) UITextView *messageTextView;
