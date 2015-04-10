@@ -8,7 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "MAVEDisplayOptionsFactory.h"
+#import "MaveSDK.h"
 #import "MAVEContactsInvitePageV2ViewController.h"
+
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
 
 @interface MAVEContactsInvitePageV2ViewControllerTests : XCTestCase
 
@@ -19,6 +25,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
 }
 
 - (void)tearDown {
@@ -26,7 +34,45 @@
     [super tearDown];
 }
 
-- (void)testSetup {
+- (void)testSetupAboveTableView {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+
+    XCTAssertEqualObjects(vc.wrapperView.aboveTableView.messageTextView, vc.messageTextView);
+    XCTAssertEqualObjects(vc.wrapperView.aboveTableView.searchBar, vc.searchBar);
+    XCTAssertEqualObjects(vc.messageTextView.delegate, vc);
+    XCTAssertEqualObjects(vc.searchBar.delegate, vc);
+
+    // Return key types
+    XCTAssertEqual(vc.messageTextView.returnKeyType, UIReturnKeyDefault);
+    XCTAssertEqual(vc.searchBar.returnKeyType, UIReturnKeyDone);
+}
+
+- (void)testSetupTableView {
+    MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].displayOptions = opts;
+
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+
+    XCTAssertEqualObjects(vc.wrapperView.tableView, vc.tableView);
+    XCTAssertEqualObjects(vc.wrapperView.searchTableView, vc.searchTableView);
+
+    // data source/delegate items
+    XCTAssertEqualObjects(vc.tableView.delegate, vc);
+    XCTAssertEqualObjects(vc.tableView.dataSource, vc);
+    XCTAssertEqualObjects(vc.searchTableView.delegate, vc);
+    XCTAssertEqualObjects(vc.searchTableView.delegate, vc);
+
+    XCTAssertEqual(vc.tableView.separatorStyle, UITableViewCellSeparatorStyleSingleLine);
+    XCTAssertEqualObjects(vc.tableView.separatorColor, opts.contactSeparatorColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexColor, opts.contactSectionIndexColor);
+    XCTAssertEqualObjects(vc.tableView.sectionIndexBackgroundColor,
+                          opts.contactSectionIndexBackgroundColor);
+    XCTAssertEqualObjects(vc.tableView.backgroundColor, opts.contactCellBackgroundColor);
+}
+
+- (void)testHeightForRowAtIndexPath {
 
 }
 
@@ -52,6 +98,10 @@
     XCTAssertEqual([vc numberOfSectionsInTableView:vc.tableView], 2);
     XCTAssertEqual([vc tableView:vc.tableView numberOfRowsInSection:0], 1);
     XCTAssertEqual([vc tableView:vc.tableView numberOfRowsInSection:1], 2);
+}
+
+- (void)testUpdatePersonToIndexPathsIndex {
+
 }
 
 - (void)testPersonAtIndexPath {

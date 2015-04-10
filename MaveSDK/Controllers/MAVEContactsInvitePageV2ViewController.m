@@ -66,13 +66,17 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     self.searchBar.returnKeyType = UIReturnKeyDone;
 }
 - (void)setupTableView {
+    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     //    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 50;
     self.tableView.estimatedSectionHeaderHeight = 20;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+    self.tableView.separatorColor = opts.contactSeparatorColor;
+    self.tableView.sectionIndexColor = opts.contactSectionIndexColor;
+    self.tableView.sectionIndexBackgroundColor = opts.contactSectionIndexBackgroundColor;
+    self.tableView.backgroundColor = opts.contactCellBackgroundColor;
 
     self.searchTableView.delegate = self;
     self.searchTableView.dataSource = self;
