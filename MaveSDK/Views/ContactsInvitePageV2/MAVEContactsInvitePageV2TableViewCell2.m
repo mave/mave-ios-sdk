@@ -17,8 +17,10 @@
 - (void)doInitialSetup {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 
+    self.sendButton.titleLabel.textColor = [UIColor blueColor];
     [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
-    [self.sendButton setTitle:@"Send" forState:UIControlStateHighlighted];
+    [self.sendButton setTitle:@"Sending..." forState:UIControlStateSelected];
+    [self.sendButton setTitle:@"Sent" forState:UIControlStateDisabled];
     [self.sendButton addTarget:self action:@selector(sendInviteToCurrentPerson) forControlEvents:UIControlEventTouchUpInside];
 
     self.expandedContactInfoHeightConstraint.constant = 0;
@@ -32,10 +34,9 @@
     // On this table we use the selected field to mean already sent, since it's one-click
     // send instead of selecting people
     if (person.selected) {
-        [self.sendButton setTitle:@"Sent" forState:UIControlStateDisabled];
+        self.sendButton.selected = NO;
         self.sendButton.enabled = NO;
     } else {
-        [self.sendButton setTitle:@"Sending..." forState:UIControlStateDisabled];
         self.sendButton.enabled = YES;
     }
 }
@@ -49,8 +50,8 @@
 
 - (void)sendInviteToCurrentPerson {
     if (self.delegateController) {
-        self.sendButton.enabled = NO;
-        [self.delegateController sendInviteToPerson:self.person];
+//        self.sendButton.enabled = NO;
+        [self.delegateController sendInviteToPerson:self.person sendButton:self.sendButton];
     }
 }
 

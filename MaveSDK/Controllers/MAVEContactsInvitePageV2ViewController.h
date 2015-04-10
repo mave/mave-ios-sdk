@@ -37,6 +37,6 @@
 - (UITextView *)messageTextView;
 - (MAVESearchBar *)searchBar;
 
-- (void)sendInviteToPerson:(MAVEABPerson *)person;
+- (void)sendInviteToPerson:(MAVEABPerson *)person sendButton:(UIButton *)sendButton;
 
 @end

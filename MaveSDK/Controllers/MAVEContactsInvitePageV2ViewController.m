@@ -349,7 +349,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 }
 
 #pragma mark - Send invites
-- (void)sendInviteToPerson:(MAVEABPerson *)person {
+- (void)sendInviteToPerson:(MAVEABPerson *)person sendButton:(UIButton *)sendButton {
     NSString *phoneToinvite = [person bestPhone];
     if (!phoneToinvite) {
         return;
@@ -357,6 +357,17 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     NSArray *phonesToInvite = @[phoneToinvite];
     NSArray *peopleToinvite = @[person];
     NSString *message = self.messageTextView.text;
+
+    // mark as "Sending..." status, and use semaphore to make sure it doesn't do an ugly flash
+    // on Sending and go immediately to sent, set an artificial delay if send completes immediately
+    dispatch_semaphore_t sendingStatusSema = dispatch_semaphore_create(0);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.65 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_semaphore_signal(sendingStatusSema);
+    });
+    sendButton.selected = YES;
+
+    // end editing to close the keyboard if it's open
+    [self.messageTextView endEditing:YES];
 
     MaveSDK *mave = [MaveSDK sharedInstance];
     MAVEAPIInterface *apiInterface = mave.APIInterface;
@@ -371,18 +382,21 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
        if (error != nil) {
            MAVEDebugLog(@"Invites failed to send, error: %@, response: %@",
                         error, responseData);
-           dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self showSendFailureErrorAndResetPerson:person];
-           });
+            });
        } else {
            MAVEInfoLog(@"Sent invite to %@!", person.fullName);
-           dispatch_async(dispatch_get_main_queue(), ^{
-               person.selected = YES;
-               [self.tableView reloadData];
-               // if search table view is active, switch back to non-search table view
-               if (!self.searchTableView.hidden) {
-                   [self jumpToMainTableRowForPerson:person];
-               }
+           dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+               dispatch_semaphore_wait(sendingStatusSema, DISPATCH_TIME_FOREVER);
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   person.selected = YES;
+                   [self.tableView reloadData];
+                   // if search table view is active, switch back to non-search table view
+                   if (!self.searchTableView.hidden) {
+                       [self jumpToMainTableRowForPerson:person];
+                   }
+               });
            });
        }
     }];
