@@ -20,7 +20,7 @@
 - (void)doInitialSetup {
     // bg color so partly opaque stuff looks neutral, this view's content shouldn't be visible anywhere
     self.backgroundColor = [UIColor whiteColor];
-    self.aboveTableView = [[MAVEContactsInvitePageV2TableHeaderView alloc] init];
+    self.aboveTableView = [[MAVEContactsInvitePageV2AboveTableView alloc] init];
     self.tableView = [[UITableView alloc] init];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
     self.tableView.hidden = NO;
@@ -34,8 +34,7 @@
 
 - (void)layoutSubviews {
     CGSize fullSize = self.frame.size;
-    CGSize aboveTableBounds = CGSizeMake(fullSize.width, CGFLOAT_MAX);
-    CGSize aboveTableSize = [self.aboveTableView sizeThatFits:aboveTableBounds];
+    CGSize aboveTableSize = [self.aboveTableView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     self.aboveTableView.frame = CGRectMake(0, 0, fullSize.width, aboveTableSize.height);
     CGRect tableViewFrame = CGRectMake(0,
                                        aboveTableSize.height,

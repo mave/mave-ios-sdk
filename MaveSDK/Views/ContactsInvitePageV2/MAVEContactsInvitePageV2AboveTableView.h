@@ -9,12 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "MAVESearchBar.h"
 
-@interface MAVEContactsInvitePageV2TableHeaderView : UIView
+@interface MAVEContactsInvitePageV2AboveTableView : UIView
 
+@property (nonatomic, strong) UIView *topLabelContainerView;
+@property (nonatomic, strong) UILabel *messageLabel;
+@property (nonatomic, strong) UIButton *editButton;
 @property (nonatomic, strong) UITextView *messageTextView;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) UIView *searchBarBottomBorder;
+
+- (CGFloat)heightOfView;
 
 
 @end

@@ -72,6 +72,13 @@
     XCTAssertEqualObjects(vc.tableView.backgroundColor, opts.contactCellBackgroundColor);
 }
 
+- (void)testOtherSetup {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+
+    XCTAssertEqualObjects(vc.navigationItem.title, @"Send Separately");
+}
+
 - (void)testHeightForRowAtIndexPath {
 
 }

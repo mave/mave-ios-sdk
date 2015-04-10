@@ -46,6 +46,10 @@ CGFloat const MAVESearchBarHeight = 44.0;
     [self setupLeftLabelView];
 }
 
+- (CGSize)intrinsicContentSize {
+    return CGSizeMake(UIViewNoIntrinsicMetric, MAVESearchBarHeight);
+}
+
 - (void)setupLeftLabelView {
     CGFloat paddingXPre = 14;
     CGFloat paddingXPost = 10;

@@ -8,7 +8,7 @@
 
 #import <objc/runtime.h>
 #import "MAVEContactsInvitePageV2ViewController.h"
-#import "MAVEContactsInvitePageV2TableHeaderView.h"
+#import "MAVEContactsInvitePageV2AboveTableView.h"
 #import "MAVEContactsInvitePageV2TableViewCell.h"
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
@@ -49,7 +49,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
 - (void)loadView {
     if (self.navigationItem) {
-        self.navigationItem.title = @"Send SMS Separately";
+        self.navigationItem.title = @"Send Separately";
     }
     self.wrapperView = [[MAVEContactsInvitePageV2TableWrapperView alloc] init];
     self.suggestionsSectionHeaderView = [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:@"Suggestions" sectionIsWaiting:YES];
