@@ -361,10 +361,14 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     // mark as "Sending..." status, and use semaphore to make sure it doesn't do an ugly flash
     // on Sending and go immediately to sent, set an artificial delay if send completes immediately
     dispatch_semaphore_t sendingStatusSema = dispatch_semaphore_create(0);
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.65 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.60 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_semaphore_signal(sendingStatusSema);
     });
-    sendButton.selected = YES;
+    [UIView transitionWithView:sendButton
+                      duration:0.25
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{ sendButton.selected = YES; }
+                    completion:nil];
 
     // end editing to close the keyboard if it's open
     [self.messageTextView endEditing:YES];
