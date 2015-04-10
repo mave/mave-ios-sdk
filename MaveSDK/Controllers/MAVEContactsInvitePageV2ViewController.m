@@ -246,11 +246,22 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     NSString *previousText = textView.text;
     NSString *newText = [previousText stringByReplacingCharactersInRange:range withString:text];
+    // stop editing on newline
+    if ([text isEqualToString:@"\n"]) {
+        [textView endEditing:YES];
+        return NO;
+    }
     // Set some limit so people don't go crazy with long sms messages
     if ([newText length] > 300) {
         return NO;
     }
     return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if (self.messageTextView.editable) {
+        [self.wrapperView.aboveTableView toggleMessageTextViewEditable];
+    }
 }
 
 #pragma mark - Search related (UITextFieldDelegate methods)

@@ -8,6 +8,7 @@
 
 #import "MAVEContactsInvitePageV2AboveTableView.h"
 #import "MaveSDK.h"
+#import "MAVESimpleDoneButtonAccessoryView.h"
 
 CGFloat const messageViewMargin = 8;
 CGFloat const MAVERightMargin = messageViewMargin;
@@ -46,8 +47,7 @@ CGFloat const messageViewHorizontalMargins = 10;
     self.editButton.titleLabel.font = [UIFont systemFontOfSize:13];
     [self.editButton setTitle:@"Edit" forState:UIControlStateNormal];
     [self.editButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.editButton setTitle:@"Done Editing" forState:UIControlStateSelected];
-    [self.editButton setTitleColor:[UIColor grayColor] forState:UIControlStateSelected];
+    [self.editButton setTitle:@"" forState:UIControlStateSelected];
     [self.editButton addTarget:self action:@selector(toggleMessageTextViewEditable) forControlEvents:UIControlEventTouchUpInside];
 
     self.messageTextView = [[UITextView alloc] init];
@@ -56,8 +56,9 @@ CGFloat const messageViewHorizontalMargins = 10;
     self.messageTextView.scrollEnabled = NO;
     self.messageTextView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
     self.messageTextView.text = @"Hey this is a longer message and it's going to wrap to multiple lines";
-//    self.messageTextView.editable = NO;
+    self.messageTextView.editable = NO;
     self.messageTextView.backgroundColor = [UIColor clearColor];
+    self.messageTextView.returnKeyType = UIReturnKeyDone;
 
     self.searchBarTopBorder = [[UIView alloc] init];
     self.searchBarTopBorder.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
