@@ -239,11 +239,13 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
 #pragma mark - TextViewDelegate methods (only for message field)
 - (void)textViewDidChange:(UITextView *)textView {
+    [self.wrapperView.aboveTableView setNeedsUpdateConstraints];
     [self.wrapperView layoutSubviews];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    NSString *newText = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    NSString *previousText = textView.text;
+    NSString *newText = [previousText stringByReplacingCharactersInRange:range withString:text];
     // Set some limit so people don't go crazy with long sms messages
     if ([newText length] > 300) {
         return NO;

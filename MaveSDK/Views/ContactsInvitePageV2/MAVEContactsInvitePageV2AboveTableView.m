@@ -19,12 +19,14 @@ CGFloat const MAVEBottomMargin = 0;
 CGFloat const MAVESearchBarBorderThickness = 0.5;
 CGFloat const MAVESearchBarHeightt = 40;
 
+CGFloat const messageViewHorizontalMargins = 10;
+
 @implementation MAVEContactsInvitePageV2AboveTableView
 
 - (instancetype)init {
     if (self = [super init]) {
         [self doInitialSetup];
-        [self doSetupConstraints];
+        [self doInitialSetupConstraints];
     }
     return self;
 }
@@ -53,7 +55,8 @@ CGFloat const MAVESearchBarHeightt = 40;
     self.messageTextView.textColor = opts.messageFieldTextColor;
     self.messageTextView.scrollEnabled = NO;
     self.messageTextView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
-    self.messageTextView.editable = NO;
+    self.messageTextView.text = @"Hey this is a longer message and it's going to wrap to multiple lines";
+//    self.messageTextView.editable = NO;
     self.messageTextView.backgroundColor = [UIColor clearColor];
 
     self.searchBarTopBorder = [[UIView alloc] init];
@@ -71,7 +74,17 @@ CGFloat const MAVESearchBarHeightt = 40;
     [self addSubview:self.searchBarBottomBorder];
 }
 
-- (void)doSetupConstraints {
+- (void)updateConstraints {
+    [super updateConstraints];
+
+    if (!CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        CGFloat msgWidth = self.frame.size.width - 2 * messageViewHorizontalMargins;
+        CGSize neededMessageTextViewSize = [self.messageTextView sizeThatFits:CGSizeMake(msgWidth, CGFLOAT_MAX)];
+        self.messageViewHeightConstraint.constant = neededMessageTextViewSize.height;
+    }
+}
+
+- (void)doInitialSetupConstraints {
     self.topLabelContainerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.editButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -88,20 +101,24 @@ CGFloat const MAVESearchBarHeightt = 40;
                                 @"searchBar": self.searchBar,
                                 @"searchBarBottomBorder": self.searchBarBottomBorder,
     };
+    NSDictionary *metrics = @{@"messageTextHMargins": @(messageViewHorizontalMargins)};
 
     NSString *sfOuterV = @"V:|-0-[topLabelContainer]-(-5)-[messageTextView]-0-[searchBarTopBorder(==0.5)]-0-[searchBar]-0-[searchBarBottomBorder(==0.5)]-0-|";
     NSString *sfTopContainerH = @"H:|-0-[topLabelContainer]-0-|";
-    NSString *sfMessageH = @"H:|-10-[messageTextView]-10-|";
+    NSString *sfMessageH = @"H:|-messageTextHMargins-[messageTextView]-messageTextHMargins-|";
     NSString *sfSearchTopH = @"H:|-0-[searchBarTopBorder]-0-|";
     NSString *sfSearchH = @"H:|-0-[searchBar]-0-|";
     NSString *sfSearchBottomH = @"H:|-0-[searchBarBottomBorder]-0-|";
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfOuterV options:0 metrics:nil views:viewsDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfTopContainerH options:0 metrics:nil views:viewsDict]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfMessageH options:0 metrics:nil views:viewsDict]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfMessageH options:0 metrics:metrics views:viewsDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfSearchTopH options:0 metrics:nil views:viewsDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfSearchH options:0 metrics:nil views:viewsDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfSearchBottomH options:0 metrics:nil views:viewsDict]];
+
+    self.messageViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:30];
+    [self addConstraint:self.messageViewHeightConstraint];
 
     NSString *sfTopLabelH = @"H:|-10-[messageLabel]-(>=0)-[editButton]-10-|";
     NSString *sfMesageLabelV = @"V:|-(>=0)-[messageLabel]-0-|";

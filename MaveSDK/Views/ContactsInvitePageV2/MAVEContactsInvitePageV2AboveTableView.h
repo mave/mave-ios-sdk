@@ -15,11 +15,10 @@
 @property (nonatomic, strong) UILabel *messageLabel;
 @property (nonatomic, strong) UIButton *editButton;
 @property (nonatomic, strong) UITextView *messageTextView;
+@property (nonatomic, strong) NSLayoutConstraint *messageViewHeightConstraint;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) UIView *searchBarBottomBorder;
-
-- (CGFloat)heightOfView;
 
 - (void)toggleMessageTextViewEditable;
 
