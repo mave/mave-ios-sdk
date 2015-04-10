@@ -50,7 +50,6 @@
 		0C1F1A1A1A53012000B2D482 /* MAVEClientPropertyUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A191A53012000B2D482 /* MAVEClientPropertyUtils.m */; };
 		0C1F1A1C1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A1B1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m */; };
 		0C25A3E91AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3E81AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m */; };
-		0C25A3EE1AD6A9990031D163 /* MAVEContactsInvitePageV2Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C25A3ED1AD6A9990031D163 /* MAVEContactsInvitePageV2Cell.xib */; };
 		0C25A3F11AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3F01AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m */; };
 		0C25A3F31AD6E3420031D163 /* MAVEContactsInvitePageV2ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3F21AD6E3420031D163 /* MAVEContactsInvitePageV2ViewControllerTests.m */; };
 		0C25A3F61AD6E9F80031D163 /* MAVEContactsInvitePageV2TableViewCellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3F51AD6E9F80031D163 /* MAVEContactsInvitePageV2TableViewCellTests.m */; };
@@ -264,7 +263,6 @@
 		0C1F1A1B1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEClientPropertyUtilsTests.m; sourceTree = "<group>"; };
 		0C25A3E71AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageV2TableWrapperView.h; sourceTree = "<group>"; };
 		0C25A3E81AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageV2TableWrapperView.m; sourceTree = "<group>"; };
-		0C25A3ED1AD6A9990031D163 /* MAVEContactsInvitePageV2Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MAVEContactsInvitePageV2Cell.xib; sourceTree = "<group>"; };
 		0C25A3EF1AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageV2TableViewCell.h; sourceTree = "<group>"; };
 		0C25A3F01AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageV2TableViewCell.m; sourceTree = "<group>"; };
 		0C25A3F21AD6E3420031D163 /* MAVEContactsInvitePageV2ViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageV2ViewControllerTests.m; sourceTree = "<group>"; };
@@ -559,7 +557,6 @@
 		0C58FDDC1A649498007F8F12 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0CB26A001AD73C660010C7E6 /* Nibs */,
 				0C58FDDD1A6494B1007F8F12 /* Images */,
 			);
 			path = Resources;
@@ -624,14 +621,6 @@
 				0CC62BC71A8EA6E800D2AF14 /* MAVERange64Tests.m */,
 			);
 			path = MAVEMerkleTree;
-			sourceTree = "<group>";
-		};
-		0CB26A001AD73C660010C7E6 /* Nibs */ = {
-			isa = PBXGroup;
-			children = (
-				0C25A3ED1AD6A9990031D163 /* MAVEContactsInvitePageV2Cell.xib */,
-			);
-			path = Nibs;
 			sourceTree = "<group>";
 		};
 		0CC7B3BB1A96ABA4004455A7 /* WaitingDots */ = {
@@ -1101,7 +1090,6 @@
 				0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */,
 				0CD4FBF21A9C277C00667655 /* MAVEWaitingDots1@3x.png in Resources */,
 				0C58FDFB1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png in Resources */,
-				0C25A3EE1AD6A9990031D163 /* MAVEContactsInvitePageV2Cell.xib in Resources */,
 				0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */,
 				0C58FDF91A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png in Resources */,
 			);

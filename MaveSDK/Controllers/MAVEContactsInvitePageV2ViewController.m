@@ -79,9 +79,6 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     self.searchTableView.estimatedRowHeight = 50;
     self.searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
-
-//    NSBundle *bundle = [MAVEBuiltinUIElementUtils bundleForMave];
-//    [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:bundle] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
     [self.tableView registerClass:[MAVEContactsInvitePageV2TableViewCell class] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
 }
 
