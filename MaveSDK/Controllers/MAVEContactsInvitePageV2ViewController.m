@@ -9,7 +9,7 @@
 #import <objc/runtime.h>
 #import "MAVEContactsInvitePageV2ViewController.h"
 #import "MAVEContactsInvitePageV2TableHeaderView.h"
-#import "MAVEContactsInvitePageV2TableViewCell2.h"
+#import "MAVEContactsInvitePageV2TableViewCell.h"
 #import "MaveSDK.h"
 #import "MAVEConstants.h"
 #import "MAVEABUtils.h"
@@ -82,7 +82,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
 //    NSBundle *bundle = [MAVEBuiltinUIElementUtils bundleForMave];
 //    [self.tableView registerNib:[UINib nibWithNibName:@"MAVEContactsInvitePageV2Cell" bundle:bundle] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
-    [self.tableView registerClass:[MAVEContactsInvitePageV2TableViewCell2 class] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
+    [self.tableView registerClass:[MAVEContactsInvitePageV2TableViewCell class] forCellReuseIdentifier:MAVEContactsInvitePageV2CellIdentifier];
 }
 
 
@@ -317,7 +317,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
 # pragma mark - Table cell layout
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MAVEContactsInvitePageV2TableViewCell2 *cell =  [self.tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV2CellIdentifier];
+    MAVEContactsInvitePageV2TableViewCell *cell =  [self.tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV2CellIdentifier];
     cell.delegateController = self;
     MAVEABPerson *person = [self tableView:tableView personForRowAtIndexPath:indexPath];
     if (!person) {

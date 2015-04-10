@@ -10,7 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import "MaveSDK.h"
-#import "MAVEContactsInvitePageV2TableViewCell2.h"
+#import "MAVEContactsInvitePageV2TableViewCell.h"
 #import "MAVEDisplayOptionsFactory.h"
 #import "MAVEBuiltinUIElementUtils.h"
 
@@ -34,7 +34,7 @@
     MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
     [MaveSDK sharedInstance].displayOptions = opts;
 
-    MAVEContactsInvitePageV2TableViewCell2 *cell = [[MAVEContactsInvitePageV2TableViewCell2 alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"foo"];
+    MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"foo"];
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
     XCTAssertEqualObjects(cell.backgroundColor, opts.contactCellBackgroundColor);
@@ -56,7 +56,7 @@
 }
 
 - (void)testUpdateWithInfoForPerson {
-    MAVEContactsInvitePageV2TableViewCell2 *cell = [[MAVEContactsInvitePageV2TableViewCell2 alloc] init];
+    MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
     cell.nameLabel = [[UILabel alloc] init];
     cell.detailLabel = [[UILabel alloc] init];
 
