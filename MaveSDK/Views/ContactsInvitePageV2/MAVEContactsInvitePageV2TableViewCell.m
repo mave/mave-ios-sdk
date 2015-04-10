@@ -71,6 +71,10 @@
                                 @"nameLabel": self.nameLabel,
                                 @"detailsLabel": self.detailLabel,
                                 @"sendButton": self.sendButton};
+    NSDictionary *marginMetrics = @{@"topMargin": @(8),
+                                    @"nameToDetailsMargin": @(0),
+                                    @"bottomMargin": @(8),
+                                    @"leftMargin": @(10)};
 
     NSString *fsOuterLevelV = @"V:|-0-[contactInfoWrapper]-0-|";
     NSString *fsOuterLevelH = @"H:|-0-[contactInfoWrapper]-10-[sendButton]";
@@ -86,12 +90,12 @@
                                   constant:0];
     [self.contentView addConstraint:wrapperWidthConstraint];
 
-    NSString *fsNameDetailsV = @"V:|-8-[nameLabel]-0-[detailsLabel]-8-|";
-    NSString *fsNameH = @"H:|-10-[nameLabel]";
-    NSString *fsDetailsH = @"H:|-10-[detailsLabel]";
-    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameDetailsV options:0 metrics:nil views:viewsDict]];
-    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameH options:0 metrics:nil views:viewsDict]];
-    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsDetailsH options:0 metrics:nil views:viewsDict]];
+    NSString *fsNameDetailsV = @"V:|-topMargin-[nameLabel]-nameToDetailsMargin-[detailsLabel]-8-|";
+    NSString *fsNameH = @"H:|-leftMargin-[nameLabel]";
+    NSString *fsDetailsH = @"H:|-leftMargin-[detailsLabel]";
+    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameDetailsV options:0 metrics:marginMetrics views:viewsDict]];
+    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameH options:0 metrics:marginMetrics views:viewsDict]];
+    [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsDetailsH options:0 metrics:marginMetrics views:viewsDict]];
 
     NSLayoutConstraint *vCenterButtonConstraint =
     [NSLayoutConstraint constraintWithItem:self.sendButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
