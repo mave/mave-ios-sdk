@@ -30,7 +30,9 @@ CGFloat const MAVESearchBarHeightt = 40;
 }
 
 - (void)doInitialSetup {
-    self.backgroundColor = [UIColor whiteColor];
+    MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
+
+    self.backgroundColor = opts.messageFieldBackgroundColor;
 
     self.topLabelContainerView = [[UIView alloc] init];
     self.topLabelContainerView.backgroundColor = [UIColor clearColor];
@@ -47,10 +49,10 @@ CGFloat const MAVESearchBarHeightt = 40;
     [self.editButton addTarget:self action:@selector(toggleMessageTextViewEditable) forControlEvents:UIControlEventTouchUpInside];
 
     self.messageTextView = [[UITextView alloc] init];
-    self.messageTextView.font = [UIFont systemFontOfSize:18];
+    self.messageTextView.font = opts.messageFieldFont;
+    self.messageTextView.textColor = opts.messageFieldTextColor;
     self.messageTextView.scrollEnabled = NO;
     self.messageTextView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
-    self.messageTextView.font = [UIFont systemFontOfSize:15];
     self.messageTextView.editable = NO;
     self.messageTextView.backgroundColor = [UIColor clearColor];
 
@@ -87,7 +89,7 @@ CGFloat const MAVESearchBarHeightt = 40;
                                 @"searchBarBottomBorder": self.searchBarBottomBorder,
     };
 
-    NSString *sfOuterV = @"V:|-5-[topLabelContainer]-(-5)-[messageTextView]-0-[searchBarTopBorder(==0.5)]-0-[searchBar]-0-[searchBarBottomBorder(==0.5)]-0-|";
+    NSString *sfOuterV = @"V:|-0-[topLabelContainer]-(-5)-[messageTextView]-0-[searchBarTopBorder(==0.5)]-0-[searchBar]-0-[searchBarBottomBorder(==0.5)]-0-|";
     NSString *sfTopContainerH = @"H:|-0-[topLabelContainer]-0-|";
     NSString *sfMessageH = @"H:|-10-[messageTextView]-10-|";
     NSString *sfSearchTopH = @"H:|-0-[searchBarTopBorder]-0-|";

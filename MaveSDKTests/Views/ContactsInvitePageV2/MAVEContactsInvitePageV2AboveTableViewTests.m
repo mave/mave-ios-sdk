@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "MAVEDisplayOptionsFactory.h"
+#import "MaveSDK.h"
 #import "MAVEContactsInvitePageV2AboveTableView.h"
 
 @interface MAVEContactsInvitePageV2AboveTableViewTests : XCTestCase
@@ -27,8 +29,15 @@
 }
 
 - (void)testInitialSetup {
+    MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].displayOptions = opts;
+
     MAVEContactsInvitePageV2AboveTableView *view = [[MAVEContactsInvitePageV2AboveTableView alloc] init];
 
+    XCTAssertEqualObjects(view.messageTextView.text, [MaveSDK sharedInstance].defaultSMSMessageText);
+    XCTAssertEqualObjects(view.messageTextView.font, opts.messageFieldFont);
+    XCTAssertEqualObjects(view.messageTextView.textColor, opts.messageFieldTextColor);
+    XCTAssertEqualObjects(view.backgroundColor, opts.messageFieldBackgroundColor);
 }
 
 - (void)testToggleMessageTextViewEditable {
