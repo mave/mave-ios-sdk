@@ -90,6 +90,7 @@
     XCTAssertEqualObjects(opts.sendButtonCopy, @"Send");
     XCTAssertEqualObjects(opts.sendButtonFont, sendButtonFont);
     XCTAssertEqualObjects(opts.sendButtonTextColor, blueTint);
+    XCTAssertEqualObjects(opts.sendButtonDisabledTextColor, lightGrey);
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
     XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
 
@@ -144,6 +145,7 @@
     XCTAssertNotEqualObjects(opts.sendButtonCopy, @"Send");
     XCTAssertTrue([opts.sendButtonFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.sendButtonTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.sendButtonDisabledTextColor isKindOfClass:[UIColor class]]);
 
     // Share page options
     // background

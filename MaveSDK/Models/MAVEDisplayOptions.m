@@ -65,6 +65,7 @@
         self.sendButtonCopy = @"Send";
         self.sendButtonFont = [UIFont systemFontOfSize:18];
         self.sendButtonTextColor = [[self class] colorBlueTint];
+        self.sendButtonDisabledTextColor = [[self class] colorLightGrey];
         self.bottomViewBorderColor = [[self class] colorMediumGrey];
         self.bottomViewBackgroundColor = [[self class] colorWhite];
 

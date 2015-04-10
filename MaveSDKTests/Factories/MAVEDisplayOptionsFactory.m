@@ -59,6 +59,7 @@
     opts.sendButtonCopy = @"Different Send";
     opts.sendButtonFont = [self randomFont];
     opts.sendButtonTextColor = [self randomColor];
+    opts.sendButtonDisabledTextColor = [self randomColor];
     opts.bottomViewBackgroundColor = [self randomColor];
     opts.bottomViewBorderColor = [self randomColor];
 
