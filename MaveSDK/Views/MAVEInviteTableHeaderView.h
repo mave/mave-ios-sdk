@@ -18,13 +18,10 @@
 @property (nonatomic, assign) BOOL showsExplanation;
 @property (nonatomic, assign) BOOL showsShareButtons;
 
-@property (nonatomic, weak) id<MAVEShareButtonsDelegate>shareDelegate;
 @property (nonatomic, strong) MAVEInviteExplanationView *inviteExplanationView;
 @property (nonatomic, strong) MAVEShareButtonsView *shareButtonsView;
 @property (nonatomic, strong) UIView *searchBarTopBorder;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
-
-- (instancetype)initWithShareDelegate:(id<MAVEShareButtonsDelegate>)shareDelegate;
 
 // This method determines whether or not we need to display this
 // view at all. Currently, the only content to show is explanation

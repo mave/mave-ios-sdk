@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Dpv-Pz-Ila">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Dpv-Pz-Ila">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Root Drawer Controller-->
@@ -41,7 +42,7 @@
                                     <constraint firstAttribute="height" constant="21" id="iPj-IB-hbb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ZrD-QY-Cy5">
@@ -50,18 +51,18 @@
                                     <segment title="Default"/>
                                     <segment title="Blue"/>
                                 </segments>
-                                <color key="tintColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Color Scheme" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iKM-RG-F6u">
                                 <rect key="frame" x="173" y="132" width="110" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message Copy" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mwF-dn-v4r">
-                                <rect key="frame" x="173" y="225" width="116" height="21"/>
+                                <rect key="frame" x="173" y="224" width="116" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" text="This is a test invite - check out the MaveSDK Invite SDK DemoApp" translatesAutoresizingMaskIntoConstraints="NO" id="OEe-sn-Sbn">
@@ -73,6 +74,18 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                             </textView>
+                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="80" translatesAutoresizingMaskIntoConstraints="NO" id="fkt-gz-fFx" customClass="MAVEShareButtonsView">
+                                <rect key="frame" x="0.0" y="355" width="600" height="80"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="iconColor">
+                                        <color key="value" red="0.31372549019607843" green="0.31372549019607843" blue="0.31372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="iconTextColor">
+                                        <color key="value" red="0.31372549019607843" green="0.31372549019607843" blue="0.31372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.43643558011959871" green="0.7570665109211715" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -82,10 +95,13 @@
                             <constraint firstItem="ITQ-Tn-ZRc" firstAttribute="leading" secondItem="OEe-sn-Sbn" secondAttribute="leading" id="QC1-Cl-rcc"/>
                             <constraint firstItem="ITQ-Tn-ZRc" firstAttribute="leading" secondItem="iKM-RG-F6u" secondAttribute="leading" id="SAs-gG-tGl"/>
                             <constraint firstItem="ZrD-QY-Cy5" firstAttribute="leading" secondItem="ITQ-Tn-ZRc" secondAttribute="leading" id="SCW-M9-Ffz"/>
+                            <constraint firstAttribute="centerX" secondItem="fkt-gz-fFx" secondAttribute="centerX" id="WxZ-Wx-4cb"/>
                             <constraint firstItem="OEe-sn-Sbn" firstAttribute="top" secondItem="mwF-dn-v4r" secondAttribute="bottom" constant="3" id="XZz-LH-A7W"/>
                             <constraint firstAttribute="centerX" secondItem="ITQ-Tn-ZRc" secondAttribute="centerX" constant="-1.5" id="ZrK-dS-kyn"/>
                             <constraint firstItem="mwF-dn-v4r" firstAttribute="top" secondItem="ZrD-QY-Cy5" secondAttribute="bottom" constant="36" id="b80-Qh-A09"/>
+                            <constraint firstItem="fkt-gz-fFx" firstAttribute="top" secondItem="OEe-sn-Sbn" secondAttribute="bottom" constant="40" id="g6f-0g-x8Q"/>
                             <constraint firstItem="iKM-RG-F6u" firstAttribute="top" secondItem="ITQ-Tn-ZRc" secondAttribute="bottom" constant="39" id="k9p-fD-9IY"/>
+                            <constraint firstItem="fkt-gz-fFx" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="ruF-Km-1UG"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MaveSDKDemoApp" id="6ZE-1W-sak">

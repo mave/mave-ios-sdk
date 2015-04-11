@@ -51,7 +51,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
         // If the inviteLinkDestinationURL is set, and the link should NOT be wrapped, pass the raw inviteLinkDestinationURL to the SMS VC
         message = [[ownInstance.remoteConfiguration.clientSMS.text stringByAppendingString:@" "] stringByAppendingString:maveUser.inviteLinkDestinationURL];
     } else {
-        message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
+        message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
     }
 
     composeVC.messageComposeDelegate = ownInstance;
@@ -75,7 +75,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
             [warningAlert show];
         }
         case MessageComposeResultSent: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientSMS shareToken:[[self class] shareToken] audience:nil];
             break;
         }
     }
@@ -94,7 +94,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
     MFMailComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMailComposeViewController];
     NSString *subject = ownInstance.remoteConfiguration.clientEmail.subject;
-    NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.clientEmail.body
+    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientEmail.body
                                    andLinkWithSubRouteLetter:@"e"];
 
     composeVC.mailComposeDelegate = ownInstance;
@@ -108,7 +108,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
     switch (result) {
         case MFMailComposeResultSent: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeClientEmail shareToken:[[self class] shareToken] audience:nil];
             break;
         }
         case MFMailComposeResultFailed: {
@@ -136,7 +136,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
     SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewControllerForFacebook];
     NSString *message = ownInstance.remoteConfiguration.facebookShare.text;
-    NSString *url = [ownInstance shareLinkWithSubRouteLetter:@"f"];
+    NSString *url = [self shareLinkWithSubRouteLetter:@"f"];
 
     [composeVC setInitialText:message];
     [composeVC addURL:[NSURL URLWithString:url]];
@@ -152,7 +152,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)facebookNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result {
     switch (result) {
         case SLComposeViewControllerResultDone: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeFacebook shareToken:[[self class] shareToken] audience:nil];
         } case SLComposeViewControllerResultCancelled: {
             break;
         }
@@ -173,7 +173,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     ownInstance.completionBlockTwitterNativeShare = completionBlock;
 
     SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewControllerForTwitter];
-    NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.twitterShare.text
+    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.twitterShare.text
                                    andLinkWithSubRouteLetter:@"t"];
     [composeVC setInitialText:message];
     __weak SLComposeViewController *weakComposeVC = composeVC;
@@ -188,7 +188,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 - (void)twitterNativeShareController:(SLComposeViewController *)controller didFinishWithResult:(SLComposeViewControllerResult)result {
     switch (result) {
         case SLComposeViewControllerResultDone: {
-            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[self shareToken] audience:nil];
+            [[MaveSDK sharedInstance].APIInterface trackShareWithShareType:MAVESharePageShareTypeTwitter shareToken:[[self class] shareToken] audience:nil];
         } case SLComposeViewControllerResultCancelled: {
             break;
         }
@@ -202,7 +202,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 + (void)composePasteboardShare {
     MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
-    NSString *message = [ownInstance shareCopyFromCopy:ownInstance.remoteConfiguration.clipboardShare.text
+    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clipboardShare.text
                                    andLinkWithSubRouteLetter:@"c"];
 
     UIPasteboard *pasteboard = [MAVESharerViewControllerBuilder UIPasteboard];
@@ -211,7 +211,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard];
 
     // Any copy to clipboard might be shared, so reset the share token here
-    [ownInstance resetShareToken];
+    [self resetShareToken];
 
     UIAlertView *alert;
     alert = [[UIAlertView alloc] initWithTitle:@"✔ Copied Link"
@@ -236,12 +236,11 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return [MaveSDK sharedInstance].remoteConfiguration;
 }
 
-- (NSString *)shareToken {
++ (NSString *)shareToken {
     MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
-    return tokenObject.shareToken;
-}
+    return tokenObject.shareToken;}
 
-- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
++ (NSString *)shareCopyFromCopy:(NSString *)shareCopy
       andLinkWithSubRouteLetter:(NSString *)letter {
     NSString* link = [self shareLinkWithSubRouteLetter:letter];
     NSString *outputText = shareCopy;
@@ -258,12 +257,12 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return outputText;
 }
 
-- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
-    NSString *shareToken = [self shareToken];
++ (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
+    NSString *shareToken = [[self class] shareToken];
     NSString *output;// = MAVEShortLinkBaseURL;
 
     if ([shareToken length] > 0) {
-        NSString *shareToken = [self shareToken];
+        NSString *shareToken = [[self class] shareToken];
         output = [NSString stringWithFormat:@"%@%@/%@",
                   MAVEShortLinkBaseURL, subRoute, shareToken];
     } else {
@@ -274,8 +273,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return output;
 }
 
-- (void)resetShareToken {
-    MAVEDebugLog(@"Resetting share token after share, was: %@", [self shareToken]);
++ (void)resetShareToken {
+    MAVEDebugLog(@"Resetting share token after share, was: %@", [[self class] shareToken]);
     [MAVEShareToken clearUserDefaults];
     [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
 }

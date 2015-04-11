@@ -61,7 +61,7 @@
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 
     // sms message text
-    NSString *expectedMessageText = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
+    NSString *expectedMessageText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
     XCTAssertGreaterThan([expectedMessageText length], 0);
     OCMExpect([messageComposeVCMock setBody:expectedMessageText]);
 
@@ -200,7 +200,7 @@
     NSString *expectedMessageSubject = sharerInstance.remoteConfiguration.clientEmail.subject;
     XCTAssertGreaterThan([expectedMessageSubject length], 0);
     OCMExpect([emailComposeVCMock setSubject:expectedMessageSubject]);
-    NSString *expectedMessageBody = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clientEmail.body andLinkWithSubRouteLetter:@"e"];
+    NSString *expectedMessageBody = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clientEmail.body andLinkWithSubRouteLetter:@"e"];
     XCTAssertGreaterThan([expectedMessageBody length], 0);
     OCMExpect([emailComposeVCMock setMessageBody:expectedMessageBody isHTML:NO]);
 
@@ -280,7 +280,7 @@
     // expectations for content to pass to share view controller
     NSString *expectedText = sharerInstance.remoteConfiguration.facebookShare.text;
     OCMExpect([socialComposeVCMock setInitialText:expectedText]);
-    NSString *expectedURLString = [sharerInstance shareLinkWithSubRouteLetter:@"f"];
+    NSString *expectedURLString = [MAVESharer shareLinkWithSubRouteLetter:@"f"];
     NSURL *expectedURL = [NSURL URLWithString:expectedURLString];
     OCMExpect([socialComposeVCMock addURL:expectedURL]);
 
@@ -368,7 +368,7 @@
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 
     // expectations for content to pass to share view controller
-    NSString *expectedText = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.twitterShare.text andLinkWithSubRouteLetter:@"t"];
+    NSString *expectedText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.twitterShare.text andLinkWithSubRouteLetter:@"t"];
     OCMExpect([socialComposeVCMock setInitialText:expectedText]);
     OCMExpect([socialComposeVCMock setCompletionHandler:[OCMArg any]]);
 
@@ -458,7 +458,7 @@
     OCMExpect([sharerMock releaseSelf]);
 
     // expectations for content to pass to share view controller
-    NSString *expectedText = [sharerInstance shareCopyFromCopy:sharerInstance.remoteConfiguration.clipboardShare.text andLinkWithSubRouteLetter:@"c"];
+    NSString *expectedText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clipboardShare.text andLinkWithSubRouteLetter:@"c"];
     OCMExpect([pasteboardMock setString:expectedText]);
 
     // run code under test
@@ -472,16 +472,14 @@
 
 #pragma mark - Helpers for building share content
 - (void)testShareToken {
-    MAVESharer *sharer = [[MAVESharer alloc] init];
     MAVEShareToken *tokenObj = [[MAVEShareToken alloc] init];
     tokenObj.shareToken = @"blahasdf";
 
     id mock = OCMPartialMock([MaveSDK sharedInstance].shareTokenBuilder);
     OCMExpect([mock createObjectSynchronousWithTimeout:0]).andReturn(tokenObj);
-    NSString *token = [sharer shareToken];
+    NSString *token = [MAVESharer shareToken];
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(token, @"blahasdf");
-    [mock stopMocking];
 }
 
 
@@ -490,7 +488,7 @@
     MAVESharer *sharer = [[MAVESharer alloc] init];
     id mock = OCMPartialMock(sharer);
     OCMStub([mock shareToken]).andReturn(@"blahtok");
-    NSString *link = [sharer shareLinkWithSubRouteLetter:@"d"];
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"d"];
     XCTAssertEqualObjects(link, expectedLink);
 }
 
@@ -501,30 +499,28 @@
     id mock = OCMPartialMock(sharer);
     OCMStub([mock shareToken]).andReturn(nil);
 
-    NSString *link = [sharer shareLinkWithSubRouteLetter:@"d"];
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"d"];
 
     XCTAssertEqualObjects(link, expectedLink);
 }
 
 - (void)testResetShareToken {
-    MAVESharer *sharer = [[MAVESharer alloc] init];
     MAVERemoteObjectBuilder *builderInitial = [MaveSDK sharedInstance].shareTokenBuilder;
 
     id stClassMock = OCMClassMock([MAVEShareToken class]);
     OCMExpect([stClassMock clearUserDefaults]);
 
-    [sharer resetShareToken];
+    [MAVESharer resetShareToken];
 
     OCMVerifyAll(stClassMock);
     XCTAssertNotEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, builderInitial);
 }
 
 - (void)testBuildShareCopyWhenCopyIsNormal {
-    MAVESharer *sharer = [[MAVESharer alloc] init];
-    id mock = OCMPartialMock(sharer);
+    id mock = OCMClassMock([MAVESharer class]);
     OCMExpect([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");
 
-    NSString *text = [sharer shareCopyFromCopy:@"foo"
+    NSString *text = [MAVESharer shareCopyFromCopy:@"foo"
                               andLinkWithSubRouteLetter:@"d"];
 
     NSString *expectedText = @"foo fakelink";
@@ -534,18 +530,17 @@
 }
 
 - (void)testBuildShareCopyWhenCopyEndsInSpace {
-    MAVESharer *sharer = [[MAVESharer alloc] init];
-    id mock = OCMPartialMock(sharer);
+    id mock = OCMClassMock([MAVESharer class]);
     OCMStub([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");
 
-    NSString *text = [sharer shareCopyFromCopy:@"foo "
+    NSString *text = [MAVESharer shareCopyFromCopy:@"foo "
                               andLinkWithSubRouteLetter:@"d"];
 
     NSString *expectedText = @"foo fakelink";
     XCTAssertEqualObjects(text, expectedText);
 
     // newline should count as a space too
-    text = [sharer shareCopyFromCopy:@"foo\n"
+    text = [MAVESharer shareCopyFromCopy:@"foo\n"
                     andLinkWithSubRouteLetter:@"d"];
 
     expectedText = @"foo\nfakelink";
@@ -553,11 +548,10 @@
 }
 
 - (void)testBuildShareCopyWhenCopyIsEmpty {
-    MAVESharer *sharer = [[MAVESharer alloc] init];
-    id mock = OCMPartialMock(sharer);
+    id mock = OCMClassMock([MAVESharer class]);
     OCMExpect([mock shareLinkWithSubRouteLetter:@"d"]).andReturn(@"fakelink");
 
-    NSString *text = [sharer shareCopyFromCopy:nil
+    NSString *text = [MAVESharer shareCopyFromCopy:nil
                               andLinkWithSubRouteLetter:@"d"];
 
     NSString *expectedText = @"fakelink";

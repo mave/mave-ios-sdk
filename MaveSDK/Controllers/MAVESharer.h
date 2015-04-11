@@ -45,12 +45,12 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 // Helpers
 //
 - (MAVERemoteConfiguration *)remoteConfiguration;
-- (NSString *)shareToken;
-- (NSString *)shareCopyFromCopy:(NSString *)shareCopy
++ (NSString *)shareToken;
++ (NSString *)shareCopyFromCopy:(NSString *)shareCopy
       andLinkWithSubRouteLetter:(NSString *)letter;
 // Build a link of the format: http://appjoin.us/<subRoute>/SHARE-TOKEN
-- (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
-- (void)resetShareToken;
++ (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
++ (void)resetShareToken;
 
 @end
 

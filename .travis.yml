@@ -4,3 +4,6 @@ env:
   - DESTINATION_OS="8.1" DESTINATION_NAME="iPhone 6"
   - DESTINATION_OS="8.1" DESTINATION_NAME="iPhone 5"
   - DESTINATION_OS="7.1" DESTINATION_NAME="iPhone 4s"
+branches:
+  only:
+    - master

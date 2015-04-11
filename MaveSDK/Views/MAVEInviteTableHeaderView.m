@@ -14,9 +14,8 @@
 
 @implementation MAVEInviteTableHeaderView
 
-- (instancetype)initWithShareDelegate:(id<MAVEShareButtonsDelegate>)shareDelegate {
+- (instancetype)init {
     if (self = [super init]) {
-        self.shareDelegate = shareDelegate;
         [self setupInit];
     }
     return self;
@@ -38,7 +37,15 @@
     }
 
     if (self.showsShareButtons) {
-        self.shareButtonsView = [[MAVEShareButtonsView alloc] initWithDelegate:self.shareDelegate iconColor:displayOptions.inviteExplanationShareButtonsColor iconFont:displayOptions.inviteExplanationShareButtonsFont backgroundColor:displayOptions.inviteExplanationShareButtonsBackgroundColor useSmallIcons:YES allowSMSShare:NO];
+        self.shareButtonsView = [[MAVEShareButtonsView alloc] init];
+        self.shareButtonsView.iconColor = displayOptions.inviteExplanationShareButtonsColor;
+        self.shareButtonsView.iconTextColor = displayOptions.inviteExplanationShareButtonsColor;
+        self.shareButtonsView.iconFont = displayOptions.inviteExplanationShareButtonsFont;
+        self.shareButtonsView.backgroundColor = displayOptions.inviteExplanationShareButtonsBackgroundColor;
+        self.shareButtonsView.useSmallIcons = YES;
+        self.shareButtonsView.allowSMSShare = NO;
+        self.shareButtonsView.dismissMaveTopLevelOnSuccessfulShare = NO;
+
         [self addSubview:self.shareButtonsView];
     }
 
