@@ -87,7 +87,7 @@
     XCTAssertEqualObjects(opts.messageFieldFont, defaultFont);
     XCTAssertEqualObjects(opts.messageFieldTextColor, almostBlack);
     XCTAssertEqualObjects(opts.messageFieldLabelFont, smallerBoldFont);
-    XCTAssertEqualObjects(opts.messageFieldLabelTextColor, lightGrey);
+    XCTAssertEqualObjects(opts.messageFieldLabelTextColor, [UIColor grayColor]);
     XCTAssertEqualObjects(opts.messageFieldBackgroundColor, white);
     XCTAssertEqualObjects(opts.sendButtonCopy, @"Send");
     XCTAssertEqualObjects(opts.sendButtonFont, sendButtonFont);

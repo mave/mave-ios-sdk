@@ -62,7 +62,7 @@
         self.messageFieldFont = [UIFont systemFontOfSize:16];
         self.messageFieldTextColor = [[self class] colorAlmostBlack];
         self.messageFieldLabelFont = [UIFont boldSystemFontOfSize:14];
-        self.messageFieldLabelTextColor = [[self class] colorLightGrey];
+        self.messageFieldLabelTextColor = [UIColor grayColor];
         self.messageFieldBackgroundColor = [[self class] colorWhite];
         self.sendButtonCopy = @"Send";
         self.sendButtonFont = [UIFont systemFontOfSize:18];
