@@ -11,7 +11,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 @interface MAVEBuiltinUIElementUtils : NSObject
 
 // Tries to return the "MaveSDK" bundle created on pod install, falls back to

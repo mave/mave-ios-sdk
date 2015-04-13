@@ -138,6 +138,9 @@
 		0C97F6761ADC6A8A0084974D /* MAVESpinnerPt9.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C97F6521ADC6A8A0084974D /* MAVESpinnerPt9.png */; };
 		0C97F6771ADC6A8A0084974D /* MAVESpinnerPt9@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C97F6531ADC6A8A0084974D /* MAVESpinnerPt9@2x.png */; };
 		0C97F6781ADC6A8A0084974D /* MAVESpinnerPt9@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C97F6541ADC6A8A0084974D /* MAVESpinnerPt9@3x.png */; };
+		0C97F67A1ADC6BE80084974D /* MAVEBuiltinUIElementUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C97F6791ADC6BE80084974D /* MAVEBuiltinUIElementUtilsTests.m */; };
+		0C97F67D1ADC6DAE0084974D /* MAVESpinnerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C97F67C1ADC6DAE0084974D /* MAVESpinnerImageView.m */; };
+		0C97F67F1ADC6E000084974D /* MAVESpinnerImageViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C97F67E1ADC6E000084974D /* MAVESpinnerImageViewTests.m */; };
 		0CA08EA71AC20DC2009BB2CE /* MAVETemplatingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CA08EA61AC20DC2009BB2CE /* MAVETemplatingUtils.m */; };
 		0CA08EA91AC20DD0009BB2CE /* MAVETemplatingUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CA08EA81AC20DD0009BB2CE /* MAVETemplatingUtilsTests.m */; };
 		0CA08EAC1AC47CA5009BB2CE /* MAVEShareButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CA08EAB1AC47CA5009BB2CE /* MAVEShareButtonsView.m */; };
@@ -400,6 +403,10 @@
 		0C97F6521ADC6A8A0084974D /* MAVESpinnerPt9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVESpinnerPt9.png; sourceTree = "<group>"; };
 		0C97F6531ADC6A8A0084974D /* MAVESpinnerPt9@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVESpinnerPt9@2x.png"; sourceTree = "<group>"; };
 		0C97F6541ADC6A8A0084974D /* MAVESpinnerPt9@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVESpinnerPt9@3x.png"; sourceTree = "<group>"; };
+		0C97F6791ADC6BE80084974D /* MAVEBuiltinUIElementUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEBuiltinUIElementUtilsTests.m; sourceTree = "<group>"; };
+		0C97F67B1ADC6DAE0084974D /* MAVESpinnerImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESpinnerImageView.h; sourceTree = "<group>"; };
+		0C97F67C1ADC6DAE0084974D /* MAVESpinnerImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESpinnerImageView.m; sourceTree = "<group>"; };
+		0C97F67E1ADC6E000084974D /* MAVESpinnerImageViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESpinnerImageViewTests.m; sourceTree = "<group>"; };
 		0CA08EA51AC20DC2009BB2CE /* MAVETemplatingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVETemplatingUtils.h; sourceTree = "<group>"; };
 		0CA08EA61AC20DC2009BB2CE /* MAVETemplatingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVETemplatingUtils.m; sourceTree = "<group>"; };
 		0CA08EA81AC20DD0009BB2CE /* MAVETemplatingUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVETemplatingUtilsTests.m; sourceTree = "<group>"; };
@@ -625,6 +632,7 @@
 				0C1A8FDB1A644E5C00518D9A /* MAVENameParsingUtilsTests.m */,
 				0C6D92AE1A72E3E000B65B82 /* MAVECompressionUtilsTests.m */,
 				0CA08EA81AC20DD0009BB2CE /* MAVETemplatingUtilsTests.m */,
+				0C97F6791ADC6BE80084974D /* MAVEBuiltinUIElementUtilsTests.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1011,6 +1019,8 @@
 				0CC7B3CC1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m */,
 				0CC7B3BE1A96AC62004455A7 /* MAVEWaitingDotsImageView.h */,
 				0CC7B3BF1A96AC62004455A7 /* MAVEWaitingDotsImageView.m */,
+				0C97F67B1ADC6DAE0084974D /* MAVESpinnerImageView.h */,
+				0C97F67C1ADC6DAE0084974D /* MAVESpinnerImageView.m */,
 				C029280719E82D18006AEE43 /* MAVEABPersonCell.h */,
 				C029280819E82D18006AEE43 /* MAVEABPersonCell.m */,
 				0C7200701A19414D00E12B91 /* MAVEInvitePageBottomActionContainerView.h */,
@@ -1074,6 +1084,7 @@
 				0C96015B1A6DC57F004DBA93 /* MAVESearchBarTests.m */,
 				0CAB5BAE1AC496DA00A7890A /* MAVEShareButtonsViewTests.m */,
 				0C1A8FB51A63183500518D9A /* MAVECustomSharePageViewTests.m */,
+				0C97F67E1ADC6E000084974D /* MAVESpinnerImageViewTests.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1338,6 +1349,7 @@
 				0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */,
 				C029279D19E823E2006AEE43 /* HomeViewController.m in Sources */,
 				C029280B19E82D18006AEE43 /* MAVEABPersonCell.m in Sources */,
+				0C97F67D1ADC6DAE0084974D /* MAVESpinnerImageView.m in Sources */,
 				0C29BC311A56FFA900C27DA5 /* MAVEHTTPStack.m in Sources */,
 				C02927FB19E82D03006AEE43 /* MAVEABTableViewController.m in Sources */,
 				0C0996E51A76B593003B82AA /* MAVEMerkleTreeDataEnumerator.m in Sources */,
@@ -1406,6 +1418,7 @@
 			files = (
 				0C03BE6B1AAA59AE0008BCC0 /* MAVEInvitePageViewController.m in Sources */,
 				0C1A8FD41A641F8000518D9A /* MAVECustomSharePageViewController.m in Sources */,
+				0C97F67A1ADC6BE80084974D /* MAVEBuiltinUIElementUtilsTests.m in Sources */,
 				0C58FE001A657A8C007F8F12 /* MAVERemoteConfigurationCustomSharePageTests.m in Sources */,
 				0C1A8FCD1A632F1800518D9A /* MAVERemoteConfigurationTwitterShareTests.m in Sources */,
 				0C29BC551A5DE6EA00C27DA5 /* MAVERemoteConfiguration.m in Sources */,
@@ -1420,6 +1433,7 @@
 				0C1F1A1C1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m in Sources */,
 				0C96015E1A71444B004DBA93 /* MAVEInviteTableHeaderViewTests.m in Sources */,
 				0C96015C1A6DC57F004DBA93 /* MAVESearchBarTests.m in Sources */,
+				0C97F67F1ADC6E000084974D /* MAVESpinnerImageViewTests.m in Sources */,
 				0CE3AA2C1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m in Sources */,
 				0CC62BC81A8EA6E800D2AF14 /* MAVERange64Tests.m in Sources */,
 				0C131EF01ACB011300F34539 /* MAVEWrapperNavigationControllerTests.m in Sources */,
