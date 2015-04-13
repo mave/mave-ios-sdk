@@ -15,9 +15,6 @@
 #import <MessageUI/MessageUI.h>
 #import <Social/Social.h>
 
-// iOS 8.3 current beta turns off native twitter sharing, though isAvailableForService type still returns true
-#define IS_IOS8_3 ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.299)
-
 CGFloat const MAVEShareIconsViewVerticalPadding = 10;
 CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 
@@ -145,7 +142,7 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
         [self.shareButtons addObject:shareButton];
     }
 
-    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter] && !IS_IOS8_3) {
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
         shareButton = [self twitterShareButton];
         [self.shareButtons addObject:shareButton];
     }
