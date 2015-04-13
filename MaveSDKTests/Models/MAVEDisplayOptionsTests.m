@@ -49,7 +49,7 @@
     XCTAssertEqualObjects(opts.navigationBarTitleFont, defaultFont);
     XCTAssertEqualObjects(opts.navigationBarTitleTextColor, almostBlack);
     XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
-    XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
+    XCTAssertNil(opts.navigationBarCancelButton);
 
     // Above table content - invite page v1 specific
     // Explanation of how the referral program works section (invite page v1)
