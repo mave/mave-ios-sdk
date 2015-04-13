@@ -19,6 +19,7 @@
 #import "MAVEDisplayOptions.h"
 
 NSString * const MAVEInvitePageTypeContactList = @"contact_list";
+NSString * const MAVEInvitePageTypeContactListV2 = @"contact_list_v2";
 NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
 NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 

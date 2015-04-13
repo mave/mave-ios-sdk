@@ -20,6 +20,7 @@ typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteController);
 typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInteger numberOfInvitesSent);
 
 extern NSString * const MAVEInvitePageTypeContactList;
+extern NSString * const MAVEInvitePageTypeContactListV2;
 extern NSString * const MAVEInvitePageTypeCustomShare;
 extern NSString * const MAVEInvitePageTypeNativeShareSheet;
 

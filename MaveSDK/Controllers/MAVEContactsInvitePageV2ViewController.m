@@ -119,7 +119,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
                 // Only if permission was granted should we log that we displayed
                 // the invite page with an address book list
-                [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactList];
+                [[MaveSDK sharedInstance].APIInterface trackInvitePageOpenForPageType:MAVEInvitePageTypeContactListV2];
             });
         }
     }];
