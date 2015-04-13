@@ -79,6 +79,21 @@
     XCTAssertEqualObjects(vc.navigationItem.title, @"Send Separately");
 }
 
+- (void)testKeyboardWillChangeFrameNotification {
+    // it should set the search table content inset when keyboard shwos up
+    NSValue *frameVal = [NSValue valueWithCGRect:CGRectMake(0, 200, 100, 31)];
+    NSNotification *notif = [[NSNotification alloc] initWithName:@"foo" object:nil userInfo:@{UIKeyboardFrameEndUserInfoKey: frameVal}];
+
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+    XCTAssertEqual(vc.searchTableView.contentInset.bottom, 0);
+
+    [vc keyboardWillChangeFrameNotification:notif];
+
+    XCTAssertEqual(vc.currentKeyboardHeightFromBottom, 31);
+    XCTAssertEqual(vc.searchTableView.contentInset.bottom, 31);
+}
+
 - (void)testHeightForRowAtIndexPath {
 
 }

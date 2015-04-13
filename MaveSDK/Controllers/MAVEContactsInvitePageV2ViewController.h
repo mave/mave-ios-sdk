@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSDictionary *tableData;
 @property (nonatomic, strong) NSArray *searchTableData;
 @property (nonatomic, strong) NSDictionary *personToIndexPathsIndex;
+@property (nonatomic, assign) CGFloat currentKeyboardHeightFromBottom;
 
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath;
 
@@ -38,5 +39,8 @@
 - (MAVESearchBar *)searchBar;
 
 - (void)sendInviteToPerson:(MAVEABPerson *)person sendButton:(UIButton *)sendButton;
+
+// Keyboard helpers
+- (void)keyboardWillChangeFrameNotification:(NSNotification *)notification;
 
 @end

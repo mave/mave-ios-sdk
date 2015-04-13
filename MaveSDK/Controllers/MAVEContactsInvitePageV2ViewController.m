@@ -26,11 +26,29 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrameNotification:) name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)keyboardWillChangeFrameNotification:(NSNotification *)notification {
+    NSDictionary *info = [notification userInfo];
+    CGRect kbFrame = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect screenFrame = [UIScreen mainScreen].bounds;
+    if (kbFrame.origin.y == screenFrame.size.height) {
+        self.currentKeyboardHeightFromBottom = 0;
+    } else {
+        self.currentKeyboardHeightFromBottom = kbFrame.size.height;
+    }
+    self.searchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.currentKeyboardHeightFromBottom, 0);
 }
 
 // Helpers for accessing deeply nested objects
