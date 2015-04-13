@@ -7,6 +7,7 @@
 //
 
 #import "MAVEContactsInvitePageV2AboveTableView.h"
+#import "MAVESpinnerImageView.h"
 #import "MaveSDK.h"
 
 CGFloat const messageViewMargin = 8;

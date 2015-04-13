@@ -31,7 +31,7 @@
     self.contactInfoWrapper = [[UIView alloc] init];
     self.nameLabel = [[UILabel alloc] init];
     self.detailLabel = [[UILabel alloc] init];
-    self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.sendButton = [[MAVEContactsInvitePageInlineSendButton alloc] init];
     [self.contentView addSubview:self.contactInfoWrapper];
     [self.contactInfoWrapper addSubview:self.nameLabel];
     [self.contactInfoWrapper addSubview:self.detailLabel];
@@ -50,13 +50,6 @@
     self.detailLabel.font = opts.contactDetailsFont;
     self.detailLabel.textColor = opts.contactDetailsTextColor;
 
-    self.sendButton.titleLabel.font = opts.contactInlineSendButtonFont;
-    [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
-    [self.sendButton setTitleColor:opts.contactInlineSendButtonTextColor forState:UIControlStateNormal];
-    [self.sendButton setTitle:@"Sending..." forState:UIControlStateSelected];
-    [self.sendButton setTitleColor:opts.contactInlineSendButtonDisabledTextColor forState:UIControlStateSelected];
-    [self.sendButton setTitle:@"Sent" forState:UIControlStateDisabled];
-    [self.sendButton setTitleColor:opts.contactInlineSendButtonDisabledTextColor forState:UIControlStateDisabled];
     [self.sendButton addTarget:self action:@selector(sendInviteToCurrentPerson) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -111,18 +104,15 @@
     // Set the state of the send button based on the person's sending status
     switch (person.sendingStatus) {
         case MAVEInviteSendingStatusUnsent: {
-            self.sendButton.selected = NO;
-            self.sendButton.enabled = YES;
+            [self.sendButton setStatusUnsent];
             break;
         }
         case MAVEInviteSendingStatusSending: {
-            self.sendButton.selected = YES;
-            self.sendButton.enabled = YES;
+            [self.sendButton setStatusSending];
             break;
         }
         case MAVEInviteSendingStatusSent: {
-            self.sendButton.selected = NO;
-            self.sendButton.enabled = NO;
+            [self.sendButton setStatusSent];
             break;
         }
     }

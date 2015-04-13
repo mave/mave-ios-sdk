@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MAVEABPerson.h"
 #import "MAVEContactsInvitePageV2ViewController.h"
+#import "MAVEContactsInvitePageInlineSendButton.h"
 
 @interface MAVEContactsInvitePageV2TableViewCell : UITableViewCell
 
@@ -18,7 +19,7 @@
 @property (strong, nonatomic) UIView *contactInfoWrapper;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *detailLabel;
-@property (strong, nonatomic) IBOutlet UIButton *sendButton;
+@property (strong, nonatomic) IBOutlet MAVEContactsInvitePageInlineSendButton *sendButton;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *expandedContactInfoHeightConstraint;
 
