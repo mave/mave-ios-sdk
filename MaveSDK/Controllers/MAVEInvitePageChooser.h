@@ -14,6 +14,7 @@
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 #import "MAVEInvitePageViewController.h"
+#import "MAVEContactsInvitePageV2ViewController.h"
 
 typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteController);
 typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInteger numberOfInvitesSent);
@@ -43,12 +44,15 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 // Choose which invite page to present and initialize is view controller
 - (UIViewController *)chooseAndCreateInvitePageViewController;
 - (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed;
+- (MAVEContactsInvitePageV2ViewController *)createContactsInvitePageV2IfAllowed;
 - (MFMessageComposeViewController *)createClientSMSInvitePage;
 
 // Helpers for business logic
+- (BOOL)isAnyServerSideContactsInvitePageAllowed;
 - (BOOL)isInSupportedRegionForServerSideSMSInvites;
+// TODO: deprecate the following, we can remove this kill switch b/c we can use
+// the invite page chooser as the kill switch
 - (BOOL)isContactsInvitePageEnabledServerSide;
-
 //
 // Handling the changing of view controllers
 //
