@@ -465,7 +465,7 @@
 - (void)testSetupNavigationButtonsModalWhenCustom {
     [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    chooser.activeViewController = [[UIViewController alloc] init];
+    chooser.activeViewController = [[MAVEContactsInvitePageV2ViewController alloc] init];
 
     [chooser _setupNavigationBarButtonsModalStyle];
 
@@ -485,6 +485,21 @@
 
     UIBarButtonItem *cancelButton = chooser.activeViewController.navigationItem.leftBarButtonItem;
     XCTAssertEqualObjects(cancelButton.title, @"Cancel");
+    XCTAssertEqual(cancelButton.style, UIBarButtonItemStylePlain);
+    XCTAssertEqualObjects(cancelButton.target, chooser);
+    XCTAssertEqual(cancelButton.action, @selector(dismissOnCancel));
+}
+
+- (void)testSetupNavigationButtonsModalOnRightSideForInvitePageV2 {
+    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = nil;
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    chooser.activeViewController = [[MAVEContactsInvitePageV2ViewController alloc] init];
+
+    [chooser _setupNavigationBarButtonsModalStyle];
+
+    XCTAssertNil(chooser.activeViewController.navigationItem.leftBarButtonItem);
+    UIBarButtonItem *cancelButton = chooser.activeViewController.navigationItem.rightBarButtonItem;
+    XCTAssertEqualObjects(cancelButton.title, @"Done");
     XCTAssertEqual(cancelButton.style, UIBarButtonItemStylePlain);
     XCTAssertEqualObjects(cancelButton.target, chooser);
     XCTAssertEqual(cancelButton.action, @selector(dismissOnCancel));
