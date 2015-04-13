@@ -46,19 +46,15 @@
     XCTAssertEqualObjects(cell.detailLabel.textColor, opts.contactDetailsTextColor);
 
     // Send Button
-    XCTAssertEqualObjects(cell.sendButton.titleLabel.font, opts.contactInlineSendButtonFont);
-    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateNormal], @"Send");
-    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateSelected], @"Sending...");
-    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateDisabled], @"Sent");
-    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateNormal], opts.contactInlineSendButtonTextColor);
-    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateSelected], opts.contactInlineSendButtonDisabledTextColor);
-    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateDisabled], opts.contactInlineSendButtonDisabledTextColor);
+    XCTAssertNotNil(cell.sendButton);
+    NSArray *buttonActions = [cell.sendButton actionsForTarget:cell forControlEvent:UIControlEventTouchUpInside];
+    XCTAssertEqual([buttonActions count], 1);
+    XCTAssertEqualObjects([buttonActions objectAtIndex:0], @"sendInviteToCurrentPerson");
 }
 
 - (void)testUpdateWithInfoForPerson {
     MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
-    cell.nameLabel = [[UILabel alloc] init];
-    cell.detailLabel = [[UILabel alloc] init];
+    [cell doCreateSubviews];
 
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.firstName = @"Peter";
@@ -73,50 +69,41 @@
 
 - (void)testUpdateWithInfoForPersonWhenStatusUnsent {
     MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
-    cell.nameLabel = [[UILabel alloc] init];
-    cell.detailLabel = [[UILabel alloc] init];
+    [cell doCreateSubviews];
 
+    id sendButtonMock = OCMPartialMock(cell.sendButton);
+    OCMExpect([sendButtonMock setStatusUnsent]);
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.firstName = @"Peter";
-    p1.phoneNumbers = @[@"+18085551111"];
-    XCTAssertEqualObjects(p1.bestPhone, @"+18085551111");
     p1.sendingStatus = MAVEInviteSendingStatusUnsent;
 
     [cell updateWithInfoForPerson:p1];
-    XCTAssertFalse(cell.sendButton.selected);
-    XCTAssertTrue(cell.sendButton.enabled);
+    OCMVerifyAll(sendButtonMock);
 }
 
 - (void)testUpdateWithInfoForPersonWhenStatusSending {
     MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
-    cell.nameLabel = [[UILabel alloc] init];
-    cell.detailLabel = [[UILabel alloc] init];
+    [cell doCreateSubviews];
 
+    id sendButtonMock = OCMPartialMock(cell.sendButton);
+    OCMExpect([sendButtonMock setStatusSending]);
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.firstName = @"Peter";
-    p1.phoneNumbers = @[@"+18085551111"];
-    XCTAssertEqualObjects(p1.bestPhone, @"+18085551111");
     p1.sendingStatus = MAVEInviteSendingStatusSending;
 
     [cell updateWithInfoForPerson:p1];
-    XCTAssertTrue(cell.sendButton.selected);
-    XCTAssertTrue(cell.sendButton.enabled);
+    OCMVerifyAll(sendButtonMock);
 }
 
 - (void)testUpdateWithInfoForPersonWhenStatusSent {
     MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
-    cell.nameLabel = [[UILabel alloc] init];
-    cell.detailLabel = [[UILabel alloc] init];
+    [cell doCreateSubviews];
 
+    id sendButtonMock = OCMPartialMock(cell.sendButton);
+    OCMExpect([sendButtonMock setStatusSent]);
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    p1.firstName = @"Peter";
-    p1.phoneNumbers = @[@"+18085551111"];
-    XCTAssertEqualObjects(p1.bestPhone, @"+18085551111");
     p1.sendingStatus = MAVEInviteSendingStatusSent;
 
     [cell updateWithInfoForPerson:p1];
-    XCTAssertFalse(cell.sendButton.selected);
-    XCTAssertFalse(cell.sendButton.enabled);
+    OCMVerifyAll(sendButtonMock);
 }
 
 
