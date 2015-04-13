@@ -64,8 +64,6 @@ CGFloat const editButtonWidth = 50;
 
     self.searchBarTopBorder = [[UIView alloc] init];
     self.searchBarTopBorder.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
-    self.searchBarBottomBorder = [[UIView alloc] init];
-    self.searchBarBottomBorder.backgroundColor = [UIColor clearColor];
     self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
 
     [self addSubview:self.nonSearchContainerView];
@@ -75,7 +73,6 @@ CGFloat const editButtonWidth = 50;
     [self.topLabelContainerView addSubview:self.messageLabel];
     [self addSubview:self.searchBarTopBorder];
     [self addSubview:self.searchBar];
-    [self addSubview:self.searchBarBottomBorder];
 }
 
 - (void)updateConstraints {
@@ -96,7 +93,6 @@ CGFloat const editButtonWidth = 50;
     self.messageTextView.translatesAutoresizingMaskIntoConstraints = NO;
     self.searchBarTopBorder.translatesAutoresizingMaskIntoConstraints = NO;
     self.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
-    self.searchBarBottomBorder.translatesAutoresizingMaskIntoConstraints = NO;
 
     NSDictionary *viewsDict = @{@"topLabelContainer": self.topLabelContainerView,
                                 @"nonSearchContainer": self.nonSearchContainerView,
@@ -105,12 +101,11 @@ CGFloat const editButtonWidth = 50;
                                 @"messageTextView": self.messageTextView,
                                 @"searchBarTopBorder": self.searchBarTopBorder,
                                 @"searchBar": self.searchBar,
-                                @"searchBarBottomBorder": self.searchBarBottomBorder,
     };
     NSDictionary *metrics = @{@"messageTextHMargins": @(messageViewHMargins),
                               @"editButtonWidth": @(editButtonWidth)};
 
-    NSString *sfOuterV = @"V:|-0-[nonSearchContainer]-0-[searchBarTopBorder(==0.5)]-0-[searchBar]-0-[searchBarBottomBorder(==0.5)]-0-|";
+    NSString *sfOuterV = @"V:|-0-[nonSearchContainer]-0-[searchBarTopBorder(==0.5)]-0-[searchBar]-0-|";
     NSString *sfNonSearchContainerH = @"H:|-0-[nonSearchContainer]-0-|";
     NSString *sfNonSearchInnerV = @"V:|-5-[topLabelContainer]-(-5)-[messageTextView]-0-|";
     NSString *sfTopContainerH = @"H:|-0-[topLabelContainer]-0-|";
@@ -118,7 +113,6 @@ CGFloat const editButtonWidth = 50;
     NSString *sfMessageH = @"H:|-messageTextHMargins-[messageTextView]-0-[editButton(editButtonWidth)]-0-|";
     NSString *sfSearchTopH = @"H:|-0-[searchBarTopBorder]-0-|";
     NSString *sfSearchH = @"H:|-0-[searchBar]-0-|";
-    NSString *sfSearchBottomH = @"H:|-0-[searchBarBottomBorder]-0-|";
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfOuterV options:0 metrics:nil views:viewsDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfNonSearchContainerH options:0 metrics:nil views:viewsDict]];
@@ -128,7 +122,6 @@ CGFloat const editButtonWidth = 50;
     [self.nonSearchContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfMessageH options:0 metrics:metrics views:viewsDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfSearchTopH options:0 metrics:nil views:viewsDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfSearchH options:0 metrics:nil views:viewsDict]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:sfSearchBottomH options:0 metrics:nil views:viewsDict]];
 
     self.messageViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:30];
     [self.nonSearchContainerView addConstraint:self.messageViewHeightConstraint];

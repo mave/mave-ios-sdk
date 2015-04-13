@@ -19,7 +19,6 @@
 @property (nonatomic, strong) NSLayoutConstraint *messageViewHeightConstraint;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) UIView *searchBarTopBorder;
-@property (nonatomic, strong) UIView *searchBarBottomBorder;
 
 - (void)toggleMessageTextViewEditable;
 
