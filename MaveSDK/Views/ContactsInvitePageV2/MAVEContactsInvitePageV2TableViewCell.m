@@ -107,13 +107,24 @@
     self.nameLabel.text = [person fullName];
     self.detailLabel.text = [MAVEABPerson displayPhoneNumber:person.bestPhone];
     self.sendButton.hidden = NO;
-    // On this table we use the selected field to mean already sent, since it's one-click
-    // send instead of selecting people
-    if (person.selected) {
-        self.sendButton.selected = NO;
-        self.sendButton.enabled = NO;
-    } else {
-        self.sendButton.enabled = YES;
+
+    // Set the state of the send button based on the person's sending status
+    switch (person.sendingStatus) {
+        case MAVEInviteSendingStatusUnsent: {
+            self.sendButton.selected = NO;
+            self.sendButton.enabled = YES;
+            break;
+        }
+        case MAVEInviteSendingStatusSending: {
+            self.sendButton.selected = YES;
+            self.sendButton.enabled = YES;
+            break;
+        }
+        case MAVEInviteSendingStatusSent: {
+            self.sendButton.selected = NO;
+            self.sendButton.enabled = NO;
+            break;
+        }
     }
 }
 

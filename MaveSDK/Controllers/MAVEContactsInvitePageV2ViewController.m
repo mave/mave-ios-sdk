@@ -380,11 +380,9 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.60 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_semaphore_signal(sendingStatusSema);
     });
-    [UIView transitionWithView:sendButton
-                      duration:0.25
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^{ sendButton.selected = YES; }
-                    completion:nil];
+
+    person.sendingStatus = MAVEInviteSendingStatusSending;
+    [self.tableView reloadData];
 
     // end editing to close the keyboard if it's open
     [self.messageTextView endEditing:YES];
@@ -410,7 +408,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                dispatch_semaphore_wait(sendingStatusSema, DISPATCH_TIME_FOREVER);
                dispatch_async(dispatch_get_main_queue(), ^{
-                   person.selected = YES;
+                   person.sendingStatus = MAVEInviteSendingStatusSent;
                    [self.tableView reloadData];
                    // if search table view is active, switch back to non-search table view
                    if (!self.searchTableView.hidden) {
@@ -436,7 +434,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     MAVEABPerson *person = objc_getAssociatedObject(alertView, &MAVESendFailedAlertViewDataKey);
     if (person) {
-        person.selected = NO;
+        person.sendingStatus = MAVEInviteSendingStatusUnsent;
         [self.tableView reloadData];
         [self jumpToMainTableRowForPerson:person];
     }

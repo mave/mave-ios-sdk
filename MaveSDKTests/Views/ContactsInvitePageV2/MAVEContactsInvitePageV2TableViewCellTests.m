@@ -71,4 +71,53 @@
     XCTAssertEqualObjects(cell.detailLabel.text, @"(808)\u00a0555-1111");
 }
 
+- (void)testUpdateWithInfoForPersonWhenStatusUnsent {
+    MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
+    cell.nameLabel = [[UILabel alloc] init];
+    cell.detailLabel = [[UILabel alloc] init];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Peter";
+    p1.phoneNumbers = @[@"+18085551111"];
+    XCTAssertEqualObjects(p1.bestPhone, @"+18085551111");
+    p1.sendingStatus = MAVEInviteSendingStatusUnsent;
+
+    [cell updateWithInfoForPerson:p1];
+    XCTAssertFalse(cell.sendButton.selected);
+    XCTAssertTrue(cell.sendButton.enabled);
+}
+
+- (void)testUpdateWithInfoForPersonWhenStatusSending {
+    MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
+    cell.nameLabel = [[UILabel alloc] init];
+    cell.detailLabel = [[UILabel alloc] init];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Peter";
+    p1.phoneNumbers = @[@"+18085551111"];
+    XCTAssertEqualObjects(p1.bestPhone, @"+18085551111");
+    p1.sendingStatus = MAVEInviteSendingStatusSending;
+
+    [cell updateWithInfoForPerson:p1];
+    XCTAssertTrue(cell.sendButton.selected);
+    XCTAssertTrue(cell.sendButton.enabled);
+}
+
+- (void)testUpdateWithInfoForPersonWhenStatusSent {
+    MAVEContactsInvitePageV2TableViewCell *cell = [[MAVEContactsInvitePageV2TableViewCell alloc] init];
+    cell.nameLabel = [[UILabel alloc] init];
+    cell.detailLabel = [[UILabel alloc] init];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Peter";
+    p1.phoneNumbers = @[@"+18085551111"];
+    XCTAssertEqualObjects(p1.bestPhone, @"+18085551111");
+    p1.sendingStatus = MAVEInviteSendingStatusSent;
+
+    [cell updateWithInfoForPerson:p1];
+    XCTAssertFalse(cell.sendButton.selected);
+    XCTAssertFalse(cell.sendButton.enabled);
+}
+
+
 @end
