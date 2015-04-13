@@ -44,7 +44,7 @@
     XCTAssertEqualObjects(vc.searchBar.delegate, vc);
 
     // Return key types
-    XCTAssertEqual(vc.messageTextView.returnKeyType, UIReturnKeyDefault);
+    XCTAssertEqual(vc.messageTextView.returnKeyType, UIReturnKeyDone);
     XCTAssertEqual(vc.searchBar.returnKeyType, UIReturnKeyDone);
 }
 

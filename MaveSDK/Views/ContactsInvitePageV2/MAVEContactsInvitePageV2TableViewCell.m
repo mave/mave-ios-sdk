@@ -50,13 +50,13 @@
     self.detailLabel.font = opts.contactDetailsFont;
     self.detailLabel.textColor = opts.contactDetailsTextColor;
 
-    self.sendButton.titleLabel.font = opts.sendButtonFont;
-    [self.sendButton setTitle:opts.sendButtonCopy forState:UIControlStateNormal];
-    [self.sendButton setTitleColor:opts.sendButtonTextColor forState:UIControlStateNormal];
+    self.sendButton.titleLabel.font = opts.contactInlineSendButtonFont;
+    [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [self.sendButton setTitleColor:opts.contactInlineSendButtonTextColor forState:UIControlStateNormal];
     [self.sendButton setTitle:@"Sending..." forState:UIControlStateSelected];
-    [self.sendButton setTitleColor:opts.sendButtonDisabledTextColor forState:UIControlStateSelected];
+    [self.sendButton setTitleColor:opts.contactInlineSendButtonDisabledTextColor forState:UIControlStateSelected];
     [self.sendButton setTitle:@"Sent" forState:UIControlStateDisabled];
-    [self.sendButton setTitleColor:opts.sendButtonDisabledTextColor forState:UIControlStateDisabled];
+    [self.sendButton setTitleColor:opts.contactInlineSendButtonDisabledTextColor forState:UIControlStateDisabled];
     [self.sendButton addTarget:self action:@selector(sendInviteToCurrentPerson) forControlEvents:UIControlEventTouchUpInside];
 }
 

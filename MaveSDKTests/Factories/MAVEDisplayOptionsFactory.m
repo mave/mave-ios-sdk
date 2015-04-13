@@ -33,6 +33,12 @@
     opts.inviteExplanationShareButtonsFont = [self randomFont];
     opts.inviteExplanationShareButtonsBackgroundColor = [self randomColor];
 
+    opts.topViewMessageFont = [self randomFont];
+    opts.topViewMessageTextColor = [self randomColor];
+    opts.topViewMessageLabelFont = [self randomFont];
+    opts.topViewMessageLabelTextColor = [self randomColor];
+    opts.topViewBackgroundColor = [self randomColor];
+
     opts.searchBarFont = [self randomFont];
     opts.searchBarPlaceholderTextColor = [self randomColor];
     opts.searchBarSearchTextColor = [self randomColor];
@@ -46,6 +52,9 @@
     opts.contactSeparatorColor = [self randomColor];
     opts.contactCellBackgroundColor = [self randomColor];
     opts.contactCheckmarkColor = [self randomColor];
+    opts.contactInlineSendButtonFont = [self randomFont];
+    opts.contactInlineSendButtonTextColor = [self randomColor];
+    opts.contactInlineSendButtonDisabledTextColor = [self randomColor];
 
     opts.contactSectionHeaderFont = [self randomFont];
     opts.contactSectionHeaderTextColor = [self randomColor];
@@ -55,13 +64,10 @@
 
     opts.messageFieldFont = [self randomFont];
     opts.messageFieldTextColor = [self randomColor];
-    opts.messageFieldLabelFont = [self randomFont];
-    opts.messageFieldLabelTextColor = [self randomColor];
     opts.messageFieldBackgroundColor = [self randomColor];
     opts.sendButtonCopy = @"Different Send";
     opts.sendButtonFont = [self randomFont];
     opts.sendButtonTextColor = [self randomColor];
-    opts.sendButtonDisabledTextColor = [self randomColor];
     opts.bottomViewBackgroundColor = [self randomColor];
     opts.bottomViewBorderColor = [self randomColor];
 

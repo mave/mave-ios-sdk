@@ -43,13 +43,13 @@ CGFloat const editButtonWidth = 50;
     self.nonSearchContainerView.backgroundColor = [UIColor clearColor];
     self.messageLabel = [[UILabel alloc] init];
     self.messageLabel.text = @"Message:";
-    self.messageLabel.font = opts.messageFieldLabelFont;
-    self.messageLabel.textColor = opts.messageFieldLabelTextColor;
+    self.messageLabel.font = opts.topViewMessageLabelFont;
+    self.messageLabel.textColor = opts.topViewMessageLabelTextColor;
     self.editButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.editButton.backgroundColor = [UIColor clearColor];
     self.editButton.titleLabel.font = [UIFont systemFontOfSize:24];
     [self.editButton setTitle:@"\u270E" forState:UIControlStateNormal];
-    [self.editButton setTitleColor:opts.messageFieldLabelTextColor forState:UIControlStateNormal];
+    [self.editButton setTitleColor:opts.topViewMessageLabelTextColor forState:UIControlStateNormal];
     [self.editButton setTitle:@"" forState:UIControlStateSelected];
     [self.editButton addTarget:self action:@selector(toggleMessageTextViewEditable) forControlEvents:UIControlEventTouchUpInside];
 
@@ -65,7 +65,7 @@ CGFloat const editButtonWidth = 50;
     self.searchBarTopBorder = [[UIView alloc] init];
     self.searchBarTopBorder.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
     self.searchBarBottomBorder = [[UIView alloc] init];
-    self.searchBarBottomBorder.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
+    self.searchBarBottomBorder.backgroundColor = [UIColor clearColor];
     self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
 
     [self addSubview:self.nonSearchContainerView];

@@ -46,13 +46,13 @@
     XCTAssertEqualObjects(cell.detailLabel.textColor, opts.contactDetailsTextColor);
 
     // Send Button
-    XCTAssertEqualObjects(cell.sendButton.titleLabel.font, opts.sendButtonFont);
-    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateNormal], opts.sendButtonCopy);
+    XCTAssertEqualObjects(cell.sendButton.titleLabel.font, opts.contactInlineSendButtonFont);
+    XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateNormal], @"Send");
     XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateSelected], @"Sending...");
     XCTAssertEqualObjects([cell.sendButton titleForState:UIControlStateDisabled], @"Sent");
-    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateNormal], opts.sendButtonTextColor);
-    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateSelected], opts.sendButtonDisabledTextColor);
-    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateDisabled], opts.sendButtonDisabledTextColor);
+    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateNormal], opts.contactInlineSendButtonTextColor);
+    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateSelected], opts.contactInlineSendButtonDisabledTextColor);
+    XCTAssertEqualObjects([cell.sendButton titleColorForState:UIControlStateDisabled], opts.contactInlineSendButtonDisabledTextColor);
 }
 
 - (void)testUpdateWithInfoForPerson {

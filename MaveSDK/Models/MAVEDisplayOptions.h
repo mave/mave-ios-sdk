@@ -18,6 +18,7 @@
 + (UIColor *)colorWhite;
 + (UIColor *)colorBlueTint;
 
+// Shared options
 // Contacts list invite friends page options:
 // Header options (also used by share page invite page)
 @property (nonatomic, copy) NSString *navigationBarTitleCopy;
@@ -36,7 +37,9 @@
 @property (nonatomic, strong) UIBarButtonItem *navigationBarBackButton;
 @property (nonatomic, strong) UIBarButtonItem *navigationBarForwardButton;
 
-// Explanation of how the referral program works section
+// Above table content - invite page v1 specific
+//  - "invite explanation" text, an explanation of how the referral program works
+//  - optional share icons on the invite page
 @property (nonatomic, copy) NSString  *inviteExplanationCopy;
 @property (nonatomic, strong) UIFont  *inviteExplanationFont;
 @property (nonatomic, strong) UIColor *inviteExplanationTextColor;
@@ -45,6 +48,15 @@
 @property (nonatomic, strong) UIColor *inviteExplanationShareButtonsColor;
 @property (nonatomic, strong) UIFont  *inviteExplanationShareButtonsFont;
 @property (nonatomic, strong) UIColor *inviteExplanationShareButtonsBackgroundColor;
+
+// Above table content - invite page v2 specific
+//  - invite message (user-customizable text that will be sent in the invite)
+//    above the table view
+@property (nonatomic, strong) UIFont  *topViewMessageLabelFont;
+@property (nonatomic, strong) UIColor *topViewMessageLabelTextColor;
+@property (nonatomic, strong) UIFont  *topViewMessageFont;
+@property (nonatomic, strong) UIColor *topViewMessageTextColor;
+@property (nonatomic, strong) UIColor *topViewBackgroundColor;
 
 // Search bar options
 @property (nonatomic, strong) UIFont *searchBarFont;
@@ -61,6 +73,9 @@
 @property (nonatomic, strong) UIColor *contactSeparatorColor;
 @property (nonatomic, strong) UIColor *contactCellBackgroundColor;
 @property (nonatomic, strong) UIColor *contactCheckmarkColor;
+@property (nonatomic, strong) UIFont  *contactInlineSendButtonFont;
+@property (nonatomic, strong) UIColor *contactInlineSendButtonTextColor;
+@property (nonatomic, strong) UIColor *contactInlineSendButtonDisabledTextColor;
 
 @property (nonatomic, strong) UIFont  *contactSectionHeaderFont;
 @property (nonatomic, strong) UIColor *contactSectionHeaderTextColor;
@@ -68,16 +83,13 @@
 @property (nonatomic, strong) UIColor *contactSectionIndexColor;
 @property (nonatomic, strong) UIColor *contactSectionIndexBackgroundColor;
 
-// Message and Send section options
+// Message and Send section options (only used with invite page v1)
 @property (nonatomic, strong) UIFont  *messageFieldFont;
 @property (nonatomic, strong) UIColor *messageFieldTextColor;
-@property (nonatomic, strong) UIFont  *messageFieldLabelFont;
-@property (nonatomic, strong) UIColor *messageFieldLabelTextColor;
 @property (nonatomic, strong) UIColor *messageFieldBackgroundColor;
 @property (nonatomic, copy) NSString  *sendButtonCopy;
 @property (nonatomic, strong) UIFont  *sendButtonFont;
 @property (nonatomic, strong) UIColor *sendButtonTextColor;
-@property (nonatomic, strong) UIColor *sendButtonDisabledTextColor;
 @property (nonatomic, strong) UIColor *bottomViewBackgroundColor;
 @property (nonatomic, strong) UIColor *bottomViewBorderColor;
 

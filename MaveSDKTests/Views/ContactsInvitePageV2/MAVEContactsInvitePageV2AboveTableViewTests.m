@@ -31,12 +31,15 @@
 - (void)testInitialSetup {
     MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
     [MaveSDK sharedInstance].displayOptions = opts;
+    [MaveSDK sharedInstance].defaultSMSMessageText = @"Foobar";
 
     MAVEContactsInvitePageV2AboveTableView *view = [[MAVEContactsInvitePageV2AboveTableView alloc] init];
 
-    XCTAssertEqualObjects(view.messageLabel.font, opts.messageFieldLabelFont);
-    XCTAssertEqualObjects(view.messageLabel.textColor, opts.messageFieldLabelTextColor);
-    XCTAssertEqualObjects(view.editButton.titleLabel.textColor, opts.messageFieldLabelTextColor);
+    XCTAssertEqualObjects(view.messageLabel.font, opts.topViewMessageLabelFont);
+    XCTAssertEqualObjects(view.messageLabel.textColor, opts.topViewMessageLabelTextColor);
+
+
+    XCTAssertEqualObjects(view.editButton.titleLabel.textColor, opts.topViewMessageLabelTextColor);
     XCTAssertEqualObjects(view.messageTextView.text, [MaveSDK sharedInstance].defaultSMSMessageText);
     XCTAssertEqualObjects(view.messageTextView.font, opts.messageFieldFont);
     XCTAssertEqualObjects(view.messageTextView.textColor, opts.messageFieldTextColor);
