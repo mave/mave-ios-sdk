@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "MAVEDisplayOptionsFactory.h"
+#import "MaveSDK.h"
 #import "MAVEContactsInvitePageInlineSendButton.h"
 
 @interface MAVEContactsInvitePageInlineSendButtonTests : XCTestCase
@@ -27,13 +29,21 @@
 }
 
 - (void)testInit {
+    MAVEDisplayOptions *opts = [MAVEDisplayOptionsFactory generateDisplayOptions];
+    [MaveSDK sharedInstance].displayOptions = opts;
+
     MAVEContactsInvitePageInlineSendButton *button = [[MAVEContactsInvitePageInlineSendButton alloc] init];
+
+    XCTAssertEqualObjects(button.titleLabel.font, opts.contactInlineSendButtonFont);
+    XCTAssertEqualObjects([button titleColorForState:UIControlStateNormal], opts.contactInlineSendButtonTextColor);
+    XCTAssertEqualObjects([button titleColorForState:UIControlStateDisabled], opts.contactInlineSendButtonDisabledTextColor);
+
+    XCTAssertEqualObjects([button titleForState:UIControlStateNormal], @"Send");
+    XCTAssertEqualObjects([button titleForState:UIControlStateDisabled], @"Sent");
 
     XCTAssertNotNil(button.sendingStatusSpinner);
     XCTAssertEqual(button.sendingStatusSpinner.frame.size.width, 18);
     XCTAssertEqual(button.sendingStatusSpinner.frame.size.height, 18);
-    XCTAssertEqualObjects([button titleForState:UIControlStateNormal], @"Send");
-    XCTAssertEqualObjects([button titleForState:UIControlStateDisabled], @"Sent");
 
     XCTAssertTrue(button.enabled);
 }
