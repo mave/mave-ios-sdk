@@ -67,7 +67,7 @@
     NSDictionary *marginMetrics = @{@"topMargin": @(8),
                                     @"nameToDetailsMargin": @(0),
                                     @"bottomMargin": @(8),
-                                    @"leftMargin": @(10)};
+                                    @"leftMargin": @(14)};
 
     NSString *fsOuterLevelV = @"V:|-0-[contactInfoWrapper]-0-|";
     NSString *fsOuterLevelH = @"H:|-0-[contactInfoWrapper]-10-[sendButton]";

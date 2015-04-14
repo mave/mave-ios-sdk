@@ -222,23 +222,14 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 // Setup the single "Cancel" button to close the modal window/return to drawer
 - (void)_setupNavigationBarButtonsModalStyle {
     UIBarButtonItem *button = [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton;
-    if (button) {
-        button.target = self;
-        button.action = @selector(dismissOnCancel);
-        self.activeViewController.navigationItem.leftBarButtonItem = button;
-    } else {
+    if (!button) {
         button = [[UIBarButtonItem alloc] init];
         button.style = UIBarButtonItemStylePlain;
-        button.target = self;
-        button.action = @selector(dismissOnCancel);
-        if ([self.activeViewController isKindOfClass:[MAVEContactsInvitePageV2ViewController class]]) {
-            button.title = @"Done";
-            self.activeViewController.navigationItem.rightBarButtonItem = button;
-        } else {
-            button.title = @"Cancel";
-            self.activeViewController.navigationItem.leftBarButtonItem = button;
-        }
+        button.title = @"Cancel";
     }
+    button.target = self;
+    button.action = @selector(dismissOnCancel);
+    self.activeViewController.navigationItem.leftBarButtonItem = button;
 }
 
 - (void)_setupNavigationBarButtonsPushStyle {
