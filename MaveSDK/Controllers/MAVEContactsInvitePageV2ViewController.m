@@ -400,6 +400,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 
     person.sendingStatus = MAVEInviteSendingStatusSending;
     [self.tableView reloadData];
+    [self.searchTableView reloadData];
 
     // end editing to close the keyboard if it's open
     [self.messageTextView endEditing:YES];

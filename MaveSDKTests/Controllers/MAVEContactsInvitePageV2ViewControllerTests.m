@@ -257,6 +257,8 @@
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     id tableViewMock = OCMPartialMock(vc.tableView);
     OCMExpect([tableViewMock reloadData]);
+    id searchTableViewMock = OCMPartialMock(vc.searchTableView);
+    OCMExpect([searchTableViewMock reloadData]);
 
     // expect calling out to the api, and call the completion block with no errors
     __block MAVEInviteSendingStatus sendingStatus;
@@ -279,6 +281,7 @@
     OCMVerifyAll(vcMock);
     OCMVerifyAll(apiInterfaceMock);
     OCMVerifyAll(tableViewMock);
+    OCMVerifyAll(searchTableViewMock);
     XCTAssertEqual(sendingStatus, MAVEInviteSendingStatusSending);
 }
 
