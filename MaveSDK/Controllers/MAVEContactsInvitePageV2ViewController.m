@@ -431,6 +431,12 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
                    // if search table view is active, switch back to non-search table view
                    if (!self.searchTableView.hidden) {
                        [self jumpToMainTableRowForPerson:person];
+                    NSString *leftButtonTitle = self.navigationItem.leftBarButtonItem.title;
+                    if (leftButtonTitle
+                        && [[leftButtonTitle lowercaseString] isEqualToString:@"cancel"]
+                        && !self.navigationItem.rightBarButtonItem) {
+                        self.navigationItem.leftBarButtonItem.title = @"Done";
+                       }
                    }
                });
            });
