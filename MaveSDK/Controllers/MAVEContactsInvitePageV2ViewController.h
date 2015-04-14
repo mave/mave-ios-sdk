@@ -32,6 +32,7 @@
 @property (nonatomic, assign) CGFloat currentKeyboardHeightFromBottom;
 
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)updatePersonToIndexPathsIndex;
 - (void) jumpToMainTableRowForPerson:(MAVEABPerson *)recipient;
 
 // Helpers for accessing nested objects
