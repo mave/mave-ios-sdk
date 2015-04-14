@@ -28,18 +28,18 @@
 - (void)doInitialSetup {
     NSString *bundleName = @"MaveSDK";
     self.animationImages = [NSArray arrayWithObjects:
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner1" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner2" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner3" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner4" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner5" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner6" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner7" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner8" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner9" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner10" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner11" fromBundle:bundleName],
-                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner12" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner1.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner2.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner3.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner4.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner5.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner6.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner7.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner8.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner9.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner10.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner11.png" fromBundle:bundleName],
+                            [MAVEBuiltinUIElementUtils imageNamed:@"MAVESpinner12.png" fromBundle:bundleName],
                             nil];
     self.animationDuration = 0.7f;
     self.animationRepeatCount = 0;
