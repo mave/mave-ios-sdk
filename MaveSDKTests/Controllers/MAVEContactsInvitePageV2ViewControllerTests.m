@@ -122,6 +122,49 @@
     XCTAssertEqual([vc tableView:vc.tableView numberOfRowsInSection:1], 2);
 }
 
+- (void)testUpdateTableDataWithSuggestedInvitesWhenSuggestions {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+    vc.tableData = @{MAVESuggestedInvitesTableDataKey: @[], @"A": @[]};
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Blah";
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p2.firstName = @"Cah";
+    NSArray *suggestions = @[p1, p2];
+    NSDictionary *expectedData = @{MAVESuggestedInvitesTableDataKey:suggestions,
+                                   @"A": @[]};
+    NSArray *indexesOfSuggestions = @[
+        [NSIndexPath indexPathForRow:0 inSection:0],
+        [NSIndexPath indexPathForRow:1 inSection:0],
+    ];
+
+    id tableViewMock = OCMPartialMock(vc.tableView);
+    id mock = OCMPartialMock(vc);
+    OCMExpect([mock updateTableDataWithoutReloading:expectedData]);
+
+    OCMExpect([tableViewMock beginUpdates]);
+    OCMExpect([tableViewMock insertRowsAtIndexPaths:indexesOfSuggestions withRowAnimation:UITableViewRowAnimationTop]);
+    OCMExpect([tableViewMock endUpdates]);
+
+    [vc updateTableDataAnimatedWithSuggestedInvites:suggestions];
+
+    OCMVerifyAll(mock);
+    OCMVerifyAll(tableViewMock);
+}
+
+- (void)testUpdateTableDataWithSuggestionsWhenNoSuggestions {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    vc.tableData = @{MAVESuggestedInvitesTableDataKey: @[], @"A": @[]};
+    NSDictionary *expectedData = @{@"A": @[]};
+
+    id mock = OCMPartialMock(vc);
+    OCMExpect([mock updateTableData:expectedData]);
+
+    [vc updateTableDataAnimatedWithSuggestedInvites:@[]];
+
+    OCMVerifyAll(mock);
+}
+
 - (void)testUpdatePersonToIndexPathsIndex {
 
 }

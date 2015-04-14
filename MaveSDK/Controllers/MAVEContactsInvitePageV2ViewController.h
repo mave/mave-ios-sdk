@@ -16,6 +16,7 @@
 
 - (void)updateTableData:(NSDictionary *)tableData;
 - (void)updateTableDataAnimatedWithSuggestedInvites:(NSArray *)suggestedInvites;
+- (void)updateTableDataWithoutReloading:(NSDictionary *)tableData;
 
 @end
 
@@ -39,6 +40,7 @@
 - (UITextView *)messageTextView;
 - (MAVESearchBar *)searchBar;
 
+// Send invite methods
 - (void)sendInviteToPerson:(MAVEABPerson *)person;
 - (void)inviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient waitSema:(dispatch_semaphore_t)sema;
 - (void)innerInviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient;
