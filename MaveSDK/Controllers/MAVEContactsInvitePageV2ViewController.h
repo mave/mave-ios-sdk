@@ -31,6 +31,7 @@
 @property (nonatomic, assign) CGFloat currentKeyboardHeightFromBottom;
 
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void) jumpToMainTableRowForPerson:(MAVEABPerson *)recipient;
 
 // Helpers for accessing nested objects
 - (UITableView *)tableView;
@@ -38,7 +39,9 @@
 - (UITextView *)messageTextView;
 - (MAVESearchBar *)searchBar;
 
-- (void)sendInviteToPerson:(MAVEABPerson *)person sendButton:(UIButton *)sendButton;
+- (void)sendInviteToPerson:(MAVEABPerson *)person;
+- (void)inviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient waitSema:(dispatch_semaphore_t)sema;
+- (void)innerInviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient;
 
 // Keyboard helpers
 - (void)keyboardWillChangeFrameNotification:(NSNotification *)notification;

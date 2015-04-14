@@ -127,7 +127,7 @@
 
 - (void)sendInviteToCurrentPerson {
     if (self.delegateController) {
-        [self.delegateController sendInviteToPerson:self.person sendButton:self.sendButton];
+        [self.delegateController sendInviteToPerson:self.person];
     }
 }
 

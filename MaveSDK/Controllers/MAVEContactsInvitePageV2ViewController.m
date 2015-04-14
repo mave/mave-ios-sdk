@@ -383,7 +383,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 }
 
 #pragma mark - Send invites
-- (void)sendInviteToPerson:(MAVEABPerson *)person sendButton:(UIButton *)sendButton {
+- (void)sendInviteToPerson:(MAVEABPerson *)person {
     NSString *phoneToinvite = [person bestPhone];
     if (!phoneToinvite) {
         return;
@@ -422,26 +422,34 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
                 [self showSendFailureErrorAndResetPerson:person];
             });
        } else {
-           MAVEInfoLog(@"Sent invite to %@!", person.fullName);
-           dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-               dispatch_semaphore_wait(sendingStatusSema, DISPATCH_TIME_FOREVER);
-               dispatch_async(dispatch_get_main_queue(), ^{
-                   person.sendingStatus = MAVEInviteSendingStatusSent;
-                   [self.tableView reloadData];
-                   // if search table view is active, switch back to non-search table view
-                   if (!self.searchTableView.hidden) {
-                       [self jumpToMainTableRowForPerson:person];
-                    NSString *leftButtonTitle = self.navigationItem.leftBarButtonItem.title;
-                    if (leftButtonTitle
-                        && [[leftButtonTitle lowercaseString] isEqualToString:@"cancel"]
-                        && !self.navigationItem.rightBarButtonItem) {
-                        self.navigationItem.leftBarButtonItem.title = @"Done";
-                       }
-                   }
-               });
-           });
+           [self inviteSentSuccessHandlerPerson:person waitSema:sendingStatusSema];
        }
     }];
+}
+
+- (void)inviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient waitSema:(dispatch_semaphore_t)sema {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self innerInviteSentSuccessHandlerPerson:recipient];
+        });
+    });
+}
+
+- (void)innerInviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient {
+    recipient.sendingStatus = MAVEInviteSendingStatusSent;
+    [self.tableView reloadData];
+    // if search table view is active, switch back to non-search table view
+    if (!self.searchTableView.hidden) {
+        [self jumpToMainTableRowForPerson:recipient];
+    }
+
+    NSString *leftNavButtonTitle = self.navigationItem.leftBarButtonItem.title;
+    if (leftNavButtonTitle
+        && [[leftNavButtonTitle lowercaseString] isEqualToString:@"cancel"]
+        && !self.navigationItem.rightBarButtonItem) {
+        self.navigationItem.leftBarButtonItem.title = @"Done";
+    }
 }
 
 - (void)showSendFailureErrorAndResetPerson:(MAVEABPerson *)person {

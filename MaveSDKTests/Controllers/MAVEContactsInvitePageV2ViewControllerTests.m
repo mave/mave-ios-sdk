@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVEDisplayOptionsFactory.h"
 #import "MaveSDK.h"
 #import "MAVEContactsInvitePageV2ViewController.h"
@@ -30,7 +31,6 @@
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
@@ -143,6 +143,87 @@
     XCTAssertEqualObjects(received1, p1);
     XCTAssertEqualObjects(received2, p2);
     XCTAssertEqualObjects(received3, p3);
+}
+
+- (void)testSendInviteToPersonSuccess {
+  MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+
+    NSString *expectedMessage =  @"Foo text";
+    vc.messageTextView.text = expectedMessage;
+    NSArray *expectedPhones = @[@"+18085556789"];
+
+    MAVEUserData *pSend = [[MAVEUserData alloc] init];
+    pSend.userID = @"1";
+    pSend.firstName = @"Dan"; pSend.lastName = @"Food";
+    [[MaveSDK sharedInstance] identifyUser:pSend];
+
+    MAVEABPerson *pRec = [[MAVEABPerson alloc] init];
+    pRec.firstName = @"Recipient"; pRec.lastName = @"Person";
+    pRec.phoneNumbers = expectedPhones;
+    NSArray *expectedPeople = @[pRec];
+
+    id vcMock = OCMPartialMock(vc);
+    OCMExpect([vcMock inviteSentSuccessHandlerPerson:[OCMArg any] waitSema:[OCMArg any]]);
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    id tableViewMock = OCMPartialMock(vc.tableView);
+    OCMExpect([tableViewMock reloadData]);
+
+    // expect calling out to the api, and call the completion block with no errors
+    __block MAVEInviteSendingStatus sendingStatus;
+    OCMExpect([apiInterfaceMock sendInvitesWithRecipientPhoneNumbers:expectedPhones
+                                             recipientContactRecords:expectedPeople
+                                                             message:expectedMessage
+                                                              userId:pSend.userID
+                                            inviteLinkDestinationURL:[OCMArg any]
+                                                      wrapInviteLink:NO
+                                                          customData:[OCMArg any]
+                                                     completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        sendingStatus = pRec.sendingStatus;
+        void(^completionBlock)(NSError *error, NSDictionary *responseData) = obj;
+        completionBlock(nil, nil);
+        return YES;
+    }]]);
+
+    [vc sendInviteToPerson:pRec];
+
+    OCMVerifyAll(vcMock);
+    OCMVerifyAll(apiInterfaceMock);
+    OCMVerifyAll(tableViewMock);
+    XCTAssertEqual(sendingStatus, MAVEInviteSendingStatusSending);
+}
+
+- (void)testinviteSentSuccessHandler {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+    id vcMock = OCMPartialMock(vc);
+    MAVEABPerson *pRec = [[MAVEABPerson alloc] init];
+
+    // search table is active, so we jump to the main table
+    vc.searchTableView.hidden = NO;
+    vc.tableView.hidden = YES;
+    OCMExpect([vcMock jumpToMainTableRowForPerson:pRec]);
+
+    id tableViewMock = OCMPartialMock(vc.tableView);
+    OCMExpect([tableViewMock reloadData]);
+
+    [vc innerInviteSentSuccessHandlerPerson:pRec];
+
+    XCTAssertEqual(pRec.sendingStatus, MAVEInviteSendingStatusSent);
+    OCMVerifyAll(vcMock);
+    OCMVerifyAll(tableViewMock);
+}
+
+- (void)testInviteSentSuccessHandlerChangeNavBarItemToDone {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+    UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:vc];
+    XCTAssertNotNil(navVC);
+    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] init];
+    vc.navigationItem.leftBarButtonItem.title = @"Cancel";
+
+    [vc innerInviteSentSuccessHandlerPerson:nil];
+    XCTAssertEqualObjects(vc.navigationItem.leftBarButtonItem.title, @"Done");
 }
 
 @end
