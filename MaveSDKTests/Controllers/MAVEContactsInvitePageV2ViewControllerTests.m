@@ -165,7 +165,7 @@
     OCMVerifyAll(mock);
 }
 
-- (void)testUpdatePersonToIndexPathsIndex {
+- (void)testEnumerateAllContacts {
     MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     p1.recordID = 1; p1.firstName = @"Ben";
@@ -173,24 +173,13 @@
     p1.recordID = 2; p2.firstName = @"Bat";
     MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
     p3.recordID = 3; p3.firstName = @"Aaron";
-    vc.tableData = @{MAVESuggestedInvitesTableDataKey:@[p2],
+    [vc updateTableData: @{MAVESuggestedInvitesTableDataKey:@[p2],
                      @"A": @[p3],
                      @"B": @[p1, p2],
-    };
-    NSArray *p1IPs = @[[NSIndexPath indexPathForRow:0 inSection:2]];
-    NSArray *p2IPs = @[[NSIndexPath indexPathForRow:0 inSection:0],
-                       [NSIndexPath indexPathForRow:1 inSection:2],
-                       ];
-    NSArray *p3IPs = @[[NSIndexPath indexPathForRow:0 inSection:1]];
+    }];
 
-    vc.tableSections = @[MAVESuggestedInvitesTableDataKey, @"A", @"B"];
-
-    [vc updatePersonToIndexPathsIndex];
-    NSDictionary *index = vc.personToIndexPathsIndex;
-
-    XCTAssertEqualObjects([index objectForKey:@(p1.recordID)], p1IPs);
-    XCTAssertEqualObjects([index objectForKey:@(p2.recordID)], p2IPs);
-    XCTAssertEqualObjects([index objectForKey:@(p3.recordID)], p3IPs);
+    NSArray *allContacts = @[p2, p3, p1];
+    XCTAssertEqualObjects([vc enumerateAllContacts], allContacts);
 }
 
 - (void)testPersonAtIndexPath {
@@ -212,8 +201,32 @@
     XCTAssertEqualObjects(received3, p3);
 }
 
-- (void)testEnumerateAllContacts {
+- (void)testUpdatePersonToIndexPathsIndex {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.recordID = 1; p1.firstName = @"Ben";
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    p1.recordID = 2; p2.firstName = @"Bat";
+    MAVEABPerson *p3 = [[MAVEABPerson alloc] init];
+    p3.recordID = 3; p3.firstName = @"Aaron";
+    vc.tableData = @{MAVESuggestedInvitesTableDataKey:@[p2],
+                     @"A": @[p3],
+                     @"B": @[p1, p2],
+                     };
+    NSArray *p1IPs = @[[NSIndexPath indexPathForRow:0 inSection:2]];
+    NSArray *p2IPs = @[[NSIndexPath indexPathForRow:0 inSection:0],
+                       [NSIndexPath indexPathForRow:1 inSection:2],
+                       ];
+    NSArray *p3IPs = @[[NSIndexPath indexPathForRow:0 inSection:1]];
 
+    vc.tableSections = @[MAVESuggestedInvitesTableDataKey, @"A", @"B"];
+
+    [vc updatePersonToIndexPathsIndex];
+    NSDictionary *index = vc.personToIndexPathsIndex;
+
+    XCTAssertEqualObjects([index objectForKey:@(p1.recordID)], p1IPs);
+    XCTAssertEqualObjects([index objectForKey:@(p2.recordID)], p2IPs);
+    XCTAssertEqualObjects([index objectForKey:@(p3.recordID)], p3IPs);
 }
 
 - (void)testSendInviteToPersonSuccess {

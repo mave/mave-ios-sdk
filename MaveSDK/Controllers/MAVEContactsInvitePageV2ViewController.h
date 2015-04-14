@@ -33,6 +33,7 @@
 
 - (MAVEABPerson *)tableView:(UITableView *)tableView personForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)updatePersonToIndexPathsIndex;
+- (NSArray *)enumerateAllContacts;
 - (void) jumpToMainTableRowForPerson:(MAVEABPerson *)recipient;
 
 // Helpers for accessing nested objects
