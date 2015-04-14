@@ -62,7 +62,7 @@
 
     // hard code the default height
     CGFloat height = [MAVEContactsInvitePageV2TableViewCell heightCellWithHave];
-    XCTAssertEqual(height, 51.79);
+    XCTAssertEqual(round(height), 52.0);
 }
 
 - (void)testUpdateWithInfoForPerson {
