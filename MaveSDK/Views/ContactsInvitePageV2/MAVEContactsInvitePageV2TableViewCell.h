@@ -28,6 +28,8 @@
 - (void) doStylingSetup;
 - (void) doConstraintSetup;
 
++ (CGFloat) heightCellWithHave;
+
 - (void)updateWithInfoForPerson:(MAVEABPerson *)person;
 - (void)updateWithInfoForNoPersonFound;
 - (void)sendInviteToCurrentPerson;

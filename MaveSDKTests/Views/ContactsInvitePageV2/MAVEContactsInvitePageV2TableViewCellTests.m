@@ -14,6 +14,10 @@
 #import "MAVEDisplayOptionsFactory.h"
 #import "MAVEBuiltinUIElementUtils.h"
 
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
+
 @interface MAVEContactsInvitePageV2TableViewCellTests : XCTestCase
 
 @end
@@ -50,6 +54,15 @@
     NSArray *buttonActions = [cell.sendButton actionsForTarget:cell forControlEvent:UIControlEventTouchUpInside];
     XCTAssertEqual([buttonActions count], 1);
     XCTAssertEqualObjects([buttonActions objectAtIndex:0], @"sendInviteToCurrentPerson");
+}
+
+- (void)testHeightCellWillHave {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+
+    // hard code the default height
+    CGFloat height = [MAVEContactsInvitePageV2TableViewCell heightCellWithHave];
+    XCTAssertEqual(height, 51.79);
 }
 
 - (void)testUpdateWithInfoForPerson {

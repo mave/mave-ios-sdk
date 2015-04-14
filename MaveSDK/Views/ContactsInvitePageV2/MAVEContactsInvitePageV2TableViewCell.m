@@ -9,6 +9,11 @@
 #import "MAVEContactsInvitePageV2TableViewCell.h"
 #import "MaveSDK.h"
 
+CGFloat const MAVEV2CellLeftMargin = 14;
+CGFloat const MAVEV2CellTopMargin = 8;
+CGFloat const MAVEV2CellBottomMargin = 8;
+CGFloat const MAVEV2CellNameToDetailsMargin = 0;
+
 @implementation MAVEContactsInvitePageV2TableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
@@ -45,12 +50,28 @@
 
     self.backgroundColor = opts.contactCellBackgroundColor;
 
-    self.nameLabel.font = opts.contactNameFont;
+    self.nameLabel.font = [[self class] nameFont];
     self.nameLabel.textColor = opts.contactNameTextColor;
-    self.detailLabel.font = opts.contactDetailsFont;
+    self.detailLabel.font = [[self class] detailsFont];
     self.detailLabel.textColor = opts.contactDetailsTextColor;
 
     [self.sendButton addTarget:self action:@selector(sendInviteToCurrentPerson) forControlEvents:UIControlEventTouchUpInside];
+}
+
++ (UIFont *)nameFont {
+    return [MaveSDK sharedInstance].displayOptions.contactNameFont;
+}
+
++ (UIFont *)detailsFont {
+    return [MaveSDK sharedInstance].displayOptions.contactDetailsFont;
+}
+
+// Name and details are both always one row, so we don't need the actual content of the cell to
+// figure out their heights, any string will be the same.
++ (CGFloat)heightCellWithHave {
+    CGFloat nameHeight = [@"Tg" sizeWithAttributes:@{NSFontAttributeName: [self nameFont]}].height;
+    CGFloat detailsHeight = [@"Tg" sizeWithAttributes:@{NSFontAttributeName: [self detailsFont]}].height;
+    return MAVEV2CellTopMargin + nameHeight + MAVEV2CellNameToDetailsMargin + detailsHeight + MAVEV2CellBottomMargin;
 }
 
 - (void)doConstraintSetup {
@@ -64,10 +85,10 @@
                                 @"nameLabel": self.nameLabel,
                                 @"detailsLabel": self.detailLabel,
                                 @"sendButton": self.sendButton};
-    NSDictionary *marginMetrics = @{@"topMargin": @(8),
-                                    @"nameToDetailsMargin": @(0),
-                                    @"bottomMargin": @(8),
-                                    @"leftMargin": @(14)};
+    NSDictionary *marginMetrics = @{@"topMargin": @(MAVEV2CellTopMargin),
+                                    @"nameToDetailsMargin": @(MAVEV2CellNameToDetailsMargin),
+                                    @"bottomMargin": @(MAVEV2CellBottomMargin),
+                                    @"leftMargin": @(MAVEV2CellLeftMargin)};
 
     NSString *fsOuterLevelV = @"V:|-0-[contactInfoWrapper]-0-|";
     NSString *fsOuterLevelH = @"H:|-0-[contactInfoWrapper]-10-[sendButton]";
@@ -83,7 +104,7 @@
                                   constant:0];
     [self.contentView addConstraint:wrapperWidthConstraint];
 
-    NSString *fsNameDetailsV = @"V:|-topMargin-[nameLabel]-nameToDetailsMargin-[detailsLabel]-8-|";
+    NSString *fsNameDetailsV = @"V:|-topMargin-[nameLabel]-nameToDetailsMargin-[detailsLabel]-bottomMargin-|";
     NSString *fsNameH = @"H:|-leftMargin-[nameLabel]-(>=0)-|";
     NSString *fsDetailsH = @"H:|-leftMargin-[detailsLabel]-(>=0)-|";
     [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameDetailsV options:0 metrics:marginMetrics views:viewsDict]];
