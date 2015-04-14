@@ -510,8 +510,8 @@
 		C02927FF19E82D0F006AEE43 /* MAVEABUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABUtils.m; sourceTree = "<group>"; };
 		C029280019E82D0F006AEE43 /* MAVEABPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPerson.h; sourceTree = "<group>"; };
 		C029280119E82D0F006AEE43 /* MAVEABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPerson.m; sourceTree = "<group>"; };
-		C029280219E82D0F006AEE43 /* MAVEDisplayOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MAVEDisplayOptions.h; path = ../Models/MAVEDisplayOptions.h; sourceTree = "<group>"; };
-		C029280319E82D0F006AEE43 /* MAVEDisplayOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MAVEDisplayOptions.m; path = ../Models/MAVEDisplayOptions.m; sourceTree = "<group>"; };
+		C029280219E82D0F006AEE43 /* MAVEDisplayOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEDisplayOptions.h; sourceTree = "<group>"; };
+		C029280319E82D0F006AEE43 /* MAVEDisplayOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEDisplayOptions.m; sourceTree = "<group>"; };
 		C029280719E82D18006AEE43 /* MAVEABPersonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEABPersonCell.h; sourceTree = "<group>"; };
 		C029280819E82D18006AEE43 /* MAVEABPersonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEABPersonCell.m; sourceTree = "<group>"; };
 		C029280919E82D18006AEE43 /* MAVEInviteMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInviteMessageView.h; sourceTree = "<group>"; };
