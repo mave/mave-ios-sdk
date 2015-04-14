@@ -84,8 +84,8 @@
     [self.contentView addConstraint:wrapperWidthConstraint];
 
     NSString *fsNameDetailsV = @"V:|-topMargin-[nameLabel]-nameToDetailsMargin-[detailsLabel]-8-|";
-    NSString *fsNameH = @"H:|-leftMargin-[nameLabel]";
-    NSString *fsDetailsH = @"H:|-leftMargin-[detailsLabel]";
+    NSString *fsNameH = @"H:|-leftMargin-[nameLabel]-(>=0)-|";
+    NSString *fsDetailsH = @"H:|-leftMargin-[detailsLabel]-(>=0)-|";
     [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameDetailsV options:0 metrics:marginMetrics views:viewsDict]];
     [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsNameH options:0 metrics:marginMetrics views:viewsDict]];
     [self.contactInfoWrapper addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:fsDetailsH options:0 metrics:marginMetrics views:viewsDict]];
