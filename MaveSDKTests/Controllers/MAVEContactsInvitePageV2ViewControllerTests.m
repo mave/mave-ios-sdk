@@ -95,7 +95,12 @@
 }
 
 - (void)testHeightForRowAtIndexPath {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
 
+    CGFloat height = [vc tableView:nil heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    // check value returned is non-zero and reasonable, no need to
+    // hard-code exact value
+    XCTAssertGreaterThan(height, 30);
 }
 
 - (void)testUpdateTableDataAndCountSectionsAndRows {

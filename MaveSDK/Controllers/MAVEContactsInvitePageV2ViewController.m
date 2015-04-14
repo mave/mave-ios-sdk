@@ -87,7 +87,6 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    //    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 50;
     self.tableView.estimatedSectionHeaderHeight = 20;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
@@ -359,9 +358,9 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     }
     return cell;
 }
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return 50;
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [MAVEContactsInvitePageV2TableViewCell heightCellWithHave];
+}
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Do nothing, rows are not selectable
 }
