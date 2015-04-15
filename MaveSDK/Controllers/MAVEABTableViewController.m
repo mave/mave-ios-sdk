@@ -399,11 +399,12 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     return _allPersons;
 }
 
-- (void)searchContacts:(NSString *)searchText {
++ (NSArray *)searchContacts:(NSArray *)contactsList withText:(NSString *)searchText {
     // Modeled after the Contacts app basic search functionality
     //  Search by search terms's fragments using BEGINSWITH (way faster than CONTAINS)
     //  Ex: "Jo G" will match things like "John Graham" or "Josh Graham", but not "Graham"
 
+    NSArray *output;
     if (searchText.length > 0) {
         NSArray *fragments = [searchText componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSMutableArray *predicates = [NSMutableArray arrayWithCapacity:fragments.count];
@@ -423,10 +424,11 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
         NSCompoundPredicate *compoundPredicate = [[NSCompoundPredicate alloc]
                                                   initWithType:NSAndPredicateType
                                                   subpredicates:predicates];
-        self.searchedTableData = [self.allPersons filteredArrayUsingPredicate:compoundPredicate];
+        output = [contactsList filteredArrayUsingPredicate:compoundPredicate];
     } else {
-        self.searchedTableData = @[];
+        output = @[];
     }
+    return output;
 }
 
 #pragma mark - Arranging search bars and content
@@ -533,7 +535,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     }
 
     NSString *searchText = textField.text;
-    [self searchContacts:searchText];
+    self.searchedTableData = [[self class] searchContacts:self.allPersons withText:searchText];
     [self.searchTableView reloadData];
 
     if ([searchText isEqualToString:@""]) {

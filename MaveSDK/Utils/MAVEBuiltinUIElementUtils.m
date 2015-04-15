@@ -7,8 +7,21 @@
 //
 
 #import "MAVEBuiltinUIElementUtils.h"
+#import "MAVEConstants.h"
 
 @implementation MAVEBuiltinUIElementUtils
+
++ (NSBundle *)bundleForMave {
+    NSBundle *bundle;
+    NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:MAVEResourceBundleName withExtension:@"bundle"];
+    if (bundleURL) {
+        bundle = [NSBundle bundleWithURL:bundleURL];
+    }
+    if (!bundle) {
+        bundle = [NSBundle mainBundle];
+    }
+    return bundle;
+}
 
 + (UIImage *)imageNamed:(NSString *)imageName fromBundle:(NSString *)bundleName {
     UIImage *image;
@@ -24,7 +37,9 @@
 
     // Otherwise fall back to getting image by name (when running this DemoApp or tests)
     if (!image) {
-        image = [UIImage imageNamed:imageName];
+//        image = [UIImage imageNamed:imageName];
+        bundle = [NSBundle mainBundle];
+        image = [UIImage imageWithContentsOfFile:[[bundle resourcePath] stringByAppendingPathComponent:imageName]];
     }
     return image;
 }

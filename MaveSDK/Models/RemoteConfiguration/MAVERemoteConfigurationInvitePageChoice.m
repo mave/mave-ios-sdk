@@ -36,6 +36,8 @@ NSString * const MAVERemoteConfigKeyInvitePageFallback = @"fallback_page";
 + (MAVEInvitePageType)invitePageTypeFromJSONStringName:(NSString *)pageType {
     if ([pageType isEqualToString:@"contacts_invite_page"]) {
         return MAVEInvitePageTypeContactsInvitePage;
+    } else if ([pageType isEqualToString:@"contacts_invite_page_v2"]) {
+        return MAVEInvitePageTypeContactsInvitePageV2;
     } else if ([pageType isEqualToString:@"share_page"]) {
         return MAVEInvitePageTypeSharePage;
     } else if ([pageType isEqualToString:@"client_sms"]) {

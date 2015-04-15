@@ -67,7 +67,7 @@
     // back and forward buttons if pushing onto a navigation stack.
     // (note the button target & actions are ignored, we call your
     // dismiss/back/forward blocks instead)
-    mave.displayOptions.navigationBarCancelButton = backButton;
+
     // mave.displayOptions.navigationBarBackButton = ...
     // mave.displayOptions.navigationBarForwardButton = ...
 

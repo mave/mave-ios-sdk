@@ -75,6 +75,6 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 - (void)textFieldDidChange:(UITextField *)textField;
 
 // For searching
-- (void)searchContacts:(NSString *)searchText;
++ (NSArray *)searchContacts:(NSArray *)contactsList withText:(NSString *)searchText;
 
 @end

@@ -80,6 +80,23 @@
     OCMVerifyAll(chooserMock);
 }
 
+- (void)testChooseAndCreateUsingContactsInvitePageV2Primary {
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
+    remoteConfig.invitePageChoice.primaryPageType = MAVEInvitePageTypeContactsInvitePageV2;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    UIViewController *expectedVC = [[UIViewController alloc] init];
+    OCMExpect([chooserMock createContactsInvitePageV2IfAllowed]).andReturn(expectedVC);
+
+    UIViewController *vc = [chooser chooseAndCreateInvitePageViewController];
+    XCTAssertEqualObjects(vc, expectedVC);
+    XCTAssertEqualObjects(chooser.activeViewController, expectedVC);
+    OCMVerifyAll(chooserMock);
+}
+
 - (void)testChooseAndCreateUsingSharePagePrimary {
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
@@ -162,9 +179,37 @@
     XCTAssertEqualObjects(chooser.activeViewController, expectedVC);
 }
 
-#pragma mark - Create contacts invite page if allowed, test in different states
+#pragma mark - Logic for if allowed to show server-side contacts invite page, and tests for v1 & v2
 
 - (void)testCreateContactsInvitePageIfAllowed {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isAnyServerSideContactsInvitePageAllowed]).andReturn(YES);
+    UIViewController *vc = [chooser createContactsInvitePageIfAllowed];
+    XCTAssertNotNil(vc);
+
+    [chooserMock stopMocking];
+    chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isAnyServerSideContactsInvitePageAllowed]).andReturn(NO);
+    vc = [chooser createContactsInvitePageIfAllowed];
+    XCTAssertNil(vc);
+}
+
+- (void)testCreateContactsInvitePageV2IfAllowed {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isAnyServerSideContactsInvitePageAllowed]).andReturn(YES);
+    UIViewController *vc = [chooser createContactsInvitePageV2IfAllowed];
+    XCTAssertNotNil(vc);
+
+    [chooserMock stopMocking];
+    chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isAnyServerSideContactsInvitePageAllowed]).andReturn(NO);
+    vc = [chooser createContactsInvitePageV2IfAllowed];
+    XCTAssertNil(vc);
+}
+
+- (void)testIsAnyServerSideContactsInvitePageAllowed {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
 
@@ -176,21 +221,19 @@
     okUserData.userID = @"1234"; okUserData.firstName = @"Foo";
     [MaveSDK sharedInstance].userData = okUserData;
 
-    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
-    XCTAssertNotNil(vc);
+    XCTAssertTrue([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
 
-- (void)testCreateContactsInvitePageNotAllowedWhenABPermissionStatusDenied {
+- (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenABPermissionStatusDenied {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusDenied);
 
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
 
-    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
-    XCTAssertNil(vc);
+    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
 
-- (void)testCreateContactsInvitePageNotAllowedWhenNotInSupportedRegion {
+- (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenNotInSupportedRegion {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
 
@@ -198,11 +241,10 @@
     id chooserMock = OCMPartialMock(chooser);
     OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(NO);
 
-    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
-    XCTAssertNil(vc);
+    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
 
-- (void)testCreateContactsInvitePageNotAllowedWhenDisabledServerSide {
+- (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenDisabledServerSide {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
 
@@ -211,11 +253,10 @@
     OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(YES);
     OCMStub([chooserMock isContactsInvitePageEnabledServerSide]).andReturn(NO);
 
-    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
-    XCTAssertNil(vc);
+    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
 
-- (void)testCreateContactsInvitePageNotAllowedWhenUserDataNotOK {
+- (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenUserDataNotOK {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
 
@@ -226,8 +267,7 @@
     MAVEUserData *notOKUserData = [[MAVEUserData alloc] init]; //
     [MaveSDK sharedInstance].userData = notOKUserData;
 
-    MAVEInvitePageViewController *vc = [chooser createContactsInvitePageIfAllowed];
-    XCTAssertNil(vc);
+    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
 
 - (void)testCreateClientSMSInvitePageCleanupOnInviteSent {
@@ -425,7 +465,7 @@
 - (void)testSetupNavigationButtonsModalWhenCustom {
     [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    chooser.activeViewController = [[UIViewController alloc] init];
+    chooser.activeViewController = [[MAVEContactsInvitePageV2ViewController alloc] init];
 
     [chooser _setupNavigationBarButtonsModalStyle];
 

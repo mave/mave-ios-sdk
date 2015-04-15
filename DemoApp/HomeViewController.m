@@ -31,47 +31,37 @@
 }
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
-    // Reset bar button item back to normal "Cancel"
-    UIBarButtonItem *bbi =
-        [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                         style:UIBarButtonItemStylePlain
-                                        target:nil
-                                        action:nil];
-    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = bbi;
+    // Reset bar button item back to normal
+    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = nil;
 
 
     // Present Modally
 
-//    MaveSDK *mave = [MaveSDK sharedInstance];
-//    [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
-//        [self presentViewController:inviteController animated:YES completion:nil];
-//    } dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
-//        [controller dismissViewControllerAnimated:YES completion:nil];
-//    } inviteContext:@"home-page-modal"];
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
+        [self presentViewController:inviteController animated:YES completion:nil];
+    } dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    } inviteContext:@"home-page-modal"];
 
 
     // Present Push
 
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UIViewController *afterInvitesPage = [storyboard
-                                          instantiateViewControllerWithIdentifier:@"PushAfterInvitesPage"];
-    MaveSDK *mave = [MaveSDK sharedInstance];
-
-    // Set a custom back button
-//    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] init];
-//    backButton.title = @"dat @$$ up";
-//    mave.displayOptions.navigationBarBackButton = backButton;
-
-    [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
-
-        [self.navigationController pushViewController:inviteController animated:YES];
-    } forwardBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
-
-        [controller.navigationController pushViewController:afterInvitesPage animated:YES];
-    } backBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
-
-        [controller.navigationController popViewControllerAnimated:YES];
-    } inviteContext:@"home-page-pushed"];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    UIViewController *afterInvitesPage = [storyboard
+//                                          instantiateViewControllerWithIdentifier:@"PushAfterInvitesPage"];
+//    MaveSDK *mave = [MaveSDK sharedInstance];
+//
+//    [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
+//
+//        [self.navigationController pushViewController:inviteController animated:YES];
+//    } forwardBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+//
+//        [controller.navigationController pushViewController:afterInvitesPage animated:YES];
+//    } backBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+//
+//        [controller.navigationController popViewControllerAnimated:YES];
+//    } inviteContext:@"home-page-pushed"];
 
 }
 

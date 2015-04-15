@@ -10,6 +10,11 @@
 #import <AddressBook/AddressBook.h>
 #import "MAVEMerkleTree.h"
 
+typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
+    MAVEInviteSendingStatusUnsent,
+    MAVEInviteSendingStatusSending,
+    MAVEInviteSendingStatusSent,
+};
 
 @interface MAVEABPerson : NSObject<MAVEMerkleTreeDataItem>
 
@@ -24,7 +29,8 @@
 @property (nonatomic, strong) NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
 @property (nonatomic, strong) NSArray *emailAddresses; // Array of NSStrings
 
-@property BOOL selected;
+@property (atomic, assign) BOOL selected;
+@property (atomic, assign) MAVEInviteSendingStatus sendingStatus;
 
 // initFromABRecordRef factory creates and does some validation
 //   - one of firstName, lastName are required, if both are missing returns nil

@@ -49,9 +49,10 @@
     XCTAssertEqualObjects(opts.navigationBarTitleFont, defaultFont);
     XCTAssertEqualObjects(opts.navigationBarTitleTextColor, almostBlack);
     XCTAssertEqualObjects(opts.navigationBarBackgroundColor, white);
-    XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
-    
-    // Explanation of how the referral program works section
+    XCTAssertNil(opts.navigationBarCancelButton);
+
+    // Above table content - invite page v1 specific
+    // Explanation of how the referral program works section (invite page v1)
     XCTAssertEqualObjects(opts.inviteExplanationCopy, nil);
     XCTAssertEqualObjects(opts.inviteExplanationFont, smallerFont);
     XCTAssertEqualObjects(opts.inviteExplanationTextColor, almostBlack);
@@ -60,6 +61,13 @@
     XCTAssertEqualObjects(opts.inviteExplanationShareButtonsColor, mediumGrey);
     XCTAssertEqualObjects(opts.inviteExplanationShareButtonsFont, smallestFont);
     XCTAssertEqualObjects(opts.inviteExplanationShareButtonsBackgroundColor, extraLightGrey);
+
+    // Above table content - invite page v2 specific
+    XCTAssertEqualObjects(opts.topViewMessageLabelFont, smallerFont);
+    XCTAssertEqualObjects(opts.topViewMessageLabelTextColor, mediumGrey);
+    XCTAssertEqualObjects(opts.topViewMessageFont, smallerFont);
+    XCTAssertEqualObjects(opts.topViewMessageTextColor, almostBlack);
+    XCTAssertEqualObjects(opts.topViewBackgroundColor, extraLightGrey);
 
     // Search Bar
     XCTAssertEqualObjects(opts.searchBarFont, defaultFont);
@@ -76,6 +84,9 @@
     XCTAssertEqualObjects(opts.contactSeparatorColor, extraLightGrey);
     XCTAssertEqualObjects(opts.contactCellBackgroundColor, white);
     XCTAssertEqualObjects(opts.contactCheckmarkColor, blueTint);
+    XCTAssertEqualObjects(opts.contactInlineSendButtonFont, defaultFont);
+    XCTAssertEqualObjects(opts.contactInlineSendButtonTextColor, blueTint);
+    XCTAssertEqualObjects(opts.contactInlineSendButtonDisabledTextColor, mediumGrey);
 
     XCTAssertEqualObjects(opts.contactSectionHeaderFont, smallerBoldFont);
     XCTAssertEqualObjects(opts.contactSectionHeaderTextColor, almostBlack);
@@ -113,7 +124,7 @@
     XCTAssertTrue([opts.navigationBarTitleFont isKindOfClass:[UIFont class]]);
     XCTAssertEqualObjects(opts.navigationBarCancelButton.title, @"Cancel");
 
-    // Invite explanation section
+    // Invite explanation section (invite page v1 only)
     XCTAssertGreaterThan([opts.inviteExplanationCopy length], 0);
     XCTAssertTrue([opts.inviteExplanationFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.inviteExplanationTextColor isKindOfClass:[UIColor class]]);
@@ -122,6 +133,13 @@
     XCTAssertTrue([opts.inviteExplanationShareButtonsColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.inviteExplanationShareButtonsFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.inviteExplanationShareButtonsBackgroundColor isKindOfClass:[UIColor class]]);
+
+    // Above table message section (invite page v2 only)
+    XCTAssertTrue([opts.topViewMessageLabelFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.topViewMessageLabelTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.topViewMessageFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.topViewMessageTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.topViewBackgroundColor isKindOfClass:[UIColor class]]);
 
     // Search Bar
     XCTAssertTrue([opts.searchBarFont isKindOfClass:[UIFont class]]);
@@ -136,8 +154,13 @@
     XCTAssertTrue([opts.contactSectionHeaderFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.contactSectionIndexColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.contactCheckmarkColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.contactInlineSendButtonFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.contactInlineSendButtonTextColor isKindOfClass:[UIColor class]]);
+    XCTAssertTrue([opts.contactInlineSendButtonDisabledTextColor isKindOfClass:[UIColor class]]);
     
     // Message and Send section options
+    XCTAssertTrue([opts.messageFieldFont isKindOfClass:[UIFont class]]);
+    XCTAssertTrue([opts.messageFieldTextColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.bottomViewBackgroundColor isKindOfClass:[UIColor class]]);
     XCTAssertTrue([opts.bottomViewBorderColor isKindOfClass:[UIColor class]]);
     XCTAssertNotNil(opts.sendButtonCopy);

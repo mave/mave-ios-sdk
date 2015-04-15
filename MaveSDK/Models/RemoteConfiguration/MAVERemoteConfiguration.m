@@ -64,7 +64,19 @@ NSString * const MAVERemoteConfigKeyClipboardShare = @"clipboard_share";
             || !self.facebookShare
             || !self.twitterShare
             || !self.clipboardShare) {
-            MAVEErrorLog(@"Remote configuration failed, 1 or more sub-sections was nil");
+            NSString *errorMsg = @"Remote configuration failed, 1 or more sub-sections was nil:";
+            if (!self.invitePageChoice) { errorMsg = [errorMsg stringByAppendingString:@" invitePageChoice"]; }
+            if (!self.contactsSync) { errorMsg = [errorMsg stringByAppendingString:@" contactsSync"]; }
+            if (!self.contactsPrePrompt) { errorMsg = [errorMsg stringByAppendingString:@" contactsPrePrompt"]; }
+            if (!self.contactsInvitePage) { errorMsg = [errorMsg stringByAppendingString:@" contactsInvitePage"]; }
+            if (!self.customSharePage) { errorMsg = [errorMsg stringByAppendingString:@" customSharePage"]; }
+            if (!self.serverSMS) { errorMsg = [errorMsg stringByAppendingString:@" serverSMS"]; }
+            if (!self.clientSMS) { errorMsg = [errorMsg stringByAppendingString:@" clientSMS"]; }
+            if (!self.clientEmail) { errorMsg = [errorMsg stringByAppendingString:@" clientEmail"]; }
+            if (!self.facebookShare) { errorMsg = [errorMsg stringByAppendingString:@" facebookShare"]; }
+            if (!self.twitterShare) { errorMsg = [errorMsg stringByAppendingString:@" twitterShare"]; }
+            if (!self.clipboardShare) { errorMsg = [errorMsg stringByAppendingString:@" clipboardShare"]; }
+            MAVEErrorLog(errorMsg);
             return nil;
         }
     }

@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.6.0
+- Adds an alternative contacts invite page, invite page v2. The main difference is it lets the user send invites immediately one by one, which may be more intuitive than sending them all together in a batch since they get delivered individually anyway. There are some additional `displayOptions` to set to control this alternate page which are explained in the docs. Switching between the existing invite page and this page is done via a server-side configuration option.
+- Extracts the row of share buttons as a re-usable component, `MAVEShareButtonsView`. This can be included in another view, using `sizeThatFits:` or `intrinsicContentSize` to lay it out (works in auto layout too).
+
 ### v0.5.8
  - Small layout bugfixes for edge cases on invite page
 

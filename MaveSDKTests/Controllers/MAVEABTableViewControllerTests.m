@@ -384,7 +384,8 @@
                                               atIndexPath:[NSIndexPath indexPathForRow:1 inSection:14]]);
 
     // Test personOnTableView for searchTableView works
-    [vc searchContacts:@"o"]; // Will return "Obbie Foo" and "Ozzzz Fzz"
+    // Will return "Obbie Foo" and "Ozzzz Fzz"
+    vc.searchedTableData = [MAVEABTableViewController searchContacts:vc.allPersons withText:@"o"];
     XCTAssertEqual(addedABData[14], [vc personOnTableView:vc.searchTableView
                                              atIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]);
     XCTAssertEqual(addedABData[15], [vc personOnTableView:vc.searchTableView
@@ -446,58 +447,60 @@
     [vc updateTableData:@{@"a": @[p1],
                           @"j": @[p2, p3, p5],
                           @"d": @[p4]}];
+    NSArray *all = vc.allPersons;
+
+    NSArray *results;
+    // Searching for "Ab" will return 1 result (Abbie Foo)
+    results = [MAVEABTableViewController searchContacts:all withText:@"Ab"];
+    XCTAssertEqual(1, [results count]);
+    XCTAssertEqual(p1, results[0]);
 
     // Searching for "Ab" will return 1 result (Abbie Foo)
-    [vc searchContacts:@"Ab"];
-    XCTAssertEqual(1, vc.searchedTableData.count);
-    XCTAssertEqual(p1, vc.searchedTableData[0]);
+    results = [MAVEABTableViewController searchContacts:all withText:@"Abbie "];
+    XCTAssertEqual(1, [results count]);
+    XCTAssertEqual(p1, results[0]);
 
     // Searching for "Ab" will return 1 result (Abbie Foo)
-    [vc searchContacts:@"Abbie "];
-    XCTAssertEqual(1, vc.searchedTableData.count);
-    XCTAssertEqual(p1, vc.searchedTableData[0]);
+    results = [MAVEABTableViewController searchContacts:all withText:@"Abbi F"];
+    XCTAssertEqual(1, [results count]);
+    XCTAssertEqual(p1, results[0]);
 
     // Searching for "Ab" will return 1 result (Abbie Foo)
-    [vc searchContacts:@"Abbi F"];
-    XCTAssertEqual(1, vc.searchedTableData.count);
-    XCTAssertEqual(p1, vc.searchedTableData[0]);
-
-    // Searching for "Ab" will return 1 result (Abbie Foo)
-    [vc searchContacts:@"Abbie Foo "];
-    XCTAssertEqual(1, vc.searchedTableData.count);
-    XCTAssertEqual(p1, vc.searchedTableData[0]);
+    results = [MAVEABTableViewController searchContacts:all withText:@"Abbie Foo "];
+    XCTAssertEqual(1, [results count]);
+    XCTAssertEqual(p1, results[0]);
 
     // Searching for "Jo" will return 3 results (John Graham, John Smith, Josh Smith)
-    [vc searchContacts:@"Jo"];
-    XCTAssertEqual(3, vc.searchedTableData.count);
-    XCTAssertEqual(p2, vc.searchedTableData[0]);
-    XCTAssertEqual(p3, vc.searchedTableData[1]);
-    XCTAssertEqual(p5, vc.searchedTableData[2]);
+    results = [MAVEABTableViewController searchContacts:all withText:@"Jo"];
+    XCTAssertEqual(3, [results count]);
+    XCTAssertEqual(p2, results[0]);
+    XCTAssertEqual(p3, results[1]);
+    XCTAssertEqual(p5, results[2]);
 
     // Searching for "J Sm" will return 2 results (John Smith, Josh Smith)
-    [vc searchContacts:@"J Sm"];
-    XCTAssertEqual(2, vc.searchedTableData.count);
-    XCTAssertEqual(p3, vc.searchedTableData[0]);
-    XCTAssertEqual(p5, vc.searchedTableData[1]);
+    results = [MAVEABTableViewController searchContacts:all withText:@"J Sm"];
+    XCTAssertEqual(2, [results count]);
+    XCTAssertEqual(p3, results[0]);
+    XCTAssertEqual(p5, results[1]);
 
     // Searching for "smi j" will return 2 results (John Smith, Josh Smith)
-    [vc searchContacts:@"smi j"];
-    XCTAssertEqual(2, vc.searchedTableData.count);
-    XCTAssertEqual(p3, vc.searchedTableData[0]);
-    XCTAssertEqual(p5, vc.searchedTableData[1]);
+    results = [MAVEABTableViewController searchContacts:all withText:@"smi j"];
+    XCTAssertEqual(2, [results count]);
+    XCTAssertEqual(p3, results[0]);
+    XCTAssertEqual(p5, results[1]);
 
     // Searching for "Jos S" will return 1 results (Josh Smith)
-    [vc searchContacts:@"Jos S"];
-    XCTAssertEqual(1, vc.searchedTableData.count);
-    XCTAssertEqual(p5, vc.searchedTableData[0]);
+    results = [MAVEABTableViewController searchContacts:all withText:@"Jos S"];
+    XCTAssertEqual(1, [results count]);
+    XCTAssertEqual(p5, results[0]);
 
     // Searching for "Jos S n" will return 0 results ()
-    [vc searchContacts:@"Jos S n"];
-    XCTAssertEqual(0, vc.searchedTableData.count);
+    results = [MAVEABTableViewController searchContacts:all withText:@"Jos S n"];
+    XCTAssertEqual(0, [results count]);
 
     // Searching for "zx" will return 0 results ()
-    [vc searchContacts:@"zx"];
-    XCTAssertEqual(0, vc.searchedTableData.count);
+    results = [MAVEABTableViewController searchContacts:all withText:@"zx"];
+    XCTAssertEqual(0, [results count]);
 }
 
 - (void)testSearchingIndexTitleBar {

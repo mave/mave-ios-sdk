@@ -21,12 +21,12 @@
         self.navigationBarTitleTextColor = [[self class] colorAlmostBlack];
         self.navigationBarBackgroundColor = [[self class] colorWhite];
 
-        self.navigationBarCancelButton = [[UIBarButtonItem alloc] init];
-        self.navigationBarCancelButton.title = @"Cancel";
-
         // If pushing onto the navigation stack, you can set self.navigationBarBackButton
         // && self.navigationBarForwardButton
-        
+
+        // Above table content - invite page v1 specific
+        //  - "invite explanation" text, an explanation of how the referral program works
+        //  - optional share icons on the invite page
         // Explanation of how the referral program works section
         self.inviteExplanationFont = [UIFont systemFontOfSize:14];
         self.inviteExplanationTextColor = [[self class] colorAlmostBlack];
@@ -35,6 +35,15 @@
         self.inviteExplanationShareButtonsColor = [[self class] colorMediumGrey];
         self.inviteExplanationShareButtonsFont = [UIFont systemFontOfSize:10];
         self.inviteExplanationShareButtonsBackgroundColor = [[self class] colorExtraLightGrey];
+
+        // Above table content - invite page v2 specific
+        //  - invite message (user-customizable text that will be sent in the invite)
+        //    above the table view
+        self.topViewMessageFont = [UIFont systemFontOfSize:14];
+        self.topViewMessageTextColor = [[self class] colorAlmostBlack];
+        self.topViewMessageLabelFont = [UIFont systemFontOfSize:14];
+        self.topViewMessageLabelTextColor = [[self class] colorMediumGrey];
+        self.topViewBackgroundColor = [[self class] colorExtraLightGrey];
 
         // Search Bar
         self.searchBarFont = [UIFont systemFontOfSize:16];
@@ -51,6 +60,9 @@
         self.contactSeparatorColor = [[self class] colorExtraLightGrey];
         self.contactCellBackgroundColor = [[self class] colorWhite];
         self.contactCheckmarkColor = [[self class] colorBlueTint];
+        self.contactInlineSendButtonFont = [UIFont systemFontOfSize:16];
+        self.contactInlineSendButtonTextColor = [[self class] colorBlueTint];
+        self.contactInlineSendButtonDisabledTextColor = [[self class] colorMediumGrey];
 
         self.contactSectionHeaderFont = [UIFont boldSystemFontOfSize:14];
         self.contactSectionHeaderTextColor = [[self class] colorAlmostBlack];
@@ -58,7 +70,7 @@
         self.contactSectionIndexColor = [[self class] colorLightGrey];
         self.contactSectionIndexBackgroundColor = [UIColor clearColor];
 
-        // Message and Send section options
+        // Message and Send section options (only used with invite page v1)
         self.messageFieldFont = [UIFont systemFontOfSize:16];
         self.messageFieldTextColor = [[self class] colorAlmostBlack];
         self.messageFieldBackgroundColor = [[self class] colorWhite];

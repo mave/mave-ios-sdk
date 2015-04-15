@@ -15,9 +15,11 @@
 #import "MAVERemoteConfiguration.h"
 #import "MAVEInvitePageViewController.h"
 #import "MAVECustomSharePageViewController.h"
+#import "MAVEContactsInvitePageV2ViewController.h"
 #import "MAVEDisplayOptions.h"
 
 NSString * const MAVEInvitePageTypeContactList = @"contact_list";
+NSString * const MAVEInvitePageTypeContactListV2 = @"contact_list_v2";
 NSString * const MAVEInvitePageTypeCustomShare = @"mave_custom_share";
 NSString * const MAVEInvitePageTypeNativeShareSheet = @"native_share_sheet";
 
@@ -71,6 +73,8 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     switch (invitePageType) {
         case MAVEInvitePageTypeContactsInvitePage:
             return [self createContactsInvitePageIfAllowed];
+        case MAVEInvitePageTypeContactsInvitePageV2:
+            return [self createContactsInvitePageV2IfAllowed];
         case MAVEInvitePageTypeSharePage:
             return [[MAVECustomSharePageViewController alloc] init];
         case MAVEInvitePageTypeClientSMS:
@@ -81,6 +85,22 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed {
+    if ([self isAnyServerSideContactsInvitePageAllowed]) {
+        return [[MAVEInvitePageViewController alloc] init];
+    } else {
+        return nil;
+    }
+}
+
+- (MAVEContactsInvitePageV2ViewController *)createContactsInvitePageV2IfAllowed {
+    if ([self isAnyServerSideContactsInvitePageAllowed]) {
+        return [[MAVEContactsInvitePageV2ViewController alloc] init];
+    } else {
+        return nil;
+    }
+}
+
+- (BOOL)isAnyServerSideContactsInvitePageAllowed {
     // Once we fully support client-side invite send method, incorporate that option
     // into the logic:
     //  MAVESMSInviteSendMethod smsInviteSendMethod = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod;
@@ -89,29 +109,28 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     NSString *addressBookStatus = [MAVEABUtils addressBookPermissionStatus];
     if (addressBookStatus == MAVEABPermissionStatusDenied) {
         MAVEInfoLog(@"Using fallback invite page b/c address book permission already denied");
-        return nil;
+        return NO;
     }
 
     // If not in a supported region, return nil
     if (![self isInSupportedRegionForServerSideSMSInvites]) {
         MAVEInfoLog(@"Using fallback invite page b/c not in supported region for server-side SMS");
-        return nil;
+        return NO;
     }
 
     // If configured server-side to turn off contacts invite page, return nil
     if (![self isContactsInvitePageEnabledServerSide]) {
         MAVEInfoLog(@"Using fallback invite page b/c contacts page set to NO server-side");
-        return nil;
+        return NO;
     }
 
     // If user data doesn't have a legit user id & first name, can't send server-side SMS
     // so use share page instead
     if (![[MaveSDK sharedInstance].userData isUserInfoOkToSendServerSideSMS]) {
         MAVEInfoLog(@"Fallback to custom share page b/c user info invalid");
-        return nil;
+        return NO;
     }
-
-    return [[MAVEInvitePageViewController alloc] init];
+    return YES;
 }
 
 - (MFMessageComposeViewController *)createClientSMSInvitePage {
@@ -205,8 +224,8 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     UIBarButtonItem *button = [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton;
     if (!button) {
         button = [[UIBarButtonItem alloc] init];
-        button.title = @"Cancel";
         button.style = UIBarButtonItemStylePlain;
+        button.title = @"Cancel";
     }
     button.target = self;
     button.action = @selector(dismissOnCancel);

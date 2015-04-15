@@ -65,6 +65,7 @@
     XCTAssertEqual([p.emailAddresses count], 1);
     XCTAssertEqualObjects(p.emailAddresses[0], @"jsmith@example.com");
     XCTAssertEqual(p.selected, NO);
+    XCTAssertEqual(p.sendingStatus, MAVEInviteSendingStatusUnsent);
 }
 
 - (void)testSettingRecordIDSetsHashedRecordID {
