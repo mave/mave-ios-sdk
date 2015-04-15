@@ -41,7 +41,7 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     self.iconFont = [UIFont systemFontOfSize:13];
 
     self.useSmallIcons = NO;
-    self.allowSMSShare = YES;
+    self.allowSMSShare = NO;
     self.dismissMaveTopLevelOnSuccessfulShare = NO;
 }
 
