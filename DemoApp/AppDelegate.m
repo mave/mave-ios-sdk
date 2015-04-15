@@ -70,7 +70,8 @@
     // mave.displayOptions.navigationBarForwardButton = ...
 
     // Above table content - invite page v1 specific
-    //  - "invite explanation" text, an explanation of how the referral program works
+    //  - "invite explanation" text, an optional explanation of how
+    //     your app's referral program works
     //  - optional share icons on the invite page
     mave.displayOptions.inviteExplanationFont = font1SmallerBold;
     mave.displayOptions.inviteExplanationTextColor = black;
@@ -80,7 +81,8 @@
     mave.displayOptions.inviteExplanationShareButtonsBackgroundColor = lightGray;
 
     // Above table content - invite page v2 specific
-    //  - invite message (user-customizable text that will be sent in the invite)
+    //  - invite message (user-customizable text that will be sent
+    //    in the invite)
     mave.displayOptions.topViewMessageFont = font1Smaller;
     mave.displayOptions.topViewMessageTextColor = black;
     mave.displayOptions.topViewMessageLabelFont = font1Smaller;
@@ -125,8 +127,8 @@
     mave.displayOptions.bottomViewBorderColor = gray;
     mave.displayOptions.bottomViewBackgroundColor = lightGray;
 
-    // The client-side share page (the fallback if the normal invite
-    // page can't be displayed)
+    // The client-side share page (the fallback if the normal
+    // invite page can't be displayed)
     mave.displayOptions.sharePageBackgroundColor = lightGray;
     mave.displayOptions.sharePageIconColor = green;
     mave.displayOptions.sharePageIconFont = [UIFont systemFontOfSize:12];
