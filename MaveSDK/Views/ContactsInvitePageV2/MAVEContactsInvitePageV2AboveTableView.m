@@ -26,7 +26,7 @@ CGFloat const editButtonWidth = 50;
 - (void)doInitialSetup {
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
-    self.backgroundColor = opts.messageFieldBackgroundColor;
+    self.backgroundColor = opts.topViewBackgroundColor;
 
     self.topLabelContainerView = [[UIView alloc] init];
     self.topLabelContainerView.backgroundColor = [UIColor clearColor];
@@ -45,8 +45,8 @@ CGFloat const editButtonWidth = 50;
     [self.editButton addTarget:self action:@selector(toggleMessageTextViewEditable) forControlEvents:UIControlEventTouchUpInside];
 
     self.messageTextView = [[UITextView alloc] init];
-    self.messageTextView.font = opts.messageFieldFont;
-    self.messageTextView.textColor = opts.messageFieldTextColor;
+    self.messageTextView.font = opts.topViewMessageFont;
+    self.messageTextView.textColor = opts.topViewMessageTextColor;
     self.messageTextView.scrollEnabled = NO;
     self.messageTextView.text = [MaveSDK sharedInstance].defaultSMSMessageText;
     self.messageTextView.editable = NO;
