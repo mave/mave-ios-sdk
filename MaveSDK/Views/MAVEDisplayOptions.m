@@ -43,7 +43,7 @@
         self.topViewMessageTextColor = [[self class] colorAlmostBlack];
         self.topViewMessageLabelFont = [UIFont systemFontOfSize:14];
         self.topViewMessageLabelTextColor = [[self class] colorMediumGrey];
-        self.topViewBackgroundColor = [[self class] colorExtraLightGrey];
+        self.topViewBackgroundColor = [[self class] colorWhite];
 
         // Search Bar
         self.searchBarFont = [UIFont systemFontOfSize:16];

@@ -437,6 +437,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 }
 
 - (void)innerInviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient {
+    MAVEInfoLog(@"Sent an invite to %@!", [recipient fullName]);
     recipient.sendingStatus = MAVEInviteSendingStatusSent;
     [self.tableView reloadData];
     // if search table view is active, switch back to non-search table view

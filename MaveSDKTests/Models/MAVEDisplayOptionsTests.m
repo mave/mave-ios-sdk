@@ -67,7 +67,7 @@
     XCTAssertEqualObjects(opts.topViewMessageLabelTextColor, mediumGrey);
     XCTAssertEqualObjects(opts.topViewMessageFont, smallerFont);
     XCTAssertEqualObjects(opts.topViewMessageTextColor, almostBlack);
-    XCTAssertEqualObjects(opts.topViewBackgroundColor, extraLightGrey);
+    XCTAssertEqualObjects(opts.topViewBackgroundColor, white);
 
     // Search Bar
     XCTAssertEqualObjects(opts.searchBarFont, defaultFont);
