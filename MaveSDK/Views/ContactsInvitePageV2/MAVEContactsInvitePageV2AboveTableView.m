@@ -54,7 +54,7 @@ CGFloat const editButtonWidth = 50;
     self.messageTextView.returnKeyType = UIReturnKeyDone;
 
     self.searchBarTopBorder = [[UIView alloc] init];
-    self.searchBarTopBorder.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
+    self.searchBarTopBorder.backgroundColor = opts.searchBarTopBorderColor;
     self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
 
     [self addSubview:self.nonSearchContainerView];

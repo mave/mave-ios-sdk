@@ -43,6 +43,8 @@
 
     XCTAssertEqualObjects(view.editButton.titleLabel.textColor, opts.topViewMessageLabelTextColor);
     XCTAssertEqualObjects(view.messageTextView.text, [MaveSDK sharedInstance].defaultSMSMessageText);
+
+    XCTAssertEqualObjects(view.searchBarTopBorder.backgroundColor, opts.searchBarTopBorderColor);
 }
 
 - (void)testToggleMessageTextViewEditable {
