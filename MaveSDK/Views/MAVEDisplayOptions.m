@@ -70,7 +70,7 @@
         self.contactSectionIndexColor = [[self class] colorLightGrey];
         self.contactSectionIndexBackgroundColor = [UIColor clearColor];
 
-        // Message and Send section options (only used with invite page v1)
+        // Message and Send section options, only used with invite page v1
         self.messageFieldFont = [UIFont systemFontOfSize:16];
         self.messageFieldTextColor = [[self class] colorAlmostBlack];
         self.messageFieldBackgroundColor = [[self class] colorWhite];

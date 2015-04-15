@@ -21,6 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self setupMaveSDK];
+    [self customizeMaveInvitePage];
     return YES;
 }
 
@@ -33,12 +34,8 @@
     [[MaveSDK sharedInstance] identifyUser:userData];
 }
 
-- (void)doDisplayOptionsCustomization {
-    ///
-    /// Display customizations
-    ///
-
-    // Set some variables to re-use
+- (void)customizeMaveInvitePage {
+    // Set some variables for our app's common fonts and colors
     UIColor *green = [[UIColor alloc] initWithRed:43.0/255 green:202.0/255
                                              blue:125.0/255 alpha:1.0];
     UIColor *clear = [UIColor clearColor];
@@ -58,6 +55,7 @@
     MaveSDK *mave = [MaveSDK sharedInstance];
 
     // Navigation bar options
+    mave.displayOptions.statusBarStyle = UIStatusBarStyleLightContent;
     mave.displayOptions.navigationBarTitleCopy = @"Invite friends";
     mave.displayOptions.navigationBarTitleFont = font1Bold;
     mave.displayOptions.navigationBarTitleTextColor = black;
@@ -67,9 +65,27 @@
     // back and forward buttons if pushing onto a navigation stack.
     // (note the button target & actions are ignored, we call your
     // dismiss/back/forward blocks instead)
-
+    mave.displayOptions.navigationBarCancelButton = backButton;
     // mave.displayOptions.navigationBarBackButton = ...
     // mave.displayOptions.navigationBarForwardButton = ...
+
+    // Above table content - invite page v1 specific
+    //  - "invite explanation" text, an explanation of how the referral program works
+    //  - optional share icons on the invite page
+    mave.displayOptions.inviteExplanationFont = font1SmallerBold;
+    mave.displayOptions.inviteExplanationTextColor = black;
+    mave.displayOptions.inviteExplanationCellBackgroundColor = green;
+    mave.displayOptions.inviteExplanationShareButtonsColor = gray;
+    mave.displayOptions.inviteExplanationShareButtonsFont = [UIFont systemFontOfSize:10];
+    mave.displayOptions.inviteExplanationShareButtonsBackgroundColor = lightGray;
+
+    // Above table content - invite page v2 specific
+    //  - invite message (user-customizable text that will be sent in the invite)
+    mave.displayOptions.topViewMessageFont = font1Smaller;
+    mave.displayOptions.topViewMessageTextColor = black;
+    mave.displayOptions.topViewMessageLabelFont = font1Smaller;
+    mave.displayOptions.topViewMessageLabelTextColor = gray;
+    mave.displayOptions.topViewBackgroundColor = lightGray;
 
     // Search bar options
     mave.displayOptions.searchBarFont = font1;
@@ -78,11 +94,6 @@
     mave.displayOptions.searchBarBackgroundColor = white;
     mave.displayOptions.searchBarTopBorderColor = clear;
 
-    // Invite explanation options
-    mave.displayOptions.inviteExplanationFont = font1SmallerBold;
-    mave.displayOptions.inviteExplanationTextColor = black;
-    mave.displayOptions.inviteExplanationCellBackgroundColor = green;
-
     // Contacts table options
     mave.displayOptions.contactNameFont = font1;
     mave.displayOptions.contactNameTextColor = black;
@@ -90,7 +101,12 @@
     mave.displayOptions.contactDetailsTextColor = gray;
     mave.displayOptions.contactSeparatorColor = lightGray;
     mave.displayOptions.contactCellBackgroundColor = white;
+    // checkmarks for selecting multiple is for invite page v1
     mave.displayOptions.contactCheckmarkColor = green;
+    // inline send button on invite page v2
+    mave.displayOptions.contactInlineSendButtonFont = [UIFont systemFontOfSize:16];
+    mave.displayOptions.contactInlineSendButtonTextColor = green;
+    mave.displayOptions.contactInlineSendButtonDisabledTextColor = gray;
 
     // Contacts table section header & index options
     mave.displayOptions.contactSectionHeaderFont = font1Smaller;
@@ -99,7 +115,7 @@
     mave.displayOptions.contactSectionIndexColor = black;
     mave.displayOptions.contactSectionIndexBackgroundColor = clear;
 
-    // Message and Send section options
+    // Message and Send section options for invite page v1
     mave.displayOptions.messageFieldFont = [UIFont systemFontOfSize:16];
     mave.displayOptions.messageFieldTextColor = black;
     mave.displayOptions.messageFieldBackgroundColor = white;
