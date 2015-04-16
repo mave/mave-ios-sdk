@@ -308,6 +308,28 @@
     OCMVerifyAll(abUtilsMock);
 }
 
+- (void)testLoadAddressBookSynchronously {
+    NSString *status = [MAVEABUtils addressBookPermissionStatus];
+    // TODO: Add suites of tests to run with and without address book permissions, and build scripts that
+    // set the simulator permissions accordingly and run tests in all the states.  For now, don't fail
+    // when no permissions but only run this test when we have permissions
+    if ([status isEqualToString:MAVEABPermissionStatusAllowed]) {
+        MAVEInfoLog(@"Address book permission granted, actually running test testLoadAddressBookSynchronously");
+        NSArray *contacts = [MAVEABPermissionPromptHandler loadAddressBookSynchronously];
+        XCTAssertNotNil(contacts);
+        XCTAssertGreaterThan([contacts count], 0);
+        // Check for the first person in the default simulator address book, sorted
+        // by first name which is how we sort the address book.
+        // If this fails, probably need to reset all simulator data which will
+        // reset to the default address book
+        MAVEABPerson *person1 = [contacts objectAtIndex:0];
+        XCTAssertEqualObjects(person1.firstName, @"Anna");
+        XCTAssertEqualObjects(person1.lastName, @"Haro");
+    } else {
+        MAVEInfoLog(@"Addres book permission not granted, skipping test testLoadAddressBookSynchronouslyIfPermissionGranted");
+    }
+}
+
 - (void)testLoadAddressBookSynchronouslyIfPermissionGranted {
     NSString *status = [MAVEABUtils addressBookPermissionStatus];
     // TODO: Add suites of tests to run with and without address book permissions, and build scripts that

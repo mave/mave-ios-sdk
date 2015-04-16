@@ -79,6 +79,10 @@
     if (![abStatus isEqualToString:MAVEABPermissionStatusAllowed]) {
         return nil;
     }
+    return [self loadAddressBookSynchronously];
+}
+
++ (NSArray *)loadAddressBookSynchronously {
     CFErrorRef accessErrorCF = NULL;
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
     if (accessErrorCF) {

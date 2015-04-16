@@ -32,6 +32,9 @@ typedef void (^MAVEABDataBlock)(NSArray *contacts);
 // Meant for when we want to do something with the address book if we already have it,
 // at a point where it wouldn't make sense to prompt the user.
 + (NSArray *)loadAddressBookSynchronouslyIfPermissionGranted;
+// Underlying method, loads address book synchronously without checking if permission
+// granted, so will prompt user for permission if unprompted
++ (NSArray *)loadAddressBookSynchronously;
 
 - (instancetype)initCustom;
 
