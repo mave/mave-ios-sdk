@@ -78,4 +78,5 @@ extern NSString * const MAVEInviteURLSwig;
 /// Country Codes
 ///
 extern NSString *const MAVECountryCodeUnitedStates;
+extern NSString *const MAVECountryCodeCanada;
 extern NSString *const MAVECountryCodeRussia;

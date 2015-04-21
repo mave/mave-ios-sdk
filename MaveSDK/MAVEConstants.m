@@ -101,4 +101,5 @@ NSString *const MAVEInviteURLSwig = @"http://appjoin.us/MTYz";
 /// Country Codes
 ///
 NSString *const MAVECountryCodeUnitedStates = @"US";
+NSString *const MAVECountryCodeCanada = @"CA";
 NSString *const MAVECountryCodeRussia = @"RU";

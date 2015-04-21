@@ -160,7 +160,8 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     // Right now, we'll only try our address book flow for US devices until we can
     // thoroughly test different countries
     NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-    if ([countryCode isEqualToString:MAVECountryCodeUnitedStates]) {
+    if (   [countryCode isEqualToString:MAVECountryCodeUnitedStates]
+        || [countryCode isEqualToString:MAVECountryCodeCanada]) {
         return YES;
     }
     return NO;

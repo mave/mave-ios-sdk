@@ -335,9 +335,21 @@
 
     XCTAssertTrue([chooser isInSupportedRegionForServerSideSMSInvites]);
     OCMVerifyAll(localeClassMock);
-    [localeClassMock stopMocking];
-
 }
+
+- (void)testCanadaIsInSupportedRegionForServerSideSMSInvites {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    NSDictionary *fakeCurrentLocale = @{NSLocaleCountryCode: @"CA"};
+
+    id localeClassMock = OCMClassMock([NSLocale class]);
+    OCMExpect([localeClassMock autoupdatingCurrentLocale])
+    .andReturn(fakeCurrentLocale);
+
+    XCTAssertTrue([chooser isInSupportedRegionForServerSideSMSInvites]);
+    OCMVerifyAll(localeClassMock);
+    [localeClassMock stopMocking];
+}
+
 - (void)testOtherCountriesNotInSupportedRegion {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
     NSDictionary *fakeCurrentLocale = @{NSLocaleCountryCode: @"Fr"};
