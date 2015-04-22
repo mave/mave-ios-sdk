@@ -38,8 +38,8 @@
                                                         email:nil
                                                         phone:nil];
     [[MaveSDK sharedInstance] identifyUser:user];
-    self.testAPIInterface = [[MAVEAPIInterface alloc] init];
-
+    NSString *baseURL = [MAVEAPIBaseURL stringByAppendingString:MAVEAPIVersion];
+    self.testAPIInterface = [[MAVEAPIInterface alloc] initWithBaseURL:baseURL];
 }
 
 - (void)tearDown {

@@ -43,9 +43,8 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 
 @implementation MAVEAPIInterface
 
-- (instancetype)init {
+- (instancetype)initWithBaseURL:(NSString *)baseURL {
     if (self = [super init]) {
-        NSString *baseURL = [MAVEAPIBaseURL stringByAppendingString:MAVEAPIVersion];
         self.httpStack = [[MAVEHTTPStack alloc] initWithAPIBaseURL:baseURL];
         MAVEInfoLog(@"Initialized on domain: %@", baseURL);
     }

@@ -37,7 +37,8 @@
         _appDeviceID = [MAVEIDUtils loadOrCreateNewAppDeviceID];
 
         _displayOptions = [[MAVEDisplayOptions alloc] initWithDefaults];
-        _APIInterface = [[MAVEAPIInterface alloc] init];
+        NSString *apiBaseURL = [MAVEAPIBaseURL stringByAppendingString:MAVEAPIVersion];
+        _APIInterface = [[MAVEAPIInterface alloc] initWithBaseURL:apiBaseURL];
         _addressBookSyncManager = [[MAVEABSyncManager alloc] init];
     }
     return self;
