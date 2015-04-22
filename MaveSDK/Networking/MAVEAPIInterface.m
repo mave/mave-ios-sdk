@@ -169,6 +169,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:invitesRoute
                                   methodName:@"POST"
                                       params:params
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:completionBlock];
 }
@@ -179,6 +180,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:launchRoute
                                   methodName:@"PUT"
                                       params:params
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:nil];
 }
@@ -193,6 +195,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"PUT"
                                       params:params
+                                extraHeaders:nil
                             gzipCompressBody:YES
                              completionBlock:nil];
 }
@@ -207,7 +210,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              @"is_full_initial_sync": @(isFullInitialSync),
                              @"own_merkle_tree_root": ownMerkleTreeRoot,
                              @"return_closest_contacts": @(returnClosestContacts)};
-    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"POST" params:params gzipCompressBody:YES completionBlock:^(NSError *error, NSDictionary *responseData) {
+    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"POST" params:params extraHeaders:nil gzipCompressBody:YES completionBlock:^(NSError *error, NSDictionary *responseData) {
         NSArray *returnVal;
         if (returnClosestContacts && !error) {
             returnVal = [responseData objectForKey:@"closest_contacts"];
@@ -232,6 +235,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:completionBlock];
 }
@@ -239,7 +243,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 - (void)getClosestContactsHashedRecordIDs:(void (^)(NSArray *))closestContactsBlock {
     NSString *route = @"/me/contacts/closest";
     NSArray *emptyValue = @[];
-    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"GET" params:nil gzipCompressBody:NO completionBlock:^(NSError *error, NSDictionary *responseData) {
+    [self sendIdentifiedJSONRequestWithRoute:route methodName:@"GET" params:nil extraHeaders:nil gzipCompressBody:NO completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error) {
             closestContactsBlock(emptyValue);
         } else {
@@ -257,6 +261,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:block];
 }
@@ -266,6 +271,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:block];
 }
@@ -275,6 +281,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:block];
 }
@@ -284,6 +291,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:route
                                   methodName:@"GET"
                                       params:nil
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:block];
 }
@@ -308,10 +316,16 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [request setValue:clientProperties forHTTPHeaderField:@"X-Client-Properties"];
     [request setValue:contextProperties forHTTPHeaderField:@"X-Context-Properties"];
 }
+- (void)addExtraHeaders:(NSDictionary *)extraHeaders toRequest:(NSMutableURLRequest *)request {
+    for (NSString *key in extraHeaders) {
+        [request setValue:[extraHeaders valueForKey:key] forHTTPHeaderField:key];
+    }
+}
 
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodName:(NSString *)methodName
                                     params:(id)params
+                              extraHeaders:(NSDictionary *)extraHeaders
                           gzipCompressBody:(BOOL)gzipCompressBody
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     MAVEHTTPRequestContentEncoding contentEncoding = gzipCompressBody ? MAVEHTTPRequestContentEncodingGzip : MAVEHTTPRequestContentEncodingDefault;
@@ -325,8 +339,9 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
         completionBlock(requestCreationError, nil);
         return;
     }
-    
+
     [self addCustomUserHeadersToRequest:request];
+    [self addExtraHeaders:extraHeaders toRequest:request];
     [self.httpStack sendPreparedRequest:request completionBlock:completionBlock];
 }
 
@@ -345,6 +360,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     [self sendIdentifiedJSONRequestWithRoute:relativeRoute
                                   methodName:@"POST"
                                       params:fullParams
+                                extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:completionBlock];
 }

@@ -97,11 +97,14 @@ extern NSString * const MAVEAPIParamShareAudience;
 ///
 // Add current user session info onto the request
 - (void)addCustomUserHeadersToRequest:(NSMutableURLRequest *)request;
+// Helper for adding arbitrary headers
+- (void)addExtraHeaders:(NSDictionary *)extraHeaders toRequest:(NSMutableURLRequest *)request;
 
 // Main request method we use against our API
 - (void)sendIdentifiedJSONRequestWithRoute:(NSString *)relativeURL
                                 methodName:(NSString *)methodName
                                     params:(id)params
+                              extraHeaders:(NSDictionary *)extraHeaders
                           gzipCompressBody:(BOOL)gzipCompressBody
                            completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 

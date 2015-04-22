@@ -236,6 +236,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/users"
                                             methodName:@"PUT"
                                                 params:expectedParams
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface identifyUser];
@@ -251,6 +252,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/users"
                                              methodName:@"PUT"
                                                  params:expectedParams
+                                            extraHeaders:nil
                                         gzipCompressBody:NO
                                         completionBlock:nil]);
     [self.testAPIInterface identifyUser];
@@ -279,6 +281,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodName:@"POST"
                                                  params:expectedParams
+                                            extraHeaders:nil
                                         gzipCompressBody:NO
                                         completionBlock:nil]);
 
@@ -303,6 +306,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/invites/sms"
                                              methodName:@"POST"
                                                  params:expectedParams
+                                            extraHeaders:nil
                                         gzipCompressBody:NO
                                         completionBlock:nil]);
 
@@ -327,6 +331,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/full"
                                               methodName:@"PUT"
                                                   params:fakeJSON
+                                            extraHeaders:nil
                                         gzipCompressBody:YES
                                          completionBlock:nil]);
     [self.testAPIInterface sendContactsMerkleTree:merkleTreeMock];
@@ -346,6 +351,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
                                               methodName:@"POST"
                                                   params:expectedJSON
+                                            extraHeaders:nil
                                         gzipCompressBody:YES
                                          completionBlock:[OCMArg any]]);
 
@@ -375,6 +381,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/sync_changesets"
                                               methodName:@"POST"
                                                   params:expectedJSON
+                                            extraHeaders:nil
                                         gzipCompressBody:YES
                                          completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         MAVEHTTPCompletionBlock completionBlock = obj;
@@ -399,6 +406,7 @@
     OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/referring_data"
                                               methodName:@"GET"
                                                   params:nil
+                                            extraHeaders:nil
                                         gzipCompressBody:NO
                                          completionBlock:expectedBlock]);
     [self.testAPIInterface getReferringData:expectedBlock];
@@ -413,6 +421,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/closest"
                                             methodName:@"GET"
                                                 params:nil
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         // Call the completion block with data, and then later check the data was returned
@@ -437,6 +446,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/remote_configuration/ios"
                                             methodName:@"GET"
                                                 params:nil
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:myBlock];
     [self.testAPIInterface getRemoteConfigurationWithCompletionBlock:myBlock]);
@@ -450,6 +460,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/remote_configuration/universal/share_token"
                                             methodName:@"GET"
                                                 params:nil
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:myBlock];
     [self.testAPIInterface getNewShareTokenWithCompletionBlock:myBlock]);
@@ -463,6 +474,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/root"
                                             methodName:@"GET"
                                                 params:nil
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:myBlock]);
     [self.testAPIInterface getRemoteContactsMerkleTreeRootWithCompletionBlock:myBlock];
@@ -476,6 +488,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/me/contacts/merkle_tree/full"
                                             methodName:@"GET"
                                                 params:nil
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:myBlock]);
     [self.testAPIInterface getRemoteContactsFullMerkleTreeWithCompletionBlock:myBlock];
@@ -513,6 +526,31 @@
     XCTAssertEqualObjects([headers objectForKey:@"X-Context-Properties"], expectedContextProperties);
 }
 
+- (void)testAddExtraHeadersToRequest {
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://example.com"]];
+    XCTAssertEqual([[request allHTTPHeaderFields] count], 0);
+
+    // nil extra headers do nothing
+    NSDictionary *extraHeaders = nil;
+    [self.testAPIInterface addExtraHeaders:extraHeaders toRequest:request];
+    XCTAssertEqual([[request allHTTPHeaderFields] count], 0);
+
+    // empty extra headers do nothing
+    extraHeaders = @{};
+    [self.testAPIInterface addExtraHeaders:extraHeaders toRequest:request];
+
+    XCTAssertEqual([[request allHTTPHeaderFields] count], 0);
+
+    // non-nil extra headers get added
+    extraHeaders = @{@"X-FOO": @"foo", @"X-BAR": @"bar"};
+    [self.testAPIInterface addExtraHeaders:extraHeaders toRequest:request];
+    NSDictionary *allHeaders = [request allHTTPHeaderFields];
+    XCTAssertEqual([allHeaders count], 2);
+
+    XCTAssertEqualObjects([allHeaders valueForKey:@"X-FOO"], @"foo");
+    XCTAssertEqualObjects([allHeaders valueForKey:@"X-BAR"], @"bar");
+}
+
 - (void)testSendIdentifiedJSONRequestSuccess {
     id httpStackMock = OCMPartialMock(self.testAPIInterface.httpStack);
     id httpInterfaceMock = OCMPartialMock(self.testAPIInterface);
@@ -520,6 +558,7 @@
     NSString *route = @"/blah/boo";
     NSString *methodName = @"DANNY";
     NSDictionary *params = @{@"foo": @3};
+    NSDictionary *extraHeaders = @{@"X-BAR": @4};
     BOOL useGzip = NO; // no gzip for this one
     MAVEHTTPCompletionBlock completionBlock = ^void(NSError *error, NSDictionary *responseData) {};
     
@@ -530,10 +569,12 @@
                                         preparationError:[OCMArg setTo:nil]]);
     OCMExpect([httpStackMock sendPreparedRequest:[OCMArg any] completionBlock:completionBlock]);
     OCMExpect([httpInterfaceMock addCustomUserHeadersToRequest:[OCMArg any]]);
+    OCMExpect([httpInterfaceMock addExtraHeaders:extraHeaders toRequest:[OCMArg any]]);
     
     [self.testAPIInterface sendIdentifiedJSONRequestWithRoute:route
                                                     methodName:methodName
                                                         params:params
+                                                 extraHeaders:extraHeaders
                                              gzipCompressBody:useGzip
                                                completionBlock:completionBlock];
     OCMVerifyAll(httpStackMock);
@@ -562,6 +603,7 @@
     [self.testAPIInterface sendIdentifiedJSONRequestWithRoute:route
                                                     methodName:methodName
                                                         params:params
+                                                 extraHeaders:nil
                                              gzipCompressBody:useGzip
                                                completionBlock:^void(NSError *error, NSDictionary *responseData) {
                                                    called = YES;
@@ -585,6 +627,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:expectedParams
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams completionBlock:nil];
@@ -597,6 +640,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:additionalParams
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:additionalParams completionBlock:nil];
@@ -608,6 +652,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:@{}
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:nil]);
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil completionBlock:nil];
@@ -620,6 +665,7 @@
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:fakeRoute
                                             methodName:@"POST"
                                                 params:@{}
+                                          extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:completionBlock]);
     [self.testAPIInterface trackGenericUserEventWithRoute:fakeRoute additionalParams:nil completionBlock:completionBlock];
