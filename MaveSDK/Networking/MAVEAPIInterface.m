@@ -341,6 +341,8 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                                               preparationError:&requestCreationError];
     if (requestCreationError) {
         if (completionBlock) {
+            NSString *logMessage = [NSString stringWithFormat:@"Error creating request to %@: %@", relativeURL, requestCreationError];
+            self.httpStack.requestLoggingBlock(logMessage);
             completionBlock(requestCreationError, nil);
         }
         return;
