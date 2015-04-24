@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, MAVEHTTPRequestContentEncoding) {
 
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, copy) NSString *baseURL;
+@property (nonatomic, copy) void (^requestLoggingBlock)(NSString *value);
 
 - (instancetype)initWithAPIBaseURL:(NSString *)baseURL;
 

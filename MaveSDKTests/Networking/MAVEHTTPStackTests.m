@@ -51,6 +51,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
                    NSURLRequestUseProtocolCachePolicy);
     XCTAssertEqual(self.testHTTPStack.session.configuration.timeoutIntervalForRequest, 10.0);
     XCTAssertEqual(self.testHTTPStack.session.configuration.timeoutIntervalForResource, 10.0);
+    XCTAssertNotNil(self.testHTTPStack.requestLoggingBlock);
 }
 
 

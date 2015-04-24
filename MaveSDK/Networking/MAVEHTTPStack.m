@@ -14,17 +14,24 @@
 
 - (instancetype)initWithAPIBaseURL:(NSString *)baseURL {
     if (self = [self init]) {
-        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-        sessionConfig.timeoutIntervalForRequest = 10.0;
-        sessionConfig.timeoutIntervalForResource = 10.0;
-        
-        NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
-        delegateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-        self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
-        
+        [self doInitialSetup];
         self.baseURL = baseURL;
     }
     return self;
+}
+
+- (void)doInitialSetup {
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    sessionConfig.timeoutIntervalForRequest = 10.0;
+    sessionConfig.timeoutIntervalForResource = 10.0;
+
+    NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
+    delegateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+    self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:delegateQueue];
+
+    self.requestLoggingBlock = ^void(NSString *value) {
+        MAVEDebugLog(value);
+    };
 }
 
 ///
@@ -130,7 +137,8 @@
             NSError *serializationError;
             returnDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&serializationError];
             if (serializationError != nil) {
-                MAVEDebugLog(@"Bad JSON error: %@", data);
+                NSString *logMessage = [NSString stringWithFormat:@"Bad JSON error: %@", data];
+                self.requestLoggingBlock(logMessage);
                 returnError = [[NSError alloc] initWithDomain:MAVE_HTTP_ERROR_DOMAIN
                                                          code:MAVEHTTPErrorResponseJSONCode
                                                      userInfo:@{}];
@@ -149,7 +157,8 @@
     // Send request
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request
                     completionHandler: ^(NSData *data, NSURLResponse *response, NSError *error) {
-        MAVEDebugLog(@"HTTP Request: \"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, request.HTTPMethod, request.URL);
+        NSString *logMessage = [NSString stringWithFormat:@"\"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, request.HTTPMethod, request.URL];
+        self.requestLoggingBlock(logMessage);
         [self handleJSONResponseWithData:data
                                 response:response
                                    error:error
