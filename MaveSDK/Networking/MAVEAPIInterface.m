@@ -335,7 +335,9 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                                                                contentEncoding:contentEncoding
                                                               preparationError:&requestCreationError];
     if (requestCreationError) {
-        completionBlock(requestCreationError, nil);
+        if (completionBlock) {
+            completionBlock(requestCreationError, nil);
+        }
         return;
     }
 
