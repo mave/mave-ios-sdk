@@ -44,6 +44,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 @property (nonatomic, strong) MAVEHTTPStack *httpStack;
 
 - (instancetype)initWithBaseURL:(NSString *)baseURL;
+- (void)setupLoggingOnInit;
 
 // User session info, pulled from MaveSDK singleton
 - (NSString *)applicationID;

@@ -46,9 +46,14 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 - (instancetype)initWithBaseURL:(NSString *)baseURL {
     if (self = [super init]) {
         self.httpStack = [[MAVEHTTPStack alloc] initWithAPIBaseURL:baseURL];
-        MAVEInfoLog(@"Initialized on domain: %@", baseURL);
+        [self setupLoggingOnInit];
     }
     return self;
+}
+
+- (void)setupLoggingOnInit {
+    NSString *logMessage = [NSString stringWithFormat:@"Initialized on domain: %@", self.httpStack.baseURL];
+    self.httpStack.requestLoggingBlock(logMessage);
 }
 
 - (NSString *)applicationID {
