@@ -335,15 +335,26 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // choose person clicked on
     MAVEABPerson *person = [self personOnTableView:tableView atIndexPath:indexPath];
 
     // person might appear in the main table more than once, lookup an array of all index paths
     // for this person
     NSArray *mainTableIndexPaths = [self indexPathsOnMainTableViewForPerson:person];
 
-    // deal with selected state of person
+    // update selected state of person
     person.selected = !person.selected;
+
+    // if this click just selected a suggested invite, mark that it did
+    if (person.selected &&
+        [self.tableSections count] > 0 &&
+        [self.tableSections[0] isEqualToString:MAVESuggestedInvitesTableDataKey] &&
+        indexPath.section == 0) {
+        person.selectedFromSuggestions = YES;
+    } else {
+        person.selectedFromSuggestions = NO;
+    }
+
+    // add to list of people to send invites to
     if (person.selected) {
         [self.selectedPhoneNumbers addObject:person.bestPhone];
         [self.selectedPeople addObject:person];

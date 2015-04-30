@@ -369,6 +369,39 @@
     OCMVerifyAll(mockedTableView);
 }
 
+- (void)testClickDidSelectRowAtIndexPathHandlesSelectedFromSuggestionsCorrectly {
+    // Set up data
+    MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
+    id mockedTableView = OCMClassMock([UITableView class]);
+    MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
+                                     initTableViewWithParent:ipvc];
+    vc.tableView = mockedTableView;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"Abbie"; p1.lastName = @"Foo";
+    p1.phoneNumbers = @[@"18085551234", @"12125551234"]; p1.selected = NO;
+    p1.phoneNumberLabels = @[@"_$!<Main>!$_", @"_$!<Mobile>!$_"];
+    [vc updateTableData:@{@"A": @[p1]}];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    NSDictionary *tableData = @{MAVESuggestedInvitesTableDataKey: @[p1], @"A": @[p1]};
+    [vc updateTableData:tableData];
+
+    [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
+    XCTAssertTrue(p1.selectedFromSuggestions);
+
+    // selecting again should deselect it
+    [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
+    XCTAssertFalse(p1.selectedFromSuggestions);
+
+    // selecting the other instance of person should not mark as selected from suggestions
+    NSIndexPath *indexPath2 = [NSIndexPath indexPathForRow:0 inSection:1];
+    [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath2];
+    XCTAssertFalse(p1.selectedFromSuggestions);
+
+    // and deselecting does nothing
+    [vc tableView:vc.tableView didSelectRowAtIndexPath:indexPath];
+    XCTAssertFalse(p1.selectedFromSuggestions);
+}
+
 - (void)testPersonOnTableViewAtIndexPath {
     MAVEInvitePageViewController *ipvc = [[MAVEInvitePageViewController alloc] init];
     MAVEABTableViewController *vc = [[MAVEABTableViewController alloc]
