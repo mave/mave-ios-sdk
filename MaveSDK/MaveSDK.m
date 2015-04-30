@@ -131,7 +131,11 @@ static dispatch_once_t sharedInstanceonceToken;
     // same objects displayed in the address book. So use the helper method to look
     // up the exact instances that we want by hashed record IDs.
     NSArray *suggestionsWrongInstances = suggestedInvites.suggestions;
-    return [MAVEABUtils instancesOfABPersonsInList:suggestionsWrongInstances fromAllContacts:contacts];
+    NSArray *suggestions = [MAVEABUtils instancesOfABPersonsInList:suggestionsWrongInstances fromAllContacts:contacts];
+    for (MAVEABPerson *person in suggestions) {
+        person.isSuggestedContact = YES;
+    }
+    return suggestions;
 }
 
 

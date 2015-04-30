@@ -29,6 +29,14 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 @property (nonatomic, strong) NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
 @property (nonatomic, strong) NSArray *emailAddresses; // Array of NSStrings
 
+// This field is true if the contact as returned from the API as a suggested invite
+@property (nonatomic, assign) BOOL isSuggestedContact;
+// This field is only true if the contact was clicked on in the top
+// suggestions section of the contact list, if the contact was
+// searched for alphabetically and selected this will be false,
+// even if the contact was a suggested invite.
+@property (nonatomic, assign) BOOL selectedFromSuggestions;
+
 @property (atomic, assign) BOOL selected;
 @property (atomic, assign) MAVEInviteSendingStatus sendingStatus;
 

@@ -56,18 +56,16 @@
 /// Serialization methods for sending over wire
 ///
 - (NSDictionary *)toJSONDictionary {
-    return @{
-        @"record_id": [[NSNumber alloc]initWithInteger:self.recordID],
-        @"hashed_record_id": @(self.hashedRecordID),
-        @"first_name": self.firstName ? self.firstName : [NSNull null],
-        @"last_name": self.lastName ? self.lastName : [NSNull null],
-        @"phone_numbers": [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[],
-        @"phone_number_labels": [self.phoneNumberLabels count] > 0 ? self.phoneNumberLabels : @[],
-        @"email_addresses": [self.emailAddresses count] > 0 ? self.emailAddresses : @[],
-    };
+    NSArray *tupleArray = [self toJSONTupleArray];
+    NSMutableDictionary *output = [NSMutableDictionary dictionaryWithCapacity:[tupleArray count]];
+    for (NSArray *tuple in tupleArray) {
+        [output setValue:tuple[1] forKey:tuple[0]];
+    }
+    return [NSDictionary dictionaryWithDictionary:output];
 }
 
 - (NSArray *)toJSONTupleArray {
+    // Needs to be in the expected order, which is the following
     return @[
         @[@"record_id", [[NSNumber alloc]initWithInteger:self.recordID]],
         @[@"hashed_record_id", @(self.hashedRecordID)],
@@ -76,6 +74,8 @@
         @[@"phone_numbers", [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[]],
         @[@"phone_number_labels", [self.phoneNumberLabels count] > 0 ? self.phoneNumberLabels : @[]],
         @[@"email_addresses", [self.emailAddresses count] > 0 ? self.emailAddresses : @[]],
+        @[@"is_suggested_contact", @(self.isSuggestedContact)],
+        @[@"selected_from_suggestions", @(self.selectedFromSuggestions)]
     ];
 }
 

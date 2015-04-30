@@ -64,6 +64,8 @@
     
     XCTAssertEqual([p.emailAddresses count], 1);
     XCTAssertEqualObjects(p.emailAddresses[0], @"jsmith@example.com");
+
+    XCTAssertFalse(p.isSuggestedContact);
     XCTAssertEqual(p.selected, NO);
     XCTAssertEqual(p.sendingStatus, MAVEInviteSendingStatusUnsent);
 }
@@ -84,6 +86,8 @@
     p1.recordID = 1; p1.firstName = @"2"; p1.lastName = @"3";
     p1.phoneNumbers = @[@"18085551234"]; p1.phoneNumberLabels = @[@"_$!<Mobile>!$_"];
     p1.emailAddresses = @[@"foo@example.com"];
+    p1.isSuggestedContact = YES;
+    p1.selectedFromSuggestions = YES;
 
     NSDictionary *p1JSON = [p1 toJSONDictionary];
     XCTAssertEqualObjects([p1JSON objectForKey:@"record_id"], [NSNumber numberWithInteger:1]);
@@ -97,6 +101,9 @@
     XCTAssertEqualObjects([p1JSON objectForKey:@"phone_numbers"], @[@"18085551234"]);
     XCTAssertEqualObjects([p1JSON objectForKey:@"phone_number_labels"], @[@"_$!<Mobile>!$_"]);
     XCTAssertEqualObjects([p1JSON objectForKey:@"email_addresses"], @[@"foo@example.com"]);
+    XCTAssertEqualObjects([p1JSON objectForKey:@"is_suggested_contact"], @1);
+    XCTAssertEqualObjects([p1JSON objectForKey:@"selected_from_suggestions"], @1);
+
     NSData *p1Data = [NSJSONSerialization dataWithJSONObject:p1JSON options:0 error:nil];
     XCTAssertNotNil(p1Data);  // check that json serialization doesn't fail
 
@@ -109,6 +116,8 @@
     XCTAssertEqualObjects([p2JSON objectForKey:@"phone_numbers"], @[]);
     XCTAssertEqualObjects([p2JSON objectForKey:@"phone_number_labels"], @[]);
     XCTAssertEqualObjects([p2JSON objectForKey:@"email_addresses"], @[]);
+    XCTAssertEqualObjects([p2JSON objectForKey:@"is_suggested_contact"], @0);
+    XCTAssertEqualObjects([p2JSON objectForKey:@"selected_from_suggestions"], @0);
     NSData *p2Data = [NSJSONSerialization dataWithJSONObject:p2JSON options:0 error:nil];
     XCTAssertNotNil(p2Data);  // check that json serialization doesn't fail
 }
@@ -122,6 +131,7 @@
     p1.firstName = @"2"; p1.lastName = @"3";
     p1.phoneNumbers = @[@"18085551234", @"18085554567"]; p1.phoneNumberLabels = @[@"_$!<Mobile>!$_", @"_$!<Main>!$_"];
     p1.emailAddresses = @[@"foo@example.com"];
+    p1.isSuggestedContact = YES;
 
     NSArray *p1JSON = [p1 toJSONTupleArray];
     NSArray *expected;
@@ -139,6 +149,10 @@
     XCTAssertEqualObjects([p1JSON objectAtIndex:5], expected);
     expected = @[@"email_addresses", @[@"foo@example.com"]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:6], expected);
+    expected = @[@"is_suggested_contact", @1];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:7], expected);
+    expected = @[@"selected_from_suggestions", @0];
+    XCTAssertEqualObjects([p1JSON objectAtIndex:8], expected);
     NSData *p1Data = [NSJSONSerialization dataWithJSONObject:p1JSON options:0 error:nil];
     XCTAssertNotNil(p1Data);  // check that json serialization doesn't fail
 

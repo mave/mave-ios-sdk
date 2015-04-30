@@ -108,6 +108,9 @@
     NSArray *contacts = @[p0, p1, p2];
     NSArray *suggestionsWrongInstances = @[p2dup, p0dup];
     NSArray *expectedSuggestions = @[p2, p0];
+    for (MAVEABPerson *_p in expectedSuggestions) {
+        XCTAssertFalse(_p.isSuggestedContact);
+    }
 
     MAVESuggestedInvites *suggestedObject = [[MAVESuggestedInvites alloc] init];
     suggestedObject.suggestions = suggestionsWrongInstances;
@@ -121,6 +124,11 @@
 
     XCTAssertEqualObjects(returnedSuggestions, expectedSuggestions);
     OCMVerifyAll(builderMock);
+
+    // Suggestions should also now be marked as isSuggestedInvite
+    for (MAVEABPerson *_p in expectedSuggestions) {
+        XCTAssertTrue(_p.isSuggestedContact);
+    }
 }
 
 - (void)testGetReferringData {
