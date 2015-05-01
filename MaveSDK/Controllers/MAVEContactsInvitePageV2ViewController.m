@@ -357,7 +357,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
         // Mark as selected a suggested invite if true
         if ([self.tableSections count] > 0 &&
             [self.tableSections[0] isEqualToString:MAVESuggestedInvitesTableDataKey] &&
-            indexPath.row == 0) {
+            indexPath.section == 0) {
             cell.isSuggestedInviteCell = YES;
         } else {
             cell.isSuggestedInviteCell = NO;
