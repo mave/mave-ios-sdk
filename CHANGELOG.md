@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.6.2
+- Sends additional analytics about inviting suggested contacts vs non suggested
+
 ### v0.6.1
 - Allow server-side SMS invites to be sent in Canada
 - Small internal api changes
