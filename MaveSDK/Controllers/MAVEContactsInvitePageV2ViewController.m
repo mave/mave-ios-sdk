@@ -354,6 +354,14 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     if (!person) {
         [cell updateWithInfoForNoPersonFound];
     } else {
+        // Mark as selected a suggested invite if true
+        if ([self.tableSections count] > 0 &&
+            [self.tableSections[0] isEqualToString:MAVESuggestedInvitesTableDataKey] &&
+            indexPath.row == 0) {
+            cell.isSuggestedInviteCell = YES;
+        } else {
+            cell.isSuggestedInviteCell = NO;
+        }
         [cell updateWithInfoForPerson:person];
     }
     return cell;
@@ -382,7 +390,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 }
 
 #pragma mark - Send invites
-- (void)sendInviteToPerson:(MAVEABPerson *)person {
+- (void)sendInviteToPerson:(MAVEABPerson *)person selectedFromSuggestions:(BOOL)selectedFromSuggestions {
     NSString *phoneToinvite = [person bestPhone];
     if (!phoneToinvite) {
         return;
@@ -399,6 +407,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
     });
 
     person.sendingStatus = MAVEInviteSendingStatusSending;
+    person.selectedFromSuggestions = selectedFromSuggestions;
     [self.tableView reloadData];
     [self.searchTableView reloadData];
 

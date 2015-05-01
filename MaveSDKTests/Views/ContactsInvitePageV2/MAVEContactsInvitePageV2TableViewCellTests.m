@@ -42,6 +42,7 @@
 
     XCTAssertEqual(cell.selectionStyle, UITableViewCellSelectionStyleNone);
     XCTAssertEqualObjects(cell.backgroundColor, opts.contactCellBackgroundColor);
+    XCTAssertFalse(cell.isSuggestedInviteCell);
 
     // Name & detail labels
     XCTAssertEqualObjects(cell.nameLabel.font, opts.contactNameFont);

@@ -101,8 +101,6 @@
     XCTAssertEqualObjects([p1JSON objectForKey:@"phone_numbers"], @[@"18085551234"]);
     XCTAssertEqualObjects([p1JSON objectForKey:@"phone_number_labels"], @[@"_$!<Mobile>!$_"]);
     XCTAssertEqualObjects([p1JSON objectForKey:@"email_addresses"], @[@"foo@example.com"]);
-    XCTAssertEqualObjects([p1JSON objectForKey:@"is_suggested_contact"], @1);
-    XCTAssertEqualObjects([p1JSON objectForKey:@"selected_from_suggestions"], @1);
 
     NSData *p1Data = [NSJSONSerialization dataWithJSONObject:p1JSON options:0 error:nil];
     XCTAssertNotNil(p1Data);  // check that json serialization doesn't fail
@@ -116,8 +114,6 @@
     XCTAssertEqualObjects([p2JSON objectForKey:@"phone_numbers"], @[]);
     XCTAssertEqualObjects([p2JSON objectForKey:@"phone_number_labels"], @[]);
     XCTAssertEqualObjects([p2JSON objectForKey:@"email_addresses"], @[]);
-    XCTAssertEqualObjects([p2JSON objectForKey:@"is_suggested_contact"], @0);
-    XCTAssertEqualObjects([p2JSON objectForKey:@"selected_from_suggestions"], @0);
     NSData *p2Data = [NSJSONSerialization dataWithJSONObject:p2JSON options:0 error:nil];
     XCTAssertNotNil(p2Data);  // check that json serialization doesn't fail
 }
@@ -149,10 +145,6 @@
     XCTAssertEqualObjects([p1JSON objectAtIndex:5], expected);
     expected = @[@"email_addresses", @[@"foo@example.com"]];
     XCTAssertEqualObjects([p1JSON objectAtIndex:6], expected);
-    expected = @[@"is_suggested_contact", @1];
-    XCTAssertEqualObjects([p1JSON objectAtIndex:7], expected);
-    expected = @[@"selected_from_suggestions", @0];
-    XCTAssertEqualObjects([p1JSON objectAtIndex:8], expected);
     NSData *p1Data = [NSJSONSerialization dataWithJSONObject:p1JSON options:0 error:nil];
     XCTAssertNotNil(p1Data);  // check that json serialization doesn't fail
 
@@ -176,6 +168,17 @@
     XCTAssertEqualObjects([p2JSON objectAtIndex:6], expected);
     NSData *p2Data = [NSJSONSerialization dataWithJSONObject:p2JSON options:0 error:nil];
     XCTAssertNotNil(p2Data);  // check that json serialization doesn't fail
+}
+
+- (void)testToJSONDictionaryIncludingSuggestionsMetadata {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.isSuggestedContact = YES;
+    p1.selectedFromSuggestions = YES;
+
+    NSDictionary *d1 = [p1 toJSONDictionaryIncludingSuggestionsMetadata];
+    XCTAssertTrue([[d1 valueForKey:@"is_suggested_contact"] boolValue]);
+    XCTAssertTrue([[d1 valueForKey:@"selected_from_suggestions"] boolValue]);
+    XCTAssertEqual([d1 count], 9);
 }
 
 - (void)testMerkleTreeSerializableFormIsTupleArray {

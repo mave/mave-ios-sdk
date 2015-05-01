@@ -154,7 +154,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     if (recipientContacts && (id)recipientContacts != [NSNull null]) {
         NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:[recipientContacts count]];
         for (MAVEABPerson *contact in recipientContacts) {
-            [tmp addObject:[contact toJSONDictionary]];
+            [tmp addObject:[contact toJSONDictionaryIncludingSuggestionsMetadata]];
         }
         [params setObject:[NSArray arrayWithArray:tmp] forKey:@"recipient_contact_records"];
     }

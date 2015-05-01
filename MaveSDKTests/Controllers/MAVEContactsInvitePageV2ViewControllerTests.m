@@ -276,13 +276,26 @@
         return YES;
     }]]);
 
-    [vc sendInviteToPerson:pRec];
+    [vc sendInviteToPerson:pRec selectedFromSuggestions:NO];
 
     OCMVerifyAll(vcMock);
     OCMVerifyAll(apiInterfaceMock);
     OCMVerifyAll(tableViewMock);
     OCMVerifyAll(searchTableViewMock);
     XCTAssertEqual(sendingStatus, MAVEInviteSendingStatusSending);
+    XCTAssertFalse(pRec.selectedFromSuggestions);
+}
+
+- (void)testSendInviteToPersonWhenSelectedFromSuggestions {
+    MAVEContactsInvitePageV2ViewController *vc = [[MAVEContactsInvitePageV2ViewController alloc] init];
+    [vc loadView];
+    MAVEABPerson *p = [[MAVEABPerson alloc] init];
+    p.phoneNumbers = @[@"+18085556789"];
+    XCTAssertFalse(p.selectedFromSuggestions);
+
+    [vc sendInviteToPerson:p selectedFromSuggestions:YES];
+
+    XCTAssertTrue(p.selectedFromSuggestions);
 }
 
 - (void)testinviteSentSuccessHandler {

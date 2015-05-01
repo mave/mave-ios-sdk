@@ -43,7 +43,7 @@
 - (MAVESearchBar *)searchBar;
 
 // Send invite methods
-- (void)sendInviteToPerson:(MAVEABPerson *)person;
+- (void)sendInviteToPerson:(MAVEABPerson *)person selectedFromSuggestions:(BOOL)selectedFromSuggestions;
 - (void)inviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient waitSema:(dispatch_semaphore_t)sema;
 - (void)innerInviteSentSuccessHandlerPerson:(MAVEABPerson *)recipient;
 

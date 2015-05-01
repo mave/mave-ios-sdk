@@ -47,6 +47,8 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 
 // Export fields to an NSDictionary, using only basic types so it can be JSON encoded
 - (NSDictionary *)toJSONDictionary;
+// Another serialization method, include suggested invites metadata
+- (NSDictionary *)toJSONDictionaryIncludingSuggestionsMetadata;
 
 // This is a hashable format that can be encoded in json, instead of encoding the properties
 // as a key-value dictionary (which is unordered) we encode them as an array of (key, value)

@@ -74,9 +74,15 @@
         @[@"phone_numbers", [self.phoneNumbers count] > 0 ? self.phoneNumbers : @[]],
         @[@"phone_number_labels", [self.phoneNumberLabels count] > 0 ? self.phoneNumberLabels : @[]],
         @[@"email_addresses", [self.emailAddresses count] > 0 ? self.emailAddresses : @[]],
-        @[@"is_suggested_contact", @(self.isSuggestedContact)],
-        @[@"selected_from_suggestions", @(self.selectedFromSuggestions)]
     ];
+}
+
+- (NSDictionary *)toJSONDictionaryIncludingSuggestionsMetadata {
+    NSDictionary *baseDict = [self toJSONDictionary];
+    NSMutableDictionary *newDict = [NSMutableDictionary dictionaryWithDictionary:baseDict];
+    [newDict setValue:@(self.isSuggestedContact) forKey:@"is_suggested_contact"];
+    [newDict setValue:@(self.selectedFromSuggestions) forKey:@"selected_from_suggestions"];
+    return [NSDictionary dictionaryWithDictionary:newDict];
 }
 
 - (uint64_t)merkleTreeDataKey {

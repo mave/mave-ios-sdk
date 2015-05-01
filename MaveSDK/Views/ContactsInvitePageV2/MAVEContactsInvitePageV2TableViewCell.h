@@ -15,6 +15,7 @@
 
 @property (nonatomic, weak) MAVEContactsInvitePageV2ViewController *delegateController;
 @property (nonatomic, weak) MAVEABPerson *person;
+@property (nonatomic, assign) BOOL isSuggestedInviteCell;
 //@property (strong, nonatomic) UIView *contentWrapper;
 @property (strong, nonatomic) UIView *contactInfoWrapper;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;

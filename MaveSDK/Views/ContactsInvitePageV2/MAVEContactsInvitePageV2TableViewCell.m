@@ -45,6 +45,7 @@ CGFloat const MAVEV2CellNameToDetailsMargin = 0;
 
 - (void)doStylingSetup {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.isSuggestedInviteCell = NO;
 
     MAVEDisplayOptions *opts = [MaveSDK sharedInstance].displayOptions;
 
@@ -148,7 +149,7 @@ CGFloat const MAVEV2CellNameToDetailsMargin = 0;
 
 - (void)sendInviteToCurrentPerson {
     if (self.delegateController) {
-        [self.delegateController sendInviteToPerson:self.person];
+        [self.delegateController sendInviteToPerson:self.person selectedFromSuggestions:self.isSuggestedInviteCell];
     }
 }
 

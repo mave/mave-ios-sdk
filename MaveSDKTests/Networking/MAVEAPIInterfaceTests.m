@@ -265,7 +265,7 @@
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.firstName = @"Foo";
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2; p2.firstName = @"Bar";
     NSArray *recipientContacts = @[p1, p2];
-    NSArray *recipientContactsSerializable = @[[p1 toJSONDictionary], [p2 toJSONDictionary]];
+    NSArray *recipientContactsSerializable = @[[p1 toJSONDictionaryIncludingSuggestionsMetadata], [p2 toJSONDictionaryIncludingSuggestionsMetadata]];
     NSString *smsCopy = @"This is as test";
     NSString *userId = @"some-user-id";
     NSString *linkDestination = @"http://example.com/foo?code=hello";
