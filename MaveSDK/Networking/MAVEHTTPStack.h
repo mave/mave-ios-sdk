@@ -9,7 +9,7 @@
 //  Created by Danny Cosson on 1/2/15.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef void (^MAVEHTTPCompletionBlock)(NSError *error, NSDictionary *responseData);
 
@@ -44,5 +44,8 @@ typedef NS_ENUM(NSInteger, MAVEHTTPRequestContentEncoding) {
                    completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 + (NSString *)dictToURLQueryStringFragment:(NSDictionary *)dict;
 + (NSInteger)statusCodeLevel:(NSInteger)code;
+
+// Common tasks
+- (void)fetchImageFromURL:(NSURL *)absoluteURL completionBlock:(void (^)(UIImage *))completionBlock;
 
 @end
