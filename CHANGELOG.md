@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.6.3
+- Small internal api changes
+
 ### v0.6.2
 - Sends additional analytics about inviting suggested contacts vs non suggested
 
