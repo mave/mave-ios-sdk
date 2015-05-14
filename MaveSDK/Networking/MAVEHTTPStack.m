@@ -219,7 +219,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 }
 
 #pragma mark - Common tasks
-- (void)fetchImageFromURL:(NSURL *)absoluteURL completionBlock:(void (^)(UIImage *))completionBlock {
+- (void)fetchImageFromURL:(NSURL *)absoluteURL completionBlock:(void (^)(UIImage *image))completionBlock {
     NSURLRequest *request = [NSURLRequest requestWithURL:absoluteURL];
     NSURLSessionTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         UIImage *image = nil;

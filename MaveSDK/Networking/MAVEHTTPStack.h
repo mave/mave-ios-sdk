@@ -46,6 +46,6 @@ typedef NS_ENUM(NSInteger, MAVEHTTPRequestContentEncoding) {
 + (NSInteger)statusCodeLevel:(NSInteger)code;
 
 // Common tasks
-- (void)fetchImageFromURL:(NSURL *)absoluteURL completionBlock:(void (^)(UIImage *))completionBlock;
+- (void)fetchImageFromURL:(NSURL *)absoluteURL completionBlock:(void (^)(UIImage *image))completionBlock;
 
 @end
