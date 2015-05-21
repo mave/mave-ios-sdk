@@ -69,6 +69,7 @@
 		0C2D73181A1FCB640059CA54 /* MAVEIDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */; };
 		0C2D731B1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2D731A1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m */; };
 		0C2FF1BB1A796EEF003058F7 /* MAVEMerkleTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D92BD1A759E7200B65B82 /* MAVEMerkleTree.m */; };
+		0C435C6E1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C435C6D1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.m */; };
 		0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */; };
 		0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */; };
 		0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */; };
@@ -329,6 +330,8 @@
 		0C2D73161A1FCB640059CA54 /* MAVEIDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEIDUtils.h; sourceTree = "<group>"; };
 		0C2D73171A1FCB640059CA54 /* MAVEIDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEIDUtils.m; sourceTree = "<group>"; };
 		0C2D731A1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEIDUtilsTests.m; sourceTree = "<group>"; };
+		0C435C6C1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageV3TableWrapperView.h; sourceTree = "<group>"; };
+		0C435C6D1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageV3TableWrapperView.m; sourceTree = "<group>"; };
 		0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@1x.png"; sourceTree = "<group>"; };
 		0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@2x.png"; sourceTree = "<group>"; };
 		0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@3x.png"; sourceTree = "<group>"; };
@@ -643,6 +646,15 @@
 				0C97F6791ADC6BE80084974D /* MAVEBuiltinUIElementUtilsTests.m */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		0C435C6B1B0E2F1E005B11AF /* ContactsInvitePageV3 */ = {
+			isa = PBXGroup;
+			children = (
+				0C435C6C1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.h */,
+				0C435C6D1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.m */,
+			);
+			path = ContactsInvitePageV3;
 			sourceTree = "<group>";
 		};
 		0C58FDDC1A649498007F8F12 /* Resources */ = {
@@ -1014,6 +1026,7 @@
 		C02927EC19E82C45006AEE43 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0C435C6B1B0E2F1E005B11AF /* ContactsInvitePageV3 */,
 				0C1BE8671AD5A569009FA742 /* ContactsInvitePageV2 */,
 				0CEEDE951A6C4FCB00A81804 /* MAVESearchBar.h */,
 				0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */,
@@ -1364,6 +1377,7 @@
 				0C131EEE1ACAFE9A00F34539 /* MAVEWrapperNavigationController.m in Sources */,
 				0C29BC411A5D7DEC00C27DA5 /* MAVERemoteObjectBuilderDataPersistor.m in Sources */,
 				0C0996F01A78527F003B82AA /* MAVEMerkleTreeDataDemo.m in Sources */,
+				0C435C6E1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.m in Sources */,
 				C02927F319E82CF8006AEE43 /* MaveSDK.m in Sources */,
 				0CCC92C31A6011E8008CB888 /* MAVEPromise.m in Sources */,
 				0CCC92BA1A5F44F7008CB888 /* MAVEInvitePageChooser.m in Sources */,
