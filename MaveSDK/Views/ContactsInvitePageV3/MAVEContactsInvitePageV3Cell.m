@@ -35,9 +35,8 @@
 
 - (void)doInitialSetup {
     self.topToNameLabel = 12;
-    self.nameLabelToContactInfoWrapper = 4;
+    self.nameLabelToContactInfoWrapper = 2;
     self.contactInfoWrapperToBottom = 8;
-    self.contactInfoHeightSpacingBetweenRows = 8;
     self.bottomSeparatorHeight = 0.5;
     self.contactInfoFont = [UIFont systemFontOfSize:14];
 
@@ -59,7 +58,6 @@
 
     self.contactInfoContainer = [[UIView alloc] init];
     self.contactInfoContainer.translatesAutoresizingMaskIntoConstraints = NO;
-    self.contactInfoContainer.backgroundColor = [UIColor greenColor];
 
     self.bottomSeparator = [[UIView alloc] init];
     self.bottomSeparator.translatesAutoresizingMaskIntoConstraints = NO;
@@ -123,7 +121,7 @@
         return 10;
     }
     CGFloat eachRecordHeight = [MAVECustomContactInfoRowV3 heightGivenFont:self.contactInfoFont];
-    return numberContactRecords * eachRecordHeight + (numberContactRecords - 1) * self.contactInfoHeightSpacingBetweenRows;
+    return numberContactRecords * eachRecordHeight;
 }
 
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person {
@@ -170,7 +168,7 @@
         [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
 
         if (previousContactInfoRow) {
-            [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:self.contactInfoHeightSpacingBetweenRows]];
+            [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
         } else {
             [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
         }
