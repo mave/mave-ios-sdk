@@ -16,6 +16,7 @@
 #import "MAVEInvitePageViewController.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEContactsInvitePageV2ViewController.h"
+#import "MAVEContactsInvitePageV3ViewController.h"
 #import "MAVEDisplayOptions.h"
 
 NSString * const MAVEInvitePageTypeContactList = @"contact_list";
@@ -84,9 +85,11 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     }
 }
 
-- (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed {
+- (MAVEContactsInvitePageV3ViewController *)createContactsInvitePageIfAllowed {
+//- (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed {
     if ([self isAnyServerSideContactsInvitePageAllowed]) {
-        return [[MAVEInvitePageViewController alloc] init];
+//        return [[MAVEInvitePageViewController alloc] init];
+        return [[MAVEContactsInvitePageV3ViewController alloc] init];
     } else {
         return nil;
     }
