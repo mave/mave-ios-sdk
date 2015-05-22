@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MAVEContactsInvitePageV3Cell.h"
 #import "MAVEInviteTableSectionHeaderView.h"
+#import "MAVEContactsInvitePageDataManager.h"
 
 @interface MAVEContactsInvitePageV3ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
@@ -18,6 +19,7 @@
 // header when suggested invites are still loading
 @property (nonatomic, strong) MAVEInviteTableSectionHeaderView *suggestionsSectionHeaderView;
 
-@property (nonatomic, strong) NSDictionary *tableData;
+
+@property (nonatomic, strong) MAVEContactsInvitePageDataManager *dataManager;
 
 @end

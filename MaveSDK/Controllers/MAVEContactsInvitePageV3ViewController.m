@@ -23,6 +23,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView registerClass:[MAVEContactsInvitePageV3Cell class]
@@ -48,38 +49,23 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 #pragma mark - Loading Contacts Data
 - (void)loadContactsData {
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
-
-        NSDictionary *indexedContactsToRenderNow;
-        BOOL updateSuggestionsWhenReady = NO;
-        [MAVEInvitePageViewController buildContactsToUseAtPageRender:&indexedContactsToRenderNow
-                                          addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
-                                                    fromContactsList:contacts];
-
-        self.tableData = indexedContactsToRenderNow;
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        [self.dataManager updateWithContacts:contacts ifNecessaryAsyncSuggestionsBlock:nil];
     }];
 }
 - (MAVEABPerson *)personAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *sectionKey = [[self sectionIndexTitlesForTableView:nil] objectAtIndex:indexPath.section];
-    NSArray *dataInSection = [self.tableData objectForKey:sectionKey];
-    return [dataInSection objectAtIndex:indexPath.row];
+    return [self.dataManager personAtMainTableIndexPath:indexPath];
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return [self.tableData allKeys];
+    return [self.dataManager sectionIndexesForMainTable];
 }
 
 #pragma mark - Table View Data Source & Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [[self.tableData allKeys] count];
+    return [self.dataManager numberOfSectionsInMainTable];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSString *sectionKey = [[self sectionIndexTitlesForTableView:tableView] objectAtIndex:section];
-    NSArray *dataInSection = [self.tableData objectForKey:sectionKey];
-    return [dataInSection count];
+    return [self.dataManager numberOfRowsInMainTableSection:section];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

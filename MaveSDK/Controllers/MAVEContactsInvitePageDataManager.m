@@ -30,10 +30,19 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
 - (NSArray *)sectionIndexesForMainTable {
     return [self.mainTableData allKeys];
 }
+- (NSInteger)numberOfSectionsInMainTable {
+    return [[self sectionIndexesForMainTable] count];
+}
+- (NSInteger)numberOfRowsInMainTableSection:(NSUInteger)section {
+    NSString *sectionKey = [[self sectionIndexesForMainTable] objectAtIndex:section];
+    NSArray *rows = [self.mainTableData objectForKey:sectionKey];
+    return [rows count];
+}
 
 - (MAVEABPerson *)personAtMainTableIndexPath:(NSIndexPath *)indexPath {
     NSString *sectionKey = [[self sectionIndexesForMainTable] objectAtIndex:indexPath.section];
-    return [self.mainTableData objectForKey:sectionKey];
+    NSArray *rows = [self.mainTableData objectForKey:sectionKey];
+    return [rows objectAtIndex:indexPath.row];
 }
 
 - (NSIndexPath *)indexPathOfFirstOccuranceInMainTableOfPerson:(MAVEABPerson *)person {

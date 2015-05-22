@@ -20,6 +20,8 @@
 @property (nonatomic, strong) NSArray *searchTableData;
 
 - (NSArray *)sectionIndexesForMainTable;
+- (NSInteger)numberOfSectionsInMainTable;
+- (NSInteger)numberOfRowsInMainTableSection:(NSUInteger)section;
 
 - (MAVEABPerson *)personAtMainTableIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathOfFirstOccuranceInMainTableOfPerson:(MAVEABPerson *)person;
