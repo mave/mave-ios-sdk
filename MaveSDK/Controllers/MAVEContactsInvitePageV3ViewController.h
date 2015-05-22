@@ -10,4 +10,6 @@
 
 @interface MAVEContactsInvitePageV3ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, strong) NSArray *tableData;
+
 @end

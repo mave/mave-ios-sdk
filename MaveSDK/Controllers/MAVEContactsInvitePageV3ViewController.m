@@ -9,6 +9,8 @@
 #import "MAVEContactsInvitePageV3ViewController.h"
 #import "MAVEContactsInvitePageV3TableWrapperView.h"
 #import "MAVEContactsInvitePageV3Cell.h"
+#import "MAVEABPermissionPromptHandler.h"
+#import "MAVEInvitePageViewController.h"
 
 NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePageV3CellIdentifier";
 
@@ -24,6 +26,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.tableView.delegate = self;
     [self.tableView registerClass:[MAVEContactsInvitePageV3Cell class]
            forCellReuseIdentifier:MAVEContactsInvitePageV3CellIdentifier];
+    [self loadContactsData];
 }
 
 - (void)loadView {
@@ -38,12 +41,23 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Loading Contacts Data
+- (void)loadContactsData {
+    [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
+        self.tableData = contacts;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    }];
+
+}
+
 #pragma mark - Table View Data Source & Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return [self.tableData count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -51,11 +65,13 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60;
+    return 150;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEContactsInvitePageV3Cell *cell = [tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV3CellIdentifier];
+    MAVEABPerson *person = [self.tableData objectAtIndex:indexPath.row];
+    [cell updateForReuseWithPerson:person];
     return (UITableViewCell *)cell;
 }
 
