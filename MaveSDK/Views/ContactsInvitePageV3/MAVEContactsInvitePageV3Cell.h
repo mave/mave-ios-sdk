@@ -29,6 +29,7 @@
 @property (nonatomic, strong) UIView *bottomSeparator;
 @property (nonatomic, strong) MAVECustomCheckboxV3 *checkmarkBox;
 
+@property (nonatomic, strong) MAVEABPerson *person;
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person;
 
 - (CGFloat)heightGivenNumberOfContactInfoRecords:(NSUInteger)numberContactRecords;

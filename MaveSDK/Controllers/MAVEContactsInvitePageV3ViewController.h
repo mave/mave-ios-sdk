@@ -19,7 +19,6 @@
 // header when suggested invites are still loading
 @property (nonatomic, strong) MAVEInviteTableSectionHeaderView *suggestionsSectionHeaderView;
 
-
 @property (nonatomic, strong) MAVEContactsInvitePageDataManager *dataManager;
 
 @end

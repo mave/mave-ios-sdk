@@ -37,7 +37,7 @@
     self.topToNameLabel = 12;
     self.nameLabelToContactInfoWrapper = 2;
     self.contactInfoWrapperToBottom = 8;
-    self.contactInfoWrapperCollapsedHeight = 10;
+    self.contactInfoWrapperCollapsedHeight = 4;
     self.bottomSeparatorHeight = 0.5;
     self.contactInfoFont = [UIFont systemFontOfSize:14];
 
@@ -71,6 +71,10 @@
     [self.contentView addSubview:self.contactInfoContainer];
     [self.contentView addSubview:self.bottomSeparator];
 
+    // create the constraint that we add/remove to expand/contract the cell, but don't do anything with it yet
+    self.overridingContactInfoContainerHeightConstraint = [NSLayoutConstraint constraintWithItem:self.contactInfoContainer attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.contactInfoWrapperCollapsedHeight];
+    self.overridingContactInfoContainerHeightConstraint.priority = 750;
+
     [self setNeedsUpdateConstraints];
 }
 
@@ -93,20 +97,19 @@
     NSDictionary *views = [NSDictionary dictionaryWithDictionary:tmp];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[picture(==pictureHeight)]-12-[nameLabel]-20-[checkmarkBox(==checkboxHeight)]-32-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-8-[picture(==pictureHeight)]" options:0 metrics:metrics views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-topToNameLabel-[nameLabel]-nameLabelToContactInfoWrapper-[contactInfoContainer]-contactInfoWrapperToBottom-[bottomSeparator(==bottomSeparatorHeight)]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-topToNameLabel-[nameLabel]-(nameLabelToContactInfoWrapper@249)-[contactInfoContainer]-contactInfoWrapperToBottom-[bottomSeparator(==bottomSeparatorHeight)]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-12-[checkmarkBox(==checkboxHeight)]" options:0 metrics:metrics views:views]];
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[contactInfoContainer]-(>=10)-[checkmarkBox]" options:0 metrics:metrics views:views]];
-    self.overridingContactInfoContainerHeightConstraint = [NSLayoutConstraint constraintWithItem:self.contactInfoContainer attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.contactInfoWrapperCollapsedHeight];
-//    self.isExpanded = self.isExpanded;
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[bottomSeparator]-0-|" options:0 metrics:metrics views:views]];
 }
 
 - (void)setIsExpanded:(BOOL)isExpanded {
     _isExpanded = isExpanded;
-//    self.contactInfoContainer.hidden = !isExpanded;
-    if (isExpanded ) {
+    self.contactInfoContainer.hidden = !isExpanded;
+    NSLog(@"container hidden changed: %@", @(self.contactInfoContainer.hidden));
+    if (!isExpanded) {
         [self.contactInfoContainer addConstraint:self.overridingContactInfoContainerHeightConstraint];
     } else {
         [self.contactInfoContainer removeConstraint:self.overridingContactInfoContainerHeightConstraint];
@@ -119,6 +122,22 @@
         _didSetupInitialConstraints = YES;
     }
     [super updateConstraints];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.isExpanded != self.person.selected) {
+        // if cell is expanding now, delay the contact info showing up a short time so that it shows up once
+        // the cell is big enough for it. When compressing, do the opposite - have it disappear immediately
+        // right when the cell begins to shrink.
+        if (self.person.selected) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.isExpanded = self.person.selected;
+            });
+        } else {
+            self.isExpanded = self.person.selected;
+        }
+    }
 }
 
 // Calculating what height will be
@@ -136,7 +155,9 @@
 }
 
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person {
+    self.person = person;
     self.nameLabel.text = [person fullName];
+    self.isExpanded = person.selected;
     [self updateWithContactInfoFromPerson:person];
 }
 
@@ -182,16 +203,17 @@
         NSLayoutConstraint *constraintTop;
         if (previousContactInfoRow) {
             constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+            constraintTop.priority = 1000;
         } else {
             constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+            constraintTop.priority = 250;
         }
-        constraintTop.priority = 750;
         [self.contactInfoContainer addConstraint:constraintTop];
 
         previousContactInfoRow = contactInfoRow;
     }
     NSLayoutConstraint *constraintBottom = [NSLayoutConstraint constraintWithItem:previousContactInfoRow attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
-    constraintBottom.priority = 750;
+    constraintBottom.priority = 250;
     [self.contactInfoContainer addConstraint:constraintBottom];
 
     [self setNeedsLayout];
