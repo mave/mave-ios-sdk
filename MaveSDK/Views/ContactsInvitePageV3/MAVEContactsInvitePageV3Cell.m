@@ -108,7 +108,6 @@
 - (void)setIsExpanded:(BOOL)isExpanded {
     _isExpanded = isExpanded;
     self.contactInfoContainer.hidden = !isExpanded;
-    NSLog(@"container hidden changed: %@", @(self.contactInfoContainer.hidden));
     if (!isExpanded) {
         [self.contactInfoContainer addConstraint:self.overridingContactInfoContainerHeightConstraint];
     } else {
@@ -137,6 +136,7 @@
         } else {
             self.isExpanded = self.person.selected;
         }
+        [self.checkmarkBox animateToggleCheckmark];
     }
 }
 
@@ -158,6 +158,7 @@
     self.person = person;
     self.nameLabel.text = [person fullName];
     self.isExpanded = person.selected;
+    self.checkmarkBox.isChecked = person.selected;
     [self updateWithContactInfoFromPerson:person];
 }
 

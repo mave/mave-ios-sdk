@@ -40,13 +40,6 @@
     [self addSubview:self.checkmarkImage];
 
     [self setNeedsUpdateConstraints];
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-
-    });
-
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(animateToggleCheckmark)];
-    [self addGestureRecognizer:tapGesture];
 }
 
 - (void)setIsChecked:(BOOL)isChecked {
