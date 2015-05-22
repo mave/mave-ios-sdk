@@ -163,10 +163,9 @@
 }
 
 - (void)updateWithContactInfoFromPerson:(MAVEABPerson *)person {
-    // Clear out any existing views
-//    for (UIView *view in [self.contactInfoContainer subviews]) {
-//        [view removeFromSuperview];
-//    }
+    // TODO: Lots of tests reusing a cell making sure these contact info rows get
+    // laid out appropriately. Try when going from more to less and less to more.
+    //
 
     NSInteger numPhoneNumbers = [person.phoneNumbers count];
     if (numPhoneNumbers == 0) {
