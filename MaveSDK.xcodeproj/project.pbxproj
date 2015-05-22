@@ -76,6 +76,9 @@
 		0C435C791B0E5F6A005B11AF /* MAVEContactsInvitePageV3Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C435C781B0E5F6A005B11AF /* MAVEContactsInvitePageV3Cell.m */; };
 		0C435C7C1B0E6510005B11AF /* ContactsInvitePageV3AboveTableFixedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C435C7B1B0E6510005B11AF /* ContactsInvitePageV3AboveTableFixedView.m */; };
 		0C435C7F1B0F7A1A005B11AF /* MAVECustomCheckboxV3.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C435C7E1B0F7A1A005B11AF /* MAVECustomCheckboxV3.m */; };
+		0C435C851B0F8574005B11AF /* MAVESimpleCheckmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C435C821B0F8574005B11AF /* MAVESimpleCheckmark.png */; };
+		0C435C861B0F8574005B11AF /* MAVESimpleCheckmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C435C831B0F8574005B11AF /* MAVESimpleCheckmark@2x.png */; };
+		0C435C871B0F8574005B11AF /* MAVESimpleCheckmark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C435C841B0F8574005B11AF /* MAVESimpleCheckmark@3x.png */; };
 		0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */; };
 		0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */; };
 		0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */; };
@@ -349,6 +352,9 @@
 		0C435C7B1B0E6510005B11AF /* ContactsInvitePageV3AboveTableFixedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsInvitePageV3AboveTableFixedView.m; sourceTree = "<group>"; };
 		0C435C7D1B0F7A1A005B11AF /* MAVECustomCheckboxV3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVECustomCheckboxV3.h; sourceTree = "<group>"; };
 		0C435C7E1B0F7A1A005B11AF /* MAVECustomCheckboxV3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomCheckboxV3.m; sourceTree = "<group>"; };
+		0C435C821B0F8574005B11AF /* MAVESimpleCheckmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVESimpleCheckmark.png; sourceTree = "<group>"; };
+		0C435C831B0F8574005B11AF /* MAVESimpleCheckmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVESimpleCheckmark@2x.png"; sourceTree = "<group>"; };
+		0C435C841B0F8574005B11AF /* MAVESimpleCheckmark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVESimpleCheckmark@3x.png"; sourceTree = "<group>"; };
 		0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@1x.png"; sourceTree = "<group>"; };
 		0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@2x.png"; sourceTree = "<group>"; };
 		0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@3x.png"; sourceTree = "<group>"; };
@@ -694,6 +700,9 @@
 		0C58FDDD1A6494B1007F8F12 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0C435C821B0F8574005B11AF /* MAVESimpleCheckmark.png */,
+				0C435C831B0F8574005B11AF /* MAVESimpleCheckmark@2x.png */,
+				0C435C841B0F8574005B11AF /* MAVESimpleCheckmark@3x.png */,
 				0C97F6CD1ADCAA5C0084974D /* Spinner */,
 				0CC7B3BB1A96ABA4004455A7 /* WaitingDots */,
 				0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */,
@@ -1259,6 +1268,7 @@
 				0C97F6F31ADCAA5C0084974D /* MAVESpinner10.png in Resources */,
 				0C58FDF01A649AF4007F8F12 /* MAVEShareIconEmail@1x.png in Resources */,
 				0C97F70A1ADCAA5C0084974D /* MAVESpinner6.png in Resources */,
+				0C435C851B0F8574005B11AF /* MAVESimpleCheckmark.png in Resources */,
 				0CD4FBF71A9C277C00667655 /* MAVEWaitingDots3@2x.png in Resources */,
 				0C58FDF31A649AF4007F8F12 /* MAVEShareIconFacebook@1x.png in Resources */,
 				0CD4FBF61A9C277C00667655 /* MAVEWaitingDots2@2x.png in Resources */,
@@ -1298,6 +1308,7 @@
 				0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */,
 				0C97F70B1ADCAA5C0084974D /* MAVESpinner6@2x.png in Resources */,
 				0C97F6FB1ADCAA5C0084974D /* MAVESpinner12@3x.png in Resources */,
+				0C435C861B0F8574005B11AF /* MAVESimpleCheckmark@2x.png in Resources */,
 				0C97F7141ADCAA5C0084974D /* MAVESpinner9@2x.png in Resources */,
 				0C97F6F71ADCAA5C0084974D /* MAVESpinner11@2x.png in Resources */,
 				0C97F6FA1ADCAA5C0084974D /* MAVESpinner12@2x.png in Resources */,
@@ -1307,6 +1318,7 @@
 				0C97F7091ADCAA5C0084974D /* MAVESpinner5@3x.png in Resources */,
 				0C58FDFB1A649AF4007F8F12 /* MAVEShareIconTwitter@3x.png in Resources */,
 				0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */,
+				0C435C871B0F8574005B11AF /* MAVESimpleCheckmark@3x.png in Resources */,
 				0C58FDF91A649AF4007F8F12 /* MAVEShareIconTwitter@1x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

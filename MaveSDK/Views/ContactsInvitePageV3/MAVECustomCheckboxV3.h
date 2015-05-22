@@ -10,6 +10,12 @@
 
 @interface MAVECustomCheckboxV3 : UIView
 
+@property (nonatomic, assign) CGFloat widthAndHeight;
+@property (nonatomic, strong) NSLayoutConstraint *checkmarkImageHeightConstraint;
 @property (nonatomic, strong) UIImageView *checkmarkImage;
+
+@property (nonatomic, assign) BOOL isChecked;
+
+- (void)animateToggleCheckmark;
 
 @end

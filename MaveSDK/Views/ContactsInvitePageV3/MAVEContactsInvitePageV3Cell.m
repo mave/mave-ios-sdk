@@ -33,6 +33,7 @@
 }
 
 - (void)doInitialSetup {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentView.backgroundColor = [UIColor redColor];
     self.picture = [[UIImageView alloc] init];
     self.picture.translatesAutoresizingMaskIntoConstraints = NO;
@@ -42,9 +43,8 @@
     self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.nameLabel.text = @"Foo Bar";
 
-    self.checkmarkBox = [[UIView alloc] init];
+    self.checkmarkBox = [[MAVECustomCheckboxV3 alloc] init];
     self.checkmarkBox.translatesAutoresizingMaskIntoConstraints = NO;
-    self.checkmarkBox.backgroundColor = [UIColor blueColor];
 
     self.contactInfoContainerView = [[UIView alloc] init];
     self.contactInfoContainerView.translatesAutoresizingMaskIntoConstraints = NO;
