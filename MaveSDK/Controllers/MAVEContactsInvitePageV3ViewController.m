@@ -78,7 +78,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
-    return [self.sampleCell heightGivenNumberOfContactInfoRecords:[person.phoneNumbers count]];
+//    NSInteger numberContactInfoRecords = person.selected ? [person.phoneNumbers count] : 0;
+    return [self.sampleCell heightGivenNumberOfContactInfoRecords:0];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -86,6 +87,13 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
     [cell updateForReuseWithPerson:person];
     return (UITableViewCell *)cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"selected row");
+    MAVEABPerson *person = [self personAtIndexPath:indexPath];
+    person.selected = !person.selected;
+
 }
 
 @end

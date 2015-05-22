@@ -37,11 +37,13 @@
     self.topToNameLabel = 12;
     self.nameLabelToContactInfoWrapper = 2;
     self.contactInfoWrapperToBottom = 8;
+    self.contactInfoWrapperCollapsedHeight = 10;
     self.bottomSeparatorHeight = 0.5;
     self.contactInfoFont = [UIFont systemFontOfSize:14];
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentView.backgroundColor = [UIColor whiteColor];
+    self.isExpanded = NO;
     self.pictureWidthHeight = 30;
     self.picture = [[UIImageView alloc] init];
     self.picture.translatesAutoresizingMaskIntoConstraints = NO;
@@ -95,11 +97,20 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-12-[checkmarkBox(==checkboxHeight)]" options:0 metrics:metrics views:views]];
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[contactInfoContainer]-(>=10)-[checkmarkBox]" options:0 metrics:metrics views:views]];
-    NSLayoutConstraint *weakEmptyContactInfoHeight = [NSLayoutConstraint constraintWithItem:self.contactInfoContainer attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0];
-    weakEmptyContactInfoHeight.priority = 250;
-    [self.contactInfoContainer addConstraint:weakEmptyContactInfoHeight];
+    self.overridingContactInfoContainerHeightConstraint = [NSLayoutConstraint constraintWithItem:self.contactInfoContainer attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.contactInfoWrapperCollapsedHeight];
+//    self.isExpanded = self.isExpanded;
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[bottomSeparator]-0-|" options:0 metrics:metrics views:views]];
+}
+
+- (void)setIsExpanded:(BOOL)isExpanded {
+    _isExpanded = isExpanded;
+//    self.contactInfoContainer.hidden = !isExpanded;
+    if (isExpanded ) {
+        [self.contactInfoContainer addConstraint:self.overridingContactInfoContainerHeightConstraint];
+    } else {
+        [self.contactInfoContainer removeConstraint:self.overridingContactInfoContainerHeightConstraint];
+    }
 }
 
 - (void)updateConstraints {
@@ -118,7 +129,7 @@
 }
 - (CGFloat)_heightOfContactInfoWrapperGivenNumberOfContactInfoRecords:(NSUInteger)numberContactRecords {
     if (numberContactRecords < 1) {
-        return 10;
+        return self.contactInfoWrapperCollapsedHeight;
     }
     CGFloat eachRecordHeight = [MAVECustomContactInfoRowV3 heightGivenFont:self.contactInfoFont];
     return numberContactRecords * eachRecordHeight;
@@ -167,15 +178,21 @@
         [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
         [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
 
+        // Vertical constraints should be lower priority so we can override with a constant near zero height when cell is collapsed
+        NSLayoutConstraint *constraintTop;
         if (previousContactInfoRow) {
-            [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+            constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
         } else {
-            [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+            constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTop multiplier:1 constant:0];
         }
+        constraintTop.priority = 750;
+        [self.contactInfoContainer addConstraint:constraintTop];
 
         previousContactInfoRow = contactInfoRow;
     }
-    [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:previousContactInfoRow attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    NSLayoutConstraint *constraintBottom = [NSLayoutConstraint constraintWithItem:previousContactInfoRow attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    constraintBottom.priority = 750;
+    [self.contactInfoContainer addConstraint:constraintBottom];
 
     [self setNeedsLayout];
 }

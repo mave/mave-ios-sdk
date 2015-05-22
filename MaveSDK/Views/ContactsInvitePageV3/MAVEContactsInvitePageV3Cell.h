@@ -16,15 +16,16 @@
 @property (nonatomic, assign) CGFloat topToNameLabel;
 @property (nonatomic, assign) CGFloat nameLabelToContactInfoWrapper;
 @property (nonatomic, assign) CGFloat contactInfoWrapperToBottom;
-@property (nonatomic, assign) CGFloat contactInfoHeightSpacingBetweenRows;
+@property (nonatomic, assign) CGFloat contactInfoWrapperCollapsedHeight;
 @property (nonatomic, assign) CGFloat bottomSeparatorHeight;
 @property (nonatomic, strong) UIFont *contactInfoFont;
 
-
+@property (nonatomic, assign) BOOL isExpanded;
 @property (nonatomic, assign) CGFloat pictureWidthHeight;
 @property (nonatomic, strong) UIImageView *picture;
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UIView *contactInfoContainer;
+@property (nonatomic, strong) NSLayoutConstraint *overridingContactInfoContainerHeightConstraint;
 @property (nonatomic, strong) UIView *bottomSeparator;
 @property (nonatomic, strong) MAVECustomCheckboxV3 *checkmarkBox;
 
