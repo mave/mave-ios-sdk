@@ -22,10 +22,14 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView registerClass:[MAVEContactsInvitePageV3Cell class]
            forCellReuseIdentifier:MAVEContactsInvitePageV3CellIdentifier];
+
+    self.sampleCell = [[MAVEContactsInvitePageV3Cell alloc] init];
+
     [self loadContactsData];
 }
 
@@ -65,7 +69,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 150;
+    MAVEABPerson *person = [self.tableData objectAtIndex:indexPath.row];
+    return [self.sampleCell heightGivenNumberOfContactInfoRecords:[person.phoneNumbers count]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

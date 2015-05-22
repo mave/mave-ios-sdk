@@ -27,16 +27,27 @@
     return self;
 }
 
+- (instancetype)initWithFont:(UIFont *)font selectedColor:(UIColor *)selectedColor deselectedColor:(UIColor *)deselectedColor {
+    if (self = [super init]) {
+        self.labelFont = font;
+        self.selectedColor = selectedColor;
+        self.deselectedColor = deselectedColor;
+        [self doInitialSetup];
+    }
+    return self;
+}
+
 - (void)updateWithLabelText:(NSString *)labelText isSelected:(BOOL)isSelected {
     self.label.text = labelText;
     self.isSelected = isSelected;
 }
 
 - (void)doInitialSetup {
+    self.backgroundColor = [UIColor redColor];
     self.label = [[UILabel alloc] init];
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
-    self.label.font = [UIFont systemFontOfSize:14];
-    self.label.textColor = [UIColor grayColor];
+    self.label.font = self.labelFont;
+    self.label.textColor = self.deselectedColor;
     [self addSubview:self.label];
 
     self.checkmarkView = [[UIImageView alloc] init];
@@ -50,10 +61,10 @@
 
 - (void)setupInitialConstraints {
     NSDictionary *views = @{@"label": self.label, @"checkmarkView": self.checkmarkView};
-    CGFloat labelHeight = [self heightForCurrentFont];
+    CGFloat labelHeight = [[self class] heightGivenFont:self.label.font];
     NSDictionary *metrics = @{@"labelHeight": @(labelHeight),
-                              @"checkmarkHeight": @(labelHeight * 0.75)};
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[label]-2-[checkmarkView(==checkmarkHeight)]-0-|" options:0 metrics:metrics views:views]];
+                              @"checkmarkHeight": @(labelHeight * 0.6)};
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[label]-4-[checkmarkView(==checkmarkHeight)]-4-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[label(==labelHeight)]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[checkmarkView(==checkmarkHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.checkmarkView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
@@ -67,8 +78,8 @@
     [super updateConstraints];
 }
 
-- (CGFloat)heightForCurrentFont {
-    return [@"(123) 555-4567" sizeWithAttributes:@{NSFontAttributeName: self.label.font}].height;
++ (CGFloat)heightGivenFont:(UIFont *)font {
+    return [@"(123) 555-4567" sizeWithAttributes:@{NSFontAttributeName: font}].height;
 }
 
 @end

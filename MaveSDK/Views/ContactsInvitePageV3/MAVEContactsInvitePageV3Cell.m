@@ -34,6 +34,13 @@
 }
 
 - (void)doInitialSetup {
+    self.topToNameLabel = 12;
+    self.nameLabelToContactInfoWrapper = 4;
+    self.contactInfoWrapperToBottom = 8;
+    self.contactInfoHeightSpacingBetweenRows = 8;
+    self.bottomSeparatorHeight = 0.5;
+    self.contactInfoFont = [UIFont systemFontOfSize:14];
+
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentView.backgroundColor = [UIColor whiteColor];
     self.pictureWidthHeight = 30;
@@ -70,7 +77,12 @@
 - (void)setupInitialConstraints {
     CGFloat checkboxWidthHeight = self.checkmarkBox.intrinsicContentSize.width;
     NSDictionary *metrics = @{@"pictureHeight": @(self.pictureWidthHeight),
-                              @"checkboxHeight": @(checkboxWidthHeight)};
+                              @"checkboxHeight": @(checkboxWidthHeight),
+                              @"topToNameLabel": @(self.topToNameLabel),
+                              @"nameLabelToContactInfoWrapper": @(self.nameLabelToContactInfoWrapper),
+                              @"contactInfoWrapperToBottom": @(self.contactInfoWrapperToBottom),
+                              @"bottomSeparatorHeight": @(self.bottomSeparatorHeight),
+    };
     NSDictionary *viewsWithSelf = NSDictionaryOfVariableBindings(self.picture, self.nameLabel, self.checkmarkBox, self.contactInfoContainer, self.bottomSeparator);
     NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithCapacity:[viewsWithSelf count]];
     for (NSString *key in viewsWithSelf) {
@@ -81,16 +93,15 @@
     NSDictionary *views = [NSDictionary dictionaryWithDictionary:tmp];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[picture(==pictureHeight)]-12-[nameLabel]-20-[checkmarkBox(==checkboxHeight)]-32-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-8-[picture(==pictureHeight)]" options:0 metrics:metrics views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-12-[nameLabel]-12-[contactInfoContainer]-0-[bottomSeparator]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-topToNameLabel-[nameLabel]-nameLabelToContactInfoWrapper-[contactInfoContainer]-contactInfoWrapperToBottom-[bottomSeparator(==bottomSeparatorHeight)]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-12-[checkmarkBox(==checkboxHeight)]" options:0 metrics:metrics views:views]];
 
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[contactInfoContainer]-12-[checkmarkBox]" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[contactInfoContainer]-(>=10)-[checkmarkBox]" options:0 metrics:metrics views:views]];
     NSLayoutConstraint *weakEmptyContactInfoHeight = [NSLayoutConstraint constraintWithItem:self.contactInfoContainer attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0];
     weakEmptyContactInfoHeight.priority = 250;
     [self.contactInfoContainer addConstraint:weakEmptyContactInfoHeight];
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[bottomSeparator]-0-|" options:0 metrics:metrics views:views]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomSeparator attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0.5f]];
 }
 
 - (void)updateConstraints {
@@ -101,6 +112,20 @@
     [super updateConstraints];
 }
 
+// Calculating what height will be
+- (CGFloat)heightGivenNumberOfContactInfoRecords:(NSUInteger)numberContactRecords {
+    CGFloat nameLabelHeight = [@"Some Name" sizeWithAttributes:@{NSFontAttributeName: self.nameLabel.font}].height;
+    CGFloat contactInfoWrapperHeight = [self _heightOfContactInfoWrapperGivenNumberOfContactInfoRecords:numberContactRecords];
+    return self.topToNameLabel + nameLabelHeight + self.nameLabelToContactInfoWrapper + contactInfoWrapperHeight + self.contactInfoWrapperToBottom + self.bottomSeparatorHeight;
+}
+- (CGFloat)_heightOfContactInfoWrapperGivenNumberOfContactInfoRecords:(NSUInteger)numberContactRecords {
+    if (numberContactRecords < 1) {
+        return 10;
+    }
+    CGFloat eachRecordHeight = [MAVECustomContactInfoRowV3 heightGivenFont:self.contactInfoFont];
+    return numberContactRecords * eachRecordHeight + (numberContactRecords - 1) * self.contactInfoHeightSpacingBetweenRows;
+}
+
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person {
     self.nameLabel.text = [person fullName];
     [self updateWithContactInfoFromPerson:person];
@@ -109,6 +134,9 @@
 - (void)updateWithContactInfoFromPerson:(MAVEABPerson *)person {
     // Clear out any existing views
     // TODO
+    for (UIView *view in [self.contactInfoContainer subviews]) {
+        [view removeFromSuperview];
+    }
 
     NSInteger numPhoneNumbers = [person.phoneNumbers count];
     if (numPhoneNumbers == 0) {
@@ -133,7 +161,7 @@
         NSString *labelText = [NSString stringWithFormat:@"%@ (%@)", displayPhone, displayCategory];
         NSLog(@"phones are: %@", labelText);
 
-        MAVECustomContactInfoRowV3 *contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] init];
+        MAVECustomContactInfoRowV3 *contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[UIColor blueColor] deselectedColor:[UIColor grayColor]];
         contactInfoRow.translatesAutoresizingMaskIntoConstraints = NO;
         [contactInfoRow updateWithLabelText:labelText isSelected:NO];
 
@@ -142,7 +170,7 @@
         [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
 
         if (previousContactInfoRow) {
-            [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:8]];
+            [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:self.contactInfoHeightSpacingBetweenRows]];
         } else {
             [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
         }
