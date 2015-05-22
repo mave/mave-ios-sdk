@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UIView *contactInfoContainer;
 @property (nonatomic, strong) NSLayoutConstraint *overridingContactInfoContainerHeightConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *bottomContactInfoToContainerBottomConstraint;
 @property (nonatomic, strong) UIView *bottomSeparator;
 @property (nonatomic, strong) MAVECustomCheckboxV3 *checkmarkBox;
 

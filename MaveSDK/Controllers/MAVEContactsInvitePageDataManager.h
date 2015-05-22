@@ -16,6 +16,7 @@
 @interface MAVEContactsInvitePageDataManager : NSObject
 
 @property (nonatomic, strong) NSDictionary *mainTableData;
+@property (nonatomic, strong) NSArray *mainTableSectionKeys;
 @property (nonatomic, strong) NSDictionary *personToIndexPathsIndex;
 @property (nonatomic, strong) NSArray *searchTableData;
 

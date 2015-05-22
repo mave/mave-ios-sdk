@@ -164,10 +164,9 @@
 
 - (void)updateWithContactInfoFromPerson:(MAVEABPerson *)person {
     // Clear out any existing views
-    // TODO
-    for (UIView *view in [self.contactInfoContainer subviews]) {
-        [view removeFromSuperview];
-    }
+//    for (UIView *view in [self.contactInfoContainer subviews]) {
+//        [view removeFromSuperview];
+//    }
 
     NSInteger numPhoneNumbers = [person.phoneNumbers count];
     if (numPhoneNumbers == 0) {
@@ -180,6 +179,7 @@
                                     @"_$!<Home>!$_": @"home",
                                     @"_$!<Work>!$_": @"work",
     };
+    NSArray *currentRowsToReuse = [self.contactInfoContainer subviews];
     MAVECustomContactInfoRowV3 *previousContactInfoRow = nil;
     for (NSUInteger i = 0; i < [person.phoneNumbers count]; ++i) {
         NSString *phoneRaw = [person.phoneNumbers objectAtIndex:i];
@@ -192,32 +192,44 @@
         NSString *labelText = [NSString stringWithFormat:@"%@ (%@)", displayPhone, displayCategory];
         NSLog(@"phones are: %@", labelText);
 
-        MAVECustomContactInfoRowV3 *contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[UIColor blueColor] deselectedColor:[UIColor grayColor]];
-        contactInfoRow.translatesAutoresizingMaskIntoConstraints = NO;
-        [contactInfoRow updateWithLabelText:labelText isSelected:NO];
-
-        [self.contactInfoContainer addSubview:contactInfoRow];
-        [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
-        [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
-
-        // Vertical constraints should be lower priority so we can override with a constant near zero height when cell is collapsed
-        NSLayoutConstraint *constraintTop;
-        if (previousContactInfoRow) {
-            constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:previousContactInfoRow attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
-            constraintTop.priority = 1000;
+        MAVECustomContactInfoRowV3 *contactInfoRow;
+        if ([currentRowsToReuse count] >= i+1) {
+            contactInfoRow = [currentRowsToReuse objectAtIndex:i];
         } else {
-            constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTop multiplier:1 constant:0];
-            constraintTop.priority = 250;
+            contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[UIColor blueColor] deselectedColor:[UIColor grayColor]];
+            contactInfoRow.translatesAutoresizingMaskIntoConstraints = NO;
+            [self.contactInfoContainer addSubview:contactInfoRow];
+            [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];
         }
-        [self.contactInfoContainer addConstraint:constraintTop];
+        [contactInfoRow updateWithLabelText:labelText isSelected:person.selected];
 
         previousContactInfoRow = contactInfoRow;
     }
-    NSLayoutConstraint *constraintBottom = [NSLayoutConstraint constraintWithItem:previousContactInfoRow attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
-    constraintBottom.priority = 250;
-    [self.contactInfoContainer addConstraint:constraintBottom];
+    if (self.bottomContactInfoToContainerBottomConstraint) {
+        [self.contactInfoContainer removeConstraint:self.bottomContactInfoToContainerBottomConstraint];
+        self.bottomContactInfoToContainerBottomConstraint = nil;
+    }
+    self.bottomContactInfoToContainerBottomConstraint = [NSLayoutConstraint constraintWithItem:previousContactInfoRow attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    self.bottomContactInfoToContainerBottomConstraint.priority = 250;
+    [self.contactInfoContainer addConstraint:self.bottomContactInfoToContainerBottomConstraint];
 
     [self setNeedsLayout];
+}
+
+- (void)setConstraintsForContactInfoRow:(MAVECustomContactInfoRowV3 *)contactInfoRow rowAbove:(MAVECustomContactInfoRowV3 *)rowAbove {
+    [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
+    [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+
+    // Vertical constraints should be lower priority so we can override with a constant near zero height when cell is collapsed
+    NSLayoutConstraint *constraintTop;
+    if (rowAbove) {
+        constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:rowAbove attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+        constraintTop.priority = 1000;
+    } else {
+        constraintTop = [NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+        constraintTop.priority = 250;
+    }
+    [self.contactInfoContainer addConstraint:constraintTop];
 }
 
 

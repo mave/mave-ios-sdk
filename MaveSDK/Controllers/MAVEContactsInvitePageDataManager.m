@@ -28,7 +28,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
 }
 
 - (NSArray *)sectionIndexesForMainTable {
-    return [self.mainTableData allKeys];
+    return self.mainTableSectionKeys;
 }
 - (NSInteger)numberOfSectionsInMainTable {
     return [[self sectionIndexesForMainTable] count];
@@ -57,6 +57,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
 
 - (void)setMainTableData:(NSDictionary *)mainTableData {
     _mainTableData = mainTableData;
+    self.mainTableSectionKeys = [[mainTableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     [self updateMainTablePersonToIndexPathsIndex];
 }
 
