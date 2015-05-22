@@ -179,9 +179,13 @@
                                     @"_$!<Home>!$_": @"home",
                                     @"_$!<Work>!$_": @"work",
     };
-    NSArray *currentRowsToReuse = [self.contactInfoContainer subviews];
+
     MAVECustomContactInfoRowV3 *previousContactInfoRow = nil;
-    for (NSUInteger i = 0; i < [person.phoneNumbers count]; ++i) {
+    NSArray *currentRowsToReuse = [self.contactInfoContainer subviews];
+    NSInteger numberOfReusableRows = [currentRowsToReuse count];
+    NSInteger numberOfRowsNeeded = [person.phoneNumbers count];
+
+    for (NSUInteger i = 0; i < numberOfRowsNeeded; ++i) {
         NSString *phoneRaw = [person.phoneNumbers objectAtIndex:i];
         NSString *categoryRaw = [person.phoneNumberLabels objectAtIndex:i];
         NSString *displayCategory = [labelMappings objectForKey:categoryRaw];
@@ -190,10 +194,9 @@
         }
         NSString *displayPhone = [MAVEABPerson displayPhoneNumber:phoneRaw];
         NSString *labelText = [NSString stringWithFormat:@"%@ (%@)", displayPhone, displayCategory];
-        NSLog(@"phones are: %@", labelText);
 
         MAVECustomContactInfoRowV3 *contactInfoRow;
-        if ([currentRowsToReuse count] >= i+1) {
+        if (numberOfReusableRows >= i+1) {
             contactInfoRow = [currentRowsToReuse objectAtIndex:i];
         } else {
             contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[UIColor blueColor] deselectedColor:[UIColor grayColor]];
@@ -205,6 +208,13 @@
 
         previousContactInfoRow = contactInfoRow;
     }
+    if (numberOfReusableRows > numberOfRowsNeeded) {
+        for (NSUInteger i = numberOfRowsNeeded; i < numberOfReusableRows; ++i) {
+            UIView *row = [currentRowsToReuse objectAtIndex:i];
+            [row removeFromSuperview];
+        }
+    }
+
     if (self.bottomContactInfoToContainerBottomConstraint) {
         [self.contactInfoContainer removeConstraint:self.bottomContactInfoToContainerBottomConstraint];
         self.bottomContactInfoToContainerBottomConstraint = nil;
