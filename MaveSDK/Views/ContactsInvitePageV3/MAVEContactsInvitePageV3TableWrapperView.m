@@ -28,8 +28,10 @@
 - (void)doInitialSetup {
     self.tableView = [[UITableView alloc] init];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.bigSendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.bigSendButton.backgroundColor = [UIColor whiteColor];
+    self.bigSendButton.backgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    self.bigSendButton.tintColor = [UIColor whiteColor];
     [self setButtonTextNumberOfInvitesToSend:4];
 
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -50,7 +52,7 @@
     // Vertical constraints
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bigSendButton attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-    self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+    self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60];
     [self addConstraint:self.bigSendButtonHeightConstraint];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
 

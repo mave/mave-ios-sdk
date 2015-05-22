@@ -25,6 +25,7 @@
 
 - (void)doInitialSetup {
     self.button = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.button.tintColor = [UIColor whiteColor];
 }
 
 @end

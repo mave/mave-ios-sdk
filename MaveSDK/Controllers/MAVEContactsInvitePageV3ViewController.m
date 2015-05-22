@@ -76,7 +76,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     return 20;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    NSString *text = @"Foo";
+    NSString *text = [[self.dataManager sectionIndexesForMainTable] objectAtIndex:section];
     return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text sectionIsWaiting:NO];
  }
 

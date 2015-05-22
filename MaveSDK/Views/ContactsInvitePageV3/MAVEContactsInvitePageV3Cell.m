@@ -63,7 +63,7 @@
 
     self.bottomSeparator = [[UIView alloc] init];
     self.bottomSeparator.translatesAutoresizingMaskIntoConstraints = NO;
-    self.bottomSeparator.backgroundColor = [UIColor grayColor];
+    self.bottomSeparator.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
 
     [self.contentView addSubview:self.picture];
     [self.contentView addSubview:self.nameLabel];
