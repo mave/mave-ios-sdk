@@ -48,38 +48,58 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 #pragma mark - Loading Contacts Data
 - (void)loadContactsData {
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
-        self.tableData = contacts;
+
+        NSDictionary *indexedContactsToRenderNow;
+        BOOL updateSuggestionsWhenReady = NO;
+        [MAVEInvitePageViewController buildContactsToUseAtPageRender:&indexedContactsToRenderNow
+                                          addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
+                                                    fromContactsList:contacts];
+
+        self.tableData = indexedContactsToRenderNow;
+
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
     }];
+}
+- (MAVEABPerson *)personAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *sectionKey = [[self sectionIndexTitlesForTableView:nil] objectAtIndex:indexPath.section];
+    NSArray *dataInSection = [self.tableData objectForKey:sectionKey];
+    return [dataInSection objectAtIndex:indexPath.row];
+}
 
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return [self.tableData allKeys];
 }
 
 #pragma mark - Table View Data Source & Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return [[self.tableData allKeys] count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.tableData count];
+    NSString *sectionKey = [[self sectionIndexTitlesForTableView:tableView] objectAtIndex:section];
+    NSArray *dataInSection = [self.tableData objectForKey:sectionKey];
+    return [dataInSection count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 20;
 }
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    NSString *text = @"Foo";
+    return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text sectionIsWaiting:NO];
+ }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MAVEABPerson *person = [self.tableData objectAtIndex:indexPath.row];
+    MAVEABPerson *person = [self personAtIndexPath:indexPath];
     return [self.sampleCell heightGivenNumberOfContactInfoRecords:[person.phoneNumbers count]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEContactsInvitePageV3Cell *cell = [tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV3CellIdentifier];
-    MAVEABPerson *person = [self.tableData objectAtIndex:indexPath.row];
+    MAVEABPerson *person = [self personAtIndexPath:indexPath];
     [cell updateForReuseWithPerson:person];
     return (UITableViewCell *)cell;
 }
-
-
 
 @end
