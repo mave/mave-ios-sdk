@@ -13,4 +13,7 @@
 
 + (MAVEDisplayOptions *)generateDisplayOptions;
 
++ (UIColor *)randomColor;
++ (UIFont *)randomFont;
+
 @end

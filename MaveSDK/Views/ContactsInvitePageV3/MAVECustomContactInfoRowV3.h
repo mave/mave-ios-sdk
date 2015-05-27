@@ -18,6 +18,7 @@
 @property (nonatomic, strong) UIImageView *checkmarkView;
 @property (nonatomic, strong) UIImage *untintedCheckmark;
 @property (nonatomic, assign) BOOL isSelected;
+@property (nonatomic, assign) void (^rowWasTappedBlock)(BOOL isSelected);
 
 - (instancetype)initWithFont:(UIFont *)font selectedColor:(UIColor *)selectedColor deselectedColor:(UIColor *)deselectedColor;
 + (CGFloat)heightGivenFont:(UIFont *)font;

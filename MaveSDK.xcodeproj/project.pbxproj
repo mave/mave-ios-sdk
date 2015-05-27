@@ -195,6 +195,7 @@
 		0CD655CC1B161C6700C89935 /* MAVEContactEmailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655CB1B161C6700C89935 /* MAVEContactEmailTests.m */; };
 		0CD655CE1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655CD1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m */; };
 		0CD6615F1A8E8114009D51C5 /* MAVERange64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD6615E1A8E8114009D51C5 /* MAVERange64.m */; };
+		0CE36EB51B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE36EB41B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m */; };
 		0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */; };
 		0CE3AA2C1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA2B1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m */; };
 		0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */; };
@@ -509,6 +510,7 @@
 		0CD655CD1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactIdentifiersSortingTests.m; sourceTree = "<group>"; };
 		0CD6615D1A8E8114009D51C5 /* MAVERange64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERange64.h; sourceTree = "<group>"; };
 		0CD6615E1A8E8114009D51C5 /* MAVERange64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERange64.m; sourceTree = "<group>"; };
+		0CE36EB41B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomContactInfoRowV3Tests.m; sourceTree = "<group>"; };
 		0CE3AA281A95214300E7C987 /* MAVERemoteConfigurationContactsSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationContactsSync.h; sourceTree = "<group>"; };
 		0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationContactsSync.m; sourceTree = "<group>"; };
 		0CE3AA2B1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationContactsSyncTests.m; sourceTree = "<group>"; };
@@ -917,6 +919,14 @@
 			path = RemoteConfiguration;
 			sourceTree = "<group>";
 		};
+		0CE36EB31B164D7A005BF445 /* ContactsInvitePageV3 */ = {
+			isa = PBXGroup;
+			children = (
+				0CE36EB41B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m */,
+			);
+			path = ContactsInvitePageV3;
+			sourceTree = "<group>";
+		};
 		BAF2AC82D5D9713890E196C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1167,6 +1177,7 @@
 			isa = PBXGroup;
 			children = (
 				0C25A3F41AD6E9DB0031D163 /* ContactsInvitePageV2 */,
+				0CE36EB31B164D7A005BF445 /* ContactsInvitePageV3 */,
 				C0834F3719F54A9500E52CA1 /* MAVEDisplayOptionsTests.m */,
 				0CFDBE2A1A1BA8F900DD2AAF /* MAVEInviteExplanationViewTests.m */,
 				0C96015D1A71444B004DBA93 /* MAVEInviteTableHeaderViewTests.m */,
@@ -1584,6 +1595,7 @@
 				0C1A8FDC1A644E5C00518D9A /* MAVENameParsingUtilsTests.m in Sources */,
 				0C0996EC1A7725F3003B82AA /* MAVEMerkleTreeLeafNodeTests.m in Sources */,
 				0C29BC441A5D88C200C27DA5 /* MAVERemoteConfiguratorDataPersistorTests.m in Sources */,
+				0CE36EB51B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m in Sources */,
 				0CB26A021AD849640010C7E6 /* MAVEContactsInvitePageV2AboveTableViewTests.m in Sources */,
 				0CC7B3DC1A9946BC004455A7 /* MAVESuggestedInvitesTests.m in Sources */,
 				0CD2743D1A891F5D00EE5B33 /* MAVEMerkleTreeHashUtilsTests.m in Sources */,

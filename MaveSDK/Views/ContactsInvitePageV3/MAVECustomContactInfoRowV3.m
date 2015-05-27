@@ -44,17 +44,28 @@ CGFloat const verticalPadding = 4;
     self.isSelected = isSelected;
 }
 
+- (void)setIsSelected:(BOOL)isSelected {
+    if (isSelected) {
+        self.label.textColor = self.selectedColor;
+        self.checkmarkView.hidden = NO;
+    } else {
+        self.label.textColor = self.deselectedColor;
+        self.checkmarkView.hidden = YES;
+    }
+    _isSelected = isSelected;
+}
+
 - (void)doInitialSetup {
     self.label = [[UILabel alloc] init];
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
     self.label.font = self.labelFont;
-    self.label.textColor = self.deselectedColor;
     [self addSubview:self.label];
 
     self.checkmarkView = [[UIImageView alloc] init];
     self.checkmarkView.translatesAutoresizingMaskIntoConstraints = NO;
     self.untintedCheckmark = [MAVEBuiltinUIElementUtils imageNamed:@"MAVESimpleCheckmark.png" fromBundle:MAVEResourceBundleName];
-    self.checkmarkView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.untintedCheckmark withColor:[UIColor grayColor]];
+    self.checkmarkView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.untintedCheckmark withColor:self.selectedColor];
+    self.isSelected = NO;
     [self addSubview:self.checkmarkView];
 
     [self setNeedsUpdateConstraints];
