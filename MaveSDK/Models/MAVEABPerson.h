@@ -28,6 +28,9 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 @property (nonatomic, strong) NSArray *phoneNumbers;   // Array of NSStrings
 @property (nonatomic, strong) NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
 @property (nonatomic, strong) NSArray *emailAddresses; // Array of NSStrings
+@property (nonatomic, strong) NSArray *phoneObjects; // Array of MAVEContactPhones
+@property (nonatomic, strong) NSArray *emailObjects; // Array of MAVEContactEmails
+
 
 // This field is true if the contact as returned from the API as a suggested invite
 @property (nonatomic, assign) BOOL isSuggestedContact;
@@ -75,6 +78,12 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 
 // Returns the mobile or main phone or the first one in the list if there are phones, otherwise nil
 - (NSString *)bestPhone;
+// Returns a list of phones and emails at which to contact this person, ranked in order to display
+// (e.g. cell phone before home phone, phones before emails, etc.)
+// Each item in the list is an integer of where in the list of phones/emails the item is
+- (NSArray *)rankedPhoneIndexes;
+- (NSArray *)rankedEmailIndexes;
+- (NSString *)phoneNumberForDisplayAtIndex:(NSInteger)index appendLabel:(BOOL)appendLabel;
 
 + (NSString *)normalizePhoneNumber:(NSString *)phoneNumber;
 

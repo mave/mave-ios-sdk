@@ -187,6 +187,12 @@
 		0CD4FBF81A9C277C00667655 /* MAVEWaitingDots1@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CD4FBEF1A9C277C00667655 /* MAVEWaitingDots1@1x.png */; };
 		0CD4FBF91A9C277C00667655 /* MAVEWaitingDots2@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CD4FBF01A9C277C00667655 /* MAVEWaitingDots2@1x.png */; };
 		0CD4FBFA1A9C277C00667655 /* MAVEWaitingDots3@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CD4FBF11A9C277C00667655 /* MAVEWaitingDots3@1x.png */; };
+		0CD655BF1B14FA4300C89935 /* MAVEContactIdentifierBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655BE1B14FA4300C89935 /* MAVEContactIdentifierBase.m */; };
+		0CD655C21B14FAAE00C89935 /* MAVEContactPhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655C11B14FAAE00C89935 /* MAVEContactPhoneNumber.m */; };
+		0CD655C41B16173D00C89935 /* MAVEContactPhoneNumberTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655C31B16173D00C89935 /* MAVEContactPhoneNumberTests.m */; };
+		0CD655C71B16184100C89935 /* MAVEContactIdentifierWithLabelBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655C61B16184100C89935 /* MAVEContactIdentifierWithLabelBase.m */; };
+		0CD655CA1B161C3700C89935 /* MAVEContactEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655C91B161C3700C89935 /* MAVEContactEmail.m */; };
+		0CD655CC1B161C6700C89935 /* MAVEContactEmailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655CB1B161C6700C89935 /* MAVEContactEmailTests.m */; };
 		0CD6615F1A8E8114009D51C5 /* MAVERange64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD6615E1A8E8114009D51C5 /* MAVERange64.m */; };
 		0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */; };
 		0CE3AA2C1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA2B1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m */; };
@@ -489,6 +495,16 @@
 		0CD4FBEF1A9C277C00667655 /* MAVEWaitingDots1@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEWaitingDots1@1x.png"; sourceTree = "<group>"; };
 		0CD4FBF01A9C277C00667655 /* MAVEWaitingDots2@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEWaitingDots2@1x.png"; sourceTree = "<group>"; };
 		0CD4FBF11A9C277C00667655 /* MAVEWaitingDots3@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEWaitingDots3@1x.png"; sourceTree = "<group>"; };
+		0CD655BD1B14FA4300C89935 /* MAVEContactIdentifierBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactIdentifierBase.h; sourceTree = "<group>"; };
+		0CD655BE1B14FA4300C89935 /* MAVEContactIdentifierBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactIdentifierBase.m; sourceTree = "<group>"; };
+		0CD655C01B14FAAE00C89935 /* MAVEContactPhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactPhoneNumber.h; sourceTree = "<group>"; };
+		0CD655C11B14FAAE00C89935 /* MAVEContactPhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactPhoneNumber.m; sourceTree = "<group>"; };
+		0CD655C31B16173D00C89935 /* MAVEContactPhoneNumberTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactPhoneNumberTests.m; sourceTree = "<group>"; };
+		0CD655C51B16184100C89935 /* MAVEContactIdentifierWithLabelBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactIdentifierWithLabelBase.h; sourceTree = "<group>"; };
+		0CD655C61B16184100C89935 /* MAVEContactIdentifierWithLabelBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactIdentifierWithLabelBase.m; sourceTree = "<group>"; };
+		0CD655C81B161C3700C89935 /* MAVEContactEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactEmail.h; sourceTree = "<group>"; };
+		0CD655C91B161C3700C89935 /* MAVEContactEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactEmail.m; sourceTree = "<group>"; };
+		0CD655CB1B161C6700C89935 /* MAVEContactEmailTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactEmailTests.m; sourceTree = "<group>"; };
 		0CD6615D1A8E8114009D51C5 /* MAVERange64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERange64.h; sourceTree = "<group>"; };
 		0CD6615E1A8E8114009D51C5 /* MAVERange64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERange64.m; sourceTree = "<group>"; };
 		0CE3AA281A95214300E7C987 /* MAVERemoteConfigurationContactsSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationContactsSync.h; sourceTree = "<group>"; };
@@ -922,6 +938,8 @@
 				C022641119EC41010087FF37 /* MAVEABPersonTests.m */,
 				C022641519EC41010087FF37 /* MAVEABTestDataTests.m */,
 				0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */,
+				0CD655C31B16173D00C89935 /* MAVEContactPhoneNumberTests.m */,
+				0CD655CB1B161C6700C89935 /* MAVEContactEmailTests.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1115,6 +1133,14 @@
 				C029280119E82D0F006AEE43 /* MAVEABPerson.m */,
 				0C141D2E1A0BC1A80036202A /* MAVEUserData.h */,
 				0C141D2F1A0BC1A80036202A /* MAVEUserData.m */,
+				0CD655BD1B14FA4300C89935 /* MAVEContactIdentifierBase.h */,
+				0CD655BE1B14FA4300C89935 /* MAVEContactIdentifierBase.m */,
+				0CD655C51B16184100C89935 /* MAVEContactIdentifierWithLabelBase.h */,
+				0CD655C61B16184100C89935 /* MAVEContactIdentifierWithLabelBase.m */,
+				0CD655C01B14FAAE00C89935 /* MAVEContactPhoneNumber.h */,
+				0CD655C11B14FAAE00C89935 /* MAVEContactPhoneNumber.m */,
+				0CD655C81B161C3700C89935 /* MAVEContactEmail.h */,
+				0CD655C91B161C3700C89935 /* MAVEContactEmail.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1414,8 +1440,10 @@
 				0C1A8FC71A632B5300518D9A /* MAVERemoteConfigurationClipboardShare.m in Sources */,
 				0CC7B3CD1A96BBE2004455A7 /* MAVEInviteTableSectionHeaderView.m in Sources */,
 				9C123D641A48A92200A0E1F5 /* MAVEInviteTableHeaderView.m in Sources */,
+				0CD655C71B16184100C89935 /* MAVEContactIdentifierWithLabelBase.m in Sources */,
 				0CCC73E919F858A4009C6385 /* RootDrawerController.m in Sources */,
 				C029279D19E823E2006AEE43 /* HomeViewController.m in Sources */,
+				0CD655BF1B14FA4300C89935 /* MAVEContactIdentifierBase.m in Sources */,
 				0C435C7C1B0E6510005B11AF /* ContactsInvitePageV3AboveTableFixedView.m in Sources */,
 				C029280B19E82D18006AEE43 /* MAVEABPersonCell.m in Sources */,
 				0C97F67D1ADC6DAE0084974D /* MAVESpinnerImageView.m in Sources */,
@@ -1458,6 +1486,7 @@
 				0C1134D11A12C42200631797 /* MAVENoAddressBookPermissionView.m in Sources */,
 				0CCC73EF19F8708E009C6385 /* SideDrawerController.m in Sources */,
 				0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */,
+				0CD655CA1B161C3700C89935 /* MAVEContactEmail.m in Sources */,
 				C029280C19E82D18006AEE43 /* MAVEInviteMessageView.m in Sources */,
 				C029280519E82D0F006AEE43 /* MAVEABPerson.m in Sources */,
 				0CC7B3D31A97A89C004455A7 /* MAVESuggestedInvites.m in Sources */,
@@ -1474,6 +1503,7 @@
 				0C435C711B0E4E2E005B11AF /* MAVEContactsInvitePageV3ViewController.m in Sources */,
 				0C1A8FC11A632AD200518D9A /* MAVERemoteConfigurationFacebookShare.m in Sources */,
 				0C03BE671AAA30090008BCC0 /* MAVESharer.m in Sources */,
+				0CD655C21B14FAAE00C89935 /* MAVEContactPhoneNumber.m in Sources */,
 				0C7200721A19414D00E12B91 /* MAVEInvitePageBottomActionContainerView.m in Sources */,
 				0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */,
 				0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */,
@@ -1535,11 +1565,13 @@
 				C0834F3219F44D7500E52CA1 /* MAVEInviteMessageViewTests.m in Sources */,
 				C0425B8E19EDBFC8006641AB /* MAVEInvitePageViewControllerTests.m in Sources */,
 				0CCC92BC1A5F50A6008CB888 /* MAVEInvitePageChooserTests.m in Sources */,
+				0CD655CC1B161C6700C89935 /* MAVEContactEmailTests.m in Sources */,
 				C022641719EC41010087FF37 /* MAVEABUtilsTests.m in Sources */,
 				0C6D92BE1A759E7200B65B82 /* MAVEMerkleTree.m in Sources */,
 				0CCC92C91A603DFD008CB888 /* MAVERemoteObjectBuilderTests.m in Sources */,
 				0CC6463619F9C6190006A1D0 /* MAVEABTableViewControllerTests.m in Sources */,
 				0C1E6ACD1AA928EF002EBD2E /* MAVEInvitePageBottomActionSendButtonOnlyViewTests.m in Sources */,
+				0CD655C41B16173D00C89935 /* MAVEContactPhoneNumberTests.m in Sources */,
 				0C2D731B1A1FCC4B0059CA54 /* MAVEIDUtilsTests.m in Sources */,
 				0CCC92CB1A603FDF008CB888 /* MAVEPromiseTests.m in Sources */,
 				C022641919EC41010087FF37 /* MAVEABTestDataTests.m in Sources */,
