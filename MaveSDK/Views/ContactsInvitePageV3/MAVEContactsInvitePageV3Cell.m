@@ -108,6 +108,9 @@
 }
 
 - (void)setIsExpanded:(BOOL)isExpanded {
+    if (!isExpanded && self.forceKeepExpandedUntilDataReloads) {
+        return;
+    }
     _isExpanded = isExpanded;
     self.contactInfoContainer.hidden = !isExpanded;
     if (!isExpanded) {
@@ -127,7 +130,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (self.isExpanded != self.person.selected) {
+    if (self.checkmarkBox.isChecked != self.person.selected) {
         // if cell is expanding now, delay the contact info showing up a short time so that it shows up once
         // the cell is big enough for it. When compressing, do the opposite - have it disappear immediately
         // right when the cell begins to shrink.
@@ -157,6 +160,7 @@
 }
 
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person {
+    self.forceKeepExpandedUntilDataReloads = NO;
     self.person = person;
     self.nameLabel.text = [person fullName];
     self.isExpanded = person.selected;
@@ -197,13 +201,24 @@
         contactInfoRow.rowWasTappedBlock = ^void(BOOL isSelected) {
             weakRowSelf.contactIdentifierRecord.selected = isSelected;
 
-            if (![person isAtLeastOneContactIdentifierSelected]) {
+            // If any contact identifiers have been selected after tapping but the contact person
+            // itself is not selected, it should be selected.
+            // And update constraints to select the checkbox to match.
+            if ([person isAtLeastOneContactIdentifierSelected]) {
+                if (!person.selected) {
+                    NSLog(@"person is now selected!!");
+                    person.selected = YES;
+                    [weakSelf setNeedsLayout];
+                    [weakSelf setNeedsUpdateConstraints];
+                }
+            // if no contact identifieres are selected, the person is no longer selected and
+            // checkmark needs to be updated to match.
+            // However, the row should not collapse, in order to give the user a chance
+            // to select another record
+            } else {
                 person.selected = NO;
+                weakSelf.forceKeepExpandedUntilDataReloads = YES;
                 [weakSelf setNeedsUpdateConstraints];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[weakSelf containingTableView] beginUpdates];
-                    [[weakSelf containingTableView] endUpdates];
-                });
             }
         };
 

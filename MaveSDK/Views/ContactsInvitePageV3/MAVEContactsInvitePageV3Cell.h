@@ -21,6 +21,13 @@
 @property (nonatomic, strong) UIFont *contactInfoFont;
 
 @property (nonatomic, assign) BOOL isExpanded;
+// This flag lets the user de-select all the phones/emails in the list without the cell collapsing
+// from its expanded state, in case the user intends to deselect one and then select another.
+// Since this is set on the cell (which gets reset when re-used) rather than the person, if user
+// deselects all numbers, then scrolls away, then scrolls back, the record is no longer expanded
+// which is intended behavior since the record isn't actually selected
+@property (nonatomic, assign) BOOL forceKeepExpandedUntilDataReloads;
+
 @property (nonatomic, assign) CGFloat pictureWidthHeight;
 @property (nonatomic, strong) UIImageView *picture;
 @property (nonatomic, strong) UILabel *nameLabel;
