@@ -13,6 +13,8 @@
 @property (nonatomic, strong) NSString *typeName;
 @property (nonatomic, strong) NSString *value;
 
+@property (nonatomic, assign) BOOL selected;
+
 + (NSString *)ownTypeName;
 - (instancetype)initWithValue:(NSString *)value;
 - (NSString *)humanReadableValue;

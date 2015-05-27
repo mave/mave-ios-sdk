@@ -37,6 +37,14 @@
                 return nil;
             }
             [self setEmailAddressesFromABRecordRef:record];
+
+            // If there are any contact identifiers (phones and emails),
+            // mark the first one as selected
+            NSArray *rankedContactIdentifiers = [self rankedContactIdentifiers];
+            if ([rankedContactIdentifiers count] > 0) {
+                MAVEContactIdentifierBase *first = [rankedContactIdentifiers objectAtIndex:0];
+                first.selected = YES;
+            }
         }
         @catch (NSException *exception) {
             self = nil;
@@ -133,9 +141,11 @@
     NSMutableArray *emailObjects = [[NSMutableArray alloc] initWithCapacity:numEmails];
     for (NSUInteger i=0; i < numEmails; i++) {
         NSString *emailAddress = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emailMultiValue, i);
-        [emailAddresses addObject:emailAddress];
-        MAVEContactEmail *emailObj = [[MAVEContactEmail alloc] initWithValue:emailAddress];
-        [emailObjects addObject:emailObj];
+        if (emailAddress) {
+            [emailAddresses addObject:emailAddress];
+            MAVEContactEmail *emailObj = [[MAVEContactEmail alloc] initWithValue:emailAddress];
+            [emailObjects addObject:emailObj];
+        }
     }
     if (emailMultiValue != NULL) CFRelease(emailMultiValue);
     self.emailAddresses = [NSArray arrayWithArray:emailAddresses];

@@ -29,6 +29,7 @@
 
 - (void)testInitAndSanityCheck {
     MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"_$!<Main>!$_"];
+    XCTAssertFalse(phone.selected);
     XCTAssertEqualObjects(phone.value, @"+18085551234");
     XCTAssertEqualObjects(phone.label, @"_$!<Main>!$_");
     XCTAssertEqualObjects(phone.typeName, @"phone");

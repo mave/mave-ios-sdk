@@ -28,6 +28,7 @@
 
 - (void)testInitAndCheckHumanReadableConversions {
     MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:@"foo@bar.com"];
+    XCTAssertFalse(email.selected);
     XCTAssertEqualObjects(email.value, @"foo@bar.com");
     XCTAssertEqualObjects(email.typeName, @"email");
     XCTAssertEqualObjects([email humanReadableValue], @"foo@bar.com");

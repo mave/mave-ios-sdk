@@ -68,6 +68,15 @@
     XCTAssertFalse(p.isSuggestedContact);
     XCTAssertEqual(p.selected, NO);
     XCTAssertEqual(p.sendingStatus, MAVEInviteSendingStatusUnsent);
+
+    // First contact identifier should be selected
+    // First email is not selected because there was a phone and that comes first
+    XCTAssertEqual([p.allContactIdentifiers count], 2);
+    XCTAssertEqual([p.rankedContactIdentifiers count], 2);
+    MAVEContactPhoneNumber *phone0 = [p.rankedContactIdentifiers objectAtIndex:0];
+    XCTAssertTrue(phone0.selected);
+    MAVEContactEmail *email0 = [p.rankedContactIdentifiers objectAtIndex:1];
+    XCTAssertFalse(email0.selected);
 }
 
 - (void)testSettingRecordIDSetsHashedRecordID {
@@ -294,8 +303,7 @@
     XCTAssertEqual([p.emailObjects count], 2);
     MAVEContactEmail *email0 = [p.emailObjects objectAtIndex:0];
     XCTAssertEqualObjects(email0.value, @"jsmith@example.com");
-    MAVEContactEmail *email1 = [p.emailObjects objectAtIndex:1];
-    XCTAssertEqualObjects(email1.value, @"john.smith@example.com");
+    MAVEContactEmail *email1 = [p.emailObjects objectAtIndex:1];    XCTAssertEqualObjects(email1.value, @"john.smith@example.com");
 }
 
 - (void)testEmailAddressesFromABRecordRefWhenNone {
