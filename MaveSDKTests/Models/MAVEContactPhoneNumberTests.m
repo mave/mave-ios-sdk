@@ -34,7 +34,7 @@
     XCTAssertEqualObjects(phone.typeName, @"phone");
     XCTAssertEqualObjects([phone humanReadableValue], @"(808)\u00a0555-1234");
     XCTAssertEqualObjects([phone humanReadableLabel], @"main");
-    XCTAssertEqualObjects([phone humanReadableValueWithLabel], @"(808)\u00a0555-1234 (main)");
+    XCTAssertEqualObjects([phone humanReadableValueForDetailedDisplay], @"(808)\u00a0555-1234 (main)");
 }
 
 - (void)testInitWithAllLabelTypes {

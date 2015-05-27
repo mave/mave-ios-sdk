@@ -16,6 +16,8 @@
 + (NSString *)ownTypeName;
 - (instancetype)initWithValue:(NSString *)value;
 - (NSString *)humanReadableValue;
+// If there's extra information to show e.g. the value plus a label, this method would return it
+- (NSString *)humanReadableValueForDetailedDisplay;
 
 - (NSComparisonResult)compareContactIdentifiers:(MAVEContactIdentifierBase *)other;
 

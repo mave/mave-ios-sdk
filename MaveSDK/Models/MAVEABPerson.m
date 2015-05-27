@@ -169,9 +169,12 @@
     return name;
 }
 
+- (NSArray *)allContactIdentifiers {
+    return [self.phoneObjects arrayByAddingObjectsFromArray:self.emailObjects];
+}
+
 - (NSArray *)rankedContactIdentifiers {
-    NSArray *combinedEmailsAndPhones = [self.phoneObjects arrayByAddingObjectsFromArray:self.emailObjects];
-    return [combinedEmailsAndPhones sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
+    return [[self allContactIdentifiers] sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
 }
 
 // Use the libPhoneNumber-iOS library to normalize phone numbers based on the

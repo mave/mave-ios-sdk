@@ -33,4 +33,8 @@
     return self.value;
 }
 
+- (NSString *)humanReadableValueForDetailedDisplay {
+    return [self humanReadableValue];
+}
+
 @end

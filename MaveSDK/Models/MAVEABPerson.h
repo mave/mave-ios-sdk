@@ -80,7 +80,8 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 
 // Returns the mobile or main phone or the first one in the list if there are phones, otherwise nil
 - (NSString *)bestPhone;
-// Return an ordered list of contact identifiers for this user
+// Return a list of contact identifiers for this user, and another method to get a sorted list
+- (NSArray *)allContactIdentifiers;
 - (NSArray *)rankedContactIdentifiers;
 // Returns a list of phones and emails at which to contact this person, ranked in order to display
 // (e.g. cell phone before home phone, phones before emails, etc.)

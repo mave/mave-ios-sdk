@@ -14,6 +14,5 @@
 
 - (instancetype)initWithValue:(NSString *)value andLabel:(NSString *)label;
 - (NSString *)humanReadableLabel;
-- (NSString *)humanReadableValueWithLabel;
 
 @end

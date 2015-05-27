@@ -31,6 +31,7 @@
     XCTAssertEqualObjects(email.value, @"foo@bar.com");
     XCTAssertEqualObjects(email.typeName, @"email");
     XCTAssertEqualObjects([email humanReadableValue], @"foo@bar.com");
+    XCTAssertEqualObjects([email humanReadableValueForDetailedDisplay], @"foo@bar.com");
 }
 
 @end

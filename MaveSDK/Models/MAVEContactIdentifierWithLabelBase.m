@@ -23,7 +23,7 @@
     return self.label;
 }
 
-- (NSString *)humanReadableValueWithLabel {
+- (NSString *)humanReadableValueForDetailedDisplay {
     return [NSString stringWithFormat:@"%@ (%@)", [self humanReadableValue], [self humanReadableLabel]];
 }
 

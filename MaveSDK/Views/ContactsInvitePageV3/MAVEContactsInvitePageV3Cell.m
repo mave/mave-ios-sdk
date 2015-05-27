@@ -8,6 +8,8 @@
 
 #import "MAVEContactsInvitePageV3Cell.h"
 #import "MAVECustomContactInfoRowV3.h"
+#import "MAVEContactPhoneNumber.h"
+#import "MAVEContactEmail.h"
 
 @implementation MAVEContactsInvitePageV3Cell {
     BOOL _didSetupInitialConstraints;
@@ -167,32 +169,19 @@
     // laid out appropriately. Try when going from more to less and less to more.
     //
 
-    NSInteger numPhoneNumbers = [person.phoneNumbers count];
-    if (numPhoneNumbers == 0) {
+    NSArray *sortedRecords = [person rankedContactIdentifiers];
+    NSInteger numberOfRowsNeeded = [sortedRecords count];
+    if (numberOfRowsNeeded == 0) {
         return;
     }
-
-    NSDictionary *labelMappings = @{@"_$!<Mobile>!$_": @"cell",
-                                    @"_$!<Main>!$_": @"main",
-                                    @"_$!<Other>!$_": @"main",
-                                    @"_$!<Home>!$_": @"home",
-                                    @"_$!<Work>!$_": @"work",
-    };
-
-    MAVECustomContactInfoRowV3 *previousContactInfoRow = nil;
     NSArray *currentRowsToReuse = [self.contactInfoContainer subviews];
     NSInteger numberOfReusableRows = [currentRowsToReuse count];
-    NSInteger numberOfRowsNeeded = [person.phoneNumbers count];
 
-    for (NSUInteger i = 0; i < numberOfRowsNeeded; ++i) {
-        NSString *phoneRaw = [person.phoneNumbers objectAtIndex:i];
-        NSString *categoryRaw = [person.phoneNumberLabels objectAtIndex:i];
-        NSString *displayCategory = [labelMappings objectForKey:categoryRaw];
-        if (!displayCategory) {
-            displayCategory = @"other";
-        }
-        NSString *displayPhone = [MAVEABPerson displayPhoneNumber:phoneRaw];
-        NSString *labelText = [NSString stringWithFormat:@"%@ (%@)", displayPhone, displayCategory];
+    MAVECustomContactInfoRowV3 *previousContactInfoRow = nil;
+    MAVEContactIdentifierBase *record = nil;
+    for (NSUInteger i = 0; i < [sortedRecords count]; ++i) {
+        record = [sortedRecords objectAtIndex:i];
+        NSString *displayValue = [record humanReadableValueForDetailedDisplay];
 
         MAVECustomContactInfoRowV3 *contactInfoRow;
         if (numberOfReusableRows >= i+1) {
@@ -203,7 +192,7 @@
             [self.contactInfoContainer addSubview:contactInfoRow];
             [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];
         }
-        [contactInfoRow updateWithLabelText:labelText isSelected:person.selected];
+        [contactInfoRow updateWithLabelText:displayValue isSelected:person.selected];
 
         previousContactInfoRow = contactInfoRow;
     }

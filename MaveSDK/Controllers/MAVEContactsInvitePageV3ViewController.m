@@ -82,7 +82,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
-    NSInteger numberContactInfoRecords = person.selected ? [person.phoneNumbers count] : 0;
+    NSInteger numberContactInfoRecords = person.selected ? [[person allContactIdentifiers] count] : 0;
     return [self.sampleCell heightGivenNumberOfContactInfoRecords:numberContactInfoRecords];
 }
 
