@@ -192,7 +192,26 @@
             [self.contactInfoContainer addSubview:contactInfoRow];
             [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];
         }
-        [contactInfoRow updateWithLabelText:displayValue isSelected:person.selected];
+        [contactInfoRow updateWithLabelText:displayValue isSelected:record.selected];
+        contactInfoRow.rowWasTappedBlock = ^void(BOOL isSelected) {
+            record.selected = isSelected;
+            BOOL atLeastOneSelected = NO;
+            for (MAVEContactIdentifierBase *_rec in [person allContactIdentifiers]) {
+                if (_rec.selected) {
+                    atLeastOneSelected = YES;
+                    break;
+                }
+            }
+            if (!atLeastOneSelected) {
+                person.selected = NO;
+                [self setNeedsUpdateConstraints];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[self containingTableView] beginUpdates];
+                    [[self containingTableView] endUpdates];
+                });
+                NSLog(@"no records on person selected!!");
+            }
+        };
 
         previousContactInfoRow = contactInfoRow;
     }
@@ -230,6 +249,13 @@
     [self.contactInfoContainer addConstraint:constraintTop];
 }
 
+- (UITableView *)containingTableView {
+    id view = [self superview];
+    while (view && [view isKindOfClass:[UITableView class]] == NO) {
+        view = [view superview];
+    }
+    return (UITableView *)view;
+}
 
 
 @end

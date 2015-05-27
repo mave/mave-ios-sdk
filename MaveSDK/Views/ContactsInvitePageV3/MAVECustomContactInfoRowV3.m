@@ -68,7 +68,17 @@ CGFloat const verticalPadding = 4;
     self.isSelected = NO;
     [self addSubview:self.checkmarkView];
 
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedRow)];
+    [self addGestureRecognizer:tapGesture];
+
     [self setNeedsUpdateConstraints];
+}
+
+- (void)tappedRow {
+    self.isSelected = !self.isSelected;
+    if (self.rowWasTappedBlock) {
+        self.rowWasTappedBlock(self.isSelected);
+    }
 }
 
 - (void)setupInitialConstraints {

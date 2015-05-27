@@ -39,6 +39,7 @@
     XCTAssertNotNil(row.checkmarkView.image);
     XCTAssertTrue([row.label isDescendantOfView:row]);
     XCTAssertTrue([row.checkmarkView isDescendantOfView:row]);
+    XCTAssertEqual([row.gestureRecognizers count], 1);
 }
 
 - (void)testHeightGivenFont {
@@ -78,6 +79,34 @@
     [row updateWithLabelText:@"foobarbaz" isSelected:YES];
     XCTAssertEqualObjects(row.label.text, @"foobarbaz");
     OCMVerifyAll(rowMock);
+}
+
+- (void)testTappedRow {
+    UIFont *font1 = [MAVEDisplayOptionsFactory randomFont];
+    UIColor *color1 = [MAVEDisplayOptionsFactory randomColor];
+    UIColor *color2 = [MAVEDisplayOptionsFactory randomColor];
+    MAVECustomContactInfoRowV3 *row = [[MAVECustomContactInfoRowV3 alloc] initWithFont:font1 selectedColor:color1 deselectedColor:color2];
+
+    __block BOOL selectedStatus0 = NO;
+    __block BOOL ran0 = NO;
+    row.rowWasTappedBlock = ^void(BOOL isSelected) {
+        selectedStatus0 = isSelected;
+        ran0 = YES;
+    };
+    [row tappedRow];
+
+    __block BOOL selectedStatus1 = NO;
+    __block BOOL ran1 = NO;
+    row.rowWasTappedBlock = ^void(BOOL isSelected) {
+        selectedStatus1 = isSelected;
+        ran1 = YES;
+    };
+    [row tappedRow];
+
+    XCTAssertTrue(ran0);
+    XCTAssertTrue(selectedStatus0);
+    XCTAssertTrue(ran1);
+    XCTAssertFalse(selectedStatus1);
 }
 
 @end
