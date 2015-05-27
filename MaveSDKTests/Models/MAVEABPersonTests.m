@@ -74,7 +74,7 @@
     XCTAssertEqual([p.allContactIdentifiers count], 2);
     XCTAssertEqual([p.rankedContactIdentifiers count], 2);
     MAVEContactPhoneNumber *phone0 = [p.rankedContactIdentifiers objectAtIndex:0];
-    XCTAssertTrue(phone0.selected);
+    XCTAssertFalse(phone0.selected);
     MAVEContactEmail *email0 = [p.rankedContactIdentifiers objectAtIndex:1];
     XCTAssertFalse(email0.selected);
 }

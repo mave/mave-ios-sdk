@@ -37,14 +37,6 @@
                 return nil;
             }
             [self setEmailAddressesFromABRecordRef:record];
-
-            // If there are any contact identifiers (phones and emails),
-            // mark the first one as selected
-            NSArray *rankedContactIdentifiers = [self rankedContactIdentifiers];
-            if ([rankedContactIdentifiers count] > 0) {
-                MAVEContactIdentifierBase *first = [rankedContactIdentifiers objectAtIndex:0];
-                first.selected = YES;
-            }
         }
         @catch (NSException *exception) {
             self = nil;
