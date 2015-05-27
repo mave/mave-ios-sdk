@@ -29,10 +29,11 @@
     self.tableView = [[UITableView alloc] init];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
-    self.bigSendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.bigSendButton.backgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-    self.bigSendButton.tintColor = [UIColor whiteColor];
-    [self setButtonTextNumberOfInvitesToSend:4];
+    self.bigSendButton = [[MAVEBigSendButton alloc] init];
+//    self.bigSendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    self.bigSendButton.backgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+//    self.bigSendButton.tintColor = [UIColor whiteColor];
+//    [self setButtonTextNumberOfInvitesToSend:4];
 
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.tableView];

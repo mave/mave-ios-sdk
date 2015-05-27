@@ -196,6 +196,9 @@
 		0CD655CE1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655CD1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m */; };
 		0CD6615F1A8E8114009D51C5 /* MAVERange64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD6615E1A8E8114009D51C5 /* MAVERange64.m */; };
 		0CE36EB51B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE36EB41B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m */; };
+		0CE36EB91B168A45005BF445 /* MAVEAirplaneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB61B168A45005BF445 /* MAVEAirplaneIcon.png */; };
+		0CE36EBA1B168A45005BF445 /* MAVEAirplaneIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB71B168A45005BF445 /* MAVEAirplaneIcon@2x.png */; };
+		0CE36EBB1B168A45005BF445 /* MAVEAirplaneIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB81B168A45005BF445 /* MAVEAirplaneIcon@3x.png */; };
 		0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */; };
 		0CE3AA2C1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA2B1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m */; };
 		0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */; };
@@ -511,6 +514,9 @@
 		0CD6615D1A8E8114009D51C5 /* MAVERange64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERange64.h; sourceTree = "<group>"; };
 		0CD6615E1A8E8114009D51C5 /* MAVERange64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERange64.m; sourceTree = "<group>"; };
 		0CE36EB41B164D92005BF445 /* MAVECustomContactInfoRowV3Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomContactInfoRowV3Tests.m; sourceTree = "<group>"; };
+		0CE36EB61B168A45005BF445 /* MAVEAirplaneIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEAirplaneIcon.png; sourceTree = "<group>"; };
+		0CE36EB71B168A45005BF445 /* MAVEAirplaneIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEAirplaneIcon@2x.png"; sourceTree = "<group>"; };
+		0CE36EB81B168A45005BF445 /* MAVEAirplaneIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEAirplaneIcon@3x.png"; sourceTree = "<group>"; };
 		0CE3AA281A95214300E7C987 /* MAVERemoteConfigurationContactsSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationContactsSync.h; sourceTree = "<group>"; };
 		0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationContactsSync.m; sourceTree = "<group>"; };
 		0CE3AA2B1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERemoteConfigurationContactsSyncTests.m; sourceTree = "<group>"; };
@@ -725,6 +731,9 @@
 		0C58FDDD1A6494B1007F8F12 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0CE36EB61B168A45005BF445 /* MAVEAirplaneIcon.png */,
+				0CE36EB71B168A45005BF445 /* MAVEAirplaneIcon@2x.png */,
+				0CE36EB81B168A45005BF445 /* MAVEAirplaneIcon@3x.png */,
 				0C435C821B0F8574005B11AF /* MAVESimpleCheckmark.png */,
 				0C435C831B0F8574005B11AF /* MAVESimpleCheckmark@2x.png */,
 				0C435C841B0F8574005B11AF /* MAVESimpleCheckmark@3x.png */,
@@ -1373,6 +1382,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CE36EBB1B168A45005BF445 /* MAVEAirplaneIcon@3x.png in Resources */,
+				0CE36EBA1B168A45005BF445 /* MAVEAirplaneIcon@2x.png in Resources */,
+				0CE36EB91B168A45005BF445 /* MAVEAirplaneIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

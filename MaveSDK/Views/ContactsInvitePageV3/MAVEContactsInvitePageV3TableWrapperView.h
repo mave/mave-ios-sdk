@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MAVEBigSendButton.h"
 
 @interface MAVEContactsInvitePageV3TableWrapperView : UIView
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) UIButton *bigSendButton;
+@property (nonatomic, strong) MAVEBigSendButton *bigSendButton;
 
 @property (nonatomic, strong) NSLayoutConstraint *bigSendButtonHeightConstraint;
+
+- (void)setButtonTextNumberOfInvitesToSend:(NSUInteger)number;
 
 @end

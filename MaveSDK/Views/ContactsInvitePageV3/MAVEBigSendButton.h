@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MAVEBigSendButton : UIView
+@interface MAVEBigSendButton : UIButton
 
-@property (nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) UIView *contentContainer;
+@property (nonatomic, strong) UIImageView *icon;
+@property (nonatomic, strong) UILabel *textLabel;
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "MAVEContactsInvitePageV3ViewController.h"
-#import "MAVEContactsInvitePageV3TableWrapperView.h"
 #import "MAVEContactsInvitePageV3Cell.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEInvitePageViewController.h"
@@ -24,6 +23,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     [super viewDidLoad];
 
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
+    self.selectedPeopleIndex = [[NSMutableSet alloc] init];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView registerClass:[MAVEContactsInvitePageV3Cell class]
@@ -35,7 +35,9 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)loadView {
-    self.view = [[MAVEContactsInvitePageV3TableWrapperView alloc] init];
+    MAVEContactsInvitePageV3TableWrapperView *view = [[MAVEContactsInvitePageV3TableWrapperView alloc] init];
+    self.wrapperView = view;
+    self.view = view;
 }
 - (UITableView *)tableView {
     return ((MAVEContactsInvitePageV3TableWrapperView *)self.view).tableView;
@@ -97,17 +99,15 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
     person.selected = !person.selected;
+    if (person.selected) {
+        [self.selectedPeopleIndex addObject:person];
+    } else {
+        [self.selectedPeopleIndex removeObject:person];
+    }
+    [self.wrapperView setButtonTextNumberOfInvitesToSend:[self.selectedPeopleIndex count]];
 
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
-//    MAVEContactsInvitePageV3Cell *cell = [self dequeueCellToUseAtIndexPath:indexPath];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        NSLog(@"cell expanded: %@", @(person.selected));
-//        cell.isExpanded = person.selected;
-//        [cell setNeedsLayout];
-//        [cell layoutIfNeeded];
-//        [cell layoutSubviews];
-//    });
 }
 
 @end
