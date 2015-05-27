@@ -193,6 +193,7 @@
 		0CD655C71B16184100C89935 /* MAVEContactIdentifierWithLabelBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655C61B16184100C89935 /* MAVEContactIdentifierWithLabelBase.m */; };
 		0CD655CA1B161C3700C89935 /* MAVEContactEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655C91B161C3700C89935 /* MAVEContactEmail.m */; };
 		0CD655CC1B161C6700C89935 /* MAVEContactEmailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655CB1B161C6700C89935 /* MAVEContactEmailTests.m */; };
+		0CD655CE1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD655CD1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m */; };
 		0CD6615F1A8E8114009D51C5 /* MAVERange64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD6615E1A8E8114009D51C5 /* MAVERange64.m */; };
 		0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */; };
 		0CE3AA2C1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA2B1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m */; };
@@ -505,6 +506,7 @@
 		0CD655C81B161C3700C89935 /* MAVEContactEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactEmail.h; sourceTree = "<group>"; };
 		0CD655C91B161C3700C89935 /* MAVEContactEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactEmail.m; sourceTree = "<group>"; };
 		0CD655CB1B161C6700C89935 /* MAVEContactEmailTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactEmailTests.m; sourceTree = "<group>"; };
+		0CD655CD1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactIdentifiersSortingTests.m; sourceTree = "<group>"; };
 		0CD6615D1A8E8114009D51C5 /* MAVERange64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERange64.h; sourceTree = "<group>"; };
 		0CD6615E1A8E8114009D51C5 /* MAVERange64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVERange64.m; sourceTree = "<group>"; };
 		0CE3AA281A95214300E7C987 /* MAVERemoteConfigurationContactsSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVERemoteConfigurationContactsSync.h; sourceTree = "<group>"; };
@@ -940,6 +942,7 @@
 				0C141D311A0BCFB50036202A /* MAVEUserDataTests.m */,
 				0CD655C31B16173D00C89935 /* MAVEContactPhoneNumberTests.m */,
 				0CD655CB1B161C6700C89935 /* MAVEContactEmailTests.m */,
+				0CD655CD1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1537,6 +1540,7 @@
 				0C1A8FB61A63183500518D9A /* MAVECustomSharePageViewTests.m in Sources */,
 				0C6D92A81A72B78300B65B82 /* MAVEABSyncManagerTests.m in Sources */,
 				C0425B9219EF1765006641AB /* MAVEConstants.m in Sources */,
+				0CD655CE1B16345C00C89935 /* MAVEContactIdentifiersSortingTests.m in Sources */,
 				0C1F1A1C1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m in Sources */,
 				0C96015E1A71444B004DBA93 /* MAVEInviteTableHeaderViewTests.m in Sources */,
 				0C96015C1A6DC57F004DBA93 /* MAVESearchBarTests.m in Sources */,

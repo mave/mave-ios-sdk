@@ -36,7 +36,7 @@
             if ([self.phoneNumbers count] == 0) {
                 return nil;
             }
-            self.emailAddresses = [[self class] emailAddressesFromABRecordRef:record];
+            [self setEmailAddressesFromABRecordRef:record];
         }
         @catch (NSException *exception) {
             self = nil;
@@ -98,6 +98,7 @@
     NSUInteger numPhones = ABMultiValueGetCount(phoneMultiValue);
     NSMutableArray *phoneNumbers = [[NSMutableArray alloc] initWithCapacity:numPhones];
     NSMutableArray *phoneNumberLabels = [[NSMutableArray alloc] initWithCapacity:numPhones];
+    NSMutableArray *phoneNumberObjects = [[NSMutableArray alloc] initWithCapacity:numPhones];
     
     NSString *pn; NSString *label;
     NSInteger insertIndex = 0;
@@ -110,27 +111,37 @@
             if (label == nil) {
                 label = (__bridge_transfer NSString *) kABPersonPhoneOtherFAXLabel;
             }
-            [phoneNumberLabels insertObject: label atIndex:insertIndex];
+            [phoneNumberLabels insertObject:label atIndex:insertIndex];
+
+            MAVEContactPhoneNumber *pnObj = [[MAVEContactPhoneNumber alloc] initWithValue:pn andLabel:label];
+            if (pnObj) {
+                [phoneNumberObjects addObject:pnObj];
+            }
             insertIndex += 1;
         }
     }
     if (phoneMultiValue != NULL) CFRelease(phoneMultiValue);
     self.phoneNumbers = phoneNumbers;
     self.phoneNumberLabels = phoneNumberLabels;
+    self.phoneObjects = [NSArray arrayWithArray:phoneNumberObjects];
 }
 
-+ (NSArray *)emailAddressesFromABRecordRef:(ABRecordRef)record {
+- (void)setEmailAddressesFromABRecordRef:(ABRecordRef) record{
     ABMultiValueRef emailMultiValue = ABRecordCopyValue(record, kABPersonEmailProperty);
     NSUInteger numEmails = ABMultiValueGetCount(emailMultiValue);
     NSMutableArray *emailAddresses = [[NSMutableArray alloc] initWithCapacity:numEmails];
+    NSMutableArray *emailObjects = [[NSMutableArray alloc] initWithCapacity:numEmails];
     for (NSUInteger i=0; i < numEmails; i++) {
-        [emailAddresses
-         insertObject:(__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emailMultiValue, i)
-         atIndex:i];
+        NSString *emailAddress = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emailMultiValue, i);
+        [emailAddresses addObject:emailAddress];
+        MAVEContactEmail *emailObj = [[MAVEContactEmail alloc] initWithValue:emailAddress];
+        [emailObjects addObject:emailObj];
     }
     if (emailMultiValue != NULL) CFRelease(emailMultiValue);
-    return (NSArray *)emailAddresses;
+    self.emailAddresses = [NSArray arrayWithArray:emailAddresses];
+    self.emailObjects = [NSArray arrayWithArray:emailObjects];
 }
+
 
 + (uint64_t)computeHashedRecordID:(ABRecordID)recordID {
     NSData *recIDData = [MAVEMerkleTreeHashUtils dataFromInt32:recordID];
@@ -156,6 +167,11 @@
         name = self.lastName;
     }
     return name;
+}
+
+- (NSArray *)rankedContactIdentifiers {
+    NSArray *combinedEmailsAndPhones = [self.phoneObjects arrayByAddingObjectsFromArray:self.emailObjects];
+    return [combinedEmailsAndPhones sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
 }
 
 // Use the libPhoneNumber-iOS library to normalize phone numbers based on the

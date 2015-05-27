@@ -16,6 +16,11 @@
     return nil;
 }
 
+- (NSComparisonResult)compareContactIdentifiers:(MAVEContactIdentifierBase *)other {
+    // Should be overwritten in subclass, but no need to raise an exception if not
+    return NSOrderedSame;
+}
+
 - (instancetype)initWithValue:(NSString *)value {
     if (self = [super init]) {
         self.typeName = [[self class] ownTypeName];

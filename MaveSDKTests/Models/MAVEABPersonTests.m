@@ -192,7 +192,7 @@
     OCMVerifyAll(mock);
 }
 
-- (void)testPhoneNumbersFromABRecordRef {
+- (void)testSetPhoneNumbersFromABRecordRef {
     ABRecordRef rec = ABPersonCreate();
     ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
     ABMultiValueAddValueAndLabel(pnmv, @"808.555.1234", kABPersonPhoneMobileLabel, NULL);
@@ -207,9 +207,18 @@
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<Mobile>!$_");
     XCTAssertEqualObjects(p.phoneNumbers[1], @"+18085555678");
     XCTAssertEqualObjects(p.phoneNumberLabels[1], @"_$!<Main>!$_");
+
+    // check the phone objects list as well
+    XCTAssertEqual([p.phoneObjects count], 2);
+    MAVEContactPhoneNumber *phone0 = [p.phoneObjects objectAtIndex:0];
+    XCTAssertEqualObjects(phone0.value, @"+18085551234");
+    XCTAssertEqualObjects([phone0 humanReadableLabel], @"cell");
+    MAVEContactPhoneNumber *phone1 = [p.phoneObjects objectAtIndex:1];
+    XCTAssertEqualObjects(phone1.value, @"+18085555678");
+    XCTAssertEqualObjects([phone1 humanReadableLabel], @"main");
 }
 
-- (void)testPhoneNumbersFromABRecordRefWhenTheUnexpectedHappens {
+- (void)testSetPhoneNumbersFromABRecordRefWhenTheUnexpectedHappens {
     ABRecordRef rec = MAVECreateABRecordRef();
 
     MAVEABPerson *p1 = [MAVEABPerson alloc];
@@ -222,7 +231,7 @@
     OCMVerifyAll(p1mock);
 }
 
-- (void)testPhoneNumbersFromABRecordRefNilLabel {
+- (void)testSetPhoneNumbersFromABRecordRefNilLabel {
     ABRecordRef rec = ABPersonCreate();
     ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
     ABMultiValueAddValueAndLabel(pnmv, @"808.555.1234", nil, NULL);
@@ -233,13 +242,19 @@
     XCTAssertEqual([p.phoneNumberLabels count], 1);
     XCTAssertEqualObjects(p.phoneNumbers[0], @"+18085551234");
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<OtherFAX>!$_");
+
+    XCTAssertEqual([p.phoneObjects count], 1);
+    MAVEContactPhoneNumber *phone0 = [p.phoneObjects objectAtIndex:0];
+    XCTAssertEqualObjects(phone0.value, @"+18085551234");
+    XCTAssertEqualObjects([phone0 humanReadableLabel], @"other");
 }
 
-- (void)testPhoneNumbersFromABRecordRefWhenNone {
+- (void)testSetPhoneNumbersFromABRecordRefWhenNone {
     ABRecordRef rec = ABPersonCreate();
     MAVEABPerson *p = [[MAVEABPerson alloc] init];
     [p setPhoneNumbersFromABRecordRef:rec];
     XCTAssertEqual([p.phoneNumbers count], 0);
+    XCTAssertEqual([p.phoneObjects count], 0);
 }
 
 - (void)testPhoneNumbersFromABRecordRefWhenSomeMalformed {
@@ -255,25 +270,40 @@
     XCTAssertEqual([p.phoneNumberLabels count], 1);
     XCTAssertEqualObjects(p.phoneNumbers[0], @"+18085551234");
     XCTAssertEqualObjects(p.phoneNumberLabels[0], @"_$!<Main>!$_");
+
+    XCTAssertEqual([p.phoneObjects count], 1);
+    MAVEContactPhoneNumber *phone0 = [p.phoneObjects objectAtIndex:0];
+    XCTAssertEqualObjects(phone0.value, @"+18085551234");
+    XCTAssertEqualObjects([phone0 humanReadableLabel], @"main");
 }
 
-- (void)testEmailAddressesFromABRecordRef {
-    ABRecordRef p = ABPersonCreate();
+- (void)testSetEmailAddressesFromABRecordRef {
+    ABRecordRef rec = ABPersonCreate();
     ABMutableMultiValueRef emv = ABMultiValueCreateMutable(kABPersonEmailProperty);
     ABMultiValueAddValueAndLabel(emv, @"jsmith@example.com", kABOtherLabel, NULL);
     ABMultiValueAddValueAndLabel(emv, @"john.smith@example.com", kABOtherLabel, NULL);
-    ABRecordSetValue(p, kABPersonEmailProperty, emv, nil);
-    
-    NSArray *emails = [MAVEABPerson emailAddressesFromABRecordRef:p];
-    XCTAssertEqual([emails count], 2);
-    XCTAssertEqualObjects(emails[0], @"jsmith@example.com");
-    XCTAssertEqualObjects(emails[1], @"john.smith@example.com");
+    ABRecordSetValue(rec, kABPersonEmailProperty, emv, nil);
+
+    MAVEABPerson *p = [[MAVEABPerson alloc] init];
+    [p setEmailAddressesFromABRecordRef:rec];
+    XCTAssertEqual([p.emailAddresses count], 2);
+    XCTAssertEqualObjects(p.emailAddresses[0], @"jsmith@example.com");
+    XCTAssertEqualObjects(p.emailAddresses[1], @"john.smith@example.com");
+
+    // check the email objects list as well
+    XCTAssertEqual([p.emailObjects count], 2);
+    MAVEContactEmail *email0 = [p.emailObjects objectAtIndex:0];
+    XCTAssertEqualObjects(email0.value, @"jsmith@example.com");
+    MAVEContactEmail *email1 = [p.emailObjects objectAtIndex:1];
+    XCTAssertEqualObjects(email1.value, @"john.smith@example.com");
 }
 
 - (void)testEmailAddressesFromABRecordRefWhenNone {
-    ABRecordRef p = ABPersonCreate();
-    NSArray *emails = [MAVEABPerson emailAddressesFromABRecordRef:p];
-    XCTAssertEqual([emails count], 0);
+    ABRecordRef rec = ABPersonCreate();
+    MAVEABPerson *p = [[MAVEABPerson alloc] init];
+    [p setEmailAddressesFromABRecordRef:rec];
+    XCTAssertEqual([p.emailAddresses count], 0);
+    XCTAssertEqual([p.emailObjects count], 0);
 }
 
 - (void)testInitFailsWhenBothNamesMissing {

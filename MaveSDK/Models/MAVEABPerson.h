@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
 #import "MAVEMerkleTree.h"
+#import "MAVEContactPhoneNumber.h"
+#import "MAVEContactEmail.h"
 
 typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
     MAVEInviteSendingStatusUnsent,
@@ -78,6 +80,8 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 
 // Returns the mobile or main phone or the first one in the list if there are phones, otherwise nil
 - (NSString *)bestPhone;
+// Return an ordered list of contact identifiers for this user
+- (NSArray *)rankedContactIdentifiers;
 // Returns a list of phones and emails at which to contact this person, ranked in order to display
 // (e.g. cell phone before home phone, phones before emails, etc.)
 // Each item in the list is an integer of where in the list of phones/emails the item is
@@ -92,7 +96,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 
 // Private
 - (void)setPhoneNumbersFromABRecordRef:(ABRecordRef)record;
-+ (NSArray *)emailAddressesFromABRecordRef:(ABRecordRef)record;
+- (void)setEmailAddressesFromABRecordRef:(ABRecordRef) record;
 - (NSString *)nameForCompareNames;
 
 @end

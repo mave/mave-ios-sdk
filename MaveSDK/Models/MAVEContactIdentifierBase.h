@@ -17,4 +17,6 @@
 - (instancetype)initWithValue:(NSString *)value;
 - (NSString *)humanReadableValue;
 
+- (NSComparisonResult)compareContactIdentifiers:(MAVEContactIdentifierBase *)other;
+
 @end
