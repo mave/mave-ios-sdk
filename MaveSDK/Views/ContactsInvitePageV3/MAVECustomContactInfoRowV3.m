@@ -39,9 +39,10 @@ CGFloat const verticalPadding = 4;
     return self;
 }
 
-- (void)updateWithLabelText:(NSString *)labelText isSelected:(BOOL)isSelected {
-    self.label.text = labelText;
-    self.isSelected = isSelected;
+- (void)updateWithContactIdentifierRecord:(MAVEContactIdentifierBase *)contactIdentifier {
+    self.contactIdentifierRecord = contactIdentifier;
+    self.label.text = [contactIdentifier humanReadableValueForDetailedDisplay];
+    self.isSelected = contactIdentifier.selected;
 }
 
 - (void)setIsSelected:(BOOL)isSelected {
@@ -99,6 +100,16 @@ CGFloat const verticalPadding = 4;
         _didSetupInitialConstraints = YES;
     }
     [super updateConstraints];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    NSLog(@"layout subviews in contact info row %@ ci is selected %@", [self.contactIdentifierRecord humanReadableValueForDetailedDisplay], @(self.contactIdentifierRecord.selected));
+    if (self.contactIdentifierRecord.selected && !self.isSelected) {
+        NSLog(@"got here, setting is selected 1");
+        self.isSelected = YES;
+        [self layoutIfNeeded];
+    }
 }
 
 + (CGFloat)labelHeightGivenFont:(UIFont *)font {

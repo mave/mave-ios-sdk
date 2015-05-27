@@ -11,6 +11,7 @@
 #import "MAVECustomContactInfoRowV3.h"
 #import "MAVEDisplayOptionsFactory.h"
 #import <OCMock/OCMock.h>
+#import "MAVEContactPhoneNumber.h"
 
 @interface MAVECustomContactInfoRowV3Tests : XCTestCase
 
@@ -68,16 +69,38 @@
     XCTAssertEqualObjects(row.label.textColor, color2);
 }
 
-- (void)testUpdateWithLabelTextAndSelectedStatus {
+- (void)testUpdateWithContactIdentifierRecord {
+    MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelHome];
+    phone.selected = YES;
+
     UIFont *font1 = [MAVEDisplayOptionsFactory randomFont];
     UIColor *color1 = [MAVEDisplayOptionsFactory randomColor];
     UIColor *color2 = [MAVEDisplayOptionsFactory randomColor];
     MAVECustomContactInfoRowV3 *row = [[MAVECustomContactInfoRowV3 alloc] initWithFont:font1 selectedColor:color1 deselectedColor:color2];
+    XCTAssertFalse(row.isSelected);
+
+    [row updateWithContactIdentifierRecord:phone];
+    XCTAssertEqualObjects(row.contactIdentifierRecord, phone);
+    XCTAssertEqualObjects(row.label.text, @"(808)\u00a0555-1234 (home)");
+    XCTAssertTrue(row.isSelected);
+}
+
+- (void)testUpdatingContactIdentifierRecordIsSelectedAndDoLayoutUpdatesIsSelected {
+    MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelHome];
+    phone.selected = NO;
+
+    UIFont *font1 = [MAVEDisplayOptionsFactory randomFont];
+    UIColor *color1 = [MAVEDisplayOptionsFactory randomColor];
+    UIColor *color2 = [MAVEDisplayOptionsFactory randomColor];
+    MAVECustomContactInfoRowV3 *row = [[MAVECustomContactInfoRowV3 alloc] initWithFont:font1 selectedColor:color1 deselectedColor:color2];
+    [row updateWithContactIdentifierRecord:phone];
+
     id rowMock = OCMPartialMock(row);
     OCMExpect([rowMock setIsSelected:YES]);
 
-    [row updateWithLabelText:@"foobarbaz" isSelected:YES];
-    XCTAssertEqualObjects(row.label.text, @"foobarbaz");
+    phone.selected = YES;
+    [row layoutIfNeeded];
+
     OCMVerifyAll(rowMock);
 }
 

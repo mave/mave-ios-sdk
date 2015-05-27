@@ -181,7 +181,6 @@
     MAVEContactIdentifierBase *record = nil;
     for (NSUInteger i = 0; i < [sortedRecords count]; ++i) {
         record = [sortedRecords objectAtIndex:i];
-        NSString *displayValue = [record humanReadableValueForDetailedDisplay];
 
         MAVECustomContactInfoRowV3 *contactInfoRow;
         if (numberOfReusableRows >= i+1) {
@@ -192,24 +191,19 @@
             [self.contactInfoContainer addSubview:contactInfoRow];
             [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];
         }
-        [contactInfoRow updateWithLabelText:displayValue isSelected:record.selected];
+        [contactInfoRow updateWithContactIdentifierRecord:record];
+        __weak MAVEContactsInvitePageV3Cell *weakSelf = self;
+        __weak MAVECustomContactInfoRowV3 *weakRowSelf = contactInfoRow;
         contactInfoRow.rowWasTappedBlock = ^void(BOOL isSelected) {
-            record.selected = isSelected;
-            BOOL atLeastOneSelected = NO;
-            for (MAVEContactIdentifierBase *_rec in [person allContactIdentifiers]) {
-                if (_rec.selected) {
-                    atLeastOneSelected = YES;
-                    break;
-                }
-            }
-            if (!atLeastOneSelected) {
+            weakRowSelf.contactIdentifierRecord.selected = isSelected;
+
+            if (![person isAtLeastOneContactIdentifierSelected]) {
                 person.selected = NO;
-                [self setNeedsUpdateConstraints];
+                [weakSelf setNeedsUpdateConstraints];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[self containingTableView] beginUpdates];
-                    [[self containingTableView] endUpdates];
+                    [[weakSelf containingTableView] beginUpdates];
+                    [[weakSelf containingTableView] endUpdates];
                 });
-                NSLog(@"no records on person selected!!");
             }
         };
 

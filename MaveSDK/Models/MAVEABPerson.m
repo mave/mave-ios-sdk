@@ -202,6 +202,7 @@
         NSArray *rankedIdentifiers = [self rankedContactIdentifiers];
         if ([rankedIdentifiers count] > 0) {
             MAVEContactIdentifierBase *topRec = [rankedIdentifiers objectAtIndex:0];
+            NSLog(@"set %@ to selected YES", topRec.humanReadableValueForDetailedDisplay);
             topRec.selected = YES;
         }
     }

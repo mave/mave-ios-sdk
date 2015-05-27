@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MAVEContactIdentifierBase.h"
 
 @interface MAVECustomContactInfoRowV3 : UIView
 
+@property (nonatomic, weak) MAVEContactIdentifierBase *contactIdentifierRecord;
 @property (nonatomic, strong) UIFont *labelFont;
 @property (nonatomic, strong) UIColor *selectedColor;
 @property (nonatomic, strong) UIColor *deselectedColor;
@@ -24,6 +26,6 @@
 - (void)tappedRow;
 + (CGFloat)heightGivenFont:(UIFont *)font;
 
-- (void)updateWithLabelText:(NSString *)labelText isSelected:(BOOL)isSelected;
+- (void)updateWithContactIdentifierRecord:(MAVEContactIdentifierBase *)contactIdentifier;
 
 @end
