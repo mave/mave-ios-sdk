@@ -34,7 +34,15 @@
     XCTAssertEqual([phone2 compareContactIdentifiers:phone1], NSOrderedSame);
 }
 
-- (void)testComparePhonesMobileHigher {
+- (void)testComparePhonesiPhoneHigherThanMobile {
+    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabeliPhone];
+    MAVEContactPhoneNumber *phone2 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085559999" andLabel:MAVEContactPhoneLabelMobile];
+    // Cell is first
+    XCTAssertEqual([phone1 compareContactIdentifiers:phone2], NSOrderedAscending);
+    XCTAssertEqual([phone2 compareContactIdentifiers:phone1], NSOrderedDescending);
+}
+
+- (void)testComparePhonesMobileHigherThanMain {
     MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
     MAVEContactPhoneNumber *phone2 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085559999" andLabel:MAVEContactPhoneLabelMain];
     // Cell is first

@@ -39,11 +39,11 @@
 
 - (void)testInitWithAllLabelTypes {
     MAVEContactPhoneNumber *phone;
-    XCTAssertEqualObjects(MAVEContactPhoneLabelMain, @"_$!<Main>!$_");
-    XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabelMain, @"main");
-    phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMain];
-    XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelMain);
-    XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabelMain);
+    XCTAssertEqualObjects(MAVEContactPhoneLabeliPhone, @"iPhone");
+    XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabeliPhone, @"iPhone");
+    phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabeliPhone];
+    XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabeliPhone);
+    XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabeliPhone);
 
     XCTAssertEqualObjects(MAVEContactPhoneLabelMobile, @"_$!<Mobile>!$_");
     XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabelMobile, @"cell");
@@ -51,7 +51,25 @@
     XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelMobile);
     XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabelMobile);
 
-    XCTAssertEqualObjects(MAVEContactPhoneLabelOther, @"_$!<Other>!$_");
+    XCTAssertEqualObjects(MAVEContactPhoneLabelMain, @"_$!<Main>!$_");
+    XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabelMain, @"main");
+    phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMain];
+    XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelMain);
+    XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabelMain);
+
+    XCTAssertEqualObjects(MAVEContactPhoneLabelHome, @"_$!<Home>!$_");
+    XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabelHome, @"home");
+    phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelHome];
+    XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelHome);
+    XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabelHome);
+
+    XCTAssertEqualObjects(MAVEContactPhoneLabelWork, @"_$!<Work>!$_");
+    XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabelWork, @"work");
+    phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelWork];
+    XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelWork);
+    XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabelWork);
+
+    XCTAssertEqualObjects(MAVEContactPhoneLabelOther, @"_$!<OtherFAX>!$_");
     XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabelOther, @"other");
     phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelOther];
     XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelOther);
