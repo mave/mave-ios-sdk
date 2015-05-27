@@ -187,6 +187,27 @@
     return [[self allContactIdentifiers] sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
 }
 
+- (BOOL)isAtLeastOneContactIdentifierSelected {
+    BOOL returnval = NO;
+    for (MAVEContactIdentifierBase *rec in [self allContactIdentifiers]) {
+        if (rec.selected) {
+            returnval = YES;
+            break;
+        }
+    }
+    return returnval;
+}
+
+- (void)selectTopContactIdentifierIfNoneSelected {
+    if (![self isAtLeastOneContactIdentifierSelected]) {
+        NSArray *rankedIdentifiers = [self rankedContactIdentifiers];
+        if ([rankedIdentifiers count] > 0) {
+            MAVEContactIdentifierBase *topRec = [rankedIdentifiers objectAtIndex:0];
+            topRec.selected = YES;
+        }
+    }
+}
+
 // Use the libPhoneNumber-iOS library to normalize phone numbers based on the
 // device's current country code.
 //

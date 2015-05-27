@@ -335,6 +335,53 @@
     XCTAssertEqualObjects(p1, nil);
 }
 
+- (void)testIsAtLeastOneContactIdentifierSelected {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"iPhone"];
+    MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.phoneObjects = @[phone];
+    p1.emailObjects = @[email];
+    XCTAssertEqual([[p1 rankedContactIdentifiers] count], 2);
+    XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
+    phone.selected = YES;
+    XCTAssertTrue([p1 isAtLeastOneContactIdentifierSelected]);
+    email.selected = YES;
+    phone.selected = NO;
+    XCTAssertTrue([p1 isAtLeastOneContactIdentifierSelected]);
+    email.selected = YES;
+    phone.selected = NO;
+    XCTAssertTrue([p1 isAtLeastOneContactIdentifierSelected]);
+    email.selected = NO;
+    phone.selected = NO;
+    XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
+}
+
+- (void)testSelectTopContactIdentifierIfNoneSelected {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"iPhone"];
+    MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.phoneObjects = @[phone];
+    p1.emailObjects = @[email];
+    email.selected = YES;
+    // does nothing if one is already selected
+    [p1 selectTopContactIdentifierIfNoneSelected];
+    XCTAssertFalse(phone.selected);
+    XCTAssertTrue(email.selected);
+
+    phone.selected = NO;
+    email.selected = NO;
+    [p1 selectTopContactIdentifierIfNoneSelected];
+    XCTAssertTrue(phone.selected);
+    XCTAssertFalse(email.selected);
+}
+
+- (void)testContactIdentifierSelectedMethodsDontCrashWhenEmpty {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
+    [p1 selectTopContactIdentifierIfNoneSelected];
+    XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
+}
+
 
 //
 // Methods on the MAVEABPerson Object
