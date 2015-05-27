@@ -42,8 +42,8 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 // even if the contact was a suggested invite.
 @property (nonatomic, assign) BOOL selectedFromSuggestions;
 
-@property (atomic, assign) BOOL selected;
-@property (atomic, assign) MAVEInviteSendingStatus sendingStatus;
+@property (nonatomic, assign) BOOL selected;
+@property (nonatomic, assign) MAVEInviteSendingStatus sendingStatus;
 
 // initFromABRecordRef factory creates and does some validation
 //   - one of firstName, lastName are required, if both are missing returns nil

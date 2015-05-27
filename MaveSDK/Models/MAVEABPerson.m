@@ -51,6 +51,13 @@
     self.hashedRecordID = [[self class] computeHashedRecordID:(ABRecordID)recordID];
 }
 
+- (void)setSelected:(BOOL)selected {
+    if (selected) {
+        [self selectTopContactIdentifierIfNoneSelected];
+    }
+    _selected = selected;
+}
+
 
 ///
 /// Serialization methods for sending over wire

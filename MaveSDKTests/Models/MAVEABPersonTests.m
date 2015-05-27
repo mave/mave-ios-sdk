@@ -89,6 +89,30 @@
     XCTAssertEqual(p1.hashedRecordID, 17385305262205052069.0);
 }
 
+- (void)testSetSelected {
+    // when setting the person's "selected" flag to true, if no contact identifiers are
+    // selected under the person, set the top one to true
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"iPhone"];
+    MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.phoneObjects = @[phone];
+    p1.emailObjects = @[email];
+    p1.selected = NO;
+    XCTAssertFalse(p1.selected);
+    XCTAssertFalse(phone.selected);
+    XCTAssertFalse(email.selected);
+
+    p1.selected = YES;
+    XCTAssertTrue(p1.selected);
+    XCTAssertTrue(phone.selected);
+    XCTAssertFalse(email.selected);
+
+    p1.selected = NO;
+    XCTAssertFalse(p1.selected);
+    XCTAssertTrue(phone.selected);
+    XCTAssertFalse(email.selected);
+}
+
 - (void)testToJSONDictionary {
     // With every value full
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
