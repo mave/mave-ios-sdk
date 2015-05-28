@@ -42,6 +42,55 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     return (NSArray *)result;
 }
 
++ (UIImage *)getImageLookingUpPersonByRecordID:(ABRecordID)recordID {
+    UIImage *image = nil;
+    @try {
+        if (![[self addressBookPermissionStatus] isEqualToString:MAVEABPermissionStatusAllowed]) {
+            return nil;
+        }
+        if (!recordID) {
+            return nil;
+        }
+        CFErrorRef accessErrorCF = NULL;
+        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
+        if (accessErrorCF) {
+            if (addressBook != NULL) CFRelease(addressBook);
+            return nil;
+        }
+        // Use the dispatch semaphore to make the async method sync. Won't block b/c we know we have permission
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        __block BOOL granted = NO;
+        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool _granted, CFErrorRef error) {
+            granted = _granted;
+            if (error) CFRelease(error);
+            dispatch_semaphore_signal(semaphore);
+        });
+        dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+        if (!addressBook) {
+            return nil;
+        }
+        if (!granted) {
+            CFRelease(addressBook);
+            return nil;
+        }
+        ABRecordRef recordRef = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
+        if (!recordRef) {
+            CFRelease(addressBook);
+            return nil;
+        }
+        CFDataRef dataCF = ABPersonCopyImageData(recordRef);
+        CFRelease(addressBook);
+        if (!dataCF || CFDataGetLength(dataCF) == 0) {
+            if (dataCF) CFRelease(dataCF);
+            return nil;
+        }
+        image = [UIImage imageWithData:(__bridge NSData *)dataCF];
+        CFRelease(dataCF);
+    } @catch (NSException *exception) {
+    }
+    return image;
+}
+
 + (void)sortMAVEABPersonArray:(NSMutableArray *)input {
     [input sortUsingSelector:@selector(compareNames:)];
 }

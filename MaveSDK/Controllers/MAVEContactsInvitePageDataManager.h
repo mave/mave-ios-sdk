@@ -16,6 +16,7 @@
 @interface MAVEContactsInvitePageDataManager : NSObject
 
 @property (nonatomic, strong) NSDictionary *mainTableData;
+@property (nonatomic, strong) NSArray *allContacts;
 @property (nonatomic, strong) NSArray *mainTableSectionKeys;
 @property (nonatomic, strong) NSDictionary *personToIndexPathsIndex;
 @property (nonatomic, strong) NSArray *searchTableData;
@@ -27,6 +28,7 @@
 - (MAVEABPerson *)personAtMainTableIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathOfFirstOccuranceInMainTableOfPerson:(MAVEABPerson *)person;
 - (MAVEABPerson *)personAtSearchTableIndexPath:(NSIndexPath *)indexPath;
+
 
 // Method to update the table data with the given contacts, and if suggestions were not yet returned
 // wait for them and then call the given block for updating them asynchronously (i.e. animating them in).

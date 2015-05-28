@@ -104,9 +104,7 @@ CGFloat const verticalPadding = 4;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    NSLog(@"layout subviews in contact info row %@ ci is selected %@", [self.contactIdentifierRecord humanReadableValueForDetailedDisplay], @(self.contactIdentifierRecord.selected));
     if (self.contactIdentifierRecord.selected && !self.isSelected) {
-        NSLog(@"got here, setting is selected 1");
         self.isSelected = YES;
         [self layoutIfNeeded];
     }

@@ -10,6 +10,7 @@
 #import "MAVECustomContactInfoRowV3.h"
 #import "MAVEContactPhoneNumber.h"
 #import "MAVEContactEmail.h"
+#import "MAVEBuiltinUIElementUtils.h"
 
 @implementation MAVEContactsInvitePageV3Cell {
     BOOL _didSetupInitialConstraints;
@@ -49,7 +50,7 @@
     self.pictureWidthHeight = 30;
     self.picture = [[UIImageView alloc] init];
     self.picture.translatesAutoresizingMaskIntoConstraints = NO;
-    self.picture.backgroundColor = [UIColor grayColor];
+    self.picture.backgroundColor = [UIColor clearColor];
     self.picture.layer.cornerRadius = self.pictureWidthHeight / 2;
     self.picture.layer.masksToBounds = YES;
 
@@ -158,6 +159,14 @@
 
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person {
     self.person = person;
+
+    if (person.picture) {
+        UIImage *smaller = [MAVEBuiltinUIElementUtils imageWithImage:person.picture scaledToSize:CGSizeMake(self.pictureWidthHeight, self.pictureWidthHeight)];
+        self.picture.image = smaller;
+    } else {
+        self.picture.image = nil;
+    }
+
     self.nameLabel.text = [person fullName];
     self.isExpanded = person.selected;
     self.checkmarkBox.isChecked = person.selected;

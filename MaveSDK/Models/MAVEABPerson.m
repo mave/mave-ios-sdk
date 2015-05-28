@@ -12,6 +12,7 @@
 #import "MAVEMerkleTreeHashUtils.h"
 #import "NBPhoneNumber.h"
 #import "NBPhoneNumberUtil.h"
+#import "MAVEABUtils.h"
 
 @implementation MAVEABPerson
 
@@ -45,10 +46,10 @@
     return self;
 }
 
-- (void)setRecordID:(NSInteger)recordID {
+- (void)setRecordID:(int32_t)recordID {
     // record ID is actually a 32 bit integer
     _recordID = recordID;
-    self.hashedRecordID = [[self class] computeHashedRecordID:(ABRecordID)recordID];
+    self.hashedRecordID = [[self class] computeHashedRecordID:recordID];
 }
 
 - (void)setSelected:(BOOL)selected {
@@ -157,6 +158,14 @@
     NSData *hashedTruncatedData = [MAVEMerkleTreeHashUtils md5Hash:recIDData
                                                   truncatedToBytes:sizeof(uint64_t)];
     return [MAVEMerkleTreeHashUtils UInt64FromData:hashedTruncatedData];
+}
+
+- (UIImage *)picture {
+    if (_picture) {
+        return _picture;
+    } else {
+        return [MAVEABUtils getImageLookingUpPersonByRecordID:self.recordID];
+    }
 }
 
 - (NSString *)firstLetter {

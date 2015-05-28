@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Mave Technologies, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <AddressBook/AddressBook.h>
 #import "MAVEMerkleTree.h"
 #import "MAVEContactPhoneNumber.h"
@@ -23,16 +23,16 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 // A Person object that is much simpler than an ABRecordRef - has just the fields we care about
 // and is an NSObject with helper methods to access fields we want.
 
-@property (nonatomic, assign) NSInteger recordID;
+@property (nonatomic, assign) int32_t recordID;
 @property (nonatomic, assign) uint64_t hashedRecordID;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
+@property (nonatomic, strong) UIImage *picture;
 @property (nonatomic, strong) NSArray *phoneNumbers;   // Array of NSStrings
 @property (nonatomic, strong) NSArray *phoneNumberLabels;  //Array of NSStrings of localized labels
 @property (nonatomic, strong) NSArray *emailAddresses; // Array of NSStrings
 @property (nonatomic, strong) NSArray *phoneObjects; // Array of MAVEContactPhones
 @property (nonatomic, strong) NSArray *emailObjects; // Array of MAVEContactEmails
-
 
 // This field is true if the contact as returned from the API as a suggested invite
 @property (nonatomic, assign) BOOL isSuggestedContact;

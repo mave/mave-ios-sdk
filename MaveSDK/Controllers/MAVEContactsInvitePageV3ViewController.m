@@ -37,6 +37,10 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     [self loadContactsData];
 }
 
+- (void)dealloc {
+    NSLog(@"table view dealloced");
+}
+
 - (void)loadView {
     MAVEContactsInvitePageV3TableWrapperView *wrapperView = [[MAVEContactsInvitePageV3TableWrapperView alloc] init];
     self.wrapperView = wrapperView;

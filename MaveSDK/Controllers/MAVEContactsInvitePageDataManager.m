@@ -59,6 +59,11 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
     _mainTableData = mainTableData;
     self.mainTableSectionKeys = [[mainTableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     [self updateMainTablePersonToIndexPathsIndex];
+    self.allContacts = [self enumerateAllContacts];
+}
+
+- (NSArray *)enumerateAllContacts {
+    return nil;
 }
 
 - (void)updateMainTablePersonToIndexPathsIndex {

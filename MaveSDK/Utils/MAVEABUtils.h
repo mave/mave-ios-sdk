@@ -23,6 +23,10 @@ extern NSString * const MAVEABPermissionStatusUnprompted;
 // return value is an NSArray * of MAVEABPerson objects that is sorted.
 + (NSArray *)copyEntireAddressBookToMAVEABPersonArray:(NSArray *)addressBook;
 
+// Search for the person with the given record id in the address book and return a UIImage
+// copy of the image set for the contact (nil if no image).
++ (UIImage *)getImageLookingUpPersonByRecordID:(ABRecordID)recordID;
+
 // Take an array of MAVEABPerson objects and return a dict mapping the first letter
 // of the sorted name to an array of MAVEABPerson objects beginning with that letter.
 // This way of indexing is for displaying them in a table view alphabetically with
