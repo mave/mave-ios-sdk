@@ -42,9 +42,10 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     return (NSArray *)result;
 }
 
+static ABAddressBookRef addressBook;
 + (UIImage *)getImageLookingUpPersonByRecordID:(ABRecordID)recordID {
     UIImage *image;
-    ABAddressBookRef addressBook;
+//    ABAddressBookRef addressBook;
     CFDataRef dataCF;
     @try {
         if (![[self addressBookPermissionStatus] isEqualToString:MAVEABPermissionStatusAllowed]) {
@@ -54,20 +55,22 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
             return nil;
         }
         CFErrorRef accessErrorCF = NULL;
-        addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
-        if (accessErrorCF) {
-            return nil;
-        }
-        // Use the dispatch semaphore to make the async method sync. Won't block b/c we know we have permission
-        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        __block BOOL granted = NO;
-        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool _granted, CFErrorRef error) {
-            granted = _granted;
-            dispatch_semaphore_signal(semaphore);
-        });
-        dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
-        if (!granted || !addressBook) {
-            return nil;
+        if (!addressBook) {
+            addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
+            if (accessErrorCF) {
+                return nil;
+            }
+            // Use the dispatch semaphore to make the async method sync. Won't block b/c we know we have permission
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            __block BOOL granted = NO;
+            ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool _granted, CFErrorRef error) {
+                granted = _granted;
+                dispatch_semaphore_signal(semaphore);
+            });
+            dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+            if (!granted || !addressBook) {
+                return nil;
+            }
         }
         ABRecordRef recordRef = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
         if (!recordRef) {
@@ -81,7 +84,7 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     } @catch (NSException *exception) {
         image = nil;
     } @finally {
-        if (addressBook) CFRelease(addressBook);
+//        if (addressBook) CFRelease(addressBook);
         if (dataCF) CFRelease(dataCF);
         return image;
     }
