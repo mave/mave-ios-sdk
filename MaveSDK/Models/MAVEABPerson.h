@@ -83,6 +83,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 // Return a list of contact identifiers for this user, and another method to get a sorted list
 - (NSArray *)allContactIdentifiers;
 - (NSArray *)rankedContactIdentifiers;
+- (NSArray *)selectedContactIdentifiers;
 - (BOOL)isAtLeastOneContactIdentifierSelected;
 - (void)selectTopContactIdentifierIfNoneSelected;
 

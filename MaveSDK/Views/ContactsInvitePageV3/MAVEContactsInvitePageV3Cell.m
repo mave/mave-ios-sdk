@@ -196,6 +196,9 @@
         __weak MAVECustomContactInfoRowV3 *weakRowSelf = contactInfoRow;
         contactInfoRow.rowWasTappedBlock = ^void(BOOL isSelected) {
             weakRowSelf.contactIdentifierRecord.selected = isSelected;
+            if (self.contactIdentifiersSelectedDidUpdateBlock) {
+                self.contactIdentifiersSelectedDidUpdateBlock(person);
+            }
 
             if (![person isAtLeastOneContactIdentifierSelected]) {
                 person.selected = NO;

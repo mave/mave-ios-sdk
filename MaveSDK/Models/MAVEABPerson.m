@@ -179,11 +179,24 @@
 }
 
 - (NSArray *)allContactIdentifiers {
-    return [self.phoneObjects arrayByAddingObjectsFromArray:self.emailObjects];
+    NSArray *result = @[];
+    result = [result arrayByAddingObjectsFromArray:self.phoneObjects];
+    result = [result arrayByAddingObjectsFromArray:self.emailObjects];
+    return result;
 }
 
 - (NSArray *)rankedContactIdentifiers {
     return [[self allContactIdentifiers] sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
+}
+
+- (NSArray *)selectedContactIdentifiers {
+    NSMutableArray *output = [[NSMutableArray alloc] initWithCapacity:[self.allContactIdentifiers count]];
+    for (MAVEContactIdentifierBase *rec in [self allContactIdentifiers]) {
+        if (rec.selected) {
+            [output addObject:rec];
+        }
+    }
+    return [NSArray arrayWithArray:output];
 }
 
 - (BOOL)isAtLeastOneContactIdentifierSelected {

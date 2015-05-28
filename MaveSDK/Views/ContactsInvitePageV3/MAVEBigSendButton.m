@@ -37,7 +37,7 @@
     self.icon = [[UIImageView alloc] init];
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.textColor = [UIColor whiteColor];
-    self.textLabel.text = @"hi there";
+    [self updateButtonTextNumberToSend:0];
 
     self.contentContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.icon.translatesAutoresizingMaskIntoConstraints = NO;
@@ -76,6 +76,12 @@
         _didSetupInitialConstraints = YES;
     }
     [super updateConstraints];
+}
+
+- (void)updateButtonTextNumberToSend:(NSUInteger)numberToSend {
+    NSString *noun = numberToSend == 1 ? @"Invite" : @"Invites";
+    NSString *text = [NSString stringWithFormat:@"Send %@ %@", @(numberToSend), noun];
+    self.textLabel.text = text;
 }
 
 @end

@@ -43,12 +43,6 @@
     [self setNeedsUpdateConstraints];
 }
 
-- (void)setButtonTextNumberOfInvitesToSend:(NSUInteger)number {
-    NSString *noun = number == 1 ? @"Invite" : @"Invites";
-    NSString *text = [NSString stringWithFormat:@"Send %@ %@", @(number), noun];
-    [self.bigSendButton setTitle:text forState:UIControlStateNormal];
-}
-
 - (void)setupInitialConstraints {
     // Vertical constraints
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];

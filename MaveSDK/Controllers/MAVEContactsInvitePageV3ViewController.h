@@ -23,6 +23,9 @@
 @property (nonatomic, strong) MAVEInviteTableSectionHeaderView *suggestionsSectionHeaderView;
 
 @property (nonatomic, strong) NSMutableSet *selectedPeopleIndex;
+@property (nonatomic, strong) NSMutableSet *selectedContactIdentifiersIndex;
 @property (nonatomic, strong) MAVEContactsInvitePageDataManager *dataManager;
+
+- (void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person;
 
 @end

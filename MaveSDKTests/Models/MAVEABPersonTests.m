@@ -359,24 +359,29 @@
     XCTAssertEqualObjects(p1, nil);
 }
 
-- (void)testIsAtLeastOneContactIdentifierSelected {
+- (void)testSelectedContactIdentifiersAndIsAtLeaseOneFunction {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"iPhone"];
     MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
     p1.phoneObjects = @[phone];
     p1.emailObjects = @[email];
     XCTAssertEqual([[p1 rankedContactIdentifiers] count], 2);
+    XCTAssertEqual([[p1 selectedContactIdentifiers] count], 0);
     XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
     phone.selected = YES;
+    XCTAssertEqual([[p1 selectedContactIdentifiers] count], 1);
     XCTAssertTrue([p1 isAtLeastOneContactIdentifierSelected]);
     email.selected = YES;
     phone.selected = NO;
+    XCTAssertEqual([[p1 selectedContactIdentifiers] count], 1);
     XCTAssertTrue([p1 isAtLeastOneContactIdentifierSelected]);
     email.selected = YES;
-    phone.selected = NO;
+    phone.selected = YES;
+    XCTAssertEqual([[p1 selectedContactIdentifiers] count], 2);
     XCTAssertTrue([p1 isAtLeastOneContactIdentifierSelected]);
     email.selected = NO;
     phone.selected = NO;
+    XCTAssertEqual([[p1 selectedContactIdentifiers] count], 0);
     XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
 }
 

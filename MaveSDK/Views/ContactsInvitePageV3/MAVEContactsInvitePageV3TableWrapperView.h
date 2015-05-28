@@ -16,6 +16,4 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *bigSendButtonHeightConstraint;
 
-- (void)setButtonTextNumberOfInvitesToSend:(NSUInteger)number;
-
 @end

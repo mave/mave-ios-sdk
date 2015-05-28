@@ -24,6 +24,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
+    self.selectedContactIdentifiersIndex = [[NSMutableSet alloc] init];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView registerClass:[MAVEContactsInvitePageV3Cell class]
@@ -60,15 +61,33 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (MAVEABPerson *)personAtIndexPath:(NSIndexPath *)indexPath {
     return [self.dataManager personAtMainTableIndexPath:indexPath];
 }
-
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return [self.dataManager sectionIndexesForMainTable];
+-(void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person {
+    if (person.selected) {
+        [self.selectedPeopleIndex addObject:person];
+        for (id rec in person.allContactIdentifiers) {
+            [self.selectedContactIdentifiersIndex removeObject:rec];
+        }
+        for (id rec in person.selectedContactIdentifiers) {
+            [self.selectedContactIdentifiersIndex addObject:rec];
+        }
+    } else {
+        [self.selectedPeopleIndex removeObject:person];
+        for (id rec in person.allContactIdentifiers) {
+            [self.selectedContactIdentifiersIndex removeObject:rec];
+        }
+    }
+    [self.wrapperView.bigSendButton updateButtonTextNumberToSend:[self.selectedContactIdentifiersIndex count]];
 }
 
 #pragma mark - Table View Data Source & Delegate
+
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSLog(@"number of sections: %@", @([self.dataManager numberOfSectionsInMainTable]));
     return [self.dataManager numberOfSectionsInMainTable];
+}
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return [self.dataManager sectionIndexesForMainTable];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.dataManager numberOfRowsInMainTableSection:section];
@@ -93,6 +112,10 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
     [cell updateForReuseWithPerson:person];
+    __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
+    cell.contactIdentifiersSelectedDidUpdateBlock = ^void(MAVEABPerson *person) {
+        [weakSelf updateToReflectPersonSelectedStatus:person];
+    };
     return (UITableViewCell *)cell;
 }
 
@@ -100,11 +123,9 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
     person.selected = !person.selected;
     if (person.selected) {
-        [self.selectedPeopleIndex addObject:person];
-    } else {
-        [self.selectedPeopleIndex removeObject:person];
+        NSLog(@"person selected with %@ contact identifiers", @([[person selectedContactIdentifiers] count]));
     }
-    [self.wrapperView setButtonTextNumberOfInvitesToSend:[self.selectedPeopleIndex count]];
+    [self updateToReflectPersonSelectedStatus:person];
 
     [self.tableView beginUpdates];
     [self.tableView endUpdates];

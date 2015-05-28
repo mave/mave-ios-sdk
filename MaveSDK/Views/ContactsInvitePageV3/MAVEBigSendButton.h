@@ -14,4 +14,6 @@
 @property (nonatomic, strong) UIImageView *icon;
 @property (nonatomic, strong) UILabel *textLabel;
 
+- (void)updateButtonTextNumberToSend:(NSUInteger)numberToSend;
+
 @end
