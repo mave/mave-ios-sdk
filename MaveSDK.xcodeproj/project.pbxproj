@@ -49,6 +49,7 @@
 		0C1F1A171A51F4F300B2D482 /* MAVERemoteConfigurationContactsPrePromptTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A161A51F4F300B2D482 /* MAVERemoteConfigurationContactsPrePromptTests.m */; };
 		0C1F1A1A1A53012000B2D482 /* MAVEClientPropertyUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A191A53012000B2D482 /* MAVEClientPropertyUtils.m */; };
 		0C1F1A1C1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A1B1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m */; };
+		0C24836F1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C24836E1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m */; };
 		0C25A3E91AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3E81AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m */; };
 		0C25A3F11AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3F01AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m */; };
 		0C25A3F31AD6E3420031D163 /* MAVEContactsInvitePageV2ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3F21AD6E3420031D163 /* MAVEContactsInvitePageV2ViewControllerTests.m */; };
@@ -333,6 +334,8 @@
 		0C1F1A181A53012000B2D482 /* MAVEClientPropertyUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEClientPropertyUtils.h; sourceTree = "<group>"; };
 		0C1F1A191A53012000B2D482 /* MAVEClientPropertyUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEClientPropertyUtils.m; sourceTree = "<group>"; };
 		0C1F1A1B1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEClientPropertyUtilsTests.m; sourceTree = "<group>"; };
+		0C24836D1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageSearchManager.h; sourceTree = "<group>"; };
+		0C24836E1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageSearchManager.m; sourceTree = "<group>"; };
 		0C25A3E71AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageV2TableWrapperView.h; sourceTree = "<group>"; };
 		0C25A3E81AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageV2TableWrapperView.m; sourceTree = "<group>"; };
 		0C25A3EF1AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageV2TableViewCell.h; sourceTree = "<group>"; };
@@ -1109,6 +1112,8 @@
 				0C435C701B0E4E2E005B11AF /* MAVEContactsInvitePageV3ViewController.m */,
 				0C435C8B1B0FB806005B11AF /* MAVEContactsInvitePageDataManager.h */,
 				0C435C8C1B0FB806005B11AF /* MAVEContactsInvitePageDataManager.m */,
+				0C24836D1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.h */,
+				0C24836E1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1531,6 +1536,7 @@
 				0C6D92B81A75653400B65B82 /* MAVEMerkleTreeInnerNode.m in Sources */,
 				0C1A8FB91A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m in Sources */,
 				0CD2743B1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m in Sources */,
+				0C24836F1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m in Sources */,
 				C029280619E82D0F006AEE43 /* MAVEDisplayOptions.m in Sources */,
 				0CFE94871AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.m in Sources */,
 				0C25A3F11AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m in Sources */,
