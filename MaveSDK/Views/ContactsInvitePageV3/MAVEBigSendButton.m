@@ -41,8 +41,10 @@
 
     self.contentContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.icon.translatesAutoresizingMaskIntoConstraints = NO;
-    UIImage *airplane = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEAirplaneIcon.png" fromBundle:MAVEResourceBundleName];
+    UIImage *airplane = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEAirplane.png" fromBundle:MAVEResourceBundleName];
     NSLog(@"airplane is %@", airplane);
+    UIImage *checkmark = [MAVEBuiltinUIElementUtils imageNamed:@"MAVESimpleCheckmark.png" fromBundle:MAVEResourceBundleName];
+    NSLog(@"checkmark is %@", checkmark);
     self.icon.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:airplane withColor:[UIColor whiteColor]];
     self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.contentContainer];

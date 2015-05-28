@@ -97,9 +97,3 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 - (NSString *)nameForCompareNames;
 
 @end
-
-@interface MAVEABPersonRow :MAVEABPerson
-
-@property BOOL selected;
-
-@end
