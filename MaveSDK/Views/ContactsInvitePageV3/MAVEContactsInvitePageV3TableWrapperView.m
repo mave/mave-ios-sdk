@@ -37,6 +37,11 @@
     self.tableView = [[UITableView alloc] init];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    self.searchTableView = [[UITableView alloc] init];
+    self.searchTableView.separatorColor = UITableViewCellSeparatorStyleNone;
+    self.searchTableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    self.searchTableView.hidden = YES;
+
     self.bigSendButton = [[MAVEBigSendButton alloc] init];
     self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60];
 
@@ -49,6 +54,7 @@
 
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.tableView];
+    [self addSubview:self.searchTableView];
     self.bigSendButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.bigSendButton];
 
@@ -84,6 +90,11 @@
         _didInitialUpdateConstraints = YES;
     }
     [super updateConstraints];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.searchTableView.frame = self.tableView.frame;
 }
 
 @end

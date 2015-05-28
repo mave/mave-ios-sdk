@@ -19,6 +19,7 @@
 @property (nonatomic, strong) MAVESearchBar *searchBar;
 @property (nonatomic, strong) MAVEInvitePageSelectAllRow *selectAllRow;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, strong) MAVEBigSendButton *bigSendButton;
 
 @property (nonatomic, strong) NSLayoutConstraint *bigSendButtonHeightConstraint;
