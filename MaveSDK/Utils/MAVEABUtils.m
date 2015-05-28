@@ -43,7 +43,9 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
 }
 
 + (UIImage *)getImageLookingUpPersonByRecordID:(ABRecordID)recordID {
-    UIImage *image = nil;
+    UIImage *image;
+    ABAddressBookRef addressBook;
+    CFDataRef dataCF;
     @try {
         if (![[self addressBookPermissionStatus] isEqualToString:MAVEABPermissionStatusAllowed]) {
             return nil;
@@ -52,9 +54,8 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
             return nil;
         }
         CFErrorRef accessErrorCF = NULL;
-        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
+        addressBook = ABAddressBookCreateWithOptions(NULL, &accessErrorCF);
         if (accessErrorCF) {
-            if (addressBook != NULL) CFRelease(addressBook);
             return nil;
         }
         // Use the dispatch semaphore to make the async method sync. Won't block b/c we know we have permission
@@ -62,33 +63,28 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
         __block BOOL granted = NO;
         ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool _granted, CFErrorRef error) {
             granted = _granted;
-            if (error) CFRelease(error);
             dispatch_semaphore_signal(semaphore);
         });
         dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
-        if (!addressBook) {
-            return nil;
-        }
-        if (!granted) {
-            CFRelease(addressBook);
+        if (!granted || !addressBook) {
             return nil;
         }
         ABRecordRef recordRef = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
         if (!recordRef) {
-            CFRelease(addressBook);
             return nil;
         }
-        CFDataRef dataCF = ABPersonCopyImageData(recordRef);
-        CFRelease(addressBook);
+        dataCF = ABPersonCopyImageData(recordRef);
         if (!dataCF || CFDataGetLength(dataCF) == 0) {
-            if (dataCF) CFRelease(dataCF);
             return nil;
         }
         image = [UIImage imageWithData:(__bridge NSData *)dataCF];
-        CFRelease(dataCF);
     } @catch (NSException *exception) {
+        image = nil;
+    } @finally {
+        if (addressBook) CFRelease(addressBook);
+        if (dataCF) CFRelease(dataCF);
+        return image;
     }
-    return image;
 }
 
 + (void)sortMAVEABPersonArray:(NSMutableArray *)input {
