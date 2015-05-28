@@ -26,14 +26,26 @@
 }
 
 - (void)doInitialSetup {
+    self.backgroundColor = [UIColor whiteColor];
+    self.aboveTableView = [[UIView alloc] init];
+    self.aboveTableView.backgroundColor = [UIColor purpleColor];
+    self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
+    self.selectAllRow = [[MAVEInvitePageSelectAllRow alloc] init];
+    self.selectAllRow.textLabel.text = @"Select All Emails";
+    self.topLayoutConstraint = [NSLayoutConstraint constraintWithItem:self.aboveTableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+
     self.tableView = [[UITableView alloc] init];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.bigSendButton = [[MAVEBigSendButton alloc] init];
-//    self.bigSendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    self.bigSendButton.backgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-//    self.bigSendButton.tintColor = [UIColor whiteColor];
-//    [self setButtonTextNumberOfInvitesToSend:4];
+    self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60];
+
+    self.aboveTableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.aboveTableView];
+    self.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
+    self.selectAllRow.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.aboveTableView addSubview:self.searchBar];
+    [self.aboveTableView addSubview:self.selectAllRow];
 
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.tableView];
@@ -44,18 +56,26 @@
 }
 
 - (void)setupInitialConstraints {
-    // Vertical constraints
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bigSendButton attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-    self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60];
-    [self addConstraint:self.bigSendButtonHeightConstraint];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+    NSDictionary *views = @{@"aboveTableView": self.aboveTableView,
+                            @"tableView": self.tableView,
+                            @"bigSendButton": self.bigSendButton,
+                            @"searchBar": self.searchBar,
+                            @"selectAllRow": self.selectAllRow};
+    NSDictionary *metrics = @{@"searchBarHeight": @(MAVESearchBarHeight + 20)};
 
-    // Horizontal constraints
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    // the constraints that are editable later
+    [self addConstraint:self.topLayoutConstraint];
+    [self addConstraint:self.bigSendButtonHeightConstraint];
+    // rest of wrapper constraints
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[aboveTableView]-0-[tableView]-0-[bigSendButton]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[aboveTableView]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[tableView]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[bigSendButton]-0-|" options:0 metrics:metrics views:views]];
+
+    // Constraints internal to above table view
+    [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]-0-[selectAllRow(44)]-0-|" options:0 metrics:metrics views:views]];
+    [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchBar]-0-|" options:0 metrics:metrics views:views]];
+    [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[selectAllRow]-0-|" options:0 metrics:metrics views:views]];
 }
 
 - (void)updateConstraints {

@@ -22,6 +22,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.navigationController.navigationBar.translucent = NO;
+
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
     self.selectedContactIdentifiersIndex = [[NSMutableSet alloc] init];
@@ -36,12 +38,12 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)loadView {
-    MAVEContactsInvitePageV3TableWrapperView *view = [[MAVEContactsInvitePageV3TableWrapperView alloc] init];
-    self.wrapperView = view;
-    self.view = view;
+    MAVEContactsInvitePageV3TableWrapperView *wrapperView = [[MAVEContactsInvitePageV3TableWrapperView alloc] init];
+    self.wrapperView = wrapperView;
+    self.view = wrapperView;
 }
 - (UITableView *)tableView {
-    return ((MAVEContactsInvitePageV3TableWrapperView *)self.view).tableView;
+    return self.wrapperView.tableView;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -83,7 +85,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSLog(@"number of sections: %@", @([self.dataManager numberOfSectionsInMainTable]));
     return [self.dataManager numberOfSectionsInMainTable];
 }
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
@@ -122,9 +123,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     MAVEABPerson *person = [self personAtIndexPath:indexPath];
     person.selected = !person.selected;
-    if (person.selected) {
-        NSLog(@"person selected with %@ contact identifiers", @([[person selectedContactIdentifiers] count]));
-    }
     [self updateToReflectPersonSelectedStatus:person];
 
     [self.tableView beginUpdates];

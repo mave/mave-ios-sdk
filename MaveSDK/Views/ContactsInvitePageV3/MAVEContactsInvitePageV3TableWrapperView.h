@@ -7,10 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MAVESearchBar.h"
+#import "MAVEInvitePageSelectAllRow.h"
 #import "MAVEBigSendButton.h"
+
 
 @interface MAVEContactsInvitePageV3TableWrapperView : UIView
 
+@property (nonatomic, strong) NSLayoutConstraint *topLayoutConstraint;
+@property (nonatomic, strong) UIView *aboveTableView;
+@property (nonatomic, strong) MAVESearchBar *searchBar;
+@property (nonatomic, strong) MAVEInvitePageSelectAllRow *selectAllRow;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MAVEBigSendButton *bigSendButton;
 
