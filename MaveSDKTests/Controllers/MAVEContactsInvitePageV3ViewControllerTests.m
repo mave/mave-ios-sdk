@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVEContactsInvitePageV3ViewController.h"
 #import "MAVEABPerson.h"
 #import "MAVEContactPhoneNumber.h"
 #import "MAVEContactEmail.h"
+#import "MAVEBigSendButton.h"
+#import "MAVEContactsInvitePageV3TableWrapperView.h"
 
 @interface MAVEContactsInvitePageV3ViewControllerTests : XCTestCase
 
@@ -32,6 +35,8 @@
 - (void)testTogglePersonSelected {
     MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
     [controller viewDidLoad];
+    MAVEContactsInvitePageV3TableWrapperView *wrapperView = [[MAVEContactsInvitePageV3TableWrapperView alloc] init];
+    controller.wrapperView = wrapperView;
 
     XCTAssertEqual([controller.selectedPeopleIndex count], 0);
     XCTAssertEqual([controller.selectedContactIdentifiersIndex count], 0);
@@ -51,32 +56,49 @@
     email3.selected = YES;
     p2.emailObjects = @[email3];
 
+
     // Add people & check state is as expected
+    id sendButtonMock = OCMClassMock([MAVEBigSendButton class]);
+    controller.wrapperView.bigSendButton = sendButtonMock;
     p1.selected = YES;
     [controller updateToReflectPersonSelectedStatus:p1];
     XCTAssertEqual([controller.selectedPeopleIndex count], 1);
     XCTAssertEqual([controller.selectedContactIdentifiersIndex count], 2);
     XCTAssertTrue([controller.selectedPeopleIndex containsObject:p1]);
     XCTAssertFalse([controller.selectedPeopleIndex containsObject:p2]);
+    OCMVerify([sendButtonMock updateButtonTextNumberToSend:2]);
+    [sendButtonMock stopMocking];
+    sendButtonMock = OCMClassMock([MAVEBigSendButton class]);
+    controller.wrapperView.bigSendButton = sendButtonMock;
     p2.selected = YES;
     [controller updateToReflectPersonSelectedStatus:p2];
     XCTAssertEqual([controller.selectedPeopleIndex count], 2);
     XCTAssertEqual([controller.selectedContactIdentifiersIndex count], 3);
     XCTAssertTrue([controller.selectedPeopleIndex containsObject:p1]);
     XCTAssertTrue([controller.selectedPeopleIndex containsObject:p2]);
+    OCMVerify([sendButtonMock updateButtonTextNumberToSend:3]);
+    [sendButtonMock stopMocking];
     // then remove them
+    sendButtonMock = OCMClassMock([MAVEBigSendButton class]);
+    controller.wrapperView.bigSendButton = sendButtonMock;
     p1.selected = NO;
     [controller updateToReflectPersonSelectedStatus:p1];
     XCTAssertEqual([controller.selectedPeopleIndex count], 1);
     XCTAssertEqual([controller.selectedContactIdentifiersIndex count], 1);
     XCTAssertFalse([controller.selectedPeopleIndex containsObject:p1]);
     XCTAssertTrue([controller.selectedPeopleIndex containsObject:p2]);
+    XCTAssertTrue([controller.selectedPeopleIndex containsObject:p2]);
+    OCMVerify([sendButtonMock updateButtonTextNumberToSend:1]);
+    [sendButtonMock stopMocking];
+    sendButtonMock = OCMClassMock([MAVEBigSendButton class]);
+    controller.wrapperView.bigSendButton = sendButtonMock;
     p2.selected = NO;
     [controller updateToReflectPersonSelectedStatus:p2];
     XCTAssertEqual([controller.selectedPeopleIndex count], 0);
     XCTAssertEqual([controller.selectedContactIdentifiersIndex count], 0);
     XCTAssertFalse([controller.selectedPeopleIndex containsObject:p1]);
     XCTAssertFalse([controller.selectedPeopleIndex containsObject:p2]);
+    OCMVerify([sendButtonMock updateButtonTextNumberToSend:0]);
 }
 
 - (void)testTogglePersonContactIdentifiersRemainUniqueWhenTwoPeopleHaveSameInfo {
