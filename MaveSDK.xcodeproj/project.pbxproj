@@ -199,6 +199,9 @@
 		0CE36EB91B168A45005BF445 /* MAVEAirplane.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB61B168A45005BF445 /* MAVEAirplane.png */; };
 		0CE36EBA1B168A45005BF445 /* MAVEAirplane@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB71B168A45005BF445 /* MAVEAirplane@2x.png */; };
 		0CE36EBB1B168A45005BF445 /* MAVEAirplane@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB81B168A45005BF445 /* MAVEAirplane@3x.png */; };
+		0CE36EBC1B17628B005BF445 /* MAVEAirplane.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB61B168A45005BF445 /* MAVEAirplane.png */; };
+		0CE36EBD1B17628B005BF445 /* MAVEAirplane@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB71B168A45005BF445 /* MAVEAirplane@2x.png */; };
+		0CE36EBE1B17628B005BF445 /* MAVEAirplane@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE36EB81B168A45005BF445 /* MAVEAirplane@3x.png */; };
 		0CE3AA2A1A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA291A95214300E7C987 /* MAVERemoteConfigurationContactsSync.m */; };
 		0CE3AA2C1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3AA2B1A95217200E7C987 /* MAVERemoteConfigurationContactsSyncTests.m */; };
 		0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CEEDE961A6C4FCB00A81804 /* MAVESearchBar.m */; };
@@ -1310,6 +1313,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CE36EBC1B17628B005BF445 /* MAVEAirplane.png in Resources */,
+				0CE36EBD1B17628B005BF445 /* MAVEAirplane@2x.png in Resources */,
+				0CE36EBE1B17628B005BF445 /* MAVEAirplane@3x.png in Resources */,
 				0CD4FBF81A9C277C00667655 /* MAVEWaitingDots1@1x.png in Resources */,
 				0C97F6FE1ADCAA5C0084974D /* MAVESpinner2.png in Resources */,
 				0C97F7121ADCAA5C0084974D /* MAVESpinner8@3x.png in Resources */,
