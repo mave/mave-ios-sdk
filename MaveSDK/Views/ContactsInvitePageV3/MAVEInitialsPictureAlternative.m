@@ -29,8 +29,12 @@
     self.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
     self.label = [[UILabel alloc] init];
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
-    self.label.font = [UIFont systemFontOfSize:12];
     self.label.textColor = [UIColor grayColor];
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
+    if (!font) {
+        font = [UIFont systemFontOfSize:14];
+    }
+    self.label.font = font;
     [self addSubview:self.label];
 }
 

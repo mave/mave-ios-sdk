@@ -170,7 +170,7 @@
     if (person.picture) {
         picToUse = [MAVEBuiltinUIElementUtils imageWithImage:person.picture scaledToSize:CGSizeMake(self.pictureWidthHeight, self.pictureWidthHeight)];
     }
-    [self updatePictureViewPicture:picToUse initials:@"AB"];
+    [self updatePictureViewPicture:picToUse initials:[person initials]];
     self.nameLabel.text = [person fullName];
     self.isExpanded = person.selected;
     self.checkmarkBox.hidden = NO;
