@@ -28,10 +28,6 @@
 }
 
 - (void)doInitialSetup {
-    NSLog(@"button type is: %@", @(self.buttonType));
-    NSLog(@"custom button type is %@", @(UIButtonTypeCustom));
-    NSLog(@"system button type is %@", @(UIButtonTypeSystem));
-
     self.backgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     self.contentContainer = [[UIView alloc] init];
     self.icon = [[UIImageView alloc] init];
@@ -42,9 +38,6 @@
     self.contentContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.icon.translatesAutoresizingMaskIntoConstraints = NO;
     UIImage *airplane = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEAirplane.png" fromBundle:MAVEResourceBundleName];
-    NSLog(@"airplane is %@", airplane);
-    UIImage *checkmark = [MAVEBuiltinUIElementUtils imageNamed:@"MAVESimpleCheckmark.png" fromBundle:MAVEResourceBundleName];
-    NSLog(@"checkmark is %@", checkmark);
     self.icon.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:airplane withColor:[UIColor whiteColor]];
     self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.contentContainer];

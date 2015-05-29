@@ -10,6 +10,7 @@
 #import "MAVEContactsInvitePageV3Cell.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEInvitePageViewController.h"
+#import "MAVEConstants.h"
 
 NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePageV3CellIdentifier";
 
@@ -103,9 +104,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         }
     }
     NSUInteger numSelected = [self.selectedContactIdentifiersIndex count];
-    if ([person.fullName isEqualToString:@"Daniel Higgins"]) {
-        NSLog(@"higgins email selected: %@", @(((MAVEContactEmail *)person.emailObjects[0]).selected));
-    }
     [self.wrapperView updateBigSendButtonHeightExpanded:(numSelected > 0) animated:YES];
     [self.wrapperView.bigSendButton updateButtonTextNumberToSend:[self.selectedContactIdentifiersIndex count]];
 }
@@ -132,9 +130,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             BOOL anyEmailSelected = NO;
             for (MAVEContactEmail *email in person.emailObjects) {
                 if (email.selected) {
-                    if ([person.firstName isEqualToString:@"Daniel"] && [email.value isEqualToString:@"d-higgins@mac.com"]) {
-                        NSLog(@"deselecting dhiggins email");
-                    }
                     anyEmailSelected = YES;
                     email.selected = NO;
                 }
@@ -151,7 +146,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         [self.searchManager clearCurrentSearchInTextField:self.wrapperView.searchBar];
         [self.wrapperView.searchBar endEditing:YES];
     }
-
 }
 
 #pragma mark - Table View Data Source & Delegate
@@ -176,7 +170,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     if ([tableView isEqual:self.searchTableView]) {
         return -1;
     } else {
-        NSLog(@"scrolled index");
         return index;
     }
 }
