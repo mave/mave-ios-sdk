@@ -43,7 +43,9 @@
     self.searchTableView.hidden = YES;
 
     self.bigSendButton = [[MAVEBigSendButton alloc] init];
-    self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0];
+    self.bigSendButtonHeightWhenExpanded = 60;
+    self.bigSendButtonBottomConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bigSendButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+    [self updateBigSendButtonHeightExpanded:NO animated:NO];
 
     self.aboveTableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.aboveTableView];
@@ -67,13 +69,14 @@
                             @"bigSendButton": self.bigSendButton,
                             @"searchBar": self.searchBar,
                             @"selectAllRow": self.selectAllRow};
-    NSDictionary *metrics = @{@"searchBarHeight": @(MAVESearchBarHeight + 20)};
+    NSDictionary *metrics = @{@"searchBarHeight": @(MAVESearchBarHeight + 20),
+                              @"bigSendButtonHeight": @(self.bigSendButtonHeightWhenExpanded)};
 
     // the constraints that are editable later
     [self addConstraint:self.topLayoutConstraint];
-    [self addConstraint:self.bigSendButtonHeightConstraint];
+    [self addConstraint:self.bigSendButtonBottomConstraint];
     // rest of wrapper constraints
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[aboveTableView]-0-[tableView]-0-[bigSendButton]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[aboveTableView]-0-[tableView]-0-[bigSendButton(==bigSendButtonHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[aboveTableView]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[tableView]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[bigSendButton]-0-|" options:0 metrics:metrics views:views]];
@@ -97,16 +100,20 @@
     self.searchTableView.frame = self.tableView.frame;
 }
 
-- (void)updateBigSendButtonHeightExpanded:(BOOL)expanded {
-    CGFloat expandedHeight = 60;
-    CGFloat compressedHeight = 0;
+- (void)updateBigSendButtonHeightExpanded:(BOOL)expanded animated:(BOOL)animated {
+    CGFloat valWhenExpanded = 0;
+    CGFloat valWhenCompressed = -1 * self.bigSendButtonHeightWhenExpanded;
     BOOL needAnimate = NO;
-    if (expanded && self.bigSendButtonHeightConstraint.constant != expandedHeight) {
-        self.bigSendButtonHeightConstraint.constant = expandedHeight;
-        needAnimate = YES;
-    } else if (!expanded && self.bigSendButtonHeightConstraint.constant != compressedHeight) {
-        self.bigSendButtonHeightConstraint.constant = compressedHeight;
-        needAnimate = YES;
+    if (expanded && self.bigSendButtonBottomConstraint.constant != valWhenExpanded) {
+        self.bigSendButtonBottomConstraint.constant = valWhenExpanded;
+        if (animated) {
+            needAnimate = YES;
+        }
+    } else if (!expanded && self.bigSendButtonBottomConstraint.constant != valWhenCompressed) {
+        self.bigSendButtonBottomConstraint.constant = valWhenCompressed;
+        if (animated) {
+            needAnimate = YES;
+        }
     }
     if (needAnimate) {
         [UIView animateWithDuration:0.2 animations:^{

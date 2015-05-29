@@ -24,7 +24,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
 
     self.navigationController.navigationBar.translucent = NO;
-    self.wrapperView.bigSendButtonHeightConstraint.constant = 0;
 
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
@@ -85,7 +84,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         }
     }
     NSUInteger numSelected = [self.selectedContactIdentifiersIndex count];
-    [self.wrapperView updateBigSendButtonHeightExpanded:(numSelected > 0)];
+    [self.wrapperView updateBigSendButtonHeightExpanded:(numSelected > 0) animated:YES];
     [self.wrapperView.bigSendButton updateButtonTextNumberToSend:[self.selectedContactIdentifiersIndex count]];
 }
 
