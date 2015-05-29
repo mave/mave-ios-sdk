@@ -50,6 +50,7 @@
 		0C1F1A1A1A53012000B2D482 /* MAVEClientPropertyUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A191A53012000B2D482 /* MAVEClientPropertyUtils.m */; };
 		0C1F1A1C1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F1A1B1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m */; };
 		0C24836F1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C24836E1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m */; };
+		0C2483721B18F1CE00EB4063 /* MAVEInitialsPictureAlternative.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2483711B18F1CE00EB4063 /* MAVEInitialsPictureAlternative.m */; };
 		0C25A3E91AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3E81AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m */; };
 		0C25A3F11AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3F01AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.m */; };
 		0C25A3F31AD6E3420031D163 /* MAVEContactsInvitePageV2ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C25A3F21AD6E3420031D163 /* MAVEContactsInvitePageV2ViewControllerTests.m */; };
@@ -335,6 +336,8 @@
 		0C1F1A1B1A532FC900B2D482 /* MAVEClientPropertyUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEClientPropertyUtilsTests.m; sourceTree = "<group>"; };
 		0C24836D1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageSearchManager.h; sourceTree = "<group>"; };
 		0C24836E1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageSearchManager.m; sourceTree = "<group>"; };
+		0C2483701B18F1CE00EB4063 /* MAVEInitialsPictureAlternative.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInitialsPictureAlternative.h; sourceTree = "<group>"; };
+		0C2483711B18F1CE00EB4063 /* MAVEInitialsPictureAlternative.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInitialsPictureAlternative.m; sourceTree = "<group>"; };
 		0C25A3E71AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageV2TableWrapperView.h; sourceTree = "<group>"; };
 		0C25A3E81AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageV2TableWrapperView.m; sourceTree = "<group>"; };
 		0C25A3EF1AD6AFD20031D163 /* MAVEContactsInvitePageV2TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageV2TableViewCell.h; sourceTree = "<group>"; };
@@ -730,6 +733,8 @@
 				0C435C7E1B0F7A1A005B11AF /* MAVECustomCheckboxV3.m */,
 				0C435C881B0F9E8D005B11AF /* MAVECustomContactInfoRowV3.h */,
 				0C435C891B0F9E8D005B11AF /* MAVECustomContactInfoRowV3.m */,
+				0C2483701B18F1CE00EB4063 /* MAVEInitialsPictureAlternative.h */,
+				0C2483711B18F1CE00EB4063 /* MAVEInitialsPictureAlternative.m */,
 			);
 			path = ContactsInvitePageV3;
 			sourceTree = "<group>";
@@ -1530,6 +1535,7 @@
 				0C6D92B81A75653400B65B82 /* MAVEMerkleTreeInnerNode.m in Sources */,
 				0C1A8FB91A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m in Sources */,
 				0CD2743B1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m in Sources */,
+				0C2483721B18F1CE00EB4063 /* MAVEInitialsPictureAlternative.m in Sources */,
 				0C24836F1B17C30100EB4063 /* MAVEContactsInvitePageSearchManager.m in Sources */,
 				C029280619E82D0F006AEE43 /* MAVEDisplayOptions.m in Sources */,
 				0CFE94871AAE039F00320FF3 /* MAVERemoteConfigurationInvitePageChoice.m in Sources */,

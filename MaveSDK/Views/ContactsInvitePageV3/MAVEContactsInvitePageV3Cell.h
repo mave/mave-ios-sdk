@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MAVECustomCheckboxV3.h"
 #import "MAVEABPerson.h"
+#import "MAVEInitialsPictureAlternative.h"
 
 @interface MAVEContactsInvitePageV3Cell : UITableViewCell
 
@@ -22,7 +23,8 @@
 
 @property (nonatomic, assign) BOOL isExpanded;
 @property (nonatomic, assign) CGFloat pictureWidthHeight;
-@property (nonatomic, strong) UIImageView *picture;
+@property (nonatomic, strong) UIImageView *pictureView;
+@property (nonatomic, strong) MAVEInitialsPictureAlternative *initialsInsteadOfPictureView;
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UIView *contactInfoContainer;
 @property (nonatomic, strong) NSLayoutConstraint *overridingContactInfoContainerHeightConstraint;
@@ -38,5 +40,6 @@
 - (UITableView *)containingTableView;
 - (CGFloat)heightGivenNumberOfContactInfoRecords:(NSUInteger)numberContactRecords;
 - (CGFloat)_heightOfContactInfoWrapperGivenNumberOfContactInfoRecords:(NSUInteger)numberContactRecords;
+- (void)updatePictureViewPicture:(UIImage *)picture initials:(NSString *)initials;
 
 @end

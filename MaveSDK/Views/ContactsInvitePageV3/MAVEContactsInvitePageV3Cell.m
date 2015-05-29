@@ -48,11 +48,15 @@
     self.contentView.backgroundColor = [UIColor whiteColor];
     self.isExpanded = NO;
     self.pictureWidthHeight = 30;
-    self.picture = [[UIImageView alloc] init];
-    self.picture.translatesAutoresizingMaskIntoConstraints = NO;
-    self.picture.backgroundColor = [UIColor clearColor];
-    self.picture.layer.cornerRadius = self.pictureWidthHeight / 2;
-    self.picture.layer.masksToBounds = YES;
+    self.pictureView = [[UIImageView alloc] init];
+    self.pictureView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.pictureView.backgroundColor = [UIColor clearColor];
+    self.pictureView.layer.cornerRadius = self.pictureWidthHeight / 2;
+    self.pictureView.layer.masksToBounds = YES;
+    self.initialsInsteadOfPictureView = [[MAVEInitialsPictureAlternative alloc] init];
+    self.initialsInsteadOfPictureView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.initialsInsteadOfPictureView.layer.cornerRadius = self.pictureWidthHeight / 2;
+    self.initialsInsteadOfPictureView.layer.masksToBounds = YES;
 
     self.nameLabel = [[UILabel alloc] init];
     self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -68,7 +72,8 @@
     self.bottomSeparator.translatesAutoresizingMaskIntoConstraints = NO;
     self.bottomSeparator.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
 
-    [self.contentView addSubview:self.picture];
+    [self.contentView addSubview:self.pictureView];
+    [self.contentView addSubview:self.initialsInsteadOfPictureView];
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.checkmarkBox];
     [self.contentView addSubview:self.contactInfoContainer];
@@ -90,7 +95,7 @@
                               @"contactInfoWrapperToBottom": @(self.contactInfoWrapperToBottom),
                               @"bottomSeparatorHeight": @(self.bottomSeparatorHeight),
     };
-    NSDictionary *viewsWithSelf = NSDictionaryOfVariableBindings(self.picture, self.nameLabel, self.checkmarkBox, self.contactInfoContainer, self.bottomSeparator);
+    NSDictionary *viewsWithSelf = NSDictionaryOfVariableBindings(self.pictureView, self.initialsInsteadOfPictureView, self.nameLabel, self.checkmarkBox, self.contactInfoContainer, self.bottomSeparator);
     NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithCapacity:[viewsWithSelf count]];
     for (NSString *key in viewsWithSelf) {
         NSString *newKey = [key stringByReplacingOccurrencesOfString:@"self." withString:@""];
@@ -98,14 +103,16 @@
     }
     
     NSDictionary *views = [NSDictionary dictionaryWithDictionary:tmp];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[picture(==pictureHeight)]-12-[nameLabel]-20-[checkmarkBox(==checkboxHeight)]-32-|" options:0 metrics:metrics views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-8-[picture(==pictureHeight)]" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[pictureView(==pictureHeight)]-12-[nameLabel]-20-[checkmarkBox(==checkboxHeight)]-32-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-8-[initialsInsteadOfPictureView(==pictureHeight)]-12-[nameLabel]" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-8-[pictureView(==pictureHeight)]" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-8-[initialsInsteadOfPictureView(==pictureHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-topToNameLabel-[nameLabel]-(nameLabelToContactInfoWrapper@249)-[contactInfoContainer]-contactInfoWrapperToBottom-[bottomSeparator(==bottomSeparatorHeight)]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-12-[checkmarkBox(==checkboxHeight)]" options:0 metrics:metrics views:views]];
 
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[contactInfoContainer]-(>=10)-[checkmarkBox]" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[pictureView]-12-[contactInfoContainer]-(>=10)-[checkmarkBox]" options:0 metrics:metrics views:views]];
 
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[picture]-12-[bottomSeparator]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[pictureView]-12-[bottomSeparator]-0-|" options:0 metrics:metrics views:views]];
 }
 
 - (void)setIsExpanded:(BOOL)isExpanded {
@@ -159,14 +166,11 @@
 
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person {
     self.person = person;
-
+    UIImage *picToUse = nil;
     if (person.picture) {
-        UIImage *smaller = [MAVEBuiltinUIElementUtils imageWithImage:person.picture scaledToSize:CGSizeMake(self.pictureWidthHeight, self.pictureWidthHeight)];
-        self.picture.image = smaller;
-    } else {
-        self.picture.image = nil;
+        picToUse = [MAVEBuiltinUIElementUtils imageWithImage:person.picture scaledToSize:CGSizeMake(self.pictureWidthHeight, self.pictureWidthHeight)];
     }
-
+    [self updatePictureViewPicture:picToUse initials:@"AB"];
     self.nameLabel.text = [person fullName];
     self.isExpanded = person.selected;
     self.checkmarkBox.hidden = NO;
@@ -176,11 +180,29 @@
 
 - (void)updateForNoPersonFoundUse {
     self.person = nil;
-    self.picture.image = nil;
+    [self updatePictureViewPicture:nil initials:nil];
     self.nameLabel.text = @"No results found";
     self.isExpanded = NO;
     self.checkmarkBox.hidden = YES;
     self.contactIdentifiersSelectedDidUpdateBlock = nil;
+}
+
+- (void)updatePictureViewPicture:(UIImage *)picture initials:(NSString *)initials {
+    if (picture) {
+        self.pictureView.hidden = NO;
+        self.initialsInsteadOfPictureView.label.text = initials;
+        self.initialsInsteadOfPictureView.hidden = YES;
+        self.pictureView.image = picture;
+    } else {
+        self.pictureView.hidden = YES;
+        self.initialsInsteadOfPictureView.label.text = initials;
+        if ([initials length] > 0) {
+            self.initialsInsteadOfPictureView.hidden = NO;
+        } else {
+            self.initialsInsteadOfPictureView.hidden = YES;
+        }
+        self.pictureView.image = nil;
+    }
 }
 
 - (void)updateWithContactInfoFromPerson:(MAVEABPerson *)person {
@@ -249,6 +271,7 @@
     [self setNeedsLayout];
 }
 
+
 - (void)setConstraintsForContactInfoRow:(MAVECustomContactInfoRowV3 *)contactInfoRow rowAbove:(MAVECustomContactInfoRowV3 *)rowAbove {
     [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
     [self.contactInfoContainer addConstraint:[NSLayoutConstraint constraintWithItem:contactInfoRow attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contactInfoContainer attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
@@ -264,6 +287,7 @@
     }
     [self.contactInfoContainer addConstraint:constraintTop];
 }
+
 
 - (UITableView *)containingTableView {
     id view = [self superview];
