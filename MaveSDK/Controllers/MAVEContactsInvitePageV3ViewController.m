@@ -25,12 +25,17 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.navigationController.navigationBar.translucent = NO;
 
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
+    self.searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:self.dataManager andSearchTable:self.searchTableView];
+    self.wrapperView.searchBar.delegate = self.searchManager;
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
     self.selectedContactIdentifiersIndex = [[NSMutableSet alloc] init];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView registerClass:[MAVEContactsInvitePageV3Cell class]
            forCellReuseIdentifier:MAVEContactsInvitePageV3CellIdentifier];
+    self.searchTableView.dataSource = self;
+    self.searchTableView.delegate = self;
+    [self.searchTableView registerClass:[MAVEContactsInvitePageV3Cell class] forCellReuseIdentifier:MAVEContactsInvitePageV3CellIdentifier];
     self.sampleCell = [[MAVEContactsInvitePageV3Cell alloc] init];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -59,6 +64,9 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (UITableView *)tableView {
     return self.wrapperView.tableView;
 }
+- (UITableView *)searchTableView {
+    return self.wrapperView.searchTableView;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -73,9 +81,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             [self.tableView reloadData];
         });
     }];
-}
-- (MAVEABPerson *)personAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.dataManager personAtMainTableIndexPath:indexPath];
 }
 -(void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person {
     if (person.selected) {
@@ -101,33 +106,62 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [self.dataManager numberOfSectionsInMainTable];
+    if ([tableView isEqual:self.searchTableView]) {
+        return 1;
+    } else {
+        return [self.dataManager numberOfSectionsInMainTable];
+    }
 }
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return [self.dataManager sectionIndexesForMainTable];
+    if ([tableView isEqual:self.searchTableView]) {
+        return nil;
+    } else {
+        return [self.dataManager sectionIndexesForMainTable];
+    }
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.dataManager numberOfRowsInMainTableSection:section];
+    if ([tableView isEqual:self.searchTableView]) {
+//        return MAX([[self.dataManager searchTableData] count], 1);
+        return [[self.dataManager searchTableData] count];
+    } else {
+        return [self.dataManager numberOfRowsInMainTableSection:section];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 20;
+    return 25;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    NSString *text = [[self.dataManager sectionIndexesForMainTable] objectAtIndex:section];
+    NSString *text;
+    if ([tableView isEqual:self.searchTableView]) {
+        text = @"Search Results";
+    } else {
+        text = [[self.dataManager sectionIndexesForMainTable] objectAtIndex:section];
+    }
     return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text sectionIsWaiting:NO];
  }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MAVEABPerson *person = [self personAtIndexPath:indexPath];
+    MAVEABPerson *person;
+    if ([tableView isEqual:self.searchTableView]) {
+        person = [self.dataManager personAtSearchTableIndexPath:indexPath];
+    } else {
+        person = [self.dataManager personAtMainTableIndexPath:indexPath];
+    }
     NSInteger numberContactInfoRecords = person.selected ? [[person allContactIdentifiers] count] : 0;
     return [self.sampleCell heightGivenNumberOfContactInfoRecords:numberContactInfoRecords];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MAVEContactsInvitePageV3Cell *cell = [self.tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV3CellIdentifier];
+    MAVEContactsInvitePageV3Cell *cell = [tableView dequeueReusableCellWithIdentifier:MAVEContactsInvitePageV3CellIdentifier];
 
-    MAVEABPerson *person = [self personAtIndexPath:indexPath];
+    MAVEABPerson *person;
+    if ([tableView isEqual:self.searchTableView]) {
+        person = [self.dataManager personAtSearchTableIndexPath:indexPath];
+    } else {
+        person = [self.dataManager personAtMainTableIndexPath:indexPath];
+    }
+
     [cell updateForReuseWithPerson:person];
     __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
     cell.contactIdentifiersSelectedDidUpdateBlock = ^void(MAVEABPerson *person) {
@@ -137,12 +171,17 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    MAVEABPerson *person = [self personAtIndexPath:indexPath];
+    MAVEABPerson *person;
+    if ([tableView isEqual:self.searchTableView]) {
+        person = [self.dataManager personAtSearchTableIndexPath:indexPath];
+    } else {
+        person = [self.dataManager personAtMainTableIndexPath:indexPath];
+    }
     person.selected = !person.selected;
     [self updateToReflectPersonSelectedStatus:person];
 
-    [self.tableView beginUpdates];
-    [self.tableView endUpdates];
+    [tableView beginUpdates];
+    [tableView endUpdates];
 }
 
 @end

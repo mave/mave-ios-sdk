@@ -26,8 +26,8 @@
 - (NSInteger)numberOfRowsInMainTableSection:(NSUInteger)section;
 
 - (MAVEABPerson *)personAtMainTableIndexPath:(NSIndexPath *)indexPath;
-- (NSIndexPath *)indexPathOfFirstOccuranceInMainTableOfPerson:(MAVEABPerson *)person;
 - (MAVEABPerson *)personAtSearchTableIndexPath:(NSIndexPath *)indexPath;
+- (NSIndexPath *)indexPathOfFirstOccuranceInMainTableOfPerson:(MAVEABPerson *)person;
 
 
 // Method to update the table data with the given contacts, and if suggestions were not yet returned

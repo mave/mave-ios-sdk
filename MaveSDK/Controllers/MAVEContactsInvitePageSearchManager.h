@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MAVEContactsInvitePageDataManager.h"
 
-@interface MAVEContactsInvitePageSearchManager : NSObject <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface MAVEContactsInvitePageSearchManager : NSObject <UITextFieldDelegate>
 
 @property (nonatomic, weak) MAVEContactsInvitePageDataManager *dataManager;
 @property (nonatomic, weak) UITableView *searchTable;

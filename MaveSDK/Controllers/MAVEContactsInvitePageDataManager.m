@@ -51,8 +51,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
 }
 
 - (MAVEABPerson *)personAtSearchTableIndexPath:(NSIndexPath *)indexPath {
-    // TODO: implement
-    return nil;
+    return [self.searchTableData objectAtIndex:indexPath.row];
 }
 
 - (void)setMainTableData:(NSDictionary *)mainTableData {
@@ -63,8 +62,18 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
 }
 
 - (NSArray *)enumerateAllContacts {
-    return nil;
-}
+    NSMutableArray *mutableAllPeople = [NSMutableArray array];
+    NSMutableSet *mutableAllPeopleUnique = [[NSMutableSet alloc] init];
+    for (NSString *sectionKey in self.mainTableSectionKeys) {
+        NSArray *section = [self.mainTableData objectForKey:sectionKey];
+        for (MAVEABPerson *person in section) {
+            if (![mutableAllPeopleUnique containsObject:person]) {
+                [mutableAllPeople addObject:person];
+                [mutableAllPeopleUnique addObject:person];
+            }
+        }
+    }
+    return [NSArray arrayWithArray:mutableAllPeople];}
 
 - (void)updateMainTablePersonToIndexPathsIndex {
     NSNumber *personKey;

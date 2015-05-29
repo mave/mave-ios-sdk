@@ -10,6 +10,7 @@
 #import "MAVEContactsInvitePageV3Cell.h"
 #import "MAVEInviteTableSectionHeaderView.h"
 #import "MAVEContactsInvitePageDataManager.h"
+#import "MAVEContactsInvitePageSearchManager.h"
 #import "MAVEContactsInvitePageV3TableWrapperView.h"
 
 @interface MAVEContactsInvitePageV3ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
@@ -25,6 +26,7 @@
 @property (nonatomic, strong) NSMutableSet *selectedPeopleIndex;
 @property (nonatomic, strong) NSMutableSet *selectedContactIdentifiersIndex;
 @property (nonatomic, strong) MAVEContactsInvitePageDataManager *dataManager;
+@property (nonatomic, strong) MAVEContactsInvitePageSearchManager *searchManager;
 
 - (void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person;
 
