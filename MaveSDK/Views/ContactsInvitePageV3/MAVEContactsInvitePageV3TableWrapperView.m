@@ -43,9 +43,14 @@
     self.searchTableView.hidden = YES;
 
     self.bigSendButton = [[MAVEBigSendButton alloc] init];
+    self.bigSendButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.extraBottomPadding = [[UIView alloc] init];
+    self.extraBottomPadding.translatesAutoresizingMaskIntoConstraints = NO;
+
     self.bigSendButtonHeightWhenExpanded = 60;
-    self.bigSendButtonBottomConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bigSendButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+    self.bigSendButtonBottomConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.extraBottomPadding attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
     [self updateBigSendButtonHeightExpanded:NO animated:NO];
+    self.extraBottomPaddingHeightConstraint = [NSLayoutConstraint constraintWithItem:self.extraBottomPadding attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0];
 
     self.aboveTableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.aboveTableView];
@@ -57,8 +62,8 @@
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.tableView];
     [self addSubview:self.searchTableView];
-    self.bigSendButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.bigSendButton];
+    [self addSubview:self.extraBottomPadding];
 
     [self setNeedsUpdateConstraints];
 }
@@ -67,6 +72,7 @@
     NSDictionary *views = @{@"aboveTableView": self.aboveTableView,
                             @"tableView": self.tableView,
                             @"bigSendButton": self.bigSendButton,
+                            @"extraBottomPadding": self.extraBottomPadding,
                             @"searchBar": self.searchBar,
                             @"selectAllRow": self.selectAllRow};
     NSDictionary *metrics = @{@"searchBarHeight": @(MAVESearchBarHeight + 20),
@@ -75,11 +81,14 @@
     // the constraints that are editable later
     [self addConstraint:self.topLayoutConstraint];
     [self addConstraint:self.bigSendButtonBottomConstraint];
+    [self addConstraint:self.extraBottomPaddingHeightConstraint];
     // rest of wrapper constraints
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[aboveTableView]-0-[tableView]-0-[bigSendButton(==bigSendButtonHeight)]" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[extraBottomPadding]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[aboveTableView]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[tableView]-0-|" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[bigSendButton]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[extraBottomPadding]-0-|" options:0 metrics:metrics views:views]];
 
     // Constraints internal to above table view
     [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]-0-[selectAllRow(44)]-0-|" options:0 metrics:metrics views:views]];
@@ -102,7 +111,7 @@
 
 - (void)updateBigSendButtonHeightExpanded:(BOOL)expanded animated:(BOOL)animated {
     CGFloat valWhenExpanded = 0;
-    CGFloat valWhenCompressed = -1 * self.bigSendButtonHeightWhenExpanded;
+    CGFloat valWhenCompressed = self.bigSendButtonHeightWhenExpanded;
     BOOL needAnimate = NO;
     if (expanded && self.bigSendButtonBottomConstraint.constant != valWhenExpanded) {
         self.bigSendButtonBottomConstraint.constant = valWhenExpanded;

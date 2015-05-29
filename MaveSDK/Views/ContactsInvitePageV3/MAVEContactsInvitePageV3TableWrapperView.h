@@ -21,9 +21,11 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, strong) MAVEBigSendButton *bigSendButton;
+@property (nonatomic, strong) UIView *extraBottomPadding;
 
 @property (nonatomic, assign) CGFloat bigSendButtonHeightWhenExpanded;
 @property (nonatomic, strong) NSLayoutConstraint *bigSendButtonBottomConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *extraBottomPaddingHeightConstraint;
 - (void)updateBigSendButtonHeightExpanded:(BOOL)expanded animated:(BOOL)animated;
 
 @end
