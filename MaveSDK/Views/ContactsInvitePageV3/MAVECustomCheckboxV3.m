@@ -63,48 +63,31 @@
 }
 
 - (void)animateCheckCheckmark {
-    CGFloat pt1Length = 0.3f;
+    CGFloat pt1Length = 0.2f;
     CGFloat pt2Length = 0.2f;
-    CGFloat pt3Length = 0.1f;
     self.isChecked = YES;
-    self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight] * 1.5;
+    self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight] * 1.15;
     [UIView animateWithDuration:pt1Length animations:^{
         [self layoutIfNeeded];
     }];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(pt1Length * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight] * 0.75;
+        self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight];
         [UIView animateWithDuration:pt2Length animations:^{
             [self layoutIfNeeded];
         }];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(pt2Length * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight];
-            [UIView animateWithDuration:pt3Length animations:^{
-                [self layoutIfNeeded];
-            }];
-        });
     });
 }
 
 - (void)animateUncheckCheckmark {
     CGFloat pt1Length = 0.2f;
-    CGFloat pt2Length = 0.2f;
-    CGFloat pt3Length = 0.1f;
-    self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight] * 1.5;
-    [UIView animateWithDuration:pt1Length animations:^{
+    self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight] * 0.75;
+    [UIView animateWithDuration:pt1Length * 2 animations:^{
         [self layoutIfNeeded];
     }];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(pt1Length * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight] * 0.5;
-        [UIView animateWithDuration:pt2Length animations:^{
-            [self layoutIfNeeded];
-        }];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(pt2Length * 0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.checkmarkImageHeightConstraint.constant = 0;
-            [self layoutIfNeeded];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(pt3Length * 0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.isChecked = NO;
-            });
-        });
+        self.checkmarkImageHeightConstraint.constant = 0;
+        self.isChecked = NO;
+        [self layoutIfNeeded];
     });
 }
 
