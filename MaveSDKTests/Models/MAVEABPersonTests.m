@@ -443,6 +443,18 @@
     XCTAssertEqualObjects(p4.fullName, nil);
 }
 
+- (void)testInitials {
+    MAVEABPerson *p0 = [MAVEABTestDataFactory personWithFirstName:nil lastName:nil];
+    MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:nil];
+    MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:nil lastName:@"Foo"];
+    MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"Foo"];
+
+    XCTAssertEqualObjects([p0 initials], @"");
+    XCTAssertEqualObjects([p1 initials], @"D");
+    XCTAssertEqualObjects([p2 initials], @"F");
+    XCTAssertEqualObjects([p3 initials], @"DF");
+}
+
 - (void)testBestPhoneSingleNumber {
     NSString *bestPhone = @"18085551234";
     MAVEABPerson *p = [[MAVEABPerson alloc] init];

@@ -187,6 +187,17 @@
     return name;
 }
 
+- (NSString *)initials {
+    NSString *returnval = @"";
+    if (self.firstName && [self.firstName length] > 0) {
+        returnval = [returnval stringByAppendingString:[self.firstName substringWithRange:NSMakeRange(0, 1)]];
+    }
+    if (self.lastName && [self.lastName length] > 0) {
+        returnval = [returnval stringByAppendingString:[self.lastName substringWithRange:NSMakeRange(0, 1)]];
+    }
+    return returnval;
+}
+
 - (NSArray *)allContactIdentifiers {
     NSArray *result = @[];
     result = [result arrayByAddingObjectsFromArray:self.phoneObjects];

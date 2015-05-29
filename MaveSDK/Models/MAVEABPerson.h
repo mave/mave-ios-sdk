@@ -77,6 +77,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 // (last name if it exists, otherwise first name)
 - (NSString *)firstLetter;
 - (NSString *)fullName;
+- (NSString *)initials;
 
 // Returns the mobile or main phone or the first one in the list if there are phones, otherwise nil
 - (NSString *)bestPhone;
