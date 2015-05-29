@@ -37,6 +37,8 @@
     self.textLabel.font = [UIFont fontWithName:@"OpenSans" size:16];
     self.textLabel.textColor = [UIColor grayColor];
     self.checkbox = [[MAVECustomCheckboxV3 alloc] init];
+    UITapGestureRecognizer *tapCheckbox = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCheckbox)];
+    [self.checkbox addGestureRecognizer:tapCheckbox];
 
     self.icon.translatesAutoresizingMaskIntoConstraints = NO;
     self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -66,5 +68,14 @@
     }
     [super updateConstraints];
 }
+
+- (void)didTapCheckbox {
+    BOOL newCheckboxState = !self.checkbox.isChecked;
+    [self.checkbox animateToggleCheckmark];
+    if (self.selectAllBlock) {
+        self.selectAllBlock(newCheckboxState);
+    }
+}
+
 
 @end

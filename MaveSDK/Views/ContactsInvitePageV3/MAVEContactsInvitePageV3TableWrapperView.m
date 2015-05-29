@@ -30,8 +30,8 @@
     self.aboveTableView = [[UIView alloc] init];
     self.aboveTableView.backgroundColor = [UIColor purpleColor];
     self.searchBar = [[MAVESearchBar alloc] initWithSingletonSearchBarDisplayOptions];
-    self.selectAllRow = [[MAVEInvitePageSelectAllRow alloc] init];
-    self.selectAllRow.textLabel.text = @"Select All Emails";
+    self.selectAllEmailsRow = [[MAVEInvitePageSelectAllRow alloc] init];
+    self.selectAllEmailsRow.textLabel.text = @"Select All Emails";
     self.topLayoutConstraint = [NSLayoutConstraint constraintWithItem:self.aboveTableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
 
     self.tableView = [[UITableView alloc] init];
@@ -55,13 +55,13 @@
     self.aboveTableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.aboveTableView];
     self.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
-    self.selectAllRow.translatesAutoresizingMaskIntoConstraints = NO;
+    self.selectAllEmailsRow.translatesAutoresizingMaskIntoConstraints = NO;
     [self.aboveTableView addSubview:self.searchBar];
-    [self.aboveTableView addSubview:self.selectAllRow];
+    [self.aboveTableView addSubview:self.selectAllEmailsRow];
 
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:self.tableView];
     [self addSubview:self.searchTableView];
+    [self addSubview:self.tableView];
     [self addSubview:self.bigSendButton];
     [self addSubview:self.extraBottomPadding];
 
@@ -74,7 +74,7 @@
                             @"bigSendButton": self.bigSendButton,
                             @"extraBottomPadding": self.extraBottomPadding,
                             @"searchBar": self.searchBar,
-                            @"selectAllRow": self.selectAllRow};
+                            @"selectAllRow": self.selectAllEmailsRow};
     NSDictionary *metrics = @{@"searchBarHeight": @(MAVESearchBarHeight + 20),
                               @"bigSendButtonHeight": @(self.bigSendButtonHeightWhenExpanded)};
 

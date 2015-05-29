@@ -104,8 +104,8 @@ CGFloat const verticalPadding = 4;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (self.contactIdentifierRecord.selected && !self.isSelected) {
-        self.isSelected = YES;
+    if (self.contactIdentifierRecord.selected != self.isSelected) {
+        self.isSelected = self.contactIdentifierRecord.selected;
         [self layoutIfNeeded];
     }
 }

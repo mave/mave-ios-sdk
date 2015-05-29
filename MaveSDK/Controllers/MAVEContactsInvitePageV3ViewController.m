@@ -25,8 +25,12 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.navigationController.navigationBar.translucent = NO;
 
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
-    self.searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:self.dataManager andSearchTable:self.searchTableView];
+    self.searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:self.dataManager mainTable:self.tableView andSearchTable:self.searchTableView];
     self.wrapperView.searchBar.delegate = self.searchManager;
+    __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
+    self.wrapperView.selectAllEmailsRow.selectAllBlock = ^void(BOOL selected) {
+        [weakSelf selectOrDeselectAllEmails:selected];
+    };
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
     self.selectedContactIdentifiersIndex = [[NSMutableSet alloc] init];
     self.tableView.dataSource = self;
@@ -82,6 +86,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         });
     }];
 }
+
 -(void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person {
     if (person.selected) {
         [self.selectedPeopleIndex addObject:person];
@@ -98,8 +103,55 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         }
     }
     NSUInteger numSelected = [self.selectedContactIdentifiersIndex count];
+    if ([person.fullName isEqualToString:@"Daniel Higgins"]) {
+        NSLog(@"higgins email selected: %@", @(((MAVEContactEmail *)person.emailObjects[0]).selected));
+    }
     [self.wrapperView updateBigSendButtonHeightExpanded:(numSelected > 0) animated:YES];
     [self.wrapperView.bigSendButton updateButtonTextNumberToSend:[self.selectedContactIdentifiersIndex count]];
+}
+
+- (void)selectOrDeselectAllEmails:(BOOL)select {
+    if (select) {
+        for (MAVEABPerson *person in self.dataManager.allContacts) {
+            if ([person.emailObjects count] == 0) {
+                continue;
+            }
+            MAVEContactEmail *firstEmail = [person.emailObjects objectAtIndex:0];
+            BOOL anyEmailAlreadySelected = NO;
+            for (MAVEContactEmail *email in person.emailObjects) {
+                if (email.selected) { anyEmailAlreadySelected = YES; }
+            }
+            if (!anyEmailAlreadySelected) {
+                firstEmail.selected = YES;
+            }
+            person.selected = YES;
+            [self updateToReflectPersonSelectedStatus:person];
+        }
+    } else {
+        for (MAVEABPerson *person in [self.selectedPeopleIndex allObjects]) {
+            BOOL anyEmailSelected = NO;
+            for (MAVEContactEmail *email in person.emailObjects) {
+                if (email.selected) {
+                    if ([person.firstName isEqualToString:@"Daniel"] && [email.value isEqualToString:@"d-higgins@mac.com"]) {
+                        NSLog(@"deselecting dhiggins email");
+                    }
+                    anyEmailSelected = YES;
+                    email.selected = NO;
+                }
+            }
+            if (anyEmailSelected) {
+                person.selected = NO;
+                [self updateToReflectPersonSelectedStatus:person];
+            }
+        }
+    }
+    [self.tableView beginUpdates];
+    [self.tableView endUpdates];
+    if (select) {
+        [self.searchManager clearCurrentSearchInTextField:self.wrapperView.searchBar];
+        [self.wrapperView.searchBar endEditing:YES];
+    }
+
 }
 
 #pragma mark - Table View Data Source & Delegate
@@ -114,9 +166,18 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     if ([tableView isEqual:self.searchTableView]) {
-        return nil;
+        // Use blank entries but not nil, so it won't remove the padding where the index was on the main table
+        return @[@""];
     } else {
         return [self.dataManager sectionIndexesForMainTable];
+    }
+}
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    if ([tableView isEqual:self.searchTableView]) {
+        return -1;
+    } else {
+        NSLog(@"scrolled index");
+        return index;
     }
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

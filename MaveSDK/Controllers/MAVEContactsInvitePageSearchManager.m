@@ -11,10 +11,12 @@
 
 @implementation MAVEContactsInvitePageSearchManager
 
-- (instancetype)initWithDataManager:(MAVEContactsInvitePageDataManager *)dataManager andSearchTable:(UITableView *)searchTable {
+- (instancetype)initWithDataManager:(MAVEContactsInvitePageDataManager *)dataManager mainTable:(UITableView *)mainTable andSearchTable:(UITableView *)searchTable {
     if (self = [super init]) {
         self.dataManager = dataManager;
+        self.mainTable = mainTable;
         self.searchTable = searchTable;
+        self.searchTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return self;
 }
@@ -28,9 +30,11 @@
     }
     if ([newText length] > 0) {
         self.searchTable.hidden = NO;
+        self.mainTable.hidden = YES;
         [self searchContactsAndUpdateSearchTableWithTerm:newText];
     } else {
         self.searchTable.hidden = YES;
+        self.mainTable.hidden = NO;
     }
     return YES;
 }
@@ -38,6 +42,12 @@
 - (void)searchContactsAndUpdateSearchTableWithTerm:(NSString *)searchTerm {
     self.dataManager.searchTableData = [MAVEABTableViewController searchContacts:self.dataManager.allContacts withText:searchTerm];
     [self.searchTable reloadData];
+}
+
+- (void)clearCurrentSearchInTextField:(UITextField *)textField {
+    textField.text = @"";
+    self.searchTable.hidden = YES;
+    self.mainTable.hidden = NO;
 }
 
 @end

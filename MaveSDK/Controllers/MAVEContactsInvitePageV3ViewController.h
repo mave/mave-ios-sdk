@@ -29,5 +29,6 @@
 @property (nonatomic, strong) MAVEContactsInvitePageSearchManager *searchManager;
 
 - (void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person;
+- (void)selectOrDeselectAllEmails:(BOOL)select;
 
 @end
