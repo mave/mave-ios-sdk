@@ -220,7 +220,7 @@
 
     MAVECustomContactInfoRowV3 *previousContactInfoRow = nil;
     MAVEContactIdentifierBase *record = nil;
-    for (NSUInteger i = 0; i < [sortedRecords count]; ++i) {
+    for (NSUInteger i = 0; i < numberOfRowsNeeded; ++i) {
         record = [sortedRecords objectAtIndex:i];
 
         MAVECustomContactInfoRowV3 *contactInfoRow;
@@ -232,7 +232,8 @@
             [self.contactInfoContainer addSubview:contactInfoRow];
             [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];
         }
-        [contactInfoRow updateWithContactIdentifierRecord:record];
+        [contactInfoRow updateWithContactIdentifierRecord:record isOnlyContactIdentifier:(numberOfRowsNeeded == 1)];
+
         __weak MAVEContactsInvitePageV3Cell *weakSelf = self;
         __weak MAVECustomContactInfoRowV3 *weakRowSelf = contactInfoRow;
         contactInfoRow.rowWasTappedBlock = ^void(BOOL isSelected) {

@@ -39,8 +39,9 @@ CGFloat const verticalPadding = 4;
     return self;
 }
 
-- (void)updateWithContactIdentifierRecord:(MAVEContactIdentifierBase *)contactIdentifier {
+- (void)updateWithContactIdentifierRecord:(MAVEContactIdentifierBase *)contactIdentifier isOnlyContactIdentifier:(BOOL)isOnlyContactIdentifier {
     self.contactIdentifierRecord = contactIdentifier;
+    self.isOnlyContactIdentifier = isOnlyContactIdentifier;
     self.label.text = [contactIdentifier humanReadableValueForDetailedDisplay];
     self.isSelected = contactIdentifier.selected;
 }
@@ -48,7 +49,13 @@ CGFloat const verticalPadding = 4;
 - (void)setIsSelected:(BOOL)isSelected {
     if (isSelected) {
         self.label.textColor = self.selectedColor;
-        self.checkmarkView.hidden = NO;
+        // If it's the only phone/email for the contact, the checkmark looks out of place and is
+        // unnecessary to indicate that this record is selected.
+        if (self.isOnlyContactIdentifier) {
+            self.checkmarkView.hidden = YES;
+        } else {
+            self.checkmarkView.hidden = NO;
+        }
     } else {
         self.label.textColor = self.deselectedColor;
         self.checkmarkView.hidden = YES;

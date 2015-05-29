@@ -20,12 +20,13 @@
 @property (nonatomic, strong) UIImageView *checkmarkView;
 @property (nonatomic, strong) UIImage *untintedCheckmark;
 @property (nonatomic, assign) BOOL isSelected;
+@property (nonatomic, assign) BOOL isOnlyContactIdentifier;
 @property (nonatomic, strong) void (^rowWasTappedBlock)(BOOL isSelected);
 
 - (instancetype)initWithFont:(UIFont *)font selectedColor:(UIColor *)selectedColor deselectedColor:(UIColor *)deselectedColor;
 - (void)tappedRow;
 + (CGFloat)heightGivenFont:(UIFont *)font;
 
-- (void)updateWithContactIdentifierRecord:(MAVEContactIdentifierBase *)contactIdentifier;
+- (void)updateWithContactIdentifierRecord:(MAVEContactIdentifierBase *)contactIdentifier isOnlyContactIdentifier:(BOOL)isOnlyContactIdentifier;
 
 @end
