@@ -23,5 +23,6 @@
 @property (nonatomic, strong) MAVEBigSendButton *bigSendButton;
 
 @property (nonatomic, strong) NSLayoutConstraint *bigSendButtonHeightConstraint;
+- (void)updateBigSendButtonHeightExpanded:(BOOL)expanded;
 
 @end

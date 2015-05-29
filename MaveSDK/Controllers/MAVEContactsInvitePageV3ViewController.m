@@ -22,7 +22,9 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+
     self.navigationController.navigationBar.translucent = NO;
+    self.wrapperView.bigSendButtonHeightConstraint.constant = 0;
 
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
@@ -82,6 +84,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             [self.selectedContactIdentifiersIndex removeObject:rec];
         }
     }
+    NSUInteger numSelected = [self.selectedContactIdentifiersIndex count];
+    [self.wrapperView updateBigSendButtonHeightExpanded:(numSelected > 0)];
     [self.wrapperView.bigSendButton updateButtonTextNumberToSend:[self.selectedContactIdentifiersIndex count]];
 }
 

@@ -43,7 +43,7 @@
     self.searchTableView.hidden = YES;
 
     self.bigSendButton = [[MAVEBigSendButton alloc] init];
-    self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60];
+    self.bigSendButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bigSendButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0];
 
     self.aboveTableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.aboveTableView];
@@ -95,6 +95,24 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.searchTableView.frame = self.tableView.frame;
+}
+
+- (void)updateBigSendButtonHeightExpanded:(BOOL)expanded {
+    CGFloat expandedHeight = 60;
+    CGFloat compressedHeight = 0;
+    BOOL needAnimate = NO;
+    if (expanded && self.bigSendButtonHeightConstraint.constant != expandedHeight) {
+        self.bigSendButtonHeightConstraint.constant = expandedHeight;
+        needAnimate = YES;
+    } else if (!expanded && self.bigSendButtonHeightConstraint.constant != compressedHeight) {
+        self.bigSendButtonHeightConstraint.constant = compressedHeight;
+        needAnimate = YES;
+    }
+    if (needAnimate) {
+        [UIView animateWithDuration:0.2 animations:^{
+            [self layoutIfNeeded];
+        }];
+    }
 }
 
 @end
