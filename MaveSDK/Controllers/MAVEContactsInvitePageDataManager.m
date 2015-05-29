@@ -51,6 +51,9 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
 }
 
 - (MAVEABPerson *)personAtSearchTableIndexPath:(NSIndexPath *)indexPath {
+    if (![self.searchTableData count] - 1 >= indexPath.row) {
+        return nil;
+    }
     return [self.searchTableData objectAtIndex:indexPath.row];
 }
 

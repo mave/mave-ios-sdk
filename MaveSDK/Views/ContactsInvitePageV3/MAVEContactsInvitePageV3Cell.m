@@ -169,8 +169,18 @@
 
     self.nameLabel.text = [person fullName];
     self.isExpanded = person.selected;
+    self.checkmarkBox.hidden = NO;
     self.checkmarkBox.isChecked = person.selected;
     [self updateWithContactInfoFromPerson:person];
+}
+
+- (void)updateForNoPersonFoundUse {
+    self.person = nil;
+    self.picture.image = nil;
+    self.nameLabel.text = @"No results found";
+    self.isExpanded = NO;
+    self.checkmarkBox.hidden = YES;
+    self.contactIdentifiersSelectedDidUpdateBlock = nil;
 }
 
 - (void)updateWithContactInfoFromPerson:(MAVEABPerson *)person {

@@ -182,8 +182,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ([tableView isEqual:self.searchTableView]) {
-//        return MAX([[self.dataManager searchTableData] count], 1);
-        return [[self.dataManager searchTableData] count];
+        return MAX([[self.dataManager searchTableData] count], 1);
     } else {
         return [self.dataManager numberOfRowsInMainTableSection:section];
     }
@@ -223,11 +222,15 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         person = [self.dataManager personAtMainTableIndexPath:indexPath];
     }
 
-    [cell updateForReuseWithPerson:person];
-    __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
-    cell.contactIdentifiersSelectedDidUpdateBlock = ^void(MAVEABPerson *person) {
-        [weakSelf updateToReflectPersonSelectedStatus:person];
-    };
+    if (person) {
+        [cell updateForReuseWithPerson:person];
+        __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
+        cell.contactIdentifiersSelectedDidUpdateBlock = ^void(MAVEABPerson *person) {
+            [weakSelf updateToReflectPersonSelectedStatus:person];
+        };
+    } else {
+        [cell updateForNoPersonFoundUse];
+    }
     return (UITableViewCell *)cell;
 }
 
@@ -237,6 +240,10 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         person = [self.dataManager personAtSearchTableIndexPath:indexPath];
     } else {
         person = [self.dataManager personAtMainTableIndexPath:indexPath];
+    }
+    if (!person) {
+        // The cell didn't represent a person, e.g. the "No results found" cell
+        return;
     }
     person.selected = !person.selected;
     [self updateToReflectPersonSelectedStatus:person];
