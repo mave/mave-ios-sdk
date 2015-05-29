@@ -15,6 +15,7 @@
 #import <MessageUI/MessageUI.h>
 #import "MAVEInvitePageViewController.h"
 #import "MAVEContactsInvitePageV2ViewController.h"
+#import "MAVEContactsInvitePageV3ViewController.h"
 
 typedef void (^MAVEInvitePagePresentBlock)(UIViewController *inviteController);
 typedef void (^MAVEInvitePageDismissBlock)(UIViewController *controller, NSUInteger numberOfInvitesSent);
@@ -46,6 +47,7 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 - (UIViewController *)chooseAndCreateInvitePageViewController;
 - (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed;
 - (MAVEContactsInvitePageV2ViewController *)createContactsInvitePageV2IfAllowed;
+- (MAVEContactsInvitePageV3ViewController *)createContactsInvitePageV3IfAllowed;
 - (MFMessageComposeViewController *)createClientSMSInvitePage;
 
 // Helpers for business logic

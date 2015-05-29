@@ -14,9 +14,6 @@
 #import "MAVEABUtils.h"
 #import "MAVERemoteConfiguration.h"
 #import "MAVEInvitePageViewController.h"
-#import "MAVECustomSharePageViewController.h"
-#import "MAVEContactsInvitePageV2ViewController.h"
-#import "MAVEContactsInvitePageV3ViewController.h"
 #import "MAVEDisplayOptions.h"
 
 NSString * const MAVEInvitePageTypeContactList = @"contact_list";
@@ -73,7 +70,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 - (UIViewController *)createViewControllerOfType:(MAVEInvitePageType)invitePageType {
     switch (invitePageType) {
         case MAVEInvitePageTypeContactsInvitePage:
-            return [self createContactsInvitePageIfAllowed];
+            return [self createContactsInvitePageV3IfAllowed];
         case MAVEInvitePageTypeContactsInvitePageV2:
             return [self createContactsInvitePageV2IfAllowed];
         case MAVEInvitePageTypeSharePage:
@@ -85,11 +82,9 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     }
 }
 
-- (MAVEContactsInvitePageV3ViewController *)createContactsInvitePageIfAllowed {
-//- (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed {
+- (MAVEInvitePageViewController *)createContactsInvitePageIfAllowed {
     if ([self isAnyServerSideContactsInvitePageAllowed]) {
-//        return [[MAVEInvitePageViewController alloc] init];
-        return [[MAVEContactsInvitePageV3ViewController alloc] init];
+        return [[MAVEInvitePageViewController alloc] init];
     } else {
         return nil;
     }
@@ -102,6 +97,15 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
         return nil;
     }
 }
+
+- (MAVEContactsInvitePageV3ViewController *)createContactsInvitePageV3IfAllowed {
+    if ([self isAnyServerSideContactsInvitePageAllowed]) {
+        return [[MAVEContactsInvitePageV3ViewController alloc] init];
+    } else {
+        return nil;
+    }
+}
+
 
 - (BOOL)isAnyServerSideContactsInvitePageAllowed {
     // Once we fully support client-side invite send method, incorporate that option
