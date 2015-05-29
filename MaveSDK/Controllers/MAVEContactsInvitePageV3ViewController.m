@@ -22,7 +22,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-
     self.navigationController.navigationBar.translucent = NO;
 
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
@@ -32,14 +31,24 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.tableView.delegate = self;
     [self.tableView registerClass:[MAVEContactsInvitePageV3Cell class]
            forCellReuseIdentifier:MAVEContactsInvitePageV3CellIdentifier];
-
     self.sampleCell = [[MAVEContactsInvitePageV3Cell alloc] init];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
 
     [self loadContactsData];
 }
 
 - (void)dealloc {
     NSLog(@"table view dealloced");
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+- (void)keyboardWillChangeFrame:(NSNotification *)notification {
+    CGFloat fullViewHeight = self.view.frame.origin.y + self.view.frame.size.height;
+    CGRect newKeyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat neededBottomPadding = MAX(fullViewHeight - newKeyboardFrame.origin.y, 0);
+    self.wrapperView.extraBottomPaddingHeightConstraint.constant = neededBottomPadding;
+    [self.wrapperView layoutIfNeeded];
 }
 
 - (void)loadView {
