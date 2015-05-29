@@ -91,7 +91,7 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[extraBottomPadding]-0-|" options:0 metrics:metrics views:views]];
 
     // Constraints internal to above table view
-    [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]-0-[selectAllRow(44)]-0-|" options:0 metrics:metrics views:views]];
+    [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]-0-[selectAllRow]-0-|" options:0 metrics:metrics views:views]];
     [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchBar]-0-|" options:0 metrics:metrics views:views]];
     [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[selectAllRow]-0-|" options:0 metrics:metrics views:views]];
 }

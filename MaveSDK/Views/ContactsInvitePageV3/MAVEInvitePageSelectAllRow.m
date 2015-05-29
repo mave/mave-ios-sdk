@@ -34,7 +34,7 @@
     envelope = [MAVEBuiltinUIElementUtils tintWhitesInImage:envelope withColor:[UIColor grayColor]];
     self.icon.image = envelope;
     self.textLabel = [[UILabel alloc] init];
-    self.textLabel.font = [UIFont fontWithName:@"OpenSans" size:16];
+    self.textLabel.font = [UIFont fontWithName:@"OpenSans" size:14];
     self.textLabel.textColor = [UIColor grayColor];
     self.checkbox = [[MAVECustomCheckboxV3 alloc] init];
     UITapGestureRecognizer *tapCheckbox = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCheckbox)];
@@ -55,10 +55,16 @@
                             @"textLabel": self.textLabel,
                             @"checkbox": self.checkbox};
     NSDictionary *metrics = @{@"checkboxRightOffset": @(48)};
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[icon]-5-[textLabel]-(>=10)-[checkbox]-(checkboxRightOffset)-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[icon]-10-[textLabel]-(>=10)-[checkbox]-(checkboxRightOffset)-|" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+}
+
+- (CGSize)intrinsicContentSize {
+    CGFloat height = [@"Some String Here" sizeWithAttributes:@{NSFontAttributeName: self.textLabel.font}].height;
+    height = height + 2 * 8;  // account for extra padding above/below
+    return CGSizeMake(UIViewNoIntrinsicMetric, height);
 }
 
 - (void)updateConstraints {
