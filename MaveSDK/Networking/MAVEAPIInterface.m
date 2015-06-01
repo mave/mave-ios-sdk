@@ -205,9 +205,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
             if (smsCopy && [inviteType isEqualToString:@"sms"]) {
                 [current setObject:smsCopy forKey:@"sms_copy"];
             }
-            if (senderUserID) {
-                [current setObject:senderUserID forKey:@"sender_user_id"];
-            }
+            [current setObject:senderUserID forKey:@"sender_user_id"];
             if (inviteLinkDestinationURL) {
                 [current setObject:inviteLinkDestinationURL forKey:@"link_destination"];
             }

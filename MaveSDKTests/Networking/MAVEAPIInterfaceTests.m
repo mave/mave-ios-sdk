@@ -389,6 +389,31 @@
     OCMVerifyAll(mock);
 }
 
+- (void)testSendInvitesToRecipientsMinimalFieldsPassedIn {
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone0 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
+    p0.phoneObjects = @[phone0];
+    p0.selected = YES;
+
+    NSString *senderUserID = @"1234";
+    NSArray *expectedParams = @[@{
+        @"recipient_contact_record": [p0 toJSONDictionaryIncludingSuggestionsMetadata],
+        @"deliver_to": phone0.value,
+        @"invite_type": @"sms",
+        @"sender_user_id": senderUserID,
+        @"wrap_invite_link": @(NO),
+        }];
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:[OCMArg checkWithBlock:^BOOL(id obj) {
+        XCTAssertEqualObjects(obj, expectedParams);
+        return YES;
+    }] extraHeaders:nil gzipCompressBody:YES completionBlock:nil]);
+
+    [self.testAPIInterface sendInvitesToRecipients:@[p0] smsCopy:nil senderUserID:senderUserID inviteLinkDestinationURL:nil wrapInviteLink:NO customData:nil completionBlock:nil];
+
+    OCMVerifyAll(mock);
+}
+
 - (void)testSendContactsMerkleTree {
     id mocked = OCMPartialMock(self.testAPIInterface);
     id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
