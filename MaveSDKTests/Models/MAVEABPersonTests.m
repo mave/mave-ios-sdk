@@ -343,20 +343,33 @@
     XCTAssertEqualObjects(p1, nil);
 }
 
-- (void)testInitFailsWhenNoPhones {
+- (void)testInitFailsWhenNoPhoneOrEmail {
     ABRecordRef rec = ABPersonCreate();
     ABRecordSetValue(rec, kABPersonFirstNameProperty, @"John" , nil);
     MAVEABPerson *p1 = [[MAVEABPerson alloc] initFromABRecordRef:rec];
     XCTAssertEqualObjects(p1, nil);
 }
-- (void)testInitFailsWhenNoValidPhones {
+- (void)testInitFailsWhenNoValidPhoneOrEmail {
     ABRecordRef rec = ABPersonCreate();
     ABRecordSetValue(rec, kABPersonFirstNameProperty, @"John" , nil);
     ABMutableMultiValueRef pnmv = ABMultiValueCreateMutable(kABPersonPhoneProperty);
     // phone number is invalid b/c not 10 digits
     ABMultiValueAddValueAndLabel(pnmv, @"555.1234", kABPersonPhoneMobileLabel, NULL);
+    ABRecordSetValue(rec, kABPersonPhoneProperty, pnmv, nil);
     MAVEABPerson *p1 = [[MAVEABPerson alloc] initFromABRecordRef:rec];
     XCTAssertEqualObjects(p1, nil);
+}
+
+- (void)testInitWorksWhenEmailButNoPhone {
+    ABRecordRef rec = ABPersonCreate();
+    ABRecordSetValue(rec, kABPersonFirstNameProperty, @"John" , nil);
+    ABMutableMultiValueRef emv = ABMultiValueCreateMutable(kABPersonEmailProperty);
+    ABMultiValueAddValueAndLabel(emv, @"john@example.com", (CFStringRef)@"home", NULL);
+    ABRecordSetValue(rec, kABPersonEmailProperty, emv, nil);
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] initFromABRecordRef:rec];
+    XCTAssertNotNil(p1);
+    XCTAssertEqual([p1.emailAddresses count], 1);
+    XCTAssertEqual([p1.emailObjects count], 1);
 }
 
 - (void)testSelectedContactIdentifiersAndIsAtLeaseOneFunction {

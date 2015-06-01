@@ -79,7 +79,7 @@
     MAVECustomContactInfoRowV3 *row = [[MAVECustomContactInfoRowV3 alloc] initWithFont:font1 selectedColor:color1 deselectedColor:color2];
     XCTAssertFalse(row.isSelected);
 
-    [row updateWithContactIdentifierRecord:phone];
+    [row updateWithContactIdentifierRecord:phone isOnlyContactIdentifier:YES];
     XCTAssertEqualObjects(row.contactIdentifierRecord, phone);
     XCTAssertEqualObjects(row.label.text, @"(808)\u00a0555-1234 (home)");
     XCTAssertTrue(row.isSelected);
@@ -93,7 +93,7 @@
     UIColor *color1 = [MAVEDisplayOptionsFactory randomColor];
     UIColor *color2 = [MAVEDisplayOptionsFactory randomColor];
     MAVECustomContactInfoRowV3 *row = [[MAVECustomContactInfoRowV3 alloc] initWithFont:font1 selectedColor:color1 deselectedColor:color2];
-    [row updateWithContactIdentifierRecord:phone];
+    [row updateWithContactIdentifierRecord:phone isOnlyContactIdentifier:YES];
 
     id rowMock = OCMPartialMock(row);
     OCMExpect([rowMock setIsSelected:YES]);

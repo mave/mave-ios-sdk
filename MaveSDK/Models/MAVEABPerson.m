@@ -34,10 +34,10 @@
                 return nil;
             }
             [self setPhoneNumbersFromABRecordRef:record];
-            if ([self.phoneNumbers count] == 0) {
+            [self setEmailAddressesFromABRecordRef:record];
+            if ([self.phoneNumbers count] == 0 && [self.emailAddresses count] == 0){
                 return nil;
             }
-            [self setEmailAddressesFromABRecordRef:record];
         }
         @catch (NSException *exception) {
             self = nil;
