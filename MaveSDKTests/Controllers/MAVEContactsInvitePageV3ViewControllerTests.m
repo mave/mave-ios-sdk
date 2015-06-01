@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import "MaveSDK.h"
 #import "MAVEContactsInvitePageV3ViewController.h"
 #import "MAVEABPerson.h"
 #import "MAVEContactPhoneNumber.h"
@@ -217,6 +218,50 @@
 
     XCTAssertFalse(phone1.selected);
     XCTAssertTrue(email1.selected);
+}
+
+- (void)testSendInvites {
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    [controller viewDidLoad];
+
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
+    MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
+    p0.emailObjects = @[email00, email01];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
+    p1.phoneObjects = @[phone1];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.emailObjects = @[email1];
+
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone2 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551111" andLabel:MAVEContactPhoneLabelMobile];
+    p2.phoneObjects = @[phone2];
+    [controller.dataManager updateWithContacts:@[p0, p1, p2] ifNecessaryAsyncSuggestionsBlock:nil];
+
+    p0.selected = YES; // this will select the best contact, email01
+    [controller updateToReflectPersonSelectedStatus:p0];
+    XCTAssertTrue(email01.selected);
+    p1.selected = YES; // this will select the best contact phone1
+    [controller updateToReflectPersonSelectedStatus:p1];
+    email1.selected = YES;
+    [controller updateToReflectPersonSelectedStatus:p1];
+    XCTAssertTrue(phone1.selected);
+    XCTAssertTrue(email1.selected);
+    email1.selected = YES; // also select the email, so phone and email are selected
+    // Somehow p2's phone is selected but p2 is not. Since the person isn't selected, we should not send the
+    // invite to this record
+    phone2.selected = YES;
+    [controller updateToReflectPersonSelectedStatus:p2];
+
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+//    OCMExpect([apiInterfaceMock ...])
+
+    [controller sendInvitesToSelected];
+
+    OCMVerifyAll(apiInterfaceMock);
 }
 
 @end

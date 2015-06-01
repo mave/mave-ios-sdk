@@ -31,4 +31,7 @@
 - (void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person;
 - (void)selectOrDeselectAllEmails:(BOOL)select;
 
+// Method to send the invites when clicking the button
+- (void)sendInvitesToSelected;
+
 @end

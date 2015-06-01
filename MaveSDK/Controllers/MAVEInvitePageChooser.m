@@ -70,7 +70,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 - (UIViewController *)createViewControllerOfType:(MAVEInvitePageType)invitePageType {
     switch (invitePageType) {
         case MAVEInvitePageTypeContactsInvitePage:
-            return [self createContactsInvitePageIfAllowed];
+            return [self createContactsInvitePageV3IfAllowed];
         case MAVEInvitePageTypeContactsInvitePageV2:
             return [self createContactsInvitePageV2IfAllowed];
         case MAVEInvitePageTypeContactsInvitePageV3:

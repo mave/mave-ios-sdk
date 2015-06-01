@@ -32,6 +32,7 @@
 - (void)doInitialSetup {
     self.backgroundColor = [MaveSDK sharedInstance].displayOptions.invitePageV3TintColor;
     self.contentContainer = [[UIView alloc] init];
+    self.contentContainer.userInteractionEnabled = NO;
     self.icon = [[UIImageView alloc] init];
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.font = [MAVEDisplayOptions invitePageV3BiggerFont];

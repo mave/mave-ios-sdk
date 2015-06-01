@@ -33,6 +33,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.wrapperView.selectAllEmailsRow.selectAllBlock = ^void(BOOL selected) {
         [weakSelf selectOrDeselectAllEmails:selected];
     };
+    [self.wrapperView.bigSendButton addTarget:self action:@selector(sendInvitesToSelected) forControlEvents:UIControlEventTouchUpInside];
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
     self.selectedContactIdentifiersIndex = [[NSMutableSet alloc] init];
     self.tableView.dataSource = self;
@@ -255,6 +256,10 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
     [tableView beginUpdates];
     [tableView endUpdates];
+}
+
+- (void)sendInvitesToSelected {
+    NSLog(@"sending invites");
 }
 
 @end
