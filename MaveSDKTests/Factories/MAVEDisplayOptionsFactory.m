@@ -71,6 +71,8 @@
     opts.bottomViewBackgroundColor = [self randomColor];
     opts.bottomViewBorderColor = [self randomColor];
 
+    opts.invitePageV3TintColor = [self randomColor];
+
     opts.sharePageBackgroundColor = [self randomColor];
     opts.sharePageIconColor = [self randomColor];
     opts.sharePageIconFont = [self randomFont];

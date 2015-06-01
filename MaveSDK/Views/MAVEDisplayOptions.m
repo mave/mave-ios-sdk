@@ -80,6 +80,9 @@
         self.bottomViewBorderColor = [[self class] colorMediumGrey];
         self.bottomViewBackgroundColor = [[self class] colorWhite];
 
+        // Invite page V3
+        self.invitePageV3TintColor = [[self class]colorAppleBlueTint];
+
         // SharePage options
         //background
         self.sharePageBackgroundColor = [[self class] colorExtraLightGrey];

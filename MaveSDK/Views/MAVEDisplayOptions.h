@@ -100,6 +100,11 @@
 @property (nonatomic, strong) UIColor *bottomViewBorderColor;
 
 ///
+/// Invite page V3
+///
+@property (nonatomic, strong) UIColor *invitePageV3TintColor;
+
+///
 /// Share page invite page
 ///
 @property (nonatomic, strong) UIColor *sharePageBackgroundColor;

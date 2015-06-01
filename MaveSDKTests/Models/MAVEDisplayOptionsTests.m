@@ -104,6 +104,8 @@
     XCTAssertEqualObjects(opts.bottomViewBackgroundColor, white);
     XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
 
+    XCTAssertEqualObjects(opts.invitePageV3TintColor, [MAVEDisplayOptions colorAppleBlueTint]);
+
     // SharePage options
     XCTAssertEqualObjects(opts.sharePageBackgroundColor, extraLightGrey);
 
@@ -167,6 +169,9 @@
     XCTAssertNotEqualObjects(opts.sendButtonCopy, @"Send");
     XCTAssertTrue([opts.sendButtonFont isKindOfClass:[UIFont class]]);
     XCTAssertTrue([opts.sendButtonTextColor isKindOfClass:[UIColor class]]);
+
+    // Invite page v3
+    XCTAssertTrue([opts.invitePageV3TintColor isKindOfClass:[UIColor class]]);
 
     // Share page options
     // background
