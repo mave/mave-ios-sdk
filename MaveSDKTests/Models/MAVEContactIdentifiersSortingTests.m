@@ -64,6 +64,7 @@
     MAVEContactEmail *email2 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
     XCTAssertEqual([email1 compareContactIdentifiers:email2], NSOrderedAscending);
     XCTAssertEqual([email2 compareContactIdentifiers:email1], NSOrderedDescending);
+
 }
 
 - (void)testCompareEmailsSameDomain {
@@ -72,6 +73,11 @@
     MAVEContactEmail *email2 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
     XCTAssertEqual([email1 compareContactIdentifiers:email2], NSOrderedSame);
     XCTAssertEqual([email2 compareContactIdentifiers:email1], NSOrderedSame);
+
+    MAVEContactEmail *email3 = [[MAVEContactEmail alloc] initWithValue:@"foo@gmail.com"];
+    MAVEContactEmail *email4 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
+    XCTAssertEqual([email3 compareContactIdentifiers:email4], NSOrderedSame);
+    XCTAssertEqual([email4 compareContactIdentifiers:email3], NSOrderedSame);
 }
 
 - (void)testPhonesBeforeEmails {

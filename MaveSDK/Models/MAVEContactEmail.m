@@ -22,10 +22,19 @@
     }
 
     // Here both are emails, gmail should be ranked highest of emails
-//    MAVEContactEmail *otherEmail = (MAVEContactEmail *)other;
-//    NSArray *tmp; NSString *ownDomain; NSString *otherDomain;
-//    tmp = [self.value componentsSeparatedByString:@"@"];
-//    if (
+    if (![other isKindOfClass:[MAVEContactEmail class]]) {
+        return NSOrderedSame;
+    }
+    MAVEContactEmail *otherEmail = (MAVEContactEmail *)other;
+    if (self.isGmail && otherEmail.isGmail) {
+        return NSOrderedSame;
+    } else if (!self.isGmail && !otherEmail.isGmail) {
+        return NSOrderedSame;
+    } else if (self.isGmail) {
+        return NSOrderedAscending;
+    } else if (otherEmail.isGmail) {
+        return NSOrderedDescending;
+    }
     return NSOrderedSame;
 }
 
