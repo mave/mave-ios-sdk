@@ -108,6 +108,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 #pragma mark - Loading Content into table
 - (void)loadContactsIntoTableOrSwitchToFallbackBasedOnPermissions {
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
+        contacts = [MAVEABUtils filterAddressBook:contacts removeIfMissingPhones:YES removeIfMissingEmails:NO];
         // Permission denied
         if ([contacts count] == 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
