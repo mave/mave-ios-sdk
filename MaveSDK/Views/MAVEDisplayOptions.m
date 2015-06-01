@@ -104,4 +104,8 @@
                                   alpha:1.0];
 }
 
++ (UIColor *)colorV3PageSecondaryText {
+    return [UIColor colorWithWhite:0.6 alpha:1.0];
+}
+
 @end

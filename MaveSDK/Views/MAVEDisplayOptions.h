@@ -18,6 +18,8 @@
 + (UIColor *)colorWhite;
 + (UIColor *)colorBlueTint;
 
++ (UIColor *)colorV3PageSecondaryText;
+
 // Shared options
 // Contacts list invite friends page options:
 // Header options (also used by share page invite page)

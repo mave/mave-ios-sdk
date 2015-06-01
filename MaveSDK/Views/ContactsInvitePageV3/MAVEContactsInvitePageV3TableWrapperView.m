@@ -7,6 +7,7 @@
 //
 
 #import "MAVEContactsInvitePageV3TableWrapperView.h"
+#import "MAVEDisplayOptions.h"
 
 @implementation MAVEContactsInvitePageV3TableWrapperView {
     BOOL _didInitialUpdateConstraints;
@@ -37,6 +38,7 @@
     self.tableView = [[UITableView alloc] init];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    self.tableView.sectionIndexColor = [MAVEDisplayOptions colorV3PageSecondaryText];
     self.searchTableView = [[UITableView alloc] init];
     self.searchTableView.separatorColor = UITableViewCellSeparatorStyleNone;
     self.searchTableView.sectionIndexBackgroundColor = [UIColor clearColor];
