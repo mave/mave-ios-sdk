@@ -106,6 +106,7 @@
 + (UIFont *)invitePageV3BiggerFont;
 + (UIFont *)invitePageV3BiggerLightFont;
 + (UIFont *)invitePageV3SmallerFont;
++ (UIFont *)invitePageV3SmallerLightFont;
 
 ///
 /// Share page invite page

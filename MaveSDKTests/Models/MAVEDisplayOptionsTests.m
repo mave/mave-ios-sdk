@@ -108,6 +108,7 @@
     XCTAssertNotNil([MAVEDisplayOptions invitePageV3BiggerFont]);
     XCTAssertNotNil([MAVEDisplayOptions invitePageV3BiggerLightFont]);
     XCTAssertNotNil([MAVEDisplayOptions invitePageV3SmallerFont]);
+    XCTAssertNotNil([MAVEDisplayOptions invitePageV3SmallerLightFont]);
 
     // SharePage options
     XCTAssertEqualObjects(opts.sharePageBackgroundColor, extraLightGrey);

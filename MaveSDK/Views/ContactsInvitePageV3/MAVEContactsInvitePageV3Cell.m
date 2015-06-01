@@ -43,7 +43,7 @@
     self.contactInfoWrapperToBottom = 8;
     self.contactInfoWrapperCollapsedHeight = 4;
     self.bottomSeparatorHeight = 0.5;
-    self.contactInfoFont = [UIFont systemFontOfSize:14];
+    self.contactInfoFont = [MAVEDisplayOptions invitePageV3SmallerLightFont];
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentView.backgroundColor = [UIColor whiteColor];
@@ -61,7 +61,7 @@
 
     self.nameLabel = [[UILabel alloc] init];
     self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.nameLabel.font = [UIFont fontWithName:@"OpenSans" size:18];
+    self.nameLabel.font = [MAVEDisplayOptions invitePageV3BiggerFont];
 
     self.checkmarkBox = [[MAVECustomCheckboxV3 alloc] init];
     self.checkmarkBox.translatesAutoresizingMaskIntoConstraints = NO;
@@ -228,7 +228,7 @@
         if (numberOfReusableRows >= i+1) {
             contactInfoRow = [currentRowsToReuse objectAtIndex:i];
         } else {
-            contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[UIColor blueColor] deselectedColor:[MAVEDisplayOptions colorAppleDarkGray]];
+            contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[MAVEDisplayOptions colorAppleBlueTint] deselectedColor:[MAVEDisplayOptions colorAppleDarkGray]];
             contactInfoRow.translatesAutoresizingMaskIntoConstraints = NO;
             [self.contactInfoContainer addSubview:contactInfoRow];
             [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];

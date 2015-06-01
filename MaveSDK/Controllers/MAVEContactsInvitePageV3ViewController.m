@@ -196,7 +196,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                                                       sectionIsWaiting:NO
                                                              textColor:[MAVEDisplayOptions colorAppleBlack]
                                                        backgroundColor:[MAVEDisplayOptions colorAppleLightGray]
-                                                                  font:[MAVEDisplayOptions invitePageV3SmallerFont]];
+                                                                  font:[MAVEDisplayOptions invitePageV3SmallerLightFont]];
  }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

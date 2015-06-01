@@ -131,7 +131,9 @@
 }
 + (UIFont *)invitePageV3SmallerFont {
     return [UIFont fontWithName:@"HelveticaNeue" size:13];
-
+}
++ (UIFont *)invitePageV3SmallerLightFont {
+    return [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
 }
 
 @end
