@@ -62,7 +62,17 @@
 
     XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeContactsInvitePageV2);
     XCTAssertEqual(invitePage.fallbackPageType, MAVEInvitePageTypeClientSMS);
+}
 
+- (void)testInitWithInvitePageV3 {
+    NSDictionary *options = @{@"primary_page": @"contacts_invite_page_v3",
+                              @"fallback_page": @"client_sms"};
+    options = @{@"template": options};
+
+    MAVERemoteConfigurationInvitePageChoice *invitePage = [[MAVERemoteConfigurationInvitePageChoice alloc] initWithDictionary:options];
+
+    XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeContactsInvitePageV3);
+    XCTAssertEqual(invitePage.fallbackPageType, MAVEInvitePageTypeClientSMS);
 }
 
 - (void)testInitWithInvalidOptions {

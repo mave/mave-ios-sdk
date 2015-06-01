@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, MAVEInvitePageType) {
     MAVEInvitePageTypeNone,
     MAVEInvitePageTypeContactsInvitePage,
     MAVEInvitePageTypeContactsInvitePageV2,
+    MAVEInvitePageTypeContactsInvitePageV3,
     MAVEInvitePageTypeSharePage,
     MAVEInvitePageTypeClientSMS,
 };
