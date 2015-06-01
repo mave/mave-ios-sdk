@@ -123,6 +123,14 @@
     XCTAssertEqualObjects(p3.firstName, @"NoEmail");
 }
 
+- (void)testFilterAddressBookDoesntBreakForNilAndEmpty {
+    NSArray *new = [MAVEABUtils filterAddressBook:nil removeIfMissingPhones:YES removeIfMissingEmails:YES];
+    XCTAssertNil(new);
+
+    NSArray *new2 = [MAVEABUtils filterAddressBook:@[] removeIfMissingPhones:YES removeIfMissingEmails:YES];
+    XCTAssertEqualObjects(new2, @[]);
+}
+
 - (void)testIndexABPersonArrayForTableSections {
     MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Don" lastName:@"Adams"];
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Deb" lastName:@"Anderson"];

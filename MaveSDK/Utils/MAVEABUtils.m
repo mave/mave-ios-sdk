@@ -45,6 +45,9 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
 + (NSArray *)filterAddressBook:(NSArray *)addressBook
          removeIfMissingPhones:(BOOL)removeIfMissingPhones
          removeIfMissingEmails:(BOOL)removeIfMissingEmails {
+    if (!addressBook) {
+        return nil;
+    }
     NSMutableArray *returnval = [[NSMutableArray alloc] initWithCapacity:[addressBook count]];
     for (MAVEABPerson *person in addressBook) {
         if (removeIfMissingPhones && [person.phoneNumbers count] == 0) {
