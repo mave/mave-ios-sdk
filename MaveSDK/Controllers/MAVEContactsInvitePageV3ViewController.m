@@ -10,6 +10,7 @@
 #import "MAVEContactsInvitePageV3Cell.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEInvitePageViewController.h"
+#import "MAVEDisplayOptions.h"
 #import "MAVEConstants.h"
 
 NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePageV3CellIdentifier";
@@ -182,7 +183,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 25;
+    return 20;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     NSString *text;
@@ -191,7 +192,11 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     } else {
         text = [[self.dataManager sectionIndexesForMainTable] objectAtIndex:section];
     }
-    return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text sectionIsWaiting:NO];
+    return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text
+                                                      sectionIsWaiting:NO
+                                                             textColor:[MAVEDisplayOptions colorAppleBlack]
+                                                       backgroundColor:[MAVEDisplayOptions colorAppleLightGray]
+                                                                  font:[MAVEDisplayOptions invitePageV3SmallerFont]];
  }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

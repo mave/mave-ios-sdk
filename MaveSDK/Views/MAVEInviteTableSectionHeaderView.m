@@ -14,14 +14,25 @@
 @implementation MAVEInviteTableSectionHeaderView
 
 - (instancetype)initWithLabelText:(NSString *)labelText sectionIsWaiting:(BOOL)sectionIsWaiting {
+    MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
+    return [self initWithLabelText:labelText
+                  sectionIsWaiting:sectionIsWaiting
+                         textColor:displayOpts.contactSectionHeaderTextColor
+                   backgroundColor:displayOpts.contactSectionHeaderBackgroundColor
+                              font:displayOpts.contactSectionHeaderFont];
+}
+
+- (instancetype)initWithLabelText:(NSString *)labelText
+                 sectionIsWaiting:(BOOL)sectionIsWaiting
+                        textColor:(UIColor *)textColor
+              backgroundColor:(UIColor *)backgroundColor
+                             font:(UIFont *)font {
     if (self = [super init]) {
-        MAVEDisplayOptions *displayOpts = [MaveSDK sharedInstance].displayOptions;
         self.titleLabel = [[UILabel alloc] init];
         self.titleLabel.text = labelText;
-        self.titleLabel.textColor = displayOpts.contactSectionHeaderTextColor;
-        self.titleLabel.font = displayOpts.contactSectionHeaderFont;
-
-        self.backgroundColor = displayOpts.contactSectionHeaderBackgroundColor;
+        self.titleLabel.textColor = textColor;
+        self.titleLabel.font = font;
+        self.backgroundColor = backgroundColor;
 
         [self addSubview:self.titleLabel];
 
@@ -34,6 +45,7 @@
     }
     return self;
 }
+
 
 - (void)initialLayoutOfSelfAndSubviews {
     CGFloat sectionWidth = [UIScreen mainScreen].applicationFrame.size.width;
