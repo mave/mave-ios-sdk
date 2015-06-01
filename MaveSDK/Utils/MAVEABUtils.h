@@ -23,6 +23,11 @@ extern NSString * const MAVEABPermissionStatusUnprompted;
 // return value is an NSArray * of MAVEABPerson objects that is sorted.
 + (NSArray *)copyEntireAddressBookToMAVEABPersonArray:(NSArray *)addressBook;
 
+// Filter a parsed address book to ignore records with no phone or with no email
++ (NSArray *)filterAddressBook:(NSArray *)addressBook
+         removeIfMissingPhones:(BOOL)removeIfMissingPhones
+         removeIfMissingEmails:(BOOL)removeIfMissingEmails;
+
 // Search for the person with the given record id in the address book and return a UIImage
 // copy of the image set for the contact (nil if no image).
 + (UIImage *)getImageLookingUpPersonByRecordID:(ABRecordID)recordID;

@@ -42,6 +42,22 @@ NSString * const MAVEABPermissionStatusUnprompted = @"unprompted";
     return (NSArray *)result;
 }
 
++ (NSArray *)filterAddressBook:(NSArray *)addressBook
+         removeIfMissingPhones:(BOOL)removeIfMissingPhones
+         removeIfMissingEmails:(BOOL)removeIfMissingEmails {
+    NSMutableArray *returnval = [[NSMutableArray alloc] initWithCapacity:[addressBook count]];
+    for (MAVEABPerson *person in addressBook) {
+        if (removeIfMissingPhones && [person.phoneNumbers count] == 0) {
+            continue;
+        }
+        if (removeIfMissingEmails && [person.emailAddresses count] == 0) {
+            continue;
+        }
+        [returnval addObject:person];
+    }
+    return [NSArray arrayWithArray:returnval];
+}
+
 static ABAddressBookRef addressBook;
 + (UIImage *)getImageLookingUpPersonByRecordID:(ABRecordID)recordID {
     UIImage *image;

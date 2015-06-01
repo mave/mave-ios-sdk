@@ -72,6 +72,57 @@
     XCTAssertEqualObjects(resortedFormattedAB, formattedAB);
 }
 
+- (NSArray *)_simpleAddressBookToTestFilter {
+    MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"HasBoth" lastName:@"Adams"];
+    p1.phoneNumbers = @[@"+18085551234"];
+    p1.emailAddresses = @[@"adams@example.com"];
+    MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"NoPhone" lastName:@"Anderson"];
+    p2.emailAddresses = @[@"andy@example.com"];
+    MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"NoEmail" lastName:@"Bernard"];
+    p3.phoneNumbers = @[@"+18085555678"];
+    return @[p1, p2, p3];
+}
+
+- (void)testFilterAddressBookRemoveIfMissingPhone {
+    NSArray *addressBook = [self _simpleAddressBookToTestFilter];
+    NSArray *new = [MAVEABUtils filterAddressBook:addressBook removeIfMissingPhones:YES removeIfMissingEmails:NO];
+    XCTAssertEqual([new count], 2);
+    MAVEABPerson *p1 = [new objectAtIndex:0];
+    XCTAssertEqualObjects(p1.firstName, @"HasBoth");
+    MAVEABPerson *p3 = [new objectAtIndex:1];
+    XCTAssertEqualObjects(p3.firstName, @"NoEmail");
+}
+
+- (void)testFilterAddressBookRemoveIfMissingEmail {
+    NSArray *addressBook = [self _simpleAddressBookToTestFilter];
+    NSArray *new = [MAVEABUtils filterAddressBook:addressBook removeIfMissingPhones:NO removeIfMissingEmails:YES];
+    XCTAssertEqual([new count], 2);
+    MAVEABPerson *p1 = [new objectAtIndex:0];
+    XCTAssertEqualObjects(p1.firstName, @"HasBoth");
+    MAVEABPerson *p2 = [new objectAtIndex:1];
+    XCTAssertEqualObjects(p2.firstName, @"NoPhone");
+}
+
+- (void)testFilterAddressBookRemoveIfMissingPhoneOrEmail {
+    NSArray *addressBook = [self _simpleAddressBookToTestFilter];
+    NSArray *new = [MAVEABUtils filterAddressBook:addressBook removeIfMissingPhones:YES removeIfMissingEmails:YES];
+    XCTAssertEqual([new count], 1);
+    MAVEABPerson *p1 = [new objectAtIndex:0];
+    XCTAssertEqualObjects(p1.firstName, @"HasBoth");
+}
+
+- (void)testFilterAddressBookNoFilters {
+    NSArray *addressBook = [self _simpleAddressBookToTestFilter];
+    NSArray *new = [MAVEABUtils filterAddressBook:addressBook removeIfMissingPhones:NO removeIfMissingEmails:NO];
+    XCTAssertEqual([new count], 3);
+    MAVEABPerson *p1 = [new objectAtIndex:0];
+    XCTAssertEqualObjects(p1.firstName, @"HasBoth");
+    MAVEABPerson *p2 = [new objectAtIndex:1];
+    XCTAssertEqualObjects(p2.firstName, @"NoPhone");
+    MAVEABPerson *p3 = [new objectAtIndex:2];
+    XCTAssertEqualObjects(p3.firstName, @"NoEmail");
+}
+
 - (void)testIndexABPersonArrayForTableSections {
     MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"Don" lastName:@"Adams"];
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Deb" lastName:@"Anderson"];
