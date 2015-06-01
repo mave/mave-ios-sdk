@@ -226,14 +226,11 @@
 
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
     MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
-    MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
-    p0.emailObjects = @[email00, email01];
+    p0.emailObjects = @[email00];
 
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
     p1.phoneObjects = @[phone1];
-    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
-    p1.emailObjects = @[email1];
 
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
     MAVEContactPhoneNumber *phone2 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551111" andLabel:MAVEContactPhoneLabelMobile];
@@ -242,14 +239,10 @@
 
     p0.selected = YES; // this will select the best contact, email01
     [controller updateToReflectPersonSelectedStatus:p0];
-    XCTAssertTrue(email01.selected);
     p1.selected = YES; // this will select the best contact phone1
     [controller updateToReflectPersonSelectedStatus:p1];
-    email1.selected = YES;
     [controller updateToReflectPersonSelectedStatus:p1];
     XCTAssertTrue(phone1.selected);
-    XCTAssertTrue(email1.selected);
-    email1.selected = YES; // also select the email, so phone and email are selected
     // Somehow p2's phone is selected but p2 is not. Since the person isn't selected, we should not send the
     // invite to this record
     phone2.selected = YES;
@@ -257,7 +250,9 @@
 
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-//    OCMExpect([apiInterfaceMock ...])
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    NSArray *people = @[p0, p1, p2];
+    OCMExpect([apiInterfaceMock sendInvitesToRecipients:people smsCopy:nil senderUserID:mave.userData.userID inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL wrapInviteLink:mave.userData.wrapInviteLink customData:mave.userData.customData completionBlock:[OCMArg any]]);
 
     [controller sendInvitesToSelected];
 
