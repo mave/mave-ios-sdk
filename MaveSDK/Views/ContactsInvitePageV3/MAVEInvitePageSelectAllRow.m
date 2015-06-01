@@ -8,6 +8,7 @@
 
 #import "MAVEInvitePageSelectAllRow.h"
 #import "MAVEBuiltinUIElementUtils.h"
+#import "MAVEDisplayOptions.h"
 #import "MAVEConstants.h"
 
 @implementation MAVEInvitePageSelectAllRow {
@@ -28,14 +29,14 @@
 }
 
 - (void)doInitialSetup {
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [MAVEDisplayOptions colorAppleLightGray];
     self.icon = [[UIImageView alloc] init];
     UIImage *envelope = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEEnvelope.png" fromBundle:MAVEResourceBundleName];
     envelope = [MAVEBuiltinUIElementUtils tintWhitesInImage:envelope withColor:[UIColor grayColor]];
     self.icon.image = envelope;
     self.textLabel = [[UILabel alloc] init];
-    self.textLabel.font = [UIFont fontWithName:@"OpenSans" size:14];
-    self.textLabel.textColor = [UIColor grayColor];
+    self.textLabel.font = [MAVEDisplayOptions invitePageV3BiggerFont];
+    self.textLabel.textColor = [MAVEDisplayOptions colorAppleBlack];
     self.checkbox = [[MAVECustomCheckboxV3 alloc] init];
     UITapGestureRecognizer *tapCheckbox = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCheckbox)];
     [self.checkbox addGestureRecognizer:tapCheckbox];

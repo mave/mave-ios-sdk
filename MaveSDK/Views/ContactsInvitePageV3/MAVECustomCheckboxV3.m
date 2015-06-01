@@ -7,6 +7,7 @@
 //
 
 #import "MAVECustomCheckboxV3.h"
+#import "MAVEDisplayOptions.h"
 #import "MAVEConstants.h"
 #import "MAVEBuiltinUIElementUtils.h"
 
@@ -45,7 +46,7 @@
 - (void)setIsChecked:(BOOL)isChecked {
     _isChecked = isChecked;
     if (isChecked) {
-        self.backgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+        self.backgroundColor = [MAVEDisplayOptions colorAppleBlueTint];
         self.layer.borderWidth = 0;
     } else {
         self.backgroundColor = [UIColor clearColor];

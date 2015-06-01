@@ -30,7 +30,7 @@
     self.backgroundColor = [UIColor whiteColor];
     self.aboveTableView = [[UIView alloc] init];
     self.aboveTableView.backgroundColor = [UIColor purpleColor];
-    self.searchBar = [[MAVESearchBar alloc] initWithFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16] placeholderTextColor:[MAVEDisplayOptions colorAppleDarkGray] textColor:[MAVEDisplayOptions colorAppleBlack] backgroundColor:[UIColor whiteColor]];
+    self.searchBar = [[MAVESearchBar alloc] initWithFont:[MAVEDisplayOptions invitePageV3BiggerFont] placeholderTextColor:[MAVEDisplayOptions colorAppleDarkGray] textColor:[MAVEDisplayOptions colorAppleBlack] backgroundColor:[UIColor whiteColor]];
     self.selectAllEmailsRow = [[MAVEInvitePageSelectAllRow alloc] init];
     self.selectAllEmailsRow.textLabel.text = @"Select All Emails";
     self.topLayoutConstraint = [NSLayoutConstraint constraintWithItem:self.aboveTableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
