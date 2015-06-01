@@ -14,6 +14,8 @@
 @property (nonatomic, strong) UIImageView *icon;
 @property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, strong) MAVECustomCheckboxV3 *checkbox;
+@property (nonatomic, strong) UIView *topSeparatorBar;
+@property (nonatomic, strong) UIView *bottomSeparatorBar;
 @property (nonatomic, strong) void(^selectAllBlock)(BOOL selected);
 
 @end

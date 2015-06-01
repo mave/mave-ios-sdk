@@ -41,12 +41,21 @@
     UITapGestureRecognizer *tapCheckbox = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCheckbox)];
     [self.checkbox addGestureRecognizer:tapCheckbox];
 
+    self.topSeparatorBar = [[UIView alloc] init];
+    self.topSeparatorBar.backgroundColor = [MAVEDisplayOptions colorAppleDarkGray];
+    self.bottomSeparatorBar = [[UIView alloc] init];
+    self.bottomSeparatorBar.backgroundColor = [MAVEDisplayOptions colorAppleDarkGray];
+
+    self.topSeparatorBar.translatesAutoresizingMaskIntoConstraints = NO;
     self.icon.translatesAutoresizingMaskIntoConstraints = NO;
     self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.checkbox.translatesAutoresizingMaskIntoConstraints = NO;
+    self.bottomSeparatorBar.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.topSeparatorBar];
     [self addSubview:self.icon];
     [self addSubview:self.textLabel];
     [self addSubview:self.checkbox];
+    [self addSubview:self.bottomSeparatorBar];
 
     [self setNeedsUpdateConstraints];
 }
@@ -60,11 +69,22 @@
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+
+    // Separator bars
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.topSeparatorBar attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.topSeparatorBar attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.topSeparatorBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.topSeparatorBar attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0.5]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomSeparatorBar attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomSeparatorBar attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomSeparatorBar attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomSeparatorBar attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0.5]];
 }
 
 - (CGSize)intrinsicContentSize {
     CGFloat height = [@"Some String Here" sizeWithAttributes:@{NSFontAttributeName: self.textLabel.font}].height;
-    height = height + 2 * 8;  // account for extra padding above/below
+    height = height + 2 * 12;  // account for extra padding above/below
     return CGSizeMake(UIViewNoIntrinsicMetric, height);
 }
 
