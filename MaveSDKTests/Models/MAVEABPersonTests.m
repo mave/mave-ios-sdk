@@ -109,7 +109,7 @@
 
     p1.selected = NO;
     XCTAssertFalse(p1.selected);
-    XCTAssertTrue(phone.selected);
+    XCTAssertFalse(phone.selected);
     XCTAssertFalse(email.selected);
 }
 
