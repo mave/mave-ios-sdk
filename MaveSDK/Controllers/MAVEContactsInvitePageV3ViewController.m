@@ -115,7 +115,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             if ([person.emailObjects count] == 0) {
                 continue;
             }
-            MAVEContactEmail *firstEmail = [person.emailObjects objectAtIndex:0];
+            MAVEContactEmail *firstEmail = [[person rankedContactIdentifiersIncludeEmails:YES includePhones:NO] objectAtIndex:0];
             BOOL anyEmailAlreadySelected = NO;
             for (MAVEContactEmail *email in person.emailObjects) {
                 if (email.selected) { anyEmailAlreadySelected = YES; }
@@ -135,7 +135,14 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                     email.selected = NO;
                 }
             }
-            if (anyEmailSelected) {
+            // Check if any phones were selected. If so, don't deselect the whole person
+            BOOL anyPhoneSelected = NO;
+            for (MAVEContactPhoneNumber *phone in person.phoneObjects) {
+                if (phone.selected) {
+                    anyPhoneSelected = YES;
+                }
+            }
+            if (anyEmailSelected && !anyPhoneSelected) {
                 person.selected = NO;
                 [self updateToReflectPersonSelectedStatus:person];
             }

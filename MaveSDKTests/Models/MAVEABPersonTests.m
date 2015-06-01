@@ -69,13 +69,13 @@
     XCTAssertEqual(p.selected, NO);
     XCTAssertEqual(p.sendingStatus, MAVEInviteSendingStatusUnsent);
 
-    // First contact identifier should be selected
-    // First email is not selected because there was a phone and that comes first
+    // None of the contact identifiers should be selected, and test that the ranked lists are correctly filtering out phones/emails when they should
     XCTAssertEqual([p.allContactIdentifiers count], 2);
-    XCTAssertEqual([p.rankedContactIdentifiers count], 2);
-    MAVEContactPhoneNumber *phone0 = [p.rankedContactIdentifiers objectAtIndex:0];
+    NSArray *ranked = [p rankedContactIdentifiersIncludeEmails:YES includePhones:YES];
+    XCTAssertEqual([ranked count], 2);
+    MAVEContactPhoneNumber *phone0 = [ranked objectAtIndex:0];
     XCTAssertFalse(phone0.selected);
-    MAVEContactEmail *email0 = [p.rankedContactIdentifiers objectAtIndex:1];
+    MAVEContactEmail *email0 = [ranked objectAtIndex:1];
     XCTAssertFalse(email0.selected);
 }
 
@@ -111,6 +111,23 @@
     XCTAssertFalse(p1.selected);
     XCTAssertTrue(phone.selected);
     XCTAssertFalse(email.selected);
+}
+
+- (void)testUnselectPersonUnselectsAllContactIdentifiers {
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
+    MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
+    p0.emailObjects = @[email00, email01];
+
+    p0.selected = YES;
+    XCTAssertFalse(email00.selected);
+    XCTAssertTrue(email01.selected);
+    email00.selected = YES;
+
+    p0.selected = NO;
+    XCTAssertFalse(p0.selected);
+    XCTAssertFalse(email00.selected);
+    XCTAssertFalse(email01.selected);
 }
 
 - (void)testToJSONDictionary {
@@ -378,7 +395,7 @@
     MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
     p1.phoneObjects = @[phone];
     p1.emailObjects = @[email];
-    XCTAssertEqual([[p1 rankedContactIdentifiers] count], 2);
+    XCTAssertEqual([[p1 rankedContactIdentifiersIncludeEmails:YES includePhones:YES] count], 2);
     XCTAssertEqual([[p1 selectedContactIdentifiers] count], 0);
     XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
     phone.selected = YES;
@@ -396,6 +413,35 @@
     phone.selected = NO;
     XCTAssertEqual([[p1 selectedContactIdentifiers] count], 0);
     XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
+}
+
+- (void)testRankedContactIdentifiers {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"other"];
+    MAVEContactPhoneNumber *phone2 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085555678" andLabel:@"iPhone"];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    MAVEContactEmail *email2 = [[MAVEContactEmail alloc] initWithValue:@"foo@gmail.com"];
+    p1.phoneObjects = @[phone1, phone2];
+    p1.emailObjects = @[email1, email2];
+
+    NSArray *rankedAll = [p1 rankedContactIdentifiersIncludeEmails:YES includePhones:YES];
+    XCTAssertEqual([rankedAll count], 4);
+    XCTAssertEqualObjects(rankedAll[0], phone2);
+    XCTAssertEqualObjects(rankedAll[1], phone1);
+    XCTAssertEqualObjects(rankedAll[2], email2);
+    XCTAssertEqualObjects(rankedAll[3], email1);
+
+    NSArray *rankedPhones = [p1 rankedContactIdentifiersIncludeEmails:NO includePhones:YES];
+    XCTAssertEqual([rankedPhones count], 2);
+    XCTAssertEqualObjects(rankedPhones[0], phone2);
+    XCTAssertEqualObjects(rankedPhones[1], phone1);
+
+    NSArray *rankedEmails = [p1 rankedContactIdentifiersIncludeEmails:YES includePhones:NO];
+    XCTAssertEqual([rankedEmails count], 2);
+    XCTAssertEqualObjects(rankedEmails[0], email2);
+    XCTAssertEqualObjects(rankedEmails[1], email1);
+
+    XCTAssertEqual([[p1 rankedContactIdentifiersIncludeEmails:NO includePhones:NO] count], 0);
 }
 
 - (void)testSelectTopContactIdentifierIfNoneSelected {
@@ -439,10 +485,12 @@
     MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"Dan" lastName:@"foo"];
     MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"dan" lastName:nil];
     MAVEABPerson *p4 = [MAVEABTestDataFactory personWithFirstName:nil lastName:@"Foo"];
+    MAVEABPerson *p5 = [[MAVEABPerson alloc] init];
     XCTAssertEqualObjects([p1 firstLetter], @"D");
     XCTAssertEqualObjects([p2 firstLetter], @"D");
     XCTAssertEqualObjects([p3 firstLetter], @"D");
     XCTAssertEqualObjects([p4 firstLetter], @"F");
+    XCTAssertEqualObjects([p5 firstLetter], @"");
 }
 
 - (void)testFullNameBoth {

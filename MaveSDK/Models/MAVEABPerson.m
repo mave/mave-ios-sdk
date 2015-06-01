@@ -55,6 +55,12 @@
 - (void)setSelected:(BOOL)selected {
     if (selected) {
         [self selectTopContactIdentifierIfNoneSelected];
+    } else {
+        for (MAVEContactIdentifierBase *rec in self.allContactIdentifiers) {
+            if (rec.selected) {
+                rec.selected = NO;
+            }
+        }
     }
     _selected = selected;
 }
@@ -170,6 +176,9 @@
 
 - (NSString *)firstLetter {
     NSString *compName = [self nameForCompareNames];
+    if ([compName length] < 1) {
+        return @"";
+    }
     NSString *letter = [compName substringToIndex:1];
     letter = [letter uppercaseString];
     return letter;
@@ -205,8 +214,16 @@
     return result;
 }
 
-- (NSArray *)rankedContactIdentifiers {
-    return [[self allContactIdentifiers] sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
+- (NSArray *)rankedContactIdentifiersIncludeEmails:(BOOL)includeEmails includePhones:(BOOL)includePhones {
+    NSArray *unranked = @[];
+    if (includePhones && includeEmails) {
+        unranked = [self allContactIdentifiers];
+    } else if (includePhones) {
+        unranked = [self phoneObjects];
+    } else if (includeEmails) {
+        unranked = [self emailObjects];
+    }
+    return [unranked sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
 }
 
 - (NSArray *)selectedContactIdentifiers {
@@ -232,7 +249,7 @@
 
 - (void)selectTopContactIdentifierIfNoneSelected {
     if (![self isAtLeastOneContactIdentifierSelected]) {
-        NSArray *rankedIdentifiers = [self rankedContactIdentifiers];
+        NSArray *rankedIdentifiers = [self rankedContactIdentifiersIncludeEmails:YES includePhones:YES];
         if ([rankedIdentifiers count] > 0) {
             MAVEContactIdentifierBase *topRec = [rankedIdentifiers objectAtIndex:0];
             topRec.selected = YES;

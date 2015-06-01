@@ -211,7 +211,7 @@
     // laid out appropriately. Try when going from more to less and less to more.
     //
 
-    NSArray *sortedRecords = [person rankedContactIdentifiers];
+    NSArray *sortedRecords = [person rankedContactIdentifiersIncludeEmails:YES includePhones:YES];
     NSInteger numberOfRowsNeeded = [sortedRecords count];
     if (numberOfRowsNeeded == 0) {
         return;

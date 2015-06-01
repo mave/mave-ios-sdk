@@ -125,4 +125,99 @@
     XCTAssertEqual([controller.selectedContactIdentifiersIndex count], 2);
 }
 
+- (void)testSelectAllEmailsThenDeselect {
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    [controller viewDidLoad];
+
+    // we should favor gmail over unkown domains as a simple proxy for personal email
+    // vs work or school email address
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
+    MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
+    p0.emailObjects = @[email00, email01];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
+    p1.phoneObjects = @[phone1];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.emailObjects = @[email1];
+
+    [controller.dataManager updateWithContacts:@[p0, p1] ifNecessaryAsyncSuggestionsBlock:nil];
+
+    [controller selectOrDeselectAllEmails:YES];
+    XCTAssertFalse(email00.selected);
+    XCTAssertTrue(email01.selected);
+    XCTAssertFalse(phone1.selected);
+    XCTAssertTrue(email1.selected);
+
+    [controller selectOrDeselectAllEmails:NO];
+    XCTAssertFalse(email00.selected);
+    XCTAssertFalse(email01.selected);
+    XCTAssertFalse(phone1.selected);
+    XCTAssertFalse(email1.selected);
+}
+
+- (void)testSelectAllEmailsWhenSomeRecordsAlreadySelected {
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    [controller viewDidLoad];
+
+    // we should favor gmail over unkown domains as a simple proxy for personal email
+    // vs work or school email address
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
+    email00.selected = YES;
+    MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
+    p0.emailObjects = @[email00, email01];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
+    phone1.selected = YES;
+    p1.phoneObjects = @[phone1];
+    MAVEContactEmail *email10 = [[MAVEContactEmail alloc] initWithValue:@"foo@gmail.com"];
+    MAVEContactEmail *email11 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.emailObjects = @[email10, email11];
+
+    [controller.dataManager updateWithContacts:@[p0, p1] ifNecessaryAsyncSuggestionsBlock:nil];
+
+    [controller selectOrDeselectAllEmails:YES];
+    // if a non-top ranked email was already selected, leave it selected and dont
+    // select the top ranked email we would have selected
+    XCTAssertTrue(email00.selected);
+    XCTAssertFalse(email01.selected);
+    // if a phone was already selected, leave it selected but still select the email
+    XCTAssertTrue(phone1.selected);
+    XCTAssertTrue(email10.selected);
+    XCTAssertFalse(email11.selected);
+
+    [controller selectOrDeselectAllEmails:NO];
+    XCTAssertFalse(email00.selected);
+    XCTAssertFalse(email01.selected);
+    XCTAssertTrue(phone1.selected);
+    XCTAssertFalse(email10.selected);
+    XCTAssertFalse(email00.selected);
+}
+
+- (void)testTogglePersonOnThenOffThenSelectAllEmailsOnlyHasEmailSelected {
+    // Regression test for a bug when first building the page
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    [controller viewDidLoad];
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
+    p1.phoneObjects = @[phone1];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.emailObjects = @[email1];
+
+    [controller.dataManager updateWithContacts:@[p1] ifNecessaryAsyncSuggestionsBlock:nil];
+    p1.selected = YES;
+    [controller updateToReflectPersonSelectedStatus:p1];
+    p1.selected = NO;
+    [controller updateToReflectPersonSelectedStatus:p1];
+
+    [controller selectOrDeselectAllEmails:YES];
+
+    XCTAssertFalse(phone1.selected);
+    XCTAssertTrue(email1.selected);
+}
+
 @end
