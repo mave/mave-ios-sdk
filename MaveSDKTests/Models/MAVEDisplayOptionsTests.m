@@ -105,6 +105,9 @@
     XCTAssertEqualObjects(opts.bottomViewBorderColor, mediumGrey);
 
     XCTAssertEqualObjects(opts.invitePageV3TintColor, [MAVEDisplayOptions colorAppleBlueTint]);
+    XCTAssertNotNil([MAVEDisplayOptions invitePageV3BiggerFont]);
+    XCTAssertNotNil([MAVEDisplayOptions invitePageV3BiggerLightFont]);
+    XCTAssertNotNil([MAVEDisplayOptions invitePageV3SmallerFont]);
 
     // SharePage options
     XCTAssertEqualObjects(opts.sharePageBackgroundColor, extraLightGrey);

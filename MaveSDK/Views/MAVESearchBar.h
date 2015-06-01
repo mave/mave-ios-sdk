@@ -21,5 +21,6 @@ extern CGFloat const MAVESearchBarHeight;
 @property (nonatomic, copy) NSString *placeholderToFieldText;
 
 - (instancetype)initWithSingletonSearchBarDisplayOptions;
+- (instancetype)initWithFont:(UIFont *)font placeholderTextColor:(UIColor *)placeholderTextColor textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor;
 
 @end

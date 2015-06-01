@@ -103,6 +103,9 @@
 /// Invite page V3
 ///
 @property (nonatomic, strong) UIColor *invitePageV3TintColor;
++ (UIFont *)invitePageV3BiggerFont;
++ (UIFont *)invitePageV3BiggerLightFont;
++ (UIFont *)invitePageV3SmallerFont;
 
 ///
 /// Share page invite page

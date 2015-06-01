@@ -27,6 +27,19 @@ CGFloat const MAVESearchBarHeight = 44.0;
     return self;
 }
 
+- (instancetype)initWithFont:(UIFont *)font placeholderTextColor:(UIColor *)placeholderTextColor textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
+    if (self = [super init]) {
+        [self setupDefaults];
+        self.searchBarFont = font;
+        self.searchBarPlaceholderTextColor = placeholderTextColor;
+        self.searchBarTextColor = textColor;
+        self.backgroundColor = backgroundColor;
+
+        [self setupInit];
+    }
+    return self;
+}
+
 - (void)setupDefaults {
     self.placeholderText = @"Enter name to search";
     self.placeholderToFieldText = @"To:";

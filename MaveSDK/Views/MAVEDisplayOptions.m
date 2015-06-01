@@ -123,4 +123,15 @@
     return [UIColor blackColor];
 }
 
++ (UIFont *)invitePageV3BiggerFont {
+    return [UIFont fontWithName:@"HelveticaNeue" size:17];
+}
++ (UIFont *)invitePageV3BiggerLightFont {
+    return [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
+}
++ (UIFont *)invitePageV3SmallerFont {
+    return [UIFont fontWithName:@"HelveticaNeue" size:23];
+
+}
+
 @end
