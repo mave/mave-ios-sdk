@@ -38,7 +38,7 @@
     self.tableView = [[UITableView alloc] init];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
-    self.tableView.sectionIndexColor = [MAVEDisplayOptions colorV3PageSecondaryText];
+    self.tableView.sectionIndexColor = [MAVEDisplayOptions colorAppleDarkGray];
     self.searchTableView = [[UITableView alloc] init];
     self.searchTableView.separatorColor = UITableViewCellSeparatorStyleNone;
     self.searchTableView.sectionIndexBackgroundColor = [UIColor clearColor];

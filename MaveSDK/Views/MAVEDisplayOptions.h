@@ -18,7 +18,11 @@
 + (UIColor *)colorWhite;
 + (UIColor *)colorBlueTint;
 
-+ (UIColor *)colorV3PageSecondaryText;
++ (UIColor *)colorAppleBlueTint;
++ (UIColor *)colorAppleLightGray;
++ (UIColor *)colorAppleMediumGray;
++ (UIColor *)colorAppleDarkGray;
++ (UIColor *)colorAppleBlack;
 
 // Shared options
 // Contacts list invite friends page options:

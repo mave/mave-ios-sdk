@@ -104,8 +104,20 @@
                                   alpha:1.0];
 }
 
-+ (UIColor *)colorV3PageSecondaryText {
-    return [UIColor colorWithWhite:0.6 alpha:1.0];
++ (UIColor *)colorAppleBlueTint {
+    return [UIColor colorWithRed:3.0/255.0 green:122.0/255.0 blue:255.0/255.0 alpha:1.0];
+}
++ (UIColor *)colorAppleLightGray {
+    return [UIColor colorWithRed:227.0/255.0 green:228.0/255.0 blue:230.0/255.0 alpha:1.0];
+}
++ (UIColor *)colorAppleMediumGray {
+    return [UIColor colorWithRed:201.0/255.0 green:201.0/255.0 blue:206.0/255.0 alpha:1.0];
+}
++ (UIColor *)colorAppleDarkGray {
+    return [UIColor colorWithRed:144.0/255.0 green:144.0/255.0 blue:148.0/255.0 alpha:1.0];
+}
++ (UIColor *)colorAppleBlack {
+    return [UIColor blackColor];
 }
 
 @end
