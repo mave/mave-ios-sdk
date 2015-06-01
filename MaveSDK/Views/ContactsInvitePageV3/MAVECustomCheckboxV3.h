@@ -10,6 +10,7 @@
 
 @interface MAVECustomCheckboxV3 : UIView
 
+@property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, assign) CGFloat widthAndHeight;
 @property (nonatomic, strong) NSLayoutConstraint *checkmarkImageHeightConstraint;
 @property (nonatomic, strong) UIImageView *checkmarkImage;

@@ -10,6 +10,7 @@
 #import "MAVEDisplayOptions.h"
 #import "MAVEConstants.h"
 #import "MAVEBuiltinUIElementUtils.h"
+#import "MaveSDK.h"
 
 @implementation MAVECustomCheckboxV3 {
     BOOL _didSetupInitialConstraints;
@@ -30,10 +31,11 @@
 
 - (void)doInitialSetup {
     self.widthAndHeight = 20;
-    self.layer.borderColor = [[UIColor grayColor] CGColor];
+    self.layer.borderColor = [[MAVEDisplayOptions colorAppleDarkGray] CGColor];
     self.layer.cornerRadius = self.widthAndHeight * 0.25;
     self.isChecked = NO;
 
+    self.tintColor = [MaveSDK sharedInstance].displayOptions.invitePageV3TintColor;
     self.checkmarkImage = [[UIImageView alloc] init];
     UIImage *checkmark = [MAVEBuiltinUIElementUtils imageNamed:@"MAVESimpleCheckmark.png" fromBundle:MAVEResourceBundleName];
     self.checkmarkImage.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:checkmark withColor:[UIColor whiteColor]];
@@ -46,7 +48,7 @@
 - (void)setIsChecked:(BOOL)isChecked {
     _isChecked = isChecked;
     if (isChecked) {
-        self.backgroundColor = [MAVEDisplayOptions colorAppleBlueTint];
+        self.backgroundColor = self.tintColor;
         self.layer.borderWidth = 0;
     } else {
         self.backgroundColor = [UIColor clearColor];
