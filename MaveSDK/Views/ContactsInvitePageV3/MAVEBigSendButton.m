@@ -7,6 +7,8 @@
 //
 
 #import "MAVEBigSendButton.h"
+#import "MaveSDK.h"
+#import "MAVEDisplayOptions.h"
 #import "MAVEConstants.h"
 #import "MAVEBuiltinUIElementUtils.h"
 
@@ -28,10 +30,11 @@
 }
 
 - (void)doInitialSetup {
-    self.backgroundColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    self.backgroundColor = [MaveSDK sharedInstance].displayOptions.invitePageV3TintColor;
     self.contentContainer = [[UIView alloc] init];
     self.icon = [[UIImageView alloc] init];
     self.textLabel = [[UILabel alloc] init];
+    self.textLabel.font = [MAVEDisplayOptions invitePageV3BiggerFont];
     self.textLabel.textColor = [UIColor whiteColor];
     [self updateButtonTextNumberToSend:0];
 
@@ -53,7 +56,7 @@
     // connect icon and label to container
     // X Constraints
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.icon attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:5]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.icon attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:8]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0]];
     // Y Constraints
     //     pin label to top and bottom
