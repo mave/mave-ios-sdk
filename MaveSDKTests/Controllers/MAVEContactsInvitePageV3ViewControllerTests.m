@@ -58,8 +58,7 @@
 
 
     // Add people & check state is as expected
-    id sendButtonMock = OCMClassMock([MAVEBigSendButton class]);
-    controller.wrapperView.bigSendButton = sendButtonMock;
+    id sendButtonMock = OCMPartialMock(wrapperView.bigSendButton);
     p1.selected = YES;
     [controller updateToReflectPersonSelectedStatus:p1];
     XCTAssertEqual([controller.selectedPeopleIndex count], 1);
