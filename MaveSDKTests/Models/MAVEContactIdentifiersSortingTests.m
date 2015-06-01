@@ -58,8 +58,16 @@
     XCTAssertEqual([phone2 compareContactIdentifiers:phone1], NSOrderedDescending);
 }
 
-- (void)testCompareEmails {
-    // Two emails have no preference
+- (void)testCompareEmailsGmailAboveOthers {
+    // Two emails of same domain have no preference
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@gmail.com"];
+    MAVEContactEmail *email2 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
+    XCTAssertEqual([email1 compareContactIdentifiers:email2], NSOrderedAscending);
+    XCTAssertEqual([email2 compareContactIdentifiers:email1], NSOrderedDescending);
+}
+
+- (void)testCompareEmailsSameDomain {
+    // Two emails of same domain have no preference
     MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
     MAVEContactEmail *email2 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
     XCTAssertEqual([email1 compareContactIdentifiers:email2], NSOrderedSame);
@@ -68,7 +76,7 @@
 
 - (void)testPhonesBeforeEmails {
     MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelOther];
-    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@gmail.com"];
     XCTAssertEqual([phone1 compareContactIdentifiers:email1], NSOrderedAscending);
     XCTAssertEqual([email1 compareContactIdentifiers:phone1], NSOrderedDescending);
 }

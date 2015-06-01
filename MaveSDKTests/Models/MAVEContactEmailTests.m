@@ -35,4 +35,36 @@
     XCTAssertEqualObjects([email humanReadableValueForDetailedDisplay], @"foo@bar.com");
 }
 
+- (void)testDomain {
+    // Our parsing shouldn't be picky about what's a real email,
+    // just split at @ and take the second item in the array.
+    // Return nil if bad format
+    MAVEContactEmail *email0 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.io"];
+    MAVEContactEmail *email2 = [[MAVEContactEmail alloc] initWithValue:@"foo+123@gmail.com"];
+    MAVEContactEmail *email3 = [[MAVEContactEmail alloc] initWithValue:@"foo@example"];
+    MAVEContactEmail *email4 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com@me.com@"];
+    MAVEContactEmail *email5 = [[MAVEContactEmail alloc] initWithValue:@"foo@"];
+    MAVEContactEmail *email6 = [[MAVEContactEmail alloc] initWithValue:@"foo"];
+    MAVEContactEmail *email7 = nil;
+
+    XCTAssertEqualObjects([email0 domain], @"example.com");
+    XCTAssertEqualObjects([email1 domain], @"example.io");
+    XCTAssertEqualObjects([email2 domain], @"gmail.com");
+    XCTAssertEqualObjects([email3 domain], @"example");
+    XCTAssertEqualObjects([email4 domain], @"example.com");
+    XCTAssertEqualObjects([email5 domain], nil);
+    XCTAssertEqualObjects([email6 domain], nil);
+    XCTAssertEqualObjects([email7 domain], nil);
+}
+
+- (void)testIsGmail {
+    MAVEContactEmail *email0 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo"];
+    MAVEContactEmail *email2 = [[MAVEContactEmail alloc] initWithValue:@"foo+123@gmail.com"];
+    XCTAssertFalse([email0 isGmail]);
+    XCTAssertFalse([email1 isGmail]);
+    XCTAssertTrue([email2 isGmail]);
+}
+
 @end

@@ -10,4 +10,7 @@
 
 @interface MAVEContactEmail : MAVEContactIdentifierBase
 
+- (NSString *)domain;
+- (BOOL)isGmail;
+
 @end
