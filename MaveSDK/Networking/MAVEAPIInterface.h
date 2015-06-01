@@ -69,6 +69,7 @@ extern NSString * const MAVEAPIParamShareAudience;
 /// Other individual requests
 ///
 - (void)identifyUser;
+// Deprecated: previous send invites method
 - (void)sendInvitesWithRecipientPhoneNumbers:(NSArray *)recipientPhones
                      recipientContactRecords:(NSArray *)recipientContacts
                                      message:(NSString *)messageText
@@ -77,6 +78,16 @@ extern NSString * const MAVEAPIParamShareAudience;
                               wrapInviteLink:(BOOL)wrapInviteLink
                                   customData:(NSDictionary *)customData
                              completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
+
+// Current send invites method, using the "selected" property of phone & email records
+// attached to the MAVEABPerson recipients.
+- (void)sendInvitesToRecipients:(NSArray *)recipients
+                        smsCopy:(NSString *)smsCopy
+                   senderUserID:(NSString *)senderUserID
+       inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                 wrapInviteLink:(BOOL)wrapInviteLink
+                     customData:(NSDictionary *)customData
+                completionBlock:(MAVEHTTPCompletionBlock)completionBlock;
 
 - (void)sendContactsMerkleTree:(MAVEMerkleTree *)merkleTree;
 - (void)sendContactsChangeset:(NSArray *)changeset

@@ -178,6 +178,50 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              completionBlock:completionBlock];
 }
 
+- (void)sendInvitesToRecipients:(NSArray *)recipients
+                        smsCopy:(NSString *)smsCopy
+                   senderUserID:(NSString *)senderUserID
+       inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                 wrapInviteLink:(BOOL)wrapInviteLink
+                     customData:(NSDictionary *)customData
+                completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+    NSMutableArray *params = [[NSMutableArray alloc] init];
+    for (MAVEABPerson *person in recipients) {
+        NSArray *sortedIdentifiers = [person.selectedContactIdentifiers sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
+        for (MAVEContactIdentifierBase *rec in sortedIdentifiers) {
+            if (!rec.selected) {
+                continue;
+            }
+            NSString *inviteType = @"";
+            if ([rec isKindOfClass:[MAVEContactPhoneNumber class]]) {
+                inviteType = @"sms";
+            } else {
+                inviteType = @"email";
+            }
+            NSMutableDictionary *current = [[NSMutableDictionary alloc] init];
+            [current setObject:[person toJSONDictionaryIncludingSuggestionsMetadata] forKey:@"recipient_contact_record"];
+            [current setObject:rec.value forKey:@"deliver_to"];
+            [current setObject:inviteType forKey:@"invite_type"];
+            if (smsCopy && [inviteType isEqualToString:@"sms"]) {
+                [current setObject:smsCopy forKey:@"sms_copy"];
+            }
+            if (senderUserID) {
+                [current setObject:senderUserID forKey:@"sender_user_id"];
+            }
+            if (inviteLinkDestinationURL) {
+                [current setObject:inviteLinkDestinationURL forKey:@"link_destination"];
+            }
+            [current setObject:@(wrapInviteLink) forKey:@"wrap_invite_link"];
+            if (customData && [customData count] > 0) {
+                [current setObject:customData forKey:@"custom_data"];
+            }
+            [params addObject:current];
+        }
+    }
+
+    [self sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:params extraHeaders:nil gzipCompressBody:YES completionBlock:nil];
+}
+
 - (void)identifyUser {
     NSString *launchRoute = @"/users";
     NSDictionary *params = [self.userData toDictionary];

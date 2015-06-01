@@ -321,6 +321,74 @@
     OCMVerifyAll(mocked);
 }
 
+
+// New send invites method
+- (void)testSendInvitesToRecipientsAllFieldsPassedIn {
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
+    MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
+    p0.emailObjects = @[email00, email01];
+    p0.selected = YES;
+    email00.selected = YES;
+    email01.selected = NO;
+
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
+    p1.phoneObjects = @[phone1];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    p1.emailObjects = @[email1];
+    p1.selected = YES;
+    phone1.selected = YES;
+    email1.selected = YES;
+
+    // if a person with no selected identifiers snuck in, it'll just get ignored
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
+    MAVEContactPhoneNumber *phone2 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551111" andLabel:MAVEContactPhoneLabelMobile];
+    p2.phoneObjects = @[phone2];
+
+    NSString *smsCopy = @"Hey sms blah";
+    NSString *senderUserID = @"1234";
+    NSString *linkDestination = @"http://foo.example.com";
+    NSDictionary *customData = @{@"foo": @"bar"};
+
+    NSArray *expectedParams = @[@{
+        @"recipient_contact_record": [p0 toJSONDictionaryIncludingSuggestionsMetadata],
+        @"deliver_to": email00.value,
+        @"invite_type": @"email",
+        @"sender_user_id": senderUserID,
+        @"link_destination": linkDestination,
+        @"wrap_invite_link": @(YES),
+        @"custom_data": customData
+        }, @{
+        @"recipient_contact_record": [p1 toJSONDictionaryIncludingSuggestionsMetadata],
+        @"deliver_to": phone1.value,
+        @"invite_type": @"sms",
+        @"sms_copy": smsCopy,
+        @"sender_user_id": senderUserID,
+        @"link_destination": linkDestination,
+        @"wrap_invite_link": @(YES),
+        @"custom_data": customData
+        }, @{
+        @"recipient_contact_record": [p1 toJSONDictionaryIncludingSuggestionsMetadata],
+        @"deliver_to": email1.value,
+        @"invite_type": @"email",
+        @"sender_user_id": senderUserID,
+        @"link_destination": linkDestination,
+        @"wrap_invite_link": @(YES),
+        @"custom_data": customData
+        }];
+
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:[OCMArg checkWithBlock:^BOOL(id obj) {
+        XCTAssertEqualObjects(obj, expectedParams);
+        return YES;
+    }] extraHeaders:nil gzipCompressBody:YES completionBlock:nil]);
+
+    [self.testAPIInterface sendInvitesToRecipients:@[p0, p2, p1] smsCopy:smsCopy senderUserID:senderUserID inviteLinkDestinationURL:linkDestination wrapInviteLink:YES customData:customData completionBlock:nil];
+
+    OCMVerifyAll(mock);
+}
+
 - (void)testSendContactsMerkleTree {
     id mocked = OCMPartialMock(self.testAPIInterface);
     id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
