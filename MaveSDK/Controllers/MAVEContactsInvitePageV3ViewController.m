@@ -223,7 +223,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 20;
+    return 25;
+
 }
 + (MAVEInviteTableSectionHeaderView *)sectionHeaderViewWithText:(NSString *)text isWaiting:(BOOL)isWaiting {
     return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text

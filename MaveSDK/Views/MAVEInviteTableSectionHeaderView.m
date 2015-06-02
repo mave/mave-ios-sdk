@@ -57,8 +57,8 @@
                         sizeWithAttributes:@{NSFontAttributeName: self.titleLabel.font}];
     self.titleLabel.frame = CGRectMake(labelOffsetX,
                                        labelMarginY,
-                                       labelSize.width,
-                                       labelSize.height);
+                                       ceil(labelSize.width),
+                                       ceil(labelSize.height)+1);
 
     CGFloat sectionHeight = labelMarginY * 2 + self.titleLabel.frame.size.height;
 
