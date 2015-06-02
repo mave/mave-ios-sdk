@@ -279,6 +279,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                 [alert show];
             } else {
                 [self.wrapperView.bigSendButton updateButtonToSentStatus];
+                [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:numberToSend];
             }
         });
     }];
