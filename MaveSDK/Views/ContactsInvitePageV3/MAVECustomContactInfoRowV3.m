@@ -118,7 +118,9 @@ CGFloat const verticalPadding = 4;
 }
 
 + (CGFloat)labelHeightGivenFont:(UIFont *)font {
-    return [@"(123) 555-4567" sizeWithAttributes:@{NSFontAttributeName: font}].height;
+    CGFloat height = [@"(123) 555-4567" sizeWithAttributes:@{NSFontAttributeName: font}].height;
+    height = ceil(height);
+    return height;
 }
 
 + (CGFloat)heightGivenFont:(UIFont *)font {
