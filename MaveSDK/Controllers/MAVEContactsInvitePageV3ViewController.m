@@ -85,10 +85,10 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)loadContactsData {
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
             [self.dataManager updateWithContacts:contacts ifNecessaryAsyncSuggestionsBlock:^(NSArray *suggestions) {
-//                [self animateInSuggestions:suggestions];
+                [self animateInSuggestions:suggestions];
             }];
+            [self.tableView reloadData];
         });
     }];
 }
@@ -113,8 +113,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     for (NSInteger rowNumber = 0; rowNumber < [suggestions count]; ++rowNumber) {
         [indexPaths addObject:[NSIndexPath indexPathForRow:rowNumber inSection:indexOfSuggested]];
     }
-    NSLog(@"number index paths: %@", @([indexPaths count]));
-
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
     [self.tableView endUpdates];
