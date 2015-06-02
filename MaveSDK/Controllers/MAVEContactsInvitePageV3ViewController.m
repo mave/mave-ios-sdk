@@ -7,6 +7,7 @@
 //
 
 #import "MAVEContactsInvitePageV3ViewController.h"
+#import "MaveSDK.h"
 #import "MAVEContactsInvitePageV3Cell.h"
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEInvitePageViewController.h"
@@ -259,11 +260,27 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)sendInvitesToSelected {
-    NSLog(@"sending invites");
     [self.wrapperView.bigSendButton updateButtonToSendingStatus];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.wrapperView.bigSendButton updateButtonToSentStatus];
-    });
+    NSArray *recipients = [self.selectedPeopleIndex allObjects];
+    NSInteger numberToSend = [self.selectedContactIdentifiersIndex count];
+    MAVEInfoLog(@"Sending batch of %@ invites to %@ contacts", @(numberToSend), @([recipients count]));
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    [[MaveSDK sharedInstance].APIInterface sendInvitesToRecipients:recipients smsCopy:nil senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                MAVEErrorLog(@"Error sending invites: %@", error);
+                [self.wrapperView.bigSendButton updateButtonTextNumberToSend:numberToSend];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
+                                                                message:@"Server was unavailable or internet connection failed"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                [self.wrapperView.bigSendButton updateButtonToSentStatus];
+            }
+        });
+    }];
 }
 
 @end

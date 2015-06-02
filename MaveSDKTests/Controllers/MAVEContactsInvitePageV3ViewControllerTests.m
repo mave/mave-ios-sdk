@@ -251,7 +251,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
     MaveSDK *mave = [MaveSDK sharedInstance];
-    NSArray *people = @[p0, p1, p2];
+    NSArray *people = @[p0, p1];
     OCMExpect([apiInterfaceMock sendInvitesToRecipients:people smsCopy:nil senderUserID:mave.userData.userID inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL wrapInviteLink:mave.userData.wrapInviteLink customData:mave.userData.customData completionBlock:[OCMArg any]]);
 
     [controller sendInvitesToSelected];

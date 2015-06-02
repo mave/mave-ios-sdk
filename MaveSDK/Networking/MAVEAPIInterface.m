@@ -217,7 +217,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
         }
     }
 
-    [self sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:params extraHeaders:nil gzipCompressBody:YES completionBlock:nil];
+    [self sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:params extraHeaders:nil gzipCompressBody:YES completionBlock:completionBlock];
 }
 
 - (void)identifyUser {

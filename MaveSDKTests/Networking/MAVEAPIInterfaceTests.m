@@ -377,14 +377,15 @@
         @"wrap_invite_link": @(YES),
         @"custom_data": customData
         }];
+    MAVEHTTPCompletionBlock completionBlock = ^void(NSError *error, NSDictionary *responseData){};
 
     id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:[OCMArg checkWithBlock:^BOOL(id obj) {
         XCTAssertEqualObjects(obj, expectedParams);
         return YES;
-    }] extraHeaders:nil gzipCompressBody:YES completionBlock:nil]);
+    }] extraHeaders:nil gzipCompressBody:YES completionBlock:completionBlock]);
 
-    [self.testAPIInterface sendInvitesToRecipients:@[p0, p2, p1] smsCopy:smsCopy senderUserID:senderUserID inviteLinkDestinationURL:linkDestination wrapInviteLink:YES customData:customData completionBlock:nil];
+    [self.testAPIInterface sendInvitesToRecipients:@[p0, p2, p1] smsCopy:smsCopy senderUserID:senderUserID inviteLinkDestinationURL:linkDestination wrapInviteLink:YES customData:customData completionBlock:completionBlock];
 
     OCMVerifyAll(mock);
 }
