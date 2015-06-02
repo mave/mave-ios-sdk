@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.7.0
+- Adds a new invite page, invite page v3 which features a slightly less plain design and email invites
+- Adds the "picture" property to MAVEUserData for passing in a profile picture URL that will be accessible in email templates as well as in referring user where you can use it to build a welcome page in your app.
+
 ### v0.6.3
 - Small internal api changes
 
