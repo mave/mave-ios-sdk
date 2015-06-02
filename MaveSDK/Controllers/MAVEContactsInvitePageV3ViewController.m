@@ -45,6 +45,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.searchTableView.delegate = self;
     [self.searchTableView registerClass:[MAVEContactsInvitePageV3Cell class] forCellReuseIdentifier:MAVEContactsInvitePageV3CellIdentifier];
     self.sampleCell = [[MAVEContactsInvitePageV3Cell alloc] init];
+    self.suggestionsSectionHeaderView = [[self class] sectionHeaderViewWithText:@"Suggestions" isWaiting:YES];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
 
@@ -52,7 +53,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)dealloc {
-    NSLog(@"table view dealloced");
+    MAVEDebugLog(@"table view dealloced");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
@@ -222,18 +223,24 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 20;
 }
++ (MAVEInviteTableSectionHeaderView *)sectionHeaderViewWithText:(NSString *)text isWaiting:(BOOL)isWaiting {
+    return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text
+                                                      sectionIsWaiting:isWaiting
+                                                             textColor:[MAVEDisplayOptions colorAppleBlack]
+                                                       backgroundColor:[MAVEDisplayOptions colorAppleLightGray]
+                                                                  font:[MAVEDisplayOptions invitePageV3SmallerLightFont]];
+}
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     NSString *text;
     if ([tableView isEqual:self.searchTableView]) {
         text = @"Search Results";
     } else {
         text = [[self.dataManager sectionIndexesForMainTable] objectAtIndex:section];
+        if  ([text isEqualToString:MAVESuggestedInvitesTableDataKey]) {
+            return self.suggestionsSectionHeaderView;
+        }
     }
-    return [[MAVEInviteTableSectionHeaderView alloc] initWithLabelText:text
-                                                      sectionIsWaiting:NO
-                                                             textColor:[MAVEDisplayOptions colorAppleBlack]
-                                                       backgroundColor:[MAVEDisplayOptions colorAppleLightGray]
-                                                                  font:[MAVEDisplayOptions invitePageV3SmallerLightFont]];
+    return [[self class] sectionHeaderViewWithText:text isWaiting:NO];
  }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
