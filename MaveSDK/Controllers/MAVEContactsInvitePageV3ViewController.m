@@ -85,10 +85,40 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)loadContactsData {
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.dataManager updateWithContacts:contacts ifNecessaryAsyncSuggestionsBlock:nil];
             [self.tableView reloadData];
+            [self.dataManager updateWithContacts:contacts ifNecessaryAsyncSuggestionsBlock:^(NSArray *suggestions) {
+//                [self animateInSuggestions:suggestions];
+            }];
         });
     }];
+}
+
+- (void)animateInSuggestions:(NSArray *)suggestions {
+    NSMutableDictionary *newData = [NSMutableDictionary dictionaryWithDictionary:self.dataManager.mainTableData];
+    if ([suggestions count] == 0) {
+        // no suggested invites, remove the section from data source and reload
+        [newData removeObjectForKey:MAVESuggestedInvitesTableDataKey];
+        self.dataManager.mainTableData = newData;
+        [self.tableView reloadData];
+        return;
+    } else {
+        // Add the suggested invites to data source before animating them in
+        [newData setObject:suggestions forKey:MAVESuggestedInvitesTableDataKey];
+        self.dataManager.mainTableData = newData;
+    }
+
+    // Animate in the new rows
+    NSUInteger indexOfSuggested = [self.dataManager.sectionIndexesForMainTable indexOfObject:MAVESuggestedInvitesTableDataKey];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:[suggestions count]];
+    for (NSInteger rowNumber = 0; rowNumber < [suggestions count]; ++rowNumber) {
+        [indexPaths addObject:[NSIndexPath indexPathForRow:rowNumber inSection:indexOfSuggested]];
+    }
+    NSLog(@"number index paths: %@", @([indexPaths count]));
+
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView endUpdates];
+    [self.suggestionsSectionHeaderView stopWaiting];
 }
 
 -(void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person {
