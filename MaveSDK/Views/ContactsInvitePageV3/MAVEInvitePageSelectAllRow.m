@@ -32,7 +32,7 @@
     self.backgroundColor = [MAVEDisplayOptions colorAppleLightGray];
     self.icon = [[UIImageView alloc] init];
     UIImage *envelope = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEEnvelope.png" fromBundle:MAVEResourceBundleName];
-    envelope = [MAVEBuiltinUIElementUtils tintWhitesInImage:envelope withColor:[UIColor grayColor]];
+    envelope = [MAVEBuiltinUIElementUtils tintWhitesInImage:envelope withColor:[MAVEDisplayOptions colorAppleMediumGray]];
     self.icon.image = envelope;
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.font = [MAVEDisplayOptions invitePageV3BiggerFont];
@@ -42,9 +42,9 @@
     [self addGestureRecognizer:tapCheckbox];
 
     self.topSeparatorBar = [[UIView alloc] init];
-    self.topSeparatorBar.backgroundColor = [MAVEDisplayOptions colorAppleDarkGray];
+    self.topSeparatorBar.backgroundColor = [MAVEDisplayOptions colorAppleMediumGray];
     self.bottomSeparatorBar = [[UIView alloc] init];
-    self.bottomSeparatorBar.backgroundColor = [MAVEDisplayOptions colorAppleDarkGray];
+    self.bottomSeparatorBar.backgroundColor = [MAVEDisplayOptions colorAppleMediumGray];
 
     self.topSeparatorBar.translatesAutoresizingMaskIntoConstraints = NO;
     self.icon.translatesAutoresizingMaskIntoConstraints = NO;
