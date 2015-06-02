@@ -61,6 +61,23 @@
     XCTAssertNil(ud.promoCode);
 }
 
+- (void)initAndSetExtraFields {
+    MAVEUserData *ud = [[MAVEUserData alloc] initWithUserID:@"id1" firstName:@"fi" lastName:@"la"];
+    ud.email = @"em";
+    ud.phone = @"ph";
+    ud.picture = [NSURL URLWithString:@"http://example.com/pic"];
+    XCTAssertEqualObjects(ud.userID, @"id1");
+    XCTAssertEqualObjects(ud.firstName, @"fi");
+    XCTAssertEqualObjects(ud.lastName, @"la");
+    XCTAssertEqualObjects(ud.email, @"em");
+    XCTAssertEqualObjects(ud.phone, @"ph");
+    XCTAssertEqualObjects([ud.picture absoluteString], @"http://example.com/pic");
+    XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
+    XCTAssertTrue(ud.wrapInviteLink);
+    XCTAssertNil(ud.customData);
+    XCTAssertNil(ud.promoCode);
+}
+
 - (void)testInitWithDictionary {
     MAVEUserData *ud = [[MAVEUserData alloc] initWithDictionary:@{
             @"user_id": @"id1",
@@ -68,6 +85,7 @@
             @"last_name": @"la",
             @"email": @"em",
             @"phone": @"ph",
+            @"picture": @"http://example.com/pic",
             @"promo_code": @"pc",
     }];
     XCTAssertEqualObjects(ud.userID, @"id1");
@@ -76,9 +94,17 @@
     XCTAssertEqualObjects(ud.email, @"em");
     XCTAssertEqualObjects(ud.phone, @"ph");
     XCTAssertEqualObjects(ud.promoCode, @"pc");
+    XCTAssertEqualObjects([ud.picture absoluteString], @"http://example.com/pic");
     XCTAssertFalse(ud.isSetAutomaticallyFromDevice);
     XCTAssertTrue(ud.wrapInviteLink);
     XCTAssertNil(ud.customData);
+}
+
+- (void)testInitWithDictionaryInvalidURL {
+    MAVEUserData *ud = [[MAVEUserData alloc] initWithDictionary:@{
+        @"picture": [NSNull null],
+    }];
+    XCTAssertNil(ud.picture);
 }
 
 - (void)testInitAutomatically {
@@ -133,13 +159,17 @@
 }
 
 - (void)testToDictionaryNoNils {
-    MAVEUserData *ud = [[MAVEUserData alloc] initWithUserID:@"id1" firstName:@"fi" lastName:@"la" email:@"em" phone:@"ph"];
+    MAVEUserData *ud = [[MAVEUserData alloc] initWithUserID:@"id1" firstName:@"fi" lastName:@"la"];
+    ud.email = @"em";
+    ud.phone = @"ph";
+    ud.picture = [NSURL URLWithString:@"http://example.com/pic"];
     ud.promoCode = @"pc";
     NSDictionary *expected = @{@"user_id": @"id1",
                                @"first_name": @"fi",
                                @"last_name": @"la",
                                @"email": @"em",
                                @"phone": @"ph",
+                               @"picture": @"http://example.com/pic",
                                @"promo_code": @"pc"};
     XCTAssertEqualObjects([ud toDictionary], expected);
 }

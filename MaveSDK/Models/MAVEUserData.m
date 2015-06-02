@@ -16,6 +16,7 @@ NSString * const MAVEUserDataKeyFirstName = @"first_name";
 NSString * const MAVEUserDataKeyLastName = @"last_name";
 NSString * const MAVEUserDataKeyEmail = @"email";
 NSString * const MAVEUserDataKeyPhone = @"phone";
+NSString * const MAVEUserDataKeyPicture = @"picture";
 NSString * const MAVEUserDataKeyPromoCode = @"promo_code";
 
 @implementation MAVEUserData
@@ -61,6 +62,10 @@ NSString * const MAVEUserDataKeyPromoCode = @"promo_code";
         self.email = [dict objectForKey:MAVEUserDataKeyEmail];
         self.phone = [dict objectForKey:MAVEUserDataKeyPhone];
         self.promoCode = [dict objectForKey:MAVEUserDataKeyPromoCode];
+        NSString *pictureURLStr = [dict objectForKey:MAVEUserDataKeyPicture];
+        if (pictureURLStr && [pictureURLStr isKindOfClass:[NSString class]]) {
+            self.picture = [NSURL URLWithString:pictureURLStr];
+        }
     }
     return self;
 }
@@ -88,6 +93,7 @@ NSString * const MAVEUserDataKeyPromoCode = @"promo_code";
     if (self.lastName) [output setValue:self.lastName forKey:MAVEUserDataKeyLastName];
     if (self.email) [output setValue:self.email forKey:MAVEUserDataKeyEmail];
     if (self.phone) [output setValue:self.phone forKey:MAVEUserDataKeyPhone];
+    if (self.picture) [output setValue:[self.picture absoluteString] forKey:MAVEUserDataKeyPicture];
     if (self.promoCode) [output setValue:self.promoCode forKey:MAVEUserDataKeyPromoCode];
     return (NSDictionary *)output;
 }

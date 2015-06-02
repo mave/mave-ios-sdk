@@ -17,6 +17,7 @@ extern NSString * const MAVEUserDataKeyUserID;
 @property (nonatomic, copy) NSString *lastName;
 @property (nonatomic, copy) NSString *email;
 @property (nonatomic, copy) NSString *phone;
+@property (nonatomic, copy) NSURL *picture;
 @property (nonatomic, copy) NSString *promoCode;
 
 // Internal flag, for use with anonymous users
