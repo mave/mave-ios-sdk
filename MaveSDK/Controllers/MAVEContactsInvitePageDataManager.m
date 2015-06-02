@@ -11,9 +11,9 @@
 #import "MAVEABUtils.h"
 
 // This is UTF-8 code point 0021, it should get sorted before any letters in any language
-NSString * const MAVESuggestedInvitesTableDataKey2 = @"\u2605";
+NSString * const MAVESuggestedInvitesTableDataKey = @"\u2605";
 // This is the last UTF-8 printable character, it should get sorted after any letters in any language
-NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
+NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 @implementation MAVEContactsInvitePageDataManager
 
@@ -104,7 +104,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
     [[self class] buildContactsToUseAtPageRender:&indexedContactsToRenderNow
                       addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
                                 fromContactsList:contacts];
-    BOOL suggestedSectionInContacts = ([indexedContactsToRenderNow objectForKey:MAVESuggestedInvitesTableDataKey2] != nil);
+    BOOL suggestedSectionInContacts = ([indexedContactsToRenderNow objectForKey:MAVESuggestedInvitesTableDataKey] != nil);
     NSLog(@"add suggestions later: %@ table has suggestions section %@", @(updateSuggestionsWhenReady), @(suggestedSectionInContacts));
     self.mainTableData = indexedContactsToRenderNow;
     

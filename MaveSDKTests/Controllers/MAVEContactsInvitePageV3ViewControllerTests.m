@@ -142,7 +142,7 @@
     MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
     p1.emailObjects = @[email1];
 
-    [controller.dataManager updateWithContacts:@[p0, p1] ifNecessaryAsyncSuggestionsBlock:nil];
+    [controller.dataManager updateWithContacts:@[p0, p1] ifNecessaryAsyncSuggestionsBlock:nil noSuggestionsToAddBlock:nil];
 
     [controller selectOrDeselectAllEmails:YES];
     XCTAssertFalse(email00.selected);

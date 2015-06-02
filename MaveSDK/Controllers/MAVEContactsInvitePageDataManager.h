@@ -13,6 +13,8 @@
 #import <UIKit/UIKit.h>
 #import "MAVEABPerson.h"
 
+extern NSString * const MAVESuggestedInvitesTableDataKey;
+
 @interface MAVEContactsInvitePageDataManager : NSObject
 
 @property (nonatomic, strong) NSDictionary *mainTableData;
