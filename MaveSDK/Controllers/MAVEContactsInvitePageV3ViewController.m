@@ -30,6 +30,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
     self.searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:self.dataManager mainTable:self.tableView andSearchTable:self.searchTableView];
     self.wrapperView.searchBar.delegate = self.searchManager;
+    self.wrapperView.searchBar.returnKeyType = UIReturnKeyDone;
     __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
     self.wrapperView.selectAllEmailsRow.selectAllBlock = ^void(BOOL selected) {
         [weakSelf selectOrDeselectAllEmails:selected];
