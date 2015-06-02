@@ -50,9 +50,11 @@
     if (isChecked) {
         self.backgroundColor = self.tintColor;
         self.layer.borderWidth = 0;
+        self.checkmarkImageHeightConstraint.constant = [self checkmarkWidthAndHeight];
     } else {
         self.backgroundColor = [UIColor clearColor];
         self.layer.borderWidth = 1.0f;
+        self.checkmarkImageHeightConstraint.constant = 0;
     }
 }
 
