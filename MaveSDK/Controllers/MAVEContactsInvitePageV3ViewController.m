@@ -88,6 +88,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.dataManager updateWithContacts:contacts ifNecessaryAsyncSuggestionsBlock:^(NSArray *suggestions) {
                 [self animateInSuggestions:suggestions];
+            } noSuggestionsToAddBlock:^{
+                [self.suggestionsSectionHeaderView stopWaiting];
             }];
             [self.tableView reloadData];
         });

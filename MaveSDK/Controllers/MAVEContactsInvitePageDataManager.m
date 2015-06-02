@@ -98,7 +98,7 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
     self.personToIndexPathsIndex = index;
 }
 
-- (void)updateWithContacts:(NSArray *)contacts ifNecessaryAsyncSuggestionsBlock:(void (^)(NSArray *))asyncSuggestionsBlock {
+- (void)updateWithContacts:(NSArray *)contacts ifNecessaryAsyncSuggestionsBlock:(void (^)(NSArray *))asyncSuggestionsBlock noSuggestionsToAddBlock:(void (^)())noSuggestionsBlock {
     NSDictionary *indexedContactsToRenderNow;
     BOOL updateSuggestionsWhenReady = NO;
     [[self class] buildContactsToUseAtPageRender:&indexedContactsToRenderNow
@@ -115,6 +115,9 @@ NSString * const MAVENonAlphabetNamesTableDataKey2 = @"\uffee";
                 asyncSuggestionsBlock(suggestions);
             });
         });
+    }
+    if (!updateSuggestionsWhenReady && noSuggestionsBlock) {
+        noSuggestionsBlock();
     }
 }
 

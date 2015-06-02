@@ -33,7 +33,9 @@
 // Method to update the table data with the given contacts, and if suggestions were not yet returned
 // wait for them and then call the given block for updating them asynchronously (i.e. animating them in).
 // If suggestions were already returned, they just get loaded with contacts and the async block is not called.
-- (void)updateWithContacts:(NSArray *)contacts ifNecessaryAsyncSuggestionsBlock:(void(^)(NSArray *suggestions))asyncSuggestionsBlock;
+- (void)updateWithContacts:(NSArray *)contacts
+ifNecessaryAsyncSuggestionsBlock:(void(^)(NSArray *suggestions))asyncSuggestionsBlock
+   noSuggestionsToAddBlock:(void(^)())noSuggestionsBlock;
 
 // Helper to manipulate contacts to also show suggested invites.
 // Based on the current state, we might
