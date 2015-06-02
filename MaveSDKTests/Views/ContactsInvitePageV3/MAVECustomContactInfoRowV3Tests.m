@@ -46,7 +46,7 @@
 - (void)testHeightGivenFont {
     UIFont *font = [UIFont systemFontOfSize:14];
     // hardcode the value we expect so test will notify us if it changes
-    XCTAssertLessThan(ABS([MAVECustomContactInfoRowV3 heightGivenFont:font] - 24.7f), 0.1);
+    XCTAssertLessThan(ABS([MAVECustomContactInfoRowV3 heightGivenFont:font] - ceil(24.7f)), 0.1);
 }
 
 - (void)testSetIsSelected {
