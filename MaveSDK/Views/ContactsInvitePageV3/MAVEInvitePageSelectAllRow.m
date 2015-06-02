@@ -39,7 +39,7 @@
     self.textLabel.textColor = [MAVEDisplayOptions colorAppleBlack];
     self.checkbox = [[MAVECustomCheckboxV3 alloc] init];
     UITapGestureRecognizer *tapCheckbox = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCheckbox)];
-    [self.checkbox addGestureRecognizer:tapCheckbox];
+    [self addGestureRecognizer:tapCheckbox];
 
     self.topSeparatorBar = [[UIView alloc] init];
     self.topSeparatorBar.backgroundColor = [MAVEDisplayOptions colorAppleDarkGray];
