@@ -282,6 +282,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         person = [self.dataManager personAtSearchTableIndexPath:indexPath];
     } else {
         person = [self.dataManager personAtMainTableIndexPath:indexPath];
+        person.selectedFromSuggestions = ([self.dataManager.sectionIndexesForMainTable[0] isEqualToString:MAVESuggestedInvitesTableDataKey]
+                                          && indexPath.section == 0);
     }
     if (!person) {
         // The cell didn't represent a person, e.g. the "No results found" cell
