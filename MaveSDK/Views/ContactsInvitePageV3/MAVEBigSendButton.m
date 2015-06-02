@@ -39,6 +39,17 @@
     self.textLabel.textColor = [UIColor whiteColor];
     [self updateButtonTextNumberToSend:0];
 
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+    self.activityIndicator.hidden = YES;
+
+    self.centeredTextLabel = [[UILabel alloc] init];
+    self.centeredTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.centeredTextLabel.font = [MAVEDisplayOptions invitePageV3BiggerFont];
+    self.centeredTextLabel.textColor = [UIColor whiteColor];
+    self.centeredTextLabel.text = @"Sent!";
+    self.centeredTextLabel.hidden = YES;
+
     self.contentContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.icon.translatesAutoresizingMaskIntoConstraints = NO;
     UIImage *airplane = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEAirplane.png" fromBundle:MAVEResourceBundleName];
@@ -47,6 +58,8 @@
     [self addSubview:self.contentContainer];
     [self.contentContainer addSubview:self.icon];
     [self.contentContainer addSubview:self.textLabel];
+    [self.contentContainer addSubview:self.activityIndicator];
+    [self.contentContainer addSubview:self.centeredTextLabel];
 }
 
 - (void)setupInitialConstriants {
@@ -65,6 +78,13 @@
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
     //     center icon vertically
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+
+    // Center activity indicator in content container
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    // Center the centered text label in content container
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centeredTextLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centeredTextLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentContainer attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
 }
 
 - (void)updateConstraints {
@@ -76,9 +96,30 @@
 }
 
 - (void)updateButtonTextNumberToSend:(NSUInteger)numberToSend {
+    [self.activityIndicator stopAnimating];
+    self.activityIndicator.hidden = YES;
+    self.centeredTextLabel.hidden = YES;
+    self.textLabel.hidden = NO;
+    self.icon.hidden = NO;
     NSString *noun = numberToSend == 1 ? @"Invite" : @"Invites";
     NSString *text = [NSString stringWithFormat:@"Send %@ %@", @(numberToSend), noun];
     self.textLabel.text = text;
+}
+
+- (void)updateButtonToSendingStatus {
+    self.textLabel.hidden = YES;
+    self.icon.hidden = YES;
+    self.centeredTextLabel.hidden = YES;
+    self.activityIndicator.hidden = NO;
+    [self.activityIndicator startAnimating];
+}
+
+- (void)updateButtonToSentStatus {
+    self.textLabel.hidden = YES;
+    self.icon.hidden = YES;
+    [self.activityIndicator stopAnimating];
+    self.activityIndicator.hidden = YES;
+    self.centeredTextLabel.hidden = NO;
 }
 
 @end
