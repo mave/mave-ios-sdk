@@ -235,6 +235,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     if (!button) {
         button = [[UIBarButtonItem alloc] init];
         button.style = UIBarButtonItemStylePlain;
+        button.tintColor = [MAVEDisplayOptions colorAppleDarkGray];
         button.title = @"Cancel";
     }
     button.target = self;
