@@ -10,6 +10,7 @@
 #import "MAVECustomContactInfoRowV3.h"
 #import "MAVEContactPhoneNumber.h"
 #import "MAVEContactEmail.h"
+#import "MaveSDK.h"
 #import "MAVEBuiltinUIElementUtils.h"
 #import "MAVEDisplayOptions.h"
 
@@ -228,7 +229,7 @@
         if (numberOfReusableRows >= i+1) {
             contactInfoRow = [currentRowsToReuse objectAtIndex:i];
         } else {
-            contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[MAVEDisplayOptions colorAppleBlueTint] deselectedColor:[MAVEDisplayOptions colorAppleDarkGray]];
+            contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[MaveSDK sharedInstance].displayOptions.invitePageV3TintColor deselectedColor:[MAVEDisplayOptions colorAppleDarkGray]];
             contactInfoRow.translatesAutoresizingMaskIntoConstraints = NO;
             [self.contactInfoContainer addSubview:contactInfoRow];
             [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];
