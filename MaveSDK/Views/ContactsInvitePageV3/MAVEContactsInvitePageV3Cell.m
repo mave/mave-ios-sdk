@@ -179,6 +179,7 @@
     self.isExpanded = person.selected;
     self.checkmarkBox.hidden = NO;
     self.checkmarkBox.isChecked = person.selected;
+    self.bottomSeparator.hidden = NO;
     [self updateWithContactInfoFromPerson:person];
 }
 

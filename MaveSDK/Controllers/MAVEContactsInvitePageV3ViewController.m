@@ -269,6 +269,12 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
     if (person) {
         [cell updateForReuseWithPerson:person];
+        // hide the bottom separator right next to a table section row
+        if ([tableView isEqual:self.tableView] &&
+            (indexPath.section + 1) != [self numberOfSectionsInTableView:tableView] &&
+            (indexPath.row + 1) == [self tableView:tableView numberOfRowsInSection:indexPath.section]) {
+            cell.bottomSeparator.hidden = YES;
+        }
         __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
         cell.contactIdentifiersSelectedDidUpdateBlock = ^void(MAVEABPerson *person) {
             [weakSelf updateToReflectPersonSelectedStatus:person];
