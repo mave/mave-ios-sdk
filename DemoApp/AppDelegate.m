@@ -21,7 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self setupMaveSDK];
-    [self customizeMaveInvitePage];
+//    [self customizeMaveInvitePage];
     return YES;
 }
 

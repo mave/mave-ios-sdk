@@ -230,7 +230,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                                                       sectionIsWaiting:isWaiting
                                                              textColor:[MAVEDisplayOptions colorAppleBlack]
                                                        backgroundColor:[MAVEDisplayOptions colorAppleLightGray]
-                                                                  font:[MAVEDisplayOptions invitePageV3SmallerLightFont]];
+                                                                  font:[MAVEDisplayOptions invitePageV3SmallerFont]];
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     NSString *text;

@@ -7,6 +7,7 @@
 //
 
 #import "MAVEInitialsPictureAlternative.h"
+#import "MAVEDisplayOptions.h"
 
 @implementation MAVEInitialsPictureAlternative {
     BOOL _didSetupInitialConstraints;
@@ -26,10 +27,10 @@
 }
 
 - (void)doInitialSetup {
-    self.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
+    self.backgroundColor = [MAVEDisplayOptions colorAppleMediumGray];
     self.label = [[UILabel alloc] init];
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
-    self.label.textColor = [UIColor grayColor];
+    self.label.textColor = [UIColor whiteColor];
     UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
     if (!font) {
         font = [UIFont systemFontOfSize:14];

@@ -111,7 +111,7 @@
     return [UIColor colorWithRed:3.0/255.0 green:122.0/255.0 blue:255.0/255.0 alpha:1.0];
 }
 + (UIColor *)colorAppleLightGray {
-    return [UIColor colorWithRed:227.0/255.0 green:228.0/255.0 blue:230.0/255.0 alpha:1.0];
+    return [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:248.0/255.0 alpha:1.0];
 }
 + (UIColor *)colorAppleMediumGray {
     return [UIColor colorWithRed:201.0/255.0 green:201.0/255.0 blue:206.0/255.0 alpha:1.0];
@@ -130,10 +130,10 @@
     return [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
 }
 + (UIFont *)invitePageV3SmallerFont {
-    return [UIFont fontWithName:@"HelveticaNeue" size:13];
+    return [UIFont fontWithName:@"HelveticaNeue" size:15];
 }
 + (UIFont *)invitePageV3SmallerLightFont {
-    return [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
+    return [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
 }
 
 @end
