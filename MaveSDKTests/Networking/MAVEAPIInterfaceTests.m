@@ -397,13 +397,13 @@
     p0.selected = YES;
 
     NSString *senderUserID = @"1234";
-    NSArray *expectedParams = @[@{
+    NSDictionary *expectedParams = @{@"invites": @[@{
         @"recipient_contact_record": [p0 toJSONDictionaryIncludingSuggestionsMetadata],
         @"deliver_to": phone0.value,
         @"invite_type": @"sms",
         @"sender_user_id": senderUserID,
         @"wrap_invite_link": @(NO),
-        }];
+        }]};
     id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:[OCMArg checkWithBlock:^BOOL(id obj) {
         XCTAssertEqualObjects(obj, expectedParams);

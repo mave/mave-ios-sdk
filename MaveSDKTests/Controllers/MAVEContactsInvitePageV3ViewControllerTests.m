@@ -17,6 +17,10 @@
 #import "MAVEBigSendButton.h"
 #import "MAVEContactsInvitePageV3TableWrapperView.h"
 
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
+
 @interface MAVEContactsInvitePageV3ViewControllerTests : XCTestCase
 
 @end
@@ -177,7 +181,7 @@
     MAVEContactEmail *email11 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
     p1.emailObjects = @[email10, email11];
 
-    [controller.dataManager updateWithContacts:@[p0, p1] ifNecessaryAsyncSuggestionsBlock:nil];
+    [controller.dataManager updateWithContacts:@[p0, p1] ifNecessaryAsyncSuggestionsBlock:nil noSuggestionsToAddBlock:nil];
 
     [controller selectOrDeselectAllEmails:YES];
     // if a non-top ranked email was already selected, leave it selected and dont
@@ -208,7 +212,7 @@
     MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
     p1.emailObjects = @[email1];
 
-    [controller.dataManager updateWithContacts:@[p1] ifNecessaryAsyncSuggestionsBlock:nil];
+    [controller.dataManager updateWithContacts:@[p1] ifNecessaryAsyncSuggestionsBlock:nil noSuggestionsToAddBlock:nil];
     p1.selected = YES;
     [controller updateToReflectPersonSelectedStatus:p1];
     p1.selected = NO;
@@ -221,6 +225,12 @@
 }
 
 - (void)testSendInvites {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.defaultSMSMessageText = @"Foobar message";
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+
     MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
     [controller viewDidLoad];
 
@@ -235,7 +245,7 @@
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init];
     MAVEContactPhoneNumber *phone2 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551111" andLabel:MAVEContactPhoneLabelMobile];
     p2.phoneObjects = @[phone2];
-    [controller.dataManager updateWithContacts:@[p0, p1, p2] ifNecessaryAsyncSuggestionsBlock:nil];
+    [controller.dataManager updateWithContacts:@[p0, p1, p2] ifNecessaryAsyncSuggestionsBlock:nil noSuggestionsToAddBlock:nil];
 
     p0.selected = YES; // this will select the best contact, email01
     [controller updateToReflectPersonSelectedStatus:p0];
@@ -248,16 +258,13 @@
     phone2.selected = YES;
     [controller updateToReflectPersonSelectedStatus:p2];
 
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
-    MaveSDK *mave = [MaveSDK sharedInstance];
-    mave.defaultSMSMessageText = @"Foobar message";
     NSArray *people = @[p0, p1];
     OCMExpect([apiInterfaceMock sendInvitesToRecipients:people smsCopy:mave.defaultSMSMessageText senderUserID:mave.userData.userID inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL wrapInviteLink:mave.userData.wrapInviteLink customData:mave.userData.customData completionBlock:[OCMArg any]]);
 
     [controller sendInvitesToSelected];
 
     OCMVerifyAll(apiInterfaceMock);
+    mave.defaultSMSMessageText = nil;
 }
 
 @end
