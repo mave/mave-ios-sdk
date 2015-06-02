@@ -264,8 +264,9 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     NSArray *recipients = [self.selectedPeopleIndex allObjects];
     NSInteger numberToSend = [self.selectedContactIdentifiersIndex count];
     MAVEInfoLog(@"Sending batch of %@ invites to %@ contacts", @(numberToSend), @([recipients count]));
+    NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
-    [[MaveSDK sharedInstance].APIInterface sendInvitesToRecipients:recipients smsCopy:nil senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
+    [[MaveSDK sharedInstance].APIInterface sendInvitesToRecipients:recipients smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error) {
                 MAVEErrorLog(@"Error sending invites: %@", error);

@@ -186,6 +186,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                      customData:(NSDictionary *)customData
                 completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     NSMutableArray *params = [[NSMutableArray alloc] init];
+    NSUInteger i = 0;
     for (MAVEABPerson *person in recipients) {
         NSArray *sortedIdentifiers = [person.selectedContactIdentifiers sortedArrayUsingSelector:@selector(compareContactIdentifiers:)];
         for (MAVEContactIdentifierBase *rec in sortedIdentifiers) {
@@ -214,10 +215,12 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                 [current setObject:customData forKey:@"custom_data"];
             }
             [params addObject:current];
+            MAVEDebugLog(@"Invite %@: %@", @(i++), params);
         }
     }
 
-    [self sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:params extraHeaders:nil gzipCompressBody:YES completionBlock:completionBlock];
+    NSDictionary *requestParams = @{@"invites": params};
+    [self sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:requestParams extraHeaders:nil gzipCompressBody:YES completionBlock:completionBlock];
 }
 
 - (void)identifyUser {

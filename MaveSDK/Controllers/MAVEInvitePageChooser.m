@@ -72,7 +72,7 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
         case MAVEInvitePageTypeContactsInvitePage:
             return [self createContactsInvitePageV3IfAllowed];
         case MAVEInvitePageTypeContactsInvitePageV2:
-            return [self createContactsInvitePageV2IfAllowed];
+            return [self createContactsInvitePageV3IfAllowed];
         case MAVEInvitePageTypeContactsInvitePageV3:
             return [self createContactsInvitePageV3IfAllowed];
         case MAVEInvitePageTypeSharePage:

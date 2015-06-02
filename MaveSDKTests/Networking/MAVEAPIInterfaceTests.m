@@ -351,7 +351,7 @@
     NSString *linkDestination = @"http://foo.example.com";
     NSDictionary *customData = @{@"foo": @"bar"};
 
-    NSArray *expectedParams = @[@{
+    NSDictionary *expectedParams = @{@"invites": @[@{
         @"recipient_contact_record": [p0 toJSONDictionaryIncludingSuggestionsMetadata],
         @"deliver_to": email00.value,
         @"invite_type": @"email",
@@ -376,7 +376,7 @@
         @"link_destination": linkDestination,
         @"wrap_invite_link": @(YES),
         @"custom_data": customData
-        }];
+        }]};
     MAVEHTTPCompletionBlock completionBlock = ^void(NSError *error, NSDictionary *responseData){};
 
     id mock = OCMPartialMock(self.testAPIInterface);
