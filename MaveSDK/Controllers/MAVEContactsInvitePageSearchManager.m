@@ -24,8 +24,9 @@
 #pragma mark - Text Field delegate search functionality
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    if ([newText isEqualToString:@"\n"]) {
+    if ([newText length] > 0 && [[newText substringFromIndex:[newText length]-1] isEqualToString:@"\n"]) {
         [textField endEditing:YES];
+        [self clearCurrentSearchInTextField:textField];
         return NO;
     }
     if ([newText length] > 0) {
@@ -48,6 +49,7 @@
     textField.text = @"";
     self.searchTable.hidden = YES;
     self.mainTable.hidden = NO;
+    [self.mainTable reloadData];
 }
 
 @end
