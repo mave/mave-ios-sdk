@@ -307,8 +307,17 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     person.selected = !person.selected;
     [self updateToReflectPersonSelectedStatus:person];
 
-    [tableView beginUpdates];
-    [tableView endUpdates];
+    if ([tableView isEqual:self.searchTableView]) {
+        NSIndexPath *pathOnMainTable = [self.dataManager indexPathOfFirstOccuranceInMainTableOfPerson:person];
+        self.tableView.hidden = NO;
+        self.wrapperView.searchTableView.hidden = YES;
+        self.wrapperView.searchBar.text = @"";
+        [self.wrapperView.searchBar endEditing:YES];
+        [self.tableView scrollToRowAtIndexPath:pathOnMainTable atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
+
+    [self.tableView beginUpdates];
+    [self.tableView endUpdates];
 }
 
 - (void)sendInvitesToSelected {
