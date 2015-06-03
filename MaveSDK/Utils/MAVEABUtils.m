@@ -65,7 +65,7 @@ static ABAddressBookRef addressBook;
 + (UIImage *)getImageLookingUpPersonByRecordID:(ABRecordID)recordID {
     UIImage *image;
 //    ABAddressBookRef addressBook;
-    CFDataRef dataCF;
+    CFDataRef dataCF = nil;
     @try {
         if (![[self addressBookPermissionStatus] isEqualToString:MAVEABPermissionStatusAllowed]) {
             return nil;
