@@ -104,7 +104,6 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
     [[self class] buildContactsToUseAtPageRender:&indexedContactsToRenderNow
                       addSuggestedLaterWhenReady:&updateSuggestionsWhenReady
                                 fromContactsList:contacts];
-    BOOL suggestedSectionInContacts = ([indexedContactsToRenderNow objectForKey:MAVESuggestedInvitesTableDataKey] != nil);
     self.mainTableData = indexedContactsToRenderNow;
     
     if (updateSuggestionsWhenReady && asyncSuggestionsBlock) {
