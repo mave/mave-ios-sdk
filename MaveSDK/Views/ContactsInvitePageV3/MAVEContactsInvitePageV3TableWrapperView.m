@@ -39,9 +39,11 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.tableView.sectionIndexColor = [MAVEDisplayOptions colorAppleDarkGray];
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     self.searchTableView = [[UITableView alloc] init];
     self.searchTableView.separatorColor = UITableViewCellSeparatorStyleNone;
     self.searchTableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    self.searchTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     self.searchTableView.hidden = YES;
 
     self.bigSendButton = [[MAVEBigSendButton alloc] init];
