@@ -182,8 +182,13 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             }
         }
     }
-    [self.tableView beginUpdates];
-    [self.tableView endUpdates];
+    // If near top of the page, selecting all
+    if (self.tableView.contentOffset.y > 150) {
+        [self.tableView reloadData];
+    } else {
+            [self.tableView beginUpdates];
+            [self.tableView endUpdates];
+    }
     if (select) {
         [self.searchManager clearCurrentSearchInTextField:self.wrapperView.searchBar];
         [self.wrapperView.searchBar endEditing:YES];
