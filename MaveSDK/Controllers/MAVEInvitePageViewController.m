@@ -58,6 +58,12 @@
     [self.view endEditing:YES];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    // reactivate table view if this view gets displayed again
+    self.ABTableViewController.tableView.delegate = self.ABTableViewController;
+}
+
 - (void)dealloc {
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter removeObserver:self
