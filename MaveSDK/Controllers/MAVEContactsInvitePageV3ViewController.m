@@ -340,7 +340,9 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                 [alert show];
             } else {
                 [self.wrapperView.bigSendButton updateButtonToSentStatus];
-                [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:numberToSend];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:numberToSend];
+                });
             }
         });
     }];
