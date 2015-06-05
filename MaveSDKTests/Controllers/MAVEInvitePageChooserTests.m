@@ -179,6 +179,22 @@
     XCTAssertEqualObjects(chooser.activeViewController, expectedVC);
 }
 
+- (void)testDebugInvitePageType {
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.debug = YES;
+    mave.debugInvitePageType = MAVEInvitePageTypeContactsInvitePageV2;
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id mock = OCMPartialMock(chooser);
+    UIViewController *fakeVC = [[UIViewController alloc] init];
+    OCMExpect([mock createViewControllerOfType:MAVEInvitePageTypeContactsInvitePageV2]).andReturn(fakeVC);
+
+    UIViewController *vc = [chooser chooseAndCreateInvitePageViewController];
+    XCTAssertEqualObjects(vc, fakeVC);
+
+    OCMVerifyAll(mock);
+}
+
 #pragma mark - Logic for if allowed to show server-side contacts invite page, and tests for v1 & v2
 
 - (void)testCreateContactsInvitePageIfAllowed {

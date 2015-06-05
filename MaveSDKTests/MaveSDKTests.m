@@ -59,6 +59,8 @@
     XCTAssertNotNil(mave.addressBookSyncManager);
     XCTAssertNotNil(mave.suggestedInvitesBuilder);
     XCTAssertNotNil(mave.referringDataBuilder);
+    XCTAssertFalse(mave.debug);
+    XCTAssertEqual(mave.debugInvitePageType, MAVEInvitePageTypeNone);
 }
 
 
@@ -134,6 +136,7 @@
 - (void)testGetReferringData {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"asd932k"];
+    XCTAssertFalse([MaveSDK sharedInstance].debug);
 
     MAVEReferringData *referringDataObj = [[MAVEReferringData alloc] init];
 
@@ -151,6 +154,35 @@
 
     XCTAssertEqualObjects(returnedObject, referringDataObj);
     OCMVerifyAll(referringBuilderMock);
+}
+
+- (void)testDebugGetReferringData {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"asd932k"];
+    MaveSDK *mave = [MaveSDK sharedInstance];
+
+    mave.debug = YES;
+    mave.debugFakeReferringData = [MaveSDK generateFakeReferringDataForTestingWithCustomData:@{@"foo": @"bar"}];
+    __block BOOL ran = NO;
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    [mave getReferringData:^(MAVEReferringData *referringData) {
+        XCTAssertNotNil(referringData.referringUser);
+        XCTAssertNotNil(referringData.currentUser);
+        XCTAssertEqualObjects([referringData.referringUser fullName], @"Danny Example");
+        XCTAssertEqualObjects([referringData.referringUser.picture absoluteString],
+                              @"http://mave.io/images/giraffe-face.jpg");
+        XCTAssertEqualObjects(referringData.referringUser.email, @"danny@example.com");
+        XCTAssertEqualObjects(referringData.referringUser.phone, @"+18085551111");
+        // current user name is never known, except the name that the referring user had this person
+        // saved under in his or her address book. Our api does not show that name to the current user.
+        XCTAssertNil([referringData.currentUser fullName]);
+        XCTAssertEqualObjects(referringData.currentUser.phone, @"+12125559999");
+        XCTAssertEqualObjects(referringData.customData, @{@"foo": @"bar"});
+        ran = YES;
+        dispatch_semaphore_signal(sema);
+    }];
+    dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+    XCTAssertTrue(ran);
 }
 
 

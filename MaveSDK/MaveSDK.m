@@ -186,6 +186,10 @@ static dispatch_once_t sharedInstanceonceToken;
 // Methods to get data from our sdk
 //
 - (void)getReferringData:(void (^)(MAVEReferringData *))referringDataHandler {
+    if (self.debug && referringDataHandler) {
+        referringDataHandler(self.debugFakeReferringData);
+        return;
+    }
     [self.referringDataBuilder createObjectWithTimeout:4 completionBlock:^(id object) {
         referringDataHandler((MAVEReferringData *)object);
     }];
@@ -303,6 +307,24 @@ static dispatch_once_t sharedInstanceonceToken;
                                       MAVEInfoLog(@"Sent %lu SMS invites", [recipientPhoneNumbers count]);
                                   }
                               }];
+}
+
+#pragma mark - Debug/ testing properties
+- (void)setDebug:(BOOL)debug {
+    if (debug) {
+        MAVEErrorLog(@"MAVE IS SET TO DEBUG MODE, MAKE SURE TO DISABLE IT BEFORE RELEASING");
+    }
+    _debug = debug;
+}
+
++(MAVEReferringData *)generateFakeReferringDataForTestingWithCustomData:(NSDictionary *)customData {
+    MAVEReferringData *rd = [[MAVEReferringData alloc] init];
+    rd.currentUser = [[MAVEUserData alloc] init];
+    rd.currentUser.phone = @"+12125559999";
+    rd.referringUser = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Danny" lastName:@"Example" email:@"danny@example.com" phone:@"+18085551111"];
+    rd.referringUser.picture = [NSURL URLWithString:@"http://mave.io/images/giraffe-face.jpg"];
+    rd.customData = customData;
+    return rd;
 }
 
 

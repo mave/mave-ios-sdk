@@ -50,6 +50,14 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 
 
 - (UIViewController *)chooseAndCreateInvitePageViewController {
+    // Debug mode
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    if (mave.debug && mave.debugInvitePageType != MAVEInvitePageTypeNone) {
+        UIViewController *vc = [self createViewControllerOfType:mave.debugInvitePageType];
+        self.activeViewController = vc;
+        return vc;
+    }
+
     // Based on the primary and fallback page configuration options,
     // display the appropriate invite page.
     MAVERemoteConfigurationInvitePageChoice *invitePageConfig = [MaveSDK sharedInstance].remoteConfiguration.invitePageChoice;

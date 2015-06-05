@@ -12,6 +12,7 @@
 #import "MAVEUserData.h"
 #import "MAVEReferringData.h"
 #import "MAVEInvitePageChooser.h"
+#import "MAVERemoteConfigurationInvitePageChoice.h"
 #import "MAVEAPIInterface.h"
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVECustomSharePageViewController.h"
@@ -29,12 +30,18 @@
 @property (nonatomic, strong) MAVERemoteObjectBuilder *suggestedInvitesBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *referringDataBuilder;
 
-
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;
 @property (nonatomic, assign) BOOL isInitialAppLaunch;
 @property (nonatomic, copy) NSString *inviteContext;
 @property (nonatomic, strong) MAVEUserData *userData;
+
+// Debug / testing properties
+@property (nonatomic, assign) BOOL debug;
+@property (nonatomic, strong) MAVEReferringData *debugFakeReferringData;
++ (MAVEReferringData *)generateFakeReferringDataForTestingWithCustomData:(NSDictionary *)customData;
+@property (nonatomic, assign) MAVEInvitePageType debugInvitePageType;
+
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
