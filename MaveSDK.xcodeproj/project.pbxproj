@@ -81,6 +81,8 @@
 		0C435C871B0F8574005B11AF /* MAVESimpleCheckmark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C435C841B0F8574005B11AF /* MAVESimpleCheckmark@3x.png */; };
 		0C435C8A1B0F9E8D005B11AF /* MAVECustomContactInfoRowV3.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C435C891B0F9E8D005B11AF /* MAVECustomContactInfoRowV3.m */; };
 		0C435C8D1B0FB806005B11AF /* MAVEContactsInvitePageDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C435C8C1B0FB806005B11AF /* MAVEContactsInvitePageDataManager.m */; };
+		0C44DCBF1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C44DCBE1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.m */; };
+		0C44DCC21B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C44DCC11B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.m */; };
 		0C58FDE11A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */; };
 		0C58FDE21A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */; };
 		0C58FDE31A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */; };
@@ -381,6 +383,10 @@
 		0C435C891B0F9E8D005B11AF /* MAVECustomContactInfoRowV3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVECustomContactInfoRowV3.m; sourceTree = "<group>"; };
 		0C435C8B1B0FB806005B11AF /* MAVEContactsInvitePageDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEContactsInvitePageDataManager.h; sourceTree = "<group>"; };
 		0C435C8C1B0FB806005B11AF /* MAVEContactsInvitePageDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEContactsInvitePageDataManager.m; sourceTree = "<group>"; };
+		0C44DCBD1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESuggestedInviteReusableTableViewCell.h; sourceTree = "<group>"; };
+		0C44DCBE1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESuggestedInviteReusableTableViewCell.m; sourceTree = "<group>"; };
+		0C44DCC01B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESuggestedInviteReusableCellDelegate.h; sourceTree = "<group>"; };
+		0C44DCC11B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESuggestedInviteReusableCellDelegate.m; sourceTree = "<group>"; };
 		0C58FDDE1A6494DD007F8F12 /* MAVEShareIconClipboard@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@1x.png"; sourceTree = "<group>"; };
 		0C58FDDF1A6494DD007F8F12 /* MAVEShareIconClipboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@2x.png"; sourceTree = "<group>"; };
 		0C58FDE01A6494DD007F8F12 /* MAVEShareIconClipboard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MAVEShareIconClipboard@3x.png"; sourceTree = "<group>"; };
@@ -739,6 +745,17 @@
 			path = ContactsInvitePageV3;
 			sourceTree = "<group>";
 		};
+		0C44DCBC1B2207C8004780A0 /* SuggestedInviteReusableCell */ = {
+			isa = PBXGroup;
+			children = (
+				0C44DCBD1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.h */,
+				0C44DCBE1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.m */,
+				0C44DCC01B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.h */,
+				0C44DCC11B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.m */,
+			);
+			path = SuggestedInviteReusableCell;
+			sourceTree = "<group>";
+		};
 		0C58FDDC1A649498007F8F12 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1013,6 +1030,7 @@
 		C029278919E8224C006AEE43 /* MaveSDK */ = {
 			isa = PBXGroup;
 			children = (
+				0C44DCBC1B2207C8004780A0 /* SuggestedInviteReusableCell */,
 				0C29BC361A5D561600C27DA5 /* MAVERemoteObjectCreator */,
 				C02927EF19E82C8D006AEE43 /* MaveSDK.h */,
 				0C141D331A0BD6920036202A /* MaveSDK_Internal.h */,
@@ -1507,8 +1525,10 @@
 				C02927FB19E82D03006AEE43 /* MAVEABTableViewController.m in Sources */,
 				0C0996E51A76B593003B82AA /* MAVEMerkleTreeDataEnumerator.m in Sources */,
 				0C131EEE1ACAFE9A00F34539 /* MAVEWrapperNavigationController.m in Sources */,
+				0C44DCBF1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.m in Sources */,
 				0C29BC411A5D7DEC00C27DA5 /* MAVERemoteObjectBuilderDataPersistor.m in Sources */,
 				0C435C8A1B0F9E8D005B11AF /* MAVECustomContactInfoRowV3.m in Sources */,
+				0C44DCC21B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.m in Sources */,
 				0C0996F01A78527F003B82AA /* MAVEMerkleTreeDataDemo.m in Sources */,
 				0C435C6E1B0E2F96005B11AF /* MAVEContactsInvitePageV3TableWrapperView.m in Sources */,
 				C02927F319E82CF8006AEE43 /* MaveSDK.m in Sources */,
