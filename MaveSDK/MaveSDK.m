@@ -17,6 +17,7 @@
 #import "MAVECustomSharePageViewController.h"
 #import "MAVESuggestedInvites.h"
 #import "MAVEABUtils.h"
+#import "MAVEABPermissionPromptHandler.h"
 
 @implementation MaveSDK {
     // Controller
@@ -193,6 +194,28 @@ static dispatch_once_t sharedInstanceonceToken;
     [self.referringDataBuilder createObjectWithTimeout:4 completionBlock:^(id object) {
         referringDataHandler((MAVEReferringData *)object);
     }];
+}
+
+- (void)getSuggestedInvites:(void (^)(NSArray *))suggestedInvitesHandler
+                    timeout:(CGFloat)timeout {
+    if (![[MAVEABUtils addressBookPermissionStatus] isEqual:MAVEABPermissionStatusAllowed]) {
+        suggestedInvitesHandler(nil);
+        return;
+    }
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+        __block NSArray *contacts;
+        // not actually going to prompt because we already have permission
+        [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock:^(NSArray *_contacts) {
+            contacts = _contacts;
+            dispatch_semaphore_signal(sema);
+        }];
+        // not going to be long because we already have contacts permission
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+
+        suggestedInvitesHandler([self suggestedInvitesWithFullContactsList:contacts delay:timeout]);
+    });
 }
 
 //

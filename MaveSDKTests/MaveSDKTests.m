@@ -17,6 +17,8 @@
 #import "MAVEAPIInterface.h"
 #import "MAVESuggestedInvites.h"
 #import "MAVEIDUtils.h"
+#import "MAVEABUtils.h"
+#import "MAVEABPermissionPromptHandler.h"
 
 @interface MaveSDK(Testing)
 + (void)resetSharedInstanceForTesting;
@@ -183,6 +185,53 @@
     }];
     dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
     XCTAssertTrue(ran);
+}
+
+- (void)testGetSuggestedInvites {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    id maveMock = OCMPartialMock(mave);
+    NSArray *fakeSuggestions = @[@2];
+
+    NSArray *fakeAllContacts = @[@1, @1];
+    id handlerMock = OCMClassMock([MAVEABPermissionPromptHandler class]);
+    OCMExpect([handlerMock promptForContactsWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+        void (^completionBlock)(NSArray *contacts) = obj;
+        completionBlock(fakeAllContacts);
+        return YES;
+    }]]);
+
+    OCMExpect([maveMock suggestedInvitesWithFullContactsList:fakeAllContacts delay:2.4f]).andReturn(fakeSuggestions);
+
+    __block NSArray *results = nil;
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    [mave getSuggestedInvites:^(NSArray *suggestedInvites) {
+        results = suggestedInvites;
+        dispatch_semaphore_signal(sema);
+    } timeout:2.4f];
+    dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+
+    XCTAssertEqualObjects(results, fakeSuggestions);
+    OCMVerifyAll(maveMock);
+    OCMVerifyAll(handlerMock);
+}
+
+- (void)testGetSuggestedInvitesWhenNoContactsPermission {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusUnprompted);
+
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    __block NSArray *results;
+    __block BOOL blockRan = NO;
+    [mave getSuggestedInvites:^(NSArray *suggestedInvites) {
+        results = suggestedInvites;
+        blockRan = YES;
+    } timeout:1.0];
+
+    XCTAssertTrue(blockRan);
+    XCTAssertNil(results);
 }
 
 

@@ -42,17 +42,18 @@
 + (MAVEReferringData *)generateFakeReferringDataForTestingWithCustomData:(NSDictionary *)customData;
 @property (nonatomic, assign) MAVEInvitePageType debugInvitePageType;
 
-
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;
+
+// Methods intended for external use, to access referring data & suggested invites
+- (void)getReferringData:(void(^)(MAVEReferringData *referringData))referringDataHandler;
+- (void)getSuggestedInvites:(void(^)(NSArray *suggestedInvites))suggestedInvitesHandler timeout:(CGFloat)timeout;
 
 // Internal, method to access the remote configuration
 - (MAVERemoteConfiguration *)remoteConfiguration;
 - (NSArray *)suggestedInvitesWithFullContactsList:(NSArray *)contacts delay:(CGFloat)seconds;
 
 - (BOOL)isSetupOK;
-
-- (void)getReferringData:(void(^)(MAVEReferringData *referringData))referringDataHandler;
 
 // Use this to identify your logged-in users to us
 - (void)identifyUser:(MAVEUserData *)userData;
