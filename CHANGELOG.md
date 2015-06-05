@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.7.1
+- Adds a debug mode for explicitly setting referringData and the invite page type when testing
+
 ### v0.7.0
 - Adds a new invite page, invite page v3 which features a slightly less plain design and email invites
 - Adds the "picture" property to MAVEUserData for passing in a profile picture URL that will be accessible in email templates as well as in referring user where you can use it to build a welcome page in your app.
