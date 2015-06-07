@@ -15,6 +15,4 @@
 @property (nonatomic, strong) UIImageView *customImageView;
 @property (nonatomic, strong) void(^sendInviteBlock)();
 
-- (instancetype)initWithSendInviteBlock:(void(^)())sendInviteBlock;
-
 @end

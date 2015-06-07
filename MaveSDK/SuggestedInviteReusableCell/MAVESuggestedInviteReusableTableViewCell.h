@@ -33,7 +33,7 @@
 
 - (CGFloat)cellHeight;
 
-- (void)updateForUseWithContact:(MAVEABPerson *)contact;
+- (void)updateForUseWithContact:(MAVEABPerson *)contact dismissBlock:(void(^)())dismissBlock inviteBlock:(void(^)())inviteBlock;
 - (void)_updatePictureViewWithPicture:(UIImage *)picture orInitials:(NSString *)initials;
 
 @end

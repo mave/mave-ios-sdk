@@ -138,11 +138,13 @@
     return ceil(self.vPicturePadding * 2 + self.pictureViewWidthHeight);
 }
 
-- (void)updateForUseWithContact:(MAVEABPerson *)contact {
+- (void)updateForUseWithContact:(MAVEABPerson *)contact dismissBlock:(void (^)())dismissBlock inviteBlock:(void (^)())inviteBlock {
     UIImage *picture = [contact picture];
     [self _updatePictureViewWithPicture:picture orInitials:[contact initials]];
     self.nameLabel.text = [contact fullName];
     self.subtitleLabel.text = @"10 friends on App";
+    self.dismissButton.dismissBlock = dismissBlock;
+    self.inviteButton.sendInviteBlock = inviteBlock;
 }
 
 - (void)_updatePictureViewWithPicture:(UIImage *)picture orInitials:(NSString *)initials {
