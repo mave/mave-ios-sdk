@@ -21,6 +21,7 @@
 @property (nonatomic, strong) UILabel *subtitleLabel;
 @property (nonatomic, strong) MAVESuggestedInviteReusableCellDismissButton *dismissButton;
 @property (nonatomic, strong) MAVESuggestedInviteReusableCellInviteButton *inviteButton;
+@property (nonatomic, strong) UIView *bottomSeparator;
 
 // Other layout values
 @property (nonatomic, assign) CGFloat pictureViewWidthHeight;

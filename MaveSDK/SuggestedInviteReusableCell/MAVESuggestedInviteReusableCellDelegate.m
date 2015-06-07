@@ -27,6 +27,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 - (void)doInitialSetup {
     [self.tableView registerClass:[MAVESuggestedInviteReusableTableViewCell class]
            forCellReuseIdentifier:MAVESuggestedInviteReusableCellIdentifier];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     MAVESuggestedInviteReusableTableViewCell *tmpCell = [[MAVESuggestedInviteReusableTableViewCell alloc] init];
     self.cellHeight = [tmpCell cellHeight];
 }

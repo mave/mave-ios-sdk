@@ -56,14 +56,14 @@
     self.nameLabel = [[UILabel alloc] init];
     self.subtitleLabel = [[UILabel alloc] init];
     self.subtitleLabel.textColor = [UIColor colorWithWhite:167.0/255 alpha:1.0];
-
     self.dismissButton = [[MAVESuggestedInviteReusableCellDismissButton alloc] init];
     self.dismissButton.layer.cornerRadius = self.buttonWidthHeight / 2;
     self.dismissButton.layer.masksToBounds = YES;
     self.inviteButton = [[MAVESuggestedInviteReusableCellInviteButton alloc] init];
     self.inviteButton.layer.cornerRadius = self.buttonWidthHeight / 2;
     self.inviteButton.layer.masksToBounds = YES;
-
+    self.bottomSeparator = [[UIView alloc] init];
+    self.bottomSeparator.backgroundColor = [MAVEDisplayOptions colorAppleMediumGray];
 
     self.pictureView.translatesAutoresizingMaskIntoConstraints = NO;
     self.initialsInsteadOfPictureView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -72,6 +72,7 @@
     self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.dismissButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.inviteButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.bottomSeparator.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:self.pictureView];
     [self.contentView addSubview:self.initialsInsteadOfPictureView];
     [self.contentView addSubview:self.textContainer];
@@ -79,6 +80,7 @@
     [self.textContainer addSubview:self.subtitleLabel];
     [self.contentView addSubview:self.dismissButton];
     [self.contentView addSubview:self.inviteButton];
+    [self.contentView addSubview:self.bottomSeparator];
 
     [self setNeedsUpdateConstraints];
 }
@@ -90,7 +92,8 @@
                             @"nameLabel": self.nameLabel,
                             @"subtitleLabel": self.subtitleLabel,
                             @"dismissButton": self.dismissButton,
-                            @"sendButton": self.inviteButton};
+                            @"sendButton": self.inviteButton,
+                            @"bottomSeparator": self.bottomSeparator};
     NSDictionary *metrics = @{@"pictureViewWidthHeight": @(self.pictureViewWidthHeight),
                               @"buttonWidthHeight": @(self.buttonWidthHeight),
                               @"betweenButtonPadding": @(self.betweenButtonPadding),
@@ -112,6 +115,10 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[sendButton(==buttonWidthHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.inviteButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
 
+
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[pictureView]-10-[bottomSeparator]-0-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[bottomSeparator(==0.5)]-0-|" options:0 metrics:metrics views:views]];
+
     // inside text container
     [self.textContainer addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[nameLabel]-4-[subtitleLabel]-0-|" options:0 metrics:metrics views:views]];
     [self.textContainer addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[nameLabel]-0-|" options:0 metrics:metrics views:views]];
@@ -128,7 +135,7 @@
 }
 
 - (CGFloat)cellHeight {
-    return self.vPicturePadding * 2 + self.pictureViewWidthHeight;
+    return ceil(self.vPicturePadding * 2 + self.pictureViewWidthHeight);
 }
 
 - (void)updateForUseWithContact:(MAVEABPerson *)contact {
