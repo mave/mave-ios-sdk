@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "MAVEABPerson.h"
 #import "MAVEInitialsPictureAlternative.h"
+#import "MAVESuggestedInviteReusableCellDismissButton.h"
+#import "MAVESuggestedInviteReusableCellInviteButton.h"
 
 @interface MAVESuggestedInviteReusableTableViewCell : UITableViewCell
 
@@ -17,8 +19,8 @@
 @property (nonatomic, strong) UIView *textContainer;
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UILabel *subtitleLabel;
-@property (nonatomic, strong) UIButton *dismissButton;
-@property (nonatomic, strong) UIButton *sendButton;
+@property (nonatomic, strong) MAVESuggestedInviteReusableCellDismissButton *dismissButton;
+@property (nonatomic, strong) MAVESuggestedInviteReusableCellInviteButton *inviteButton;
 
 // Other layout values
 @property (nonatomic, assign) CGFloat pictureViewWidthHeight;

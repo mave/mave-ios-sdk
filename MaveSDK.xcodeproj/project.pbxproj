@@ -115,6 +115,8 @@
 		0C7200741A19A87900E12B91 /* MAVEInvitePageBottomActionContainerViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7200731A19A87900E12B91 /* MAVEInvitePageBottomActionContainerViewTests.m */; };
 		0C775E2E1A9FB6790028D687 /* MAVEReferringData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C775E2D1A9FB6790028D687 /* MAVEReferringData.m */; };
 		0C775E301A9FB6F30028D687 /* MAVEReferringDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C775E2F1A9FB6F30028D687 /* MAVEReferringDataTests.m */; };
+		0C7C14D81B24A27A00B15D43 /* MAVESuggestedInviteReusableCellDismissButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7C14D71B24A27A00B15D43 /* MAVESuggestedInviteReusableCellDismissButton.m */; };
+		0C7C14DB1B24AB9700B15D43 /* MAVESuggestedInviteReusableCellInviteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7C14DA1B24AB9700B15D43 /* MAVESuggestedInviteReusableCellInviteButton.m */; };
 		0C80B9B71B17AA7900702A97 /* MAVEInvitePageSelectAllRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C80B9B61B17AA7900702A97 /* MAVEInvitePageSelectAllRow.m */; };
 		0C80B9BB1B17ADA500702A97 /* MAVEEnvelope.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C80B9B81B17ADA500702A97 /* MAVEEnvelope.png */; };
 		0C80B9BC1B17ADA500702A97 /* MAVEEnvelope@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C80B9B91B17ADA500702A97 /* MAVEEnvelope@2x.png */; };
@@ -427,6 +429,10 @@
 		0C775E2C1A9FB6790028D687 /* MAVEReferringData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEReferringData.h; sourceTree = "<group>"; };
 		0C775E2D1A9FB6790028D687 /* MAVEReferringData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEReferringData.m; sourceTree = "<group>"; };
 		0C775E2F1A9FB6F30028D687 /* MAVEReferringDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEReferringDataTests.m; sourceTree = "<group>"; };
+		0C7C14D61B24A27A00B15D43 /* MAVESuggestedInviteReusableCellDismissButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESuggestedInviteReusableCellDismissButton.h; sourceTree = "<group>"; };
+		0C7C14D71B24A27A00B15D43 /* MAVESuggestedInviteReusableCellDismissButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESuggestedInviteReusableCellDismissButton.m; sourceTree = "<group>"; };
+		0C7C14D91B24AB9700B15D43 /* MAVESuggestedInviteReusableCellInviteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVESuggestedInviteReusableCellInviteButton.h; sourceTree = "<group>"; };
+		0C7C14DA1B24AB9700B15D43 /* MAVESuggestedInviteReusableCellInviteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVESuggestedInviteReusableCellInviteButton.m; sourceTree = "<group>"; };
 		0C80B9B51B17AA7900702A97 /* MAVEInvitePageSelectAllRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAVEInvitePageSelectAllRow.h; sourceTree = "<group>"; };
 		0C80B9B61B17AA7900702A97 /* MAVEInvitePageSelectAllRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAVEInvitePageSelectAllRow.m; sourceTree = "<group>"; };
 		0C80B9B81B17ADA500702A97 /* MAVEEnvelope.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MAVEEnvelope.png; sourceTree = "<group>"; };
@@ -758,10 +764,14 @@
 		0C44DCBC1B2207C8004780A0 /* SuggestedInviteReusableCell */ = {
 			isa = PBXGroup;
 			children = (
-				0C44DCBD1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.h */,
-				0C44DCBE1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.m */,
 				0C44DCC01B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.h */,
 				0C44DCC11B220817004780A0 /* MAVESuggestedInviteReusableCellDelegate.m */,
+				0C44DCBD1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.h */,
+				0C44DCBE1B2207E6004780A0 /* MAVESuggestedInviteReusableTableViewCell.m */,
+				0C7C14D61B24A27A00B15D43 /* MAVESuggestedInviteReusableCellDismissButton.h */,
+				0C7C14D71B24A27A00B15D43 /* MAVESuggestedInviteReusableCellDismissButton.m */,
+				0C7C14D91B24AB9700B15D43 /* MAVESuggestedInviteReusableCellInviteButton.h */,
+				0C7C14DA1B24AB9700B15D43 /* MAVESuggestedInviteReusableCellInviteButton.m */,
 			);
 			path = SuggestedInviteReusableCell;
 			sourceTree = "<group>";
@@ -1563,6 +1573,7 @@
 				0CCC92C61A603996008CB888 /* MAVERemoteObjectBuilder.m in Sources */,
 				0C97F6821ADC70C60084974D /* MAVEContactsInvitePageInlineSendButton.m in Sources */,
 				0C25A3E91AD5C14C0031D163 /* MAVEContactsInvitePageV2TableWrapperView.m in Sources */,
+				0C7C14DB1B24AB9700B15D43 /* MAVESuggestedInviteReusableCellInviteButton.m in Sources */,
 				0C6D92B81A75653400B65B82 /* MAVEMerkleTreeInnerNode.m in Sources */,
 				0C1A8FB91A63255C00518D9A /* MAVERemoteConfigurationClientSMS.m in Sources */,
 				0CD2743B1A891EE500EE5B33 /* MAVEMerkleTreeHashUtils.m in Sources */,
@@ -1597,6 +1608,7 @@
 				0CFDBE291A1B875100DD2AAF /* MAVEInviteExplanationView.m in Sources */,
 				0CEEDE971A6C4FCB00A81804 /* MAVESearchBar.m in Sources */,
 				0C141D301A0BC1A80036202A /* MAVEUserData.m in Sources */,
+				0C7C14D81B24A27A00B15D43 /* MAVESuggestedInviteReusableCellDismissButton.m in Sources */,
 				0C6D92AD1A72BE4A00B65B82 /* MAVECompressionUtils.m in Sources */,
 				0C1E6ACB1AA9267A002EBD2E /* MAVEInvitePageBottomActionSendButtonOnlyView.m in Sources */,
 				0C435C741B0E5BE2005B11AF /* MAVEBigSendButton.m in Sources */,

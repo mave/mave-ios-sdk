@@ -20,6 +20,7 @@
 
 + (UIColor *)colorAppleBlueTint;
 + (UIColor *)colorAppleLightGray;
++ (UIColor *)colorAppleMediumLightGray;
 + (UIColor *)colorAppleMediumGray;
 + (UIColor *)colorAppleDarkGray;
 + (UIColor *)colorAppleBlack;

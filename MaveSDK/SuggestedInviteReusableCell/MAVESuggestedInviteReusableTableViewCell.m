@@ -8,6 +8,8 @@
 
 #import "MAVESuggestedInviteReusableTableViewCell.h"
 #import "MAVEDisplayOptions.h"
+#import "MAVEBuiltinUIElementUtils.h"
+#import "MAVEConstants.h"
 
 @implementation MAVESuggestedInviteReusableTableViewCell {
     BOOL _setupInitialConstraints;
@@ -33,12 +35,12 @@
 }
 
 - (void)doInitialSetup {
-    self.pictureViewWidthHeight = 70;
+    self.pictureViewWidthHeight = 60;
     self.buttonWidthHeight = 34;
     self.betweenButtonPadding = 20;
     self.hLeftPadding = 8;
     self.hRightPadding = 20;
-    self.vPicturePadding = 6;
+    self.vPicturePadding = 4;
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.pictureView = [[UIImageView alloc] init];
@@ -54,16 +56,13 @@
     self.nameLabel = [[UILabel alloc] init];
     self.subtitleLabel = [[UILabel alloc] init];
     self.subtitleLabel.textColor = [UIColor colorWithWhite:167.0/255 alpha:1.0];
-    self.dismissButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.dismissButton.layer.borderColor = [[MAVEDisplayOptions colorAppleMediumGray] CGColor];
-    self.dismissButton.layer.borderWidth = 1.0f;
+
+    self.dismissButton = [[MAVESuggestedInviteReusableCellDismissButton alloc] init];
     self.dismissButton.layer.cornerRadius = self.buttonWidthHeight / 2;
     self.dismissButton.layer.masksToBounds = YES;
-    self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.sendButton.layer.borderColor = [[MAVEDisplayOptions colorAppleMediumGray] CGColor];
-    self.sendButton.layer.borderWidth = 1.0f;
-    self.sendButton.layer.cornerRadius = self.buttonWidthHeight / 2;
-    self.sendButton.layer.masksToBounds = YES;
+    self.inviteButton = [[MAVESuggestedInviteReusableCellInviteButton alloc] init];
+    self.inviteButton.layer.cornerRadius = self.buttonWidthHeight / 2;
+    self.inviteButton.layer.masksToBounds = YES;
 
 
     self.pictureView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -72,14 +71,14 @@
     self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.dismissButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.sendButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.inviteButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:self.pictureView];
     [self.contentView addSubview:self.initialsInsteadOfPictureView];
     [self.contentView addSubview:self.textContainer];
     [self.textContainer addSubview:self.nameLabel];
     [self.textContainer addSubview:self.subtitleLabel];
     [self.contentView addSubview:self.dismissButton];
-    [self.contentView addSubview:self.sendButton];
+    [self.contentView addSubview:self.inviteButton];
 
     [self setNeedsUpdateConstraints];
 }
@@ -91,7 +90,7 @@
                             @"nameLabel": self.nameLabel,
                             @"subtitleLabel": self.subtitleLabel,
                             @"dismissButton": self.dismissButton,
-                            @"sendButton": self.sendButton};
+                            @"sendButton": self.inviteButton};
     NSDictionary *metrics = @{@"pictureViewWidthHeight": @(self.pictureViewWidthHeight),
                               @"buttonWidthHeight": @(self.buttonWidthHeight),
                               @"betweenButtonPadding": @(self.betweenButtonPadding),
@@ -111,7 +110,7 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[dismissButton(==buttonWidthHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.dismissButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[sendButton(==buttonWidthHeight)]" options:0 metrics:metrics views:views]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.sendButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.inviteButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
 
     // inside text container
     [self.textContainer addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[nameLabel]-4-[subtitleLabel]-0-|" options:0 metrics:metrics views:views]];
