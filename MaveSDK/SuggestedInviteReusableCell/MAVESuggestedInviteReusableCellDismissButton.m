@@ -24,21 +24,37 @@
 }
 
 - (void)doInitialSetup {
-    self.layer.borderColor = [[MAVEDisplayOptions colorAppleMediumLightGray] CGColor];
     self.layer.borderWidth = 2.0f;
-    UIImage *image = [MAVEBuiltinUIElementUtils imageNamed:@"MAVECancelX.png" fromBundle:MAVEResourceBundleName];
-    self.customImageView = [[UIImageView alloc] initWithImage:image];
-    [self setCustomTintColor:[UIColor colorWithRed:167.0/255.0 green:168.0/255.0 blue:171.0/255.0 alpha:1.0]];
+    self.iconColor = [UIColor colorWithRed:167.0/255.0 green:168.0/255.0 blue:171.0/255.0 alpha:1.0];
+    self.untintedImage = [MAVEBuiltinUIElementUtils imageNamed:@"MAVECancelX.png" fromBundle:MAVEResourceBundleName];
+    self.customImageView = [[UIImageView alloc] initWithImage:self.untintedImage];
 
     self.customImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.customImageView];
 
+    [self tintForNonHighlighted];
+    [self addTarget:self action:@selector(tintForHighlighted) forControlEvents:UIControlEventTouchDown];
+    [self addTarget:self action:@selector(tintForNonHighlighted) forControlEvents:(UIControlEventTouchUpInside^UIControlEventTouchUpOutside)];
+    [self addTarget:self action:@selector(doAction) forControlEvents:UIControlEventTouchUpInside];
+
     [self setNeedsUpdateConstraints];
 }
 
-- (void)setCustomTintColor:(UIColor *)customTintColor {
-    _customTintColor = customTintColor;
-    self.customImageView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.customImageView.image withColor:customTintColor];
+- (void)tintForHighlighted {
+    UIColor *borderTinted = [MAVEDisplayOptions colorAppleLightGray];
+    UIColor *iconTinted = [MAVEDisplayOptions colorAppleMediumLightGray];
+    self.customImageView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.untintedImage withColor:iconTinted];
+    self.layer.borderColor = [borderTinted CGColor];
+}
+
+- (void)tintForNonHighlighted {
+    UIColor *borderColor = [MAVEDisplayOptions colorAppleMediumLightGray];
+    self.customImageView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.untintedImage withColor:self.iconColor];
+    self.layer.borderColor = [borderColor CGColor];
+}
+
+- (void)doAction {
+    NSLog(@"do the action");
 }
 
 - (void)doSetupInitialConstraints {

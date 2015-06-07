@@ -10,7 +10,8 @@
 
 @interface MAVESuggestedInviteReusableCellDismissButton : UIButton
 
-@property (nonatomic, strong) UIColor *customTintColor;
+@property (nonatomic, strong) UIColor *iconColor;
+@property (nonatomic, strong) UIImage *untintedImage;
 @property (nonatomic, strong) UIImageView *customImageView;
 
 @end
