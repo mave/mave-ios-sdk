@@ -13,5 +13,8 @@
 @property (nonatomic, strong) UIColor *iconColor;
 @property (nonatomic, strong) UIImage *untintedImage;
 @property (nonatomic, strong) UIImageView *customImageView;
+@property (nonatomic, strong) void(^sendInviteBlock)();
+
+- (instancetype)initWithSendInviteBlock:(void(^)())sendInviteBlock;
 
 @end

@@ -23,6 +23,15 @@
     return  self;
 }
 
+- (instancetype)initWithSendInviteBlock:(void (^)())sendInviteBlock {
+    self = [[self class] buttonWithType:UIButtonTypeSystem];
+    if (self) {
+        self.sendInviteBlock = sendInviteBlock;
+        [self doInitialSetup];
+    }
+    return self;
+}
+
 - (void)doInitialSetup {
     self.layer.borderWidth = 2.0f;
     self.iconColor = [UIColor colorWithRed:167.0/255.0 green:168.0/255.0 blue:171.0/255.0 alpha:1.0];
