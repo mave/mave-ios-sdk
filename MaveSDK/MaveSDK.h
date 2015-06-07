@@ -38,9 +38,12 @@
 
 // Debug / testing properties
 @property (nonatomic, assign) BOOL debug;
+@property (nonatomic, assign) MAVEInvitePageType debugInvitePageType;
 @property (nonatomic, strong) MAVEReferringData *debugFakeReferringData;
 + (MAVEReferringData *)generateFakeReferringDataForTestingWithCustomData:(NSDictionary *)customData;
-@property (nonatomic, assign) MAVEInvitePageType debugInvitePageType;
+@property (nonatomic, assign) NSUInteger debugNumberOfRandomSuggestedInvites;
+@property (nonatomic, assign) CGFloat debugSuggestedInvitesDelaySeconds;
+
 
 + (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
 + (instancetype)sharedInstance;

@@ -126,6 +126,22 @@ static dispatch_once_t sharedInstanceonceToken;
 
 
 - (NSArray *)suggestedInvitesWithFullContactsList:(NSArray *)contacts delay:(CGFloat)seconds {
+    // Pick randomly from the contacts list if debugging
+    if (self.debug) {
+        CGFloat debugDelay = MIN(self.debugSuggestedInvitesDelaySeconds, seconds);
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+        dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, debugDelay * NSEC_PER_SEC));
+        NSMutableArray *debugSuggestions = [NSMutableArray arrayWithCapacity:self.debugNumberOfRandomSuggestedInvites];
+        NSMutableArray *mutableContacts =[NSMutableArray arrayWithArray:contacts];
+        NSInteger numToReturn = MIN(self.debugNumberOfRandomSuggestedInvites, [mutableContacts count]);
+        for (NSInteger i = 0; i < numToReturn; i++) {
+            NSUInteger index = arc4random() % [mutableContacts count];
+            [debugSuggestions addObject:[mutableContacts objectAtIndex:index]];
+            [mutableContacts removeObjectAtIndex:index];
+        }
+        return [NSArray arrayWithArray:debugSuggestions];
+    }
+
     MAVESuggestedInvites *suggestedInvites = (MAVESuggestedInvites *)[self.suggestedInvitesBuilder createObjectSynchronousWithTimeout:seconds];
     // At this point we don't know when the suggestion objects were created, and bc of
     // how the contacts invite page is designed we need them to be instances of the
