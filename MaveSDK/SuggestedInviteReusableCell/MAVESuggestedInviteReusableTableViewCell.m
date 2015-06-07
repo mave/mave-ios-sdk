@@ -7,6 +7,7 @@
 //
 
 #import "MAVESuggestedInviteReusableTableViewCell.h"
+#import "MAVEDisplayOptions.h"
 
 @implementation MAVESuggestedInviteReusableTableViewCell {
     BOOL _setupInitialConstraints;
@@ -32,30 +33,38 @@
 }
 
 - (void)doInitialSetup {
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.pictureViewWidthHeight = 70;
+    self.buttonWidthHeight = 34;
+    self.betweenButtonPadding = 20;
+    self.hLeftPadding = 8;
+    self.hRightPadding = 20;
+    self.vPicturePadding = 6;
 
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.pictureView = [[UIImageView alloc] init];
     self.pictureView.backgroundColor = [UIColor orangeColor];
     self.pictureView.layer.cornerRadius = self.pictureViewWidthHeight / 2;
     self.pictureView.layer.masksToBounds = YES;
     self.initialsInsteadOfPictureView = [[MAVEInitialsPictureAlternative alloc] init];
-    self.initialsInsteadOfPictureView.layer.cornerRadius = self.pictureViewWidthHeight / 2;
+    self.initialsInsteadOfPictureView.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:28];
+    self.initialsInsteadOfPictureView.layer.cornerRadius = floor(self.pictureViewWidthHeight / 2);
     self.initialsInsteadOfPictureView.layer.masksToBounds = YES;
     self.initialsInsteadOfPictureView.hidden = YES;
     self.textContainer = [[UIView alloc] init];
-    self.textContainer.backgroundColor = [UIColor blueColor];
     self.nameLabel = [[UILabel alloc] init];
     self.subtitleLabel = [[UILabel alloc] init];
     self.subtitleLabel.textColor = [UIColor colorWithWhite:167.0/255 alpha:1.0];
     self.dismissButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.dismissButton.backgroundColor = [UIColor greenColor];
+    self.dismissButton.layer.borderColor = [[MAVEDisplayOptions colorAppleMediumGray] CGColor];
+    self.dismissButton.layer.borderWidth = 1.0f;
+    self.dismissButton.layer.cornerRadius = self.buttonWidthHeight / 2;
+    self.dismissButton.layer.masksToBounds = YES;
     self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.sendButton.backgroundColor = [UIColor purpleColor];
+    self.sendButton.layer.borderColor = [[MAVEDisplayOptions colorAppleMediumGray] CGColor];
+    self.sendButton.layer.borderWidth = 1.0f;
+    self.sendButton.layer.cornerRadius = self.buttonWidthHeight / 2;
+    self.sendButton.layer.masksToBounds = YES;
 
-    self.pictureViewWidthHeight = 80;
-    self.buttonWidthHeight = 25;
-    self.hOuterPadding = 8;
-    self.vPicturePadding = 6;
 
     self.pictureView.translatesAutoresizingMaskIntoConstraints = NO;
     self.initialsInsteadOfPictureView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -85,14 +94,16 @@
                             @"sendButton": self.sendButton};
     NSDictionary *metrics = @{@"pictureViewWidthHeight": @(self.pictureViewWidthHeight),
                               @"buttonWidthHeight": @(self.buttonWidthHeight),
-                              @"hOuterPadding": @(self.hOuterPadding),
+                              @"betweenButtonPadding": @(self.betweenButtonPadding),
+                              @"hLeftPadding": @(self.hLeftPadding),
+                              @"hRightPadding": @(self.hRightPadding),
                               @"vPicturePadding": @(self.vPicturePadding),
                               };
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-hOuterPadding-[pictureView(==pictureViewWidthHeight)]-10-[textContainer]-10-[dismissButton(==buttonWidthHeight)]-10-[sendButton(==buttonWidthHeight)]-hOuterPadding-|" options:0 metrics:metrics views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[pictureView]-10-[subtitleLabel]-[dismissButton]" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-hLeftPadding-[pictureView(==pictureViewWidthHeight)]-10-[textContainer]-10-[dismissButton(==buttonWidthHeight)]-(betweenButtonPadding)-[sendButton(==buttonWidthHeight)]-hRightPadding-|" options:0 metrics:metrics views:views]];
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[pictureView(==pictureViewWidthHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pictureView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-hLeftPadding-[initialsInsteadOfPictureView(==pictureViewWidthHeight)]-10-[textContainer]" options:0 metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[initialsInsteadOfPictureView(==pictureViewWidthHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.initialsInsteadOfPictureView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
 
@@ -124,6 +135,8 @@
 - (void)updateForUseWithContact:(MAVEABPerson *)contact {
     UIImage *picture = [contact picture];
     [self _updatePictureViewWithPicture:picture orInitials:[contact initials]];
+    self.nameLabel.text = [contact fullName];
+    self.subtitleLabel.text = @"10 friends on App";
 }
 
 - (void)_updatePictureViewWithPicture:(UIImage *)picture orInitials:(NSString *)initials {

@@ -26,7 +26,8 @@
                    sectionNumber:(NSInteger)sectionNumber
                  maxNumberOfRows:(NSInteger)maxNumberOfRows;
 
-- (void)getSuggestionsAndLoadAsynchronously;
+- (void)getSuggestionsAndLoadAnimated:(BOOL)animated withCompletionBlock:(void(^)(NSUInteger numberOfSuggestions))initialLoadCompletionBlock;
+
 - (NSInteger)numberOfRows;
 - (CGFloat)cellHeight;
 - (MAVESuggestedInviteReusableTableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath;

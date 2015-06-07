@@ -23,7 +23,9 @@
 // Other layout values
 @property (nonatomic, assign) CGFloat pictureViewWidthHeight;
 @property (nonatomic, assign) CGFloat buttonWidthHeight;
-@property (nonatomic, assign) CGFloat hOuterPadding;
+@property (nonatomic, assign) CGFloat betweenButtonPadding;
+@property (nonatomic, assign) CGFloat hLeftPadding;
+@property (nonatomic, assign) CGFloat hRightPadding;
 @property (nonatomic, assign) CGFloat vPicturePadding;
 
 - (CGFloat)cellHeight;

@@ -31,10 +31,26 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     self.cellHeight = [tmpCell cellHeight];
 }
 
-- (void)getSuggestionsAndLoadAsynchronously {
+- (void)getSuggestionsAndLoadAnimated:(BOOL)animated withCompletionBlock:(void (^)(NSUInteger))initialLoadCompletionBlock {
     [[MaveSDK sharedInstance] getSuggestedInvites:^(NSArray *suggestedInvites) {
         [self _loadSuggestedInvites:suggestedInvites];
-        NSLog(@"got %@ suggestions", @([suggestedInvites count]));
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (animated) {
+                NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+                for (NSInteger i = 0; i < [suggestedInvites count]; i++) {
+                    [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:self.sectionNumber]];
+                }
+                if ([indexPaths count] > 0) {
+                    [self.tableView beginUpdates];
+                    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
+                    [self.tableView endUpdates];
+                }
+            }
+            [self.tableView reloadData];
+            if (initialLoadCompletionBlock) {
+                initialLoadCompletionBlock([suggestedInvites count]);
+            }
+        });
     } timeout:5];
 }
 
