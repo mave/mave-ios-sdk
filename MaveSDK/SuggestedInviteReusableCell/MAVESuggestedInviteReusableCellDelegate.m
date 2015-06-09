@@ -13,7 +13,9 @@
 
 NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInviteReusableCellIdentifier";
 
-@implementation MAVESuggestedInviteReusableCellDelegate
+@implementation MAVESuggestedInviteReusableCellDelegate {
+    BOOL _tableDataLoaded;
+}
 
 - (instancetype)initForTableView:(UITableView *)tableView sectionNumber:(NSInteger)sectionNumber maxNumberOfRows:(NSInteger)maxNumberOfRows {
     if (self = [super init]) {
@@ -72,6 +74,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     }
     self.liveData = [NSArray arrayWithArray:liveData];
     self.standbyData = [NSArray arrayWithArray:extraData];
+    _tableDataLoaded = YES;
 }
 
 - (void)setFullContactsPageInviteContext:(NSString *)fullContactsPageInviteContext {
@@ -169,6 +172,9 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 }
 
 - (NSInteger)numberOfRows {
+    if (!_tableDataLoaded) {
+        return 0;
+    }
     return [self.liveData count] + 1;
 }
 
