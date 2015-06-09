@@ -167,4 +167,8 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     return indexPath.section == self.sectionNumber && indexPath.row == [self numberOfRows] - 1;
 }
 
+- (void)sendInviteToContactAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
 @end

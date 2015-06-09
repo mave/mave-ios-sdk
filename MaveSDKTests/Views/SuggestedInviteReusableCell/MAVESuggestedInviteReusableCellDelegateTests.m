@@ -67,9 +67,9 @@
     XCTAssertEqual([del.standbyData count], 0);
 }
 
-- (void)testContactAtIndexPath {
-    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0;
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
+- (void)testContactAtIndexPathAndReverseIndex {
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 10;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 11;
     NSInteger section = 4; NSInteger numRows = 3;
     MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
     del.liveData = @[p0, p1];
@@ -84,22 +84,26 @@
     XCTAssertNil(queried3);
     MAVEABPerson *queried4 = [del _contactAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:1]];
     XCTAssertNil(queried4);
+
+    XCTAssertEqual([del.recordIDToIndexMap count], 2);
+    XCTAssertEqualObjects([del.recordIDToIndexMap objectForKey:@(10)], @(0));
+    XCTAssertEqualObjects([del.recordIDToIndexMap objectForKey:@(10)], @(0));
 }
 
-- (void)testNumberOfRows {
+- (void)testNumberOfRowsIncludesLastInvitePageButtonRow {
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
     NSInteger section = 4; NSInteger numRows = 3;
     MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
     del.liveData = @[p0, p1];
-    XCTAssertEqual([del numberOfRows], 2);
+    XCTAssertEqual([del numberOfRows], 3);
 }
 
 - (void)testCellHeight {
     MAVESuggestedInviteReusableTableViewCell *tmpCell = [[MAVESuggestedInviteReusableTableViewCell alloc] init];
     NSInteger section = 4; NSInteger numRows = 3;
     MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
-    XCTAssertEqual([tmpCell cellHeight], 92);
+    XCTAssertEqual([tmpCell cellHeight], 68);
     XCTAssertEqual([del cellHeight], [tmpCell cellHeight]);
 }
 
