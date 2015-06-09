@@ -30,6 +30,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     MAVESuggestedInviteReusableTableViewCell *tmpCell = [[MAVESuggestedInviteReusableTableViewCell alloc] init];
     self.cellHeight = [tmpCell cellHeight];
+    self.inviteFriendsCell = [[MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell alloc] init];
 }
 
 - (void)getSuggestionsAndLoadAnimated:(BOOL)animated withCompletionBlock:(void (^)(NSUInteger))initialLoadCompletionBlock {
@@ -58,11 +59,11 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 - (void)_loadSuggestedInvites:(NSArray *)suggestedInvites {
     NSMutableArray *liveData = [[NSMutableArray alloc] init];
     NSMutableArray *extraData = [[NSMutableArray alloc] init];
-    for (MAVEABPerson *person in suggestedInvites) {
+    for (id row in suggestedInvites) {
         if ([liveData count] < self.maxNumberOfRows) {
-            [liveData addObject:person];
+            [liveData addObject:row];
         } else {
-            [extraData addObject:person];
+            [extraData addObject:row];
         }
     }
     self.liveData = [NSArray arrayWithArray:liveData];
@@ -70,6 +71,10 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 }
 
 - (MAVESuggestedInviteReusableTableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Last row should be our invite friends cell
+    if (indexPath.row == [self numberOfRows] - 1) {
+        return self.inviteFriendsCell;
+    }
     MAVEABPerson *contact = [self _contactAtIndexPath:indexPath];
     if (!contact) {
         return nil;
@@ -122,7 +127,11 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 }
 
 - (NSInteger)numberOfRows {
-    return [self.liveData count];
+    return [self.liveData count] + 1;
+}
+
+- (BOOL)isLastRow:(NSIndexPath *)indexPath {
+    return indexPath.section == self.sectionNumber && indexPath.row == [self numberOfRows] - 1;
 }
 
 @end

@@ -12,6 +12,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MAVESuggestedInviteReusableTableViewCell.h"
+#import "MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell.h"
 
 @interface MAVESuggestedInviteReusableCellDelegate : NSObject
 
@@ -21,6 +22,7 @@
 @property (nonatomic, assign) NSInteger maxNumberOfRows;
 @property (nonatomic, strong) NSArray *liveData;
 @property (nonatomic, strong) NSArray *standbyData;
+@property (nonatomic, strong) MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell *inviteFriendsCell;
 
 - (instancetype)initForTableView:(UITableView *)tableView
                    sectionNumber:(NSInteger)sectionNumber
