@@ -59,15 +59,30 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 - (void)_loadSuggestedInvites:(NSArray *)suggestedInvites {
     NSMutableArray *liveData = [[NSMutableArray alloc] init];
     NSMutableArray *extraData = [[NSMutableArray alloc] init];
-    for (id row in suggestedInvites) {
+    for (MAVEABPerson *person in suggestedInvites) {
         if ([liveData count] < self.maxNumberOfRows) {
-            [liveData addObject:row];
+            [liveData addObject:person];
         } else {
-            [extraData addObject:row];
+            [extraData addObject:person];
         }
     }
     self.liveData = [NSArray arrayWithArray:liveData];
     self.standbyData = [NSArray arrayWithArray:extraData];
+}
+
+- (void)setLiveData:(NSArray *)liveData {
+    _liveData = liveData;
+    [self updateRecordIDToIndexMapWithTableData:liveData];
+}
+
+- (void)updateRecordIDToIndexMapWithTableData:(NSArray *)tableData {
+    NSMutableDictionary *reverseMap = [[NSMutableDictionary alloc] init];
+    NSInteger i = 0;
+    for (MAVEABPerson *person in tableData) {
+        [reverseMap setObject:@(i) forKey:@(person.recordID)];
+        i++;
+    }
+    self.recordIDToIndexMap = [NSDictionary dictionaryWithDictionary:reverseMap];
 }
 
 - (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -81,11 +96,11 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     }
     MAVESuggestedInviteReusableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:MAVESuggestedInviteReusableCellIdentifier];
     [cell updateForUseWithContact:contact dismissBlock:^{
-        [self _replaceCellAtIndexPath:indexPath afterDelay:0 deleteAnimation:UITableViewRowAnimationLeft];
+        [self _replaceCellForContact:contact afterDelay:0 deleteAnimation:UITableViewRowAnimationLeft];
     } inviteBlock:^{
-        [self _replaceCellAtIndexPath:indexPath afterDelay:1.2f deleteAnimation:UITableViewRowAnimationRight];
+        [self _replaceCellForContact:contact afterDelay:0.8 deleteAnimation:UITableViewRowAnimationRight];
         cell.subtitleLabel.text = @" ";
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [cell moveToInviteSentState];
         });
     }];
@@ -110,8 +125,15 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     return [self.liveData objectAtIndex:indexPath.row];
 }
 
-- (void)_replaceCellAtIndexPath:(NSIndexPath *)indexPath afterDelay:(CGFloat)delaySeconds deleteAnimation:(UITableViewRowAnimation)deleteAnimation {
+- (void)_replaceCellForContact:(MAVEABPerson *)contact afterDelay:(CGFloat)delaySeconds deleteAnimation:(UITableViewRowAnimation)deleteAnimation {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delaySeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSNumber *row = [self.recordIDToIndexMap objectForKey:@(contact.recordID)];
+        if (!row) {
+            return;
+        }
+        NSLog(@"replacing contact %@ at row %@", [contact fullName], row);
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[row integerValue] inSection:self.sectionNumber];
+
         NSMutableArray *tmpLiveData = [[NSMutableArray alloc] initWithArray:self.liveData];
         [tmpLiveData removeObjectAtIndex:indexPath.row];
         NSIndexPath *insertAtIndexPath = nil;
@@ -133,9 +155,6 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
                 [self.tableView insertRowsAtIndexPaths:@[insertAtIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
             }
             [self.tableView endUpdates];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
         });
     });
 }

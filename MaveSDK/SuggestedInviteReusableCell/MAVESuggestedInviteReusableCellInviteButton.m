@@ -73,14 +73,9 @@
     self.layer.borderWidth = 0;
     self.customImageView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.untintedImage withColor:[UIColor whiteColor]];
     self.backgroundOverlay.layer.cornerRadius = self.frame.size.height / 2;
-    [UIView animateWithDuration:0.8f animations:^{
+    [UIView animateWithDuration:0.5f animations:^{
         [self.backgroundOverlay setTransform:CGAffineTransformMakeScale(1, 1)];
     }];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    });
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.9 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.layer.borderWidth = 0;
-    });
 }
 
 - (void)resetButtonNotClicked {

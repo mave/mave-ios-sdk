@@ -21,6 +21,7 @@
 @property (nonatomic, assign) NSInteger sectionNumber;
 @property (nonatomic, assign) NSInteger maxNumberOfRows;
 @property (nonatomic, strong) NSArray *liveData;
+@property (atomic, strong) NSDictionary *recordIDToIndexMap;
 @property (nonatomic, strong) NSArray *standbyData;
 @property (nonatomic, strong) MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell *inviteFriendsCell;
 
@@ -38,7 +39,7 @@
 // Helpers
 - (void)_loadSuggestedInvites:(NSArray *)suggestedInvites;
 - (MAVEABPerson *)_contactAtIndexPath:(NSIndexPath *)indexPath;
-- (void)_replaceCellAtIndexPath:(NSIndexPath *)indexPath afterDelay:(CGFloat)delaySeconds deleteAnimation:(UITableViewRowAnimation)deleteAnimation;
+- (void)_replaceCellForContact:(MAVEABPerson *)contact afterDelay:(CGFloat)delaySeconds deleteAnimation:(UITableViewRowAnimation)deleteAnimation;
 - (void)sendInviteToContactAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
