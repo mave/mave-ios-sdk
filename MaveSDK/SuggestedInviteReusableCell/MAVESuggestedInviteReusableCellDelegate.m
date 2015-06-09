@@ -34,6 +34,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     MAVESuggestedInviteReusableTableViewCell *tmpCell = [[MAVESuggestedInviteReusableTableViewCell alloc] init];
     self.cellHeight = [tmpCell cellHeight];
     self.inviteFriendsCell = [[MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell alloc] init];
+    [self.inviteFriendsCell updateConstraints];
 
     [self setFullContactsPageInviteContext:@"InvitePageFromBottomOfReusableSuggestionsTable"];
     [self setSuggestionsCellInviteContext:@"ReusableSuggestionCell"];
