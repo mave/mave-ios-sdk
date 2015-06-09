@@ -16,6 +16,6 @@
 @property (nonatomic, strong) UIImageView *customImageView;
 @property (nonatomic, strong) void(^sendInviteBlock)();
 
-
+- (void)resetButtonNotClicked;
 
 @end

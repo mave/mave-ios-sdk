@@ -14,6 +14,7 @@
 
 @interface MAVESuggestedInviteReusableTableViewCell : UITableViewCell
 
+@property (nonatomic, strong) UIColor *highlightColor;
 @property (nonatomic, strong) UIImageView *pictureView;
 @property (nonatomic, strong) MAVEInitialsPictureAlternative *initialsInsteadOfPictureView;
 @property (nonatomic, strong) UIView *textContainer;
@@ -32,6 +33,7 @@
 @property (nonatomic, assign) CGFloat vPicturePadding;
 
 - (CGFloat)cellHeight;
+- (void)moveToInviteSentState;
 
 - (void)updateForUseWithContact:(MAVEABPerson *)contact dismissBlock:(void(^)())dismissBlock inviteBlock:(void(^)())inviteBlock;
 - (void)_updatePictureViewWithPicture:(UIImage *)picture orInitials:(NSString *)initials;

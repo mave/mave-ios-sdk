@@ -38,7 +38,7 @@
 // Helpers
 - (void)_loadSuggestedInvites:(NSArray *)suggestedInvites;
 - (MAVEABPerson *)_contactAtIndexPath:(NSIndexPath *)indexPath;
-- (void)_replaceCellAtIndexPath:(NSIndexPath *)indexPath deleteAnimation:(UITableViewRowAnimation)deleteAnimation;
+- (void)_replaceCellAtIndexPath:(NSIndexPath *)indexPath afterDelay:(CGFloat)delaySeconds deleteAnimation:(UITableViewRowAnimation)deleteAnimation;
 - (void)sendInviteToContactAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

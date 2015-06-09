@@ -24,7 +24,6 @@
 }
 
 - (void)doInitialSetup {
-    self.iconColor = [UIColor colorWithRed:112.0/255.0 green:192.0/255.0 blue:215.0/255.0 alpha:1.0];
     UIColor *borderColor = [MAVEDisplayOptions colorAppleMediumLightGray];
     self.layer.borderWidth = 2.0f;
     self.layer.borderColor = [borderColor CGColor];
@@ -32,17 +31,17 @@
     self.untintedImage = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEInviteIconSmall.png" fromBundle:MAVEResourceBundleName];
     self.customImageView = [[UIImageView alloc] initWithImage:self.untintedImage];
     self.customImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.customImageView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.untintedImage withColor:self.iconColor];
 
     self.backgroundOverlay = [[UIView alloc] init];
     self.backgroundOverlay.userInteractionEnabled = NO;
-    self.backgroundOverlay.backgroundColor = self.iconColor;
     self.backgroundOverlay.translatesAutoresizingMaskIntoConstraints = NO;
     self.backgroundOverlay.layer.masksToBounds = YES;
     self.backgroundOverlay.hidden = YES;
 
     [self addSubview:self.backgroundOverlay];
     [self addSubview:self.customImageView];
+
+    self.iconColor = [MAVEDisplayOptions colorAppleBlueTint];
 
     [self addTarget:self action:@selector(doAction) forControlEvents:UIControlEventTouchUpInside];
 
@@ -53,13 +52,18 @@
     });
 }
 
+- (void)setIconColor:(UIColor *)iconColor {
+    _iconColor = iconColor;
+    self.backgroundOverlay.backgroundColor = iconColor;
+    self.customImageView.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:self.untintedImage withColor:self.iconColor];
+}
+
 - (void)doAction {
-    NSLog(@"clicked button");
     dispatch_async(dispatch_get_main_queue(), ^{
         [self animateClickedButton];
     });
     if (self.sendInviteBlock) {
-//        self.sendInviteBlock();
+        self.sendInviteBlock();
     }
 }
 
@@ -77,6 +81,13 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.9 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.layer.borderWidth = 0;
     });
+}
+
+- (void)resetButtonNotClicked {
+    self.backgroundOverlay.hidden = YES;
+    self.layer.borderWidth = 2.0f;
+    [self.backgroundOverlay setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
+    [self setIconColor:self.iconColor];
 }
 
 - (void)doSetupInitialConstraints {
@@ -103,8 +114,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    NSLog(@"layout subviews");
-    self.backgroundOverlay.layer.cornerRadius = self.backgroundOverlay.frame.size.height / 2;
 }
 
 @end

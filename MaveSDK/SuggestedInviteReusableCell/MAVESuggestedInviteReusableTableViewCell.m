@@ -55,13 +55,13 @@
     self.textContainer = [[UIView alloc] init];
     self.nameLabel = [[UILabel alloc] init];
     self.subtitleLabel = [[UILabel alloc] init];
-    self.subtitleLabel.textColor = [UIColor colorWithWhite:167.0/255 alpha:1.0];
     self.dismissButton = [[MAVESuggestedInviteReusableCellDismissButton alloc] init];
     self.dismissButton.layer.cornerRadius = self.buttonWidthHeight / 2;
     self.dismissButton.layer.masksToBounds = YES;
     self.inviteButton = [[MAVESuggestedInviteReusableCellInviteButton alloc] init];
     self.inviteButton.layer.cornerRadius = self.buttonWidthHeight / 2;
     self.inviteButton.layer.masksToBounds = YES;
+
     self.bottomSeparator = [[UIView alloc] init];
     self.bottomSeparator.backgroundColor = [MAVEDisplayOptions colorAppleMediumGray];
 
@@ -82,7 +82,14 @@
     [self.contentView addSubview:self.inviteButton];
     [self.contentView addSubview:self.bottomSeparator];
 
+    self.highlightColor = [UIColor colorWithRed:112.0/255.0 green:192.0/255.0 blue:215.0/255.0 alpha:1.0];
+
     [self setNeedsUpdateConstraints];
+}
+
+- (void)setHighlightColor:(UIColor *)highlightColor {
+    _highlightColor = highlightColor;
+    self.inviteButton.iconColor = self.highlightColor;
 }
 
 - (void)setupInitialConstraints {
@@ -138,12 +145,19 @@
     return ceil(self.vPicturePadding * 2 + self.pictureViewWidthHeight);
 }
 
+- (void)moveToInviteSentState {
+    self.subtitleLabel.text = @"Invite Sent!";
+    self.subtitleLabel.textColor = self.highlightColor;
+}
+
 - (void)updateForUseWithContact:(MAVEABPerson *)contact dismissBlock:(void (^)())dismissBlock inviteBlock:(void (^)())inviteBlock {
     UIImage *picture = [contact picture];
     [self _updatePictureViewWithPicture:picture orInitials:[contact initials]];
     self.nameLabel.text = [contact fullName];
+    self.subtitleLabel.textColor = [UIColor colorWithWhite:167.0/255 alpha:1.0];
     self.subtitleLabel.text = @"10 friends on App";
     self.dismissButton.dismissBlock = dismissBlock;
+    [self.inviteButton resetButtonNotClicked];
     self.inviteButton.sendInviteBlock = inviteBlock;
 }
 

@@ -81,9 +81,13 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     }
     MAVESuggestedInviteReusableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:MAVESuggestedInviteReusableCellIdentifier];
     [cell updateForUseWithContact:contact dismissBlock:^{
-        [self _replaceCellAtIndexPath:indexPath deleteAnimation:UITableViewRowAnimationLeft];
+        [self _replaceCellAtIndexPath:indexPath afterDelay:0 deleteAnimation:UITableViewRowAnimationLeft];
     } inviteBlock:^{
-        [self _replaceCellAtIndexPath:indexPath deleteAnimation:UITableViewRowAnimationRight];
+        [self _replaceCellAtIndexPath:indexPath afterDelay:1.2f deleteAnimation:UITableViewRowAnimationRight];
+        cell.subtitleLabel.text = @" ";
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [cell moveToInviteSentState];
+        });
     }];
     return cell;
 }
@@ -106,30 +110,32 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     return [self.liveData objectAtIndex:indexPath.row];
 }
 
-- (void)_replaceCellAtIndexPath:(NSIndexPath *)indexPath deleteAnimation:(UITableViewRowAnimation)deleteAnimation {
-    NSMutableArray *tmpLiveData = [[NSMutableArray alloc] initWithArray:self.liveData];
-    [tmpLiveData removeObjectAtIndex:indexPath.row];
-    NSIndexPath *insertAtIndexPath = nil;
-    if ([self.standbyData count] > 0) {
-        NSMutableArray *tmpStandbyData = [[NSMutableArray alloc] initWithArray:self.standbyData];
-        MAVEABPerson *upNext = [tmpStandbyData objectAtIndex:0];
-        [tmpStandbyData removeObjectAtIndex:0];
-        self.standbyData = [[NSArray alloc] initWithArray:tmpStandbyData];
-        if (upNext) {
-            [tmpLiveData addObject:upNext];
-            insertAtIndexPath = [NSIndexPath indexPathForRow:([tmpLiveData count]-1) inSection:self.sectionNumber];
+- (void)_replaceCellAtIndexPath:(NSIndexPath *)indexPath afterDelay:(CGFloat)delaySeconds deleteAnimation:(UITableViewRowAnimation)deleteAnimation {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delaySeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSMutableArray *tmpLiveData = [[NSMutableArray alloc] initWithArray:self.liveData];
+        [tmpLiveData removeObjectAtIndex:indexPath.row];
+        NSIndexPath *insertAtIndexPath = nil;
+        if ([self.standbyData count] > 0) {
+            NSMutableArray *tmpStandbyData = [[NSMutableArray alloc] initWithArray:self.standbyData];
+            MAVEABPerson *upNext = [tmpStandbyData objectAtIndex:0];
+            [tmpStandbyData removeObjectAtIndex:0];
+            self.standbyData = [[NSArray alloc] initWithArray:tmpStandbyData];
+            if (upNext) {
+                [tmpLiveData addObject:upNext];
+                insertAtIndexPath = [NSIndexPath indexPathForRow:([tmpLiveData count]-1) inSection:self.sectionNumber];
+            }
         }
-    }
-    self.liveData = [[NSArray alloc] initWithArray:tmpLiveData];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:deleteAnimation];
-        if (insertAtIndexPath) {
-            [self.tableView insertRowsAtIndexPaths:@[insertAtIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
-        }
-        [self.tableView endUpdates];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
+        self.liveData = [[NSArray alloc] initWithArray:tmpLiveData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:deleteAnimation];
+            if (insertAtIndexPath) {
+                [self.tableView insertRowsAtIndexPaths:@[insertAtIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
+            }
+            [self.tableView endUpdates];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         });
     });
 }
