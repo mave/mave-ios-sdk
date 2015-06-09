@@ -11,6 +11,8 @@
 @interface MAVEInviteFriendsReusableOvalButton : UIButton
 
 @property (nonatomic, strong) UIColor *textAndIconColor;
+@property (nonatomic, strong) UIColor *customBackgroundColor;
+@property (nonatomic, copy) NSString *inviteContext;
 
 @property (nonatomic, strong) UIImage *untintedImage;
 @property (nonatomic, strong) UIView *containerView;
@@ -18,5 +20,6 @@
 @property (nonatomic, strong) UILabel *customLabel;
 
 - (void)setHeight:(CGFloat)height;
+- (void)presentInvitePageModally;
 
 @end

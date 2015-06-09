@@ -32,7 +32,8 @@
 
 - (NSInteger)numberOfRows;
 - (CGFloat)cellHeight;
-- (MAVESuggestedInviteReusableTableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 // Helpers
 - (void)_loadSuggestedInvites:(NSArray *)suggestedInvites;

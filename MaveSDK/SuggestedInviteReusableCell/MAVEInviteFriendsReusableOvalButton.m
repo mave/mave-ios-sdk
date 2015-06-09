@@ -9,10 +9,13 @@
 #import "MAVEInviteFriendsReusableOvalButton.h"
 #import "MAVEBuiltinUIElementUtils.h"
 #import "MAVEConstants.h"
+#import "MAVEDisplayOptions.h"
+#import "MaveSDK.h"
 
 @implementation MAVEInviteFriendsReusableOvalButton {
     BOOL _didSetupConstraints;
     NSLayoutConstraint *_heightConstraint;
+    UIColor *_unselectedBackgroundColor;
 }
 
 - (instancetype)init {
@@ -30,10 +33,13 @@
 }
 
 - (void)doInitialSetup {
-    self.backgroundColor = [UIColor colorWithRed:112.0/255.0 green:192.0/255.0 blue:215.0/255.0 alpha:1.0];
+    self.inviteContext = @"belowSuggestionsCellsButton";
+
+    self.customBackgroundColor = [UIColor colorWithRed:112.0/255.0 green:192.0/255.0 blue:215.0/255.0 alpha:1.0];
 
     self.containerView = [[UIView alloc] init];
     self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.containerView.userInteractionEnabled = NO;
     _heightConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0];
     self.customLabel = [[UILabel alloc] init];
     self.customLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -50,7 +56,40 @@
     [self setHeight:50];
     [self setTextAndIconColor:[UIColor whiteColor]];
 
+    [self addTarget:self action:@selector(grayButtonWhenPressed) forControlEvents:UIControlEventTouchDown];
+    [self addTarget:self action:@selector(unGrayButtonWhenReleased) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    [self addTarget:self action:@selector(presentInvitePageModally) forControlEvents:UIControlEventTouchUpInside];
+
     [self setNeedsUpdateConstraints];
+}
+
+- (void)grayButtonWhenPressed {
+    self.backgroundColor = [MAVEDisplayOptions colorAppleMediumGray];
+}
+
+- (void)unGrayButtonWhenReleased {
+    self.backgroundColor = self.customBackgroundColor;
+}
+
+- (void)presentInvitePageModally {
+    UIViewController *controllingVC = [self controllingViewController];
+    if (!controllingVC) {
+        MAVEErrorLog(@"Couldnt find a parent vc to present invite page when pressed InviteFriendsReusableOvalButton");
+        return;
+    }
+    [[MaveSDK sharedInstance] presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
+        [controllingVC presentViewController:inviteController animated:YES completion:nil];
+    } dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    } inviteContext:self.inviteContext];
+}
+
+- (UIViewController *)controllingViewController {
+    UIResponder *responder = self;
+    while (responder && [responder isKindOfClass:[UIView class]]) {
+        responder = [responder nextResponder];
+    }
+    return  responder;
 }
 
 - (void)setTextAndIconColor:(UIColor *)textAndIconColor {
@@ -61,6 +100,11 @@
 - (void)setHeight:(CGFloat)height {
     _heightConstraint.constant = height;
     self.layer.cornerRadius = height / 2;
+}
+
+- (void)setCustomBackgroundColor:(UIColor *)customBackgroundColor {
+    _customBackgroundColor = customBackgroundColor;
+    self.backgroundColor = customBackgroundColor;
 }
 
 - (void)setupInitialConstraints {

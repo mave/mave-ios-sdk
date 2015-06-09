@@ -70,7 +70,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     self.standbyData = [NSArray arrayWithArray:extraData];
 }
 
-- (MAVESuggestedInviteReusableTableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     // Last row should be our invite friends cell
     if (indexPath.row == [self numberOfRows] - 1) {
         return self.inviteFriendsCell;
@@ -86,6 +86,14 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
         [self _replaceCellAtIndexPath:indexPath deleteAnimation:UITableViewRowAnimationRight];
     }];
     return cell;
+}
+
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self isLastRow:indexPath]) {
+        return 80;
+    } else {
+        return self.cellHeight;
+    }
 }
 
 - (MAVEABPerson *)_contactAtIndexPath:(NSIndexPath *)indexPath {

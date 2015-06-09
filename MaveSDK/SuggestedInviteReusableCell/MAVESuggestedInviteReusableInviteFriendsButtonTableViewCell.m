@@ -20,6 +20,7 @@
 }
 
 - (void)doInitialSetup {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.inviteFriendsButton = [[MAVEInviteFriendsReusableOvalButton alloc] init];
     self.inviteFriendsButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:self.inviteFriendsButton];
@@ -27,7 +28,7 @@
 
 - (void)setupInitialConstraints {
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.inviteFriendsButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.inviteFriendsButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.inviteFriendsButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10]];
 }
 
 - (void)updateConstraints {
@@ -36,16 +37,6 @@
         [self setupInitialConstraints];
         _didSetupInitialConstraints = YES;
     }
-}
-
-- (void)awakeFromNib {
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 @end
