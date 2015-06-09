@@ -9,6 +9,7 @@
 #import "MAVESuggestedInviteReusableCellDelegate.h"
 #import "MAVESuggestedInviteReusableTableViewCell.h"
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 
 NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInviteReusableCellIdentifier";
 
@@ -31,6 +32,9 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     MAVESuggestedInviteReusableTableViewCell *tmpCell = [[MAVESuggestedInviteReusableTableViewCell alloc] init];
     self.cellHeight = [tmpCell cellHeight];
     self.inviteFriendsCell = [[MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell alloc] init];
+
+    [self setFullContactsPageInviteContext:@"InvitePageFromBottomOfReusableSuggestionsTable"];
+    [self setSuggestionsCellInviteContext:@"ReusableSuggestionCell"];
 }
 
 - (void)getSuggestionsAndLoadAnimated:(BOOL)animated withCompletionBlock:(void (^)(NSUInteger))initialLoadCompletionBlock {
@@ -68,6 +72,11 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     }
     self.liveData = [NSArray arrayWithArray:liveData];
     self.standbyData = [NSArray arrayWithArray:extraData];
+}
+
+- (void)setFullContactsPageInviteContext:(NSString *)fullContactsPageInviteContext {
+    _fullContactsPageInviteContext = fullContactsPageInviteContext;
+    self.inviteFriendsCell.inviteFriendsButton.inviteContext = fullContactsPageInviteContext;
 }
 
 - (void)setLiveData:(NSArray *)liveData {
@@ -167,8 +176,28 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     return indexPath.section == self.sectionNumber && indexPath.row == [self numberOfRows] - 1;
 }
 
-- (void)sendInviteToContactAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (void)sendInviteToContact:(MAVEABPerson *)contact {
+    contact.isSuggestedContact = YES;
+    contact.selectedFromSuggestions = YES;
+    NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
+    NSArray *recipients = @[contact];
+    [MaveSDK sharedInstance].inviteContext = self.suggestionsCellInviteContext;
+
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    [[MaveSDK sharedInstance].APIInterface sendInvitesToRecipients:recipients smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                MAVEErrorLog(@"Error sending invite: %@", error);
+                NSString *errorMessage = [NSString stringWithFormat:@"Invite to %@ failed to send. Server was unavailable or internet connection failed", [contact fullName]];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
+                                                                message:errorMessage
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+        });
+    }];
 }
 
 @end

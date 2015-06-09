@@ -33,7 +33,7 @@
 }
 
 - (void)doInitialSetup {
-    self.inviteContext = @"belowSuggestionsCellsButton";
+    self.inviteContext = @"MAVEInviteFriendsReusableOvalButton";
 
     self.customBackgroundColor = [UIColor colorWithRed:112.0/255.0 green:192.0/255.0 blue:215.0/255.0 alpha:1.0];
 
@@ -89,7 +89,10 @@
     while (responder && [responder isKindOfClass:[UIView class]]) {
         responder = [responder nextResponder];
     }
-    return  responder;
+    if (!responder) {
+        return nil;
+    }
+    return  (UIViewController *)responder;
 }
 
 - (void)setTextAndIconColor:(UIColor *)textAndIconColor {

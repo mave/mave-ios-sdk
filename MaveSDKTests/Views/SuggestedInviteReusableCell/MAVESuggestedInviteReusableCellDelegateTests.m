@@ -8,7 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 #import "MAVESuggestedInviteReusableCellDelegate.h"
+#import "MaveSDK.h"
+
+@interface MaveSDK(Testing)
++ (void)resetSharedInstanceForTesting;
+@end
 
 @interface MAVESuggestedInviteReusableCellDelegateTests : XCTestCase
 
@@ -33,6 +39,8 @@
     XCTAssertEqualObjects(del.tableView, tv);
     XCTAssertEqual(del.sectionNumber, section);
     XCTAssertEqual(del.maxNumberOfRows, numRows);
+    XCTAssertEqualObjects(del.fullContactsPageInviteContext, @"InvitePageFromBottomOfReusableSuggestionsTable");
+    XCTAssertEqualObjects(del.suggestionsCellInviteContext, @"ReusableSuggestionCell");
 }
 
 - (void)testLoadSuggestedInvitesWhenMoreThanNumberOfRows {
@@ -105,6 +113,38 @@
     MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
     XCTAssertEqual([tmpCell cellHeight], 68);
     XCTAssertEqual([del cellHeight], [tmpCell cellHeight]);
+}
+
+- (void)testSettingFullPageInviteContextSetsItOnTheInviteButton {
+    MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:0 maxNumberOfRows:2];
+    del.fullContactsPageInviteContext = @"foo ad";
+    XCTAssertEqualObjects(del.inviteFriendsCell.inviteFriendsButton.inviteContext, @"foo ad");
+}
+
+- (void)testSendInviteToContact {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.userID = @"1234";
+    [MaveSDK sharedInstance].userData = user;
+    [MaveSDK sharedInstance].defaultSMSMessageText = @"foo mes";
+
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 10;
+    NSInteger section = 4; NSInteger numRows = 3;
+    MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
+    del.suggestionsCellInviteContext = @"Foo";
+    del.fullContactsPageInviteContext = @"Bar";
+
+    id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
+    NSArray *expectedRecipients = @[p0];
+    OCMExpect([apiInterfaceMock sendInvitesToRecipients:expectedRecipients smsCopy:@"foo mes" senderUserID:@"1234" inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:[OCMArg any]]);
+
+    [del sendInviteToContact:p0];
+
+    OCMVerifyAll(apiInterfaceMock);
+    XCTAssertTrue(p0.isSuggestedContact);
+    XCTAssertTrue(p0.selectedFromSuggestions);
+    XCTAssertEqualObjects([MaveSDK sharedInstance].inviteContext, @"Foo");
 }
 
 

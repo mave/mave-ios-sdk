@@ -24,6 +24,8 @@
 @property (atomic, strong) NSDictionary *recordIDToIndexMap;
 @property (nonatomic, strong) NSArray *standbyData;
 @property (nonatomic, strong) MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell *inviteFriendsCell;
+@property (nonatomic, copy) NSString *suggestionsCellInviteContext;
+@property (nonatomic, copy) NSString *fullContactsPageInviteContext;
 
 - (instancetype)initForTableView:(UITableView *)tableView
                    sectionNumber:(NSInteger)sectionNumber
@@ -40,6 +42,7 @@
 - (void)_loadSuggestedInvites:(NSArray *)suggestedInvites;
 - (MAVEABPerson *)_contactAtIndexPath:(NSIndexPath *)indexPath;
 - (void)_replaceCellForContact:(MAVEABPerson *)contact afterDelay:(CGFloat)delaySeconds deleteAnimation:(UITableViewRowAnimation)deleteAnimation;
-- (void)sendInviteToContactAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)sendInviteToContact:(MAVEABPerson *)contact;
 
 @end
