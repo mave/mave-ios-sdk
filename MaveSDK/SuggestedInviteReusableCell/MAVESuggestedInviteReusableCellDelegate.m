@@ -141,7 +141,6 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
         if (!row) {
             return;
         }
-        NSLog(@"replacing contact %@ at row %@", [contact fullName], row);
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[row integerValue] inSection:self.sectionNumber];
 
         NSMutableArray *tmpLiveData = [[NSMutableArray alloc] initWithArray:self.liveData];
