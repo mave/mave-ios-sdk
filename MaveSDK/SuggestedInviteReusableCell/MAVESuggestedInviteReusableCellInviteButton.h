@@ -12,13 +12,10 @@
 
 @property (nonatomic, strong) UIColor *iconColor;
 @property (nonatomic, strong) UIImage *untintedImage;
+@property (nonatomic, strong) UIView *backgroundOverlay;
 @property (nonatomic, strong) UIImageView *customImageView;
 @property (nonatomic, strong) void(^sendInviteBlock)();
 
-@property (nonatomic, strong) UIView *backgroundOverlay;
-@property (nonatomic, strong) UIImageView *overlayImageView;
-@property (nonatomic, strong) NSLayoutConstraint *overlayExpandedDiameterConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *overlayShrunkDiameterConstraint;
 
 
 @end
