@@ -179,6 +179,8 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 - (void)sendInviteToContact:(MAVEABPerson *)contact {
     contact.isSuggestedContact = YES;
     contact.selectedFromSuggestions = YES;
+    contact.selected = YES;
+
     NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
     NSArray *recipients = @[contact];
     [MaveSDK sharedInstance].inviteContext = self.suggestionsCellInviteContext;

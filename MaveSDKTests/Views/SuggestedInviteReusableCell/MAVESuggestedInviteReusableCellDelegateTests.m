@@ -130,6 +130,12 @@
     [MaveSDK sharedInstance].defaultSMSMessageText = @"foo mes";
 
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 10;
+    MAVEContactPhoneNumber *phone0 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"Other"];
+    phone0.selected = NO;
+    MAVEContactEmail *email0 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    email0.selected = NO;
+    p0.emailObjects = @[email0];
+    p0.phoneObjects = @[phone0];
     NSInteger section = 4; NSInteger numRows = 3;
     MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
     del.suggestionsCellInviteContext = @"Foo";
@@ -144,6 +150,9 @@
     OCMVerifyAll(apiInterfaceMock);
     XCTAssertTrue(p0.isSuggestedContact);
     XCTAssertTrue(p0.selectedFromSuggestions);
+    XCTAssertTrue(p0.selected);
+    XCTAssertTrue(phone0.selected);
+    XCTAssertFalse(email0.selected);
     XCTAssertEqualObjects([MaveSDK sharedInstance].inviteContext, @"Foo");
 }
 
