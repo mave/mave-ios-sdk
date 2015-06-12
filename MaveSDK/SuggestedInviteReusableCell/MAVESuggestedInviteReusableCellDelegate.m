@@ -109,6 +109,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     }
     MAVESuggestedInviteReusableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:MAVESuggestedInviteReusableCellIdentifier];
     [cell updateForUseWithContact:contact dismissBlock:^{
+        [[MaveSDK sharedInstance].APIInterface markSuggestedInviteAsDismissedByUser:contact.hashedRecordID];
         [self _replaceCellForContact:contact afterDelay:0 deleteAnimation:UITableViewRowAnimationLeft];
     } inviteBlock:^{
         [self sendInviteToContact:contact];
