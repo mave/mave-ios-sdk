@@ -494,6 +494,19 @@
     XCTAssertEqualObjects(returnedClosestHashedRecordIDs, fakeClosestHashedRecordIDs);
 }
 
+- (void)testMarkSuggestedInviteAsDismissedByUser {
+    id mocked = OCMPartialMock(self.testAPIInterface);
+    NSDictionary *expectedParams = @{@"dismissed": @1};
+    OCMExpect([mocked sendIdentifiedJSONRequestWithRoute:@"/me/contacts/suggestion/12345"
+                                              methodName:@"PATCH"
+                                                  params:expectedParams
+                                            extraHeaders:nil
+                                        gzipCompressBody:NO
+                                         completionBlock:nil]);
+    [self.testAPIInterface markSuggestedInviteAsDismissedByUser:12345];
+    OCMVerifyAll(mocked);
+}
+
 - (void)testGetReferringData {
     id mocked = OCMPartialMock(self.testAPIInterface);
     MAVEHTTPCompletionBlock expectedBlock = ^void(NSError *error, NSDictionary *responseData) {};

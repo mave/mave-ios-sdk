@@ -95,6 +95,7 @@ extern NSString * const MAVEAPIParamShareAudience;
             ownMerkleTreeRoot:(NSString *)ownMerkleTreeRoot
         returnClosestContacts:(BOOL)returnClosestContacts
               completionBlock:(void (^)(NSArray *closestContacts))closestContactsBlock;
+- (void)markSuggestedInviteAsDismissedByUser:(uint64_t)hashedRecordID;
 
 ///
 /// GET requests
