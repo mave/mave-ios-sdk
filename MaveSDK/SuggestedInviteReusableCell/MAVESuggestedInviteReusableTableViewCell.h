@@ -36,6 +36,7 @@
 - (void)moveToInviteSentState;
 
 - (void)updateForUseWithContact:(MAVEABPerson *)contact dismissBlock:(void(^)())dismissBlock inviteBlock:(void(^)())inviteBlock;
+- (void)_setNumberContactsLabelText:(NSUInteger)numberFriends;
 - (void)_updatePictureViewWithPicture:(UIImage *)picture orInitials:(NSString *)initials;
 
 @end

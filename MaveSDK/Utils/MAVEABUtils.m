@@ -138,7 +138,7 @@ static ABAddressBookRef addressBook;
                                             andAllContacts:(NSArray *)persons {
     NSDictionary *index = [self indexABPersonArrayByHashedRecordID:persons];
     NSMutableArray *output = [[NSMutableArray alloc] initWithCapacity:[hridTuples count]];
-    NSArray *tuple; NSString *hrid; MAVEABPerson *personTmp;
+    NSArray *tuple; NSString *hrid; MAVEABPerson *personTmp; NSUInteger numFriendsTmp;
     for (id obj in hridTuples) {
         if (![obj isKindOfClass:[NSArray class]]) {
             continue;
@@ -148,8 +148,10 @@ static ABAddressBookRef addressBook;
             continue;
         }
         hrid = [tuple objectAtIndex:0];
+        numFriendsTmp = [[tuple objectAtIndex:1] integerValue];
         personTmp = [index objectForKey:hrid];
         if (personTmp) {
+            personTmp.numberFriendsOnApp = numFriendsTmp;
             [output addObject:personTmp];
         }
     }

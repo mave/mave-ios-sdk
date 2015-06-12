@@ -156,5 +156,16 @@
     XCTAssertEqualObjects([MaveSDK sharedInstance].inviteContext, @"Foo");
 }
 
+- (void)testSetNumberContactsLabelText {
+    MAVESuggestedInviteReusableTableViewCell *cell = [[MAVESuggestedInviteReusableTableViewCell alloc] init];
+
+    [cell _setNumberContactsLabelText:0];
+    XCTAssertEqualObjects(cell.subtitleLabel.text, @"0 friends on app");
+    [cell _setNumberContactsLabelText:1];
+    XCTAssertEqualObjects(cell.subtitleLabel.text, @"1 friend on app");
+    [cell _setNumberContactsLabelText:9];
+    XCTAssertEqualObjects(cell.subtitleLabel.text, @"9 friends on app");
+}
+
 
 @end

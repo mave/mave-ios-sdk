@@ -34,6 +34,12 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 @property (nonatomic, strong) NSArray *phoneObjects; // Array of MAVEContactPhones
 @property (nonatomic, strong) NSArray *emailObjects; // Array of MAVEContactEmails
 
+// Special properties for suggested invites
+@property (nonatomic, assign) NSUInteger numberFriendsOnApp;
+
+//
+// Flags used related to invite page/sending invites
+//
 // This field is true if the contact as returned from the API as a suggested invite
 @property (nonatomic, assign) BOOL isSuggestedContact;
 // This field is only true if the contact was clicked on in the top
@@ -44,6 +50,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, assign) MAVEInviteSendingStatus sendingStatus;
+
 
 // initFromABRecordRef factory creates and does some validation
 //   - one of firstName, lastName are required, if both are missing returns nil

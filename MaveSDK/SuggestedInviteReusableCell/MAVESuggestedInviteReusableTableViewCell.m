@@ -155,10 +155,15 @@
     [self _updatePictureViewWithPicture:picture orInitials:[contact initials]];
     self.nameLabel.text = [contact fullName];
     self.subtitleLabel.textColor = [UIColor colorWithWhite:167.0/255 alpha:1.0];
-    self.subtitleLabel.text = @"10 friends on App";
+    [self _setNumberContactsLabelText:contact.numberFriendsOnApp];
     self.dismissButton.dismissBlock = dismissBlock;
     [self.inviteButton resetButtonNotClicked];
     self.inviteButton.sendInviteBlock = inviteBlock;
+}
+
+- (void)_setNumberContactsLabelText:(NSUInteger)numberFriends {
+    NSString *pluralSingularFriend = numberFriends == 1 ? @"friend" : @"friends";
+    self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@ on app", @(numberFriends), pluralSingularFriend];
 }
 
 - (void)_updatePictureViewWithPicture:(UIImage *)picture orInitials:(NSString *)initials {

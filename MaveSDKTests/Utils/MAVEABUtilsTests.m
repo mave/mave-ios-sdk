@@ -164,6 +164,8 @@
     NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
     NSArray *expectedSuggested = @[p0, p2];
     XCTAssertEqualObjects(suggested, expectedSuggested);
+    XCTAssertEqual([(MAVEABPerson *)suggested[0] numberFriendsOnApp], 10);
+    XCTAssertEqual([(MAVEABPerson *)suggested[1] numberFriendsOnApp], 2);
 }
 
 - (void)testListOfABPersonsFromHashedRecordIDTuplesIgnoresBadInputData {
@@ -178,6 +180,7 @@
     NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
     NSArray *expectedSuggested = @[p0];
     XCTAssertEqualObjects(suggested, expectedSuggested);
+    XCTAssertEqual([(MAVEABPerson *)suggested[0] numberFriendsOnApp], 10);
 }
 
 - (void)testInstancesofABPersonsInListFromAllContacts {
