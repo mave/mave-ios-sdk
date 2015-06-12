@@ -167,6 +167,8 @@ static ABAddressBookRef addressBook;
         stringKey = [NSString stringWithFormat:@"%llu", person.hashedRecordID];
         queriedPerson = [contactsIndexByHRID objectForKey:stringKey];
         if (queriedPerson) {
+            // copy suggested invite related attributes over to the new instance of the object
+            queriedPerson.numberFriendsOnApp = person.numberFriendsOnApp;
             [output addObject:queriedPerson];
         }
     }
