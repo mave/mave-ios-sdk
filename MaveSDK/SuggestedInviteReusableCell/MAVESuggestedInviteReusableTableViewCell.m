@@ -154,6 +154,7 @@
     UIImage *picture = [contact picture];
     [self _updatePictureViewWithPicture:picture orInitials:[contact initials]];
     self.nameLabel.text = [contact fullName];
+    self.bottomSeparator.hidden = NO;
     self.subtitleLabel.textColor = [UIColor colorWithWhite:167.0/255 alpha:1.0];
     [self _setNumberContactsLabelText:contact.numberFriendsOnApp];
     self.dismissButton.dismissBlock = dismissBlock;

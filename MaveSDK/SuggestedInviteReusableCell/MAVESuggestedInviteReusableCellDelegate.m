@@ -100,7 +100,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
 
 - (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     // Last row should be our invite friends cell
-    if (indexPath.row == [self numberOfRows] - 1) {
+    if (self.includeInviteFriendsCell && indexPath.row == [self numberOfRows] - 1) {
         return self.inviteFriendsCell;
     }
     MAVEABPerson *contact = [self _contactAtIndexPath:indexPath];
@@ -119,11 +119,14 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
             [cell moveToInviteSentState];
         });
     }];
+    if ([self isLastRow:indexPath]) {
+        cell.bottomSeparator.hidden = YES;
+    }
     return cell;
 }
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self isLastRow:indexPath]) {
+    if (self.includeInviteFriendsCell && [self isLastRow:indexPath]) {
         return 80;
     } else {
         return self.cellHeight;
@@ -177,7 +180,11 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     if (!_tableDataLoaded) {
         return 0;
     }
-    return [self.liveData count] + 1;
+    NSInteger number = [self.liveData count];
+    if (self.includeInviteFriendsCell) {
+        number += 1;
+    }
+    return number;
 }
 
 - (BOOL)isLastRow:(NSIndexPath *)indexPath {

@@ -23,6 +23,7 @@
 @property (nonatomic, strong) NSArray *liveData;
 @property (atomic, strong) NSDictionary *recordIDToIndexMap;
 @property (nonatomic, strong) NSArray *standbyData;
+@property (nonatomic, assign) BOOL includeInviteFriendsCell;
 @property (nonatomic, strong) MAVESuggestedInviteReusableInviteFriendsButtonTableViewCell *inviteFriendsCell;
 @property (nonatomic, copy) NSString *suggestionsCellInviteContext;
 @property (nonatomic, copy) NSString *fullContactsPageInviteContext;
