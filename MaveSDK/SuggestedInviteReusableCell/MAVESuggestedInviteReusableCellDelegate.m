@@ -55,7 +55,6 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
                     [self.tableView endUpdates];
                 }
             }
-            [self.tableView reloadData];
             if (initialLoadCompletionBlock) {
                 initialLoadCompletionBlock([suggestedInvites count]);
             }
