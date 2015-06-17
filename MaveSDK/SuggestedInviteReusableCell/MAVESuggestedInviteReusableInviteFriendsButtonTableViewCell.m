@@ -24,6 +24,8 @@
     self.inviteFriendsButton = [[MAVEInviteFriendsReusableOvalButton alloc] init];
     self.inviteFriendsButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:self.inviteFriendsButton];
+
+    [self setNeedsUpdateConstraints];
 }
 
 - (void)setupInitialConstraints {
