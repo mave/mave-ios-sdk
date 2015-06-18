@@ -19,6 +19,9 @@
 @property (nonatomic, strong) UIImageView *customImageView;
 @property (nonatomic, strong) UILabel *customLabel;
 
+// Callback so the code using this button can get notified if it's pressed
+@property (nonatomic, copy) void (^openedInvitePageBlock)(NSUInteger numberInvitesSent);
+
 - (void)setHeight:(CGFloat)height;
 - (void)presentInvitePageModally;
 

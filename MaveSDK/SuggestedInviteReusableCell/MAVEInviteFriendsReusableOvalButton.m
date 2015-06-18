@@ -80,6 +80,9 @@
     [[MaveSDK sharedInstance] presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
         [controllingVC presentViewController:inviteController animated:YES completion:nil];
     } dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        if (self.openedInvitePageBlock) {
+            self.openedInvitePageBlock(numberOfInvitesSent);
+        }
         [controller dismissViewControllerAnimated:YES completion:nil];
     } inviteContext:self.inviteContext];
 }

@@ -28,6 +28,11 @@
 @property (nonatomic, copy) NSString *suggestionsCellInviteContext;
 @property (nonatomic, copy) NSString *fullContactsPageInviteContext;
 
+// Callbacks so the app integrating can track user interactions with these cells
+@property (nonatomic, copy) void (^dismissedSuggestedCellBlock)(MAVEABPerson *contact);
+@property (nonatomic, copy) void (^sentToSuggestedCellBlock)(MAVEABPerson *contact);
+@property (nonatomic, copy) void (^openedInvitePageBlock)(NSUInteger numberInvitesSent);
+
 - (instancetype)initForTableView:(UITableView *)tableView
                    sectionNumber:(NSInteger)sectionNumber
                  maxNumberOfRows:(NSInteger)maxNumberOfRows;
