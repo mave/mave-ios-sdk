@@ -31,7 +31,8 @@
 // Callbacks so the app integrating can track user interactions with these cells
 @property (nonatomic, copy) void (^dismissedSuggestedCellBlock)(MAVEABPerson *contact);
 @property (nonatomic, copy) void (^sentToSuggestedCellBlock)(MAVEABPerson *contact);
-@property (nonatomic, copy) void (^openedInvitePageBlock)(NSUInteger numberInvitesSent);
+// For a callback for clicking the round invite friends button (if it's enabled)
+// set it directly as inviteFriendsCell.openedInvitePageBlock
 
 - (instancetype)initForTableView:(UITableView *)tableView
                    sectionNumber:(NSInteger)sectionNumber

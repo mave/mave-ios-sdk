@@ -108,9 +108,15 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
     }
     MAVESuggestedInviteReusableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:MAVESuggestedInviteReusableCellIdentifier];
     [cell updateForUseWithContact:contact dismissBlock:^{
+        if (self.dismissedSuggestedCellBlock) {
+            self.dismissedSuggestedCellBlock(contact);
+        }
         [[MaveSDK sharedInstance].APIInterface markSuggestedInviteAsDismissedByUser:contact.hashedRecordID];
         [self _replaceCellForContact:contact afterDelay:0 deleteAnimation:UITableViewRowAnimationLeft];
     } inviteBlock:^{
+        if (self.sentToSuggestedCellBlock) {
+            self.sentToSuggestedCellBlock(contact);
+        }
         [self sendInviteToContact:contact];
         [self _replaceCellForContact:contact afterDelay:0.8 deleteAnimation:UITableViewRowAnimationRight];
         cell.subtitleLabel.text = @" ";
