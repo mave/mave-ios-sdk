@@ -28,7 +28,7 @@
     self.layer.borderWidth = 2.0f;
     self.layer.borderColor = [borderColor CGColor];
 
-    self.untintedImage = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEInviteIconSmall.png" fromBundle:MAVEResourceBundleName];
+    self.untintedImage = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEAirplaneSmall.png" fromBundle:MAVEResourceBundleName];
     self.customImageView = [[UIImageView alloc] initWithImage:self.untintedImage];
     self.customImageView.translatesAutoresizingMaskIntoConstraints = NO;
 
