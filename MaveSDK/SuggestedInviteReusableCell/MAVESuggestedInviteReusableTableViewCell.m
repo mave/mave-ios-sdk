@@ -35,7 +35,7 @@
 }
 
 - (void)doInitialSetup {
-    self.pictureViewWidthHeight = 60;
+    self.pictureViewWidthHeight = 54;
     self.buttonWidthHeight = 34;
     self.betweenButtonPadding = 20;
     self.hLeftPadding = 8;
@@ -108,7 +108,7 @@
                               @"hRightPadding": @(self.hRightPadding),
                               @"vPicturePadding": @(self.vPicturePadding),
                               };
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-hLeftPadding-[pictureView(==pictureViewWidthHeight)]-10-[textContainer]-10-[dismissButton(==buttonWidthHeight)]-(betweenButtonPadding)-[sendButton(==buttonWidthHeight)]-hRightPadding-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-hLeftPadding-[pictureView(==pictureViewWidthHeight)]-10-[textContainer]-8-[dismissButton(==buttonWidthHeight)]-(betweenButtonPadding)-[sendButton(==buttonWidthHeight)]-hRightPadding-|" options:0 metrics:metrics views:views]];
 
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[pictureView(==pictureViewWidthHeight)]" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pictureView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
