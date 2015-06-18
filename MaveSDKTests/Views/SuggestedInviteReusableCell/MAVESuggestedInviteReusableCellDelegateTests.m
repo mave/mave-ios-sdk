@@ -101,9 +101,10 @@
 - (void)testNumberOfRowsIncludesLastInvitePageButtonRow {
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
-    NSInteger section = 4; NSInteger numRows = 3;
+    NSInteger section = 4; NSInteger numRows = 6;
     MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
-    del.liveData = @[p0, p1];
+    del.includeInviteFriendsCell = YES;
+    [del _loadSuggestedInvites:@[p0, p1]];
     XCTAssertEqual([del numberOfRows], 3);
 }
 
