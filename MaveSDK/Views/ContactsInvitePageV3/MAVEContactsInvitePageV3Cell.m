@@ -154,6 +154,13 @@
         } else {
             self.isExpanded = self.person.selected;
         }
+
+        // fix for ios7 - the contact info rows are not having their layout methods called to pick up the changes
+        // to the data models when a record has been selected/deselected
+        for (UIView *view in [self.contactInfoContainer subviews]) {
+            [view setNeedsLayout];
+        }
+
         [self.checkmarkBox animateToggleCheckmark];
     }
 }
