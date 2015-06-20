@@ -182,7 +182,11 @@
         if (val == (id)[NSNull null]) {  // NSNull and all false-ey things
             val = @"";
         }
-        // convert non-strings to strings
+        if ([val isKindOfClass:[NSArray class]] || [val isKindOfClass:[NSMutableArray class]]) {
+            NSArray *valArray = (NSArray *)val;
+            val = [valArray componentsJoinedByString:@","];
+        }
+        // convert any other non-strings to strings
         val = [NSString stringWithFormat:@"%@", val];
         val = [val stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
         [fragments addObject:[NSString stringWithFormat:@"%@=%@", key, val]];

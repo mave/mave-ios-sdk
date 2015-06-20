@@ -132,7 +132,7 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     // GET requests should have no body. Gzip encoding doesn't matter b/c it's get request
     // so body is empty and it shouldn't gzip encode
     NSString *path = @"/foo";
-    NSDictionary *params = @{@"foo": @2, @"bar": @YES, @"baz": @"hello"};
+    NSDictionary *params = @{@"foo": @2, @"bar": @YES, @"baz": @"hello", @"bae":@[@"a", @1]};
     NSString *method = @"GET";
     NSError *error = nil;
     NSMutableURLRequest *request = [self.testHTTPStack prepareJSONRequestWithRoute:path
@@ -142,7 +142,8 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
                                                                   preparationError:&error];
     XCTAssertNil(error);
 
-    NSString *expectedURL = @"https://foo.example.com/foo?bar=1&baz=hello&foo=2";
+    // note array params get joined with commas
+    NSString *expectedURL = @"https://foo.example.com/foo?bae=a,1&bar=1&baz=hello&foo=2";
     XCTAssertEqualObjects(request.URL, [[NSURL alloc] initWithString:expectedURL]);
     XCTAssertEqualObjects(request.HTTPMethod, method);
     XCTAssertEqualObjects(request.HTTPBody, [@"" dataUsingEncoding:NSUTF8StringEncoding]);

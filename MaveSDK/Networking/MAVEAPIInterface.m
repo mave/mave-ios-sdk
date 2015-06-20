@@ -273,6 +273,17 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
     }];
 }
 
+- (void)markSuggestedInviteAsDismissedByUser:(uint64_t)hashedRecordID {
+    NSString *route = [NSString stringWithFormat:@"/me/contacts/suggestion/%llu", hashedRecordID];
+    NSDictionary *params = @{@"dismissed": @YES};
+    [self sendIdentifiedJSONRequestWithRoute:route
+                                  methodName:@"PATCH"
+                                      params:params
+                                extraHeaders:nil
+                            gzipCompressBody:NO
+                             completionBlock:nil];
+}
+
 
 //
 // GET Requests

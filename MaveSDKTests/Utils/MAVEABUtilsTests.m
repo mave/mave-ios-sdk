@@ -164,6 +164,8 @@
     NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
     NSArray *expectedSuggested = @[p0, p2];
     XCTAssertEqualObjects(suggested, expectedSuggested);
+    XCTAssertEqual([(MAVEABPerson *)suggested[0] numberFriendsOnApp], 10);
+    XCTAssertEqual([(MAVEABPerson *)suggested[1] numberFriendsOnApp], 2);
 }
 
 - (void)testListOfABPersonsFromHashedRecordIDTuplesIgnoresBadInputData {
@@ -178,14 +180,15 @@
     NSArray *suggested = [MAVEABUtils listOfABPersonsFromListOfHashedRecordIDTuples:hashedRecordIDs andAllContacts:contacts];
     NSArray *expectedSuggested = @[p0];
     XCTAssertEqualObjects(suggested, expectedSuggested);
+    XCTAssertEqual([(MAVEABPerson *)suggested[0] numberFriendsOnApp], 10);
 }
 
 - (void)testInstancesofABPersonsInListFromAllContacts {
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = 1;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
-    MAVEABPerson *p1r = [[MAVEABPerson alloc] init]; p1r.hashedRecordID = 1;
-    MAVEABPerson *p3r = [[MAVEABPerson alloc] init]; p3r.hashedRecordID = 3;
+    MAVEABPerson *p1r = [[MAVEABPerson alloc] init]; p1r.hashedRecordID = 1; p1r.numberFriendsOnApp = 1;
+    MAVEABPerson *p3r = [[MAVEABPerson alloc] init]; p3r.hashedRecordID = 3; p3r.numberFriendsOnApp = 3;
     NSArray *contacts = @[p0, p1, p2];
     // p3 doesn't exist in contacts so it should get filtered out for now
     NSArray *list = @[p1r, p3r];
@@ -196,6 +199,7 @@
     XCTAssertEqual([results count], 1);
     MAVEABPerson *result1 = [results objectAtIndex:0];
     XCTAssertEqual(result1, p1);
+    XCTAssertEqual(result1.numberFriendsOnApp, 1);
 }
 
 - (void)testIndexABPersonArrayByHashedRecordID {

@@ -63,6 +63,8 @@
     XCTAssertNotNil(mave.referringDataBuilder);
     XCTAssertFalse(mave.debug);
     XCTAssertEqual(mave.debugInvitePageType, MAVEInvitePageTypeNone);
+    XCTAssertEqual(mave.debugNumberOfRandomSuggestedInvites, 0);
+    XCTAssertEqual(mave.debugSuggestedInvitesDelaySeconds, 0);
 }
 
 
@@ -192,6 +194,7 @@
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
 
     MaveSDK *mave = [MaveSDK sharedInstance];
+    XCTAssertFalse(mave.debug);
     id maveMock = OCMPartialMock(mave);
     NSArray *fakeSuggestions = @[@2];
 
@@ -232,6 +235,39 @@
 
     XCTAssertTrue(blockRan);
     XCTAssertNil(results);
+}
+
+- (void)testGetDebugSuggestedInvitesWithFullContactsList {
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0;
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1;
+    MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2;
+    NSArray *contacts = @[p0, p1, p2];
+
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    mave.debug = YES;
+    // delay is the min of this variable and the timeout delay passed to the method
+    mave.debugSuggestedInvitesDelaySeconds = 0.01f;
+    mave.debugNumberOfRandomSuggestedInvites = 3;
+    NSArray *s0 = [mave suggestedInvitesWithFullContactsList:contacts delay:10];
+    XCTAssertEqual([s0 count], 3);
+    XCTAssertTrue([s0 containsObject:p0]);
+    XCTAssertTrue([s0 containsObject:p1]);
+    XCTAssertTrue([s0 containsObject:p2]);
+
+    mave.debugSuggestedInvitesDelaySeconds = 30;
+    mave.debugNumberOfRandomSuggestedInvites = 2;
+    NSArray *s1 = [mave suggestedInvitesWithFullContactsList:contacts delay:0];
+    XCTAssertEqual([s1 count], 2);
+
+    // cant get more than the number of contacts
+    mave.debugNumberOfRandomSuggestedInvites = 5;
+    NSArray *s2 = [mave suggestedInvitesWithFullContactsList:contacts delay:0];
+    XCTAssertEqual([s2 count], 3);
+
+    // getting 0 works fine
+    mave.debugNumberOfRandomSuggestedInvites = 0;
+    NSArray *s3 = [mave suggestedInvitesWithFullContactsList:contacts delay:0];
+    XCTAssertEqual([s3 count], 0);
 }
 
 

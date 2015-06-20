@@ -62,8 +62,8 @@ static dispatch_once_t syncContactsOnceToken;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
             // Only sync contacts if the current configuration allows it
             MAVERemoteConfiguration *config = [MaveSDK sharedInstance].remoteConfiguration;
-            BOOL syncEnabled = config.contactsSync.enabled;
             BOOL useSuggestedInvites = config.contactsInvitePage.suggestedInvitesEnabled;
+            BOOL syncEnabled = config.contactsSync.enabled;
 
             NSArray *suggestedHRIDTuples = @[];
             if (syncEnabled) {
