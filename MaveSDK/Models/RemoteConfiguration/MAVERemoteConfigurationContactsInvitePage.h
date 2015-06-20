@@ -14,6 +14,11 @@ typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
     MAVESMSInviteSendMethodClientSideGroup
 };
 
+typedef NS_ENUM(NSInteger, MAVEReusableSuggestedInviteCellSendIcon) {
+    MAVEReusableSuggestedInviteCellSendIconAirplane,
+    MAVEReusableSuggestedInviteCellSendIconPersonPlus,
+};
+
 @interface MAVERemoteConfigurationContactsInvitePage : NSObject<MAVEDictionaryInitializable>
 
 @property (nonatomic) BOOL enabled;
@@ -23,6 +28,7 @@ typedef NS_ENUM(NSInteger, MAVESMSInviteSendMethod) {
 @property (nonatomic, assign) BOOL shareButtonsEnabled;
 @property (nonatomic, assign) BOOL suggestedInvitesEnabled;
 @property (nonatomic, assign) MAVESMSInviteSendMethod smsInviteSendMethod;
+@property (nonatomic, assign) MAVEReusableSuggestedInviteCellSendIcon reusableSuggestedInviteCellSendIcon;
 
 + (NSDictionary *)defaultJSONData;
 

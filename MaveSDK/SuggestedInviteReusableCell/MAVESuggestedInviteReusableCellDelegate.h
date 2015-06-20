@@ -32,7 +32,7 @@
 @property (nonatomic, copy) void (^dismissedSuggestedCellBlock)(MAVEABPerson *contact);
 @property (nonatomic, copy) void (^sentToSuggestedCellBlock)(MAVEABPerson *contact);
 // For a callback for clicking the round invite friends button (if it's enabled)
-// set it directly as inviteFriendsCell.openedInvitePageBlock
+// set it directly as inviteFriendsCell.inviteFriendsButton.openedInvitePageBlock
 
 - (instancetype)initForTableView:(UITableView *)tableView
                    sectionNumber:(NSInteger)sectionNumber
