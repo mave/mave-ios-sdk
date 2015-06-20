@@ -87,12 +87,18 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)loadContactsData {
     [MAVEABPermissionPromptHandler promptForContactsWithCompletionBlock: ^(NSArray *contacts) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.dataManager updateWithContacts:contacts ifNecessaryAsyncSuggestionsBlock:^(NSArray *suggestions) {
-                [self animateInSuggestions:suggestions];
-            } noSuggestionsToAddBlock:^{
+            if ([contacts count] == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[MaveSDK sharedInstance].invitePageChooser replaceActiveViewControllerWithFallbackPage];
+                });
+            } else {
+                [self.dataManager updateWithContacts:contacts ifNecessaryAsyncSuggestionsBlock:^(NSArray *suggestions) {
+                    [self animateInSuggestions:suggestions];
+                    } noSuggestionsToAddBlock:^{
                 [self.suggestionsSectionHeaderView stopWaiting];
-            }];
-            [self.tableView reloadData];
+                    }];
+                [self.tableView reloadData];
+            }
         });
     }];
 }
