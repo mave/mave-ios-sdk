@@ -142,6 +142,12 @@
         // the cell is big enough for it. When compressing, do the opposite - have it disappear immediately
         // right when the cell begins to shrink.
         if (self.person.selected) {
+
+            // fix for ios7 - when selecting a cell this method is getting called twice within ~5ms, so the
+            // comparison above still fails and it basically gets toggled twice. So we can set the variable
+            // now and then just don't run the code in the setter method until the delay
+            _isExpanded = self.person.selected;
+
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 self.isExpanded = self.person.selected;
             });
