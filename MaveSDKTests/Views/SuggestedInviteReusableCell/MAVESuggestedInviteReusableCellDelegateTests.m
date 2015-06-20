@@ -112,7 +112,7 @@
     MAVESuggestedInviteReusableTableViewCell *tmpCell = [[MAVESuggestedInviteReusableTableViewCell alloc] init];
     NSInteger section = 4; NSInteger numRows = 3;
     MAVESuggestedInviteReusableCellDelegate *del = [[MAVESuggestedInviteReusableCellDelegate alloc] initForTableView:nil sectionNumber:section maxNumberOfRows:numRows];
-    XCTAssertEqual([tmpCell cellHeight], 68);
+    XCTAssertEqual([tmpCell cellHeight], 62);
     XCTAssertEqual([del cellHeight], [tmpCell cellHeight]);
 }
 
