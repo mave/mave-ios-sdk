@@ -10,6 +10,7 @@
 #import "MAVEBuiltinUIElementUtils.h"
 #import "MAVEConstants.h"
 #import "MAVEDisplayOptions.h"
+#import "MaveSDK.h"
 
 @implementation MAVESuggestedInviteReusableCellInviteButton {
     BOOL _didSetupInitialConstraints;
@@ -28,7 +29,8 @@
     self.layer.borderWidth = 2.0f;
     self.layer.borderColor = [borderColor CGColor];
 
-    self.untintedImage = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEAirplaneSmall.png" fromBundle:MAVEResourceBundleName];
+    NSString *imageName = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.reusableSuggestedInviteCellSendIcon == MAVEReusableSuggestedInviteCellSendIconPersonPlus ? @"MAVEInviteIconSmall.png" : @"MAVEAirplaneSmall.png";
+    self.untintedImage = [MAVEBuiltinUIElementUtils imageNamed:imageName fromBundle:MAVEResourceBundleName];
     self.customImageView = [[UIImageView alloc] initWithImage:self.untintedImage];
     self.customImageView.translatesAutoresizingMaskIntoConstraints = NO;
 
