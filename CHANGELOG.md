@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.7.2
+- Fix a couple of bugs
+
 ### v0.7.1
 - Adds a debug mode for explicitly setting referringData and the invite page type when testing
 - Adds reusable suggested invite table cells & delegate to control them. This lets you add a section of any of your own tables to let users invite friends easily in the flow of whatever they're doing. An example use case is as an empty state, if user doesn't have much content b/c they don't have enough friends on your app, you can add some cells to the table to show them suggested friends to invite right there.
