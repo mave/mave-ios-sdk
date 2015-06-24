@@ -75,6 +75,13 @@
     phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelOther];
     XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelOther);
     XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabelOther);
+
+    // nil label
+    XCTAssertEqualObjects(MAVEContactPhoneLabelOther, @"_$!<OtherFAX>!$_");
+    XCTAssertEqualObjects(MAVEContactPhoneHumanReadableLabelOther, @"other");
+    phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:nil];
+    XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelOther);
+    XCTAssertEqualObjects(phone.humanReadableLabel, MAVEContactPhoneHumanReadableLabelOther);
 }
 
 - (void)testInitConvertsUnknownLabelToOther {

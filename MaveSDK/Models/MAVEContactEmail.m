@@ -51,7 +51,11 @@
 }
 
 - (BOOL)isGmail {
-    return [[self domain] isEqualToString:@"gmail.com"];
+    NSString *domain = [self domain];
+    if (!domain) {
+        return NO;
+    }
+    return [domain isEqualToString:@"gmail.com"];
 }
 
 @end
