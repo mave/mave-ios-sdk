@@ -14,7 +14,7 @@
 @interface MAVEPromise ()
 
 @property (nonatomic, strong) NSValue *value;
-@property (nonatomic) dispatch_semaphore_t gcd_semaphore;
+@property (nonatomic, strong) dispatch_semaphore_t gcd_semaphore;
 
 @end
 
