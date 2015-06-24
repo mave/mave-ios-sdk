@@ -121,6 +121,7 @@
                                    @"template_id": [NSNull null],
                                    @"explanation_copy_template": [NSNull null],
                                    @"suggested_invites_enabled": [NSNull null],
+                                   @"reusable_suggested_invite_cell_send_icon": [NSNull null],
                             }
                            };
     obj = [[MAVERemoteConfigurationContactsInvitePage alloc] initWithDictionary:dict];
