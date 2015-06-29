@@ -27,7 +27,9 @@
         self.parentViewController = parent;
         self.didInitialTableDataLoad = NO;
         self.lockScrollViewDidScroll = NO;
+        self.isFixedSearchBarActive = NO;
         self.didInitialTableHeaderLayout = NO;
+        self.didInitialViewDidScroll = NO;
         self.selectedPhoneNumbers = [[NSMutableSet alloc] init];
         self.selectedPeople = [[NSMutableSet alloc] init];
 
@@ -459,7 +461,7 @@
     CGFloat embeddedSearchBarHeight = self.inviteTableHeaderView.searchBar.frame.size.height;
     CGFloat embeddedSearchBarBottom = embeddedSearchBarTop + embeddedSearchBarHeight;
 
-    BOOL shouldMakeSearchBarFixed = !self.isFixedSearchBarActive && offsetY >= embeddedSearchBarTop;
+    BOOL shouldMakeSearchBarFixed = (!self.didInitialViewDidScroll || !self.isFixedSearchBarActive) && offsetY >= embeddedSearchBarTop;
     BOOL shouldMakeSearchBarUnfixed = self.isFixedSearchBarActive && offsetY < embeddedSearchBarBottom;
 
     if (shouldMakeSearchBarFixed) {
@@ -474,6 +476,7 @@
     if ([self.inviteTableHeaderView hasContentOtherThanSearchBar] && offsetY < 0) {
         [self.inviteTableHeaderView resizeWithShiftedOffsetY:offsetY];
     }
+    self.didInitialViewDidScroll = YES;
 }
 
 - (void)makeSearchBarFixed {

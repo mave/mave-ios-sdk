@@ -46,6 +46,7 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 @property (nonatomic, assign) BOOL isFixedSearchBarActive;
 @property (nonatomic, assign) BOOL lockScrollViewDidScroll;
 @property (nonatomic, assign) BOOL didInitialTableHeaderLayout;
+@property (nonatomic, assign) BOOL didInitialViewDidScroll;
 @property (nonatomic, strong) UITableView *searchTableView;
 
 - (instancetype)initTableViewWithParent:(MAVEInvitePageViewController *)parent;
