@@ -43,26 +43,23 @@
     } dismissBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
         [controller dismissViewControllerAnimated:YES completion:nil];
     } inviteContext:@"home-page-modal"];
+}
 
+- (void)presentInvitePagePush:(id)sender {
+    // Reset bar button item back to normal
+    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = nil;
 
-    // Present Push
-
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    UIViewController *afterInvitesPage = [storyboard
-//                                          instantiateViewControllerWithIdentifier:@"PushAfterInvitesPage"];
-//    MaveSDK *mave = [MaveSDK sharedInstance];
-//
-//    [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
-//
-//        [self.navigationController pushViewController:inviteController animated:YES];
-//    } forwardBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
-//
-//        [controller.navigationController pushViewController:afterInvitesPage animated:YES];
-//    } backBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
-//
-//        [controller.navigationController popViewControllerAnimated:YES];
-//    } inviteContext:@"home-page-pushed"];
-
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController *afterInvitesPage = [storyboard instantiateViewControllerWithIdentifier:@"PushAfterInvitesPage"];
+    MaveSDK *mave = [MaveSDK sharedInstance];
+    
+    [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
+        [self.navigationController pushViewController:inviteController animated:YES];
+    } forwardBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        [controller.navigationController pushViewController:afterInvitesPage animated:YES];
+    } backBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {
+        [controller.navigationController popViewControllerAnimated:YES];
+    } inviteContext:@"home-page-pushed"];
 }
 
 // Methods to present this home view in the drawer

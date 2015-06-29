@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *colorSchemes;
 
 - (IBAction)presentInvitePageAsModal:(id)sender;
+- (IBAction)presentInvitePagePush:(id)sender;
 
 @end
 
