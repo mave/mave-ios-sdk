@@ -200,6 +200,7 @@
 }
 
 - (void)testCompleteAfterPermissionUnfulfilledToGranted {
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     NSArray *fakeContacts = @[[MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Cosson"]];
 
     // generate object under test and its block
