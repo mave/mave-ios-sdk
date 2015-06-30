@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, MAVEContactSyncType) {
 
 @interface MAVEABSyncManager : NSObject
 
+@property (nonatomic, assign) BOOL fetchSuggestionsInitiated;
+
 // These methods do the full process of syncing contacts, the first will pull contacts
 // from the ios contacts api and the second lets you pass in the contacts to avoid pulling
 // them twice when we're already working with them.

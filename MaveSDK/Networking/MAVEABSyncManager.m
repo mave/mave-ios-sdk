@@ -21,6 +21,13 @@ NSUInteger const MAVEABSyncMerkleTreeHeight = 11;
 
 @implementation MAVEABSyncManager
 
+- (instancetype)init {
+    if (self = [super init]) {
+        self.fetchSuggestionsInitiated = NO;
+    }
+    return self;
+}
+
 // Use dispatch_once to make sure we only call syncContacts once per session. This
 // way we don't need any logic to decide where to call it, we can just hook into
 // wherever we access the contacts and call it there.
@@ -54,10 +61,7 @@ static dispatch_once_t syncContactsOnceToken;
 
 - (void)syncContactsAndPopulateSuggestedInBackground:(NSArray *)contacts {
     dispatch_once(&syncContactsOnceToken, ^{
-        // tmp, log the changeset of all contacts
-        //    MAVEMerkleTree *tmpMerkleTree = [self buildLocalContactsMerkleTreeFromContacts:contacts];
-        //    NSArray *changeset = [tmpMerkleTree changesetForEmptyTreeToMatchSelf];
-        //    MAVEDebugLog(@"Changeset: %@", changeset);
+        self.fetchSuggestionsInitiated = YES;
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
             // Only sync contacts if the current configuration allows it
