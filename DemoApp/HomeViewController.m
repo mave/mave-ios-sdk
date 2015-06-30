@@ -52,7 +52,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UIViewController *afterInvitesPage = [storyboard instantiateViewControllerWithIdentifier:@"PushAfterInvitesPage"];
     MaveSDK *mave = [MaveSDK sharedInstance];
-    
+
     [mave presentInvitePagePushWithBlock:^(UIViewController *inviteController) {
         [self.navigationController pushViewController:inviteController animated:YES];
     } forwardBlock:^(UIViewController *controller, NSUInteger numberOfInvitesSent) {

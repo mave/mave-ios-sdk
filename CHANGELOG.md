@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.7.3
+- Fix a race condition when fetching suggested contacts very soon after doing an initial contact sync.
+- Address an issue with empty space above the table content in some conditions on v1 invite page.
+
 ### v0.7.2
 - Fix a couple of bugs
 
