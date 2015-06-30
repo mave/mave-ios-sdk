@@ -59,7 +59,7 @@ NSString * const MAVESuggestedInviteReusableCellIdentifier = @"MAVESuggestedInvi
                 initialLoadCompletionBlock([suggestedInvites count]);
             }
         });
-    } timeout:5];
+    } timeout:8];
 }
 
 - (void)_loadSuggestedInvites:(NSArray *)suggestedInvites {
