@@ -14,6 +14,8 @@
 @property (nonatomic, weak) MAVEContactsInvitePageDataManager *dataManager;
 @property (nonatomic, weak) UITableView *mainTable;
 @property (nonatomic, weak) UITableView *searchTable;
+@property (nonatomic, assign) BOOL useInviteNewNumberCell;
+@property (nonatomic, assign) BOOL useInviteNewEmailCell;
 
 - (instancetype)initWithDataManager:(MAVEContactsInvitePageDataManager *)dataManager mainTable:(UITableView *)mainTable andSearchTable:(UITableView *)searchTable;
 

@@ -17,6 +17,8 @@
         self.mainTable = mainTable;
         self.searchTable = searchTable;
         self.searchTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.useInviteNewNumberCell = NO;
+        self.useInviteNewEmailCell = NO;
     }
     return self;
 }
@@ -40,7 +42,19 @@
 }
 
 - (void)searchContactsAndUpdateSearchTableWithTerm:(NSString *)searchTerm {
-    self.dataManager.searchTableData = [MAVEABTableViewController searchContacts:self.dataManager.allContacts withText:searchTerm];
+    NSArray *searchResults = [MAVEABTableViewController searchContacts:self.dataManager.allContacts withText:searchTerm];
+    // if no search results, see if it's a new phone number or email that we should send to
+    if ([searchResults count] == 0) {
+        NSString *formattedPhone = [MAVEABPerson normalizePhoneNumber:searchTerm];
+        if (formattedPhone) {
+            self.useInviteNewNumberCell = YES;
+            self.dataManager.searchTableData = @[formattedPhone];
+            [self.searchTable reloadData];
+            return;
+        }
+
+    }
+    self.dataManager.searchTableData = searchResults;
     [self.searchTable reloadData];
 }
 
