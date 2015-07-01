@@ -283,7 +283,7 @@
     // Filter ones we don't want to use. In the US, this is any 7 digit numbers because
     // those don't have an area code
     NSDictionary *nationalNumberMinLengths = @{
-        @1: @8,
+        @1: @10,
     };
     NSString *nationalNumber = [phoneNumberUtil getNationalSignificantNumber:pnObject];
     id minNationalNumberLengthObj = [nationalNumberMinLengths objectForKey:pnObject.countryCode];

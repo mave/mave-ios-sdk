@@ -36,6 +36,7 @@
 @property (nonatomic, strong) MAVEABPerson *person;
 - (void)updateForReuseWithPerson:(MAVEABPerson *)person;
 - (void)updateForNoPersonFoundUse;
+- (void)updateForInviteToNewPhone:(NSString *)phoneNumber;
 
 - (UITableView *)containingTableView;
 - (CGFloat)heightGivenNumberOfContactInfoRecords:(NSUInteger)numberContactRecords;

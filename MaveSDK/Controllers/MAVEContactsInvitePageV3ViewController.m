@@ -292,7 +292,15 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             [weakSelf updateToReflectPersonSelectedStatus:person];
         };
     } else {
-        [cell updateForNoPersonFoundUse];
+        // If no person found, check if the user input was a new phone or email, and
+        // if so set up a cell to allow them to send to that phone/email direclty
+        if (self.searchManager.useNewNumber) {
+            NSString *formattedNewNumber = [MAVEABPerson displayPhoneNumber:self.searchManager.useNewNumber];
+            NSString *cellText = [NSString stringWithFormat:@"Invite %@", formattedNewNumber];
+            [cell updateForInviteToNewPhone:cellText];
+        } else {
+            [cell updateForNoPersonFoundUse];
+        }
     }
     return (UITableViewCell *)cell;
 }
@@ -307,7 +315,11 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                                           && indexPath.section == 0);
     }
     if (!person) {
-        // The cell didn't represent a person, e.g. the "No results found" cell
+        // The cell didn't represent a person
+        // Check if new phone or email cell
+        if (self.searchManager.useNewNumber) {
+            NSLog(@"Would invite: %@", self.searchManager.useNewNumber);
+        }
         return;
     }
     person.selected = !person.selected;

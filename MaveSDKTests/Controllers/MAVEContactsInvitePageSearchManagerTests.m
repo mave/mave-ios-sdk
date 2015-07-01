@@ -37,8 +37,8 @@
     XCTAssertEqualObjects(searchManager.dataManager, dataManager);
     XCTAssertEqualObjects(searchManager.mainTable, mainTable);
     XCTAssertEqualObjects(searchManager.searchTable, searchTable);
-    XCTAssertFalse(searchManager.useInviteNewNumberCell);
-    XCTAssertFalse(searchManager.useInviteNewEmailCell);
+    XCTAssertNil(searchManager.useNewNumber);
+    XCTAssertNil(searchManager.useNewEmail);
 }
 
 - (void)testSearchContactsAndUpdateTableNormalSearchTerm {
@@ -80,9 +80,8 @@
     OCMExpect([abtvcMock searchContacts:dataManager.allContacts withText:number]).andReturn(fakeSearchTableData);
 
     [searchManager searchContactsAndUpdateSearchTableWithTerm:number];
-    XCTAssertTrue(searchManager.useInviteNewNumberCell);
-    XCTAssertEqual([dataManager.searchTableData count], 1);
-    XCTAssertEqualObjects([dataManager.searchTableData objectAtIndex:0], @"+18085554567");
+    XCTAssertEqualObjects(searchManager.useNewNumber, @"+18085554567");
+    XCTAssertEqual([dataManager.searchTableData count], 0);
     OCMVerifyAll(abtvcMock);
     OCMVerifyAll(searchTableMock);
 }
@@ -104,9 +103,9 @@
     OCMExpect([abtvcMock searchContacts:dataManager.allContacts withText:number]).andReturn(fakeSearchTableData);
 
     [searchManager searchContactsAndUpdateSearchTableWithTerm:number];
-    XCTAssertFalse(searchManager.useInviteNewNumberCell);
+    XCTAssertNil(searchManager.useNewNumber);
     XCTAssertEqual([dataManager.searchTableData count], 1);
-    XCTAssertEqualObjects([dataManager.searchTableData objectAtIndex:0],@1);
+    XCTAssertEqualObjects([dataManager.searchTableData objectAtIndex:0], @1);
     OCMVerifyAll(abtvcMock);
     OCMVerifyAll(searchTableMock);
 }

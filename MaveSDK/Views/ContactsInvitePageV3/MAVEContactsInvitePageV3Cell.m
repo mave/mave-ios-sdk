@@ -205,6 +205,15 @@
     self.contactIdentifiersSelectedDidUpdateBlock = nil;
 }
 
+- (void)updateForInviteToNewPhone:(NSString *)phoneNumber {
+    self.person = nil;
+    [self updatePictureViewPicture:nil initials:nil];
+    self.nameLabel.text = phoneNumber;
+    self.isExpanded = NO;
+    self.checkmarkBox.hidden = YES;
+    self.contactIdentifiersSelectedDidUpdateBlock = nil;
+}
+
 - (void)updatePictureViewPicture:(UIImage *)picture initials:(NSString *)initials {
     if (picture) {
         self.pictureView.hidden = NO;
