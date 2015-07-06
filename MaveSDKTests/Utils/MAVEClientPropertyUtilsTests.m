@@ -270,7 +270,7 @@
 - (void)testOSVersion {
     NSString *osVersion = [MAVEClientPropertyUtils osVersion];
     NSRegularExpression *regex = [[NSRegularExpression alloc]
-                                  initWithPattern:@"^[7-8]+\\.[0-3]$" options:0 error:nil];
+                                  initWithPattern:@"^[7-8]+\\.[0-4]$" options:0 error:nil];
     NSArray *matches = [regex matchesInString:osVersion options:0 range:NSMakeRange(0, [osVersion length])];
     XCTAssertEqual([matches count], 1);
 }
