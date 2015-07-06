@@ -318,7 +318,12 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         // The cell didn't represent a person
         // Check if new phone or email cell
         if (self.searchManager.useNewNumber) {
-            NSLog(@"Would invite: %@", self.searchManager.useNewNumber);
+            MAVEABPerson *anonymousPerson = [[MAVEABPerson alloc] initAnonymousFromPhoneNumber:self.searchManager.useNewNumber];
+            if (anonymousPerson) {
+                [self sendInviteToAnonymousPerson:anonymousPerson withSuccessBlock:^{
+                    NSLog(@"Invite to %@ success!", self.searchManager.useNewNumber);
+                }];
+            }
         }
         return;
     }
@@ -363,6 +368,26 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                 });
             }
         });
+    }];
+}
+
+// Anonymous person is one with a contact identifier that the user just typed in
+- (void)sendInviteToAnonymousPerson:(MAVEABPerson *)anonymousPerson withSuccessBlock:(void(^)())successBlock {
+    NSArray *recipients = @[anonymousPerson];
+    NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    [[MaveSDK sharedInstance].APIInterface sendInvitesToRecipients:recipients smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
+        if (error) {
+            MAVEErrorLog(@"Error sending invites: %@", error);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
+                                                            message:@"Server was unavailable or internet connection failed"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        } else if (successBlock) {
+            successBlock();
+        }
     }];
 }
 

@@ -80,6 +80,32 @@
     XCTAssertFalse(email0.selected);
 }
 
+- (void)testInitAnonymousFromPhoneNumber {
+    NSString *number = @"+18085551234";
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] initAnonymousFromPhoneNumber:number];
+
+    XCTAssertNotNil(p1);
+    XCTAssertEqual(p1.recordID, -1);
+    XCTAssertEqual(p1.hashedRecordID, 11911739821441243909u);
+    // Old style phone numbers & labels should be filled in
+    XCTAssertEqual([p1.phoneNumbers count], 1);
+    XCTAssertEqualObjects(p1.phoneNumbers[0], number);
+    XCTAssertEqualObjects(p1.phoneNumberLabels[0], MAVEContactPhoneLabelOther);
+    // Phone contact object should be correct too
+    XCTAssertEqual([p1.emailObjects count], 0);
+    NSArray *phones = p1.phoneObjects;
+    XCTAssertEqual([phones count], 1);
+    MAVEContactPhoneNumber *phone = phones[0];
+    XCTAssertEqualObjects(phone.value, number);
+    XCTAssertEqualObjects(phone.label, MAVEContactPhoneLabelOther);
+    XCTAssertTrue(phone.selected);
+}
+
+- (void)testInitAnonymousFromPhoneNumberNil {
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] initAnonymousFromPhoneNumber:nil];
+    XCTAssertNil(p1);
+}
+
 - (void)testSettingRecordIDSetsHashedRecordID {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     // should default to hash of 0
