@@ -371,6 +371,10 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     }];
 }
 
+- (void)sendInvitesToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void (^)())successBlock {
+    
+}
+
 // Anonymous person is one with a contact identifier that the user just typed in
 - (void)sendInviteToAnonymousPerson:(MAVEABPerson *)anonymousPerson withSuccessBlock:(void(^)())successBlock {
     NSArray *recipients = @[anonymousPerson];

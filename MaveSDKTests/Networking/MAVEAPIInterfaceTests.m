@@ -415,6 +415,36 @@
     OCMVerifyAll(mock);
 }
 
+- (void)testSendInvitesToAnonymousContactIdentifier {
+    MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
+    NSString *smsCopy = @"Hey sms blah";
+    NSString *senderUserID = @"1234";
+    NSString *linkDestination = @"http://foo.example.com";
+    NSDictionary *customData = @{@"foo": @"bar"};
+
+    NSDictionary *expectedParams = @{@"invites": @[@{
+        @"recipient_contact_record": @{},
+        @"deliver_to": phone.value,
+        @"invite_type": @"sms",
+        @"sms_copy": smsCopy,
+        @"sender_user_id": senderUserID,
+        @"link_destination": linkDestination,
+        @"wrap_invite_link": @(YES),
+        @"custom_data": customData
+    }]};
+    MAVEHTTPCompletionBlock completionBlock = ^void(NSError *error, NSDictionary *responseData){};
+
+    id mock = OCMPartialMock(self.testAPIInterface);
+    OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:[OCMArg checkWithBlock:^BOOL(id obj) {
+        XCTAssertEqualObjects(obj, expectedParams);
+        return YES;
+    }] extraHeaders:nil gzipCompressBody:YES completionBlock:completionBlock]);
+
+    [self.testAPIInterface sendInviteToAnonymousContactIdentifier:phone smsCopy:smsCopy senderUserID:senderUserID inviteLinkDestinationURL:linkDestination wrapInviteLink:YES customData:customData completionBlock:completionBlock];
+
+    OCMVerifyAll(mock);
+}
+
 - (void)testSendContactsMerkleTree {
     id mocked = OCMPartialMock(self.testAPIInterface);
     id merkleTreeMock = OCMClassMock([MAVEMerkleTree class]);
