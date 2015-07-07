@@ -137,13 +137,17 @@
     OCMVerifyAll(searchTableMock);
 }
 
-- (void)testSearchContactsAndUpdateTableSetsDidSendToNewFlagsToFalse {
+- (void)testSearchContactsAndUpdateTableSetsPhonesAndEmailsToNilAndFlagsToFalse {
     MAVEContactsInvitePageSearchManager *searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:nil mainTable:nil andSearchTable:nil];
     XCTAssertNotNil(searchManager);
+    searchManager.useNewNumber = @"8085551234";
     searchManager.didSendToNewNumber = YES;
+    searchManager.useNewEmail = @"foo@example.com";
     searchManager.didSendToNewEmail = YES;
     [searchManager searchContactsAndUpdateSearchTableWithTerm:@"foo"];
+    XCTAssertNil(searchManager.useNewNumber);
     XCTAssertFalse(searchManager.didSendToNewNumber);
+    XCTAssertNil(searchManager.useNewEmail);
     XCTAssertFalse(searchManager.didSendToNewEmail);
 }
 

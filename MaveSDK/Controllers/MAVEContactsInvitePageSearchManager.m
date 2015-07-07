@@ -45,6 +45,7 @@
 - (void)searchContactsAndUpdateSearchTableWithTerm:(NSString *)searchTerm {
     self.useNewNumber = nil;
     self.didSendToNewNumber = NO;
+    self.useNewEmail = nil;
     self.didSendToNewEmail = NO;
     NSArray *searchResults = [MAVEABTableViewController searchContacts:self.dataManager.allContacts withText:searchTerm];
     // if no search results, see if it's a new phone number or email that we should send to
