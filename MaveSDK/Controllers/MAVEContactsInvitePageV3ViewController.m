@@ -318,9 +318,9 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         // The cell didn't represent a person
         // Check if new phone or email cell
         if (self.searchManager.useNewNumber) {
-            MAVEABPerson *anonymousPerson = [[MAVEABPerson alloc] initAnonymousFromPhoneNumber:self.searchManager.useNewNumber];
-            if (anonymousPerson) {
-                [self sendInviteToAnonymousPerson:anonymousPerson withSuccessBlock:^{
+            MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:self.searchManager.useNewNumber andLabel:MAVEContactPhoneLabelOther];
+            if (phone) {
+                [self sendInviteToAnonymousContactIdentifier:phone successBlock:^{
                     NSLog(@"Invite to %@ success!", self.searchManager.useNewNumber);
                 }];
             }
@@ -371,16 +371,11 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     }];
 }
 
-- (void)sendInvitesToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void (^)())successBlock {
-    
-}
-
-// Anonymous person is one with a contact identifier that the user just typed in
-- (void)sendInviteToAnonymousPerson:(MAVEABPerson *)anonymousPerson withSuccessBlock:(void(^)())successBlock {
-    NSArray *recipients = @[anonymousPerson];
+// Anonymous contact identifier is e.g. a phone or email that the user just typed in
+- (void)sendInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void (^)())successBlock {
     NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
-    [[MaveSDK sharedInstance].APIInterface sendInvitesToRecipients:recipients smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
+    [[MaveSDK sharedInstance].APIInterface sendInviteToAnonymousContactIdentifier:contactIdentifier smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
         if (error) {
             MAVEErrorLog(@"Error sending invites: %@", error);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"

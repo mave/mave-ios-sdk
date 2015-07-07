@@ -70,7 +70,6 @@
             if (preparationError != NULL) { *preparationError = jsonParseError; }
             return nil;
         }
-        NSLog(@"request body data: %@", params);
     }
 
     BOOL isUsingGzip = ([bodyData length] > 0
