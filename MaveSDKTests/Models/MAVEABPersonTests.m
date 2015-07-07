@@ -621,6 +621,29 @@
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+341234");
 }
 
+- (void)testLooksLikeEmail {
+    // valid examples
+    NSString *e0 = @"a@b.c";
+    NSString *e1 = @"foo@bar.com";
+    NSString *e2 = @"foo+banana@bar.co.uk";
+    NSString *e3 = @"foo@bar";
+    NSString *e4 = @"foo@.com";
+    // invalid examples
+    NSString *e10 = @"@bar.com";
+    NSString *e11 = @"foo@";
+    NSString *e12 = @"noat";
+
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e0]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e1]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e2]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e3]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e4]);
+
+    XCTAssertFalse([MAVEABPerson looksLikeEmail:e10]);
+    XCTAssertFalse([MAVEABPerson looksLikeEmail:e11]);
+    XCTAssertFalse([MAVEABPerson looksLikeEmail:e12]);
+}
+
 - (void)testFallbackCountryCodeIsUS {
     id clientPropertiesMock = OCMClassMock([MAVEClientPropertyUtils class]);
     OCMExpect([clientPropertiesMock countryCode]).andReturn(nil);

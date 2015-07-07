@@ -97,6 +97,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 - (void)selectTopContactIdentifierIfNoneSelected;
 
 + (NSString *)normalizePhoneNumber:(NSString *)phoneNumber;
++ (BOOL)looksLikeEmail:(NSString *)email;
 
 // Takes an 11-digit US phone number beginning with 1 and returns in pretty human readable format
 + (NSString *)displayPhoneNumber:(NSString *)phoneNumber;

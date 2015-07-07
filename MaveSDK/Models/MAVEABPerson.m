@@ -303,6 +303,13 @@
     return parsed;
 }
 
++ (BOOL)looksLikeEmail:(NSString *)email {
+    NSString *pattern = @"\\S+@\\S+";
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
+    NSArray *matches = [regex matchesInString:email options:0 range:NSMakeRange(0, [email length])];
+    return [matches count] != 0;
+}
+
 
 // For now, phone is required so this will always return exactly one phone
 // number that we should send the invite to
