@@ -294,9 +294,15 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     } else {
         // If no person found, check if the user input was a new phone or email, and
         // if so set up a cell to allow them to send to that phone/email direclty
+        // If we just sent the invite to that number, change the cell copy to "Sent!" to show the user
         if (self.searchManager.useNewNumber) {
+            NSString *cellText = nil;
             NSString *formattedNewNumber = [MAVEABPerson displayPhoneNumber:self.searchManager.useNewNumber];
-            NSString *cellText = [NSString stringWithFormat:@"Invite %@", formattedNewNumber];
+            if (self.searchManager.didSendToNewNumber) {
+                cellText = @"Sent!";
+            } else {
+                cellText = [NSString stringWithFormat:@"Invite %@", formattedNewNumber];
+            }
             [cell updateForInviteToNewPhone:cellText];
         } else {
             [cell updateForNoPersonFoundUse];
@@ -316,12 +322,14 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     }
     if (!person) {
         // The cell didn't represent a person
-        // Check if new phone or email cell
+        // Check if new phone or email cell, in which case send invite directly
         if (self.searchManager.useNewNumber) {
             MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:self.searchManager.useNewNumber andLabel:MAVEContactPhoneLabelOther];
             if (phone) {
                 [self sendInviteToAnonymousContactIdentifier:phone successBlock:^{
                     NSLog(@"Invite to %@ success!", self.searchManager.useNewNumber);
+                    self.searchManager.didSendToNewNumber = YES;
+                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                 }];
             }
         }
@@ -376,17 +384,19 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
     [[MaveSDK sharedInstance].APIInterface sendInviteToAnonymousContactIdentifier:contactIdentifier smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
-        if (error) {
-            MAVEErrorLog(@"Error sending invites: %@", error);
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
-                                                            message:@"Server was unavailable or internet connection failed"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Ok"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        } else if (successBlock) {
-            successBlock();
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                MAVEErrorLog(@"Error sending invites: %@", error);
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
+                                                                message:@"Server was unavailable or internet connection failed"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else if (successBlock) {
+                successBlock();
+            }
+        });
     }];
 }
 

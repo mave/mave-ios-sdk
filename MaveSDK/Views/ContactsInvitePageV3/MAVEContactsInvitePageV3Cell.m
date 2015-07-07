@@ -189,6 +189,7 @@
     }
     [self updatePictureViewPicture:picToUse initials:[person initials]];
     self.nameLabel.text = [person fullName];
+    self.nameLabel.textColor = [UIColor blackColor];
     self.isExpanded = person.selected;
     self.checkmarkBox.hidden = NO;
     self.checkmarkBox.isChecked = person.selected;
@@ -200,6 +201,7 @@
     self.person = nil;
     [self updatePictureViewPicture:nil initials:nil];
     self.nameLabel.text = @"No results found";
+    self.nameLabel.textColor = [UIColor blackColor];
     self.isExpanded = NO;
     self.checkmarkBox.hidden = YES;
     self.contactIdentifiersSelectedDidUpdateBlock = nil;
@@ -209,6 +211,7 @@
     self.person = nil;
     [self updatePictureViewPicture:nil initials:nil];
     self.nameLabel.text = phoneNumber;
+    self.nameLabel.textColor = self.checkmarkBox.tintColor;
     self.isExpanded = NO;
     self.checkmarkBox.hidden = YES;
     self.contactIdentifiersSelectedDidUpdateBlock = nil;

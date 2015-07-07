@@ -38,7 +38,9 @@
     XCTAssertEqualObjects(searchManager.mainTable, mainTable);
     XCTAssertEqualObjects(searchManager.searchTable, searchTable);
     XCTAssertNil(searchManager.useNewNumber);
+    XCTAssertFalse(searchManager.didSendToNewNumber);
     XCTAssertNil(searchManager.useNewEmail);
+    XCTAssertFalse(searchManager.didSendToNewEmail);
 }
 
 - (void)testSearchContactsAndUpdateTableNormalSearchTerm {
@@ -108,6 +110,16 @@
     XCTAssertEqualObjects([dataManager.searchTableData objectAtIndex:0], @1);
     OCMVerifyAll(abtvcMock);
     OCMVerifyAll(searchTableMock);
+}
+
+- (void)testSearchContactsAndUpdateTableSetsDidSendToNewFlagsToFalse {
+    MAVEContactsInvitePageSearchManager *searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:nil mainTable:nil andSearchTable:nil];
+    XCTAssertNotNil(searchManager);
+    searchManager.didSendToNewNumber = YES;
+    searchManager.didSendToNewEmail = YES;
+    [searchManager searchContactsAndUpdateSearchTableWithTerm:@"foo"];
+    XCTAssertFalse(searchManager.didSendToNewNumber);
+    XCTAssertFalse(searchManager.didSendToNewEmail);
 }
 
 @end
