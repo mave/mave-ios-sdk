@@ -304,6 +304,14 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                 cellText = [NSString stringWithFormat:@"Invite %@", formattedNewNumber];
             }
             [cell updateForInviteToNewPhone:cellText];
+        } else if (self.searchManager.useNewEmail) {
+            NSString *cellText = nil;
+            if (self.searchManager.didSendToNewEmail) {
+                cellText = @"Sent!";
+            } else {
+                cellText = [NSString stringWithFormat:@"Invite %@", self.searchManager.useNewEmail];
+            }
+            [cell updateForInviteToNewPhone:cellText];
         } else {
             [cell updateForNoPersonFoundUse];
         }
@@ -327,9 +335,24 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:self.searchManager.useNewNumber andLabel:MAVEContactPhoneLabelOther];
             if (phone) {
                 [self sendInviteToAnonymousContactIdentifier:phone successBlock:^{
-                    NSLog(@"Invite to %@ success!", self.searchManager.useNewNumber);
                     self.searchManager.didSendToNewNumber = YES;
                     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.searchManager clearCurrentSearchInTextField:self.wrapperView.searchBar];
+                        [self.wrapperView endEditing:YES];
+                    });
+                }];
+            }
+        } else if (self.searchManager.useNewEmail) {
+            MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:self.searchManager.useNewEmail];
+            if (email) {
+                [self sendInviteToAnonymousContactIdentifier:email successBlock:^{
+                    self.searchManager.didSendToNewEmail = YES;
+                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.searchManager clearCurrentSearchInTextField:self.wrapperView.searchBar];
+                        [self.wrapperView endEditing:YES];
+                    });
                 }];
             }
         }

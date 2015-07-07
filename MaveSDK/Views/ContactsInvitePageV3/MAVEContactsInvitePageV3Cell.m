@@ -217,6 +217,16 @@
     self.contactIdentifiersSelectedDidUpdateBlock = nil;
 }
 
+- (void)updateForInviteToNewEmail:(NSString *)email {
+    self.person = nil;
+    [self updatePictureViewPicture:nil initials:nil];
+    self.nameLabel.text = email;
+    self.nameLabel.textColor = self.checkmarkBox.tintColor;
+    self.isExpanded = NO;
+    self.checkmarkBox.hidden = YES;
+    self.contactIdentifiersSelectedDidUpdateBlock = nil;
+}
+
 - (void)updatePictureViewPicture:(UIImage *)picture initials:(NSString *)initials {
     if (picture) {
         self.pictureView.hidden = NO;
