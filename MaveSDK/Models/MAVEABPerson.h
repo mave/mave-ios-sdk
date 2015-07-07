@@ -57,11 +57,6 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 //   - all other fields are optional
 - (instancetype)initFromABRecordRef:(ABRecordRef)record;
 
-// An anonymous person, initialized from e.g. just a typed-in phone number
-// Phone number given should be in normalized format, and the phone number
-// object will be marked as selected
-- (instancetype)initAnonymousFromPhoneNumber:(NSString *)phoneNumber;
-
 // Export fields to an NSDictionary, using only basic types so it can be JSON encoded
 - (NSDictionary *)toJSONDictionary;
 // Another serialization method, include suggested invites metadata

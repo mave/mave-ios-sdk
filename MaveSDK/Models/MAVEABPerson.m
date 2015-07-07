@@ -46,21 +46,6 @@
     return self;
 }
 
-- (instancetype)initAnonymousFromPhoneNumber:(NSString *)phoneNumber {
-    if (self = [self init]) {
-        if (!phoneNumber) {
-            return nil;
-        }
-        self.recordID = -1;
-        self.phoneNumbers = @[phoneNumber];
-        self.phoneNumberLabels = @[MAVEContactPhoneLabelOther];
-        MAVEContactPhoneNumber *phoneObj = [[MAVEContactPhoneNumber alloc] initWithValue:phoneNumber andLabel:MAVEContactPhoneLabelOther];
-        phoneObj.selected = YES;
-        self.phoneObjects = @[phoneObj];
-    }
-    return self;
-}
-
 - (void)setRecordID:(int32_t)recordID {
     // record ID is actually a 32 bit integer
     _recordID = recordID;
