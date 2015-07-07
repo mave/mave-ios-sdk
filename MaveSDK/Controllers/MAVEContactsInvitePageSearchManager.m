@@ -56,7 +56,13 @@
             [self.searchTable reloadData];
             return;
         }
-
+        BOOL isEmail = [MAVEABPerson looksLikeEmail:searchTerm];
+        if (isEmail) {
+            self.useNewEmail = searchTerm;
+            self.dataManager.searchTableData = @[];
+            [self.searchTable reloadData];
+            return;
+        }
     }
     self.dataManager.searchTableData = searchResults;
     [self.searchTable reloadData];

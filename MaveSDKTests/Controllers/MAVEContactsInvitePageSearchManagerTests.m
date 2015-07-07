@@ -88,6 +88,31 @@
     OCMVerifyAll(searchTableMock);
 }
 
+- (void)testSearchContactsAndUpdateTableAddNewEmail {
+    // any search term that looks like a phone number doesn't get searched, we'll just show
+    // the option to invite that new number
+    MAVEContactsInvitePageDataManager *dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
+    dataManager.allContacts = @[];
+    UITableView *mainTable = [[UITableView alloc] init];
+    id searchTableMock = OCMClassMock([UITableView class]);
+    OCMExpect([searchTableMock reloadData]);
+    MAVEContactsInvitePageSearchManager *searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:dataManager mainTable:mainTable andSearchTable:searchTableMock];
+    XCTAssertNotNil(searchManager);
+    NSString *email = @"foo@example";
+
+    // should search before checking phone number, and only if search result is empty
+    // check to see if it's a valid phone number
+    id abtvcMock = OCMClassMock([MAVEABTableViewController class]);
+    NSArray *fakeSearchTableData = @[];
+    OCMExpect([abtvcMock searchContacts:dataManager.allContacts withText:email]).andReturn(fakeSearchTableData);
+
+    [searchManager searchContactsAndUpdateSearchTableWithTerm:email];
+    XCTAssertEqualObjects(searchManager.useNewEmail, email);
+    XCTAssertEqual([dataManager.searchTableData count], 0);
+    OCMVerifyAll(abtvcMock);
+    OCMVerifyAll(searchTableMock);
+}
+
 - (void)testSearchContactsAndUpdateTableUsesSearchResultsInsteadOfNewPhoneIfBothExist {
     MAVEContactsInvitePageDataManager *dataManager = [[MAVEContactsInvitePageDataManager alloc] init];
     dataManager.allContacts = @[];
