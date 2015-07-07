@@ -584,7 +584,7 @@
 }
 
 - (void)testFilterUSPhoneNumbersWithBadAreaCodes {
-    // We still accept US numbers that aren't 10 digits, but we don't accept 7 digits or shorter.
+    // We don't accept US numbers that aren't 10 digits
     // The library has weird behavior by sometimes stripping a leading 0, so we test for that too
     NSString *p1 = @"2.808.555.1234";
     NSString *p2 = @"08.555.1234";
@@ -592,8 +592,8 @@
     NSString *p4 = @"867-5309";
     NSString *p5 = @"100";
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+128085551234");
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"+1085551234");
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+1085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], nil);
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], nil);
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p4], nil);
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p5], nil);
 }
