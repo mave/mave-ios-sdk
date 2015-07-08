@@ -15,13 +15,13 @@ CGFloat const MAVESearchBarHeight = 44.0;
 
 - (instancetype)initWithSingletonSearchBarDisplayOptions {
     if (self = [super init]) {
-        [self setupDefaults];
         MAVEDisplayOptions *displayOptions = [MaveSDK sharedInstance].displayOptions;
         self.searchBarFont = displayOptions.searchBarFont;
         self.searchBarPlaceholderTextColor = displayOptions.searchBarPlaceholderTextColor;
         self.searchBarTextColor = displayOptions.searchBarSearchTextColor;
         self.backgroundColor = displayOptions.searchBarBackgroundColor;
 
+        [self setupDefaults];
         [self setupInit];
     }
     return self;
@@ -29,15 +29,20 @@ CGFloat const MAVESearchBarHeight = 44.0;
 
 - (instancetype)initWithFont:(UIFont *)font placeholderTextColor:(UIColor *)placeholderTextColor textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
     if (self = [super init]) {
-        [self setupDefaults];
         self.searchBarFont = font;
         self.searchBarPlaceholderTextColor = placeholderTextColor;
         self.searchBarTextColor = textColor;
         self.backgroundColor = backgroundColor;
 
+        [self setupDefaults];
         [self setupInit];
     }
     return self;
+}
+
+- (void)setPlaceholderText:(NSString *)placeholderText {
+    _placeholderText = placeholderText;
+    self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholderText attributes:@{NSForegroundColorAttributeName: self.searchBarPlaceholderTextColor, NSFontAttributeName: self.searchBarFont}];
 }
 
 - (void)setupDefaults {
@@ -49,11 +54,6 @@ CGFloat const MAVESearchBarHeight = 44.0;
     self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.font = self.searchBarFont;
     self.textColor = self.searchBarTextColor;
-    self.attributedPlaceholder = [[NSAttributedString alloc]
-                                  initWithString:self.placeholderText
-                                  attributes:@{NSForegroundColorAttributeName: self.searchBarPlaceholderTextColor,
-                                               NSFontAttributeName: self.searchBarFont,
-                                               }];
     self.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.autocorrectionType = UITextAutocorrectionTypeNo;
     [self setupLeftLabelView];
