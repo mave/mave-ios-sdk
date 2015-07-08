@@ -567,8 +567,18 @@
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+18085551234");
     // try some from the GZ library
     NSString *p, *pNormalized;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 1000; ++i) {
         p = [GZPhoneNumbers phoneNumber];
+        // skip numbers with area codes beginning with 0 or 1, those aren't
+        // valid in the US so libphonenumber treats them differently
+        if ([[p substringWithRange:NSMakeRange(0, 4)] isEqualToString:@"+1 0"] ||
+            [[p substringWithRange:NSMakeRange(0, 4)] isEqualToString:@"+1 1"] ||
+            [[p substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"(0"] ||
+            [[p substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"(1"] ||
+            [[p substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"1"] ||
+            [[p substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"0"]) {
+            continue;
+        }
         pNormalized = [MAVEABPerson normalizePhoneNumber:p];
         XCTAssertNotNil(pNormalized);
     }
