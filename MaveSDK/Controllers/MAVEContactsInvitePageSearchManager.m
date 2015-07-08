@@ -17,6 +17,9 @@
         self.mainTable = mainTable;
         self.searchTable = searchTable;
         self.searchTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.useNewNumber = nil;
+        self.didSendToNewNumber = NO;
+        self.useNewEmail = nil;
     }
     return self;
 }
@@ -40,7 +43,29 @@
 }
 
 - (void)searchContactsAndUpdateSearchTableWithTerm:(NSString *)searchTerm {
-    self.dataManager.searchTableData = [MAVEABTableViewController searchContacts:self.dataManager.allContacts withText:searchTerm];
+    self.useNewNumber = nil;
+    self.didSendToNewNumber = NO;
+    self.useNewEmail = nil;
+    self.didSendToNewEmail = NO;
+    NSArray *searchResults = [MAVEABTableViewController searchContacts:self.dataManager.allContacts withText:searchTerm];
+    // if no search results, see if it's a new phone number or email that we should send to
+    if ([searchResults count] == 0) {
+        NSString *normalizedPhone = [MAVEABPerson normalizePhoneNumber:searchTerm];
+        if (normalizedPhone) {
+            self.useNewNumber = normalizedPhone;
+            self.dataManager.searchTableData = @[];
+            [self.searchTable reloadData];
+            return;
+        }
+        BOOL isEmail = [MAVEABPerson looksLikeEmail:searchTerm];
+        if (isEmail) {
+            self.useNewEmail = searchTerm;
+            self.dataManager.searchTableData = @[];
+            [self.searchTable reloadData];
+            return;
+        }
+    }
+    self.dataManager.searchTableData = searchResults;
     [self.searchTable reloadData];
 }
 

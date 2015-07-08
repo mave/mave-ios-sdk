@@ -567,8 +567,18 @@
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+18085551234");
     // try some from the GZ library
     NSString *p, *pNormalized;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 1000; ++i) {
         p = [GZPhoneNumbers phoneNumber];
+        // skip numbers with area codes beginning with 0 or 1, those aren't
+        // valid in the US so libphonenumber treats them differently
+        if ([[p substringWithRange:NSMakeRange(0, 4)] isEqualToString:@"+1 0"] ||
+            [[p substringWithRange:NSMakeRange(0, 4)] isEqualToString:@"+1 1"] ||
+            [[p substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"(0"] ||
+            [[p substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"(1"] ||
+            [[p substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"1"] ||
+            [[p substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"0"]) {
+            continue;
+        }
         pNormalized = [MAVEABPerson normalizePhoneNumber:p];
         XCTAssertNotNil(pNormalized);
     }
@@ -584,7 +594,7 @@
 }
 
 - (void)testFilterUSPhoneNumbersWithBadAreaCodes {
-    // We still accept US numbers that aren't 10 digits, but we don't accept 7 digits or shorter.
+    // We don't accept US numbers that aren't 10 digits
     // The library has weird behavior by sometimes stripping a leading 0, so we test for that too
     NSString *p1 = @"2.808.555.1234";
     NSString *p2 = @"08.555.1234";
@@ -592,8 +602,8 @@
     NSString *p4 = @"867-5309";
     NSString *p5 = @"100";
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+128085551234");
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"+1085551234");
-    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+1085551234");
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], nil);
+    XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], nil);
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p4], nil);
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p5], nil);
 }
@@ -619,6 +629,29 @@
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p1], @"+34934027000");
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p2], @"+34934027000");
     XCTAssertEqualObjects([MAVEABPerson normalizePhoneNumber:p3], @"+341234");
+}
+
+- (void)testLooksLikeEmail {
+    // valid examples
+    NSString *e0 = @"a@b.c";
+    NSString *e1 = @"foo@bar.com";
+    NSString *e2 = @"foo+banana@bar.co.uk";
+    NSString *e3 = @"foo@bar";
+    NSString *e4 = @"foo@.com";
+    // invalid examples
+    NSString *e10 = @"@bar.com";
+    NSString *e11 = @"foo@";
+    NSString *e12 = @"noat";
+
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e0]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e1]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e2]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e3]);
+    XCTAssertTrue([MAVEABPerson looksLikeEmail:e4]);
+
+    XCTAssertFalse([MAVEABPerson looksLikeEmail:e10]);
+    XCTAssertFalse([MAVEABPerson looksLikeEmail:e11]);
+    XCTAssertFalse([MAVEABPerson looksLikeEmail:e12]);
 }
 
 - (void)testFallbackCountryCodeIsUS {

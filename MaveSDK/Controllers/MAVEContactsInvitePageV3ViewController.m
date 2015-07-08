@@ -31,6 +31,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.searchManager = [[MAVEContactsInvitePageSearchManager alloc] initWithDataManager:self.dataManager mainTable:self.tableView andSearchTable:self.searchTableView];
     self.wrapperView.searchBar.delegate = self.searchManager;
     self.wrapperView.searchBar.returnKeyType = UIReturnKeyDone;
+    self.wrapperView.searchBar.placeholderText = @"Enter name, phone or email";
     __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
     self.wrapperView.selectAllEmailsRow.selectAllBlock = ^void(BOOL selected) {
         [weakSelf selectOrDeselectAllEmails:selected];
@@ -292,7 +293,29 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             [weakSelf updateToReflectPersonSelectedStatus:person];
         };
     } else {
-        [cell updateForNoPersonFoundUse];
+        // If no person found, check if the user input was a new phone or email, and
+        // if so set up a cell to allow them to send to that phone/email direclty
+        // If we just sent the invite to that number, change the cell copy to "Sent!" to show the user
+        if (self.searchManager.useNewNumber) {
+            NSString *cellText = nil;
+            NSString *formattedNewNumber = [MAVEABPerson displayPhoneNumber:self.searchManager.useNewNumber];
+            if (self.searchManager.didSendToNewNumber) {
+                cellText = @"Sent!";
+            } else {
+                cellText = [NSString stringWithFormat:@"Invite %@", formattedNewNumber];
+            }
+            [cell updateForInviteToNewPhone:cellText];
+        } else if (self.searchManager.useNewEmail) {
+            NSString *cellText = nil;
+            if (self.searchManager.didSendToNewEmail) {
+                cellText = @"Sent!";
+            } else {
+                cellText = [NSString stringWithFormat:@"Invite %@", self.searchManager.useNewEmail];
+            }
+            [cell updateForInviteToNewPhone:cellText];
+        } else {
+            [cell updateForNoPersonFoundUse];
+        }
     }
     return (UITableViewCell *)cell;
 }
@@ -307,7 +330,33 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                                           && indexPath.section == 0);
     }
     if (!person) {
-        // The cell didn't represent a person, e.g. the "No results found" cell
+        // The cell didn't represent a person
+        // Check if new phone or email cell, in which case send invite directly
+        if (self.searchManager.useNewNumber) {
+            MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:self.searchManager.useNewNumber andLabel:MAVEContactPhoneLabelOther];
+            if (phone) {
+                [self sendInviteToAnonymousContactIdentifier:phone successBlock:^{
+                    self.searchManager.didSendToNewNumber = YES;
+                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.searchManager clearCurrentSearchInTextField:self.wrapperView.searchBar];
+                        [self.wrapperView endEditing:YES];
+                    });
+                }];
+            }
+        } else if (self.searchManager.useNewEmail) {
+            MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:self.searchManager.useNewEmail];
+            if (email) {
+                [self sendInviteToAnonymousContactIdentifier:email successBlock:^{
+                    self.searchManager.didSendToNewEmail = YES;
+                    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.searchManager clearCurrentSearchInTextField:self.wrapperView.searchBar];
+                        [self.wrapperView endEditing:YES];
+                    });
+                }];
+            }
+        }
         return;
     }
     person.selected = !person.selected;
@@ -349,6 +398,27 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:numberToSend];
                 });
+            }
+        });
+    }];
+}
+
+// Anonymous contact identifier is e.g. a phone or email that the user just typed in
+- (void)sendInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void (^)())successBlock {
+    NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    [[MaveSDK sharedInstance].APIInterface sendInviteToAnonymousContactIdentifier:contactIdentifier smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                MAVEErrorLog(@"Error sending invites: %@", error);
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invites not sent"
+                                                                message:@"Server was unavailable or internet connection failed"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else if (successBlock) {
+                successBlock();
             }
         });
     }];

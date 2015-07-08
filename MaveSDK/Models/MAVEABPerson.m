@@ -23,7 +23,7 @@
     return self;
 }
 
-- (id)initFromABRecordRef:(ABRecordRef)record {
+- (instancetype)initFromABRecordRef:(ABRecordRef)record {
     if (self = [self init]) {
         @try {
             int32_t rid = ABRecordGetRecordID(record);
@@ -283,7 +283,7 @@
     // Filter ones we don't want to use. In the US, this is any 7 digit numbers because
     // those don't have an area code
     NSDictionary *nationalNumberMinLengths = @{
-        @1: @8,
+        @1: @10,
     };
     NSString *nationalNumber = [phoneNumberUtil getNationalSignificantNumber:pnObject];
     id minNationalNumberLengthObj = [nationalNumberMinLengths objectForKey:pnObject.countryCode];
@@ -301,6 +301,13 @@
         return nil;
     }
     return parsed;
+}
+
++ (BOOL)looksLikeEmail:(NSString *)email {
+    NSString *pattern = @"\\S+@\\S+";
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
+    NSArray *matches = [regex matchesInString:email options:0 range:NSMakeRange(0, [email length])];
+    return [matches count] != 0;
 }
 
 

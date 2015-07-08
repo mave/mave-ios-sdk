@@ -193,27 +193,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
             if (!rec.selected) {
                 continue;
             }
-            NSString *inviteType = @"";
-            if ([rec isKindOfClass:[MAVEContactPhoneNumber class]]) {
-                inviteType = @"sms";
-            } else {
-                inviteType = @"email";
-            }
-            NSMutableDictionary *current = [[NSMutableDictionary alloc] init];
-            [current setObject:[person toJSONDictionaryIncludingSuggestionsMetadata] forKey:@"recipient_contact_record"];
-            [current setObject:rec.value forKey:@"deliver_to"];
-            [current setObject:inviteType forKey:@"invite_type"];
-            if (smsCopy && [inviteType isEqualToString:@"sms"]) {
-                [current setObject:smsCopy forKey:@"sms_copy"];
-            }
-            [current setObject:senderUserID forKey:@"sender_user_id"];
-            if (inviteLinkDestinationURL) {
-                [current setObject:inviteLinkDestinationURL forKey:@"link_destination"];
-            }
-            [current setObject:@(wrapInviteLink) forKey:@"wrap_invite_link"];
-            if (customData && [customData count] > 0) {
-                [current setObject:customData forKey:@"custom_data"];
-            }
+            NSDictionary *current = [self _singleInviteParamsWithPerson:person contactIdentifier:rec smsCopy:smsCopy senderUserID:senderUserID inviteLinkDestinationURL:inviteLinkDestinationURL wrapInviteLink:wrapInviteLink customData:customData];
             [params addObject:current];
             MAVEDebugLog(@"Invite %@: %@", @(i++), params);
         }
@@ -221,6 +201,49 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 
     NSDictionary *requestParams = @{@"invites": params};
     [self sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:requestParams extraHeaders:nil gzipCompressBody:YES completionBlock:completionBlock];
+}
+
+- (void)sendInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier smsCopy:(NSString *)smsCopy senderUserID:(NSString *)senderUserID inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL wrapInviteLink:(BOOL)wrapInviteLink customData:(NSDictionary *)customData completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
+
+    NSDictionary *params = [self _singleInviteParamsWithPerson:nil contactIdentifier:contactIdentifier smsCopy:smsCopy senderUserID:senderUserID inviteLinkDestinationURL:inviteLinkDestinationURL wrapInviteLink:wrapInviteLink customData:customData];
+    MAVEDebugLog(@"Invite 0: %@", params);
+    NSDictionary *requestParams = @{@"invites": @[params]};
+    [self sendIdentifiedJSONRequestWithRoute:@"/invites" methodName:@"POST" params:requestParams extraHeaders:nil gzipCompressBody:YES completionBlock:completionBlock];
+}
+
+- (NSDictionary *)_singleInviteParamsWithPerson:(MAVEABPerson *)person
+                              contactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier
+                                        smsCopy:(NSString *)smsCopy
+                                   senderUserID:(NSString *)senderUserID
+                       inviteLinkDestinationURL:(NSString *)inviteLinkDestinationURL
+                                 wrapInviteLink:(BOOL)wrapInviteLink
+                                     customData:(NSDictionary *)customData {
+    NSMutableDictionary *output = [[NSMutableDictionary alloc] init];
+    NSDictionary *personJSON = @{};
+    if (person) {
+        personJSON = [person toJSONDictionaryIncludingSuggestionsMetadata];
+    }
+    [output setObject:personJSON forKey:@"recipient_contact_record"];
+    NSString *inviteType;
+    if ([contactIdentifier isKindOfClass:[MAVEContactPhoneNumber class]]) {
+        inviteType = @"sms";
+    } else {
+        inviteType = @"email";
+    }
+    [output setObject:inviteType forKey:@"invite_type"];
+    [output setObject:contactIdentifier.value forKey:@"deliver_to"];
+    if (smsCopy && [inviteType isEqualToString:@"sms"]) {
+        [output setObject:smsCopy forKey:@"sms_copy"];
+    }
+    [output setObject:senderUserID forKey:@"sender_user_id"];
+    if (inviteLinkDestinationURL) {
+        [output setObject:inviteLinkDestinationURL forKey:@"link_destination"];
+    }
+    [output setObject:@(wrapInviteLink) forKey:@"wrap_invite_link"];
+    if (customData && [customData count] > 0) {
+        [output setObject:customData forKey:@"custom_data"];
+    }
+    return [NSDictionary dictionaryWithDictionary:output];
 }
 
 - (void)identifyUser {

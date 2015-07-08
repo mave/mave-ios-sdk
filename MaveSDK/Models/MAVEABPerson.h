@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 // initFromABRecordRef factory creates and does some validation
 //   - one of firstName, lastName are required, if both are missing returns nil
 //   - all other fields are optional
-- (id)initFromABRecordRef:(ABRecordRef)record;
+- (instancetype)initFromABRecordRef:(ABRecordRef)record;
 
 // Export fields to an NSDictionary, using only basic types so it can be JSON encoded
 - (NSDictionary *)toJSONDictionary;
@@ -97,6 +97,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 - (void)selectTopContactIdentifierIfNoneSelected;
 
 + (NSString *)normalizePhoneNumber:(NSString *)phoneNumber;
++ (BOOL)looksLikeEmail:(NSString *)email;
 
 // Takes an 11-digit US phone number beginning with 1 and returns in pretty human readable format
 + (NSString *)displayPhoneNumber:(NSString *)phoneNumber;

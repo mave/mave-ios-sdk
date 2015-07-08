@@ -33,5 +33,6 @@
 
 // Method to send the invites when clicking the button
 - (void)sendInvitesToSelected;
+- (void)sendInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void(^)())successBlock;
 
 @end
