@@ -17,6 +17,7 @@
 #import "MAVEABPermissionPromptHandler.h"
 #import "MAVEABTableViewController.h"
 #import "MAVEInviteTableSectionHeaderView.h"
+#import "MAVEContactsInvitePageDataManager.h"
 
 const char MAVESendFailedAlertViewDataKey;
 NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
@@ -186,7 +187,7 @@ NSString * const MAVEContactsInvitePageV2CellIdentifier = @"personCell";
 }
 - (void)updateTableDataWithoutReloading:(NSDictionary *)tableData {
     self.tableData = tableData;
-    self.tableSections = [[tableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    self.tableSections = [MAVEContactsInvitePageDataManager sortedSectionKeys:[tableData allKeys]];
     self.allContacts = [self enumerateAllContacts];
     [self updatePersonToIndexPathsIndex];
 }

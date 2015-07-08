@@ -183,8 +183,7 @@
 // This is a helper for places we may want to update table data and animate it in rather than reloading
 - (void)updateTableDataWithoutReloading:(NSDictionary *)data {
     self.tableData = data;
-    self.tableSections = [[self.tableData allKeys]
-                          sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    self.tableSections = [MAVEContactsInvitePageDataManager sortedSectionKeys:[self.tableData allKeys]];
     [self updatePersonToIndexPathsIndex];
 }
 
