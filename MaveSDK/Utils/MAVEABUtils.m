@@ -11,6 +11,7 @@
 #import <AddressBook/AddressBook.h>
 #import "MAVEABPerson.h"
 #import "MAVEABTableViewController.h"
+#import "MAVEContactsInvitePageDataManager.h"
 
 NSString * const MAVEABPermissionStatusAllowed = @"allowed";
 NSString * const MAVEABPermissionStatusDenied = @"denied";
@@ -121,11 +122,15 @@ static ABAddressBookRef addressBook;
     MAVEABPerson *person = nil;
     NSString *indexLetter = nil;
     for (NSUInteger i = 0; i < [persons count]; i++) {
-        // person can never be Nil or it wouldn't have been inserted into array
+        // person can never be nil or it wouldn't have been inserted into array
         person = persons[i];
         // person firstLetter can never be nil since you can't create a person
         // with no first or last name
+
         indexLetter = [person firstLetter];
+        if (![[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[indexLetter characterAtIndex:0]]) {
+            indexLetter = MAVENonAlphabetNamesTableDataKey;
+        }
         if ([result objectForKey:indexLetter] == nil) {
             [result setValue:[[NSMutableArray alloc] init] forKey:indexLetter];
         }

@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "MAVEABUtils.h"
 #import "MAVEABTestDataFactory.h"
+#import "MAVEContactsInvitePageDataManager.h"
 
 @interface MAVEABUtilsTests : XCTestCase
 
@@ -137,6 +138,17 @@
     MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"Foo" lastName:@"Bernard"];
     NSArray *data = @[p1, p2, p3];
     NSDictionary *expected = @{@"D": @[p1, p2], @"F": @[p3]};
+
+    NSDictionary *indexed = [MAVEABUtils indexABPersonArrayForTableSections:data];
+    XCTAssertEqualObjects(indexed, expected);
+}
+
+- (void)testIndexABPersonARrayForTableSectionsNonLetters {
+    MAVEABPerson *p1 = [MAVEABTestDataFactory personWithFirstName:@"1Foo" lastName:@"Adams"];
+    MAVEABPerson *p2 = [MAVEABTestDataFactory personWithFirstName:@"5Bar" lastName:@"Anderson"];
+    MAVEABPerson *p3 = [MAVEABTestDataFactory personWithFirstName:@"/Slash/" lastName:@"Bernard"];
+    NSArray *data = @[p1, p2, p3];
+    NSDictionary *expected = @{MAVENonAlphabetNamesTableDataKey: @[p1, p2, p3]};
 
     NSDictionary *indexed = [MAVEABUtils indexABPersonArrayForTableSections:data];
     XCTAssertEqualObjects(indexed, expected);

@@ -10,10 +10,10 @@
 #import "MaveSDK.h"
 #import "MAVEABUtils.h"
 
-// This is UTF-8 code point 0021, it should get sorted before any letters in any language
+// Use arbitrary non-letter code points, in our sorting function we'll
+// explicitly set the suggestions first and non-alphabet chars last
 NSString * const MAVESuggestedInvitesTableDataKey = @"\u2605";
-// This is the last UTF-8 printable character, it should get sorted after any letters in any language
-NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
+NSString * const MAVENonAlphabetNamesTableDataKey = @"#";
 
 @implementation MAVEContactsInvitePageDataManager
 
@@ -59,9 +59,28 @@ NSString * const MAVENonAlphabetNamesTableDataKey = @"\uffee";
 
 - (void)setMainTableData:(NSDictionary *)mainTableData {
     _mainTableData = mainTableData;
-    self.mainTableSectionKeys = [[mainTableData allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    self.mainTableSectionKeys = [[self class] sortedSectionKeys:[mainTableData allKeys]];
     [self updateMainTablePersonToIndexPathsIndex];
     self.allContacts = [self enumerateAllContacts];
+}
+
++ (NSArray *)sortedSectionKeys:(NSArray *)sectionKeys {
+    return [sectionKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSString *s1 = obj1, *s2 = obj2;
+        if ([s1 isEqualToString:MAVESuggestedInvitesTableDataKey]) {
+            return NSOrderedAscending;
+        }
+        if ([s2 isEqualToString:MAVESuggestedInvitesTableDataKey]) {
+            return NSOrderedDescending;
+        }
+        if ([s1 isEqualToString:MAVENonAlphabetNamesTableDataKey]) {
+            return NSOrderedDescending;
+        }
+        if ([s2 isEqualToString:MAVENonAlphabetNamesTableDataKey]) {
+            return NSOrderedAscending;
+        }
+        return [s1 localizedCaseInsensitiveCompare:s2];
+    }];
 }
 
 - (NSArray *)enumerateAllContacts {

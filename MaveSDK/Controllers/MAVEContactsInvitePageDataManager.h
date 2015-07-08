@@ -14,6 +14,7 @@
 #import "MAVEABPerson.h"
 
 extern NSString * const MAVESuggestedInvitesTableDataKey;
+extern NSString * const MAVENonAlphabetNamesTableDataKey;
 
 @interface MAVEContactsInvitePageDataManager : NSObject
 
@@ -24,6 +25,7 @@ extern NSString * const MAVESuggestedInvitesTableDataKey;
 @property (nonatomic, strong) NSArray *searchTableData;
 
 - (NSArray *)sectionIndexesForMainTable;
++ (NSArray *)sortedSectionKeys:(NSArray *)sectionKeys;
 - (NSInteger)numberOfSectionsInMainTable;
 - (NSInteger)numberOfRowsInMainTableSection:(NSUInteger)section;
 
