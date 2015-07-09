@@ -122,15 +122,18 @@ static ABAddressBookRef addressBook;
     MAVEABPerson *person = nil;
     NSString *indexLetter = nil;
     for (NSUInteger i = 0; i < [persons count]; i++) {
-        // person can never be nil or it wouldn't have been inserted into array
+        // person can never be nil or it couldn't have been inserted into array
         person = persons[i];
-        // person firstLetter can never be nil since you can't create a person
-        // with no first or last name
-
         indexLetter = [person firstLetter];
+        // index letter shouldn't be nil but so as not to crash, just skip it if it is
+        if (!indexLetter || [indexLetter length] == 0) {
+            continue;
+        }
+        // Replace any non-letters with the non-alphabet section key
         if (![[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[indexLetter characterAtIndex:0]]) {
             indexLetter = MAVENonAlphabetNamesTableDataKey;
         }
+        // we want a dict of arrays, if value is nil setup an empty mutable array
         if ([result objectForKey:indexLetter] == nil) {
             [result setValue:[[NSMutableArray alloc] init] forKey:indexLetter];
         }

@@ -136,11 +136,13 @@
     // we should favor gmail over unkown domains as a simple proxy for personal email
     // vs work or school email address
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    p0.firstName = @"A";
     MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
     MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
     p0.emailObjects = @[email00, email01];
 
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    p1.firstName = @"B";
     MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
     p1.phoneObjects = @[phone1];
     MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
@@ -167,13 +169,13 @@
 
     // we should favor gmail over unkown domains as a simple proxy for personal email
     // vs work or school email address
-    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.firstName = @"A";
     MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
     email00.selected = YES;
     MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"bar@gmail.com"];
     p0.emailObjects = @[email00, email01];
 
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.firstName = @"B";
     MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
     phone1.selected = YES;
     p1.phoneObjects = @[phone1];
@@ -206,7 +208,7 @@
     MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
     [controller viewDidLoad];
 
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
+    MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.firstName = @"A";
     MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
     p1.phoneObjects = @[phone1];
     MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
