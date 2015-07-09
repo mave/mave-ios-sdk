@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.7.4
+- Allow typing in a new email or phone number in the search bar (invite page v3 only currently)
+- Fix address book grouping into sections so all names starting with non-letters get grouped into the same section at the end
+
 ### v0.7.3
 - Fix a race condition when fetching suggested contacts very soon after doing an initial contact sync.
 - Address an issue with empty space above the table content in some conditions on v1 invite page.
