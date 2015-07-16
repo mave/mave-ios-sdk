@@ -664,4 +664,15 @@
     XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
 }
 
+- (void)testSetupShareTokenDoesNothingIfShareTokenBuilderAlreadyExists {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVERemoteObjectBuilder *emptyBuilder = [[MAVERemoteObjectBuilder alloc] init];
+    [MaveSDK sharedInstance].shareTokenBuilder = emptyBuilder;
+
+    [MAVESharer setupShareToken];
+
+    XCTAssertEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, emptyBuilder);
+}
+
 @end

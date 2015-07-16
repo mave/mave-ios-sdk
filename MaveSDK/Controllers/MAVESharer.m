@@ -276,11 +276,17 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 + (void)setupShareToken {
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    // No need to set up if it already exists
+    if ([MaveSDK sharedInstance].shareTokenBuilder) {
+        return;
+    }
+
     // No need to set up if we're not using Mave links, aka wrapping links
     if (!user.wrapInviteLink) {
         return;
     }
 
+    MAVEDebugLog(@"Setting up share token");
     NSDictionary *linkDetails = [user serializeLinkDetails];
     NSDictionary *storedLinkDetails = nil;
 
