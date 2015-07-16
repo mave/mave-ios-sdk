@@ -104,6 +104,12 @@ NSString * const MAVEUserDataKeyPromoCode = @"promo_code";
     return (NSDictionary *)output;
 }
 
+- (NSDictionary *)serializeLinkDetails {
+    id linkDestination = self.inviteLinkDestinationURL ? self.inviteLinkDestinationURL : [NSNull null];
+    id customData = self.customData ? self.customData : @{};
+    return @{@"link_destination": linkDestination, @"wrap_invite_link": @(self.wrapInviteLink), @"custom_data": customData};
+}
+
 - (NSString *)fullName {
     NSString *output = self.firstName;
     if (self.lastName) {

@@ -180,6 +180,30 @@
     XCTAssertEqualObjects([ud toDictionaryIDOnly], expected);
 }
 
+- (void)testSerializeLinkDetailsWhenSet {
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
+    user.inviteLinkDestinationURL = @"https://example.com/blah";
+    user.wrapInviteLink = YES;
+    user.customData = @{@"foo": @"bar"};
+
+    NSDictionary *linkDetails = [user serializeLinkDetails];
+    XCTAssertEqual([linkDetails count], 3);
+    XCTAssertEqualObjects(linkDetails[@"link_destination"], @"https://example.com/blah");
+    XCTAssertEqualObjects(linkDetails[@"custom_data"], @{@"foo": @"bar"});
+    XCTAssertEqualObjects(linkDetails[@"wrap_invite_link"], @YES);
+}
+
+- (void)testSerializeLinkDetailsEmpty {
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
+    NSDictionary *linkDetails = [user serializeLinkDetails];
+    XCTAssertEqual([linkDetails count], 3);
+    XCTAssertEqualObjects(linkDetails[@"link_destination"], [NSNull null]);
+    XCTAssertEqualObjects(linkDetails[@"custom_data"], @{});
+    XCTAssertEqualObjects(linkDetails[@"wrap_invite_link"], @YES);
+    MAVEUserData *otherUser = [[MAVEUserData alloc] initWithUserID:@"2" firstName:@"blah" lastName:nil];
+    XCTAssertEqualObjects(linkDetails, [otherUser serializeLinkDetails]);
+}
+
 - (void)testFullName {
     MAVEUserData *ud = [[MAVEUserData alloc] init];
     ud.firstName = @"Foo";

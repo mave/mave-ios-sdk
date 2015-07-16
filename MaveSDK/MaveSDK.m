@@ -56,7 +56,6 @@ static dispatch_once_t sharedInstanceonceToken;
         [sharedInstance.APIInterface trackAppOpenFetchingReferringDataWithPromise:sharedInstance.referringDataBuilder.promise];
 
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
-        sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
         sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
 
 

@@ -590,17 +590,19 @@
     OCMVerifyAll(mock);
 }
 
-- (void)testGetNewShareToken {
+- (void)testNewShareTokenWithDetails {
     MAVEHTTPCompletionBlock myBlock = ^(NSError *error, NSDictionary *data){};
+    NSDictionary *details = @{@"link_destination": @"http://example.com",
+                              @"custom_data": @{}};
 
     id mock = OCMPartialMock(self.testAPIInterface);
     OCMExpect([mock sendIdentifiedJSONRequestWithRoute:@"/remote_configuration/universal/share_token"
-                                            methodName:@"GET"
-                                                params:nil
+                                            methodName:@"POST"
+                                                params:details
                                           extraHeaders:nil
                                       gzipCompressBody:NO
                                        completionBlock:myBlock];
-    [self.testAPIInterface getNewShareTokenWithCompletionBlock:myBlock]);
+    [self.testAPIInterface newShareTokenWithDetails:details completionBlock:myBlock]);
     OCMVerifyAll(mock);
 }
 

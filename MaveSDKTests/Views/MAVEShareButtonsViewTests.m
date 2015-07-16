@@ -58,6 +58,15 @@
     XCTAssertEqualObjects(view.backgroundColor, backgroundColor);
 }
 
+- (void)testInitSetsUpShareToken {
+    id sharerMock = OCMClassMock([MAVESharer class]);
+
+    id obj = [[MAVEShareButtonsView alloc] init];
+
+    OCMVerify([sharerMock setupShareToken]);
+    XCTAssertNotNil(obj);
+}
+
 #pragma mark - Test Share Actions
 
 - (void)testAfterShareActionsDismissAfterShare {

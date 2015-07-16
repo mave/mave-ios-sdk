@@ -42,6 +42,7 @@ extern NSString * const MAVEUserDefaultsKeyAppDeviceID;
 
 // Key where we cache the user data set by the application
 extern NSString *const MAVEUserDefaultsKeyUserData;
+extern NSString *const MAVEUserDefaultsKeyLinkDetails;
 
 // Server response cache user defaults
 extern NSString * const MAVEUserDefaultsKeyRemoteConfiguration;

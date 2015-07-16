@@ -472,16 +472,58 @@
 
 #pragma mark - Helpers for building share content
 - (void)testShareToken {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEShareToken *tokenObj = [[MAVEShareToken alloc] init];
     tokenObj.shareToken = @"blahasdf";
-
-    id mock = OCMPartialMock([MaveSDK sharedInstance].shareTokenBuilder);
+    id mock = OCMClassMock([MAVERemoteObjectBuilder class]);
+    [MaveSDK sharedInstance].shareTokenBuilder = mock;
     OCMExpect([mock createObjectSynchronousWithTimeout:0]).andReturn(tokenObj);
+
     NSString *token = [MAVESharer shareToken];
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(token, @"blahasdf");
 }
 
+- (void)testShareTokenNilWhenBuilderIsNil {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK sharedInstance].shareTokenBuilder = nil;
+
+    NSString *shareToken = [MAVESharer shareToken];
+    XCTAssertNil(shareToken);
+}
+
+- (void)testShareLinkBaseURLWhenCustom {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
+    config.customSharePage.inviteLinkDomain = @"foo.example.com";
+
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    NSString *url = [MAVESharer shareLinkBaseURL];
+    XCTAssertEqualObjects(url, @"http://foo.example.com/");
+    OCMVerifyAll(maveMock);
+}
+
+- (void)testShareLinkBaseURLWhenUsingDefault {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
+    config.customSharePage.inviteLinkDomain = nil;
+
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    NSString *url = [MAVESharer shareLinkBaseURL];
+    XCTAssertEqualObjects(url, MAVEShortLinkBaseURL);
+    XCTAssertEqualObjects(url, @"test-appjoin-us/");
+    OCMVerifyAll(maveMock);
+}
 
 - (void)testBuildShareLink {
     NSString *expectedLink = [NSString stringWithFormat:@"%@d/blahtok", MAVEShortLinkBaseURL];
@@ -490,6 +532,28 @@
     OCMStub([mock shareToken]).andReturn(@"blahtok");
     NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"d"];
     XCTAssertEqualObjects(link, expectedLink);
+}
+
+- (void)testBuildShareLinkWhenUsingMaveLinksWithCustomDomain {
+    NSString *expectedLink = @"http://foo.example.com/d/blahtok2";
+    MAVESharer *sharer = [[MAVESharer alloc] init];
+    id mock = OCMPartialMock(sharer);
+    OCMStub([mock shareToken]).andReturn(@"blahtok2");
+    OCMStub([mock shareLinkBaseURL]).andReturn(@"http://foo.example.com/");
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"d"];
+    XCTAssertEqualObjects(link, expectedLink);
+}
+
+- (void)testBuildLinkWhenNotUsingMaveLinks {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
+    user.inviteLinkDestinationURL = @"http://example.com/abcd";
+    user.wrapInviteLink = NO;
+    [MaveSDK sharedInstance].userData = user;
+
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"a"];
+    XCTAssertEqualObjects(link, @"http://example.com/abcd");
 }
 
 - (void)testBuildShareLinkWhenNoShareToken {
@@ -558,6 +622,100 @@
     
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(text, expectedText);
+}
+
+#pragma mark - Tests for setup share token
+- (void)testSetupShareTokenStoresLinkDetailsAndSetsUpShareTokenBuilder {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
+    user.inviteLinkDestinationURL = @"https://example.com/1";
+    user.wrapInviteLink = YES;
+    [MaveSDK sharedInstance].userData = user;
+
+    id maveShareToken = OCMClassMock([MAVEShareToken class]);
+    id someObj = [[NSObject alloc] init];
+    OCMExpect([maveShareToken remoteBuilder]).andReturn(someObj);
+
+    // run method under test
+    [MAVESharer setupShareToken];
+
+    NSData *_ldData = [[NSUserDefaults standardUserDefaults] objectForKey:MAVEUserDefaultsKeyLinkDetails];
+    XCTAssertNotNil(_ldData);
+    NSDictionary *storedLinkDetails = [NSJSONSerialization JSONObjectWithData:_ldData options:0 error:nil];
+    XCTAssertNotNil(storedLinkDetails);
+    XCTAssertEqualObjects([user serializeLinkDetails], storedLinkDetails);
+
+    XCTAssertEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, someObj);
+    OCMVerifyAll(maveShareToken);
+}
+
+- (void)testSetupShareTokenClearsExistingShareTokenIfDetailsDifferent {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:@"foobar" forKey:MAVEUserDefaultsKeyShareToken];
+    [defaults setObject:[NSJSONSerialization dataWithJSONObject:@{} options:0 error:nil] forKey:MAVEUserDefaultsKeyLinkDetails];
+
+    id maveShareToken = OCMClassMock([MAVEShareToken class]);
+    OCMStub([maveShareToken remoteBuilder]);
+
+    // run method under test
+    [MAVESharer setupShareToken];
+
+    NSString *storedToken = [defaults objectForKey:MAVEUserDefaultsKeyShareToken];
+    XCTAssertNil(storedToken);
+}
+
+- (void)testSetupShareTokenDoesntClearExistingShareTokenIfDetailsSame {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+
+    // Manually store the link details for the current user object,
+    // then when the setup share token method looks up the stored linke
+    // details they won't have changed so it won't clear share token user defaults
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Danny" lastName:@"Foo"];
+    user.wrapInviteLink = YES;
+    user.inviteLinkDestinationURL = @"https://example.com/bar";
+    user.customData = @{@"foo": @"bar"};
+    [MaveSDK sharedInstance].userData = user;
+    [defaults setObject:[NSJSONSerialization dataWithJSONObject:[user serializeLinkDetails] options:0 error:nil] forKey:MAVEUserDefaultsKeyLinkDetails];
+    [defaults setObject:@"foobar8127" forKey:MAVEUserDefaultsKeyShareToken];
+
+    id maveShareToken = OCMClassMock([MAVEShareToken class]);
+    OCMStub([maveShareToken remoteBuilder]);
+
+    // run method under test
+    [MAVESharer setupShareToken];
+
+    NSString *storedToken = [defaults objectForKey:MAVEUserDefaultsKeyShareToken];
+    XCTAssertNotNil(storedToken);
+    XCTAssertEqualObjects(storedToken, @"foobar8127");
+}
+
+- (void)testSetupShareTokenDoesNothingIfNotUsingMaveLinks {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
+    user.inviteLinkDestinationURL = @"https://example.com/1";
+    user.wrapInviteLink = NO;
+    [MaveSDK sharedInstance].userData = user;
+
+    [MAVESharer setupShareToken];
+
+    XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
+}
+
+- (void)testSetupShareTokenDoesNothingIfShareTokenBuilderAlreadyExists {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVERemoteObjectBuilder *emptyBuilder = [[MAVERemoteObjectBuilder alloc] init];
+    [MaveSDK sharedInstance].shareTokenBuilder = emptyBuilder;
+
+    [MAVESharer setupShareToken];
+
+    XCTAssertEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, emptyBuilder);
 }
 
 @end

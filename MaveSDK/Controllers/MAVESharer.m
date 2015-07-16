@@ -45,14 +45,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     ownInstance.completionBlockClientSMS = completionBlock;
 
     MFMessageComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMessageComposeViewController];
-    MAVEUserData *maveUser = [MaveSDK sharedInstance].userData;
-    NSString *message;
-    if ( maveUser.inviteLinkDestinationURL && !maveUser.wrapInviteLink ) {
-        // If the inviteLinkDestinationURL is set, and the link should NOT be wrapped, pass the raw inviteLinkDestinationURL to the SMS VC
-        message = [[ownInstance.remoteConfiguration.clientSMS.text stringByAppendingString:@" "] stringByAppendingString:maveUser.inviteLinkDestinationURL];
-    } else {
-        message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
-    }
+    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
 
     composeVC.messageComposeDelegate = ownInstance;
     composeVC.body = message;
@@ -238,7 +231,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 + (NSString *)shareToken {
     MAVEShareToken *tokenObject = [[MaveSDK sharedInstance].shareTokenBuilder createObjectSynchronousWithTimeout:0];
-    return tokenObject.shareToken;}
+    return tokenObject.shareToken;
+}
 
 + (NSString *)shareCopyFromCopy:(NSString *)shareCopy
       andLinkWithSubRouteLetter:(NSString *)letter {
@@ -257,20 +251,82 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return outputText;
 }
 
++ (NSString *)shareLinkBaseURL {
+    NSString *inviteLinkDomain = [MaveSDK sharedInstance].remoteConfiguration.customSharePage.inviteLinkDomain;
+    if (inviteLinkDomain) {
+        return [NSString stringWithFormat:@"http://%@/", inviteLinkDomain];
+    } else {
+        return MAVEShortLinkBaseURL;
+    }
+}
+
 + (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    if (user.inviteLinkDestinationURL && !user.wrapInviteLink) {
+        return user.inviteLinkDestinationURL;
+    }
+
     NSString *shareToken = [[self class] shareToken];
+    NSString *baseURL = [self shareLinkBaseURL];
     NSString *output;// = MAVEShortLinkBaseURL;
 
     if ([shareToken length] > 0) {
         NSString *shareToken = [[self class] shareToken];
         output = [NSString stringWithFormat:@"%@%@/%@",
-                  MAVEShortLinkBaseURL, subRoute, shareToken];
+                  baseURL, subRoute, shareToken];
     } else {
         NSString * base64AppID = [MAVEClientPropertyUtils urlSafeBase64ApplicationID];
         output = [NSString stringWithFormat:@"%@o/%@/%@",
-                  MAVEShortLinkBaseURL, subRoute, base64AppID];
+                  baseURL, subRoute, base64AppID];
     }
     return output;
+}
+
++ (void)setupShareToken {
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    // No need to set up if it already exists
+    if ([MaveSDK sharedInstance].shareTokenBuilder) {
+        return;
+    }
+
+    // No need to set up if we're not using Mave links, aka wrapping links
+    if (!user.wrapInviteLink) {
+        return;
+    }
+
+    MAVEDebugLog(@"Setting up share token");
+    NSDictionary *linkDetails = [user serializeLinkDetails];
+    NSDictionary *storedLinkDetails = nil;
+
+    // try to load stored link details
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *_storedLDData = [userDefaults objectForKey:MAVEUserDefaultsKeyLinkDetails];
+    if (_storedLDData) {
+        NSError *loadError = nil;
+        NSDictionary *tmp = [NSJSONSerialization JSONObjectWithData:_storedLDData options:0 error:&loadError];
+        if (loadError) {
+            MAVEErrorLog(@"Error reading link details from disk");
+        } else {
+            storedLinkDetails = tmp;
+        }
+    }
+
+    // Need a new share token if the link details have changed
+    if (![linkDetails isEqualToDictionary:storedLinkDetails]) {
+        [MAVEShareToken clearUserDefaults];
+    }
+    [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
+
+    // serialize & store new link details
+    NSError *storeError = nil;
+    NSData *_ldData = [NSJSONSerialization dataWithJSONObject:linkDetails options:0 error:&storeError];
+    if (storeError) {
+        MAVEErrorLog(@"Error serializing link details to JSON to store");
+    } else {
+        [userDefaults setObject:_ldData forKey:MAVEUserDefaultsKeyLinkDetails];
+    }
+
+
 }
 
 + (void)resetShareToken {

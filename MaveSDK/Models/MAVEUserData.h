@@ -59,6 +59,9 @@ extern NSString * const MAVEUserDataKeyUserID;
 // Serializes only the userID field to a dictionary
 - (NSDictionary *)toDictionaryIDOnly;
 
+// Methods for serializing link details to store/send to server
+- (NSDictionary *)serializeLinkDetails;
+
 // Convenience Methods
 - (NSString *)fullName;
 

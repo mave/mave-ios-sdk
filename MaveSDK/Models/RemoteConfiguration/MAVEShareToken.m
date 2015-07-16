@@ -28,8 +28,9 @@ NSString * const MAVEShareTokenKeyShareToken = @"share_token";
 + (MAVERemoteObjectBuilder *)remoteBuilder {
     return [[MAVERemoteObjectBuilder alloc] initWithClassToCreate:[self class]
             preFetchBlock:^(MAVEPromise *promise) {
+                NSDictionary *linkDetails = [[MaveSDK sharedInstance].userData serializeLinkDetails];
                 [[MaveSDK sharedInstance].APIInterface
-                getNewShareTokenWithCompletionBlock:^(NSError *error, NSDictionary *responseData) {
+                newShareTokenWithDetails:linkDetails completionBlock:^(NSError *error, NSDictionary *responseData) {
                     if (error) {
                         [promise rejectPromise];
                     } else {
