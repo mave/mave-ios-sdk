@@ -32,7 +32,7 @@
     NSDictionary *defaults = [MAVERemoteConfigurationCustomSharePage defaultJSONData];
 
     XCTAssertTrue([[defaults objectForKey:@"enabled"] boolValue]);
-    XCTAssertEqualObjects([defaults objectForKey:@"invite_link_domain"], [NSNull null]);
+    XCTAssertEqualObjects([defaults objectForKey:@"invite_link_base_url"], [NSNull null]);
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
 
@@ -48,17 +48,17 @@
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertEqualObjects(obj.explanationCopy,
                           @"Share DemoApp with friends");
-    XCTAssertEqualObjects(obj.inviteLinkDomain, nil);
+    XCTAssertEqualObjects(obj.inviteLinkBaseURL, nil);
 }
 
 - (void)testInviteConfigWithInviteLinkDomain {
     NSString *domain = @"https://example.com";
     NSMutableDictionary *opts = [[NSMutableDictionary alloc] init];
     [opts addEntriesFromDictionary:[MAVERemoteConfigurationCustomSharePage defaultJSONData]];
-    [opts setObject:domain forKey:@"invite_link_domain"];
+    [opts setObject:domain forKey:@"invite_link_base_url"];
 
     MAVERemoteConfigurationCustomSharePage *config = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:opts];
-    XCTAssertEqualObjects(config.inviteLinkDomain, domain);
+    XCTAssertEqualObjects(config.inviteLinkBaseURL, domain);
 }
 
 - (void)testExplanationCopyInterpolatesTemplate {

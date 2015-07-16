@@ -499,7 +499,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
     config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
-    config.customSharePage.inviteLinkDomain = @"foo.example.com";
+    config.customSharePage.inviteLinkBaseURL = @"http://foo.example.com";
 
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     OCMExpect([maveMock remoteConfiguration]).andReturn(config);
@@ -514,7 +514,7 @@
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
     config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
-    config.customSharePage.inviteLinkDomain = nil;
+    config.customSharePage.inviteLinkBaseURL = nil;
 
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     OCMExpect([maveMock remoteConfiguration]).andReturn(config);

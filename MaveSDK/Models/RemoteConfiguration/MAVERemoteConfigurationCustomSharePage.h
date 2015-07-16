@@ -14,7 +14,7 @@
 @property (nonatomic) BOOL enabled;
 @property (nonatomic, copy) NSString *templateID;
 @property (nonatomic, copy) NSString *explanationCopyTemplate;
-@property (nonatomic, copy) NSString *inviteLinkDomain;
+@property (nonatomic, copy) NSString *inviteLinkBaseURL;
 - (NSString *)explanationCopy;
 
 + (NSDictionary *)defaultJSONData;

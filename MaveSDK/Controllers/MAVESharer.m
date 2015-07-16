@@ -252,9 +252,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 }
 
 + (NSString *)shareLinkBaseURL {
-    NSString *inviteLinkDomain = [MaveSDK sharedInstance].remoteConfiguration.customSharePage.inviteLinkDomain;
+    NSString *inviteLinkDomain = [MaveSDK sharedInstance].remoteConfiguration.customSharePage.inviteLinkBaseURL;
     if (inviteLinkDomain) {
-        return [NSString stringWithFormat:@"http://%@/", inviteLinkDomain];
+        return [inviteLinkDomain stringByAppendingString:@"/"];
     } else {
         return MAVEShortLinkBaseURL;
     }
