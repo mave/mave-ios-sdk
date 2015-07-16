@@ -471,6 +471,10 @@
 }
 
 #pragma mark - Helpers for building share content
+- (void)testRemoteConfiguration {
+
+}
+
 - (void)testShareToken {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
@@ -494,6 +498,36 @@
     XCTAssertNil(shareToken);
 }
 
+- (void)testShareLinkBaseURLWhenCustom {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
+    config.customSharePage.inviteLinkDomain = @"foo.example.com";
+
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    NSString *url = [MAVESharer shareLinkBaseURL];
+    XCTAssertEqualObjects(url, @"http://foo.example.com/");
+    OCMVerifyAll(maveMock);
+}
+
+- (void)testShareLinkBaseURLWhenUsingDefault {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
+    config.customSharePage.inviteLinkDomain = nil;
+
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMExpect([maveMock remoteConfiguration]).andReturn(config);
+
+    NSString *url = [MAVESharer shareLinkBaseURL];
+    XCTAssertEqualObjects(url, MAVEShortLinkBaseURL);
+    XCTAssertEqualObjects(url, @"test-appjoin-us/");
+    OCMVerifyAll(maveMock);
+}
 
 - (void)testBuildShareLink {
     NSString *expectedLink = [NSString stringWithFormat:@"%@d/blahtok", MAVEShortLinkBaseURL];
@@ -504,12 +538,26 @@
     XCTAssertEqualObjects(link, expectedLink);
 }
 
-- (void)testBuildLinkWhenUsingInviteDestinationLinks {
+- (void)testBuildShareLinkWhenUsingMaveLinksWithCustomDomain {
+    NSString *expectedLink = @"http://foo.example.com/d/blahtok2";
+    MAVESharer *sharer = [[MAVESharer alloc] init];
+    id mock = OCMPartialMock(sharer);
+    OCMStub([mock shareToken]).andReturn(@"blahtok2");
+    OCMStub([mock shareLinkBaseURL]).andReturn(@"http://foo.example.com/");
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"d"];
+    XCTAssertEqualObjects(link, expectedLink);
+}
+
+- (void)testBuildLinkWhenNotUsingMaveLinks {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
     user.inviteLinkDestinationURL = @"http://example.com/abcd";
     user.wrapInviteLink = NO;
+    [MaveSDK sharedInstance].userData = user;
+
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"a"];
+    XCTAssertEqualObjects(link, @"http://example.com/abcd");
 }
 
 - (void)testBuildShareLinkWhenNoShareToken {

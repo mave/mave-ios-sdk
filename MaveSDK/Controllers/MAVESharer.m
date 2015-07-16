@@ -258,18 +258,33 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return outputText;
 }
 
++ (NSString *)shareLinkBaseURL {
+    NSString *inviteLinkDomain = [MaveSDK sharedInstance].remoteConfiguration.customSharePage.inviteLinkDomain;
+    if (inviteLinkDomain) {
+        return [NSString stringWithFormat:@"http://%@/", inviteLinkDomain];
+    } else {
+        return MAVEShortLinkBaseURL;
+    }
+}
+
 + (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute {
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    if (user.inviteLinkDestinationURL && !user.wrapInviteLink) {
+        return user.inviteLinkDestinationURL;
+    }
+
     NSString *shareToken = [[self class] shareToken];
+    NSString *baseURL = [self shareLinkBaseURL];
     NSString *output;// = MAVEShortLinkBaseURL;
 
     if ([shareToken length] > 0) {
         NSString *shareToken = [[self class] shareToken];
         output = [NSString stringWithFormat:@"%@%@/%@",
-                  MAVEShortLinkBaseURL, subRoute, shareToken];
+                  baseURL, subRoute, shareToken];
     } else {
         NSString * base64AppID = [MAVEClientPropertyUtils urlSafeBase64ApplicationID];
         output = [NSString stringWithFormat:@"%@o/%@/%@",
-                  MAVEShortLinkBaseURL, subRoute, base64AppID];
+                  baseURL, subRoute, base64AppID];
     }
     return output;
 }
