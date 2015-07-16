@@ -14,6 +14,7 @@ const NSString *MAVERemoteConfigKeyCustomSharePageEnabled = @"enabled";
 const NSString *MAVERemoteConfigKeyCustomSharePageTemplate = @"template";
 const NSString *MAVERemoteConfigKeyCustomSharePageTemplateID = @"template_id";
 const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanation_copy_template";
+const NSString *MAVERemoteConfigKeyCustomSharePageInviteLinkDomain = @"invite_link_domain";
 
 @implementation MAVERemoteConfigurationCustomSharePage
 
@@ -25,6 +26,11 @@ const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanatio
             return nil;
         }
         self.enabled = [enabledValue boolValue];
+
+        NSString *inviteLinkDomain = [data objectForKey:MAVERemoteConfigKeyCustomSharePageInviteLinkDomain];
+        if (inviteLinkDomain && inviteLinkDomain != (id)[NSNull null]) {
+            self.inviteLinkDomain = inviteLinkDomain;
+        }
 
         // Template values, only care about if enabled is true
         if (self.enabled) {
@@ -55,6 +61,7 @@ const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanatio
     NSString *explanation = [NSString stringWithFormat:@"Share %@ with friends",
                              [MAVEClientPropertyUtils appName]];
     return @{MAVERemoteConfigKeyCustomSharePageEnabled: @YES,
+             MAVERemoteConfigKeyCustomSharePageInviteLinkDomain: [NSNull null],
              MAVERemoteConfigKeyCustomSharePageTemplate: @{
                  MAVERemoteConfigKeyCustomSharePageTemplateID: @"0",
                  MAVERemoteConfigKeyCustomSharePageExplanationCopy: explanation,
