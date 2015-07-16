@@ -482,6 +482,15 @@
     XCTAssertEqualObjects(token, @"blahasdf");
 }
 
+- (void)testShareTokenNilWhenBuilderIsNil {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK sharedInstance].shareTokenBuilder = nil;
+
+    NSString *shareToken = [MAVESharer shareToken];
+    XCTAssertNil(shareToken);
+}
+
 
 - (void)testBuildShareLink {
     NSString *expectedLink = [NSString stringWithFormat:@"%@d/blahtok", MAVEShortLinkBaseURL];
@@ -490,6 +499,14 @@
     OCMStub([mock shareToken]).andReturn(@"blahtok");
     NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"d"];
     XCTAssertEqualObjects(link, expectedLink);
+}
+
+- (void)testBuildLinkWhenUsingInviteDestinationLinks {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
+    user.inviteLinkDestinationURL = @"http://example.com/abcd";
+    user.wrapInviteLink = NO;
 }
 
 - (void)testBuildShareLinkWhenNoShareToken {
