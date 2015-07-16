@@ -274,7 +274,45 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return output;
 }
 
-+ (void)setupShareTokenForUser:(MAVEUserData *)user {
++ (void)setupShareToken {
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    // No need to set up if we're not using Mave links, aka wrapping links
+    if (!user.wrapInviteLink) {
+        return;
+    }
+
+    NSDictionary *linkDetails = [user serializeLinkDetails];
+    NSDictionary *storedLinkDetails = nil;
+
+    // try to load stored link details
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *_storedLDData = [userDefaults objectForKey:MAVEUserDefaultsKeyLinkDetails];
+    if (_storedLDData) {
+        NSError *loadError = nil;
+        NSDictionary *tmp = [NSJSONSerialization JSONObjectWithData:_storedLDData options:0 error:&loadError];
+        if (loadError) {
+            MAVEErrorLog(@"Error reading link details from disk");
+        } else {
+            storedLinkDetails = tmp;
+        }
+    }
+
+    // Need a new share token if the link details are wrong
+    if (![linkDetails isEqualToDictionary:storedLinkDetails]) {
+        [MAVEShareToken clearUserDefaults];
+    }
+    [MaveSDK sharedInstance].shareTokenBuilder = [MAVEShareToken remoteBuilder];
+
+    // serialize & store new link details
+    NSError *storeError = nil;
+    NSData *_ldData = [NSJSONSerialization dataWithJSONObject:linkDetails options:0 error:&storeError];
+    if (storeError) {
+        MAVEErrorLog(@"Error serializing link details to JSON to store");
+    } else {
+        [userDefaults setObject:_ldData forKey:MAVEUserDefaultsKeyLinkDetails];
+    }
+
+
 }
 
 + (void)resetShareToken {

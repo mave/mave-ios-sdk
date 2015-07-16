@@ -577,4 +577,88 @@
     XCTAssertEqualObjects(text, expectedText);
 }
 
+#pragma mark - Tests for setup share token
+- (void)testSetupShareTokenStoresLinkDetailsAndSetsUpShareTokenBuilder {
+//UsesNewTokenIfLinkDetailsChanged {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
+    user.inviteLinkDestinationURL = @"https://example.com/1";
+    user.wrapInviteLink = YES;
+    [MaveSDK sharedInstance].userData = user;
+
+    id maveShareToken = OCMClassMock([MAVEShareToken class]);
+    id someObj = [[NSObject alloc] init];
+    OCMExpect([maveShareToken remoteBuilder]).andReturn(someObj);
+
+    // run method under test
+    [MAVESharer setupShareToken];
+
+    NSData *_ldData = [[NSUserDefaults standardUserDefaults] objectForKey:MAVEUserDefaultsKeyLinkDetails];
+    XCTAssertNotNil(_ldData);
+    NSDictionary *storedLinkDetails = [NSJSONSerialization JSONObjectWithData:_ldData options:0 error:nil];
+    XCTAssertNotNil(storedLinkDetails);
+    XCTAssertEqualObjects([user serializeLinkDetails], storedLinkDetails);
+
+    XCTAssertEqualObjects([MaveSDK sharedInstance].shareTokenBuilder, someObj);
+    OCMVerifyAll(maveShareToken);
+}
+
+- (void)testSetupShareTokenClearsExistingShareTokenIfDetailsDifferent {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:@"foobar" forKey:MAVEUserDefaultsKeyShareToken];
+    [defaults setObject:[NSJSONSerialization dataWithJSONObject:@{} options:0 error:nil] forKey:MAVEUserDefaultsKeyLinkDetails];
+
+    id maveShareToken = OCMClassMock([MAVEShareToken class]);
+    OCMStub([maveShareToken remoteBuilder]);
+
+    // run method under test
+    [MAVESharer setupShareToken];
+
+    NSString *storedToken = [defaults objectForKey:MAVEUserDefaultsKeyShareToken];
+    XCTAssertNil(storedToken);
+}
+
+- (void)testSetupShareTokenDoesntClearExistingShareTokenIfDetailsSame {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+
+    // Manually store the link details for the current user object,
+    // then when the setup share token method looks up the stored linke
+    // details they won't have changed so it won't clear share token user defaults
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Danny" lastName:@"Foo"];
+    user.wrapInviteLink = YES;
+    user.inviteLinkDestinationURL = @"https://example.com/bar";
+    user.customData = @{@"foo": @"bar"};
+    [MaveSDK sharedInstance].userData = user;
+    [defaults setObject:[NSJSONSerialization dataWithJSONObject:[user serializeLinkDetails] options:0 error:nil] forKey:MAVEUserDefaultsKeyLinkDetails];
+    [defaults setObject:@"foobar8127" forKey:MAVEUserDefaultsKeyShareToken];
+
+    id maveShareToken = OCMClassMock([MAVEShareToken class]);
+    OCMStub([maveShareToken remoteBuilder]);
+
+    // run method under test
+    [MAVESharer setupShareToken];
+
+    NSString *storedToken = [defaults objectForKey:MAVEUserDefaultsKeyShareToken];
+    XCTAssertNotNil(storedToken);
+    XCTAssertEqualObjects(storedToken, @"foobar8127");
+}
+
+- (void)testSetupShareTokenDoesNothingIfNotUsingMaveLinks {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
+    MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
+    user.inviteLinkDestinationURL = @"https://example.com/1";
+    user.wrapInviteLink = NO;
+    [MaveSDK sharedInstance].userData = user;
+
+    [MAVESharer setupShareToken];
+
+    XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
+}
+
 @end

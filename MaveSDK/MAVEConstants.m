@@ -65,10 +65,12 @@ NSString * const MAVEUserDefaultsKeyAppDeviceID = @"MAVEUserDefaultsKeyAppDevice
 
 #ifdef UNIT_TESTING
 NSString * const MAVEUserDefaultsKeyUserData = @"MAVETESTSUserDefaultsKeyUserData";
+NSString * const MAVEUserDefaultsKeyLinkDetails = @"MAVETESTSUserDefaultsKeyLinkDetails";
 NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVETESTSUserDefaultsKeyRemoteConfiguration";
 NSString * const MAVEUserDefaultsKeyShareToken = @"MAVETESTSUserDefaultsKeyShareToken";
 #else
 NSString * const MAVEUserDefaultsKeyUserData = @"MAVEUserDefaultsKeyUserData";
+NSString * const MAVEUserDefaultsKeyLinkDetails = @"MAVEUserDefaultsKeyLinkDetails";
 NSString * const MAVEUserDefaultsKeyRemoteConfiguration = @"MAVEUserDefaultsKeyRemoteConfiguration";
 NSString * const MAVEUserDefaultsKeyShareToken = @"MAVEUserDefaultsKeyShareToken";
 #endif

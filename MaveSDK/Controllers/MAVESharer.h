@@ -50,6 +50,7 @@ extern NSString * const MAVESharePageShareTypeClipboard;
       andLinkWithSubRouteLetter:(NSString *)letter;
 // Build a link of the format: http://appjoin.us/<subRoute>/SHARE-TOKEN
 + (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
++ (void)setupShareToken;
 + (void)resetShareToken;
 
 @end
