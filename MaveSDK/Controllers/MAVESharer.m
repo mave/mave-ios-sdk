@@ -297,7 +297,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
         }
     }
 
-    // Need a new share token if the link details are wrong
+    // Need a new share token if the link details have changed
     if (![linkDetails isEqualToDictionary:storedLinkDetails]) {
         [MAVEShareToken clearUserDefaults];
     }
