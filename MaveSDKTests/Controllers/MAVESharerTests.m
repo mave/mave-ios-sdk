@@ -471,10 +471,6 @@
 }
 
 #pragma mark - Helpers for building share content
-- (void)testRemoteConfiguration {
-
-}
-
 - (void)testShareToken {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
@@ -630,7 +626,6 @@
 
 #pragma mark - Tests for setup share token
 - (void)testSetupShareTokenStoresLinkDetailsAndSetsUpShareTokenBuilder {
-//UsesNewTokenIfLinkDetailsChanged {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
