@@ -49,7 +49,7 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 + (NSString *)shareCopyFromCopy:(NSString *)shareCopy
       andLinkWithSubRouteLetter:(NSString *)letter;
 
-// If using Mave links, build a link of the format: <base url>/<subRoute>/SHARE-TOKEN
+// If using Mave links, build a link of the format: <base url><subRoute>/SHARE-TOKEN
 // Otherwise, just return the 3rd party link
 + (NSString *)shareLinkWithSubRouteLetter:(NSString *)subRoute;
 + (NSString *)shareLinkBaseURL;
