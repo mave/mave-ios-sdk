@@ -351,11 +351,11 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
                              completionBlock:block];
 }
 
-- (void)getNewShareTokenWithCompletionBlock:(MAVEHTTPCompletionBlock)block {
+- (void)newShareTokenWithDetails:(NSDictionary *)details completionBlock:(MAVEHTTPCompletionBlock)block {
     NSString *route = @"/remote_configuration/universal/share_token";
     [self sendIdentifiedJSONRequestWithRoute:route
-                                  methodName:@"GET"
-                                      params:nil
+                                  methodName:@"POST"
+                                      params:details
                                 extraHeaders:nil
                             gzipCompressBody:NO
                              completionBlock:block];
