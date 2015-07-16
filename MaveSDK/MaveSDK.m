@@ -56,7 +56,6 @@ static dispatch_once_t sharedInstanceonceToken;
         [sharedInstance.APIInterface trackAppOpenFetchingReferringDataWithPromise:sharedInstance.referringDataBuilder.promise];
 
         sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
-        sharedInstance.shareTokenBuilder = [MAVEShareToken remoteBuilder];
         sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
 
 
@@ -239,6 +238,7 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 - (void)identifyUser:(MAVEUserData *)userData {
     self.userData = userData;
+    [MAVESharer resetShareToken];
     NSError *validationError = [self validateUserSetup];
     if (validationError == nil) {
         [self.APIInterface identifyUser];

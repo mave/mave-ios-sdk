@@ -274,6 +274,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     return output;
 }
 
++ (void)setupShareTokenForUser:(MAVEUserData *)user {
+}
+
 + (void)resetShareToken {
     MAVEDebugLog(@"Resetting share token after share, was: %@", [[self class] shareToken]);
     [MAVEShareToken clearUserDefaults];

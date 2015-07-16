@@ -57,7 +57,7 @@
     XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.serverSMS.text);
     XCTAssertNotNil(mave.appDeviceID);
     XCTAssertNotNil(mave.remoteConfigurationBuilder);
-    XCTAssertNotNil(mave.shareTokenBuilder);
+    XCTAssertNil(mave.shareTokenBuilder);
     XCTAssertNotNil(mave.addressBookSyncManager);
     XCTAssertNotNil(mave.suggestedInvitesBuilder);
     XCTAssertNotNil(mave.referringDataBuilder);
