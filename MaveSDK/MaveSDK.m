@@ -238,7 +238,6 @@ static dispatch_once_t sharedInstanceonceToken;
 //
 - (void)identifyUser:(MAVEUserData *)userData {
     self.userData = userData;
-    [MAVESharer resetShareToken];
     NSError *validationError = [self validateUserSetup];
     if (validationError == nil) {
         [self.APIInterface identifyUser];

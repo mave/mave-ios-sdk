@@ -472,11 +472,14 @@
 
 #pragma mark - Helpers for building share content
 - (void)testShareToken {
+    [MaveSDK resetSharedInstanceForTesting];
+    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEShareToken *tokenObj = [[MAVEShareToken alloc] init];
     tokenObj.shareToken = @"blahasdf";
-
-    id mock = OCMPartialMock([MaveSDK sharedInstance].shareTokenBuilder);
+    id mock = OCMClassMock([MAVERemoteObjectBuilder class]);
+    [MaveSDK sharedInstance].shareTokenBuilder = mock;
     OCMExpect([mock createObjectSynchronousWithTimeout:0]).andReturn(tokenObj);
+
     NSString *token = [MAVESharer shareToken];
     OCMVerifyAll(mock);
     XCTAssertEqualObjects(token, @"blahasdf");
