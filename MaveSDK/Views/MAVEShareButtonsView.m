@@ -43,6 +43,9 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     self.useSmallIcons = NO;
     self.allowSMSShare = NO;
     self.dismissMaveTopLevelOnSuccessfulShare = NO;
+
+    // setup the share tokens so we have a link to share
+    [MAVESharer setupShareToken];
 }
 
 - (void)layoutSubviews {
