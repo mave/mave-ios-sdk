@@ -31,7 +31,7 @@
 - (void)doInitialSetup {
     self.backgroundColor = [MAVEDisplayOptions colorAppleLightGray];
     self.icon = [[UIImageView alloc] init];
-    UIImage *envelope = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEEnvelope.png" fromBundle:MAVEResourceBundleName];
+    UIImage *envelope = [MAVEBuiltinUIElementUtils imageNamed:@"MAVEAddressBook.png" fromBundle:MAVEResourceBundleName];
     envelope = [MAVEBuiltinUIElementUtils tintWhitesInImage:envelope withColor:[MAVEDisplayOptions colorAppleMediumGray]];
     self.icon.image = envelope;
     self.textLabel = [[UILabel alloc] init];
@@ -65,7 +65,7 @@
                             @"textLabel": self.textLabel,
                             @"checkbox": self.checkbox};
     NSDictionary *metrics = @{@"checkboxRightOffset": @(48)};
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[icon]-10-[textLabel]-(>=10)-[checkbox]-(checkboxRightOffset)-|" options:0 metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[icon]-12-[textLabel]-(>=10)-[checkbox]-(checkboxRightOffset)-|" options:0 metrics:metrics views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
