@@ -31,8 +31,10 @@
     self.aboveTableView = [[UIView alloc] init];
     self.aboveTableView.backgroundColor = [UIColor purpleColor];
     self.searchBar = [[MAVESearchBar alloc] initWithFont:[MAVEDisplayOptions invitePageV3BiggerFont] placeholderTextColor:[MAVEDisplayOptions colorAppleDarkGray] textColor:[MAVEDisplayOptions colorAppleBlack] backgroundColor:[UIColor whiteColor]];
-    self.selectAllEmailsRow = [[MAVEInvitePageSelectAllRow alloc] init];
-    self.selectAllEmailsRow.textLabel.text = @"Select All Emails";
+    self.selectAllRow = [[MAVEInvitePageSelectAllRow alloc] init];
+    self.selectAllRow.textLabel.text = @"Select All Contacts";
+    CGFloat defaultSelectAllRowHeight = [self.selectAllRow intrinsicContentSize].height;
+    self.selectAllRowHeightConstraint = [NSLayoutConstraint constraintWithItem:self.selectAllRow attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:defaultSelectAllRowHeight];
     self.topLayoutConstraint = [NSLayoutConstraint constraintWithItem:self.aboveTableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
 
     self.tableView = [[UITableView alloc] init];
@@ -59,9 +61,9 @@
     self.aboveTableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.aboveTableView];
     self.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
-    self.selectAllEmailsRow.translatesAutoresizingMaskIntoConstraints = NO;
+    self.selectAllRow.translatesAutoresizingMaskIntoConstraints = NO;
     [self.aboveTableView addSubview:self.searchBar];
-    [self.aboveTableView addSubview:self.selectAllEmailsRow];
+    [self.aboveTableView addSubview:self.selectAllRow];
 
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.searchTableView];
@@ -78,9 +80,8 @@
                             @"bigSendButton": self.bigSendButton,
                             @"extraBottomPadding": self.extraBottomPadding,
                             @"searchBar": self.searchBar,
-                            @"selectAllRow": self.selectAllEmailsRow};
-    NSDictionary *metrics = @{@"searchBarHeight": @(MAVESearchBarHeight + 20),
-                              @"bigSendButtonHeight": @(self.bigSendButtonHeightWhenExpanded)};
+                            @"selectAllRow": self.selectAllRow};
+    NSDictionary *metrics = @{@"bigSendButtonHeight": @(self.bigSendButtonHeightWhenExpanded)};
 
     // the constraints that are editable later
     [self addConstraint:self.topLayoutConstraint];
@@ -98,6 +99,7 @@
     [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]-0-[selectAllRow]-0-|" options:0 metrics:metrics views:views]];
     [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchBar]-0-|" options:0 metrics:metrics views:views]];
     [self.aboveTableView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[selectAllRow]-0-|" options:0 metrics:metrics views:views]];
+    [self.aboveTableView addConstraint:self.selectAllRowHeightConstraint];
 }
 
 - (void)updateConstraints {
