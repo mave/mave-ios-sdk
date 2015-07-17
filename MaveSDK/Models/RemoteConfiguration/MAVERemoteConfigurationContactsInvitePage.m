@@ -16,6 +16,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageTemplateID = @"template_id
 NSString * const MAVERemoteConfigKeyContactsInvitePageExplanationCopy = @"explanation_copy_template";
 NSString * const MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons = @"share_buttons_enabled";
 NSString * const MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled = @"suggested_invites_enabled";
+NSString * const MAVERemoteConfigKeyContactsInvitePageSelectAllEnabled = @"select_all_enabled";
 
 NSString * const MAVERemoteConfigKeyContactsInvitePageReusableSuggestedInviteCellSendIcon = @"reusable_suggested_invite_cell_send_icon";
 NSString * const MAVERemoteConfigKeyContactsInvitePageReusableSuggestedInviteCellSendIconAirplane = @"airplane";
@@ -60,6 +61,12 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
             if (suggestedInvitesVal && (id)suggestedInvitesVal != [NSNull null]) {
                 self.suggestedInvitesEnabled = [suggestedInvitesVal boolValue];
             }
+
+            id selectAllVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSelectAllEnabled];
+            if (selectAllVal && (id)selectAllVal != [NSNull null]) {
+                self.selectAllEnabled = [suggestedInvitesVal boolValue];
+            }
+
             NSString *smsSendMethod = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSMSSendMethod];
             if ([smsSendMethod isEqualToString:MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGroup]) {
                 self.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
@@ -91,6 +98,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
             MAVERemoteConfigKeyContactsInvitePageExplanationCopy: [NSNull null],
             MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons: @NO,
             MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled: @NO,
+            MAVERemoteConfigKeyContactsInvitePageSelectAllEnabled: @NO,
             MAVERemoteConfigKeyContactsInvitePageSMSSendMethod: MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide,
             MAVERemoteConfigKeyContactsInvitePageReusableSuggestedInviteCellSendIcon: MAVERemoteConfigKeyContactsInvitePageReusableSuggestedInviteCellSendIconAirplane,
         }

@@ -39,6 +39,7 @@
                    [NSNull null]);
     XCTAssertFalse([[template objectForKey:@"share_buttons_enabled"] boolValue]);
     XCTAssertFalse([[template objectForKey:@"suggested_invites_enabled"] boolValue]);
+    XCTAssertFalse([[template objectForKey:@"select_all_enabled"] boolValue]);
     XCTAssertEqualObjects([template objectForKey:@"sms_invite_send_method"], @"server_side");
     XCTAssertEqualObjects([template objectForKey:@"reusable_suggested_invite_cell_send_icon"], @"airplane");
 }
@@ -52,6 +53,7 @@
     XCTAssertNil(obj.explanationCopy);
     XCTAssertFalse(obj.shareButtonsEnabled);
     XCTAssertFalse(obj.suggestedInvitesEnabled);
+    XCTAssertFalse(obj.selectAllEnabled);
     XCTAssertEqual(obj.smsInviteSendMethod, MAVESMSInviteSendMethodServerSide);
     XCTAssertEqual(obj.reusableSuggestedInviteCellSendIcon, MAVEReusableSuggestedInviteCellSendIconAirplane);
 }
@@ -89,6 +91,7 @@
             @"explanation_copy_template": @"some copy",
             @"share_buttons_enabled": @YES,
             @"suggested_invites_enabled": @YES,
+            @"select_all_enabled": @YES,
             @"reusable_suggested_invite_cell_send_icon": @"personplus",
 
         }
@@ -102,6 +105,7 @@
     XCTAssertEqualObjects(obj.explanationCopy, @"some copy");
     XCTAssertTrue(obj.shareButtonsEnabled);
     XCTAssertTrue(obj.suggestedInvitesEnabled);
+    XCTAssertTrue(obj.selectAllEnabled);
     XCTAssertEqual(obj.reusableSuggestedInviteCellSendIcon, MAVEReusableSuggestedInviteCellSendIconPersonPlus);
 }
 

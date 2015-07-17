@@ -27,6 +27,7 @@ typedef NS_ENUM(NSInteger, MAVEReusableSuggestedInviteCellSendIcon) {
 - (NSString *)explanationCopy;
 @property (nonatomic, assign) BOOL shareButtonsEnabled;
 @property (nonatomic, assign) BOOL suggestedInvitesEnabled;
+@property (nonatomic, assign) BOOL selectAllEnabled;
 @property (nonatomic, assign) MAVESMSInviteSendMethod smsInviteSendMethod;
 @property (nonatomic, assign) MAVEReusableSuggestedInviteCellSendIcon reusableSuggestedInviteCellSendIcon;
 
