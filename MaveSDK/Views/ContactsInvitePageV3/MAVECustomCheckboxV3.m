@@ -35,7 +35,7 @@
     self.layer.cornerRadius = self.widthAndHeight * 0.25;
     self.isChecked = NO;
 
-    self.tintColor = [MaveSDK sharedInstance].displayOptions.invitePageV3TintColor;
+    self.tintColor = [MaveSDK sharedInstance].displayOptions.contactsInvitePageTintColor;
     self.checkmarkImage = [[UIImageView alloc] init];
     UIImage *checkmark = [MAVEBuiltinUIElementUtils imageNamed:@"MAVESimpleCheckmark.png" fromBundle:MAVEResourceBundleName];
     self.checkmarkImage.image = [MAVEBuiltinUIElementUtils tintWhitesInImage:checkmark withColor:[UIColor whiteColor]];

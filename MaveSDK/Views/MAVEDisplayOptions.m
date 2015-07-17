@@ -95,6 +95,11 @@
     return self;
 }
 
+// Leave old setter for backwards comaptibility in 0.7.x versions
+- (void)setInvitePageV3TintColor:(UIColor *)invitePageV3TintColor {
+    _contactsInvitePageTintColor = invitePageV3TintColor;
+}
+
 + (UIColor *)colorAlmostBlack { return [[UIColor alloc] initWithWhite:0.15 alpha:1.0]; }
 + (UIColor *)colorMediumGrey { return [[UIColor alloc] initWithWhite:0.65 alpha:1.0]; }
 + (UIColor *)colorLightGrey { return [[UIColor alloc] initWithWhite:0.70 alpha:1.0]; }

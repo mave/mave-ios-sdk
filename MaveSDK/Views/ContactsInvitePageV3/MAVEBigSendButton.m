@@ -30,7 +30,7 @@
 }
 
 - (void)doInitialSetup {
-    self.backgroundColor = [MaveSDK sharedInstance].displayOptions.invitePageV3TintColor;
+    self.backgroundColor = [MaveSDK sharedInstance].displayOptions.contactsInvitePageTintColor;
     self.contentContainer = [[UIView alloc] init];
     self.contentContainer.userInteractionEnabled = NO;
     self.icon = [[UIImageView alloc] init];

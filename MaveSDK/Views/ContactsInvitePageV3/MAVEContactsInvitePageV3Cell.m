@@ -267,7 +267,7 @@
         if (numberOfReusableRows >= i+1) {
             contactInfoRow = [currentRowsToReuse objectAtIndex:i];
         } else {
-            contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[MaveSDK sharedInstance].displayOptions.invitePageV3TintColor deselectedColor:[MAVEDisplayOptions colorAppleDarkGray]];
+            contactInfoRow = [[MAVECustomContactInfoRowV3 alloc] initWithFont:self.contactInfoFont selectedColor:[MaveSDK sharedInstance].displayOptions.contactsInvitePageTintColor deselectedColor:[MAVEDisplayOptions colorAppleDarkGray]];
             contactInfoRow.translatesAutoresizingMaskIntoConstraints = NO;
             [self.contactInfoContainer addSubview:contactInfoRow];
             [self setConstraintsForContactInfoRow:contactInfoRow rowAbove:previousContactInfoRow];
