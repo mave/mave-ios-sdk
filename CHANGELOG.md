@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.7.6
+- Change "select all emails" to "select all contacts", allowing user in one-click to select all their contacts to invite. There's a flag in the Mave dashboard to turn this off.
+- Make invite page v3 the default.
+
 ### v0.7.5
 - Fix client sms & share links (facebook share, copy link, etc.) so they work as expected with regards to passing custom data through & using the custom link domain if enabled on the Mave dashboard.
 
