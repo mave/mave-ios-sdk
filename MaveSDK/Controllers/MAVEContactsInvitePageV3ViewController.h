@@ -29,7 +29,7 @@
 @property (nonatomic, strong) MAVEContactsInvitePageSearchManager *searchManager;
 
 - (void)updateToReflectPersonSelectedStatus:(MAVEABPerson *)person;
-- (void)selectOrDeselectAllEmails:(BOOL)select;
+- (void)selectOrDeselectAll:(BOOL)select;
 
 // Method to send the invites when clicking the button
 - (void)sendInvitesToSelected;

@@ -34,7 +34,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.wrapperView.searchBar.placeholderText = @"Enter name, phone or email";
     __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
     self.wrapperView.selectAllEmailsRow.selectAllBlock = ^void(BOOL selected) {
-        [weakSelf selectOrDeselectAllEmails:selected];
+        [weakSelf selectOrDeselectAll:selected];
     };
     [self.wrapperView.bigSendButton addTarget:self action:@selector(sendInvitesToSelected) forControlEvents:UIControlEventTouchUpInside];
     self.selectedPeopleIndex = [[NSMutableSet alloc] init];
@@ -150,43 +150,41 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     [self.wrapperView.bigSendButton updateButtonTextNumberToSend:[self.selectedContactIdentifiersIndex count]];
 }
 
-- (void)selectOrDeselectAllEmails:(BOOL)select {
+- (void)selectOrDeselectAll:(BOOL)select {
     if (select) {
         for (MAVEABPerson *person in self.dataManager.allContacts) {
-            if ([person.emailObjects count] == 0) {
+            NSArray *rankedIdentifiers = [person rankedContactIdentifiersIncludeEmails:YES includePhones:YES];
+            if ([rankedIdentifiers count] == 0) {
+                // shouldn't get here, but just in case logic changes elsewhere don't crash
                 continue;
             }
-            MAVEContactEmail *firstEmail = [[person rankedContactIdentifiersIncludeEmails:YES includePhones:NO] objectAtIndex:0];
-            BOOL anyEmailAlreadySelected = NO;
-            for (MAVEContactEmail *email in person.emailObjects) {
-                if (email.selected) { anyEmailAlreadySelected = YES; }
+            MAVEContactIdentifierBase *topRec = [rankedIdentifiers objectAtIndex:0];
+            // if identifier (or multiple identifiers) already selected, just leave them
+            BOOL anyAlreadySelected = NO;
+            for (MAVEContactIdentifierBase *rec in rankedIdentifiers) {
+                if (rec.selected) {
+                    anyAlreadySelected = YES;
+                    break;
+                }
             }
-            if (!anyEmailAlreadySelected) {
-                firstEmail.selected = YES;
+            // only select the top record if nothing else is selected
+            if (!anyAlreadySelected) {
+                topRec.selected = YES;
             }
             person.selected = YES;
             [self updateToReflectPersonSelectedStatus:person];
         }
     } else {
         for (MAVEABPerson *person in [self.selectedPeopleIndex allObjects]) {
-            BOOL anyEmailSelected = NO;
-            for (MAVEContactEmail *email in person.emailObjects) {
-                if (email.selected) {
-                    anyEmailSelected = YES;
-                    email.selected = NO;
+            NSArray *rankedIdentifiers = [person rankedContactIdentifiersIncludeEmails:YES includePhones:YES];
+            // unselect everything, phones and emails
+            for (MAVEContactIdentifierBase *rec in rankedIdentifiers) {
+                if (rec.selected) {
+                    rec.selected = NO;
                 }
             }
-            // Check if any phones were selected. If so, don't deselect the whole person
-            BOOL anyPhoneSelected = NO;
-            for (MAVEContactPhoneNumber *phone in person.phoneObjects) {
-                if (phone.selected) {
-                    anyPhoneSelected = YES;
-                }
-            }
-            if (anyEmailSelected && !anyPhoneSelected) {
-                person.selected = NO;
-                [self updateToReflectPersonSelectedStatus:person];
-            }
+            person.selected = NO;
+            [self updateToReflectPersonSelectedStatus:person];
         }
     }
     // If near top of the page, selecting all
