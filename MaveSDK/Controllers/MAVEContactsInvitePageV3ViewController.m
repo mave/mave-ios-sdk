@@ -33,7 +33,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     self.wrapperView.searchBar.returnKeyType = UIReturnKeyDone;
     self.wrapperView.searchBar.placeholderText = @"Enter name, phone or email";
     __weak MAVEContactsInvitePageV3ViewController *weakSelf = self;
-    self.wrapperView.selectAllEmailsRow.selectAllBlock = ^void(BOOL selected) {
+    self.wrapperView.selectAllRow.selectAllBlock = ^void(BOOL selected) {
         [weakSelf selectOrDeselectAll:selected];
     };
     [self.wrapperView.bigSendButton addTarget:self action:@selector(sendInvitesToSelected) forControlEvents:UIControlEventTouchUpInside];

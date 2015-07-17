@@ -17,7 +17,8 @@
 @property (nonatomic, strong) NSLayoutConstraint *topLayoutConstraint;
 @property (nonatomic, strong) UIView *aboveTableView;
 @property (nonatomic, strong) MAVESearchBar *searchBar;
-@property (nonatomic, strong) MAVEInvitePageSelectAllRow *selectAllEmailsRow;
+@property (nonatomic, strong) MAVEInvitePageSelectAllRow *selectAllRow;
+@property (nonatomic, strong) NSLayoutConstraint *selectAllRowHeightConstraint;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, strong) MAVEBigSendButton *bigSendButton;
