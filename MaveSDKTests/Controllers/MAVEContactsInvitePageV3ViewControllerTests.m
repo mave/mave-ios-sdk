@@ -278,7 +278,7 @@
 //    OCMExpect([apiInterfaceMock sendInvitesToRecipients:people smsCopy:mave.defaultSMSMessageText senderUserID:mave.userData.userID inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL wrapInviteLink:mave.userData.wrapInviteLink customData:mave.userData.customData completionBlock:[OCMArg any]]);
     OCMExpect([apiInterfaceMock sendInvitesToRecipients:[OCMArg any] smsCopy:[OCMArg any] senderUserID:[OCMArg any] inviteLinkDestinationURL:[OCMArg any] wrapInviteLink:YES customData:[OCMArg any] completionBlock:[OCMArg any]]);
 
-    [controller sendInvitesToSelected];
+    [controller sendRemoteInvitesToSelected];
 
     OCMVerifyAll(apiInterfaceMock);
     mave.defaultSMSMessageText = nil;

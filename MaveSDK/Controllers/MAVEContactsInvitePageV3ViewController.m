@@ -340,7 +340,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         if (self.searchManager.useNewNumber) {
             MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:self.searchManager.useNewNumber andLabel:MAVEContactPhoneLabelOther];
             if (phone) {
-                [self sendInviteToAnonymousContactIdentifier:phone successBlock:^{
+                [self sendRemoteInviteToAnonymousContactIdentifier:phone successBlock:^{
                     self.searchManager.didSendToNewNumber = YES;
                     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -352,7 +352,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         } else if (self.searchManager.useNewEmail) {
             MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:self.searchManager.useNewEmail];
             if (email) {
-                [self sendInviteToAnonymousContactIdentifier:email successBlock:^{
+                [self sendRemoteInviteToAnonymousContactIdentifier:email successBlock:^{
                     self.searchManager.didSendToNewEmail = YES;
                     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -380,7 +380,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     [self.tableView endUpdates];
 }
 
-- (void)sendInvitesToSelected {
+- (void)sendRemoteInvitesToSelected {
     [self.wrapperView.bigSendButton updateButtonToSendingStatus];
     NSArray *recipients = [self.selectedPeopleIndex allObjects];
     NSInteger numberToSend = [self.selectedContactIdentifiersIndex count];
@@ -409,7 +409,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 // Anonymous contact identifier is e.g. a phone or email that the user just typed in
-- (void)sendInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void (^)())successBlock {
+- (void)sendRemoteInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void (^)())successBlock {
     NSString *message = [MaveSDK sharedInstance].defaultSMSMessageText;
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
     [[MaveSDK sharedInstance].APIInterface sendInviteToAnonymousContactIdentifier:contactIdentifier smsCopy:message senderUserID:user.userID inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:user.wrapInviteLink customData:user.customData completionBlock:^(NSError *error, NSDictionary *responseData) {

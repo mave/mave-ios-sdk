@@ -32,7 +32,7 @@
 - (void)selectOrDeselectAll:(BOOL)select;
 
 // Method to send the invites when clicking the button
-- (void)sendInvitesToSelected;
-- (void)sendInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void(^)())successBlock;
+- (void)sendRemoteInvitesToSelected;
+- (void)sendRemoteInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void(^)())successBlock;
 
 @end

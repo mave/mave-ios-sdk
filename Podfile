@@ -8,5 +8,5 @@ end
 
 target "MaveSDKTests" do
   pod "Gizou"
-  pod "OCMock", "~>3.1.1"
+  pod "OCMock", "~>3.1.2"
 end
