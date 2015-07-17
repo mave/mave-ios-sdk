@@ -31,14 +31,14 @@
     XCTAssertEqual([defaults count], 1);
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertEqual([template count], 2);
-    XCTAssertEqualObjects([template objectForKey:@"primary_page"], @"contacts_invite_page");
+    XCTAssertEqualObjects([template objectForKey:@"primary_page"], @"contacts_invite_page_v3");
     XCTAssertEqualObjects([template objectForKey:@"fallback_page"], @"share_page");
 }
 
 - (void)testInitWithDefaultData {
     MAVERemoteConfigurationInvitePageChoice *invitePage = [[MAVERemoteConfigurationInvitePageChoice alloc] initWithDictionary:[MAVERemoteConfigurationInvitePageChoice defaultJSONData]];
 
-    XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeContactsInvitePage);
+    XCTAssertEqual(invitePage.primaryPageType, MAVEInvitePageTypeContactsInvitePageV3);
     XCTAssertEqual(invitePage.fallbackPageType, MAVEInvitePageTypeSharePage);
 }
 

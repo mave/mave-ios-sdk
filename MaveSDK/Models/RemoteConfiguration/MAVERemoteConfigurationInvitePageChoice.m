@@ -52,7 +52,7 @@ NSString * const MAVERemoteConfigKeyInvitePageFallback = @"fallback_page";
 + (NSDictionary *)defaultJSONData {
     return @{
         MAVERemoteConfigKeyTemplate: @{
-            MAVERemoteConfigKeyInvitePagePrimary: @"contacts_invite_page",
+            MAVERemoteConfigKeyInvitePagePrimary: @"contacts_invite_page_v3",
             MAVERemoteConfigKeyInvitePageFallback: @"share_page",
         },
     };
