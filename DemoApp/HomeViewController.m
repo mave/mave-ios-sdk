@@ -31,12 +31,6 @@
 }
 
 - (IBAction)presentInvitePageAsModal:(id)sender {
-    // Reset bar button item back to normal
-    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = nil;
-
-
-    // Present Modally
-
     MaveSDK *mave = [MaveSDK sharedInstance];
     [mave presentInvitePageModallyWithBlock:^(UIViewController *inviteController) {
         [self presentViewController:inviteController animated:YES completion:nil];
@@ -46,9 +40,6 @@
 }
 
 - (void)presentInvitePagePush:(id)sender {
-    // Reset bar button item back to normal
-    [MaveSDK sharedInstance].displayOptions.navigationBarCancelButton = nil;
-
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UIViewController *afterInvitesPage = [storyboard instantiateViewControllerWithIdentifier:@"PushAfterInvitesPage"];
     MaveSDK *mave = [MaveSDK sharedInstance];
