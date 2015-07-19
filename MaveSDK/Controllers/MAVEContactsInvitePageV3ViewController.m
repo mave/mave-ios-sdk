@@ -380,6 +380,14 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     [self.tableView endUpdates];
 }
 
+- (void)sendInvitesToSelected {
+    if ([MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod == MAVESMSInviteSendMethodServerSide) {
+        [self sendRemoteInvitesToSelected];
+    } else {
+        [self sendClientSideGroupInvitesToSelected];
+    }
+}
+
 - (void)sendRemoteInvitesToSelected {
     [self.wrapperView.bigSendButton updateButtonToSendingStatus];
     NSArray *recipients = [self.selectedPeopleIndex allObjects];
@@ -406,6 +414,34 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
             }
         });
     }];
+}
+
+- (void)sendClientSideGroupInvitesToSelected {
+    NSLog(@"client side group invites!");
+
+    NSArray *recipients = [self.selectedPeopleIndex allObjects];
+    NSMutableArray *phonesToInvite = [[NSMutableArray alloc] init];
+    NSMutableArray *emailsToInvite = [[NSMutableArray alloc] init];
+    for (MAVEABPerson *person in recipients) {
+        for (MAVEContactPhoneNumber *phone in person.phoneObjects) {
+            if (phone.selected) {
+                [phonesToInvite addObject:phone];
+            }
+        }
+        for (MAVEContactEmail *email in person.emailObjects) {
+            if (email.selected) {
+                [emailsToInvite addObject:email];
+            }
+        }
+    }
+    [MAVESharer composeClientSMSInviteToRecipientPhones:[NSArray arrayWithArray:phonesToInvite] completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
+        [self.wrapperView.bigSendButton updateButtonToSentStatus];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
+        });
+    }];
+
+
 }
 
 // Anonymous contact identifier is e.g. a phone or email that the user just typed in
