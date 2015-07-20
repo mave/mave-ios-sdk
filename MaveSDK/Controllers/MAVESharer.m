@@ -39,6 +39,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 + (MFMessageComposeViewController *)composeClientSMSInviteToRecipientPhones:(NSArray *)recipientPhones completionBlock:(void (^)(MFMessageComposeViewController *controller, MessageComposeResult composeResult))completionBlock {
     if (![MFMessageComposeViewController canSendText]) {
         MAVEErrorLog(@"Tried to do compose client sms but canSendText is false");
+        if (completionBlock) {
+            completionBlock(nil, MessageComposeResultFailed);
+        }
         return nil;
     }
     MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
@@ -81,6 +84,13 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 #pragma mark - client Email
 
 + (MFMailComposeViewController *)composeClientEmailWithCompletionBlock:(void (^)(MFMailComposeViewController *, MFMailComposeResult))completionBlock {
+    if (![MFMailComposeViewController canSendMail]) {
+        MAVEErrorLog(@"Tried to do compose client email but canSendMail is false");
+        if (completionBlock) {
+            completionBlock(nil, MFMailComposeResultFailed);
+        }
+        return nil;
+    }
 
     MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
     ownInstance.completionBlockClientEmail = completionBlock;

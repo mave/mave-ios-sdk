@@ -130,8 +130,15 @@
     id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
     [[builderMock reject] sharerInstanceRetained];
 
-    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:nil];
+    __block MessageComposeResult returnedComposeResult;
+    __block BOOL wasCalled = NO;
+    UIViewController *vc = [MAVESharer composeClientSMSInviteToRecipientPhones:nil completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
+        returnedComposeResult = composeResult;
+        wasCalled = YES;
+    }];
     XCTAssertNil(vc);
+    XCTAssertTrue(wasCalled);
+    XCTAssertEqual(returnedComposeResult, MessageComposeResultFailed);
     OCMVerifyAll(builderMock);
 }
 
@@ -217,6 +224,23 @@
     OCMVerifyAll(builderMock);
 }
 
+- (void)testComposeClientEmailInviteReturnsNilIfCantSendEmail {
+    id mailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    OCMExpect([mailComposeVCMock canSendMail]).andReturn(NO);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    [[builderMock reject] sharerInstanceRetained];
+
+    __block MFMailComposeResult returnedComposeResult;
+    __block BOOL wasCalled = NO;
+    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
+        returnedComposeResult = result;
+        wasCalled = YES;
+    }];
+    XCTAssertNil(vc);
+    XCTAssertTrue(wasCalled);
+    XCTAssertEqual(returnedComposeResult, MFMailComposeResultFailed);
+    OCMVerifyAll(builderMock);
+}
 
 - (void)testComposeClientEmailCompletionBlockSuccess {
     MAVESharer *sharer = [[MAVESharer alloc] initAndRetainSelf];
