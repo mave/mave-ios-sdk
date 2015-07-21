@@ -100,7 +100,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientEmail.body
                                    andLinkWithSubRouteLetter:@"e"];
 
-    composeVC.bccRecipients = recipients;
+    if ([recipients count] > 0) {
+        composeVC.bccRecipients = recipients;
+    }
     composeVC.mailComposeDelegate = ownInstance;
     composeVC.subject = subject;
     [composeVC setMessageBody:message isHTML:NO];

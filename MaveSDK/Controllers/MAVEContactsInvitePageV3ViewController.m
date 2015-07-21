@@ -455,6 +455,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                 }
                 case MessageComposeResultSent: {
                     eitherSendCompleted = YES;
+                    break;
                 }
             }
 //            [self.wrapperView.bigSendButton updateButtonToSentStatus];
@@ -476,7 +477,29 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
 
     if ([emailsToInvite count] > 0) {
-        dispatch_semaphore_signal(sema);
+        UIViewController *emailVC = [MAVESharer composeClientEmailInviteToRecipientEmails:emailsToInvite withCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult composeResult) {
+            switch (composeResult) {
+                case MFMailComposeResultCancelled: {
+                    break;
+                }
+                case MFMailComposeResultFailed: {
+                    break;
+                }
+                case MFMailComposeResultSaved: {
+                    break;
+                }
+                case MFMailComposeResultSent: {
+                    eitherSendCompleted = YES;
+                }
+            }
+            [self dismissViewControllerAnimated:controller completion:nil];
+            dispatch_semaphore_signal(sema);
+        }];
+        if (emailVC) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:emailVC animated:YES completion:nil];
+            });
+        }
     } else {
         dispatch_semaphore_signal(sema);
     }

@@ -227,7 +227,17 @@
 }
 
 - (void)testComposeClientEmailInviteIfRecipientsNil {
+    id emailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
+    id builderMock = OCMClassMock([MAVESharerViewControllerBuilder class]);
+    OCMExpect([builderMock MFMailComposeViewController]).andReturn(emailComposeVCMock);
+    // should not set the recipients if nil
+    [[emailComposeVCMock reject] setBccRecipients:[OCMArg any]];
 
+    UIViewController *vc = [MAVESharer composeClientEmailInviteToRecipientEmails:nil withCompletionBlock:[OCMArg any]];
+
+    XCTAssertNotNil(vc);
+    OCMVerifyAll(emailComposeVCMock);
+    OCMVerifyAll(builderMock);
 }
 
 - (void)testComposeClientEmailInviteReturnsNilIfCantSendEmail {
