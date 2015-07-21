@@ -97,6 +97,87 @@
     OCMVerifyAll(chooserMock);
 }
 
+- (void)testCreateContactsInvitePageV3IfAllowedWhenServerSide {
+    MAVERemoteConfigurationContactsInvitePage *invitePageConfig = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    invitePageConfig.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = invitePageConfig;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isServerSideSMSAllowed]).andReturn(YES);
+    OCMExpect([chooserMock isAnyContactsInvitePageAllowed]).andReturn(YES);
+
+    MAVEContactsInvitePageV3ViewController *vc = [chooser createContactsInvitePageV3IfAllowed];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqual(vc.inviteSendMethod, MAVESMSInviteSendMethodServerSide);
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testCreateContactsInvitePageV3IfAllowedWhenServerSideButServerSideNotAllowed {
+    MAVERemoteConfigurationContactsInvitePage *invitePageConfig = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    invitePageConfig.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = invitePageConfig;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isServerSideSMSAllowed]).andReturn(NO);
+    OCMExpect([chooserMock isAnyContactsInvitePageAllowed]).andReturn(YES);
+
+    MAVEContactsInvitePageV3ViewController *vc = [chooser createContactsInvitePageV3IfAllowed];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqual(vc.inviteSendMethod, MAVESMSInviteSendMethodClientSideGroup);
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testCreateContactsInvitePageV3IfAllowedWhenChosenClientSideGroup {
+    MAVERemoteConfigurationContactsInvitePage *invitePageConfig = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    invitePageConfig.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = invitePageConfig;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMStub([chooserMock isServerSideSMSAllowed]).andReturn(NO);
+    OCMExpect([chooserMock isAnyContactsInvitePageAllowed]).andReturn(YES);
+
+    MAVEContactsInvitePageV3ViewController *vc = [chooser createContactsInvitePageV3IfAllowed];
+
+    XCTAssertNotNil(vc);
+    XCTAssertEqual(vc.inviteSendMethod, MAVESMSInviteSendMethodClientSideGroup);
+    OCMVerifyAll(chooserMock);
+}
+
+- (void)testCreateContactsInvitePageV3WhenContactsInvitePageNotAllowed {
+    MAVERemoteConfigurationContactsInvitePage *invitePageConfig = [[MAVERemoteConfigurationContactsInvitePage alloc] init];
+    invitePageConfig.smsInviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] init];
+    remoteConfig.contactsInvitePage = invitePageConfig;
+    OCMStub([maveMock remoteConfiguration]).andReturn(remoteConfig);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMStub([chooserMock isServerSideSMSAllowed]).andReturn(NO);
+    OCMExpect([chooserMock isAnyContactsInvitePageAllowed]).andReturn(NO);
+
+    MAVEContactsInvitePageV3ViewController *vc = [chooser createContactsInvitePageV3IfAllowed];
+
+    XCTAssertNil(vc);
+    OCMVerifyAll(chooserMock);
+}
+
+
+
 - (void)testChooseAndCreateUsingSharePagePrimary {
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
     MAVERemoteConfiguration *remoteConfig = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];

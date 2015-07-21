@@ -109,8 +109,16 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (MAVEContactsInvitePageV3ViewController *)createContactsInvitePageV3IfAllowed {
-    if ([self isAnyServerSideContactsInvitePageAllowed]) {
-        return [[MAVEContactsInvitePageV3ViewController alloc] init];
+    if ([self isAnyContactsInvitePageAllowed]) {
+        MAVEContactsInvitePageV3ViewController *vc = [[MAVEContactsInvitePageV3ViewController alloc] init];
+        MAVESMSInviteSendMethod sendMethod = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod;
+        if (sendMethod == MAVESMSInviteSendMethodServerSide &&
+            [self isServerSideSMSAllowed]) {
+            vc.inviteSendMethod = MAVESMSInviteSendMethodServerSide;
+        } else {
+            vc.inviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+        }
+        return vc;
     } else {
         return nil;
     }
