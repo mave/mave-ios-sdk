@@ -328,6 +328,10 @@
     [controller _syncSendClientSideGroupInvitesToSelected];
 
     OCMVerifyAll(sharerMock);
+
+    // after sending, people should no longer be selected
+    XCTAssertFalse(p0.selected);
+    XCTAssertFalse(p1.selected);
 }
 
 @end

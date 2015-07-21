@@ -425,24 +425,31 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 - (void)_syncSendClientSideGroupInvitesToSelected {
     NSLog(@"client side group invites!");
     NSArray *recipients = [self.selectedPeopleIndex allObjects];
+    NSMutableArray *_phoneRecipients = [[NSMutableArray alloc] init];
+    NSMutableArray *_emailRecipients = [[NSMutableArray alloc] init];
     NSMutableArray *_phonesToInvite = [[NSMutableArray alloc] init];
     NSMutableArray *_emailsToInvite = [[NSMutableArray alloc] init];
     for (MAVEABPerson *person in recipients) {
         for (MAVEContactPhoneNumber *phone in person.phoneObjects) {
             if (phone.selected) {
+                [_phoneRecipients addObject:person];
                 [_phonesToInvite addObject:phone.value];
             }
         }
         for (MAVEContactEmail *email in person.emailObjects) {
             if (email.selected) {
+                [_emailRecipients addObject:person];
                 [_emailsToInvite addObject:email.value];
             }
         }
     }
     NSArray *phonesToInvite = [NSArray arrayWithArray:_phonesToInvite];
     NSArray *emailsToInvite = [NSArray arrayWithArray:_emailsToInvite];
+    NSArray *phoneRecipients = [NSArray arrayWithArray:_phoneRecipients];
+    NSArray *emailRecipients = [NSArray arrayWithArray:_emailRecipients];
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
-    __block BOOL eitherSendCompleted = NO;
+    __block BOOL smsInvitesSent = NO, emailInvitesSent = NO;
+    __block BOOL smsInvitesFailed = NO, emailinvitesFailed = NO;
 
     if ([phonesToInvite count] > 0) {
         UIViewController *smsVC = [MAVESharer composeClientSMSInviteToRecipientPhones:phonesToInvite completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
@@ -451,17 +458,14 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                     break;
                 }
                 case MessageComposeResultFailed: {
+                    smsInvitesFailed = YES;
                     break;
                 }
                 case MessageComposeResultSent: {
-                    eitherSendCompleted = YES;
+                    smsInvitesSent = YES;
                     break;
                 }
             }
-//            [self.wrapperView.bigSendButton updateButtonToSentStatus];
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
-//            });
             [self dismissViewControllerAnimated:controller completion:nil];
             dispatch_semaphore_signal(sema);
         }];
@@ -473,8 +477,8 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
     } else {
         dispatch_semaphore_signal(sema);
     }
-
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+
 
     if ([emailsToInvite count] > 0) {
         UIViewController *emailVC = [MAVESharer composeClientEmailInviteToRecipientEmails:emailsToInvite withCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult composeResult) {
@@ -486,10 +490,11 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                     break;
                 }
                 case MFMailComposeResultSaved: {
+                    emailinvitesFailed = YES;
                     break;
                 }
                 case MFMailComposeResultSent: {
-                    eitherSendCompleted = YES;
+                    emailInvitesSent = YES;
                 }
             }
             [self dismissViewControllerAnimated:controller completion:nil];
@@ -506,9 +511,73 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
 
-    if (eitherSendCompleted) {
-        MAVEInfoLog(@"Sent client side invites!");
+    // Show alerts if any failures
+    if (smsInvitesFailed) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"SMS failed to send" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [alert show];
+        });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [alert dismissWithClickedButtonIndex:0 animated:YES];
+            dispatch_semaphore_signal(sema);
+        });
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
     }
+
+    if (emailinvitesFailed) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Email failed to send" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [alert show];
+        });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [alert dismissWithClickedButtonIndex:0 animated:YES];
+            dispatch_semaphore_signal(sema);
+        });
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+    }
+
+    // Log what happened
+    if (smsInvitesSent || emailInvitesSent) {
+        MAVEInfoLog(@"Sent client side invites!");
+    } else {
+        MAVEInfoLog(@"Canceled sending client side invites!");
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (smsInvitesSent || emailInvitesSent) {
+            // deselect people, only if we successfully sent to that medium
+            if (smsInvitesSent) {
+                for (MAVEABPerson *person in phoneRecipients) {
+                    person.selected = NO;
+                    [self updateToReflectPersonSelectedStatus:person];
+                }
+            }
+            if (emailInvitesSent) {
+                for (MAVEABPerson *person in emailRecipients) {
+                    person.selected = NO;
+                    [self updateToReflectPersonSelectedStatus:person];
+                }
+            }
+            NSString *successTitle = nil;
+            if (smsInvitesSent && !emailInvitesSent) {
+                successTitle = @"SMS invites sent!";
+            } else if (emailInvitesSent && !smsInvitesSent) {
+                successTitle = @"Email invites sent!";
+            } else {
+                successTitle = @"SMS and Email invites sent!";
+            }
+            [self.view setNeedsUpdateConstraints];
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            [self.tableView beginUpdates];
+            [self.tableView endUpdates];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:successTitle message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+            [alert show];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [alert dismissWithClickedButtonIndex:0 animated:YES];
+            });
+        }
+    });
 }
 
 // Anonymous contact identifier is e.g. a phone or email that the user just typed in
