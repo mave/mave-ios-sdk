@@ -21,10 +21,6 @@
 + (void)resetSharedInstanceForTesting;
 @end
 
-@interface MAVEContactsInvitePageV3ViewController(Testing)
-- (void)_syncSendClientSideGroupInvitesToSelected;
-@end
-
 @interface MAVEContactsInvitePageV3ViewControllerTests : XCTestCase
 
 @end
@@ -288,56 +284,7 @@
     mave.defaultSMSMessageText = nil;
 }
 
-- (void)testSendClientSideInvitesSMSAndPhone {
-    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
-    [controller viewDidLoad];
+#pragma mark - Send Invites client side tests
 
-    MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
-    MAVEContactEmail *email00 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
-    MAVEContactEmail *email01 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
-    p0.emailObjects = @[email00, email01];
-    p0.selected = YES; email00.selected = YES; email01.selected = NO;
-    [controller updateToReflectPersonSelectedStatus:p0];
-
-    MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
-    MAVEContactPhoneNumber *phone1 = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:MAVEContactPhoneLabelMobile];
-    p1.phoneObjects = @[phone1];
-    p1.selected = YES; phone1.selected = YES;
-    [controller updateToReflectPersonSelectedStatus:p1];
-
-    // Mock sharer to test that we launched sms and email share pages
-    id sharerMock = OCMClassMock([MAVESharer class]);
-    NSArray *invitePhones = @[phone1.value];
-    OCMExpect([sharerMock composeClientSMSInviteToRecipientPhones:invitePhones completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void(^completionBlock)(MFMessageComposeViewController *, MessageComposeResult) = obj;
-        completionBlock(nil, MessageComposeResultSent);
-        return YES;
-    }]]);
-    NSArray *inviteEmails = @[email00.value];
-    OCMExpect([sharerMock composeClientEmailInviteToRecipientEmails:inviteEmails withCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
-        void(^completionBlock)(MFMailComposeViewController *, MFMailComposeResult) = obj;
-        completionBlock(nil, MFMailComposeResultSent);
-        return YES;
-    }]]);
-
-    [controller _syncSendClientSideGroupInvitesToSelected];
-
-    OCMVerifyAll(sharerMock);
-    // after sending, people should no longer be selected
-
-    // Wait for them to become unselected on main run loop.
-    // (can't just wait here using GCD b/c test is running on main loop so if we
-    // block then any dispatches to main queue in the code won't ever run)
-    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:5];
-    while ([loopUntil timeIntervalSinceNow] > 0) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:loopUntil];
-        if (!p0.selected && !p1.selected) {
-            break;
-        }
-    }
-    XCTAssertFalse(p0.selected);
-    XCTAssertFalse(p1.selected);
-}
 
 @end

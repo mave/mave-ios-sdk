@@ -517,7 +517,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         MAVEInfoLog(@"Canceled sending client side invites!");
     }
 
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         if (smsInvitesSent || emailInvitesSent) {
             // deselect people, only if we successfully sent to that medium
             if (smsInvitesSent) {
