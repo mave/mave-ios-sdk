@@ -289,11 +289,6 @@
 }
 
 - (void)testSendClientSideInvitesSMSAndPhone {
-    // Setup up controller and select people to invite
-    [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
-    MaveSDK *mave = [MaveSDK sharedInstance];
-
     MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
     [controller viewDidLoad];
 
@@ -328,8 +323,19 @@
     [controller _syncSendClientSideGroupInvitesToSelected];
 
     OCMVerifyAll(sharerMock);
-
     // after sending, people should no longer be selected
+
+    // Wait for them to become unselected on main run loop.
+    // (can't just wait here using GCD b/c test is running on main loop so if we
+    // block then any dispatches to main queue in the code won't ever run)
+    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:5];
+    while ([loopUntil timeIntervalSinceNow] > 0) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                 beforeDate:loopUntil];
+        if (!p0.selected && !p1.selected) {
+            break;
+        }
+    }
     XCTAssertFalse(p0.selected);
     XCTAssertFalse(p1.selected);
 }

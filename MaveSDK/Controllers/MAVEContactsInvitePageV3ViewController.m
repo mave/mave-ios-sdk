@@ -423,7 +423,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)_syncSendClientSideGroupInvitesToSelected {
-    NSLog(@"client side group invites!");
     NSArray *recipients = [self.selectedPeopleIndex allObjects];
     NSMutableArray *_phoneRecipients = [[NSMutableArray alloc] init];
     NSMutableArray *_emailRecipients = [[NSMutableArray alloc] init];
@@ -543,7 +542,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
         MAVEInfoLog(@"Canceled sending client side invites!");
     }
 
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_sync(dispatch_get_main_queue(), ^{
         if (smsInvitesSent || emailInvitesSent) {
             // deselect people, only if we successfully sent to that medium
             if (smsInvitesSent) {
