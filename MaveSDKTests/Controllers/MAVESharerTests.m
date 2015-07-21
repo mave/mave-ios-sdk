@@ -204,16 +204,18 @@
     OCMExpect([emailComposeVCMock setMailComposeDelegate:sharerInstance]);
 
     // email message subject and body
+    NSArray *recipients = @[@"foo@example.com", @"bar@example.com"];
     NSString *expectedMessageSubject = sharerInstance.remoteConfiguration.clientEmail.subject;
     XCTAssertGreaterThan([expectedMessageSubject length], 0);
     OCMExpect([emailComposeVCMock setSubject:expectedMessageSubject]);
     NSString *expectedMessageBody = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clientEmail.body andLinkWithSubRouteLetter:@"e"];
     XCTAssertGreaterThan([expectedMessageBody length], 0);
     OCMExpect([emailComposeVCMock setMessageBody:expectedMessageBody isHTML:NO]);
+    OCMExpect([emailComposeVCMock setBccRecipients:recipients]);
 
     void (^myCompletionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = ^void(MFMailComposeViewController *controller, MFMailComposeResult result) {};
 
-    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:myCompletionBlock];
+    UIViewController *vc = [MAVESharer composeClientEmailInviteToRecipientEmails:recipients withCompletionBlock:myCompletionBlock];
 
     XCTAssertNotNil(vc);
     XCTAssertEqualObjects(vc, emailComposeVCMock);
@@ -224,6 +226,10 @@
     OCMVerifyAll(builderMock);
 }
 
+- (void)testComposeClientEmailInviteIfRecipientsNil {
+
+}
+
 - (void)testComposeClientEmailInviteReturnsNilIfCantSendEmail {
     id mailComposeVCMock = OCMClassMock([MFMailComposeViewController class]);
     OCMExpect([mailComposeVCMock canSendMail]).andReturn(NO);
@@ -232,7 +238,7 @@
 
     __block MFMailComposeResult returnedComposeResult;
     __block BOOL wasCalled = NO;
-    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
+    UIViewController *vc = [MAVESharer composeClientEmailInviteToRecipientEmails:nil withCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
         returnedComposeResult = result;
         wasCalled = YES;
     }];

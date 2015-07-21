@@ -150,7 +150,7 @@
     MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
     id mock = OCMPartialMock(view);
     id sharerMock = OCMClassMock([MAVESharer class]);
-    OCMExpect([sharerMock composeClientEmailWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+    OCMExpect([sharerMock composeClientEmailInviteToRecipientEmails:nil withCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^completionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = obj;
         completionBlock(nil, MFMailComposeResultSent);
         return YES;
@@ -172,7 +172,7 @@
     MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
     id mock = OCMPartialMock(view);
     id sharerMock = OCMClassMock([MAVESharer class]);
-    OCMExpect([sharerMock composeClientEmailWithCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
+    OCMExpect([sharerMock composeClientEmailInviteToRecipientEmails:nil withCompletionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^completionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result) = obj;
         completionBlock(nil, MFMailComposeResultCancelled);
         return YES;

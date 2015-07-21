@@ -417,31 +417,75 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)sendClientSideGroupInvitesToSelected {
-    NSLog(@"client side group invites!");
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self _syncSendClientSideGroupInvitesToSelected];
+    });
+}
 
+- (void)_syncSendClientSideGroupInvitesToSelected {
+    NSLog(@"client side group invites!");
     NSArray *recipients = [self.selectedPeopleIndex allObjects];
-    NSMutableArray *phonesToInvite = [[NSMutableArray alloc] init];
-    NSMutableArray *emailsToInvite = [[NSMutableArray alloc] init];
+    NSMutableArray *_phonesToInvite = [[NSMutableArray alloc] init];
+    NSMutableArray *_emailsToInvite = [[NSMutableArray alloc] init];
     for (MAVEABPerson *person in recipients) {
         for (MAVEContactPhoneNumber *phone in person.phoneObjects) {
             if (phone.selected) {
-                [phonesToInvite addObject:phone];
+                [_phonesToInvite addObject:phone.value];
             }
         }
         for (MAVEContactEmail *email in person.emailObjects) {
             if (email.selected) {
-                [emailsToInvite addObject:email];
+                [_emailsToInvite addObject:email.value];
             }
         }
     }
-    [MAVESharer composeClientSMSInviteToRecipientPhones:[NSArray arrayWithArray:phonesToInvite] completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
-        [self.wrapperView.bigSendButton updateButtonToSentStatus];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
-        });
-    }];
+    NSArray *phonesToInvite = [NSArray arrayWithArray:_phonesToInvite];
+    NSArray *emailsToInvite = [NSArray arrayWithArray:_emailsToInvite];
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    __block BOOL eitherSendCompleted = NO;
 
+    if ([phonesToInvite count] > 0) {
+        UIViewController *smsVC = [MAVESharer composeClientSMSInviteToRecipientPhones:phonesToInvite completionBlock:^(MFMessageComposeViewController *controller, MessageComposeResult composeResult) {
+            switch (composeResult) {
+                case MessageComposeResultCancelled: {
+                    break;
+                }
+                case MessageComposeResultFailed: {
+                    break;
+                }
+                case MessageComposeResultSent: {
+                    eitherSendCompleted = YES;
+                }
+            }
+//            [self.wrapperView.bigSendButton updateButtonToSentStatus];
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [[MaveSDK sharedInstance].invitePageChooser dismissOnSuccess:1];
+//            });
+            [self dismissViewControllerAnimated:controller completion:nil];
+            dispatch_semaphore_signal(sema);
+        }];
+        if (smsVC) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:smsVC animated:YES completion:nil];
+            });
+        }
+    } else {
+        dispatch_semaphore_signal(sema);
+    }
 
+    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+
+    if ([emailsToInvite count] > 0) {
+        dispatch_semaphore_signal(sema);
+    } else {
+        dispatch_semaphore_signal(sema);
+    }
+
+    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+
+    if (eitherSendCompleted) {
+        MAVEInfoLog(@"Sent client side invites!");
+    }
 }
 
 // Anonymous contact identifier is e.g. a phone or email that the user just typed in

@@ -83,7 +83,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 #pragma mark - client Email
 
-+ (MFMailComposeViewController *)composeClientEmailWithCompletionBlock:(void (^)(MFMailComposeViewController *, MFMailComposeResult))completionBlock {
++ (MFMailComposeViewController *)composeClientEmailInviteToRecipientEmails:(NSArray *)recipients withCompletionBlock:(void (^)(MFMailComposeViewController *, MFMailComposeResult))completionBlock {
     if (![MFMailComposeViewController canSendMail]) {
         MAVEErrorLog(@"Tried to do compose client email but canSendMail is false");
         if (completionBlock) {
@@ -100,6 +100,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientEmail.body
                                    andLinkWithSubRouteLetter:@"e"];
 
+    composeVC.bccRecipients = recipients;
     composeVC.mailComposeDelegate = ownInstance;
     composeVC.subject = subject;
     [composeVC setMessageBody:message isHTML:NO];
