@@ -225,6 +225,7 @@
     XCTAssertNil(vc);
 }
 
+// deprecated
 - (void)testIsAnyServerSideContactsInvitePageAllowed {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
@@ -239,7 +240,42 @@
 
     XCTAssertTrue([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
+- (void)testIsServerSMSAllowedYES {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    // check 1: is in supported region yes
+    OCMExpect([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(YES);
+    // dont need contacts invite page enabled for this check
+    [[chooserMock reject] isContactsInvitePageEnabledServerSide];
+    // check 2: user data ok yes
+    MAVEUserData *okUserData = [[MAVEUserData alloc] init];
+    okUserData.userID = @"1234"; okUserData.firstName = @"Foo";
+    [MaveSDK sharedInstance].userData = okUserData;
 
+    XCTAssertTrue([chooser isServerSideSMSAllowed]);
+    OCMVerifyAll(chooserMock);
+}
+- (void)testIsAnyContactsInvitePageAllowedYES {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    // check 1: is address book status enabled
+    OCMExpect([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    // check 2, is page enabled server side
+    OCMExpect([chooserMock isContactsInvitePageEnabledServerSide]).andReturn(YES);
+    // no need to check this
+    [[chooserMock reject] isInSupportedRegionForServerSideSMSInvites];
+    // dont need user data for this check
+    [MaveSDK sharedInstance].userData = nil;
+
+    XCTAssertTrue([chooser isAnyContactsInvitePageAllowed]);
+
+    OCMVerifyAll(chooserMock);
+    OCMVerifyAll(abUtilsMock);
+}
+
+// deprecated
 - (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenABPermissionStatusDenied {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusDenied);
@@ -248,18 +284,16 @@
 
     XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
-
-- (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenNotInSupportedRegion {
+- (void)testIsAnyContactsInvitePageAllowedNOWhenABPermissionStatusDenied {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
-    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusDenied);
 
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
-    id chooserMock = OCMPartialMock(chooser);
-    OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(NO);
 
-    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
+    XCTAssertFalse([chooser isAnyContactsInvitePageAllowed]);
 }
 
+// deprecated
 - (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenDisabledServerSide {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
@@ -271,7 +305,39 @@
 
     XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
 }
+- (void)testIsAnyContactsInvitePageAllowedNOWhenNotEnabledServerSide {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
 
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isContactsInvitePageEnabledServerSide]).andReturn(NO);
+
+    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
+    OCMVerifyAll(chooserMock);
+}
+
+// deprecated
+- (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenNotInSupportedRegion {
+    id abUtilsMock = OCMClassMock([MAVEABUtils class]);
+    OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMStub([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(NO);
+
+    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
+}
+- (void)testIsServerSideSMSAllowedNOWhenNotInSuportedRegion {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(NO);
+
+    XCTAssertFalse([chooser isServerSideSMSAllowed]);
+    OCMVerifyAll(chooserMock);
+}
+
+// deprecated
 - (void)testIsAnyServerSideContactsInvitePageNotAllowedWhenUserDataNotOK {
     id abUtilsMock = OCMClassMock([MAVEABUtils class]);
     OCMStub([abUtilsMock addressBookPermissionStatus]).andReturn(MAVEABPermissionStatusAllowed);
@@ -284,6 +350,16 @@
     [MaveSDK sharedInstance].userData = notOKUserData;
 
     XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
+}
+- (void)testIsServerSideSMSAllowedNOWhenUserDataNotOK {
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+    id chooserMock = OCMPartialMock(chooser);
+    OCMExpect([chooserMock isInSupportedRegionForServerSideSMSInvites]).andReturn(YES);
+    MAVEUserData *notOKUserData = [[MAVEUserData alloc] init];
+    [MaveSDK sharedInstance].userData = notOKUserData;
+
+    XCTAssertFalse([chooser isAnyServerSideContactsInvitePageAllowed]);
+    OCMVerifyAll(chooserMock);
 }
 
 - (void)testCreateClientSMSInvitePageCleanupOnInviteSent {

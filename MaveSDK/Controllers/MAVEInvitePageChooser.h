@@ -54,6 +54,9 @@ extern NSString * const MAVEInvitePagePresentFormatPush;
 - (MFMessageComposeViewController *)createClientSMSInvitePage;
 
 // Helpers for business logic
+- (BOOL)isAnyContactsInvitePageAllowed;
+- (BOOL)isServerSideSMSAllowed;
+// deprecated with invite page v1 & v2: both of the previous checks combined
 - (BOOL)isAnyServerSideContactsInvitePageAllowed;
 - (BOOL)isInSupportedRegionForServerSideSMSInvites;
 // TODO: deprecate the following, we can remove this kill switch b/c we can use
