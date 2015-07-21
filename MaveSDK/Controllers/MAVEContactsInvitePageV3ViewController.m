@@ -510,31 +510,6 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
 
-    // Show alerts if any failures
-    if (smsInvitesFailed) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"SMS failed to send" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [alert show];
-        });
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [alert dismissWithClickedButtonIndex:0 animated:YES];
-            dispatch_semaphore_signal(sema);
-        });
-        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-    }
-
-    if (emailinvitesFailed) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Email failed to send" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [alert show];
-        });
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [alert dismissWithClickedButtonIndex:0 animated:YES];
-            dispatch_semaphore_signal(sema);
-        });
-        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-    }
-
     // Log what happened
     if (smsInvitesSent || emailInvitesSent) {
         MAVEInfoLog(@"Sent client side invites!");
