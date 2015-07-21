@@ -381,10 +381,15 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
 }
 
 - (void)sendInvitesToSelected {
-    if ([MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod == MAVESMSInviteSendMethodServerSide) {
-        [self sendRemoteInvitesToSelected];
-    } else {
-        [self sendClientSideGroupInvitesToSelected];
+    switch (self.inviteSendMethod) {
+        case MAVESMSInviteSendMethodClientSideGroup: {
+            [self sendClientSideGroupInvitesToSelected];
+            break;
+        }
+        case MAVESMSInviteSendMethodServerSide: {
+            [self sendRemoteInvitesToSelected];
+            break;
+        }
     }
 }
 

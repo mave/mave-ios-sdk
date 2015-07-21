@@ -229,6 +229,32 @@
     XCTAssertFalse(email1.selected);
 }
 
+- (void)testSendInvitesWhenClientSide {
+    // Test code that chooses whether we send remote or client invites
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    controller.inviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+    [controller viewDidLoad];
+
+    id mock = OCMPartialMock(controller);
+    OCMExpect([mock sendClientSideGroupInvitesToSelected]);
+    [controller sendInvitesToSelected];
+
+    OCMVerifyAll(mock);
+}
+
+- (void)testSendInvitesWhenRemote {
+    // Test code that chooses whether we send remote or client invites
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    controller.inviteSendMethod = MAVESMSInviteSendMethodServerSide;
+    [controller viewDidLoad];
+
+    id mock = OCMPartialMock(controller);
+    OCMExpect([mock sendRemoteInvitesToSelected]);
+    [controller sendInvitesToSelected];
+
+    OCMVerifyAll(mock);
+}
+
 - (void)testSendRemoteInvites {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
@@ -283,8 +309,6 @@
     OCMVerifyAll(apiInterfaceMock);
     mave.defaultSMSMessageText = nil;
 }
-
-#pragma mark - Send Invites client side tests
 
 
 @end
