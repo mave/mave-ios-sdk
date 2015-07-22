@@ -211,6 +211,10 @@ static dispatch_once_t sharedInstanceonceToken;
     }];
 }
 
+- (void)getSuggestedInvites:(void (^)(NSArray *))suggestedInvitesHandler {
+    [self getSuggestedInvites:suggestedInvitesHandler timeout:10];
+}
+
 - (void)getSuggestedInvites:(void (^)(NSArray *))suggestedInvitesHandler
                     timeout:(CGFloat)timeout {
     if (![[MAVEABUtils addressBookPermissionStatus] isEqual:MAVEABPermissionStatusAllowed]) {

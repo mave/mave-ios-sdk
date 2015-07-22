@@ -50,7 +50,8 @@
 
 // Methods intended for external use, to access referring data & suggested invites
 - (void)getReferringData:(void(^)(MAVEReferringData *referringData))referringDataHandler;
-- (void)getSuggestedInvites:(void(^)(NSArray *suggestedInvites))suggestedInvitesHandler timeout:(CGFloat)timeout;
+
+- (void)getSuggestedInvites:(void(^)(NSArray *suggestedInvites))suggestedInvitesHandler;
 
 // Internal, method to access the remote configuration
 - (MAVERemoteConfiguration *)remoteConfiguration;

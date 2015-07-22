@@ -206,14 +206,14 @@
         return YES;
     }]]);
 
-    OCMExpect([maveMock suggestedInvitesWithFullContactsList:fakeAllContacts delay:2.4f]).andReturn(fakeSuggestions);
+    OCMExpect([maveMock suggestedInvitesWithFullContactsList:fakeAllContacts delay:10]).andReturn(fakeSuggestions);
 
     __block NSArray *results = nil;
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     [mave getSuggestedInvites:^(NSArray *suggestedInvites) {
         results = suggestedInvites;
         dispatch_semaphore_signal(sema);
-    } timeout:2.4f];
+    }];
     dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
 
     XCTAssertEqualObjects(results, fakeSuggestions);
@@ -231,7 +231,7 @@
     [mave getSuggestedInvites:^(NSArray *suggestedInvites) {
         results = suggestedInvites;
         blockRan = YES;
-    } timeout:1.0];
+    }];
 
     XCTAssertTrue(blockRan);
     XCTAssertNil(results);
