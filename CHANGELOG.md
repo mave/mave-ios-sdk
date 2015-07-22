@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.7.7
+- Add ability to send invites completely client-side from the contacts invite page. This is now the fallback for international in countries we don't support.
+- Update the `getSuggestedInvites:` call
+
 ### v0.7.6
 - Change "select all emails" to "select all contacts", allowing user in one-click to select all their contacts to invite. There's a flag in the Mave dashboard to turn this off.
 - Make invite page v3 the default.
