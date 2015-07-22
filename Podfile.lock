@@ -21,7 +21,7 @@ DEPENDENCIES:
   - Gizou
   - libPhoneNumber-iOS (= 0.8.3)
   - MMDrawerController (~> 0.6.0)
-  - OCMock (~> 3.1.1)
+  - OCMock (~> 3.1.2)
 
 SPEC CHECKSUMS:
   CCTemplate: f00efa85dad31e12b8a766b8e8198eb772c71c4f
@@ -30,4 +30,4 @@ SPEC CHECKSUMS:
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
 
-COCOAPODS: 0.36.0
+COCOAPODS: 0.38.0

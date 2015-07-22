@@ -229,7 +229,33 @@
     XCTAssertFalse(email1.selected);
 }
 
-- (void)testSendInvites {
+- (void)testSendInvitesWhenClientSide {
+    // Test code that chooses whether we send remote or client invites
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    controller.inviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+    [controller viewDidLoad];
+
+    id mock = OCMPartialMock(controller);
+    OCMExpect([mock sendClientSideGroupInvitesToSelected]);
+    [controller sendInvitesToSelected];
+
+    OCMVerifyAll(mock);
+}
+
+- (void)testSendInvitesWhenRemote {
+    // Test code that chooses whether we send remote or client invites
+    MAVEContactsInvitePageV3ViewController *controller = [[MAVEContactsInvitePageV3ViewController alloc] init];
+    controller.inviteSendMethod = MAVESMSInviteSendMethodServerSide;
+    [controller viewDidLoad];
+
+    id mock = OCMPartialMock(controller);
+    OCMExpect([mock sendRemoteInvitesToSelected]);
+    [controller sendInvitesToSelected];
+
+    OCMVerifyAll(mock);
+}
+
+- (void)testSendRemoteInvites {
     [MaveSDK resetSharedInstanceForTesting];
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MaveSDK *mave = [MaveSDK sharedInstance];
@@ -278,10 +304,11 @@
 //    OCMExpect([apiInterfaceMock sendInvitesToRecipients:people smsCopy:mave.defaultSMSMessageText senderUserID:mave.userData.userID inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL wrapInviteLink:mave.userData.wrapInviteLink customData:mave.userData.customData completionBlock:[OCMArg any]]);
     OCMExpect([apiInterfaceMock sendInvitesToRecipients:[OCMArg any] smsCopy:[OCMArg any] senderUserID:[OCMArg any] inviteLinkDestinationURL:[OCMArg any] wrapInviteLink:YES customData:[OCMArg any] completionBlock:[OCMArg any]]);
 
-    [controller sendInvitesToSelected];
+    [controller sendRemoteInvitesToSelected];
 
     OCMVerifyAll(apiInterfaceMock);
     mave.defaultSMSMessageText = nil;
 }
+
 
 @end

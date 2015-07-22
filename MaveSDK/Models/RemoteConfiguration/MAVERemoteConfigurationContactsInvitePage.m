@@ -73,6 +73,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
             } else {
                 self.smsInviteSendMethod = MAVESMSInviteSendMethodServerSide;
             }
+
             // Set the reusable icon if it was passed in the template, otherwise default to airplane
             NSString *reusableSuggestedInviteCellSendIcon = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageReusableSuggestedInviteCellSendIcon];
             if (reusableSuggestedInviteCellSendIcon != (id)[NSNull null] &&

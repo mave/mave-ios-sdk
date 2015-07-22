@@ -12,8 +12,12 @@
 #import "MAVEContactsInvitePageDataManager.h"
 #import "MAVEContactsInvitePageSearchManager.h"
 #import "MAVEContactsInvitePageV3TableWrapperView.h"
+#import "MAVERemoteConfigurationContactsInvitePage.h"
 
 @interface MAVEContactsInvitePageV3ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+// how we'll send the sms invites, server-side or client side
+@property (nonatomic, assign) MAVESMSInviteSendMethod inviteSendMethod;
 
 // Keep a weak reference to the wrapper view, which is really just the view
 @property (nonatomic, weak) MAVEContactsInvitePageV3TableWrapperView *wrapperView;
@@ -33,6 +37,8 @@
 
 // Method to send the invites when clicking the button
 - (void)sendInvitesToSelected;
-- (void)sendInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void(^)())successBlock;
+- (void)sendRemoteInvitesToSelected;
+- (void)sendRemoteInviteToAnonymousContactIdentifier:(MAVEContactIdentifierBase *)contactIdentifier successBlock:(void(^)())successBlock;
+- (void)sendClientSideGroupInvitesToSelected;
 
 @end

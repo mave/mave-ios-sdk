@@ -109,14 +109,22 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 }
 
 - (MAVEContactsInvitePageV3ViewController *)createContactsInvitePageV3IfAllowed {
-    if ([self isAnyServerSideContactsInvitePageAllowed]) {
-        return [[MAVEContactsInvitePageV3ViewController alloc] init];
+    if ([self isAnyContactsInvitePageAllowed]) {
+        MAVEContactsInvitePageV3ViewController *vc = [[MAVEContactsInvitePageV3ViewController alloc] init];
+        MAVESMSInviteSendMethod sendMethod = [MaveSDK sharedInstance].remoteConfiguration.contactsInvitePage.smsInviteSendMethod;
+        if (sendMethod == MAVESMSInviteSendMethodServerSide &&
+            [self isServerSideSMSAllowed]) {
+            vc.inviteSendMethod = MAVESMSInviteSendMethodServerSide;
+        } else {
+            vc.inviteSendMethod = MAVESMSInviteSendMethodClientSideGroup;
+        }
+        return vc;
     } else {
         return nil;
     }
 }
 
-
+// deprecated, remove once invite page v1 & v2 are removed
 - (BOOL)isAnyServerSideContactsInvitePageAllowed {
     // Once we fully support client-side invite send method, incorporate that option
     // into the logic:
@@ -138,6 +146,39 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
     // If configured server-side to turn off contacts invite page, return nil
     if (![self isContactsInvitePageEnabledServerSide]) {
         MAVEInfoLog(@"Using fallback invite page b/c contacts page set to NO server-side");
+        return NO;
+    }
+
+    // If user data doesn't have a legit user id & first name, can't send server-side SMS
+    // so use share page instead
+    if (![[MaveSDK sharedInstance].userData isUserInfoOkToSendServerSideSMS]) {
+        MAVEInfoLog(@"Fallback to custom share page b/c user info invalid");
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)isAnyContactsInvitePageAllowed {
+    // If contacts permission already denied, return NO
+    NSString *addressBookStatus = [MAVEABUtils addressBookPermissionStatus];
+    if (addressBookStatus == MAVEABPermissionStatusDenied) {
+        MAVEInfoLog(@"Using fallback invite page b/c address book permission already denied");
+        return NO;
+    }
+
+    // If configured server-side to turn off contacts invite page, return NO
+    if (![self isContactsInvitePageEnabledServerSide]) {
+        MAVEInfoLog(@"Using fallback invite page b/c contacts page set to NO server-side");
+        return NO;
+    }
+
+    return YES;
+}
+
+- (BOOL)isServerSideSMSAllowed {
+    // If not in a supported region, return NO
+    if (![self isInSupportedRegionForServerSideSMSInvites]) {
+        MAVEInfoLog(@"Using fallback invite page b/c not in supported region for server-side SMS");
         return NO;
     }
 

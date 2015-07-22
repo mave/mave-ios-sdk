@@ -259,7 +259,7 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
 }
 
 - (void)doClientEmailShare {
-    UIViewController *vc = [MAVESharer composeClientEmailWithCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
+    UIViewController *vc = [MAVESharer composeClientEmailInviteToRecipientEmails:nil withCompletionBlock:^(MFMailComposeViewController *controller, MFMailComposeResult result) {
         [controller dismissViewControllerAnimated:YES completion:nil];
         if (result == MFMailComposeResultSent) {
             [self afterShareActions];
