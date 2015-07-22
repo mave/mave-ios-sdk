@@ -470,7 +470,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                     break;
                 }
             }
-            [self dismissViewControllerAnimated:controller completion:nil];
+            [controller dismissViewControllerAnimated:YES completion:nil];
             dispatch_semaphore_signal(sema);
         }];
         if (smsVC) {
@@ -501,7 +501,7 @@ NSString * const MAVEContactsInvitePageV3CellIdentifier = @"MAVEContactsInvitePa
                     emailInvitesSent = YES;
                 }
             }
-            [self dismissViewControllerAnimated:controller completion:nil];
+            [controller dismissViewControllerAnimated:YES completion:nil];
             dispatch_semaphore_signal(sema);
         }];
         if (emailVC) {
