@@ -64,7 +64,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
 
             id selectAllVal = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSelectAllEnabled];
             if (selectAllVal && (id)selectAllVal != [NSNull null]) {
-                self.selectAllEnabled = [suggestedInvitesVal boolValue];
+                self.selectAllEnabled = [selectAllVal boolValue];
             }
 
             NSString *smsSendMethod = [template objectForKey:MAVERemoteConfigKeyContactsInvitePageSMSSendMethod];
