@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.7.8
+- Add method `invitePerson:withCompletionBlock` to send an invite to a MAVEABPerson object, to use when using suggested invites outside of the drop-in invite page.
+
 ### v0.7.7
 - Add ability to send invites completely client-side from the contacts invite page. This is now the fallback for international in countries we don't support.
 - Update the `getSuggestedInvites:` call
