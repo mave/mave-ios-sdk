@@ -17,6 +17,7 @@
 #import "MAVERemoteObjectBuilder.h"
 #import "MAVECustomSharePageViewController.h"
 #import "MAVEABSyncManager.h"
+#import "MAVEInviteSender.h"
 
 @interface MaveSDK : NSObject
 
@@ -25,6 +26,7 @@
 @property (nonatomic, strong) MAVEAPIInterface *APIInterface;
 @property (nonatomic, strong) MAVEABSyncManager *addressBookSyncManager;
 @property (nonatomic, strong) MAVEInvitePageChooser *invitePageChooser;
+@property (nonatomic, strong) MAVEInviteSender *inviteSender;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *remoteConfigurationBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *shareTokenBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *suggestedInvitesBuilder;

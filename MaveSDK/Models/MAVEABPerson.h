@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger, MAVEInviteSendingStatus) {
 - (NSArray *)selectedContactIdentifiers;
 
 - (BOOL)isAtLeastOneContactIdentifierSelected;
-- (void)selectTopContactIdentifierIfNoneSelected;
+- (void)selectBestContactIdentifierIfNoneSelected;
 
 + (NSString *)normalizePhoneNumber:(NSString *)phoneNumber;
 + (BOOL)looksLikeEmail:(NSString *)email;

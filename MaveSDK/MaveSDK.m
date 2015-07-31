@@ -41,6 +41,7 @@
         NSString *apiBaseURL = [MAVEAPIBaseURL stringByAppendingString:MAVEAPIVersion];
         _APIInterface = [[MAVEAPIInterface alloc] initWithBaseURL:apiBaseURL];
         _addressBookSyncManager = [[MAVEABSyncManager alloc] init];
+        _inviteSender = [[MAVEInviteSender alloc] init];
     }
     return self;
 }

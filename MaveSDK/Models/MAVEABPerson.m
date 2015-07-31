@@ -54,7 +54,7 @@
 
 - (void)setSelected:(BOOL)selected {
     if (selected) {
-        [self selectTopContactIdentifierIfNoneSelected];
+        [self selectBestContactIdentifierIfNoneSelected];
     } else {
         for (MAVEContactIdentifierBase *rec in self.allContactIdentifiers) {
             if (rec.selected) {
@@ -247,7 +247,7 @@
     return returnval;
 }
 
-- (void)selectTopContactIdentifierIfNoneSelected {
+- (void)selectBestContactIdentifierIfNoneSelected {
     if (![self isAtLeastOneContactIdentifierSelected]) {
         NSArray *rankedIdentifiers = [self rankedContactIdentifiersIncludeEmails:YES includePhones:YES];
         if ([rankedIdentifiers count] > 0) {
