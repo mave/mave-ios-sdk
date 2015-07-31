@@ -445,7 +445,7 @@
     XCTAssertEqual([[p1 rankedContactIdentifiersIncludeEmails:NO includePhones:NO] count], 0);
 }
 
-- (void)testSelectTopContactIdentifierIfNoneSelected {
+- (void)testSelectBestContactIdentifierIfNoneSelected {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     MAVEContactPhoneNumber *phone = [[MAVEContactPhoneNumber alloc] initWithValue:@"+18085551234" andLabel:@"iPhone"];
     MAVEContactEmail *email = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
@@ -453,13 +453,13 @@
     p1.emailObjects = @[email];
     email.selected = YES;
     // does nothing if one is already selected
-    [p1 selectTopContactIdentifierIfNoneSelected];
+    [p1 selectBestContactIdentifierIfNoneSelected];
     XCTAssertFalse(phone.selected);
     XCTAssertTrue(email.selected);
 
     phone.selected = NO;
     email.selected = NO;
-    [p1 selectTopContactIdentifierIfNoneSelected];
+    [p1 selectBestContactIdentifierIfNoneSelected];
     XCTAssertTrue(phone.selected);
     XCTAssertFalse(email.selected);
 }
@@ -467,7 +467,7 @@
 - (void)testContactIdentifierSelectedMethodsDontCrashWhenEmpty {
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init];
     XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
-    [p1 selectTopContactIdentifierIfNoneSelected];
+    [p1 selectBestContactIdentifierIfNoneSelected];
     XCTAssertFalse([p1 isAtLeastOneContactIdentifierSelected]);
 }
 

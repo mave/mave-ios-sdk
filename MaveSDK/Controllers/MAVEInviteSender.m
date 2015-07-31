@@ -12,7 +12,7 @@
 @implementation MAVEInviteSender
 
 - (void)invitePerson:(MAVEABPerson *)person withCompletionBlock:(void (^)(BOOL success))completionBlock {
-    
+    [person selectBestContactIdentifierIfNoneSelected];
     MaveSDK *mave = [MaveSDK sharedInstance];
     NSArray *recipients = @[person];
     [mave.APIInterface sendInvitesToRecipients:recipients smsCopy:mave.defaultSMSMessageText senderUserID:mave.userData.userID inviteLinkDestinationURL:mave.userData.inviteLinkDestinationURL wrapInviteLink:mave.userData.wrapInviteLink customData:mave.userData.customData completionBlock:^(NSError *error, NSDictionary *responseData) {

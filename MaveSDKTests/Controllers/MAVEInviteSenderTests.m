@@ -44,6 +44,9 @@
     id apiInterfaceMock = OCMPartialMock([MaveSDK sharedInstance].APIInterface);
 
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init];
+    MAVEContactEmail *email0 = [[MAVEContactEmail alloc] initWithValue:@"foo@example.com"];
+    MAVEContactEmail *email1 = [[MAVEContactEmail alloc] initWithValue:@"bar@example.com"];
+    p0.emailObjects = @[email0, email1];
     OCMExpect([apiInterfaceMock sendInvitesToRecipients:@[p0] smsCopy:[MaveSDK sharedInstance].defaultSMSMessageText senderUserID:@"123" inviteLinkDestinationURL:user.inviteLinkDestinationURL wrapInviteLink:NO customData:user.customData completionBlock:[OCMArg checkWithBlock:^BOOL(id obj) {
         void (^completionBlock)(NSError *error, NSDictionary *responseData)  = obj;
         completionBlock(nil, nil);
@@ -58,6 +61,9 @@
 
     XCTAssertTrue(sentOK);
     OCMVerifyAll(apiInterfaceMock);
+    // Since neither contact identifier (email) was already marked as selected
+    // this method should have marked the first one as selected
+    XCTAssertTrue(email0.selected);
 }
 
 
