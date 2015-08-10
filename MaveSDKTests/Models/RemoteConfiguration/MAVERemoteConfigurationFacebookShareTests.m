@@ -71,8 +71,8 @@
 
 - (void)testTextFillsInTemplate {
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
-    NSString *templateString = @"{{ customData.foo }}";
-    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+    NSString *templateString = @"some string";
+    OCMExpect([templatingUtilsMock interpolateTemplateString:templateString withUser:[OCMArg any] link:nil]).andReturn(@"bar1");
 
     MAVERemoteConfigurationFacebookShare *facebookShareConfig = [[MAVERemoteConfigurationFacebookShare alloc] init];
     facebookShareConfig.textTemplate = templateString;
