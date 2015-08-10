@@ -30,30 +30,30 @@
 
 - (void)testInterpolateTemplateStringNoInterpolation {
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
-    NSDictionary *customData = @{@"foo_field": @"blah"};
+    user.customData = @{@"foo_field": @"blah"};
     NSString *template = @"Hello there";
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user customData:customData];
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user];
 
     NSString *expected = template;
     XCTAssertEqualObjects(output, expected);
 }
 
 - (void)testInterpolateTemplateStringNoInterpolationNils {
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:@"Foo" withUser:nil customData:nil];
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:@"Foo" withUser:nil];
 
     XCTAssertEqualObjects(output, @"Foo");
 }
 
 - (void)testInterpolateTemplateStringNil {
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:nil withUser:nil customData:nil];
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:nil withUser:nil];
     XCTAssertNil(output);
 }
 
 - (void)testInterpolateTemplateStringSimpleWithUserAndCustomData {
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
-    NSDictionary *customData = @{@"foo_field": @"blah"};
+    user.customData = @{@"foo_field": @"blah"};
     NSString *template = @"{{ user.firstName }} is \"{{customData.foo_field}}\"";
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user customData:customData];
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user];
 
     NSString *expected = @"Foo is \"blah\"";
     XCTAssertEqualObjects(output, expected);
@@ -61,9 +61,10 @@
 
 - (void)testInterpolateTemplateStringAllUserFields {
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
+    user.customData = @{};
     user.promoCode = @"123foo";
     NSString *template = @"{{ user.userID }} {{ user.firstName }} {{ user.lastName }} '{{ user.fullName }}' {{ user.promoCode }}";
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user customData:@{}];
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user];
 
     NSString *expected = @"1 Foo Bar 'Foo Bar' 123foo";
     XCTAssertEqualObjects(output, expected);
@@ -71,8 +72,9 @@
 
 - (void)testInterpolateTemplateStringMissingStringLeavesEmpty {
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
+    user.customData = nil;
     NSString *template = @"{{ user.firstName }} is not \"{{ firstName }}\"";
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user customData:nil];
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:template withUser:user];
 
     NSString *expected = @"Foo is not \"\"";
     XCTAssertEqualObjects(output, expected);
@@ -95,17 +97,19 @@
 }
 
 - (void)testInterpolateTemplateStringConvertsValuesToStrings {
-    NSDictionary *customData = @{@"a": @19, @"b": @(19.55), @"c": @(YES), @"d": [NSNull null], @"e": @"string", @"f": [[MAVEUserData alloc] init]};
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.customData = @{@"a": @19, @"b": @(19.55), @"c": @(YES), @"d": [NSNull null], @"e": @"string", @"f": [[MAVEUserData alloc] init]};
     NSString *templateString = @"a {{ customData.a }} b {{ customData.b }} c {{ customData.c }} d {{ customData.d }} e {{ customData.e }} f {{ customData.f }}";
 
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:templateString withUser:nil customData:customData];
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:templateString withUser:user];
     NSString *expected = @"a 19 b 19.55 c 1 d <null> e string f ";
     XCTAssertEqualObjects(output, expected);
 }
 
 - (void)testInterpolateTemplateStringSkipsNonStringKeys {
-    NSDictionary *customData = @{@(19): @"foo"};
-    NSString *output = [MAVETemplatingUtils interpolateTemplateString:@"{{ customData.19 }}" withUser:nil customData:customData];
+    MAVEUserData *user = [[MAVEUserData alloc] init];
+    user.customData = @{@(19): @"foo"};
+    NSString *output = [MAVETemplatingUtils interpolateTemplateString:@"{{ customData.19 }}" withUser:user];
     XCTAssertEqualObjects(output, @"");
 }
 

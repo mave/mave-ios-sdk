@@ -16,10 +16,10 @@
 + (NSString *)convertValueToString:(id)value;
 
 // Helper method to interpolate the template string using the current context.
-// Available fields in template are user.* and customData.*
+// Available fields in template are user.* and customData.*, but the way we
+// pass the values in customData is a property of MAVEUserData.
 + (NSString *)interpolateTemplateString:(NSString *)templateString
-                               withUser:(MAVEUserData *)user
-                             customData:(NSDictionary *)customData;
+                               withUser:(MAVEUserData *)user;
 
 + (NSString *)appendLinkVariableToTemplateStringIfNeeded:(NSString *)templateString;
 

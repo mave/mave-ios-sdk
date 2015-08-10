@@ -12,7 +12,7 @@
 
 @implementation MAVETemplatingUtils
 
-+ (NSString *)interpolateTemplateString:(NSString *)templateString withUser:(MAVEUserData *)user customData:(NSDictionary *)customData {
++ (NSString *)interpolateTemplateString:(NSString *)templateString withUser:(MAVEUserData *)user {
 
     NSMutableDictionary *interpolationDict = [[NSMutableDictionary alloc] init];
 
@@ -22,6 +22,7 @@
     [interpolationDict setValue:user.lastName forKey:@"user.lastName"];
     [interpolationDict setValue:user.fullName forKey:@"user.fullName"];
     [interpolationDict setValue:user.promoCode forKey:@"user.promoCode"];
+    NSDictionary *customData = user.customData;
 
     NSString *namespacedKey, *key, *stringValue;
     for (key in customData) {
@@ -78,8 +79,7 @@
 
 + (NSString *)interpolateWithSingletonDataTemplateString:(NSString *)templateString {
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
-    NSDictionary *customData = user.customData;
-    return [self interpolateTemplateString:templateString withUser:user customData:customData];
+    return [self interpolateTemplateString:templateString withUser:user];
 }
 
 
