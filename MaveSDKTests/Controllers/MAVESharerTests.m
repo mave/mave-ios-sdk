@@ -407,7 +407,7 @@
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 
     // expectations for content to pass to share view controller
-    NSString *expectedText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.twitterShare.text andLinkWithSubRouteLetter:@"t"];
+    NSString *expectedText = sharerInstance.remoteConfiguration.twitterShare.text;
     OCMExpect([socialComposeVCMock setInitialText:expectedText]);
     OCMExpect([socialComposeVCMock setCompletionHandler:[OCMArg any]]);
 
@@ -497,7 +497,7 @@
     OCMExpect([sharerMock releaseSelf]);
 
     // expectations for content to pass to share view controller
-    NSString *expectedText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clipboardShare.text andLinkWithSubRouteLetter:@"c"];
+    NSString *expectedText = sharerInstance.remoteConfiguration.clipboardShare.text;
     OCMExpect([pasteboardMock setString:expectedText]);
 
     // run code under test

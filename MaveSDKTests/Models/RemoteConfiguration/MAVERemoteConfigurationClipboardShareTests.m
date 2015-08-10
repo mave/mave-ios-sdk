@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import "MAVERemoteConfigurationClipboardShare.h"
 #import "MAVETemplatingUtils.h"
+#import "MAVESharer.h"
 
 @interface MAVERemoteConfigurationClipboardShareTests : XCTestCase
 
@@ -71,9 +72,13 @@
 }
 
 - (void)testTextFillsInTemplate {
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock shareLinkWithSubRouteLetter:@"c"]).andReturn(@"fakeLink");
+
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
-    NSString *templateString = @"{{ customData.foo }}";
-    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+    NSString *templateString = @"some text";
+    NSString *tmplWithLink = @"some text {{ link }}";
+    OCMExpect([templatingUtilsMock interpolateTemplateString:tmplWithLink withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
 
     MAVERemoteConfigurationClipboardShare *twitterShareConfig = [[MAVERemoteConfigurationClipboardShare alloc] init];
     twitterShareConfig.textTemplate = templateString;
