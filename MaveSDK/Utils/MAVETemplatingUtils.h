@@ -19,7 +19,8 @@
 // Available fields in template are user.* and customData.*, but the way we
 // pass the values in customData is a property of MAVEUserData.
 + (NSString *)interpolateTemplateString:(NSString *)templateString
-                               withUser:(MAVEUserData *)user;
+                               withUser:(MAVEUserData *)user
+                                   link:(NSString *)link;
 
 + (NSString *)appendLinkVariableToTemplateStringIfNeeded:(NSString *)templateString;
 
