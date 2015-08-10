@@ -207,7 +207,7 @@
     NSString *expectedMessageSubject = sharerInstance.remoteConfiguration.clientEmail.subject;
     XCTAssertGreaterThan([expectedMessageSubject length], 0);
     OCMExpect([emailComposeVCMock setSubject:expectedMessageSubject]);
-    NSString *expectedMessageBody = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clientEmail.body andLinkWithSubRouteLetter:@"e"];
+    NSString *expectedMessageBody = sharerInstance.remoteConfiguration.clientEmail.body;
     XCTAssertGreaterThan([expectedMessageBody length], 0);
     OCMExpect([emailComposeVCMock setMessageBody:expectedMessageBody isHTML:NO]);
     OCMExpect([emailComposeVCMock setBccRecipients:recipients]);

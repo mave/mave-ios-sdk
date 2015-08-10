@@ -96,15 +96,14 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
     MFMailComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMailComposeViewController];
     NSString *subject = ownInstance.remoteConfiguration.clientEmail.subject;
-    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientEmail.body
-                                   andLinkWithSubRouteLetter:@"e"];
+    NSString *body = ownInstance.remoteConfiguration.clientEmail.body;
 
     if ([recipients count] > 0) {
         composeVC.bccRecipients = recipients;
     }
     composeVC.mailComposeDelegate = ownInstance;
     composeVC.subject = subject;
-    [composeVC setMessageBody:message isHTML:NO];
+    [composeVC setMessageBody:body isHTML:NO];
 
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientEmail];
     return composeVC;
