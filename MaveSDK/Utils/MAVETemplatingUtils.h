@@ -21,6 +21,8 @@
                                withUser:(MAVEUserData *)user
                              customData:(NSDictionary *)customData;
 
++ (NSString *)appendLinkVariableToTemplateStringIfNeeded:(NSString *)templateString;
+
 + (NSString *)interpolateWithSingletonDataTemplateString:(NSString *)templateString;
 
 @end

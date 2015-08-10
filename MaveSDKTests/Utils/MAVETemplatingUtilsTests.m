@@ -109,6 +109,35 @@
     XCTAssertEqualObjects(output, @"");
 }
 
+- (void)testAppendLinkVariableToTemplateStringIfNeededWhenNeeded {
+    NSString *tmpl0 = @"Simple string";
+    NSString *exp0 = @"Simple string {{ link }}";
+    NSString *output0 = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:tmpl0];
+    XCTAssertEqualObjects(output0, exp0);
+
+    NSString *tmpl1 = @"String without {{ link variable";
+    NSString *exp1 = @"String without {{ link variable {{ link }}";
+    NSString *output1 = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:tmpl1];
+    XCTAssertEqualObjects(output1, exp1);
+
+    // don't add an extra string if it ends in whitespace
+    NSString *tmpl2 = @"String ending in whitespace ";
+    NSString *exp2 = @"String ending in whitespace {{ link }}";
+    NSString *output2 = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:tmpl2];
+    XCTAssertEqualObjects(output2, exp2);
+
+    // doesn't break for empty string or nil
+    XCTAssertEqualObjects([MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:@""], @"{{ link }}");
+    XCTAssertEqualObjects([MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:nil], @"{{ link }}");
+
+}
+
+- (void)testAppendLinkVariableToTemplateStringIfNeededWhenNotNeeded {
+    NSString *tmpl0 = @"Some string with {{  link}} variable";
+    NSString *output = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:tmpl0];
+    XCTAssertEqualObjects(tmpl0, output);
+}
+
 - (void)testInterpolateWithSingletonData {
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Foo" lastName:@"Bar"];
     user.customData = @{@"other_field": @"blahz"};

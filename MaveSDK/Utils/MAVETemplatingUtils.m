@@ -53,6 +53,29 @@
     return nil;
 }
 
++ (NSString *)appendLinkVariableToTemplateStringIfNeeded:(NSString *)templateString {
+    NSString *LINKVAL = @"{{ link }}";
+    // Shouldn't get empty case, but just in case return only link
+    if ([templateString length] == 0) {
+        return LINKVAL;
+    }
+
+    // to check if template already contains link, actually fill it in with a value that
+    // won't exist in the string so we don't have to re-implement the logic to identify
+    // a template variable, e.g. allowing both {{var}} and {{   var   }}.
+    NSString *output = templateString;
+    NSString *_tmp = [templateString templateFromDict:@{@"link": LINKVAL}];
+    if (![_tmp containsString:LINKVAL]) {
+        // template string has no link in it, so append one to the end, following a space
+        NSString *lastLetter = [templateString substringFromIndex:[templateString length] - 1];
+        if (![@[@" ", @"\n"] containsObject:lastLetter]) {
+            output = [output stringByAppendingString:@" "];
+        }
+        output = [output stringByAppendingString:LINKVAL];
+    }
+    return output;
+}
+
 + (NSString *)interpolateWithSingletonDataTemplateString:(NSString *)templateString {
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
     NSDictionary *customData = user.customData;
