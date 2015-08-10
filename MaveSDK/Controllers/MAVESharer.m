@@ -48,10 +48,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     ownInstance.completionBlockClientSMS = completionBlock;
 
     MFMessageComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMessageComposeViewController];
-    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
 
     composeVC.messageComposeDelegate = ownInstance;
-    composeVC.body = message;
+    composeVC.body = ownInstance.remoteConfiguration.clientSMS.text;
 
     if (recipientPhones && [recipientPhones count] > 0) {
         composeVC.recipients = recipientPhones;

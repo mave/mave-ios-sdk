@@ -61,7 +61,7 @@
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 
     // sms message text
-    NSString *expectedMessageText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
+    NSString *expectedMessageText = sharerInstance.remoteConfiguration.clientSMS.text;
     XCTAssertGreaterThan([expectedMessageText length], 0);
     OCMExpect([messageComposeVCMock setBody:expectedMessageText]);
 
@@ -106,8 +106,7 @@
     [MaveSDK sharedInstance].userData.wrapInviteLink = NO;
     
     // sms message text
-    NSString *expectedMessageText = [sharerInstance.remoteConfiguration.clientSMS.text stringByAppendingString:@" http://example.com/unwrapped/link"];
-    OCMExpect([messageComposeVCMock setBody:expectedMessageText]);
+    OCMExpect([messageComposeVCMock setBody:sharerInstance.remoteConfiguration.clientSMS.text]);
     
     // sms recipient
     OCMExpect([messageComposeVCMock setRecipients:recipientPhones]);
