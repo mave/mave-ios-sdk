@@ -67,7 +67,11 @@
     // a template variable, e.g. allowing both {{var}} and {{   var   }}.
     NSString *output = templateString;
     NSString *_tmp = [templateString templateFromDict:@{@"link": LINKVAL}];
-    if (![_tmp containsString:LINKVAL]) {
+    // ios7 doesnt have NSString containsString:
+    NSRange _foundInRange = [_tmp rangeOfString:LINKVAL];
+    BOOL containsLink = _foundInRange.length != 0;
+
+    if (!containsLink) {
         // template string has no link in it, so append one to the end, following a space
         NSString *lastLetter = [templateString substringFromIndex:[templateString length] - 1];
         if (![@[@" ", @"\n"] containsObject:lastLetter]) {
