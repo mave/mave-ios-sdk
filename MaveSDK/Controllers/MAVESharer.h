@@ -46,8 +46,6 @@ extern NSString * const MAVESharePageShareTypeClipboard;
 //
 - (MAVERemoteConfiguration *)remoteConfiguration;
 + (NSString *)shareToken;
-+ (NSString *)clientSMSMessageText;
-
 + (NSString *)shareCopyFromCopy:(NSString *)shareCopy
       andLinkWithSubRouteLetter:(NSString *)letter;
 
