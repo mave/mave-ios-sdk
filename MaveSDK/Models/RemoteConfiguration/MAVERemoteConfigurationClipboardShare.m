@@ -9,6 +9,8 @@
 #import "MAVERemoteConfigurationClipboardShare.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVETemplatingUtils.h"
+#import "MaveSDK.h"
+#import "MAVESharer.h"
 
 NSString * const MAVERemoteConfigKeyClipboardShareTemplate = @"template";
 NSString * const MAVERemoteConfigKeyClipboardShareTemplateID = @"template_id";
@@ -37,7 +39,11 @@ NSString * const MAVERemoteConfigKeyClipboardShareCopy = @"copy_template";
 }
 
 - (NSString *)text {
-    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.textTemplate];
+    NSString *templateWithLink = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:self.textTemplate];
+    // if we generate link, clipboard should use a "c" to designate
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"c"];
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    return [MAVETemplatingUtils interpolateTemplateString:templateWithLink withUser:user link:link];
 }
 
 + (NSDictionary *)defaultJSONData {

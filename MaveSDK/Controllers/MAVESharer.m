@@ -48,10 +48,9 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     ownInstance.completionBlockClientSMS = completionBlock;
 
     MFMessageComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMessageComposeViewController];
-    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
 
     composeVC.messageComposeDelegate = ownInstance;
-    composeVC.body = message;
+    composeVC.body = ownInstance.remoteConfiguration.clientSMS.text;
 
     if (recipientPhones && [recipientPhones count] > 0) {
         composeVC.recipients = recipientPhones;
@@ -97,15 +96,14 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
     MFMailComposeViewController *composeVC = [MAVESharerViewControllerBuilder MFMailComposeViewController];
     NSString *subject = ownInstance.remoteConfiguration.clientEmail.subject;
-    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clientEmail.body
-                                   andLinkWithSubRouteLetter:@"e"];
+    NSString *body = ownInstance.remoteConfiguration.clientEmail.body;
 
     if ([recipients count] > 0) {
         composeVC.bccRecipients = recipients;
     }
     composeVC.mailComposeDelegate = ownInstance;
     composeVC.subject = subject;
-    [composeVC setMessageBody:message isHTML:NO];
+    [composeVC setMessageBody:body isHTML:NO];
 
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClientEmail];
     return composeVC;
@@ -179,9 +177,7 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
     ownInstance.completionBlockTwitterNativeShare = completionBlock;
 
     SLComposeViewController *composeVC = [MAVESharerViewControllerBuilder SLComposeViewControllerForTwitter];
-    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.twitterShare.text
-                                   andLinkWithSubRouteLetter:@"t"];
-    [composeVC setInitialText:message];
+    [composeVC setInitialText:ownInstance.remoteConfiguration.twitterShare.text];
     __weak SLComposeViewController *weakComposeVC = composeVC;
     composeVC.completionHandler = ^(SLComposeViewControllerResult result) {
         [ownInstance twitterNativeShareController:weakComposeVC didFinishWithResult:result];
@@ -208,11 +204,8 @@ NSString * const MAVESharePageShareTypeClipboard = @"clipboard";
 
 + (void)composePasteboardShare {
     MAVESharer *ownInstance = [MAVESharerViewControllerBuilder sharerInstanceRetained];
-    NSString *message = [self shareCopyFromCopy:ownInstance.remoteConfiguration.clipboardShare.text
-                                   andLinkWithSubRouteLetter:@"c"];
-
     UIPasteboard *pasteboard = [MAVESharerViewControllerBuilder UIPasteboard];
-    pasteboard.string = message;
+    pasteboard.string = ownInstance.remoteConfiguration.clipboardShare.text;
 
     [[MaveSDK sharedInstance].APIInterface trackShareActionClickWithShareType:MAVESharePageShareTypeClipboard];
 

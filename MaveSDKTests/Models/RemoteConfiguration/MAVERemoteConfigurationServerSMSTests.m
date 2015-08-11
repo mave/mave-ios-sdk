@@ -74,8 +74,8 @@
 
 - (void)testTextFillsInTemplate {
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
-    NSString *templateString = @"{{ customData.foo }}";
-    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+    NSString *templateString = @"some text ";
+    OCMExpect([templatingUtilsMock interpolateTemplateString:templateString withUser:[OCMArg any] link:@"{{ link }}"]).andReturn(@"bar1");
 
     MAVERemoteConfigurationServerSMS *serverSMSConfig = [[MAVERemoteConfigurationServerSMS alloc] init];
     serverSMSConfig.textTemplate = templateString;

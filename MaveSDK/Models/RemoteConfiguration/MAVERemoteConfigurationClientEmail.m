@@ -9,6 +9,8 @@
 #import "MAVERemoteConfigurationClientEmail.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVETemplatingUtils.h"
+#import "MaveSDK.h"
+#import "MAVESharer.h"
 
 NSString * const MAVERemoteConfigKeyClientEmailTemplate = @"template";
 NSString * const MAVERemoteConfigKeyClientEmailTemplateID = @"template_id";
@@ -41,11 +43,20 @@ NSString * const MAVERemoteConfigKeyClientEmailBody = @"body_template";
 }
 
 - (NSString *)subject {
-    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.subjectTemplate];
+    // NB: don't append link to subject if none b/c subject doesn't need link,
+    // but still render template with it in case anyone tries to use it
+    // if we generate link, email should use an "e" to designate
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"e"];
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    return [MAVETemplatingUtils interpolateTemplateString:self.subjectTemplate withUser:user link:link];
 }
 
 - (NSString *)body {
-    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.bodyTemplate];
+    NSString *templateWithLink = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:self.bodyTemplate];
+    // if we generate link, email should use an "e" to designate
+    NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"e"];
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    return [MAVETemplatingUtils interpolateTemplateString:templateWithLink withUser:user link:link];
 }
 
 + (NSDictionary *)defaultJSONData {

@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import "MAVERemoteConfigurationClientEmail.h"
 #import "MAVETemplatingUtils.h"
+#import "MAVESharer.h"
 
 @interface MAVERemoteConfigurationClientEmailTests : XCTestCase
 
@@ -73,11 +74,16 @@
 }
 
 - (void)testTextFillsInTemplate {
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock shareLinkWithSubRouteLetter:@"e"]).andReturn(@"fakeLink");
+    OCMExpect([sharerMock shareLinkWithSubRouteLetter:@"e"]).andReturn(@"fakeLink");
+
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
-    NSString *subjectTemplate = @"{{ customData.foo }}";
-    NSString *bodyTemplate = @"{{ customData.bar }}";
-    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:subjectTemplate]).andReturn(@"bar1");
-    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:bodyTemplate]).andReturn(@"bar2");
+    NSString *subjectTemplate = @"some subject";
+    NSString *bodyTemplate = @"some body";
+    NSString *bodyTmplWithLink = @"some body {{ link }}";
+    OCMExpect([templatingUtilsMock interpolateTemplateString:subjectTemplate withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
+    OCMExpect([templatingUtilsMock interpolateTemplateString:bodyTmplWithLink withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar2");
 
     MAVERemoteConfigurationClientEmail *clientEmailConfig = [[MAVERemoteConfigurationClientEmail alloc] init];
     clientEmailConfig.subjectTemplate = subjectTemplate;
@@ -87,6 +93,7 @@
     NSString *body = [clientEmailConfig body];
 
     OCMVerifyAll(templatingUtilsMock);
+    OCMVerifyAll(sharerMock);
     XCTAssertEqualObjects(subject, @"bar1");
     XCTAssertEqualObjects(body, @"bar2");
 }

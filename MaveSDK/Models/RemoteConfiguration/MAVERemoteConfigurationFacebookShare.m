@@ -9,6 +9,7 @@
 #import "MAVERemoteConfigurationFacebookShare.h"
 #import "MAVEClientPropertyUtils.h"
 #import "MAVETemplatingUtils.h"
+#import "MaveSDK.h"
 
 NSString * const MAVERemoteConfigKeyFacebookShareTemplate = @"template";
 NSString * const MAVERemoteConfigKeyFacebookShareTemplateID = @"template_id";
@@ -36,7 +37,10 @@ NSString * const MAVERemoteConfigKeyFacebookShareCopy = @"initial_text_template"
 }
 
 - (NSString *)text {
-    return [MAVETemplatingUtils interpolateWithSingletonDataTemplateString:self.textTemplate];
+    // don't need to interpolate the {{ link }} variable bc the link gets
+    // set separately as metadata on the FB post
+    MAVEUserData *user = [MaveSDK sharedInstance].userData;
+    return [MAVETemplatingUtils interpolateTemplateString:self.textTemplate withUser:user link:nil];
 }
 
 + (NSDictionary *)defaultJSONData {

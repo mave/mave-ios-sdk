@@ -61,7 +61,7 @@
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 
     // sms message text
-    NSString *expectedMessageText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clientSMS.text andLinkWithSubRouteLetter:@"s"];
+    NSString *expectedMessageText = sharerInstance.remoteConfiguration.clientSMS.text;
     XCTAssertGreaterThan([expectedMessageText length], 0);
     OCMExpect([messageComposeVCMock setBody:expectedMessageText]);
 
@@ -106,8 +106,7 @@
     [MaveSDK sharedInstance].userData.wrapInviteLink = NO;
     
     // sms message text
-    NSString *expectedMessageText = [sharerInstance.remoteConfiguration.clientSMS.text stringByAppendingString:@" http://example.com/unwrapped/link"];
-    OCMExpect([messageComposeVCMock setBody:expectedMessageText]);
+    OCMExpect([messageComposeVCMock setBody:sharerInstance.remoteConfiguration.clientSMS.text]);
     
     // sms recipient
     OCMExpect([messageComposeVCMock setRecipients:recipientPhones]);
@@ -208,7 +207,7 @@
     NSString *expectedMessageSubject = sharerInstance.remoteConfiguration.clientEmail.subject;
     XCTAssertGreaterThan([expectedMessageSubject length], 0);
     OCMExpect([emailComposeVCMock setSubject:expectedMessageSubject]);
-    NSString *expectedMessageBody = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clientEmail.body andLinkWithSubRouteLetter:@"e"];
+    NSString *expectedMessageBody = sharerInstance.remoteConfiguration.clientEmail.body;
     XCTAssertGreaterThan([expectedMessageBody length], 0);
     OCMExpect([emailComposeVCMock setMessageBody:expectedMessageBody isHTML:NO]);
     OCMExpect([emailComposeVCMock setBccRecipients:recipients]);
@@ -408,7 +407,7 @@
     OCMExpect([builderMock sharerInstanceRetained]).andReturn(sharerInstance);
 
     // expectations for content to pass to share view controller
-    NSString *expectedText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.twitterShare.text andLinkWithSubRouteLetter:@"t"];
+    NSString *expectedText = sharerInstance.remoteConfiguration.twitterShare.text;
     OCMExpect([socialComposeVCMock setInitialText:expectedText]);
     OCMExpect([socialComposeVCMock setCompletionHandler:[OCMArg any]]);
 
@@ -498,7 +497,7 @@
     OCMExpect([sharerMock releaseSelf]);
 
     // expectations for content to pass to share view controller
-    NSString *expectedText = [MAVESharer shareCopyFromCopy:sharerInstance.remoteConfiguration.clipboardShare.text andLinkWithSubRouteLetter:@"c"];
+    NSString *expectedText = sharerInstance.remoteConfiguration.clipboardShare.text;
     OCMExpect([pasteboardMock setString:expectedText]);
 
     // run code under test

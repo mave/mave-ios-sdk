@@ -11,6 +11,7 @@
 #import <OCMock/OCMock.h>
 #import "MAVERemoteConfigurationClientSMS.h"
 #import "MAVETemplatingUtils.h"
+#import "MAVESharer.h"
 
 @interface MAVERemoteConfigurationClientSMSTests : XCTestCase
 
@@ -71,9 +72,13 @@
 }
 
 - (void)testTextFillsInTemplate {
+    id sharerMock = OCMClassMock([MAVESharer class]);
+    OCMExpect([sharerMock shareLinkWithSubRouteLetter:@"s"]).andReturn(@"fakeLink");
+
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
-    NSString *templateString = @"{{ customData.foo }}";
-    OCMExpect([templatingUtilsMock interpolateWithSingletonDataTemplateString:templateString]).andReturn(@"bar1");
+    NSString *templateString = @"some template";
+    NSString *tmplWithLink = @"some template {{ link }}";
+    OCMExpect([templatingUtilsMock interpolateTemplateString:tmplWithLink withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
 
     MAVERemoteConfigurationClientSMS *clientSMSConfig = [[MAVERemoteConfigurationClientSMS alloc] init];
     clientSMSConfig.textTemplate = templateString;
@@ -81,6 +86,7 @@
     NSString *output = [clientSMSConfig text];
 
     OCMVerifyAll(templatingUtilsMock);
+    OCMVerifyAll(sharerMock);
     XCTAssertEqualObjects(output, @"bar1");
 }
 
