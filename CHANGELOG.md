@@ -1,5 +1,8 @@
 ## Mave SDK releases
 
+### v0.7.9
+- Move the link for an invite into the templating system as the {{ link }} variable, instead of always appending it to the end of the string. If it's not found in the template, it'll still get appended to the end of the string for backwards compatibility.
+
 ### v0.7.8
 - Add method `invitePerson:withCompletionBlock` to send an invite to a MAVEABPerson object, to use when using suggested invites outside of the drop-in invite page.
 
