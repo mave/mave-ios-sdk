@@ -35,14 +35,14 @@
     XCTAssertNotNil(template);
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
-    XCTAssertEqualObjects([template objectForKey:@"copy_template"], @"");
+    XCTAssertEqualObjects([template objectForKey:@"copy_template"], @"{{ link }}");
 }
 
 - (void)testInitFromDefaultData {
     MAVERemoteConfigurationClipboardShare *obj = [[MAVERemoteConfigurationClipboardShare alloc] initWithDictionary:[MAVERemoteConfigurationClipboardShare defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.textTemplate, @"");
+    XCTAssertEqualObjects(obj.textTemplate, @"{{ link }}");
 }
 
 - (void)testInitFailsIfTemplateMalformed {

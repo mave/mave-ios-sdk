@@ -36,14 +36,14 @@
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
     XCTAssertEqualObjects([template objectForKey:@"copy_template"],
-                          @"Join me on DemoApp!");
+                          @"Join me on DemoApp! {{ link }}");
 }
 
 - (void)testInitFromDefaultData {
     MAVERemoteConfigurationClientSMS *obj = [[MAVERemoteConfigurationClientSMS alloc] initWithDictionary:[MAVERemoteConfigurationClientSMS defaultJSONData]];
 
     XCTAssertEqualObjects(obj.templateID, @"0");
-    XCTAssertEqualObjects(obj.textTemplate, @"Join me on DemoApp!");
+    XCTAssertEqualObjects(obj.textTemplate, @"Join me on DemoApp! {{ link }}");
 }
 
 - (void)testInitFailsIfTemplateMalformed {

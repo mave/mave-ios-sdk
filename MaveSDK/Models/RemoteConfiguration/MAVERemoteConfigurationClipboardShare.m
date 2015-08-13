@@ -47,7 +47,7 @@ NSString * const MAVERemoteConfigKeyClipboardShareCopy = @"copy_template";
 
 + (NSDictionary *)defaultJSONData {
     // With the clipboard we probably want to copy just the link
-    NSString *text = @"";
+    NSString *text = @"{{ link }}";
     return @{
              MAVERemoteConfigKeyClipboardShareTemplate: @{
                      MAVERemoteConfigKeyClipboardShareTemplateID: @"0",

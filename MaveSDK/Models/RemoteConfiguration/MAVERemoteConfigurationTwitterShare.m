@@ -46,7 +46,7 @@ NSString * const MAVERemoteConfigKeyTwitterShareCopy = @"copy_template";
 }
 
 + (NSDictionary *)defaultJSONData {
-    NSString *text = [NSString stringWithFormat:@"I love %@. Try it out",
+    NSString *text = [NSString stringWithFormat:@"I love %@. Try it out {{ link }}",
                       [MAVEClientPropertyUtils appName]];
     return @{
         MAVERemoteConfigKeyTwitterShareTemplate: @{

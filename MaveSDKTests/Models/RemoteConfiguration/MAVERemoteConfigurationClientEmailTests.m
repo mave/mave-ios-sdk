@@ -36,7 +36,7 @@
 
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
     XCTAssertEqualObjects([template objectForKey:@"subject_template"], @"Join DemoApp");
-    XCTAssertEqualObjects([template objectForKey:@"body_template"], @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\n");
+    XCTAssertEqualObjects([template objectForKey:@"body_template"], @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\n{{ link }}");
 }
 
 - (void)testInitFromDefaultData {
@@ -44,7 +44,7 @@
 
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertEqualObjects(obj.subjectTemplate, @"Join DemoApp");
-    XCTAssertEqualObjects(obj.bodyTemplate, @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\n");
+    XCTAssertEqualObjects(obj.bodyTemplate, @"Hey, I've been using DemoApp and thought you might like it. Check it out:\n\n{{ link }}");
 }
 
 - (void)testInitFailsIfTemplateMalformed {
