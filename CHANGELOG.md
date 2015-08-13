@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.7.10
+- Stop appending links to client shares, no reason to always do this
+- Add remote config options to enable/disable individual share types on the fallback share page
+
 ### v0.7.9
 - Move the link for an invite into the templating system as the {{ link }} variable, instead of always appending it to the end of the string. If it's not found in the template, it'll still get appended to the end of the string for backwards compatibility.
 
