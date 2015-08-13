@@ -81,9 +81,8 @@
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
     NSString *subjectTemplate = @"some subject";
     NSString *bodyTemplate = @"some body";
-    NSString *bodyTmplWithLink = @"some body {{ link }}";
     OCMExpect([templatingUtilsMock interpolateTemplateString:subjectTemplate withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
-    OCMExpect([templatingUtilsMock interpolateTemplateString:bodyTmplWithLink withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar2");
+    OCMExpect([templatingUtilsMock interpolateTemplateString:bodyTemplate withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar2");
 
     MAVERemoteConfigurationClientEmail *clientEmailConfig = [[MAVERemoteConfigurationClientEmail alloc] init];
     clientEmailConfig.subjectTemplate = subjectTemplate;

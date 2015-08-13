@@ -52,11 +52,10 @@ NSString * const MAVERemoteConfigKeyClientEmailBody = @"body_template";
 }
 
 - (NSString *)body {
-    NSString *templateWithLink = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:self.bodyTemplate];
     // if we generate link, email should use an "e" to designate
     NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"e"];
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
-    return [MAVETemplatingUtils interpolateTemplateString:templateWithLink withUser:user link:link];
+    return [MAVETemplatingUtils interpolateTemplateString:self.bodyTemplate withUser:user link:link];
 }
 
 + (NSDictionary *)defaultJSONData {

@@ -77,8 +77,7 @@
 
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
     NSString *templateString = @"some text";
-    NSString *tmplWithLink = @"some text {{ link }}";
-    OCMExpect([templatingUtilsMock interpolateTemplateString:tmplWithLink withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
+    OCMExpect([templatingUtilsMock interpolateTemplateString:templateString withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
 
     MAVERemoteConfigurationClipboardShare *twitterShareConfig = [[MAVERemoteConfigurationClipboardShare alloc] init];
     twitterShareConfig.textTemplate = templateString;

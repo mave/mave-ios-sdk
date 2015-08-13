@@ -77,8 +77,9 @@
 
     id templatingUtilsMock = OCMClassMock([MAVETemplatingUtils class]);
     NSString *templateString = @"some template";
-    NSString *tmplWithLink = @"some template {{ link }}";
-    OCMExpect([templatingUtilsMock interpolateTemplateString:tmplWithLink withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
+    // note: if not link in template string, we don't automatically append one
+    // (like we do with server sms)
+    OCMExpect([templatingUtilsMock interpolateTemplateString:templateString withUser:[OCMArg any] link:@"fakeLink"]).andReturn(@"bar1");
 
     MAVERemoteConfigurationClientSMS *clientSMSConfig = [[MAVERemoteConfigurationClientSMS alloc] init];
     clientSMSConfig.textTemplate = templateString;

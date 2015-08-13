@@ -39,11 +39,10 @@ NSString * const MAVERemoteConfigKeyClientSMSCopyTemplate = @"copy_template";
 }
 
 - (NSString *)text {
-    NSString *templateWithLink = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:self.textTemplate];
     // if we generate link, sms should use an "s" to designate
     NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"s"];
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
-    return [MAVETemplatingUtils interpolateTemplateString:templateWithLink withUser:user link:link];
+    return [MAVETemplatingUtils interpolateTemplateString:self.textTemplate withUser:user link:link];
 }
 
 + (NSDictionary *)defaultJSONData {

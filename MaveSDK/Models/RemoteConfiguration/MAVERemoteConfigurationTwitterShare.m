@@ -39,11 +39,10 @@ NSString * const MAVERemoteConfigKeyTwitterShareCopy = @"copy_template";
 }
 
 - (NSString *)text {
-    NSString *templateWithLink = [MAVETemplatingUtils appendLinkVariableToTemplateStringIfNeeded:self.textTemplate];
     // if we generate link, twitter should use a "t" to designate
     NSString *link = [MAVESharer shareLinkWithSubRouteLetter:@"t"];
     MAVEUserData *user = [MaveSDK sharedInstance].userData;
-    return [MAVETemplatingUtils interpolateTemplateString:templateWithLink withUser:user link:link];
+    return [MAVETemplatingUtils interpolateTemplateString:self.textTemplate withUser:user link:link];
 }
 
 + (NSDictionary *)defaultJSONData {
