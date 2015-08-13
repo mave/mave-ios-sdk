@@ -60,11 +60,37 @@
 
 - (void)testInitSetsUpShareToken {
     id sharerMock = OCMClassMock([MAVESharer class]);
-
     id obj = [[MAVEShareButtonsView alloc] init];
 
     OCMVerify([sharerMock setupShareToken]);
     XCTAssertNotNil(obj);
+}
+
+- (void)testInitSetsAllowAllShareOptionsToTrue {
+    MAVEShareButtonsView *obj = [[MAVEShareButtonsView alloc] init];
+
+    XCTAssertTrue(obj.allowSMSShare);
+    XCTAssertTrue(obj.allowEmailShare);
+    XCTAssertTrue(obj.allowNativeFacebookShare);
+    XCTAssertTrue(obj.allowNativeTwitterShare);
+    XCTAssertTrue(obj.allowClipboardShare);
+}
+
+- (void)testSetupShareButtonsWhenAllAllowedTrue {
+    MAVEShareButtonsView *obj = [[MAVEShareButtonsView alloc] init];
+    [obj shareButtonSize]; // triggers laying out share buttons
+    // on simulator, only email & clipboard actually work
+    XCTAssertEqual([obj.shareButtons count], 2);
+}
+
+- (void)testSettingAllowOptionsToNoDoesntIncludeThem {
+    MAVEShareButtonsView *obj = [[MAVEShareButtonsView alloc] init];
+    obj.allowSMSShare = NO; obj.allowEmailShare = NO;
+    obj.allowNativeFacebookShare = NO; obj.allowNativeTwitterShare = NO;
+    obj.allowClipboardShare = NO;
+    [obj shareButtonSize]; // triggers laying out share buttons
+
+    XCTAssertEqual([obj.shareButtons count], 0);
 }
 
 #pragma mark - Test Share Actions

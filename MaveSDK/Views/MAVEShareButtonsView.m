@@ -31,6 +31,11 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
     if (self = [super init]) {
         [self setupDefaultStyling];
     }
+    self.allowSMSShare = YES;
+    self.allowEmailShare = YES;
+    self.allowNativeFacebookShare = YES;
+    self.allowNativeTwitterShare = YES;
+    self.allowClipboardShare = YES;
     return self;
 }
 
@@ -135,23 +140,25 @@ CGFloat const MAVEShareIconsSmallIconsEdgeSize = 22;
         shareButton = [self smsShareButton];
         [self.shareButtons addObject:shareButton];
     }
-    if ([MFMailComposeViewController canSendMail]) {
+    if (self.allowEmailShare && [MFMailComposeViewController canSendMail]) {
         shareButton = [self emailShareButton];
         [self.shareButtons addObject:shareButton];
     }
 
-    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+    if (self.allowNativeFacebookShare && [SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
         shareButton = [self facebookShareButton];
         [self.shareButtons addObject:shareButton];
     }
 
-    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+    if (self.allowNativeTwitterShare && [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
         shareButton = [self twitterShareButton];
         [self.shareButtons addObject:shareButton];
     }
 
-    shareButton = [self clipboardShareButton];
-    [self.shareButtons addObject:shareButton];
+    if (self.allowClipboardShare) {
+        shareButton = [self clipboardShareButton];
+        [self.shareButtons addObject:shareButton];
+    }
 }
 
 

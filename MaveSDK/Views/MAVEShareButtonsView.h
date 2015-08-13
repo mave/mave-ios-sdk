@@ -18,6 +18,11 @@
 @property (nonatomic, assign) BOOL useSmallIcons;
 
 @property (nonatomic, assign) BOOL allowSMSShare;
+@property (nonatomic, assign) BOOL allowEmailShare;
+@property (nonatomic, assign) BOOL allowNativeFacebookShare;
+@property (nonatomic, assign) BOOL allowNativeTwitterShare;
+@property (nonatomic, assign) BOOL allowClipboardShare;
+
 
 @property (nonatomic, assign) BOOL dismissMaveTopLevelOnSuccessfulShare;
 
