@@ -15,6 +15,12 @@ const NSString *MAVERemoteConfigKeyCustomSharePageTemplate = @"template";
 const NSString *MAVERemoteConfigKeyCustomSharePageTemplateID = @"template_id";
 const NSString *MAVERemoteConfigKeyCustomSharePageExplanationCopy = @"explanation_copy_template";
 const NSString *MAVERemoteConfigKeyCustomSharePageInviteLinkBaseURL = @"invite_link_base_url";
+const NSString *MAVERemoteConfigKeyCustomSharePageIncludeClientSMS = @"include_client_sms";
+const NSString *MAVERemoteConfigKeyCustomSharePageIncludeClientEmail = @"include_client_email";
+const NSString *MAVERemoteConfigKeyCustomSharePageIncludeNativeFacebook = @"include_native_facebook";
+const NSString *MAVERemoteConfigKeyCustomSharePageIncludeNativeTwitter = @"include_native_twitter";
+const NSString *MAVERemoteConfigKeyCustomSharePageIncludeClipboard = @"include_clipboard";
+
 
 @implementation MAVERemoteConfigurationCustomSharePage
 
@@ -48,6 +54,27 @@ const NSString *MAVERemoteConfigKeyCustomSharePageInviteLinkBaseURL = @"invite_l
             if (!self.explanationCopyTemplate) {
                 return nil;
             }
+
+            id includeClientSMS = [template objectForKey:MAVERemoteConfigKeyCustomSharePageIncludeClientSMS];
+            if (![includeClientSMS isEqual:[NSNull null]]) {
+                self.includeClientSMS = [includeClientSMS boolValue];
+            }
+            id includeClientEmail = [template objectForKey:MAVERemoteConfigKeyCustomSharePageIncludeClientEmail];
+            if (![includeClientEmail isEqual:[NSNull null]]) {
+                self.includeClientEmail = [includeClientEmail boolValue];
+            }
+            id includeNativeFacebook = [template objectForKey:MAVERemoteConfigKeyCustomSharePageIncludeNativeFacebook];
+            if (![includeNativeFacebook isEqual:[NSNull null]]) {
+                self.includeNativeFacebook = [includeNativeFacebook boolValue];
+            }
+            id includeNativeTwitter = [template objectForKey:MAVERemoteConfigKeyCustomSharePageIncludeNativeTwitter];
+            if (![includeNativeTwitter isEqual:[NSNull null]]) {
+                self.includeNativeTwitter = [includeNativeTwitter boolValue];
+            }
+            id includeClipboard = [template objectForKey:MAVERemoteConfigKeyCustomSharePageIncludeClipboard];
+            if (![includeClipboard isEqual:[NSNull null]]) {
+                self.includeClipboard = [includeClipboard boolValue];
+            }
         }
     }
     return self;
@@ -65,6 +92,11 @@ const NSString *MAVERemoteConfigKeyCustomSharePageInviteLinkBaseURL = @"invite_l
              MAVERemoteConfigKeyCustomSharePageTemplate: @{
                  MAVERemoteConfigKeyCustomSharePageTemplateID: @"0",
                  MAVERemoteConfigKeyCustomSharePageExplanationCopy: explanation,
+                 MAVERemoteConfigKeyCustomSharePageIncludeClientSMS: @YES,
+                 MAVERemoteConfigKeyCustomSharePageIncludeClientEmail: @YES,
+                 MAVERemoteConfigKeyCustomSharePageIncludeNativeFacebook: @YES,
+                 MAVERemoteConfigKeyCustomSharePageIncludeNativeTwitter: @YES,
+                 MAVERemoteConfigKeyCustomSharePageIncludeClipboard: @YES,
         }
     };
 }

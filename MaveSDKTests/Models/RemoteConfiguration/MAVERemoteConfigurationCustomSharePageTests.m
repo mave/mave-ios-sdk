@@ -35,6 +35,12 @@
     XCTAssertEqualObjects([defaults objectForKey:@"invite_link_base_url"], [NSNull null]);
     NSDictionary *template = [defaults objectForKey:@"template"];
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
+    XCTAssertEqualObjects([template objectForKey:@"include_client_sms"], @YES);
+    XCTAssertEqualObjects([template objectForKey:@"include_client_email"], @YES);
+    XCTAssertEqualObjects([template objectForKey:@"include_native_facebook"], @YES);
+    XCTAssertEqualObjects([template objectForKey:@"include_native_twitter"], @YES);
+    XCTAssertEqualObjects([template objectForKey:@"include_clipboard"], @YES);
+
 
     // The actual app name here comes from the bundle name, this test always runs in
     // the context of the demo app
@@ -49,6 +55,11 @@
     XCTAssertEqualObjects(obj.explanationCopy,
                           @"Share DemoApp with friends");
     XCTAssertEqualObjects(obj.inviteLinkBaseURL, nil);
+    XCTAssertTrue(obj.includeClientSMS);
+    XCTAssertTrue(obj.includeClientEmail);
+    XCTAssertTrue(obj.includeNativeFacebook);
+    XCTAssertTrue(obj.includeNativeTwitter);
+    XCTAssertTrue(obj.includeClipboard);
 }
 
 - (void)testInviteConfigWithInviteLinkDomain {
@@ -59,6 +70,26 @@
 
     MAVERemoteConfigurationCustomSharePage *config = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:opts];
     XCTAssertEqualObjects(config.inviteLinkBaseURL, domain);
+}
+
+- (void)testInviteConfigWithShareTypesDisabled {
+    NSMutableDictionary *opts = [[NSMutableDictionary alloc] init];
+    [opts addEntriesFromDictionary:[MAVERemoteConfigurationCustomSharePage defaultJSONData]];
+    NSMutableDictionary *tmpl = [[NSMutableDictionary alloc] initWithDictionary:[opts objectForKey:@"template"]];
+    [tmpl setObject:@1 forKey:@"include_client_sms"];
+    [tmpl setObject:@0 forKey:@"include_client_email"];
+    [tmpl setObject:[NSNull null] forKey:@"include_native_facebook"];
+    [tmpl setObject:@NO forKey:@"include_native_twitter"];
+    [tmpl setObject:@"0" forKey:@"include_clipboard"];
+    [opts setObject:tmpl forKey:@"template"];
+
+    MAVERemoteConfigurationCustomSharePage *config = [[MAVERemoteConfigurationCustomSharePage alloc] initWithDictionary:opts];
+    XCTAssertTrue(config.enabled);
+    XCTAssertTrue (config.includeClientSMS);
+    XCTAssertFalse(config.includeClientEmail);
+    XCTAssertFalse(config.includeNativeFacebook);
+    XCTAssertFalse(config.includeNativeTwitter);
+    XCTAssertFalse(config.includeClipboard);
 }
 
 - (void)testExplanationCopyInterpolatesTemplate {
