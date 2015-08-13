@@ -52,9 +52,13 @@
     self.shareIconsView.iconFont = opts.sharePageIconFont;
     self.shareIconsView.backgroundColor = [UIColor clearColor];
     self.shareIconsView.useSmallIcons = NO;
-    self.shareIconsView.allowSMSShare = YES;
     self.shareIconsView.dismissMaveTopLevelOnSuccessfulShare = YES;
 
+    self.shareIconsView.allowSMSShare = remoteConfig.customSharePage.includeClientSMS;
+    self.shareIconsView.allowEmailShare = remoteConfig.customSharePage.includeClientEmail;
+    self.shareIconsView.allowNativeFacebookShare = remoteConfig.customSharePage.includeNativeFacebook;
+    self.shareIconsView.allowNativeTwitterShare = remoteConfig.customSharePage.includeNativeTwitter;
+    self.shareIconsView.allowClipboardShare = remoteConfig.customSharePage.includeClipboard;
     [self addSubview:self.shareIconsView];
 }
 

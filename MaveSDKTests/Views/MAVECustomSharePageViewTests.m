@@ -53,4 +53,24 @@
     XCTAssertTrue([view.shareIconsView isDescendantOfView:view]);
 }
 
+- (void)testInitSetsAllowedSharesFromRemoteConfig {
+    MAVERemoteConfiguration *overrideRemoteConfig = [[MAVERemoteConfiguration alloc] init];
+    overrideRemoteConfig.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
+    overrideRemoteConfig.customSharePage.includeClientSMS = NO;
+    overrideRemoteConfig.customSharePage.includeClientEmail = YES;
+    overrideRemoteConfig.customSharePage.includeNativeFacebook = NO;
+    overrideRemoteConfig.customSharePage.includeNativeTwitter = YES;
+    overrideRemoteConfig.customSharePage.includeClipboard = NO;
+
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMStub([maveMock remoteConfiguration]).andReturn(overrideRemoteConfig);
+
+    MAVECustomSharePageView *view = [[MAVECustomSharePageView alloc] init];
+    XCTAssertFalse(view.shareIconsView.allowSMSShare);
+    XCTAssertTrue(view.shareIconsView.allowEmailShare);
+    XCTAssertFalse(view.shareIconsView.allowNativeFacebookShare);
+    XCTAssertTrue(view.shareIconsView.allowNativeTwitterShare);
+    XCTAssertFalse(view.shareIconsView.allowClipboardShare);
+}
+
 @end
