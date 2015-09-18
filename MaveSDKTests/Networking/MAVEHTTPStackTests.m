@@ -17,11 +17,15 @@
 
 typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, NSError *error);
 
-// alter built-in task object to make readonly property assignable
-@interface NSURLSessionTask (MutableSessionTask)
+// NSURLSessionTask is doing something weird, we can't just extend it to make originalRequest readwrite
+// or mock it bceause ios thinks the method doesn't exist. So use this fake version instead.
+
+@interface FakeNSURLSessionTaskForTestingRedirect : NSObject
 @property (strong, nonatomic, readwrite) NSURLRequest *originalRequest;
 @end
 
+@implementation FakeNSURLSessionTaskForTestingRedirect
+@end
 
 
 @interface MAVEHTTPStackTests : XCTestCase
@@ -167,14 +171,12 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     newRequest.HTTPBody = nil;
     [originalRequest setValue:@"foobar" forHTTPHeaderField:@"X-Danny-Foo"];
 
-    NSURLSessionTask *task = [[NSURLSessionTask alloc] init];
-//    id req = task.originalRequest;
-//    id taskMock = OCMClassMock([NSURLSessionDataTask class]);
-//    OCMStub([taskMock originalRequest]).andReturn(originalRequest);
+    FakeNSURLSessionTaskForTestingRedirect *task = [[FakeNSURLSessionTaskForTestingRedirect alloc] init];
+    task.originalRequest = originalRequest;
     id fakeResponse = OCMClassMock([NSHTTPURLResponse class]);
     
     [self.testHTTPStack URLSession:self.testHTTPStack.session
-                              task:task
+                              task:(NSURLSessionTask *)task
         willPerformHTTPRedirection:fakeResponse
                         newRequest:newRequest
                  completionHandler:^(NSURLRequest * request) {
