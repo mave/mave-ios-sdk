@@ -1,5 +1,9 @@
 ## Mave SDK releases
 
+### v0.7.11
+- Fix some warnings on xcode 7/ios9
+- Make the countries where server-side SMS is available remote configurable to enable expanding internationally
+
 ### v0.7.10
 - Stop appending links to client shares, no reason to always do this
 - Add remote config options to enable/disable individual share types on the fallback share page
