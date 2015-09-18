@@ -497,6 +497,35 @@
 }
 
 # pragma mark - Tests for logic that determines which page to show
+- (void)testIsInSupportedRegionForServerSideSMSInvites {
+    [MaveSDK resetSharedInstanceForTesting];
+    // mock some country code values to use
+    MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
+    config.serverSMS = [[MAVERemoteConfigurationServerSMS alloc] init];
+    config.serverSMS.countryCodes = [NSSet setWithArray:@[@"CA", @"JP"]];
+    id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
+    OCMStub([maveMock remoteConfiguration]).andReturn(config);
+
+    OCMStub([[MaveSDK sharedInstance] remoteConfiguration]).andReturn(config);
+
+    // mock my current locale
+    NSMutableDictionary *fakeCurrentLocale = [[NSMutableDictionary alloc] init];
+    id localeClassMock = OCMClassMock([NSLocale class]);
+    OCMStub([localeClassMock autoupdatingCurrentLocale])
+        .andReturn(fakeCurrentLocale);
+
+    MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];
+
+    // US is not supported in our mocked values
+    [fakeCurrentLocale setObject:@"US" forKey:NSLocaleCountryCode];
+    XCTAssertFalse([chooser isInSupportedRegionForServerSideSMSInvites]);
+
+    // Japan and canada are supported
+    [fakeCurrentLocale setObject:@"JP" forKey:NSLocaleCountryCode];
+    XCTAssertTrue([chooser isInSupportedRegionForServerSideSMSInvites]);
+    [fakeCurrentLocale setObject:@"CA" forKey:NSLocaleCountryCode];
+    XCTAssertTrue([chooser isInSupportedRegionForServerSideSMSInvites]);
+}
 
 - (void)testUSIsInSupportedRegionForServerSideSMSInvites {
     MAVEInvitePageChooser *chooser = [[MAVEInvitePageChooser alloc] init];

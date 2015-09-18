@@ -215,11 +215,10 @@ NSString * const MAVEInvitePagePresentFormatPush = @"push";
 
 #pragma mark - Logic about current conditions
 - (BOOL)isInSupportedRegionForServerSideSMSInvites {
-    // Right now, we'll only try our address book flow for US devices until we can
-    // thoroughly test different countries
+    // Uses server-config option to set which countries are available
+    // for server side sms invites
     NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-    if (   [countryCode isEqualToString:MAVECountryCodeUnitedStates]
-        || [countryCode isEqualToString:MAVECountryCodeCanada]) {
+    if ([[MaveSDK sharedInstance].remoteConfiguration.serverSMS.countryCodes containsObject:countryCode]) {
         return YES;
     }
     return NO;
