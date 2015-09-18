@@ -37,6 +37,8 @@
     XCTAssertEqualObjects([template objectForKey:@"template_id"], @"0");
     XCTAssertEqualObjects([template objectForKey:@"copy_template"],
                           @"Join me on DemoApp!");
+    NSArray *expectedCCs = @[@"US", @"CA"];
+    XCTAssertEqualObjects([template objectForKey:@"country_codes"], expectedCCs);
 }
 
 - (void)testInitFromDefaultData {
@@ -44,6 +46,9 @@
 
     XCTAssertEqualObjects(obj.templateID, @"0");
     XCTAssertEqualObjects(obj.textTemplate, @"Join me on DemoApp!");
+    XCTAssertEqual([obj.countryCodes count], 2);
+    XCTAssertTrue([obj.countryCodes containsObject:@"US"]);
+    XCTAssertTrue([obj.countryCodes containsObject:@"CA"]);
 }
 
 - (void)testInitFailsIfTemplateMalformed {
@@ -70,6 +75,24 @@
     XCTAssertNotNil(obj); // text is required so this will still be nil
     // should be nil, not nsnull
     XCTAssertNil(obj.templateID);
+}
+
+- (void)testCountryCodesMissingAndNullChangesToEmptySet {
+    NSDictionary *dict = @{@"enabled": @YES,
+                           @"template": @{@"copy_template": @"foo"}};
+    MAVERemoteConfigurationServerSMS *obj = [[MAVERemoteConfigurationServerSMS alloc] initWithDictionary:dict];
+    XCTAssertNotNil(obj);
+    XCTAssertNotNil(obj.countryCodes);
+    XCTAssertEqual([obj.countryCodes count], 0);
+
+    dict = @{@"enabled": @YES,
+             @"template": @{
+                     @"copy_template": @"foo",
+                     @"country_codes":[NSNull null]}};
+    obj = [[MAVERemoteConfigurationServerSMS alloc] initWithDictionary:dict];
+    XCTAssertNotNil(obj);
+    XCTAssertNotNil(obj.countryCodes);
+    XCTAssertEqual([obj.countryCodes count], 0);
 }
 
 - (void)testTextFillsInTemplate {

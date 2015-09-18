@@ -10,10 +10,12 @@
 #import "MAVEClientPropertyUtils.h"
 #import "MAVETemplatingUtils.h"
 #import "MaveSDK.h"
+#import "MAVEConstants.h"
 
 NSString * const MAVERemoteConfigKeyServerSMSTemplate = @"template";
 NSString * const MAVERemoteConfigKeyServerSMSTemplateID = @"template_id";
 NSString * const MAVERemoteConfigKeyServerSMSCopy = @"copy_template";
+NSString * const MAVERemoteConfigKeyServerSMSCountryCodes = @"country_codes";
 
 
 @implementation MAVERemoteConfigurationServerSMS
@@ -32,6 +34,13 @@ NSString * const MAVERemoteConfigKeyServerSMSCopy = @"copy_template";
         }
         if (!self.textTemplate) {
             return nil;
+        }
+
+        NSArray *countryCodes = [template objectForKey:MAVERemoteConfigKeyServerSMSCountryCodes];
+        if (countryCodes && ![countryCodes isEqual: [NSNull null]]) {
+            self.countryCodes = [[NSSet alloc] initWithArray:countryCodes];
+        } else {
+            self.countryCodes = [[NSSet alloc] init];
         }
 
     }
@@ -59,6 +68,8 @@ NSString * const MAVERemoteConfigKeyServerSMSCopy = @"copy_template";
              MAVERemoteConfigKeyServerSMSTemplate: @{
                      MAVERemoteConfigKeyServerSMSTemplateID: @"0",
                      MAVERemoteConfigKeyServerSMSCopy: text,
+                     MAVERemoteConfigKeyServerSMSCountryCodes: @[
+                             MAVECountryCodeUnitedStates, MAVECountryCodeCanada],
                      },
              
              };
