@@ -178,7 +178,8 @@
     id mock = OCMPartialMock(promptHandler);
     OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionDenied]);
 
-    [promptHandler alertView:nil clickedButtonAtIndex:0];
+    id alertViewMock = OCMClassMock([UIAlertView class]);
+    [promptHandler alertView:alertViewMock clickedButtonAtIndex:0];
 
     OCMVerifyAll(mock);
     XCTAssertTrue(called);
@@ -194,7 +195,8 @@
     OCMExpect([mock logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionGranted]);
     OCMExpect([mock loadAddressBookAndComplete]);
 
-    [promptHandler alertView:nil clickedButtonAtIndex:1];
+    id alertViewMock = OCMClassMock([UIAlertView class]);
+    [promptHandler alertView:alertViewMock clickedButtonAtIndex:1];
 
     OCMVerifyAll(mock);
 }

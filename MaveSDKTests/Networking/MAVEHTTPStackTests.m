@@ -166,13 +166,16 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     newRequest.HTTPMethod = @"GET";
     newRequest.HTTPBody = nil;
     [originalRequest setValue:@"foobar" forHTTPHeaderField:@"X-Danny-Foo"];
-    
+
     NSURLSessionTask *task = [[NSURLSessionTask alloc] init];
-    task.originalRequest = originalRequest;
+//    id req = task.originalRequest;
+//    id taskMock = OCMClassMock([NSURLSessionDataTask class]);
+//    OCMStub([taskMock originalRequest]).andReturn(originalRequest);
+    id fakeResponse = OCMClassMock([NSHTTPURLResponse class]);
     
     [self.testHTTPStack URLSession:self.testHTTPStack.session
                               task:task
-        willPerformHTTPRedirection:nil
+        willPerformHTTPRedirection:fakeResponse
                         newRequest:newRequest
                  completionHandler:^(NSURLRequest * request) {
         XCTAssertEqualObjects(request.URL, newRequest.URL);

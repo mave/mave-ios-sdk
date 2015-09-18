@@ -217,7 +217,7 @@
 - (void)testIndexABPersonArrayByHashedRecordID {
     // make some people and explicitly overwrite hashed record id so we know it
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.hashedRecordID = 0;
-    uint64_t biggestValue = 1844674407370955161 * 10 + 5;
+    uint64_t biggestValue = 18446744073709551615ULL;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.hashedRecordID = biggestValue;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.hashedRecordID = 2;
     // if there happens to be a hashed record id collision, it simply uses the

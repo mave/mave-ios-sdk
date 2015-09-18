@@ -36,7 +36,7 @@
     XCTAssertEqual(range2.length, 1);
 
     MAVERange64 range3 = MAVEMakeRange64(0, UINT64_MAX);
-    uint64_t expectedMax = 1844674407370955161 * 10 + 5;
+    uint64_t expectedMax = 18446744073709551615ULL;
     XCTAssertEqual(range3.location, 0);
     XCTAssertEqual(range3.length, expectedMax);
 }
