@@ -12,6 +12,8 @@
 #import "MAVEInviteFriendsReusableOvalButton.h"
 #import "MaveSDK.h"
 
+#define IS_IOS8_OR_BELOW ([[[UIDevice currentDevice] systemVersion] floatValue] < 9.0)
+
 @interface MAVEInviteFriendsReusableOvalButtonTests : XCTestCase
 
 @end
@@ -46,7 +48,15 @@
     XCTAssertEqualObjects(button.inviteContext, @"MAVEInviteFriendsReusableOvalButton");
     CGSize size = button.frame.size;
     XCTAssertEqual(size.height, 47.5);
-    XCTAssertEqual(size.width, 203);  // set to current width, to make sure it doesn't change
+
+    // new ios9 system font changes expected width; Since we're hard-coding, need to consider that
+    CGFloat expectedWidth;
+    if (IS_IOS8_OR_BELOW) {
+        expectedWidth = 203.0;
+    } else {
+        expectedWidth = 206.5;
+    }
+    XCTAssertEqual(size.width, expectedWidth);
 
     XCTAssertEqualObjects(button.customLabel.textColor, [UIColor greenColor]);
 }
