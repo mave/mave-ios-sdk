@@ -10,16 +10,15 @@
 
 Pod::Spec.new do |s|
   s.name             = "MaveSDK"
-  s.version          = "0.7.11"
-  s.summary          = "A drop-in SMS invite and share platform to accelerate your user growth"
+  s.version          = "0.8.0"
+  s.summary          = "A drop-in SMS invite and share page to accelerate your user growth"
   s.description      = <<-DESC
-                       Make it simple for your users to send more, higher quality invites and shares.
+                       Mave the service has shut down as of Dec 2015.
 
-                       Sign up on our website to get started, and be up and running in 20 minutes
-                       with an invite page that's as good or better as what the top apps are using.
+                       This library is still functional as a stand-alone invite or share page, but the Mave-provided services such as SMS invite delivery, the stats dashboard, and suggested invites are no longer available. The library is now released under the MIT license.
                        DESC
-  s.homepage         = "http://mave.io"
-  s.license          = 'Proprietary'
+  s.homepage         = "https://github.com/mave/mave-ios-sdk"
+  s.license          = 'MIT'
   s.author           = 'Mave'
   s.source           = { :git => "https://github.com/mave/mave-ios-sdk.git", :tag => "v#{s.version.to_s}" }
   s.social_media_url = 'https://twitter.com/mavegrowth'
