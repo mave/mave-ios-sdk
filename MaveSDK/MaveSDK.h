@@ -32,7 +32,6 @@
 @property (nonatomic, strong) MAVERemoteObjectBuilder *suggestedInvitesBuilder;
 @property (nonatomic, strong) MAVERemoteObjectBuilder *referringDataBuilder;
 
-@property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *appDeviceID;
 @property (nonatomic, assign) BOOL isInitialAppLaunch;
 @property (nonatomic, copy) NSString *inviteContext;
@@ -47,7 +46,7 @@
 @property (nonatomic, assign) CGFloat debugSuggestedInvitesDelaySeconds;
 
 
-+ (void)setupSharedInstanceWithApplicationID:(NSString *)applicationID;
++ (void)setupSharedInstance;
 + (instancetype)sharedInstance;
 
 // Methods intended for external use, to access referring data & suggested invites

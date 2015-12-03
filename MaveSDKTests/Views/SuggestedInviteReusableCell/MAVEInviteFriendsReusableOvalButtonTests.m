@@ -62,7 +62,7 @@
 }
 
 - (void)testPresentInvitePageModallyPresentsPageAndTriggersCallbackIfSet {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     id maveMock = OCMPartialMock([MaveSDK sharedInstance]);
 
     MAVEInviteFriendsReusableOvalButton *button = [[MAVEInviteFriendsReusableOvalButton alloc] init];

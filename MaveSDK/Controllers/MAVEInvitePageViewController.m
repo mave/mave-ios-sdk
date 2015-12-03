@@ -436,10 +436,6 @@
     MaveSDK *mave = [MaveSDK sharedInstance];
     NSMutableArray *activityItems = [[NSMutableArray alloc] init];
     [activityItems addObject:mave.defaultSMSMessageText];
-    if ([mave.appId isEqualToString:MAVEPartnerApplicationIDSwig] ||
-        [mave.appId isEqualToString:MAVEPartnerApplicationIDSwigEleviter]) {
-        [activityItems addObject:[NSURL URLWithString:MAVEInviteURLSwig]];
-    }
     
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]
                                             initWithActivityItems:activityItems

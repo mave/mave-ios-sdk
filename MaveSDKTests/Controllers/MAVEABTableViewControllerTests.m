@@ -29,7 +29,7 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"1231234"];
+    [MaveSDK setupSharedInstance];
     [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
     [MaveSDK sharedInstance].userData.userID = @"foo";
     [MaveSDK sharedInstance].displayOptions =

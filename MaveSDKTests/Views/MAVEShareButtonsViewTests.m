@@ -112,7 +112,7 @@
 }
 
 - (void)testAfterShareActionsNoDismissAfterShare {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEShareButtonsView *view = [[MAVEShareButtonsView alloc] init];
     view.dismissMaveTopLevelOnSuccessfulShare = YES;
 

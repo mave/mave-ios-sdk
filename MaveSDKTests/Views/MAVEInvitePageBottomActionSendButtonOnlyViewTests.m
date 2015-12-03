@@ -20,7 +20,7 @@
 
 - (void)setUp {
     [super setUp];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     [MaveSDK sharedInstance].displayOptions = [MAVEDisplayOptionsFactory generateDisplayOptions];
 }
 

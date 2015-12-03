@@ -40,7 +40,7 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
 }
 
 - (void)tearDown {

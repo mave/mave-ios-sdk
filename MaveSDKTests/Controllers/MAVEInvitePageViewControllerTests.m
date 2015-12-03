@@ -31,7 +31,7 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"1231234"];
+    [MaveSDK setupSharedInstance];
     [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
     [MaveSDK sharedInstance].userData.userID = @"foo";
     [MaveSDK sharedInstance].displayOptions =
@@ -257,7 +257,7 @@
     }]]);
 
     // setup code and add test expectations
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstance];
 
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     id mockVC = OCMPartialMock(vc);
@@ -282,7 +282,7 @@
     OCMExpect([mockPrompter promptForContactsWithCompletionBlock:[OCMArg any]]);
 
     // setup code and add test expectations
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstance];
 
     MAVEInvitePageViewController *vc = [[MAVEInvitePageViewController alloc] init];
     id mockVC = OCMPartialMock(vc);
@@ -353,7 +353,7 @@
 // Tests for the helper for displaying suggested invites
 - (void)testBuildContactsToUseAtPageRenderWhenShowSuggestedFlaggedOff {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstance];
 
     // flag off the show suggested flag
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
@@ -381,7 +381,7 @@
 
 - (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndContactsAlreadyReturned {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstance];
 
     // flag on the show suggested flag
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
@@ -415,7 +415,7 @@
 
 - (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndContactsAlreadyReturnedEmpty {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstance];
 
     // flag on the show suggested flag
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
@@ -446,7 +446,7 @@
 
 - (void)testBuildContactsToUseAtPageRenderWhenFlaggedOnAndWaitingOnContactsToBeReturned {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstance];
 
     // flag on the show suggested flag
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];

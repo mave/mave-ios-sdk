@@ -49,10 +49,9 @@
 
 - (void)testSetupSharedInstance {
     [MAVEABSyncManager resetSyncContactsOnceTokenForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
 
     MaveSDK *mave = [MaveSDK sharedInstance];
-    XCTAssertEqualObjects(mave.appId, @"foo123");
     XCTAssertNotNil(mave.displayOptions);
     XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.serverSMS.text);
     XCTAssertNotNil(mave.appDeviceID);
@@ -70,9 +69,9 @@
 
 
 - (void)testSharedInstanceIsShared {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MaveSDK *gk1 = [MaveSDK sharedInstance];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MaveSDK *gk2 = [MaveSDK sharedInstance];
     
     // Test pointer to same object
@@ -80,20 +79,20 @@
 }
 
 - (void)testResetSharedInstanceResetsUserDataButNotAppDeviceID {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     NSString *appDeviceID1 = [MaveSDK sharedInstance].appDeviceID;
     [MaveSDK sharedInstance].userData = [[MAVEUserData alloc] init];
     [MaveSDK sharedInstance].userData.userID = @"blah";
 
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     XCTAssertNil([MaveSDK sharedInstance].userData.userID);
     XCTAssertEqualObjects(appDeviceID1, [MaveSDK sharedInstance].appDeviceID);
 }
 
 // Test getting properties on the mave object
 - (void)testSuggestedInvitesWithDelay {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0; p0.hashedRecordID = 0;
     MAVEABPerson *p1 = [[MAVEABPerson alloc] init]; p1.recordID = 1; p1.hashedRecordID = 1;
     MAVEABPerson *p2 = [[MAVEABPerson alloc] init]; p2.recordID = 2; p2.hashedRecordID = 2;
@@ -128,7 +127,7 @@
 
 - (void)testGetReferringData {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"asd932k"];
+    [MaveSDK setupSharedInstance];
     XCTAssertFalse([MaveSDK sharedInstance].debug);
 
     MAVEReferringData *referringDataObj = [[MAVEReferringData alloc] init];
@@ -151,7 +150,7 @@
 
 - (void)testDebugGetReferringData {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"asd932k"];
+    [MaveSDK setupSharedInstance];
     MaveSDK *mave = [MaveSDK sharedInstance];
 
     mave.debug = YES;
@@ -300,7 +299,7 @@
 }
 
 - (void)testIdentifyUser {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"100" firstName:@"Dan" lastName:@"Foo" email:@"dan@example.com" phone:@"18085551234"];
     MaveSDK *mave = [MaveSDK sharedInstance];
     id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
@@ -314,7 +313,7 @@
 }
 
 - (void)testIdentifyUserInvalidDoesntMakeNetworkRequest {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     userData.userID = @"1";  // no first name
     id mockAPIInterface = OCMClassMock([MAVEAPIInterface class]);
@@ -346,7 +345,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:MAVEUserDefaultsKeyUserData];
 
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *user = [[MAVEUserData alloc] init];
     user.firstName = @"aa234";
     [MaveSDK sharedInstance].userData = user;
@@ -361,7 +360,7 @@
 - (void)testUserDataGetsFromUserDefaultsIfNotSet {
     // Make sure state is reset
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     [MaveSDK sharedInstance].userData = nil;
     [defaults removeObjectForKey:MAVEUserDefaultsKeyUserData];
     XCTAssertNil([MaveSDK sharedInstance].userData);
@@ -385,27 +384,20 @@
     // to mean that the app has been launched before, if it's not on disk
     // then this is the first time the app has been launched
     [MAVEIDUtils clearStoredAppDeviceID];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     XCTAssertTrue([MaveSDK sharedInstance].isInitialAppLaunch);
 }
 
 - (void)testIsInitialLaunchNoOnSubsequentLaunches {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     XCTAssertNotNil([MaveSDK sharedInstance].appDeviceID);
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     XCTAssertFalse([MaveSDK sharedInstance].isInitialAppLaunch);
 }
 
-- (void)testIsSetupOKFailsWithNoApplicationID {
-    [MaveSDK setupSharedInstanceWithApplicationID:nil];
-    MaveSDK *mave = [MaveSDK sharedInstance];
-    [mave identifyAnonymousUser];
-    XCTAssertFalse([mave isSetupOK]);
-}
-
 - (void)testIsSetupOkSucceedsWithMinimumRequiredFields {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MaveSDK *mave = [MaveSDK sharedInstance];
     // didn't identify user, but it's ok
     XCTAssertTrue([mave isSetupOK]);
@@ -507,7 +499,7 @@
 }
 
 - (void)testTrackSignup {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *userData = [[MAVEUserData alloc] init];
     // Verify the API request is sent
     id mockAPIInterface = [OCMockObject mockForClass:[MAVEAPIInterface class]];
@@ -525,7 +517,7 @@
 # pragma mark - Send SMS programatically Tests
 
 - (void)testSendSMSInviteMessageProgramaticallySuccessWithOptions {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    [MaveSDK setupSharedInstance];
 
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
@@ -568,7 +560,7 @@
 }
 
 - (void)testSendSMSInviteMessageProgramaticallySuccessWithNoOptions {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    [MaveSDK setupSharedInstance];
 
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
@@ -603,7 +595,7 @@
 }
 
 - (void)testSendSMSInviteMessageProgramaticallyFailsWithBadUserData {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    [MaveSDK setupSharedInstance];
 
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
@@ -637,7 +629,7 @@
 }
 
 - (void)testSendSMSInviteMessageProgramaticallyFailsIfNetworkRequestFails {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    [MaveSDK setupSharedInstance];
 
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
@@ -677,7 +669,7 @@
 }
 
 - (void)testSendSMSInviteMessageProgramaticallyWithNilErrorBlockIsOk {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    [MaveSDK setupSharedInstance];
     [MaveSDK sharedInstance].userData = nil;
     // no user data is set up
 
@@ -703,7 +695,7 @@
 }
 
 - (void)testSendSMSInviteMessageProgramaticallyFailsIfCustomReferringDataNotIsValidJSONObject {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foobar123"];
+    [MaveSDK setupSharedInstance];
     // setup the user to send sms from
     MAVEUserData *user = [[MAVEUserData alloc] init];
     user.userID = @"1"; user.firstName = @"Dan"; user.wrapInviteLink = YES;

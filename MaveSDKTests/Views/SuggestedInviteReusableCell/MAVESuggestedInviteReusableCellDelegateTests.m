@@ -124,7 +124,7 @@
 
 - (void)testSendInviteToContact {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *user = [[MAVEUserData alloc] init];
     user.userID = @"1234";
     [MaveSDK sharedInstance].userData = user;

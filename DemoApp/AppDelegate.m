@@ -26,7 +26,7 @@
 }
 
 - (void)setupMaveSDK {
-    [MaveSDK setupSharedInstanceWithApplicationID:MAVEDemoApplicationID];
+    [MaveSDK setupSharedInstance];
 
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"1"
                                                         firstName:@"Example"

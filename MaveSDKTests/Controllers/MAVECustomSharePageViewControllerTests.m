@@ -38,7 +38,7 @@
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
     self.applicationID = @"foo123";
-    [MaveSDK setupSharedInstanceWithApplicationID:self.applicationID];
+    [MaveSDK setupSharedInstance];
     self.viewController = nil;
     self.viewControllerMock = nil;
     self.sharerMock = nil;

@@ -15,7 +15,7 @@
 
 @interface MaveSDK (Internal)
 
-- (instancetype)initWithAppId:(NSString *)appId;
+- (instancetype)initCustom;
 
 // This function checks that required fields for the MaveSDK invite page to work
 // correctly have been initialized. It logs any errors with a big "ERROR"

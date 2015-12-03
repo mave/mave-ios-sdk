@@ -156,7 +156,7 @@
             completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
     // No-op sending actual requests so the client doesn't rely on the API
     // Still call the completion block with a hard-coded error in case there's code that needs to run
-    [self handleJSONResponseWithData:nil response:nil error:nil completionBlock:completionBlock];
+    [self handleJSONResponseWithData:nil response:nil error:[NSError errorWithDomain:@"" code:0 userInfo:nil] completionBlock:completionBlock];
 }
 
 ///

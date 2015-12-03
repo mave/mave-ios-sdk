@@ -269,7 +269,7 @@
 // Try to use the integer encoding so it'll be as short as possible, but if
 // app ID is not a valid 8 byte integer just encode as utf8 string
 + (NSString *)urlSafeBase64ApplicationID {
-    NSString *appID = [MaveSDK sharedInstance].appId;
+    NSString *appID = @"<NO App ID>";
 
     // check if it's an 8 byte integer by converting to a number then back
     // to string and making sure it's the same number

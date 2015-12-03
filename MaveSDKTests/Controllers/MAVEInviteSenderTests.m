@@ -35,7 +35,7 @@
 
 - (void)testSendInviteToPerson {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo234"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"123" firstName:@"Foo" lastName:@"Example"];
     user.inviteLinkDestinationURL = @"http://example.com/invite";
     user.wrapInviteLink = NO;

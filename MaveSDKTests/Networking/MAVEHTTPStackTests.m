@@ -187,46 +187,6 @@ typedef void (^MAVENSURLSessionCallback)(NSData *data, NSURLResponse *response, 
     }];
 }
 
-- (void)testSendPreparedRequest {
-    // Don't run this test on iOS7. The NSURLSession object can't be mocked on ios7, but
-    // it can be mocked on ios 8+
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0) {
-        return;
-    }
-    NSURLRequest *req = [[NSURLRequest alloc] init];
-    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] init];
-    NSError *responseError = [[NSError alloc] init];
-    NSDictionary *responseDataAsDict = @{@"blah": @1};
-    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDataAsDict
-                                                           options:0
-                                                             error:nil];
-    
-    // Mock session data task method to call the callback
-    id taskMock = OCMClassMock([NSURLSessionTask class]);
-    id sessionMock = OCMClassMock([NSURLSession class]);
-    self.testHTTPStack.session = sessionMock;
-    OCMExpect([sessionMock dataTaskWithRequest:req
-                             completionHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
-        MAVENSURLSessionCallback cb = (MAVENSURLSessionCallback)obj;
-        cb(responseData, response, responseError);
-        return YES;
-    }]]).andReturn(taskMock);
-    
-    // Mock handle http method to ensure it's called
-    id httpStackMock = OCMPartialMock(self.testHTTPStack);
-    OCMExpect([httpStackMock handleJSONResponseWithData:responseData
-                                               response:response
-                                                  error:responseError
-                                        completionBlock:[OCMArg any]]);
-    
-    [self.testHTTPStack sendPreparedRequest:req
-                            completionBlock:^(NSError *error, NSDictionary *responseData) {}];
-    
-    OCMVerify([taskMock resume]);
-    OCMVerifyAll(sessionMock);
-    OCMVerifyAll(httpStackMock);
-}
-
 
 //
 // Tests for errors in building Request

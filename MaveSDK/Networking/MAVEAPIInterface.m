@@ -57,7 +57,7 @@ NSString * const MAVEAPIHeaderContextPropertiesInviteContext = @"invite_context"
 }
 
 - (NSString *)applicationID {
-    return [MaveSDK sharedInstance].appId;
+    return @"<NO APP ID>";
 }
 
 - (NSString *)applicationDeviceID {

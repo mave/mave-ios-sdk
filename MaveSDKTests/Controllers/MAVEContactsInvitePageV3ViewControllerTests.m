@@ -257,7 +257,7 @@
 
 - (void)testSendRemoteInvites {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MaveSDK *mave = [MaveSDK sharedInstance];
     MAVEUserData *userData = [[MAVEUserData alloc] initWithUserID:@"456" firstName:@"Blah" lastName:@"Name"];
     mave.userData = userData;

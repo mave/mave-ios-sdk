@@ -31,7 +31,7 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"12345"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1"
                                                     firstName:@"foo"
                                                      lastName:@"bar"
@@ -50,7 +50,6 @@
 - (void)testInitAndCurrentUserProperties {
     XCTAssertEqualObjects(MAVEAPIBaseURL, @"test-api-mave-io/");
     XCTAssertEqualObjects(self.testAPIInterface.httpStack.baseURL, @"test-api-mave-io/v1.0");
-    XCTAssertEqualObjects(self.testAPIInterface.applicationID, [MaveSDK sharedInstance].appId);
     XCTAssertEqualObjects(self.testAPIInterface.applicationDeviceID, [MaveSDK sharedInstance].appDeviceID);
     XCTAssertEqualObjects(self.testAPIInterface.userData, [MaveSDK sharedInstance].userData);
 }
@@ -648,8 +647,6 @@
     [self.testAPIInterface addCustomUserHeadersToRequest:req];
     NSDictionary *headers = req.allHTTPHeaderFields;
     XCTAssertEqual([headers count], 6);
-    XCTAssertEqualObjects([headers objectForKey:@"X-Application-Id"],
-                          [MaveSDK sharedInstance].appId);
     XCTAssertEqualObjects([headers objectForKey:@"X-App-Device-Id"],
                           [MaveSDK sharedInstance].appDeviceID);
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;

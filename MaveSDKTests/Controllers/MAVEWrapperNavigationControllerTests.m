@@ -28,7 +28,7 @@
 }
 
 - (void)testStatusBarStyle {
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MaveSDK *mave = [MaveSDK sharedInstance];
     mave.displayOptions.statusBarStyle = UIStatusBarStyleLightContent;
     MAVEWrapperNavigationController *vc = [[MAVEWrapperNavigationController alloc] init];

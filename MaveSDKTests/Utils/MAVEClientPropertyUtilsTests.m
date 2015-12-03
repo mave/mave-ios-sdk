@@ -151,24 +151,11 @@
     XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64EncodeAndStripData:nil], @"");
 }
 
-- (void)testUrlSafeBase64EncodeAppIDWhenBigInteger {
-    [MaveSDK sharedInstance].appId = @"202834210204166";
+- (void)testUrlSafeBase64EncodeAppID {
     XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
-                          @"AAC4egUMKgY");
-
-    [MaveSDK sharedInstance].appId = @"0";
-    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
-                          @"AAAAAAAAAAA");
+                          @"PE5PIEFwcCBJRD4");
 }
 
-- (void)testUrlSafeBase64EncodeAppIDWhenString {
-    [MaveSDK sharedInstance].appId = @"10afdkjl3";
-    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
-                          @"MTBhZmRramwz");
-    [MaveSDK sharedInstance].appId = @"";
-    XCTAssertEqualObjects([MAVEClientPropertyUtils urlSafeBase64ApplicationID],
-                          @"");
-}
 
 
 ///

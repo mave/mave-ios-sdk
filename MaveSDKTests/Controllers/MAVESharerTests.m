@@ -28,7 +28,7 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
 }
 
 - (void)tearDown {
@@ -512,7 +512,7 @@
 #pragma mark - Helpers for building share content
 - (void)testShareToken {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEShareToken *tokenObj = [[MAVEShareToken alloc] init];
     tokenObj.shareToken = @"blahasdf";
     id mock = OCMClassMock([MAVERemoteObjectBuilder class]);
@@ -526,7 +526,7 @@
 
 - (void)testShareTokenNilWhenBuilderIsNil {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     [MaveSDK sharedInstance].shareTokenBuilder = nil;
 
     NSString *shareToken = [MAVESharer shareToken];
@@ -535,7 +535,7 @@
 
 - (void)testShareLinkBaseURLWhenCustom {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
+    [MaveSDK setupSharedInstance];
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
     config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
     config.customSharePage.inviteLinkBaseURL = @"http://foo.example.com";
@@ -550,7 +550,7 @@
 
 - (void)testShareLinkBaseURLWhenUsingDefault {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo124"];
+    [MaveSDK setupSharedInstance];
     MAVERemoteConfiguration *config = [[MAVERemoteConfiguration alloc] init];
     config.customSharePage = [[MAVERemoteConfigurationCustomSharePage alloc] init];
     config.customSharePage.inviteLinkBaseURL = nil;
@@ -585,7 +585,7 @@
 
 - (void)testBuildLinkWhenNotUsingMaveLinks {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
     user.inviteLinkDestinationURL = @"http://example.com/abcd";
     user.wrapInviteLink = NO;
@@ -666,7 +666,7 @@
 #pragma mark - Tests for setup share token
 - (void)testSetupShareTokenStoresLinkDetailsAndSetsUpShareTokenBuilder {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
     user.inviteLinkDestinationURL = @"https://example.com/1";
@@ -707,7 +707,7 @@
 
 - (void)testSetupShareTokenDoesntClearExistingShareTokenIfDetailsSame {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
 
     // Manually store the link details for the current user object,
     // then when the setup share token method looks up the stored linke
@@ -734,7 +734,7 @@
 
 - (void)testSetupShareTokenDoesNothingIfNotUsingMaveLinks {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     XCTAssertNil([MaveSDK sharedInstance].shareTokenBuilder);
     MAVEUserData *user = [[MAVEUserData alloc] initWithUserID:@"1" firstName:@"Dan" lastName:@"Foo"];
     user.inviteLinkDestinationURL = @"https://example.com/1";
@@ -748,7 +748,7 @@
 
 - (void)testSetupShareTokenDoesNothingIfShareTokenBuilderAlreadyExists {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
     MAVERemoteObjectBuilder *emptyBuilder = [[MAVERemoteObjectBuilder alloc] init];
     [MaveSDK sharedInstance].shareTokenBuilder = emptyBuilder;
 

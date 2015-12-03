@@ -31,7 +31,7 @@
 - (void)setUp {
     [super setUp];
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
 }
 
 - (void)tearDown {
@@ -644,7 +644,7 @@
 
 - (void)testStyleNavigationController {
     // Uses display options from the singleton
-    [MaveSDK setupSharedInstanceWithApplicationID:@"appid1"];
+    [MaveSDK setupSharedInstance];
     MAVEDisplayOptions *displayOpts = [MAVEDisplayOptionsFactory generateDisplayOptions];
     [MaveSDK sharedInstance].displayOptions = displayOpts;
 

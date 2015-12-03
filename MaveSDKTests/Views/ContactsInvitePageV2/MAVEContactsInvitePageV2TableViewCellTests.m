@@ -59,7 +59,7 @@
 
 - (void)testHeightCellWillHave {
     [MaveSDK resetSharedInstanceForTesting];
-    [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
+    [MaveSDK setupSharedInstance];
 
     // hard code the default height
     CGFloat height = [MAVEContactsInvitePageV2TableViewCell heightCellWithHave];
