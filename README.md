@@ -1,6 +1,6 @@
-Unfortunately, Mave the service has shut down as of Dec 2015.
+Mave the service has shut down as of Dec 2015.
 
-This library is still functional as a stand-alone invite or share page, but the Mave-provided services such as as SMS invite delivery, the stats dashboard, and suggested invites are no longer available.
+This library is still functional as a stand-alone invite or share page, but the Mave-provided services such as SMS invite delivery, the stats dashboard, and suggested invites are no longer available.
 
 The code is now open-source under an MIT license, so feel free to use it as you please.
 
