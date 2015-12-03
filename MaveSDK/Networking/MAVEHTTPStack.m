@@ -154,17 +154,9 @@
 
 - (void)sendPreparedRequest:(NSURLRequest *)request
             completionBlock:(MAVEHTTPCompletionBlock)completionBlock {
-    // Send request
-    NSURLSessionTask *task = [self.session dataTaskWithRequest:request
-                    completionHandler: ^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSString *logMessage = [NSString stringWithFormat:@"\"%lu\" %@ %@", (long)((NSHTTPURLResponse *)response).statusCode, request.HTTPMethod, request.URL];
-        self.requestLoggingBlock(logMessage);
-        [self handleJSONResponseWithData:data
-                                response:response
-                                   error:error
-                         completionBlock:completionBlock];
-    }];
-    [task resume];
+    // No-op sending actual requests so the client doesn't rely on the API
+    // Still call the completion block with a hard-coded error in case there's code that needs to run
+    [self handleJSONResponseWithData:nil response:nil error:nil completionBlock:completionBlock];
 }
 
 ///
