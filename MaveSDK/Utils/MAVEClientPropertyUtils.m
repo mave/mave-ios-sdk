@@ -176,7 +176,7 @@
     // If any are nil, set to NSNull so the json key will still be created with "null"
     // Note that these could all be the default value of "0" or the previously-saved value
     // if the remote configuration hasn't returned yet (e.g. the track app open request).
-    MAVERemoteConfiguration *remoteConfig = [MaveSDK sharedInstance].remoteConfigurationBuilder.object;
+    MAVERemoteConfiguration *remoteConfig = [MaveSDK sharedInstance].remoteConfiguration;
     propertyVal = remoteConfig.contactsPrePrompt.templateID;
     if (!propertyVal) {propertyVal = (NSString *)[NSNull null];}
     [properties setValue:propertyVal forKey:@"contacts_pre_permission_prompt_template_id"];

@@ -50,27 +50,24 @@
 
 
     // Otherwise, decide how to prompt and prompt
-    [[MaveSDK sharedInstance].remoteConfigurationBuilder
-     createObjectWithTimeout:1.0 completionBlock:^(id object) {
-        MAVERemoteConfiguration *remoteConfig = object;
-        this.prePromptTemplate = remoteConfig.contactsPrePrompt;
+    MAVERemoteConfiguration *remoteConfig = [[MaveSDK sharedInstance] remoteConfiguration];
+    this.prePromptTemplate = remoteConfig.contactsPrePrompt;
 
-        if (remoteConfig.contactsPrePrompt.enabled) {
-            // purposely create retain cycle so it won't get dealloc'ed until alert view
-            // is displayed then dismissed
-            this.retainSelf = this;
+    if (remoteConfig.contactsPrePrompt.enabled) {
+        // purposely create retain cycle so it won't get dealloc'ed until alert view
+        // is displayed then dismissed
+        this.retainSelf = this;
 
-            [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView];
-            [this showPrePromptAlertWithTitle:this.prePromptTemplate.title
-                                      message:this.prePromptTemplate.message
-                             cancelButtonCopy:this.prePromptTemplate.cancelButtonCopy
-                             acceptbuttonCopy:this.prePromptTemplate.acceptButtonCopy];
+        [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPrePermissionPromptView];
+        [this showPrePromptAlertWithTitle:this.prePromptTemplate.title
+                                  message:this.prePromptTemplate.message
+                         cancelButtonCopy:this.prePromptTemplate.cancelButtonCopy
+                         acceptbuttonCopy:this.prePromptTemplate.acceptButtonCopy];
 
-        } else {
-            [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView];
-            [this loadAddressBookAndComplete];
-        }
-    }];
+    } else {
+        [this logContactsPromptRelatedEventWithRoute:MAVERouteTrackContactsPermissionPromptView];
+        [this loadAddressBookAndComplete];
+    }
     return this;
 }
 

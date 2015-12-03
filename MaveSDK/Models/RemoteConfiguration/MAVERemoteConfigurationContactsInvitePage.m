@@ -100,7 +100,7 @@ NSString * const MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGro
             MAVERemoteConfigKeyContactsInvitePageIncludeShareButtons: @NO,
             MAVERemoteConfigKeyContactsInvitePageSuggestedInvitesEnabled: @NO,
             MAVERemoteConfigKeyContactsInvitePageSelectAllEnabled: @NO,
-            MAVERemoteConfigKeyContactsInvitePageSMSSendMethod: MAVERemoteConfigKeyContactsInvitePageSMSSendMethodServerSide,
+            MAVERemoteConfigKeyContactsInvitePageSMSSendMethod: MAVERemoteConfigKeyContactsInvitePageSMSSendMethodClientSideGroup,
             MAVERemoteConfigKeyContactsInvitePageReusableSuggestedInviteCellSendIcon: MAVERemoteConfigKeyContactsInvitePageReusableSuggestedInviteCellSendIconAirplane,
         }
     };

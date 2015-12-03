@@ -42,6 +42,7 @@
         _APIInterface = [[MAVEAPIInterface alloc] initWithBaseURL:apiBaseURL];
         _addressBookSyncManager = [[MAVEABSyncManager alloc] init];
         _inviteSender = [[MAVEInviteSender alloc] init];
+        _remoteConfiguration = [[MAVERemoteConfiguration alloc] initWithDictionary:[MAVERemoteConfiguration defaultJSONData]];
     }
     return self;
 }
@@ -56,7 +57,6 @@ static dispatch_once_t sharedInstanceonceToken;
         sharedInstance.referringDataBuilder = [MAVEReferringData remoteBuilderNoPreFetch];
         [sharedInstance.APIInterface trackAppOpenFetchingReferringDataWithPromise:sharedInstance.referringDataBuilder.promise];
 
-        sharedInstance.remoteConfigurationBuilder = [MAVERemoteConfiguration remoteBuilder];
         sharedInstance.suggestedInvitesBuilder = [MAVESuggestedInvites remoteBuilder];
 
 
@@ -117,11 +117,6 @@ static dispatch_once_t sharedInstanceonceToken;
         ok = NO;
     }
     return ok;
-}
-
-- (MAVERemoteConfiguration *)remoteConfiguration {
-    id obj = [self.remoteConfigurationBuilder createObjectSynchronousWithTimeout:0];
-    return (MAVERemoteConfiguration *)obj;
 }
 
 

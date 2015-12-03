@@ -56,7 +56,7 @@
     XCTAssertNotNil(mave.displayOptions);
     XCTAssertEqualObjects(mave.defaultSMSMessageText, mave.remoteConfiguration.serverSMS.text);
     XCTAssertNotNil(mave.appDeviceID);
-    XCTAssertNotNil(mave.remoteConfigurationBuilder);
+    XCTAssertNotNil(mave.remoteConfiguration);
     XCTAssertNil(mave.shareTokenBuilder);
     XCTAssertNotNil(mave.addressBookSyncManager);
     XCTAssertNotNil(mave.inviteSender);
@@ -92,18 +92,6 @@
 }
 
 // Test getting properties on the mave object
-- (void) testRemoteConfiguration {
-    MAVERemoteObjectBuilder *builder = [[MAVERemoteObjectBuilder alloc] init];
-    [MaveSDK sharedInstance].remoteConfigurationBuilder = builder;
-    id remoteConfig = [[MAVERemoteConfiguration alloc] init];
-
-    id builderMock = OCMPartialMock(builder);
-    OCMStub([builderMock createObjectSynchronousWithTimeout:0]).andReturn(remoteConfig);
-
-    XCTAssertEqualObjects([[MaveSDK sharedInstance] remoteConfiguration],
-                          remoteConfig);
-}
-
 - (void)testSuggestedInvitesWithDelay {
     [MaveSDK setupSharedInstanceWithApplicationID:@"foo123"];
     MAVEABPerson *p0 = [[MAVEABPerson alloc] init]; p0.recordID = 0; p0.hashedRecordID = 0;
